@@ -468,28 +468,28 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8"
+                        className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8 font-exo"
                     >
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                 {timeRemaining.days}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Days</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                 {timeRemaining.hours}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Hours</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                 {timeRemaining.minutes}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Minutes</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                 {timeRemaining.seconds}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Seconds</div>
