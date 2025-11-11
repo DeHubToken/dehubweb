@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import tiktokLogo from '@/assets/tiktok-logo.png';
+import instagramLogo from '@/assets/instagram-logo.png';
 
 // --- Simplex Noise Library ---
 // Included directly to resolve dependency issues in this environment.
@@ -557,25 +558,15 @@ export const FuturisticAlienHero = () => {
                                     </svg>
                                 )}
                                 {social.icon === "instagram" && (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    <img 
+                                        src={instagramLogo}
+                                        alt="Instagram"
                                         width="28"
                                         height="28"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
                                         style={{
-                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
-                                            color: '#fff'
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
-                                    >
-                                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                                    </svg>
+                                    />
                                 )}
                                 {social.icon === "music" && (
                                     <img 
