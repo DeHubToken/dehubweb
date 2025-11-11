@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
+import tiktokLogo from '@/assets/tiktok-logo.png';
 
 // --- Simplex Noise Library ---
 // Included directly to resolve dependency issues in this environment.
@@ -577,25 +578,15 @@ export const FuturisticAlienHero = () => {
                                     </svg>
                                 )}
                                 {social.icon === "music" && (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    <img 
+                                        src={tiktokLogo}
+                                        alt="TikTok"
                                         width="28"
                                         height="28"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
                                         style={{
-                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
-                                            color: '#fff'
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
-                                    >
-                                        <path d="M9 18V5l12-2v13" />
-                                        <circle cx="6" cy="18" r="3" />
-                                        <circle cx="18" cy="16" r="3" />
-                                    </svg>
+                                    />
                                 )}
                             </a>
                         ))}
