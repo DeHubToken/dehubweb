@@ -448,7 +448,7 @@ export const FuturisticAlienHero = () => {
     };
 
     return (
-        <div className="relative h-screen w-full overflow-hidden bg-black" style={{ cursor: 'crosshair' }}>
+        <div className="relative h-screen w-full overflow-hidden bg-black" style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' /%3E%3C/svg%3E") 6 6, auto' }}>
             <canvas ref={mountRef} className="absolute top-0 left-0 w-full h-full z-0" />
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4">
