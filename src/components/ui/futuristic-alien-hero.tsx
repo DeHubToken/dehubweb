@@ -495,6 +495,111 @@ export const FuturisticAlienHero = () => {
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Seconds</div>
                         </div>
                     </motion.div>
+                    <motion.div
+                        variants={fadeUpVariants}
+                        custom={2.5}
+                        initial="hidden"
+                        animate="visible"
+                        className="mt-8 flex items-center justify-center gap-6"
+                    >
+                        {[
+                            { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
+                            { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
+                            { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
+                            { icon: "music", url: "https://tiktok.com/@dehub_official", label: "TikTok" },
+                        ].map((social, idx) => (
+                            <a
+                                key={idx}
+                                href={social.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="transition-transform hover:scale-110"
+                                aria-label={social.label}
+                            >
+                                {social.icon === "send" && (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="28"
+                                        height="28"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        style={{
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
+                                            color: '#fff'
+                                        }}
+                                    >
+                                        <path d="m22 2-7 20-4-9-9-4Z" />
+                                        <path d="M22 2 11 13" />
+                                    </svg>
+                                )}
+                                {social.icon === "twitter" && (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="28"
+                                        height="28"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        style={{
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
+                                            color: '#fff'
+                                        }}
+                                    >
+                                        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+                                    </svg>
+                                )}
+                                {social.icon === "instagram" && (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="28"
+                                        height="28"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        style={{
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
+                                            color: '#fff'
+                                        }}
+                                    >
+                                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                                    </svg>
+                                )}
+                                {social.icon === "music" && (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="28"
+                                        height="28"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        style={{
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
+                                            color: '#fff'
+                                        }}
+                                    >
+                                        <path d="M9 18V5l12-2v13" />
+                                        <circle cx="6" cy="18" r="3" />
+                                        <circle cx="18" cy="16" r="3" />
+                                    </svg>
+                                )}
+                            </a>
+                        ))}
+                    </motion.div>
                 </div>
             </section>
         </div>
