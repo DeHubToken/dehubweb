@@ -518,7 +518,7 @@ export const FuturisticAlienHero = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="transition-transform hover:scale-110"
-                                style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
+                                style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'13\' height=\'13\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'13\' height=\'13\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6.5 6.5, auto' }}
                                 aria-label={social.label}
                             >
                                 {social.icon === "send" && (
