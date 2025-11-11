@@ -535,8 +535,8 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={xLogo}
                                         alt="X (Twitter)"
-                                        width="29"
-                                        height="29"
+                                        width="30"
+                                        height="30"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6)) invert(1)'
                                         }}
