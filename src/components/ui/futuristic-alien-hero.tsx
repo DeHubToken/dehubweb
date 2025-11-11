@@ -278,7 +278,7 @@ export const FuturisticAlienHero = () => {
         camera.position.z = 5;
 
         // --- Lighting ---
-        const pointLight = new THREE.PointLight(0x00ffff, 1.5, 100);
+        const pointLight = new THREE.PointLight(0xffffff, 1.5, 100);
         pointLight.position.set(0, 0, 7);
         scene.add(pointLight);
         
@@ -291,7 +291,7 @@ export const FuturisticAlienHero = () => {
         artifactGeometry.setAttribute('originalPosition', artifactGeometry.attributes.position.clone());
 
         const artifactMaterial = new THREE.MeshStandardMaterial({
-            color: 0xADD8E6,
+            color: 0xffffff,
             metalness: 0.2,
             roughness: 0.1,
             envMapIntensity: 0.9,
@@ -315,7 +315,7 @@ export const FuturisticAlienHero = () => {
         const nebulaCount = 20000;
         const posArray = new Float32Array(nebulaCount * 3);
         const colorArray = new Float32Array(nebulaCount * 3);
-        const nebulaColors = [new THREE.Color(0x00ffff), new THREE.Color(0x8a2be2), new THREE.Color(0xff4500)];
+        const nebulaColors = [new THREE.Color(0xffffff), new THREE.Color(0xffffff), new THREE.Color(0xff4500)];
 
         for(let i = 0; i < nebulaCount; i++) {
             posArray[i*3 + 0] = (Math.random() - 0.5) * 20;
@@ -426,8 +426,8 @@ export const FuturisticAlienHero = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4">
                     <motion.h1
-                        className="font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-cyan-300"
-                        style={{ textShadow: '0 0 8px rgba(0, 255, 255, 0.7), 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(173, 216, 230, 0.5)' }}
+                        className="font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white"
+                        style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
                             A New World
@@ -439,7 +439,7 @@ export const FuturisticAlienHero = () => {
                     <motion.div variants={fadeUpVariants} custom={2} initial="hidden" animate="visible" className="mt-12">
                         <a
                             href="#"
-                            className="inline-block bg-cyan-400/10 border-2 border-cyan-400 text-cyan-300 font-bold uppercase tracking-widest py-3 px-8 rounded-md transition-all duration-300 hover:bg-cyan-400 hover:text-black hover:shadow-lg hover:shadow-cyan-400/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-50"
+                            className="inline-block bg-white/10 border-2 border-white text-white font-bold uppercase tracking-widest py-3 px-8 rounded-md transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:shadow-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                         >
                             Initiate Contact
                         </a>
