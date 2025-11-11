@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -261,6 +261,33 @@ class SimplexNoise {
 // Main Hero Component
 export const FuturisticAlienHero = () => {
     const mountRef = useRef<HTMLCanvasElement>(null);
+    const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+    // Countdown timer
+    useEffect(() => {
+        const targetDate = new Date('2025-12-10T00:00:00Z').getTime();
+        
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance > 0) {
+                setTimeRemaining({
+                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                    seconds: Math.floor((distance % (1000 * 60)) / 1000)
+                });
+            } else {
+                setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            }
+        };
+        
+        updateCountdown();
+        const interval = setInterval(updateCountdown, 1000);
+        
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         if (!mountRef.current) return;
@@ -436,6 +463,38 @@ export const FuturisticAlienHero = () => {
                             Awaits
                         </motion.span>
                     </motion.h1>
+                    <motion.div 
+                        variants={fadeUpVariants} 
+                        custom={2} 
+                        initial="hidden" 
+                        animate="visible" 
+                        className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8"
+                    >
+                        <div className="text-center">
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                                {timeRemaining.days}
+                            </div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Days</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                                {timeRemaining.hours}
+                            </div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Hours</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                                {timeRemaining.minutes}
+                            </div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Minutes</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.5)' }}>
+                                {timeRemaining.seconds}
+                            </div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Seconds</div>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
         </div>
