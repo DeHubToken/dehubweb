@@ -315,7 +315,7 @@ export const FuturisticAlienHero = () => {
         const nebulaCount = 20000;
         const posArray = new Float32Array(nebulaCount * 3);
         const colorArray = new Float32Array(nebulaCount * 3);
-        const nebulaColors = [new THREE.Color(0xffffff), new THREE.Color(0xffffff), new THREE.Color(0xC0C0C0)];
+        const nebulaColors = [new THREE.Color(0xffffff), new THREE.Color(0xffffff), new THREE.Color(0x505050)];
 
         for(let i = 0; i < nebulaCount; i++) {
             posArray[i*3 + 0] = (Math.random() - 0.5) * 20;
