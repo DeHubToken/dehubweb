@@ -426,14 +426,14 @@ export const FuturisticAlienHero = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4">
                     <motion.h1
-                        className="font-orbitron text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-cyan-300"
+                        className="font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-cyan-300"
                         style={{ textShadow: '0 0 8px rgba(0, 255, 255, 0.7), 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(173, 216, 230, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
-                            Transcend
+                            A New World
                         </motion.span>
                         <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-4">
-                            The Known
+                            Awaits
                         </motion.span>
                     </motion.h1>
                     <motion.div variants={fadeUpVariants} custom={2} initial="hidden" animate="visible" className="mt-12">
