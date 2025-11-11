@@ -304,7 +304,7 @@ export const FuturisticAlienHero = () => {
 
         const coreGeometry = new THREE.IcosahedronGeometry(0.5, 5);
         const coreMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff4500,
+            color: 0xffffff,
             wireframe: true
         });
         const energyCore = new THREE.Mesh(coreGeometry, coreMaterial);
