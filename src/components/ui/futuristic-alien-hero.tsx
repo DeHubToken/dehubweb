@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import tiktokLogo from '@/assets/tiktok-logo.png';
 import instagramLogo from '@/assets/instagram-logo.png';
 import xLogo from '@/assets/x-logo.png';
+import telegramLogo from '@/assets/telegram-logo.png';
 
 // --- Simplex Noise Library ---
 // Included directly to resolve dependency issues in this environment.
@@ -520,24 +521,15 @@ export const FuturisticAlienHero = () => {
                                 aria-label={social.label}
                             >
                                 {social.icon === "send" && (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    <img 
+                                        src={telegramLogo}
+                                        alt="Telegram"
                                         width="28"
                                         height="28"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
                                         style={{
-                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
-                                            color: '#fff'
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
-                                    >
-                                        <path d="m22 2-7 20-4-9-9-4Z" />
-                                        <path d="M22 2 11 13" />
-                                    </svg>
+                                    />
                                 )}
                                 {social.icon === "twitter" && (
                                     <img 
