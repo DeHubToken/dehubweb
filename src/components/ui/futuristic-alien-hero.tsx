@@ -436,14 +436,6 @@ export const FuturisticAlienHero = () => {
                             Awaits
                         </motion.span>
                     </motion.h1>
-                    <motion.div variants={fadeUpVariants} custom={2} initial="hidden" animate="visible" className="mt-12">
-                        <a
-                            href="#"
-                            className="inline-block bg-white/10 border-2 border-white text-white font-bold uppercase tracking-widest py-3 px-8 rounded-md transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg hover:shadow-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                        >
-                            Initiate Contact
-                        </a>
-                    </motion.div>
                 </div>
             </section>
         </div>
