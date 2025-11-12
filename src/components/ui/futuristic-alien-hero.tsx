@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
-import { BookOpen } from 'lucide-react';
 import { GlowingEffect } from './glowing-effect';
 import tiktokLogo from '@/assets/tiktok-logo.png';
 import instagramLogo from '@/assets/instagram-logo.png';
@@ -619,15 +618,10 @@ export const FuturisticAlienHero = () => {
                                     inactiveZone={0.01}
                                     borderWidth={2}
                                 />
-                                <div className="relative flex flex-col gap-2 overflow-hidden rounded-md border-[0.75px] bg-background/80 backdrop-blur-sm p-3 shadow-sm">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-fit rounded-md border-[0.75px] border-border bg-muted p-1.5">
-                                            <BookOpen className="h-3 w-3" />
-                                        </div>
-                                        <h3 className="text-sm font-semibold font-sans tracking-tight text-foreground">
-                                            read
-                                        </h3>
-                                    </div>
+                                <div className="relative flex items-center justify-center overflow-hidden rounded-md border-[0.75px] bg-transparent p-3 shadow-sm">
+                                    <h3 className="text-base font-bold text-white uppercase tracking-wider font-exo" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                                        read
+                                    </h3>
                                 </div>
                             </div>
                         </div>
