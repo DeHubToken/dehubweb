@@ -335,6 +335,54 @@ export const FuturisticAlienHero = () => {
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
         scene.add(artifact);
 
+        // --- Electrical Pulsing Rings ---
+        const rings: THREE.Mesh[] = [];
+        const ringConfigs = [
+            { radius: 2.5, tube: 0.02, rotationX: Math.PI / 3, rotationY: 0, phaseOffset: 0 },
+            { radius: 3, tube: 0.015, rotationX: -Math.PI / 4, rotationY: Math.PI / 3, phaseOffset: Math.PI },
+            { radius: 2.8, tube: 0.018, rotationX: Math.PI / 2, rotationY: Math.PI / 6, phaseOffset: Math.PI / 2 }
+        ];
+
+        ringConfigs.forEach((config) => {
+            const ringGeometry = new THREE.TorusGeometry(config.radius, config.tube, 16, 100);
+            const ringMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.3,
+                blending: THREE.AdditiveBlending,
+                side: THREE.DoubleSide
+            });
+            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+            ring.rotation.x = config.rotationX;
+            ring.rotation.y = config.rotationY;
+            ring.userData = { phaseOffset: config.phaseOffset, baseOpacity: 0.3 };
+            rings.push(ring);
+            scene.add(ring);
+        });
+
+        // --- Electric Arc Particles ---
+        const arcParticleCount = 150;
+        const arcGeometry = new THREE.BufferGeometry();
+        const arcPositions = new Float32Array(arcParticleCount * 3);
+        const arcAngles = new Float32Array(arcParticleCount);
+        const arcRadii = new Float32Array(arcParticleCount);
+
+        for (let i = 0; i < arcParticleCount; i++) {
+            arcAngles[i] = Math.random() * Math.PI * 2;
+            arcRadii[i] = 2.5 + Math.random() * 0.6; // Spread across ring radii
+        }
+
+        arcGeometry.setAttribute('position', new THREE.BufferAttribute(arcPositions, 3));
+        const arcMaterial = new THREE.PointsMaterial({
+            color: 0x00ffff,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const arcParticles = new THREE.Points(arcGeometry, arcMaterial);
+        scene.add(arcParticles);
+
         // --- Nebula Particle System ---
         const nebulaGeometry = new THREE.BufferGeometry();
         const nebulaCount = 20000;
@@ -421,6 +469,36 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.y = 0.1 * elapsedTime;
             artifact.rotation.x = 0.1 * elapsedTime;
 
+            // Animate electrical rings
+            rings.forEach((ring) => {
+                const phase = elapsedTime * 2 + ring.userData.phaseOffset;
+                const pulse = Math.sin(phase) * 0.5 + 0.5; // 0 to 1
+                ring.scale.setScalar(0.95 + pulse * 0.1);
+                (ring.material as THREE.MeshBasicMaterial).opacity = ring.userData.baseOpacity + pulse * 0.5;
+            });
+
+            // Animate electric arc particles
+            const arcPos = arcParticles.geometry.attributes.position;
+            for (let i = 0; i < arcParticleCount; i++) {
+                const angle = arcAngles[i] + elapsedTime * 3;
+                const radius = arcRadii[i];
+                const ringIndex = Math.floor((radius - 2.5) / 0.2);
+                const ringConfig = ringConfigs[Math.min(ringIndex, ringConfigs.length - 1)];
+                
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius * 0.3;
+                const z = Math.sin(angle) * radius;
+                
+                // Rotate based on ring orientation
+                const cos = Math.cos(ringConfig.rotationX);
+                const sin = Math.sin(ringConfig.rotationX);
+                const rotatedY = y * cos - z * sin;
+                const rotatedZ = y * sin + z * cos;
+                
+                arcPos.setXYZ(i, x, rotatedY, rotatedZ);
+            }
+            arcPos.needsUpdate = true;
+
             nebula.rotation.y += 0.0002;
 
             const positions = artifact.geometry.attributes.position;
@@ -452,6 +530,12 @@ export const FuturisticAlienHero = () => {
             renderer.dispose();
             artifactGeometry.dispose();
             artifactMaterial.dispose();
+            rings.forEach(ring => {
+                ring.geometry.dispose();
+                (ring.material as THREE.Material).dispose();
+            });
+            arcGeometry.dispose();
+            arcMaterial.dispose();
             nebulaGeometry.dispose();
             nebulaMaterial.dispose();
         };
