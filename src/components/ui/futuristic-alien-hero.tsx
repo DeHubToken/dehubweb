@@ -334,16 +334,6 @@ export const FuturisticAlienHero = () => {
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
         scene.add(artifact);
 
-        const coreGeometry = new THREE.IcosahedronGeometry(0.5, 5);
-        const coreMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.8
-        });
-        const energyCore = new THREE.Mesh(coreGeometry, coreMaterial);
-        artifact.add(energyCore);
-
         // --- Nebula Particle System ---
         const nebulaGeometry = new THREE.BufferGeometry();
         const nebulaCount = 20000;
@@ -429,8 +419,6 @@ export const FuturisticAlienHero = () => {
 
             artifact.rotation.y = 0.1 * elapsedTime;
             artifact.rotation.x = 0.1 * elapsedTime;
-            energyCore.rotation.y = -0.5 * elapsedTime;
-            energyCore.scale.setScalar(Math.sin(elapsedTime * 2) * 0.2 + 1);
 
             nebula.rotation.y += 0.0002;
 
@@ -463,8 +451,6 @@ export const FuturisticAlienHero = () => {
             renderer.dispose();
             artifactGeometry.dispose();
             artifactMaterial.dispose();
-            coreGeometry.dispose();
-            coreMaterial.dispose();
             nebulaGeometry.dispose();
             nebulaMaterial.dispose();
         };
