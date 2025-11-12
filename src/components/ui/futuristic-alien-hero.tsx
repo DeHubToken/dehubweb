@@ -8,6 +8,7 @@ import tiktokLogo from '@/assets/tiktok-logo.png';
 import instagramLogo from '@/assets/instagram-logo.png';
 import xLogo from '@/assets/x-logo.png';
 import telegramLogo from '@/assets/telegram-logo.png';
+import dehubLogo from '@/assets/dehub-logo.png';
 
 // --- Simplex Noise Library ---
 // Included directly to resolve dependency issues in this environment.
@@ -631,6 +632,20 @@ export const FuturisticAlienHero = () => {
                                 </div>
                             </div>
                         </a>
+                    </motion.div>
+
+                    {/* Logo at bottom */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                        className="mt-8"
+                    >
+                        <img 
+                            src={dehubLogo} 
+                            alt="DeHub Logo" 
+                            className="h-6 w-auto opacity-50"
+                        />
                     </motion.div>
                 </div>
             </section>
