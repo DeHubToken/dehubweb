@@ -644,7 +644,10 @@ export const FuturisticAlienHero = () => {
                         <img 
                             src={dehubLogo} 
                             alt="DeHub Logo" 
-                            className="h-6 w-auto opacity-50"
+                            className="h-6 w-auto opacity-100"
+                            style={{
+                                filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.5))'
+                            }}
                         />
                     </motion.div>
                 </div>
