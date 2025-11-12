@@ -595,7 +595,7 @@ export const FuturisticAlienHero = () => {
                         custom={3}
                         initial="hidden"
                         animate="visible"
-                        className="mt-6 flex justify-center px-4"
+                        className="mt-6 flex justify-center px-4 translate-y-[2px]"
                     >
                         <a 
                             href="https://docs.dhb.gg" 
@@ -639,7 +639,7 @@ export const FuturisticAlienHero = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 3.5 }}
-                        className="mt-8 flex justify-center"
+                        className="mt-8 flex justify-center translate-y-[2px]"
                     >
                         <img 
                             src={dehubLogo} 
