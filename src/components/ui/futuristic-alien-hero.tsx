@@ -391,7 +391,7 @@ export const FuturisticAlienHero = () => {
                 blending: THREE.AdditiveBlending
             });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(0.3, 0.3, 1);
+            sprite.scale.set(0.1, 0.1, 1);
             sprite.position.set(
                 (Math.random() - 0.5) * 20,
                 (Math.random() - 0.5) * 20,
