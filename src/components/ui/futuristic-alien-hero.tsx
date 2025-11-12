@@ -370,34 +370,6 @@ export const FuturisticAlienHero = () => {
         const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
 
-        // --- Red Nebulas ---
-        const redNebulaGeometry = new THREE.BufferGeometry();
-        const redNebulaCount = 50;
-        const redPosArray = new Float32Array(redNebulaCount * 3);
-        const redColorArray = new Float32Array(redNebulaCount * 3);
-        const redColor = new THREE.Color(0xff0000);
-
-        for(let i = 0; i < redNebulaCount; i++) {
-            redPosArray[i*3 + 0] = (Math.random() - 0.5) * 30;
-            redPosArray[i*3 + 1] = (Math.random() - 0.5) * 30;
-            redPosArray[i*3 + 2] = (Math.random() - 0.5) * 30 - 10;
-            redColorArray[i*3 + 0] = redColor.r;
-            redColorArray[i*3 + 1] = redColor.g;
-            redColorArray[i*3 + 2] = redColor.b;
-        }
-        redNebulaGeometry.setAttribute('position', new THREE.BufferAttribute(redPosArray, 3));
-        redNebulaGeometry.setAttribute('color', new THREE.BufferAttribute(redColorArray, 3));
-
-        const redNebulaMaterial = new THREE.PointsMaterial({
-            size: 0.15,
-            vertexColors: true,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.8
-        });
-        const redNebula = new THREE.Points(redNebulaGeometry, redNebulaMaterial);
-        scene.add(redNebula);
-
         // --- Mouse Interaction ---
         let mouseX = 0, mouseY = 0;
         const handleMouseMove = (event: MouseEvent) => {
@@ -431,8 +403,6 @@ export const FuturisticAlienHero = () => {
             energyCore.scale.setScalar(Math.sin(elapsedTime * 2) * 0.2 + 1);
 
             nebula.rotation.y += 0.0002;
-            redNebula.rotation.y += 0.0001;
-            redNebula.rotation.x += 0.00005;
 
             const positions = artifact.geometry.attributes.position;
             const originalPositions = artifact.geometry.attributes.originalPosition as THREE.BufferAttribute;
@@ -464,8 +434,6 @@ export const FuturisticAlienHero = () => {
             coreMaterial.dispose();
             nebulaGeometry.dispose();
             nebulaMaterial.dispose();
-            redNebulaGeometry.dispose();
-            redNebulaMaterial.dispose();
         };
     }, []);
 
