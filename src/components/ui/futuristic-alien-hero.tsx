@@ -622,8 +622,9 @@ export const FuturisticAlienHero = () => {
                                     disabled={false}
                                     proximity={120}
                                     inactiveZone={0.01}
-                                    borderWidth={3}
+                                    borderWidth={4}
                                     blur={4}
+                                    className="brightness-150 saturate-150"
                                 />
                                 <div className="relative flex items-center justify-center overflow-hidden rounded-sm border-[0.75px] bg-transparent p-1.5 shadow-sm">
                                     <GlowingEffect
@@ -634,6 +635,7 @@ export const FuturisticAlienHero = () => {
                                         inactiveZone={0.01}
                                         borderWidth={2}
                                         blur={2}
+                                        className="brightness-150 saturate-150"
                                     />
                                     <h3 className="text-xs font-bold text-white uppercase tracking-wider font-exo relative z-10" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                         read
