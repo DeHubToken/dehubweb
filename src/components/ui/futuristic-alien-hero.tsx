@@ -364,6 +364,45 @@ export const FuturisticAlienHero = () => {
         const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
 
+        // --- Binary Digits (0s and 1s) ---
+        const createTextTexture = (text: string): THREE.CanvasTexture => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d')!;
+            ctx.font = 'Bold 48px monospace';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 32, 32);
+            return new THREE.CanvasTexture(canvas);
+        };
+
+        const binaryGroup = new THREE.Group();
+        const binarySprites: THREE.Sprite[] = [];
+        
+        for (let i = 0; i < 200; i++) {
+            const digit = Math.random() > 0.5 ? '1' : '0';
+            const texture = createTextTexture(digit);
+            const spriteMaterial = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(0.3, 0.3, 1);
+            sprite.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20
+            );
+            (sprite as any).velocity = (Math.random() - 0.5) * 0.002;
+            binarySprites.push(sprite);
+            binaryGroup.add(sprite);
+        }
+        scene.add(binaryGroup);
+
         // --- Mouse/Touch Interaction ---
         let mouseX = 0, mouseY = 0;
         let isTouching = false;
@@ -423,6 +462,23 @@ export const FuturisticAlienHero = () => {
 
             nebula.rotation.y += 0.0002;
 
+            // Animate binary digits
+            binaryGroup.rotation.y += 0.0001;
+            binarySprites.forEach((sprite, index) => {
+                sprite.position.y += (sprite as any).velocity;
+                sprite.rotation.z += 0.001;
+                
+                // Reset position if out of bounds
+                if (sprite.position.y > 10) {
+                    sprite.position.y = -10;
+                } else if (sprite.position.y < -10) {
+                    sprite.position.y = 10;
+                }
+                
+                // Subtle pulsing effect
+                sprite.material.opacity = 0.5 + Math.sin(elapsedTime * 2 + index) * 0.3;
+            });
+
             const positions = artifact.geometry.attributes.position;
             const originalPositions = artifact.geometry.attributes.originalPosition as THREE.BufferAttribute;
             for (let i = 0; i < positions.count; i++) {
@@ -454,6 +510,10 @@ export const FuturisticAlienHero = () => {
             artifactMaterial.dispose();
             nebulaGeometry.dispose();
             nebulaMaterial.dispose();
+            binarySprites.forEach(sprite => {
+                sprite.material.map?.dispose();
+                sprite.material.dispose();
+            });
         };
     }, []);
 
