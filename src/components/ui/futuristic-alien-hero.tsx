@@ -370,13 +370,38 @@ export const FuturisticAlienHero = () => {
         const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
 
-        // --- Mouse Interaction ---
+        // --- Mouse/Touch Interaction ---
         let mouseX = 0, mouseY = 0;
+        let isTouching = false;
+        
+        // Desktop mouse movement (continuous tracking)
         const handleMouseMove = (event: MouseEvent) => {
             mouseX = (event.clientX - window.innerWidth / 2) / 100;
             mouseY = (event.clientY - window.innerHeight / 2) / 100;
         };
+        
+        // Mobile touch handlers (only during drag)
+        const handleTouchStart = (event: TouchEvent) => {
+            isTouching = true;
+        };
+        
+        const handleTouchMove = (event: TouchEvent) => {
+            if (!isTouching) return;
+            
+            const touch = event.touches[0];
+            mouseX = (touch.clientX - window.innerWidth / 2) / 100;
+            mouseY = (touch.clientY - window.innerHeight / 2) / 100;
+        };
+        
+        const handleTouchEnd = () => {
+            isTouching = false;
+        };
+        
+        // Add listeners
         window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchstart', handleTouchStart, { passive: true });
+        window.addEventListener('touchmove', handleTouchMove, { passive: true });
+        window.addEventListener('touchend', handleTouchEnd);
 
         // --- Window Resize ---
         const handleResize = () => {
@@ -426,6 +451,9 @@ export const FuturisticAlienHero = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
             cancelAnimationFrame(animationFrameId);
             renderer.dispose();
             artifactGeometry.dispose();
