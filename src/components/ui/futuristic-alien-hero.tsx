@@ -617,15 +617,25 @@ export const FuturisticAlienHero = () => {
                         >
                             <div className="relative h-full rounded-md border-[0.75px] border-border p-1">
                                 <GlowingEffect
-                                    spread={20}
+                                    spread={80}
                                     glow={true}
                                     disabled={false}
-                                    proximity={32}
+                                    proximity={120}
                                     inactiveZone={0.01}
-                                    borderWidth={1.5}
+                                    borderWidth={3}
+                                    blur={4}
                                 />
                                 <div className="relative flex items-center justify-center overflow-hidden rounded-sm border-[0.75px] bg-transparent p-1.5 shadow-sm">
-                                    <h3 className="text-xs font-bold text-white uppercase tracking-wider font-exo" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                                    <GlowingEffect
+                                        spread={80}
+                                        glow={true}
+                                        disabled={false}
+                                        proximity={120}
+                                        inactiveZone={0.01}
+                                        borderWidth={2}
+                                        blur={2}
+                                    />
+                                    <h3 className="text-xs font-bold text-white uppercase tracking-wider font-exo relative z-10" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                         read
                                     </h3>
                                 </div>
