@@ -398,34 +398,6 @@ export const FuturisticAlienHero = () => {
         const redNebula = new THREE.Points(redNebulaGeometry, redNebulaMaterial);
         scene.add(redNebula);
 
-        // --- Blue Nebulas (Baby Blue) ---
-        const blueNebulaGeometry = new THREE.BufferGeometry();
-        const blueNebulaCount = 33;
-        const bluePosArray = new Float32Array(blueNebulaCount * 3);
-        const blueColorArray = new Float32Array(blueNebulaCount * 3);
-        const blueColor = new THREE.Color(0x87CEEB);
-
-        for(let i = 0; i < blueNebulaCount; i++) {
-            bluePosArray[i*3 + 0] = (Math.random() - 0.5) * 30;
-            bluePosArray[i*3 + 1] = (Math.random() - 0.5) * 30;
-            bluePosArray[i*3 + 2] = (Math.random() - 0.5) * 30 - 10;
-            blueColorArray[i*3 + 0] = blueColor.r;
-            blueColorArray[i*3 + 1] = blueColor.g;
-            blueColorArray[i*3 + 2] = blueColor.b;
-        }
-        blueNebulaGeometry.setAttribute('position', new THREE.BufferAttribute(bluePosArray, 3));
-        blueNebulaGeometry.setAttribute('color', new THREE.BufferAttribute(blueColorArray, 3));
-
-        const blueNebulaMaterial = new THREE.PointsMaterial({
-            size: 0.15,
-            vertexColors: true,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.8
-        });
-        const blueNebula = new THREE.Points(blueNebulaGeometry, blueNebulaMaterial);
-        scene.add(blueNebula);
-
         // --- Mouse Interaction ---
         let mouseX = 0, mouseY = 0;
         const handleMouseMove = (event: MouseEvent) => {
@@ -461,8 +433,6 @@ export const FuturisticAlienHero = () => {
             nebula.rotation.y += 0.0002;
             redNebula.rotation.y += 0.0001;
             redNebula.rotation.x += 0.00005;
-            blueNebula.rotation.y += 0.00015;
-            blueNebula.rotation.x += 0.00008;
 
             const positions = artifact.geometry.attributes.position;
             const originalPositions = artifact.geometry.attributes.originalPosition as THREE.BufferAttribute;
@@ -496,8 +466,6 @@ export const FuturisticAlienHero = () => {
             nebulaMaterial.dispose();
             redNebulaGeometry.dispose();
             redNebulaMaterial.dispose();
-            blueNebulaGeometry.dispose();
-            blueNebulaMaterial.dispose();
         };
     }, []);
 
