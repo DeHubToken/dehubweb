@@ -382,12 +382,14 @@ export const FuturisticAlienHero = () => {
         
         // Mobile touch handlers (only during drag)
         const handleTouchStart = (event: TouchEvent) => {
+            event.preventDefault(); // Prevent default touch behavior
             isTouching = true;
         };
         
         const handleTouchMove = (event: TouchEvent) => {
             if (!isTouching) return;
             
+            event.preventDefault(); // Prevent scrolling during drag
             const touch = event.touches[0];
             mouseX = (touch.clientX - window.innerWidth / 2) / 100;
             mouseY = (touch.clientY - window.innerHeight / 2) / 100;
@@ -399,8 +401,8 @@ export const FuturisticAlienHero = () => {
         
         // Add listeners
         window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('touchstart', handleTouchStart, { passive: true });
-        window.addEventListener('touchmove', handleTouchMove, { passive: true });
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchmove', handleTouchMove);
         window.addEventListener('touchend', handleTouchEnd);
 
         // --- Window Resize ---
