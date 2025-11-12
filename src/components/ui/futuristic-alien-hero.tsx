@@ -607,31 +607,26 @@ export const FuturisticAlienHero = () => {
                         custom={3}
                         initial="hidden"
                         animate="visible"
-                        className="mt-12 flex justify-center px-4"
+                        className="mt-6 flex justify-center px-4"
                     >
-                        <div className="w-full max-w-md">
-                            <div className="relative h-full rounded-[1.25rem] border-[0.75px] border-border p-2 md:rounded-[1.5rem] md:p-3">
+                        <div className="w-full max-w-[200px]">
+                            <div className="relative h-full rounded-lg border-[0.75px] border-border p-1.5">
                                 <GlowingEffect
-                                    spread={40}
+                                    spread={30}
                                     glow={true}
                                     disabled={false}
-                                    proximity={64}
+                                    proximity={48}
                                     inactiveZone={0.01}
-                                    borderWidth={3}
+                                    borderWidth={2}
                                 />
-                                <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border-[0.75px] bg-background/80 backdrop-blur-sm p-6 shadow-sm">
-                                    <div className="relative flex flex-1 flex-col justify-between gap-3">
-                                        <div className="w-fit rounded-lg border-[0.75px] border-border bg-muted p-2">
-                                            <BookOpen className="h-4 w-4" />
+                                <div className="relative flex flex-col gap-2 overflow-hidden rounded-md border-[0.75px] bg-background/80 backdrop-blur-sm p-3 shadow-sm">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-fit rounded-md border-[0.75px] border-border bg-muted p-1.5">
+                                            <BookOpen className="h-3 w-3" />
                                         </div>
-                                        <div className="space-y-3">
-                                            <h3 className="pt-0.5 text-xl leading-[1.375rem] font-semibold font-sans tracking-[-0.04em] md:text-2xl md:leading-[1.875rem] text-balance text-foreground">
-                                                read
-                                            </h3>
-                                            <p className="font-sans text-sm leading-[1.125rem] md:text-base md:leading-[1.375rem] text-muted-foreground">
-                                                Discover the future of decentralized innovation
-                                            </p>
-                                        </div>
+                                        <h3 className="text-sm font-semibold font-sans tracking-tight text-foreground">
+                                            read
+                                        </h3>
                                     </div>
                                 </div>
                             </div>
