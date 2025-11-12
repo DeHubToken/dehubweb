@@ -328,7 +328,7 @@ export const FuturisticAlienHero = () => {
             roughness: 0.1,
             envMapIntensity: 0.9,
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.8,
             premultipliedAlpha: true
         });
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
@@ -337,7 +337,9 @@ export const FuturisticAlienHero = () => {
         const coreGeometry = new THREE.IcosahedronGeometry(0.5, 5);
         const coreMaterial = new THREE.MeshBasicMaterial({
             color: 0xffffff,
-            wireframe: true
+            wireframe: true,
+            transparent: true,
+            opacity: 0.8
         });
         const energyCore = new THREE.Mesh(coreGeometry, coreMaterial);
         artifact.add(energyCore);
@@ -366,7 +368,7 @@ export const FuturisticAlienHero = () => {
             vertexColors: true,
             blending: THREE.AdditiveBlending,
             transparent: true,
-            opacity: 0.7
+            opacity: 0.8
         });
         const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
