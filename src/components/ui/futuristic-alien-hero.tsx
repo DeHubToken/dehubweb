@@ -608,18 +608,18 @@ export const FuturisticAlienHero = () => {
                         animate="visible"
                         className="mt-6 flex justify-center px-4"
                     >
-                        <div className="w-full max-w-[200px]">
-                            <div className="relative h-full rounded-lg border-[0.75px] border-border p-1.5">
+                        <div className="w-full max-w-[100px]">
+                            <div className="relative h-full rounded-md border-[0.75px] border-border p-1">
                                 <GlowingEffect
-                                    spread={30}
+                                    spread={20}
                                     glow={true}
                                     disabled={false}
-                                    proximity={48}
+                                    proximity={32}
                                     inactiveZone={0.01}
-                                    borderWidth={2}
+                                    borderWidth={1.5}
                                 />
-                                <div className="relative flex items-center justify-center overflow-hidden rounded-md border-[0.75px] bg-transparent p-3 shadow-sm">
-                                    <h3 className="text-base font-bold text-white uppercase tracking-wider font-exo" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                                <div className="relative flex items-center justify-center overflow-hidden rounded-sm border-[0.75px] bg-transparent p-1.5 shadow-sm">
+                                    <h3 className="text-xs font-bold text-white uppercase tracking-wider font-exo" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
                                         read
                                     </h3>
                                 </div>
