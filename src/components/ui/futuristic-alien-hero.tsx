@@ -608,7 +608,13 @@ export const FuturisticAlienHero = () => {
                         animate="visible"
                         className="mt-6 flex justify-center px-4"
                     >
-                        <div className="w-full max-w-[100px]">
+                        <a 
+                            href="https://docs.dhb.gg" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="w-full max-w-[100px] transition-transform hover:scale-105"
+                            style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
+                        >
                             <div className="relative h-full rounded-md border-[0.75px] border-border p-1">
                                 <GlowingEffect
                                     spread={20}
@@ -624,7 +630,7 @@ export const FuturisticAlienHero = () => {
                                     </h3>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </motion.div>
                 </div>
             </section>
