@@ -329,6 +329,22 @@ export const FuturisticAlienHero = () => {
                 setMasterGlitch(true);
                 setShowPixelCorruption(true);
                 
+                // Set initial glitched values immediately
+                setGlitchedCountdown({
+                    days: String(Math.floor(Math.random() * 30)).padStart(2, '0'),
+                    hours: String(Math.floor(Math.random() * 24)).padStart(2, '0'),
+                    minutes: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
+                    seconds: String(Math.floor(Math.random() * 60)).padStart(2, '0')
+                });
+                setGlitchedLabels({
+                    days: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
+                    hours: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
+                    minutes: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
+                    seconds: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)]
+                });
+                setCorruptedTitle(corruptText('A New World'));
+                setCorruptedSubtitle(corruptText('Awaits'));
+                
                 // Rapid cycling of values (every 50ms for 300ms = 6 cycles)
                 let cycleCount = 0;
                 const cycleInterval = setInterval(() => {
