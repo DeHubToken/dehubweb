@@ -269,7 +269,15 @@ export const FuturisticAlienHero = () => {
     const mountRef = useRef<HTMLCanvasElement>(null);
     const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     
-    // Glitch effect states
+    // Master synchronized glitch states (every 5 seconds)
+    const [masterGlitch, setMasterGlitch] = useState(false);
+    const [glitchedCountdown, setGlitchedCountdown] = useState({ days: '', hours: '', minutes: '', seconds: '' });
+    const [glitchedLabels, setGlitchedLabels] = useState({ days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds' });
+    const [corruptedTitle, setCorruptedTitle] = useState('A New World');
+    const [corruptedSubtitle, setCorruptedSubtitle] = useState('Awaits');
+    const [showPixelCorruption, setShowPixelCorruption] = useState(false);
+    
+    // Old glitch effect states (keeping for other effects)
     const [titleGlitch, setTitleGlitch] = useState(false);
     const [subtitleText, setSubtitleText] = useState('Awaits');
     const [screenFlash, setScreenFlash] = useState(false);
@@ -282,6 +290,7 @@ export const FuturisticAlienHero = () => {
         subtitle?: NodeJS.Timeout;
         flash?: NodeJS.Timeout;
         icon?: NodeJS.Timeout;
+        master?: NodeJS.Timeout;
     }>({});
 
     // Countdown timer
@@ -310,6 +319,94 @@ export const FuturisticAlienHero = () => {
         return () => clearInterval(interval);
     }, []);
 
+    // Master synchronized glitch controller (every 5 seconds)
+    useEffect(() => {
+        const binaryChars = ['01010101', '10101010', '00110011', '11001100', '11111111', '00000000'];
+        const symbolChars = ['###', '@@@', '!!!', '???', '$$$', '¥¥¥', '∞∞∞', '◊◊◊', '░░░', '▓▓▓'];
+        const glitchChars = ['█', '▓', '▒', '░', '@', '#', '$', '%', '&', '0', '1'];
+        const labelGlitchChars = ['####', '0101', 'ERR!', '!@#$', '????', '$$$', '█████'];
+        
+        const corruptText = (text: string) => {
+            const chars = text.split('');
+            return chars.map(char => {
+                if (Math.random() < 0.3 && char !== ' ') {
+                    return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                }
+                return char;
+            }).join('');
+        };
+        
+        const scheduleMasterGlitch = () => {
+            glitchTimersRef.current.master = setTimeout(() => {
+                // Start glitch
+                setMasterGlitch(true);
+                setShowPixelCorruption(true);
+                
+                // Rapid cycling of values (every 50ms for 300ms = 6 cycles)
+                let cycleCount = 0;
+                const cycleInterval = setInterval(() => {
+                    cycleCount++;
+                    
+                    // Glitch counter numbers
+                    const glitchType = Math.random();
+                    if (glitchType < 0.5) {
+                        // Binary strings
+                        setGlitchedCountdown({
+                            days: binaryChars[Math.floor(Math.random() * binaryChars.length)],
+                            hours: binaryChars[Math.floor(Math.random() * binaryChars.length)],
+                            minutes: binaryChars[Math.floor(Math.random() * binaryChars.length)],
+                            seconds: binaryChars[Math.floor(Math.random() * binaryChars.length)]
+                        });
+                    } else {
+                        // Symbol characters
+                        setGlitchedCountdown({
+                            days: symbolChars[Math.floor(Math.random() * symbolChars.length)],
+                            hours: symbolChars[Math.floor(Math.random() * symbolChars.length)],
+                            minutes: symbolChars[Math.floor(Math.random() * symbolChars.length)],
+                            seconds: symbolChars[Math.floor(Math.random() * symbolChars.length)]
+                        });
+                    }
+                    
+                    // Glitch labels
+                    setGlitchedLabels({
+                        days: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
+                        hours: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
+                        minutes: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
+                        seconds: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)]
+                    });
+                    
+                    // Corrupt title and subtitle
+                    setCorruptedTitle(corruptText('A New World'));
+                    setCorruptedSubtitle(corruptText('Awaits'));
+                    
+                    if (cycleCount >= 6) {
+                        clearInterval(cycleInterval);
+                        // End glitch after 300ms
+                        setTimeout(() => {
+                            setMasterGlitch(false);
+                            setShowPixelCorruption(false);
+                            setCorruptedTitle('A New World');
+                            setCorruptedSubtitle('Awaits');
+                            setGlitchedLabels({ days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds' });
+                        }, 50);
+                    }
+                }, 50);
+                
+                // Schedule next glitch in 5 seconds
+                setTimeout(scheduleMasterGlitch, 5000);
+            }, 5000);
+        };
+        
+        // Start the cycle
+        scheduleMasterGlitch();
+        
+        return () => {
+            if (glitchTimersRef.current.master) {
+                clearTimeout(glitchTimersRef.current.master);
+            }
+        };
+    }, []);
+    
     // Glitch effects controller
     useEffect(() => {
         const originalText = 'Awaits';
@@ -704,6 +801,37 @@ export const FuturisticAlienHero = () => {
 
     return (
         <div className="relative h-screen w-full overflow-hidden bg-black scanline-overlay" style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}>
+            {/* Pixel corruption overlay */}
+            {showPixelCorruption && (
+                <div className="absolute inset-0 pointer-events-none z-50 pixel-corruption">
+                    {Array.from({ length: 50 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className="absolute"
+                            style={{
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 100}%`,
+                                width: `${Math.random() * 10 + 2}px`,
+                                height: `${Math.random() * 10 + 2}px`,
+                                backgroundColor: ['#00ffff', '#ff00ff', '#ffffff', '#ff0000'][Math.floor(Math.random() * 4)],
+                                opacity: 0.6
+                            }}
+                        />
+                    ))}
+                    {Array.from({ length: 10 }).map((_, i) => (
+                        <div
+                            key={`line-${i}`}
+                            className="absolute w-full"
+                            style={{
+                                top: `${Math.random() * 100}%`,
+                                height: '2px',
+                                background: 'linear-gradient(90deg, transparent, #00ffff 50%, transparent)',
+                                opacity: 0.5
+                            }}
+                        />
+                    ))}
+                </div>
+            )}
             {/* Screen flash overlay */}
             {screenFlash && (
                 <div className="absolute inset-0 bg-white pointer-events-none z-50" style={{ opacity: 0.15 }} />
@@ -712,14 +840,14 @@ export const FuturisticAlienHero = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4">
                     <motion.h1
-                        className={`font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white ${titleGlitch ? 'glitch-active' : ''}`}
+                        className={`font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white ${titleGlitch || masterGlitch ? 'glitch-active' : ''}`}
                         style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
-                            A New World
+                            {masterGlitch ? corruptedTitle : 'A New World'}
                         </motion.span>
                         <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-4">
-                            {subtitleText}
+                            {masterGlitch ? corruptedSubtitle : subtitleText}
                         </motion.span>
                     </motion.h1>
                     <motion.div 
@@ -731,27 +859,27 @@ export const FuturisticAlienHero = () => {
                     >
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
-                                {timeRemaining.days}
+                                {masterGlitch ? glitchedCountdown.days : timeRemaining.days}
                             </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Days</div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.days}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
-                                {timeRemaining.hours}
+                                {masterGlitch ? glitchedCountdown.hours : timeRemaining.hours}
                             </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Hours</div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.hours}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
-                                {timeRemaining.minutes}
+                                {masterGlitch ? glitchedCountdown.minutes : timeRemaining.minutes}
                             </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Minutes</div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.minutes}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
-                                {timeRemaining.seconds}
+                                {masterGlitch ? glitchedCountdown.seconds : timeRemaining.seconds}
                             </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">Seconds</div>
+                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.seconds}</div>
                         </div>
                     </motion.div>
                     <motion.div
