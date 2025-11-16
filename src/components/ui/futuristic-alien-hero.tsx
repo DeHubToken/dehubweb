@@ -777,7 +777,7 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8 font-exo"
+                        className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8 font-exo relative"
                     >
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
@@ -811,9 +811,10 @@ export const FuturisticAlienHero = () => {
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="mt-6 text-center"
+                            className="absolute left-1/2 -translate-x-1/2 mt-2"
+                            style={{ top: 'calc(100% + 0.5rem)' }}
                         >
-                            <span className="text-white/90 text-lg md:text-xl uppercase tracking-widest font-bold" style={{ textShadow: '0 0 10px rgba(255, 255, 255, 0.8)' }}>
+                            <span className="text-white/80 text-xs md:text-sm uppercase tracking-widest font-exo font-thin" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.6)' }}>
                                 Countdown Starts Soon
                             </span>
                         </motion.div>
