@@ -1,10 +1,10 @@
 const DeleteAccount = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         <h1 className="text-4xl font-bold mb-8">Account and Data Deletion</h1>
         
-        <p className="text-muted-foreground mb-8">
+        <p className="text-white/80 mb-8">
           This page explains how you can request deletion of your DeHub account and associated data, 
           or request deletion of specific data without deleting your account. You can use this URL 
           in app stores where a "Delete account URL" is required.
@@ -12,9 +12,9 @@ const DeleteAccount = () => {
 
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">How to submit a deletion request</h2>
-          <ol className="list-decimal list-inside space-y-3 text-muted-foreground">
+          <ol className="list-decimal list-inside space-y-3 text-white/80">
             <li>
-              Send an email to <a href="mailto:tech@dehub.net" className="text-primary hover:underline">tech@dehub.net</a> from 
+              Send an email to <a href="mailto:tech@dehub.net" className="text-white hover:underline">tech@dehub.net</a> from
               the email address linked to your DeHub account. If your account is wallet-based, include your wallet address as shown in the app.
             </li>
             <li>
@@ -41,8 +41,8 @@ const DeleteAccount = () => {
           <h2 className="text-2xl font-semibold mb-4">What is deleted vs. retained</h2>
           
           <div className="mb-6">
-            <h3 className="text-xl font-medium mb-3 text-primary">Deleted</h3>
-            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+            <h3 className="text-xl font-medium mb-3 text-white">Deleted</h3>
+            <ul className="list-disc list-inside space-y-2 text-white/80">
               <li>Account profile (username, display name, bio, avatar, cover)</li>
               <li>Social links (e.g., X/Twitter, Discord, Instagram, etc.)</li>
               <li>Off‑chain app activity (comments, likes, follows, notifications)</li>
@@ -52,8 +52,8 @@ const DeleteAccount = () => {
           </div>
 
           <div>
-            <h3 className="text-xl font-medium mb-3 text-destructive">Retained (not deletable)</h3>
-            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+            <h3 className="text-xl font-medium mb-3 text-red-400">Retained (not deletable)</h3>
+            <ul className="list-disc list-inside space-y-2 text-white/80">
               <li>On‑chain records (transactions, mints, transfers) recorded on public blockchains. These are immutable and cannot be altered or deleted by DeHub.</li>
               <li>Security, fraud-prevention, and audit logs retained for up to 90 days, or longer if legally required.</li>
               <li>Minimal records necessary to comply with law, resolve disputes, or enforce our terms.</li>
@@ -63,7 +63,7 @@ const DeleteAccount = () => {
 
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">Data deletion without deleting your account</h2>
-          <p className="text-muted-foreground">
+          <p className="text-white/80">
             Yes. You may request that certain data (for example, your profile information or off‑chain activity) 
             be deleted while keeping your account active. Use the subject line <strong>Data deletion</strong> and 
             specify the categories of data you want removed.
@@ -72,7 +72,7 @@ const DeleteAccount = () => {
 
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">Verification</h2>
-          <p className="text-muted-foreground">
+          <p className="text-white/80">
             We will verify that the request is coming from the email linked to the account. If your email cannot 
             be verified, we may ask you to sign a verification message with the wallet address associated with your DeHub account.
           </p>
@@ -80,7 +80,7 @@ const DeleteAccount = () => {
 
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">Processing time and retention</h2>
-          <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+          <ul className="list-disc list-inside space-y-2 text-white/80">
             <li>We aim to acknowledge requests within 7 days and complete processing within 30 days.</li>
             <li>Backups and security logs may persist for up to 90 days before being automatically purged, unless a longer period is required by law.</li>
             <li>Once processed, deletion is irreversible.</li>
@@ -92,7 +92,7 @@ const DeleteAccount = () => {
           
           <div className="mb-6">
             <h3 className="text-xl font-medium mb-3">Account deletion</h3>
-            <div className="bg-muted p-4 rounded-lg font-mono text-sm">
+            <div className="bg-white/10 p-4 rounded-lg font-mono text-sm text-white/90">
               <p className="mb-2"><strong>To:</strong> tech@dehub.net</p>
               <p className="mb-4"><strong>Subject:</strong> Account deletion</p>
               <p className="mb-2">Hello DeHub team,</p>
@@ -108,7 +108,7 @@ const DeleteAccount = () => {
 
           <div>
             <h3 className="text-xl font-medium mb-3">Data deletion (keep account)</h3>
-            <div className="bg-muted p-4 rounded-lg font-mono text-sm">
+            <div className="bg-white/10 p-4 rounded-lg font-mono text-sm text-white/90">
               <p className="mb-2"><strong>To:</strong> tech@dehub.net</p>
               <p className="mb-4"><strong>Subject:</strong> Data deletion</p>
               <p className="mb-2">Hello DeHub team,</p>
@@ -125,13 +125,13 @@ const DeleteAccount = () => {
 
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">Contact</h2>
-          <p className="text-muted-foreground">
-            Email: <a href="mailto:tech@dehub.net" className="text-primary hover:underline">tech@dehub.net</a>
+          <p className="text-white/80">
+            Email: <a href="mailto:tech@dehub.net" className="text-white hover:underline">tech@dehub.net</a>
           </p>
         </section>
 
-        <div className="border-t border-border pt-6">
-          <p className="text-sm text-muted-foreground italic">
+        <div className="border-t border-white/20 pt-6">
+          <p className="text-sm text-white/70 italic">
             <strong>Note:</strong> DeHub operates with blockchain technology. On‑chain records are public and immutable. 
             While we can remove app-side references, we cannot alter or delete blockchain data.
           </p>
