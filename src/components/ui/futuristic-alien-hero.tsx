@@ -276,6 +276,7 @@ export const FuturisticAlienHero = () => {
     const [corruptedTitle, setCorruptedTitle] = useState('A New World');
     const [corruptedSubtitle, setCorruptedSubtitle] = useState('Awaits');
     const [showPixelCorruption, setShowPixelCorruption] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
     
     // Glitch timing ref
     const glitchTimerRef = useRef<NodeJS.Timeout>();
@@ -379,6 +380,10 @@ export const FuturisticAlienHero = () => {
                             setCorruptedTitle('A New World');
                             setCorruptedSubtitle('Awaits');
                             setGlitchedLabels({ days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds' });
+                            
+                            // Show popup after glitch ends
+                            setShowPopup(true);
+                            setTimeout(() => setShowPopup(false), 2000);
                         }, 50);
                     }
                 }, 50);
@@ -799,6 +804,21 @@ export const FuturisticAlienHero = () => {
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.seconds}</div>
                         </div>
                     </motion.div>
+                    
+                    {/* Popup text after glitch */}
+                    {showPopup && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="mt-6 text-center"
+                        >
+                            <span className="text-white/90 text-lg md:text-xl uppercase tracking-widest font-bold" style={{ textShadow: '0 0 10px rgba(255, 255, 255, 0.8)' }}>
+                                Countdown Starts Soon
+                            </span>
+                        </motion.div>
+                    )}
+                    
                     <motion.div
                         variants={fadeUpVariants}
                         custom={2.5}
