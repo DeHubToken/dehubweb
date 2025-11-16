@@ -765,12 +765,10 @@ export const FuturisticAlienHero = () => {
                         className={`font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white ${masterGlitch ? 'glitch-active' : ''}`}
                         style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
-                        <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block relative">
-                            <div className="absolute inset-0 opacity-15 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '150px 150px' }}></div>
+                        <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
                             {masterGlitch ? corruptedTitle : 'A New World'}
                         </motion.span>
-                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-4 relative">
-                            <div className="absolute inset-0 opacity-15 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '150px 150px' }}></div>
+                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-4">
                             {masterGlitch ? corruptedSubtitle : 'Awaits'}
                         </motion.span>
                     </motion.h1>
@@ -782,29 +780,25 @@ export const FuturisticAlienHero = () => {
                         className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8 font-exo relative"
                     >
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider relative" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '100px 100px' }}></div>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.days : timeRemaining.days}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.days}</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider relative" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '100px 100px' }}></div>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.hours : timeRemaining.hours}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.hours}</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider relative" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '100px 100px' }}></div>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.minutes : timeRemaining.minutes}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.minutes}</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider relative" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '100px 100px' }}></div>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.seconds : timeRemaining.seconds}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.seconds}</div>
