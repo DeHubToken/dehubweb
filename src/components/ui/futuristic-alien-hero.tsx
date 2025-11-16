@@ -277,21 +277,8 @@ export const FuturisticAlienHero = () => {
     const [corruptedSubtitle, setCorruptedSubtitle] = useState('Awaits');
     const [showPixelCorruption, setShowPixelCorruption] = useState(false);
     
-    // Old glitch effect states (keeping for other effects)
-    const [titleGlitch, setTitleGlitch] = useState(false);
-    const [subtitleText, setSubtitleText] = useState('Awaits');
-    const [screenFlash, setScreenFlash] = useState(false);
-    const [buttonGlitch, setButtonGlitch] = useState(false);
-    const [iconFlicker, setIconFlicker] = useState<number | null>(null);
-    
-    // Glitch timing refs
-    const glitchTimersRef = useRef<{
-        title?: NodeJS.Timeout;
-        subtitle?: NodeJS.Timeout;
-        flash?: NodeJS.Timeout;
-        icon?: NodeJS.Timeout;
-        master?: NodeJS.Timeout;
-    }>({});
+    // Glitch timing ref
+    const glitchTimerRef = useRef<NodeJS.Timeout>();
 
     // Countdown timer
     useEffect(() => {
@@ -337,7 +324,7 @@ export const FuturisticAlienHero = () => {
         };
         
         const scheduleMasterGlitch = () => {
-            glitchTimersRef.current.master = setTimeout(() => {
+            glitchTimerRef.current = setTimeout(() => {
                 // Start glitch
                 setMasterGlitch(true);
                 setShowPixelCorruption(true);
@@ -401,79 +388,9 @@ export const FuturisticAlienHero = () => {
         scheduleMasterGlitch();
         
         return () => {
-            if (glitchTimersRef.current.master) {
-                clearTimeout(glitchTimersRef.current.master);
+            if (glitchTimerRef.current) {
+                clearTimeout(glitchTimerRef.current);
             }
-        };
-    }, []);
-    
-    // Glitch effects controller
-    useEffect(() => {
-        const originalText = 'Awaits';
-        const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`';
-        
-        // Title RGB glitch (every 3-8 seconds)
-        const scheduleTitleGlitch = () => {
-            const delay = 3000 + Math.random() * 5000;
-            glitchTimersRef.current.title = setTimeout(() => {
-                setTitleGlitch(true);
-                setTimeout(() => setTitleGlitch(false), 200);
-                scheduleTitleGlitch();
-            }, delay);
-        };
-        
-        // Subtitle corruption (every 5-10 seconds)
-        const scheduleSubtitleGlitch = () => {
-            const delay = 5000 + Math.random() * 5000;
-            glitchTimersRef.current.subtitle = setTimeout(() => {
-                // Corrupt 1-2 random characters
-                const numToCorrupt = Math.floor(Math.random() * 2) + 1;
-                let corruptedText = originalText;
-                
-                for (let i = 0; i < numToCorrupt; i++) {
-                    const pos = Math.floor(Math.random() * originalText.length);
-                    const glitchChar = glitchChars[Math.floor(Math.random() * glitchChars.length)];
-                    corruptedText = corruptedText.substring(0, pos) + glitchChar + corruptedText.substring(pos + 1);
-                }
-                
-                setSubtitleText(corruptedText);
-                setTimeout(() => setSubtitleText(originalText), 300);
-                scheduleSubtitleGlitch();
-            }, delay);
-        };
-        
-        // Screen flash (every 8-15 seconds)
-        const scheduleFlash = () => {
-            const delay = 8000 + Math.random() * 7000;
-            glitchTimersRef.current.flash = setTimeout(() => {
-                setScreenFlash(true);
-                setTimeout(() => setScreenFlash(false), 80);
-                scheduleFlash();
-            }, delay);
-        };
-        
-        // Icon flicker (every 6-12 seconds)
-        const scheduleIconFlicker = () => {
-            const delay = 6000 + Math.random() * 6000;
-            glitchTimersRef.current.icon = setTimeout(() => {
-                const iconIndex = Math.floor(Math.random() * 4);
-                setIconFlicker(iconIndex);
-                setTimeout(() => setIconFlicker(null), 100);
-                scheduleIconFlicker();
-            }, delay);
-        };
-        
-        // Start all glitch effects
-        scheduleTitleGlitch();
-        scheduleSubtitleGlitch();
-        scheduleFlash();
-        scheduleIconFlicker();
-        
-        // Cleanup
-        return () => {
-            Object.values(glitchTimersRef.current).forEach(timer => {
-                if (timer) clearTimeout(timer);
-            });
         };
     }, []);
 
@@ -832,22 +749,18 @@ export const FuturisticAlienHero = () => {
                     ))}
                 </div>
             )}
-            {/* Screen flash overlay */}
-            {screenFlash && (
-                <div className="absolute inset-0 bg-white pointer-events-none z-50" style={{ opacity: 0.15 }} />
-            )}
             <canvas ref={mountRef} className="absolute top-0 left-0 w-full h-full z-0" />
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4">
                     <motion.h1
-                        className={`font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white ${titleGlitch || masterGlitch ? 'glitch-active' : ''}`}
+                        className={`font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white ${masterGlitch ? 'glitch-active' : ''}`}
                         style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
                             {masterGlitch ? corruptedTitle : 'A New World'}
                         </motion.span>
                         <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-4">
-                            {masterGlitch ? corruptedSubtitle : subtitleText}
+                            {masterGlitch ? corruptedSubtitle : 'Awaits'}
                         </motion.span>
                     </motion.h1>
                     <motion.div 
@@ -900,7 +813,7 @@ export const FuturisticAlienHero = () => {
                                 href={social.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`transition-transform hover:scale-110 ${iconFlicker === idx ? 'icon-flicker' : ''}`}
+                                className="transition-transform hover:scale-110"
                                 style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
                                 aria-label={social.label}
                             >
@@ -966,10 +879,8 @@ export const FuturisticAlienHero = () => {
                             rel="noopener noreferrer"
                             className="w-full max-w-[100px] transition-transform hover:scale-105"
                             style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
-                            onMouseEnter={() => setButtonGlitch(true)}
-                            onMouseLeave={() => setButtonGlitch(false)}
                         >
-                            <div className={`relative h-full rounded-md border-[0.75px] border-border p-2 ${buttonGlitch ? 'glitch-jitter' : ''}`}>
+                            <div className="relative h-full rounded-md border-[0.75px] border-border p-2">
                                 <GlowingEffect
                                     spread={80}
                                     glow={true}
