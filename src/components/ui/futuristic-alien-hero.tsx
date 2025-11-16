@@ -278,6 +278,10 @@ export const FuturisticAlienHero = () => {
     const [showPixelCorruption, setShowPixelCorruption] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     
+    // Ticking animation state
+    const [tickingNumbers, setTickingNumbers] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [isTicking, setIsTicking] = useState(false);
+    
     // Glitch timing ref
     const glitchTimerRef = useRef<NodeJS.Timeout>();
 
@@ -306,6 +310,87 @@ export const FuturisticAlienHero = () => {
         
         return () => clearInterval(interval);
     }, []);
+
+    // Ticking animation effect (on mount and after glitch)
+    useEffect(() => {
+        const runTickAnimation = () => {
+            setIsTicking(true);
+            const target = { ...timeRemaining };
+            const startValues = {
+                days: Math.max(0, target.days - 3),
+                hours: Math.max(0, target.hours - 5),
+                minutes: Math.max(0, target.minutes - 10),
+                seconds: Math.max(0, target.seconds - 15)
+            };
+            
+            setTickingNumbers(startValues);
+            
+            const duration = 1500; // 1.5 seconds
+            const steps = 30;
+            const interval = duration / steps;
+            let step = 0;
+            
+            const tickInterval = setInterval(() => {
+                step++;
+                const progress = step / steps;
+                
+                setTickingNumbers({
+                    days: Math.round(startValues.days + (target.days - startValues.days) * progress),
+                    hours: Math.round(startValues.hours + (target.hours - startValues.hours) * progress),
+                    minutes: Math.round(startValues.minutes + (target.minutes - startValues.minutes) * progress),
+                    seconds: Math.round(startValues.seconds + (target.seconds - startValues.seconds) * progress)
+                });
+                
+                if (step >= steps) {
+                    clearInterval(tickInterval);
+                    setIsTicking(false);
+                }
+            }, interval);
+        };
+        
+        // Run on mount after a short delay
+        const mountTimeout = setTimeout(() => runTickAnimation(), 500);
+        
+        return () => clearTimeout(mountTimeout);
+    }, []);
+
+    // Trigger ticking animation after glitch ends
+    const triggerPostGlitchTick = () => {
+        setTimeout(() => {
+            setIsTicking(true);
+            const target = { ...timeRemaining };
+            const startValues = {
+                days: Math.min(99, target.days + 2),
+                hours: Math.min(23, target.hours + 3),
+                minutes: Math.min(59, target.minutes + 5),
+                seconds: Math.min(59, target.seconds + 8)
+            };
+            
+            setTickingNumbers(startValues);
+            
+            const duration = 1000;
+            const steps = 20;
+            const interval = duration / steps;
+            let step = 0;
+            
+            const tickInterval = setInterval(() => {
+                step++;
+                const progress = step / steps;
+                
+                setTickingNumbers({
+                    days: Math.round(startValues.days + (target.days - startValues.days) * progress),
+                    hours: Math.round(startValues.hours + (target.hours - startValues.hours) * progress),
+                    minutes: Math.round(startValues.minutes + (target.minutes - startValues.minutes) * progress),
+                    seconds: Math.round(startValues.seconds + (target.seconds - startValues.seconds) * progress)
+                });
+                
+                if (step >= steps) {
+                    clearInterval(tickInterval);
+                    setIsTicking(false);
+                }
+            }, interval);
+        }, 100);
+    };
 
     // Master synchronized glitch controller (every 5 seconds)
     useEffect(() => {
@@ -384,6 +469,9 @@ export const FuturisticAlienHero = () => {
                             // Show popup after glitch ends
                             setShowPopup(true);
                             setTimeout(() => setShowPopup(false), 2000);
+                            
+                            // Trigger ticking animation after glitch
+                            triggerPostGlitchTick();
                         }, 50);
                     }
                 }, 50);
@@ -781,25 +869,25 @@ export const FuturisticAlienHero = () => {
                     >
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.days : timeRemaining.days}
+                                {masterGlitch ? glitchedCountdown.days : (isTicking ? tickingNumbers.days : timeRemaining.days)}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.days}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.hours : timeRemaining.hours}
+                                {masterGlitch ? glitchedCountdown.hours : (isTicking ? tickingNumbers.hours : timeRemaining.hours)}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.hours}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.minutes : timeRemaining.minutes}
+                                {masterGlitch ? glitchedCountdown.minutes : (isTicking ? tickingNumbers.minutes : timeRemaining.minutes)}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.minutes}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.seconds : timeRemaining.seconds}
+                                {masterGlitch ? glitchedCountdown.seconds : (isTicking ? tickingNumbers.seconds : timeRemaining.seconds)}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.seconds}</div>
                         </div>
