@@ -334,10 +334,10 @@ export const FuturisticAlienHero = () => {
                 const cycleInterval = setInterval(() => {
                     cycleCount++;
                     
-                    // Glitch counter numbers with random countdown values
+                    // Glitch counter numbers with random countdown values (days capped at 29)
                     setGlitchedCountdown({
-                        days: String(Math.floor(Math.random() * 100)).padStart(2, '0'),
-                        hours: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
+                        days: String(Math.floor(Math.random() * 30)).padStart(2, '0'),
+                        hours: String(Math.floor(Math.random() * 24)).padStart(2, '0'),
                         minutes: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
                         seconds: String(Math.floor(Math.random() * 60)).padStart(2, '0')
                     });
