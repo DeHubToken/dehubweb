@@ -268,6 +268,21 @@ class SimplexNoise {
 export const FuturisticAlienHero = () => {
     const mountRef = useRef<HTMLCanvasElement>(null);
     const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    
+    // Glitch effect states
+    const [titleGlitch, setTitleGlitch] = useState(false);
+    const [subtitleText, setSubtitleText] = useState('Awaits');
+    const [screenFlash, setScreenFlash] = useState(false);
+    const [buttonGlitch, setButtonGlitch] = useState(false);
+    const [iconFlicker, setIconFlicker] = useState<number | null>(null);
+    
+    // Glitch timing refs
+    const glitchTimersRef = useRef<{
+        title?: NodeJS.Timeout;
+        subtitle?: NodeJS.Timeout;
+        flash?: NodeJS.Timeout;
+        icon?: NodeJS.Timeout;
+    }>({});
 
     // Countdown timer
     useEffect(() => {
@@ -293,6 +308,76 @@ export const FuturisticAlienHero = () => {
         const interval = setInterval(updateCountdown, 1000);
         
         return () => clearInterval(interval);
+    }, []);
+
+    // Glitch effects controller
+    useEffect(() => {
+        const originalText = 'Awaits';
+        const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+        
+        // Title RGB glitch (every 3-8 seconds)
+        const scheduleTitleGlitch = () => {
+            const delay = 3000 + Math.random() * 5000;
+            glitchTimersRef.current.title = setTimeout(() => {
+                setTitleGlitch(true);
+                setTimeout(() => setTitleGlitch(false), 200);
+                scheduleTitleGlitch();
+            }, delay);
+        };
+        
+        // Subtitle corruption (every 5-10 seconds)
+        const scheduleSubtitleGlitch = () => {
+            const delay = 5000 + Math.random() * 5000;
+            glitchTimersRef.current.subtitle = setTimeout(() => {
+                // Corrupt 1-2 random characters
+                const numToCorrupt = Math.floor(Math.random() * 2) + 1;
+                let corruptedText = originalText;
+                
+                for (let i = 0; i < numToCorrupt; i++) {
+                    const pos = Math.floor(Math.random() * originalText.length);
+                    const glitchChar = glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                    corruptedText = corruptedText.substring(0, pos) + glitchChar + corruptedText.substring(pos + 1);
+                }
+                
+                setSubtitleText(corruptedText);
+                setTimeout(() => setSubtitleText(originalText), 300);
+                scheduleSubtitleGlitch();
+            }, delay);
+        };
+        
+        // Screen flash (every 8-15 seconds)
+        const scheduleFlash = () => {
+            const delay = 8000 + Math.random() * 7000;
+            glitchTimersRef.current.flash = setTimeout(() => {
+                setScreenFlash(true);
+                setTimeout(() => setScreenFlash(false), 80);
+                scheduleFlash();
+            }, delay);
+        };
+        
+        // Icon flicker (every 6-12 seconds)
+        const scheduleIconFlicker = () => {
+            const delay = 6000 + Math.random() * 6000;
+            glitchTimersRef.current.icon = setTimeout(() => {
+                const iconIndex = Math.floor(Math.random() * 4);
+                setIconFlicker(iconIndex);
+                setTimeout(() => setIconFlicker(null), 100);
+                scheduleIconFlicker();
+            }, delay);
+        };
+        
+        // Start all glitch effects
+        scheduleTitleGlitch();
+        scheduleSubtitleGlitch();
+        scheduleFlash();
+        scheduleIconFlicker();
+        
+        // Cleanup
+        return () => {
+            Object.values(glitchTimersRef.current).forEach(timer => {
+                if (timer) clearTimeout(timer);
+            });
+        };
     }, []);
 
     useEffect(() => {
@@ -449,6 +534,13 @@ export const FuturisticAlienHero = () => {
         // --- Animation Loop ---
         const clock = new THREE.Clock();
         let animationFrameId: number;
+        
+        // Glitch timing variables
+        let binaryGlitchTime = 0;
+        let artifactGlitchTime = 0;
+        let artifactOriginalPosition = { x: 0, y: 0, z: 0 };
+        let isArtifactGlitching = false;
+        
         const animate = () => {
             animationFrameId = requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
@@ -461,6 +553,85 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.x = 0.1 * elapsedTime;
 
             nebula.rotation.y += 0.0002;
+
+            // Binary digit glitch (every 2-5 seconds)
+            if (elapsedTime - binaryGlitchTime > 2 + Math.random() * 3) {
+                binaryGlitchTime = elapsedTime;
+                const numToGlitch = Math.floor(Math.random() * 6) + 5;
+                const indicesToGlitch: number[] = [];
+                
+                for (let i = 0; i < numToGlitch; i++) {
+                    indicesToGlitch.push(Math.floor(Math.random() * binarySprites.length));
+                }
+                
+                // Rapid flip effect
+                let flipCount = 0;
+                const flipInterval = setInterval(() => {
+                    indicesToGlitch.forEach(index => {
+                        const sprite = binarySprites[index];
+                        const currentDigit = Math.random() > 0.5 ? '1' : '0';
+                        const newTexture = createTextTexture(currentDigit);
+                        sprite.material.map = newTexture;
+                        sprite.material.needsUpdate = true;
+                        
+                        // Scale pulse during glitch
+                        const scale = 0.15 + Math.random() * 0.1;
+                        sprite.scale.set(scale, scale, 1);
+                    });
+                    
+                    flipCount++;
+                    if (flipCount >= 8) {
+                        clearInterval(flipInterval);
+                        // Reset scales
+                        indicesToGlitch.forEach(index => {
+                            binarySprites[index].scale.set(0.1, 0.1, 1);
+                        });
+                    }
+                }, 30);
+            }
+            
+            // Artifact position glitch (every 10-20 seconds)
+            if (!isArtifactGlitching && elapsedTime - artifactGlitchTime > 10 + Math.random() * 10) {
+                artifactGlitchTime = elapsedTime;
+                isArtifactGlitching = true;
+                
+                // Store original position
+                artifactOriginalPosition = {
+                    x: artifact.position.x,
+                    y: artifact.position.y,
+                    z: artifact.position.z
+                };
+                
+                // Random jump
+                artifact.position.x += (Math.random() - 0.5) * 0.5;
+                artifact.position.y += (Math.random() - 0.5) * 0.5;
+                artifact.position.z += (Math.random() - 0.5) * 0.2;
+                
+                // Return with elastic easing
+                setTimeout(() => {
+                    const returnDuration = 100;
+                    const startTime = Date.now();
+                    const startPos = { ...artifact.position };
+                    
+                    const returnInterval = setInterval(() => {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / returnDuration, 1);
+                        
+                        // Elastic easing out
+                        const easeProgress = progress === 1 ? 1 : 
+                            1 - Math.pow(2, -10 * progress) * Math.sin((progress * 10 - 0.75) * (2 * Math.PI) / 3);
+                        
+                        artifact.position.x = startPos.x + (artifactOriginalPosition.x - startPos.x) * easeProgress;
+                        artifact.position.y = startPos.y + (artifactOriginalPosition.y - startPos.y) * easeProgress;
+                        artifact.position.z = startPos.z + (artifactOriginalPosition.z - startPos.z) * easeProgress;
+                        
+                        if (progress >= 1) {
+                            clearInterval(returnInterval);
+                            isArtifactGlitching = false;
+                        }
+                    }, 16);
+                }, 100);
+            }
 
             // Animate binary digits
             binaryGroup.rotation.y += 0.0001;
@@ -532,19 +703,23 @@ export const FuturisticAlienHero = () => {
     };
 
     return (
-        <div className="relative h-screen w-full overflow-hidden bg-black" style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}>
+        <div className="relative h-screen w-full overflow-hidden bg-black scanline-overlay" style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}>
+            {/* Screen flash overlay */}
+            {screenFlash && (
+                <div className="absolute inset-0 bg-white pointer-events-none z-50" style={{ opacity: 0.15 }} />
+            )}
             <canvas ref={mountRef} className="absolute top-0 left-0 w-full h-full z-0" />
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4">
                     <motion.h1
-                        className="font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white"
+                        className={`font-exo text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white ${titleGlitch ? 'glitch-active' : ''}`}
                         style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
                             A New World
                         </motion.span>
                         <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-4">
-                            Awaits
+                            {subtitleText}
                         </motion.span>
                     </motion.h1>
                     <motion.div 
@@ -597,7 +772,7 @@ export const FuturisticAlienHero = () => {
                                 href={social.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="transition-transform hover:scale-110"
+                                className={`transition-transform hover:scale-110 ${iconFlicker === idx ? 'icon-flicker' : ''}`}
                                 style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
                                 aria-label={social.label}
                             >
@@ -663,8 +838,10 @@ export const FuturisticAlienHero = () => {
                             rel="noopener noreferrer"
                             className="w-full max-w-[100px] transition-transform hover:scale-105"
                             style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
+                            onMouseEnter={() => setButtonGlitch(true)}
+                            onMouseLeave={() => setButtonGlitch(false)}
                         >
-                            <div className="relative h-full rounded-md border-[0.75px] border-border p-2">
+                            <div className={`relative h-full rounded-md border-[0.75px] border-border p-2 ${buttonGlitch ? 'glitch-jitter' : ''}`}>
                                 <GlowingEffect
                                     spread={80}
                                     glow={true}
