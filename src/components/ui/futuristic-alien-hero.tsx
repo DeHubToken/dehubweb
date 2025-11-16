@@ -780,25 +780,25 @@ export const FuturisticAlienHero = () => {
                         className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8 font-exo relative"
                     >
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.days : timeRemaining.days}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.days}</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.hours : timeRemaining.hours}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.hours}</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.minutes : timeRemaining.minutes}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.minutes}</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
+                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
                                 {masterGlitch ? glitchedCountdown.seconds : timeRemaining.seconds}
                             </div>
                             <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.seconds}</div>
@@ -814,7 +814,7 @@ export const FuturisticAlienHero = () => {
                             className="absolute left-1/2 -translate-x-1/2 mt-2"
                             style={{ top: 'calc(100% + 0.5rem)' }}
                         >
-                            <span className="text-white/80 text-xs md:text-sm uppercase tracking-widest font-exo font-thin" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.6)' }}>
+                            <span className="text-white/80 text-xs md:text-sm uppercase tracking-widest font-exo font-thin" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.54)' }}>
                                 Countdown Starts Soon
                             </span>
                         </motion.div>
