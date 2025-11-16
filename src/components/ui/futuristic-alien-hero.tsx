@@ -334,25 +334,13 @@ export const FuturisticAlienHero = () => {
                 const cycleInterval = setInterval(() => {
                     cycleCount++;
                     
-                    // Glitch counter numbers
-                    const glitchType = Math.random();
-                    if (glitchType < 0.5) {
-                        // Binary strings
-                        setGlitchedCountdown({
-                            days: binaryChars[Math.floor(Math.random() * binaryChars.length)],
-                            hours: binaryChars[Math.floor(Math.random() * binaryChars.length)],
-                            minutes: binaryChars[Math.floor(Math.random() * binaryChars.length)],
-                            seconds: binaryChars[Math.floor(Math.random() * binaryChars.length)]
-                        });
-                    } else {
-                        // Symbol characters
-                        setGlitchedCountdown({
-                            days: symbolChars[Math.floor(Math.random() * symbolChars.length)],
-                            hours: symbolChars[Math.floor(Math.random() * symbolChars.length)],
-                            minutes: symbolChars[Math.floor(Math.random() * symbolChars.length)],
-                            seconds: symbolChars[Math.floor(Math.random() * symbolChars.length)]
-                        });
-                    }
+                    // Glitch counter numbers with random countdown values
+                    setGlitchedCountdown({
+                        days: String(Math.floor(Math.random() * 100)).padStart(2, '0'),
+                        hours: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
+                        minutes: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
+                        seconds: String(Math.floor(Math.random() * 60)).padStart(2, '0')
+                    });
                     
                     // Glitch labels
                     setGlitchedLabels({
