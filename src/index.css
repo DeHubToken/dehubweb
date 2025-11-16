@@ -156,42 +156,6 @@ All colors MUST be HSL.
     }
   }
 
-  @keyframes flash {
-    0%, 100% {
-      opacity: 0;
-    }
-    50% {
-      opacity: 0.15;
-    }
-  }
-
-  @keyframes glitch-jitter {
-    0%, 100% {
-      transform: translate(0, 0);
-    }
-    20% {
-      transform: translate(-1px, 1px);
-    }
-    40% {
-      transform: translate(1px, -1px);
-    }
-    60% {
-      transform: translate(-1px, -1px);
-    }
-    80% {
-      transform: translate(1px, 1px);
-    }
-  }
-
-  @keyframes icon-flicker {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.3;
-    }
-  }
-
   /* Scanline overlay */
   .scanline-overlay::before {
     content: '';
@@ -215,14 +179,6 @@ All colors MUST be HSL.
   .glitch-active {
     animation: glitch-rgb 0.2s ease-in-out;
   }
-
-  .glitch-jitter {
-    animation: glitch-jitter 0.1s ease-in-out;
-  }
-
-.icon-flicker {
-  animation: icon-flicker 0.1s ease-in-out;
-}
 
 @keyframes corruption-flicker {
   0%, 100% { opacity: 0.3; }
