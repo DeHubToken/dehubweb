@@ -853,7 +853,7 @@ export const FuturisticAlienHero = () => {
                                         width="36"
                                         height="36"
                                         style={{
-                                            filter: 'brightness(0) saturate(100%) invert(100%) drop-shadow(0 0 20px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 40px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 60px rgba(255, 255, 255, 0.4))'
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
                                     />
                                 )}
