@@ -560,44 +560,6 @@ export const FuturisticAlienHero = () => {
         const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
 
-        // --- Binary Digits (0s and 1s) ---
-        const createTextTexture = (text: string): THREE.CanvasTexture => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 64;
-            canvas.height = 64;
-            const ctx = canvas.getContext('2d')!;
-            ctx.font = 'Bold 48px monospace';
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(text, 32, 32);
-            return new THREE.CanvasTexture(canvas);
-        };
-
-        const binaryGroup = new THREE.Group();
-        const binarySprites: THREE.Sprite[] = [];
-        
-        for (let i = 0; i < 200; i++) {
-            const digit = Math.random() > 0.5 ? '1' : '0';
-            const texture = createTextTexture(digit);
-            const spriteMaterial = new THREE.SpriteMaterial({
-                map: texture,
-                transparent: true,
-                opacity: 0.7,
-                blending: THREE.AdditiveBlending
-            });
-            const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(0.1, 0.1, 1);
-            sprite.position.set(
-                (Math.random() - 0.5) * 20,
-                (Math.random() - 0.5) * 20,
-                (Math.random() - 0.5) * 20
-            );
-            (sprite as any).velocity = (Math.random() - 0.5) * 0.002;
-            binarySprites.push(sprite);
-            binaryGroup.add(sprite);
-        }
-        scene.add(binaryGroup);
 
         // --- Mouse/Touch Interaction ---
         let mouseX = 0, mouseY = 0;
@@ -647,7 +609,6 @@ export const FuturisticAlienHero = () => {
         let animationFrameId: number;
         
         // Glitch timing variables
-        let binaryGlitchTime = 0;
         let artifactGlitchTime = 0;
         let artifactOriginalPosition = { x: 0, y: 0, z: 0 };
         let isArtifactGlitching = false;
@@ -665,42 +626,6 @@ export const FuturisticAlienHero = () => {
 
             nebula.rotation.y += 0.0002;
 
-            // Binary digit glitch (every 2-5 seconds)
-            if (elapsedTime - binaryGlitchTime > 2 + Math.random() * 3) {
-                binaryGlitchTime = elapsedTime;
-                const numToGlitch = Math.floor(Math.random() * 6) + 5;
-                const indicesToGlitch: number[] = [];
-                
-                for (let i = 0; i < numToGlitch; i++) {
-                    indicesToGlitch.push(Math.floor(Math.random() * binarySprites.length));
-                }
-                
-                // Rapid flip effect
-                let flipCount = 0;
-                const flipInterval = setInterval(() => {
-                    indicesToGlitch.forEach(index => {
-                        const sprite = binarySprites[index];
-                        const currentDigit = Math.random() > 0.5 ? '1' : '0';
-                        const newTexture = createTextTexture(currentDigit);
-                        sprite.material.map = newTexture;
-                        sprite.material.needsUpdate = true;
-                        
-                        // Scale pulse during glitch
-                        const scale = 0.1 + Math.random() * 0.02;
-                        sprite.scale.set(scale, scale, 1);
-                    });
-                    
-                    flipCount++;
-                    if (flipCount >= 8) {
-                        clearInterval(flipInterval);
-                        // Reset scales
-                        indicesToGlitch.forEach(index => {
-                            binarySprites[index].scale.set(0.1, 0.1, 1);
-                        });
-                    }
-                }, 30);
-            }
-            
             // Artifact position glitch (every 10-20 seconds)
             if (!isArtifactGlitching && elapsedTime - artifactGlitchTime > 10 + Math.random() * 10) {
                 artifactGlitchTime = elapsedTime;
@@ -744,22 +669,6 @@ export const FuturisticAlienHero = () => {
                 }, 100);
             }
 
-            // Animate binary digits
-            binaryGroup.rotation.y += 0.0001;
-            binarySprites.forEach((sprite, index) => {
-                sprite.position.y += (sprite as any).velocity;
-                sprite.rotation.z += 0.001;
-                
-                // Reset position if out of bounds
-                if (sprite.position.y > 10) {
-                    sprite.position.y = -10;
-                } else if (sprite.position.y < -10) {
-                    sprite.position.y = 10;
-                }
-                
-                // Subtle pulsing effect
-                sprite.material.opacity = 0.5 + Math.sin(elapsedTime * 2 + index) * 0.3;
-            });
 
             const positions = artifact.geometry.attributes.position;
             const originalPositions = artifact.geometry.attributes.originalPosition as THREE.BufferAttribute;
@@ -792,10 +701,6 @@ export const FuturisticAlienHero = () => {
             artifactMaterial.dispose();
             nebulaGeometry.dispose();
             nebulaMaterial.dispose();
-            binarySprites.forEach(sprite => {
-                sprite.material.map?.dispose();
-                sprite.material.dispose();
-            });
         };
     }, []);
 
