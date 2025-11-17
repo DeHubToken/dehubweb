@@ -847,19 +847,15 @@ export const FuturisticAlienHero = () => {
                                     />
                                 )}
                                 {social.icon === "twitter" && (
-                                    <div style={{
-                                        filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 40px rgba(255, 255, 255, 0.5))'
-                                    }}>
-                                        <img 
-                                            src={xLogo}
-                                            alt="X (Twitter)"
-                                            width="36"
-                                            height="36"
-                                            style={{
-                                                filter: 'brightness(0) saturate(100%) invert(100%)'
-                                            }}
-                                        />
-                                    </div>
+                                    <img 
+                                        src={xLogo}
+                                        alt="X (Twitter)"
+                                        width="36"
+                                        height="36"
+                                        style={{
+                                            filter: 'brightness(0) saturate(100%) invert(100%) drop-shadow(0 0 20px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 40px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 60px rgba(255, 255, 255, 0.4))'
+                                        }}
+                                    />
                                 )}
                                 {social.icon === "instagram" && (
                                     <img 
