@@ -722,7 +722,7 @@ export const FuturisticAlienHero = () => {
         <div className="relative h-screen w-full overflow-hidden bg-black scanline-overlay" style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}>
             {/* Pixel corruption overlay */}
             {showPixelCorruption && (
-                <div className="absolute inset-0 pointer-events-none z-50 pixel-corruption">
+                <div className="fixed inset-0 pointer-events-none z-50 pixel-corruption">
                     {Array.from({ length: 50 }).map((_, i) => (
                         <div
                             key={i}
