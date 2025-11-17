@@ -686,7 +686,7 @@ export const FuturisticAlienHero = () => {
                         sprite.material.needsUpdate = true;
                         
                         // Scale pulse during glitch
-                        const scale = 0.15 + Math.random() * 0.1;
+                        const scale = 0.1 + Math.random() * 0.02;
                         sprite.scale.set(scale, scale, 1);
                     });
                     
