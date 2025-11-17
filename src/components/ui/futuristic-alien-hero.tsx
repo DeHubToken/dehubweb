@@ -822,9 +822,9 @@ export const FuturisticAlienHero = () => {
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
-                            { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
-                            { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
                             { icon: "music", url: "https://tiktok.com/@dehub_official", label: "TikTok" },
+                            { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
+                            { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
                         ].map((social, idx) => (
                             <a
                                 key={idx}
