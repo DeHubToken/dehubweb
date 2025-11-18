@@ -1,7 +1,23 @@
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+
 const DeleteAccount = () => {
   return (
     <div className="min-h-screen h-auto overflow-y-auto bg-black text-white fixed inset-0">
       <div className="container mx-auto px-4 py-4 max-w-4xl pb-8">
+        <Button 
+          asChild 
+          variant="ghost" 
+          size="sm" 
+          className="mb-4 text-white/80 hover:text-white"
+        >
+          <Link to="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
+        </Button>
+        
         <h1 className="text-xl font-bold mb-2">Account and Data Deletion</h1>
         
         <p className="text-xs text-white/80 mb-2">
