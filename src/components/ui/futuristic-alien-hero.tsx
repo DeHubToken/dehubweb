@@ -410,6 +410,59 @@ export const FuturisticAlienHero = () => {
         const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
         scene.add(nebula);
 
+        // --- Floating Buzzwords ---
+        const buzzwords = [
+            'DECENTRALIZED',
+            'CENSORSHIP-RESISTANT',
+            'USER OWNED',
+            'FREE SPEECH',
+            'DATA OWNERSHIP'
+        ];
+        const textSprites: THREE.Sprite[] = [];
+        
+        // Create canvas texture for text
+        const createTextSprite = (text: string, size: number) => {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            if (!context) return null;
+            
+            canvas.width = 512;
+            canvas.height = 128;
+            
+            context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            context.font = `bold ${Math.floor(size * 40)}px Arial`;
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                opacity: 0.3,
+                blending: THREE.AdditiveBlending
+            });
+            
+            return new THREE.Sprite(spriteMaterial);
+        };
+        
+        // Create 5 instances of each buzzword at random positions
+        buzzwords.forEach(word => {
+            for (let i = 0; i < 5; i++) {
+                const size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+                const sprite = createTextSprite(word, size);
+                if (sprite) {
+                    sprite.position.set(
+                        (Math.random() - 0.5) * 18,
+                        (Math.random() - 0.5) * 18,
+                        (Math.random() - 0.5) * 18
+                    );
+                    sprite.scale.set(size * 2, size * 0.5, 1);
+                    scene.add(sprite);
+                    textSprites.push(sprite);
+                }
+            }
+        });
 
         // --- Mouse/Touch Interaction ---
         let mouseX = 0, mouseY = 0;
@@ -475,6 +528,11 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.x = 0.1 * elapsedTime;
 
             nebula.rotation.y += 0.0002;
+
+            // Animate text sprites - gentle rotation
+            textSprites.forEach((sprite, index) => {
+                sprite.rotation.z = Math.sin(elapsedTime * 0.2 + index) * 0.1;
+            });
 
             // Artifact position glitch (every 10-20 seconds)
             if (!isArtifactGlitching && elapsedTime - artifactGlitchTime > 10 + Math.random() * 10) {
@@ -551,6 +609,12 @@ export const FuturisticAlienHero = () => {
             artifactMaterial.dispose();
             nebulaGeometry.dispose();
             nebulaMaterial.dispose();
+            textSprites.forEach(sprite => {
+                if (sprite.material.map) {
+                    sprite.material.map.dispose();
+                }
+                sprite.material.dispose();
+            });
         };
     }, []);
 
