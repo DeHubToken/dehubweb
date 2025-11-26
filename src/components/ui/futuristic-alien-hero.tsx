@@ -525,7 +525,7 @@ export const FuturisticAlienHero = () => {
                     (Math.random() - 0.5) * 5,
                     Math.random() * 2 + 1  // In front of globe (z: 1 to 3)
                 );
-                sprite.scale.set(size * 2.875 * 1.035, size * 0.71875 * 1.035, 1); // 3.5% bigger (reduced by 10%)
+                sprite.scale.set(size * 2.875 * 1.15, size * 0.71875 * 1.15, 1); // 15% bigger
                 scene.add(sprite);
                 textSprites.push(sprite);
                 spriteTypes.push('foreground');
@@ -800,20 +800,21 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-6"
+                        className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
                         <a
                             href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="transition-transform hover:scale-105 w-7 sm:w-auto"
+                            className="transition-transform hover:scale-105"
                             style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
                         >
                             <img 
                                 src={googlePlayBadge} 
                                 alt="Get it on Google Play" 
-                                className="h-auto w-full sm:h-[63px] sm:w-auto"
                                 style={{
+                                    height: '63px',
+                                    width: 'auto',
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
                             />
@@ -825,14 +826,15 @@ export const FuturisticAlienHero = () => {
                                     duration: 3000,
                                 });
                             }}
-                            className="transition-transform hover:scale-105 w-7 sm:w-auto"
+                            className="transition-transform hover:scale-105"
                             style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
                         >
                             <img 
                                 src={appStoreBadge} 
                                 alt="Download on the App Store" 
-                                className="h-auto w-full sm:h-[44px] sm:w-auto"
                                 style={{
+                                    height: '44px',
+                                    width: 'auto',
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
                             />
