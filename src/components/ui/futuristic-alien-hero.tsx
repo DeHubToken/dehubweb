@@ -525,7 +525,7 @@ export const FuturisticAlienHero = () => {
                     (Math.random() - 0.5) * 5,
                     Math.random() * 2 + 1  // In front of globe (z: 1 to 3)
                 );
-                sprite.scale.set(size * 2.875 * 1.15, size * 0.71875 * 1.15, 1); // 15% bigger
+                sprite.scale.set(size * 2.875 * 1.035, size * 0.71875 * 1.035, 1); // 3.5% bigger (reduced by 10%)
                 scene.add(sprite);
                 textSprites.push(sprite);
                 spriteTypes.push('foreground');
