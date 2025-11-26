@@ -440,6 +440,7 @@ export const FuturisticAlienHero = () => {
             'DEFI'
         ];
         const textSprites: THREE.Sprite[] = [];
+        const spriteTypes: ('background' | 'foreground')[] = [];
         
         // Create canvas texture for text
         const createTextSprite = (text: string, size: number) => {
@@ -586,7 +587,6 @@ export const FuturisticAlienHero = () => {
         // Buzzword glitch timing variables
         let buzzwordGlitchTime = 0;
         let isBuzzwordGlitching = false;
-        const spriteTypes: ('background' | 'foreground')[] = [];
         
         const animate = () => {
             animationFrameId = requestAnimationFrame(animate);
