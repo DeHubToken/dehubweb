@@ -800,7 +800,7 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4"
+                        className="mt-8 -translate-y-5 md:translate-y-0 flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
                         <a
                             href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
@@ -812,7 +812,7 @@ export const FuturisticAlienHero = () => {
                             <img 
                                 src={googlePlayBadge} 
                                 alt="Get it on Google Play" 
-                                className="h-[94.5px] md:h-[63px] w-auto"
+                                className="h-[111.5px] md:h-[63px] w-auto"
                                 style={{
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
@@ -831,7 +831,7 @@ export const FuturisticAlienHero = () => {
                             <img 
                                 src={appStoreBadge} 
                                 alt="Download on the App Store" 
-                                className="h-[66px] md:h-[44px] w-auto"
+                                className="h-[78px] md:h-[44px] w-auto"
                                 style={{
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
