@@ -438,6 +438,44 @@ export const FuturisticAlienHero = () => {
         const flickeringStars = new THREE.Points(flickerGeometry, flickerMaterial);
         scene.add(flickeringStars);
 
+        // --- Shooting Star ---
+        const tailPointCount = 25;
+        const shootingStarGeometry = new THREE.BufferGeometry();
+        const shootingStarPositions = new Float32Array(tailPointCount * 3);
+        shootingStarGeometry.setAttribute('position', new THREE.BufferAttribute(shootingStarPositions, 3));
+        
+        const shootingStarMaterial = new THREE.LineBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            linewidth: 2
+        });
+        
+        const shootingStarLine = new THREE.Line(shootingStarGeometry, shootingStarMaterial);
+        scene.add(shootingStarLine);
+        
+        // Shooting star head (bright point)
+        const headGeometry = new THREE.SphereGeometry(0.15, 8, 8);
+        const headMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const shootingStarHead = new THREE.Mesh(headGeometry, headMaterial);
+        scene.add(shootingStarHead);
+        
+        // Shooting star state
+        let shootingStarActive = false;
+        let shootingStarProgress = 0;
+        let lastShootingStarTime = 0;
+        let shootingStarStart = new THREE.Vector3();
+        let shootingStarEnd = new THREE.Vector3();
+        const shootingStarDuration = 0.7; // seconds
+
         // --- Alien Artifact & Core ---
         const simplex = new SimplexNoise();
         const artifactGeometry = new THREE.IcosahedronGeometry(1.875, 20);
@@ -707,6 +745,7 @@ export const FuturisticAlienHero = () => {
         const animate = () => {
             animationFrameId = requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
+            const delta = clock.getDelta();
 
             camera.position.x += (mouseX - camera.position.x) * 0.05;
             camera.position.y += (-mouseY - camera.position.y) * 0.05;
@@ -736,6 +775,87 @@ export const FuturisticAlienHero = () => {
                 flickerGeometry.attributes.size.setX(i, finalSize);
             });
             flickerGeometry.attributes.size.needsUpdate = true;
+
+            // Shooting star logic - trigger every 20 seconds
+            if (elapsedTime - lastShootingStarTime > 20 && !shootingStarActive) {
+                shootingStarActive = true;
+                shootingStarProgress = 0;
+                lastShootingStarTime = elapsedTime;
+                
+                // Random start position (upper portion of scene)
+                const startAngle = Math.random() * Math.PI * 2;
+                const startRadius = 15 + Math.random() * 5;
+                shootingStarStart.set(
+                    Math.cos(startAngle) * startRadius,
+                    10 + Math.random() * 5, // Upper area
+                    Math.sin(startAngle) * startRadius
+                );
+                
+                // End position (diagonal downward)
+                const angle = Math.random() * Math.PI / 3 + Math.PI / 6; // 30-60 degrees
+                const distance = 25 + Math.random() * 10;
+                shootingStarEnd.set(
+                    shootingStarStart.x + Math.cos(startAngle + Math.PI / 4) * distance,
+                    shootingStarStart.y - distance * 0.7, // Downward
+                    shootingStarStart.z + Math.sin(startAngle + Math.PI / 4) * distance
+                );
+            }
+            
+            // Animate shooting star
+            if (shootingStarActive) {
+                shootingStarProgress += delta / shootingStarDuration;
+                
+                if (shootingStarProgress >= 1) {
+                    shootingStarActive = false;
+                    shootingStarMaterial.opacity = 0;
+                    headMaterial.opacity = 0;
+                } else {
+                    // Current position
+                    const currentPos = new THREE.Vector3().lerpVectors(
+                        shootingStarStart,
+                        shootingStarEnd,
+                        shootingStarProgress
+                    );
+                    
+                    // Update head position
+                    shootingStarHead.position.copy(currentPos);
+                    
+                    // Update tail points
+                    const positions = shootingStarGeometry.attributes.position.array as Float32Array;
+                    const tailLength = 3; // Length of tail trail
+                    
+                    for (let i = 0; i < tailPointCount; i++) {
+                        const tailProgress = shootingStarProgress - (i / tailPointCount) * 0.15;
+                        if (tailProgress >= 0) {
+                            const tailPos = new THREE.Vector3().lerpVectors(
+                                shootingStarStart,
+                                shootingStarEnd,
+                                tailProgress
+                            );
+                            positions[i * 3] = tailPos.x;
+                            positions[i * 3 + 1] = tailPos.y;
+                            positions[i * 3 + 2] = tailPos.z;
+                        } else {
+                            // Hide points that haven't started yet
+                            positions[i * 3] = shootingStarStart.x;
+                            positions[i * 3 + 1] = shootingStarStart.y;
+                            positions[i * 3 + 2] = shootingStarStart.z;
+                        }
+                    }
+                    shootingStarGeometry.attributes.position.needsUpdate = true;
+                    
+                    // Fade in/out
+                    let opacity = 1;
+                    if (shootingStarProgress < 0.1) {
+                        opacity = shootingStarProgress / 0.1; // Fade in
+                    } else if (shootingStarProgress > 0.85) {
+                        opacity = (1 - shootingStarProgress) / 0.15; // Fade out
+                    }
+                    
+                    shootingStarMaterial.opacity = opacity * 0.8;
+                    headMaterial.opacity = opacity;
+                }
+            }
 
             // Animate text sprites - constant CRT static effect
             textSprites.forEach((sprite, index) => {
