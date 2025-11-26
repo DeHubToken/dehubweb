@@ -438,43 +438,68 @@ export const FuturisticAlienHero = () => {
         const flickeringStars = new THREE.Points(flickerGeometry, flickerMaterial);
         scene.add(flickeringStars);
 
-        // --- Shooting Star ---
+        // --- Shooting Stars (Multiple) ---
         const tailPointCount = 25;
-        const shootingStarGeometry = new THREE.BufferGeometry();
-        const shootingStarPositions = new Float32Array(tailPointCount * 3);
-        shootingStarGeometry.setAttribute('position', new THREE.BufferAttribute(shootingStarPositions, 3));
-        
-        const shootingStarMaterial = new THREE.LineBasicMaterial({
-            color: 0x88ffff, // Cyan tint
-            transparent: true,
-            opacity: 0,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false,
-            linewidth: 2
-        });
-        
-        const shootingStarLine = new THREE.Line(shootingStarGeometry, shootingStarMaterial);
-        scene.add(shootingStarLine);
-        
-        // Shooting star head (bright point)
-        const headGeometry = new THREE.SphereGeometry(0.25, 8, 8);
-        const headMaterial = new THREE.MeshBasicMaterial({
-            color: 0x88ffff, // Cyan tint
-            transparent: true,
-            opacity: 0,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-        const shootingStarHead = new THREE.Mesh(headGeometry, headMaterial);
-        scene.add(shootingStarHead);
-        
-        // Shooting star state
-        let shootingStarActive = false;
-        let shootingStarProgress = 0;
-        let lastShootingStarTime = 0;
-        let shootingStarStart = new THREE.Vector3();
-        let shootingStarEnd = new THREE.Vector3();
+        const shootingStarCount = 5; // Number of shooting stars that can exist
         const shootingStarDuration = 0.7; // seconds
+        
+        interface ShootingStar {
+            line: THREE.Line;
+            head: THREE.Mesh;
+            lineMaterial: THREE.LineBasicMaterial;
+            headMaterial: THREE.MeshBasicMaterial;
+            geometry: THREE.BufferGeometry;
+            active: boolean;
+            progress: number;
+            start: THREE.Vector3;
+            end: THREE.Vector3;
+        }
+        
+        const shootingStars: ShootingStar[] = [];
+        
+        // Create multiple shooting stars
+        for (let i = 0; i < shootingStarCount; i++) {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(tailPointCount * 3);
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0x88ffff, // Cyan tint
+                transparent: true,
+                opacity: 0,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                linewidth: 2
+            });
+            
+            const line = new THREE.Line(geometry, lineMaterial);
+            scene.add(line);
+            
+            const headGeometry = new THREE.SphereGeometry(0.25, 8, 8);
+            const headMaterial = new THREE.MeshBasicMaterial({
+                color: 0x88ffff, // Cyan tint
+                transparent: true,
+                opacity: 0,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            scene.add(head);
+            
+            shootingStars.push({
+                line,
+                head,
+                lineMaterial,
+                headMaterial,
+                geometry,
+                active: false,
+                progress: 0,
+                start: new THREE.Vector3(),
+                end: new THREE.Vector3()
+            });
+        }
+        
+        let lastShootingStarTime = 0;
 
         // --- Alien Artifact & Core ---
         const simplex = new SimplexNoise();
@@ -779,88 +804,103 @@ export const FuturisticAlienHero = () => {
             flickerGeometry.attributes.size.needsUpdate = true;
 
             // Shooting star logic - trigger every 20 seconds
-            if (elapsedTime - lastShootingStarTime > 20 && !shootingStarActive) {
-                shootingStarActive = true;
-                shootingStarProgress = 0;
+            if (elapsedTime - lastShootingStarTime > 20) {
                 lastShootingStarTime = elapsedTime;
                 
-                console.log('🌠 Shooting star triggered at', elapsedTime);
+                // Spawn 3-5 shooting stars with slight delays
+                const numStars = 3 + Math.floor(Math.random() * 3); // 3-5 stars
+                console.log(`🌠 Spawning ${numStars} shooting stars at`, elapsedTime);
                 
-                // Random start position (closer to camera view)
-                const startAngle = Math.random() * Math.PI * 2;
-                const startRadius = 4 + Math.random() * 4; // Much closer: 4-8 units
-                shootingStarStart.set(
-                    Math.cos(startAngle) * startRadius,
-                    4 + Math.random() * 4, // Upper area, closer: 4-8 units
-                    Math.sin(startAngle) * startRadius
-                );
-                
-                // End position (diagonal downward, closer)
-                const distance = 10 + Math.random() * 5; // Shorter distance
-                shootingStarEnd.set(
-                    shootingStarStart.x + Math.cos(startAngle + Math.PI / 4) * distance,
-                    shootingStarStart.y - distance * 0.7, // Downward
-                    shootingStarStart.z + Math.sin(startAngle + Math.PI / 4) * distance
-                );
-                
-                console.log('Start:', shootingStarStart, 'End:', shootingStarEnd);
-            }
-            
-            // Animate shooting star
-            if (shootingStarActive) {
-                shootingStarProgress += delta / shootingStarDuration;
-                
-                if (shootingStarProgress >= 1) {
-                    shootingStarActive = false;
-                    shootingStarMaterial.opacity = 0;
-                    headMaterial.opacity = 0;
-                } else {
-                    // Current position
-                    const currentPos = new THREE.Vector3().lerpVectors(
-                        shootingStarStart,
-                        shootingStarEnd,
-                        shootingStarProgress
-                    );
-                    
-                    // Update head position
-                    shootingStarHead.position.copy(currentPos);
-                    
-                    // Update tail points
-                    const positions = shootingStarGeometry.attributes.position.array as Float32Array;
-                    const tailLength = 3; // Length of tail trail
-                    
-                    for (let i = 0; i < tailPointCount; i++) {
-                        const tailProgress = shootingStarProgress - (i / tailPointCount) * 0.15;
-                        if (tailProgress >= 0) {
-                            const tailPos = new THREE.Vector3().lerpVectors(
-                                shootingStarStart,
-                                shootingStarEnd,
-                                tailProgress
+                let spawned = 0;
+                for (let i = 0; i < shootingStars.length && spawned < numStars; i++) {
+                    if (!shootingStars[i].active) {
+                        const star = shootingStars[i];
+                        
+                        // Slight delay for each star (0-0.3 seconds)
+                        const delay = spawned * 0.1;
+                        setTimeout(() => {
+                            star.active = true;
+                            star.progress = 0;
+                            
+                            // Random start position (closer to camera view)
+                            const startAngle = Math.random() * Math.PI * 2;
+                            const startRadius = 4 + Math.random() * 4; // 4-8 units
+                            star.start.set(
+                                Math.cos(startAngle) * startRadius,
+                                4 + Math.random() * 4, // Upper area: 4-8 units
+                                Math.sin(startAngle) * startRadius
                             );
-                            positions[i * 3] = tailPos.x;
-                            positions[i * 3 + 1] = tailPos.y;
-                            positions[i * 3 + 2] = tailPos.z;
-                        } else {
-                            // Hide points that haven't started yet
-                            positions[i * 3] = shootingStarStart.x;
-                            positions[i * 3 + 1] = shootingStarStart.y;
-                            positions[i * 3 + 2] = shootingStarStart.z;
-                        }
+                            
+                            // End position (diagonal downward)
+                            const distance = 10 + Math.random() * 5;
+                            star.end.set(
+                                star.start.x + Math.cos(startAngle + Math.PI / 4) * distance,
+                                star.start.y - distance * 0.7,
+                                star.start.z + Math.sin(startAngle + Math.PI / 4) * distance
+                            );
+                        }, delay * 1000);
+                        
+                        spawned++;
                     }
-                    shootingStarGeometry.attributes.position.needsUpdate = true;
-                    
-                    // Fade in/out
-                    let opacity = 1;
-                    if (shootingStarProgress < 0.1) {
-                        opacity = shootingStarProgress / 0.1; // Fade in
-                    } else if (shootingStarProgress > 0.85) {
-                        opacity = (1 - shootingStarProgress) / 0.15; // Fade out
-                    }
-                    
-                    shootingStarMaterial.opacity = opacity; // Full opacity for tail
-                    headMaterial.opacity = opacity;
                 }
             }
+            
+            // Animate all active shooting stars
+            shootingStars.forEach((star) => {
+                if (star.active) {
+                    star.progress += delta / shootingStarDuration;
+                    
+                    if (star.progress >= 1) {
+                        star.active = false;
+                        star.lineMaterial.opacity = 0;
+                        star.headMaterial.opacity = 0;
+                    } else {
+                        // Current position
+                        const currentPos = new THREE.Vector3().lerpVectors(
+                            star.start,
+                            star.end,
+                            star.progress
+                        );
+                        
+                        // Update head position
+                        star.head.position.copy(currentPos);
+                        
+                        // Update tail points
+                        const positions = star.geometry.attributes.position.array as Float32Array;
+                        
+                        for (let i = 0; i < tailPointCount; i++) {
+                            const tailProgress = star.progress - (i / tailPointCount) * 0.15;
+                            if (tailProgress >= 0) {
+                                const tailPos = new THREE.Vector3().lerpVectors(
+                                    star.start,
+                                    star.end,
+                                    tailProgress
+                                );
+                                positions[i * 3] = tailPos.x;
+                                positions[i * 3 + 1] = tailPos.y;
+                                positions[i * 3 + 2] = tailPos.z;
+                            } else {
+                                // Hide points that haven't started yet
+                                positions[i * 3] = star.start.x;
+                                positions[i * 3 + 1] = star.start.y;
+                                positions[i * 3 + 2] = star.start.z;
+                            }
+                        }
+                        star.geometry.attributes.position.needsUpdate = true;
+                        
+                        // Fade in/out
+                        let opacity = 1;
+                        if (star.progress < 0.1) {
+                            opacity = star.progress / 0.1; // Fade in
+                        } else if (star.progress > 0.85) {
+                            opacity = (1 - star.progress) / 0.15; // Fade out
+                        }
+                        
+                        star.lineMaterial.opacity = opacity;
+                        star.headMaterial.opacity = opacity;
+                    }
+                }
+            });
 
             // Animate text sprites - constant CRT static effect
             textSprites.forEach((sprite, index) => {
