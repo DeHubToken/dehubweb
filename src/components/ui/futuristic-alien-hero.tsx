@@ -429,8 +429,8 @@ export const FuturisticAlienHero = () => {
             canvas.width = 512;
             canvas.height = 128;
             
-            context.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            context.font = `bold ${Math.floor(size * 40)}px Arial`;
+            context.fillStyle = 'rgba(255, 255, 255, 1.0)';
+            context.font = `bold ${Math.floor(size * 50)}px Arial`;
             context.textAlign = 'center';
             context.textBaseline = 'middle';
             context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -439,7 +439,7 @@ export const FuturisticAlienHero = () => {
             const spriteMaterial = new THREE.SpriteMaterial({
                 map: texture,
                 transparent: true,
-                opacity: 0.3,
+                opacity: 0.7,
                 blending: THREE.AdditiveBlending
             });
             
@@ -453,9 +453,9 @@ export const FuturisticAlienHero = () => {
                 const sprite = createTextSprite(word, size);
                 if (sprite) {
                     sprite.position.set(
-                        (Math.random() - 0.5) * 18,
-                        (Math.random() - 0.5) * 18,
-                        (Math.random() - 0.5) * 18
+                        (Math.random() - 0.5) * 12,
+                        (Math.random() - 0.5) * 12,
+                        (Math.random() - 0.5) * 12
                     );
                     sprite.scale.set(size * 2, size * 0.5, 1);
                     scene.add(sprite);
