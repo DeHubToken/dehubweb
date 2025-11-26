@@ -853,7 +853,7 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 -translate-y-[70px] md:translate-y-0 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
+                        className="mt-8 -translate-y-[120px] md:translate-y-0 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
                         <a
                             href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
@@ -897,7 +897,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[45px] md:translate-y-0"
+                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[95px] md:translate-y-0"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
