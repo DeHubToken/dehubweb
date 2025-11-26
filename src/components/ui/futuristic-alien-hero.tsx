@@ -445,7 +445,7 @@ export const FuturisticAlienHero = () => {
         shootingStarGeometry.setAttribute('position', new THREE.BufferAttribute(shootingStarPositions, 3));
         
         const shootingStarMaterial = new THREE.LineBasicMaterial({
-            color: 0xffffff,
+            color: 0x88ffff, // Cyan tint
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
@@ -457,9 +457,9 @@ export const FuturisticAlienHero = () => {
         scene.add(shootingStarLine);
         
         // Shooting star head (bright point)
-        const headGeometry = new THREE.SphereGeometry(0.15, 8, 8);
+        const headGeometry = new THREE.SphereGeometry(0.25, 8, 8);
         const headMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0x88ffff, // Cyan tint
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
@@ -732,6 +732,7 @@ export const FuturisticAlienHero = () => {
         // --- Animation Loop ---
         const clock = new THREE.Clock();
         let animationFrameId: number;
+        let previousTime = 0;
         
         // Glitch timing variables
         let artifactGlitchTime = 0;
@@ -745,7 +746,8 @@ export const FuturisticAlienHero = () => {
         const animate = () => {
             animationFrameId = requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
-            const delta = clock.getDelta();
+            const delta = elapsedTime - previousTime;
+            previousTime = elapsedTime;
 
             camera.position.x += (mouseX - camera.position.x) * 0.05;
             camera.position.y += (-mouseY - camera.position.y) * 0.05;
@@ -782,23 +784,26 @@ export const FuturisticAlienHero = () => {
                 shootingStarProgress = 0;
                 lastShootingStarTime = elapsedTime;
                 
-                // Random start position (upper portion of scene)
+                console.log('🌠 Shooting star triggered at', elapsedTime);
+                
+                // Random start position (closer to camera view)
                 const startAngle = Math.random() * Math.PI * 2;
-                const startRadius = 15 + Math.random() * 5;
+                const startRadius = 4 + Math.random() * 4; // Much closer: 4-8 units
                 shootingStarStart.set(
                     Math.cos(startAngle) * startRadius,
-                    10 + Math.random() * 5, // Upper area
+                    4 + Math.random() * 4, // Upper area, closer: 4-8 units
                     Math.sin(startAngle) * startRadius
                 );
                 
-                // End position (diagonal downward)
-                const angle = Math.random() * Math.PI / 3 + Math.PI / 6; // 30-60 degrees
-                const distance = 25 + Math.random() * 10;
+                // End position (diagonal downward, closer)
+                const distance = 10 + Math.random() * 5; // Shorter distance
                 shootingStarEnd.set(
                     shootingStarStart.x + Math.cos(startAngle + Math.PI / 4) * distance,
                     shootingStarStart.y - distance * 0.7, // Downward
                     shootingStarStart.z + Math.sin(startAngle + Math.PI / 4) * distance
                 );
+                
+                console.log('Start:', shootingStarStart, 'End:', shootingStarEnd);
             }
             
             // Animate shooting star
@@ -852,7 +857,7 @@ export const FuturisticAlienHero = () => {
                         opacity = (1 - shootingStarProgress) / 0.15; // Fade out
                     }
                     
-                    shootingStarMaterial.opacity = opacity * 0.8;
+                    shootingStarMaterial.opacity = opacity; // Full opacity for tail
                     headMaterial.opacity = opacity;
                 }
             }
