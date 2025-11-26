@@ -930,28 +930,27 @@ export const FuturisticAlienHero = () => {
                                     </div>
                                 )}
                             </a>
-                        ))}
-                    </motion.div>
+                    ))}
+                </motion.div>
+            </div>
 
-
-                    {/* Logo at bottom */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 3.5 }}
-                        className="mt-8 flex justify-center translate-y-[205px] md:translate-y-[2px]"
-                    >
-                        <img 
-                            src={dehubLogo} 
-                            alt="DeHub Logo" 
-                            className="h-6 w-auto opacity-100"
-                            style={{
-                                filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.5))'
-                            }}
-                        />
-                    </motion.div>
-                </div>
-            </section>
+            {/* Logo at bottom */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 3.5 }}
+                className="absolute bottom-[20px] left-1/2 -translate-x-1/2 md:relative md:bottom-auto md:left-auto md:translate-x-0 md:mt-8 md:flex md:justify-center z-20"
+            >
+                <img 
+                    src={dehubLogo} 
+                    alt="DeHub Logo" 
+                    className="h-6 w-auto opacity-100"
+                    style={{
+                        filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.5))'
+                    }}
+                />
+            </motion.div>
+        </section>
         </div>
     );
 };
