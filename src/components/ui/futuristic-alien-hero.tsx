@@ -601,9 +601,21 @@ export const FuturisticAlienHero = () => {
 
             nebula.rotation.y += 0.0002;
 
-            // Animate text sprites - gentle rotation
+            // Animate text sprites - constant CRT static effect
             textSprites.forEach((sprite, index) => {
+                // Subtle rotation wobble
                 sprite.rotation.z = Math.sin(elapsedTime * 0.2 + index) * 0.1;
+                
+                // CRT static effect - constant subtle flickering
+                const baseOpacity = spriteTypes[index] === 'foreground' ? 0.8 : 0.7;
+                const staticNoise = Math.random() * 0.15; // Random noise 0-15%
+                const scanlineFlicker = Math.sin(elapsedTime * 60 + index * 0.5) * 0.05; // Fast scanline-like pulse
+                sprite.material.opacity = baseOpacity - staticNoise + scanlineFlicker;
+                
+                // Tiny position jitter (like signal interference)
+                const jitterAmount = 0.008; // Very subtle
+                sprite.position.x += (Math.random() - 0.5) * jitterAmount;
+                sprite.position.y += (Math.random() - 0.5) * jitterAmount;
             });
 
             // Buzzword glitch effect (every 5-10 seconds)
