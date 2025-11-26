@@ -840,7 +840,7 @@ export const FuturisticAlienHero = () => {
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
                             {masterGlitch ? corruptedTitle : 'A New World'}
                         </motion.span>
-                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block -mt-2 md:mt-2">
+                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block -mt-6 md:mt-2">
                             {masterGlitch ? corruptedSubtitle : 'Awaits'}
                         </motion.span>
                     </motion.h1>
