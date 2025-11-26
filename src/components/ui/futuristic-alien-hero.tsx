@@ -857,7 +857,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 flex items-center justify-center gap-6"
+                        className="mt-8 translate-x-[5px] flex items-center justify-center gap-6"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
