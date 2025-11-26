@@ -952,13 +952,13 @@ export const FuturisticAlienHero = () => {
                                 )}
                                 {social.icon === "scroll" && (
                                     <div 
-                                        className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center"
+                                        className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center -translate-y-[2px]"
                                         style={{
-                                            fontSize: '28px',
+                                            fontSize: '24px',
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
                                     >
-                                        <span className="md:text-[36px]">📜</span>
+                                        <span className="md:text-[32px]">📜</span>
                                     </div>
                                 )}
                             </a>
