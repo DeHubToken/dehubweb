@@ -812,9 +812,8 @@ export const FuturisticAlienHero = () => {
                             <img 
                                 src={googlePlayBadge} 
                                 alt="Get it on Google Play" 
+                                className="h-[94.5px] md:h-[63px] w-auto"
                                 style={{
-                                    height: '63px',
-                                    width: 'auto',
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
                             />
@@ -832,9 +831,8 @@ export const FuturisticAlienHero = () => {
                             <img 
                                 src={appStoreBadge} 
                                 alt="Download on the App Store" 
+                                className="h-[66px] md:h-[44px] w-auto"
                                 style={{
-                                    height: '44px',
-                                    width: 'auto',
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
                             />
