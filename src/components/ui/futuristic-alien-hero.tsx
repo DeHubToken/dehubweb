@@ -4,11 +4,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { GlowingEffect } from './glowing-effect';
+import { toast } from 'sonner';
 import tiktokLogo from '@/assets/tiktok-logo.png';
 import instagramLogo from '@/assets/instagram-logo.png';
 import xLogo from '@/assets/x-logo.png';
 import telegramLogo from '@/assets/telegram-logo.png';
 import dehubLogo from '@/assets/dehub-logo.png';
+import googlePlayBadge from '@/assets/google-play-badge.png';
+import appStoreBadge from '@/assets/app-store-badge.svg';
 
 // --- Simplex Noise Library ---
 // Included directly to resolve dependency issues in this environment.
@@ -267,137 +270,20 @@ class SimplexNoise {
 // Main Hero Component
 export const FuturisticAlienHero = () => {
     const mountRef = useRef<HTMLCanvasElement>(null);
-    const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     
-    // Master synchronized glitch states (every 5 seconds)
+    // Glitch states for title
     const [masterGlitch, setMasterGlitch] = useState(false);
-    const [glitchedCountdown, setGlitchedCountdown] = useState({ days: '', hours: '', minutes: '', seconds: '' });
-    const [glitchedLabels, setGlitchedLabels] = useState({ days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds' });
     const [corruptedTitle, setCorruptedTitle] = useState('A New World');
     const [corruptedSubtitle, setCorruptedSubtitle] = useState('Awaits');
     const [showPixelCorruption, setShowPixelCorruption] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-    
-    // Ticking animation state
-    const [tickingNumbers, setTickingNumbers] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    const [isTicking, setIsTicking] = useState(false);
     
     // Glitch timing ref
     const glitchTimerRef = useRef<NodeJS.Timeout>();
 
-    // Countdown timer
-    useEffect(() => {
-        const targetDate = new Date('2025-12-10T00:00:00Z').getTime();
-        
-        const updateCountdown = () => {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-            
-            if (distance > 0) {
-                setTimeRemaining({
-                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-                    seconds: Math.floor((distance % (1000 * 60)) / 1000)
-                });
-            } else {
-                setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-            }
-        };
-        
-        updateCountdown();
-        const interval = setInterval(updateCountdown, 1000);
-        
-        return () => clearInterval(interval);
-    }, []);
-
-    // Ticking animation effect (on mount and after glitch)
-    useEffect(() => {
-        const runTickAnimation = () => {
-            setIsTicking(true);
-            const target = { ...timeRemaining };
-            const startValues = {
-                days: Math.max(0, target.days - 3),
-                hours: Math.max(0, target.hours - 5),
-                minutes: Math.max(0, target.minutes - 10),
-                seconds: Math.max(0, target.seconds - 15)
-            };
-            
-            setTickingNumbers(startValues);
-            
-            const duration = 1500; // 1.5 seconds
-            const steps = 30;
-            const interval = duration / steps;
-            let step = 0;
-            
-            const tickInterval = setInterval(() => {
-                step++;
-                const progress = step / steps;
-                
-                setTickingNumbers({
-                    days: Math.round(startValues.days + (target.days - startValues.days) * progress),
-                    hours: Math.round(startValues.hours + (target.hours - startValues.hours) * progress),
-                    minutes: Math.round(startValues.minutes + (target.minutes - startValues.minutes) * progress),
-                    seconds: Math.round(startValues.seconds + (target.seconds - startValues.seconds) * progress)
-                });
-                
-                if (step >= steps) {
-                    clearInterval(tickInterval);
-                    setIsTicking(false);
-                }
-            }, interval);
-        };
-        
-        // Run on mount after a short delay
-        const mountTimeout = setTimeout(() => runTickAnimation(), 500);
-        
-        return () => clearTimeout(mountTimeout);
-    }, []);
-
-    // Trigger ticking animation after glitch ends
-    const triggerPostGlitchTick = () => {
-        setTimeout(() => {
-            setIsTicking(true);
-            const target = { ...timeRemaining };
-            const startValues = {
-                days: Math.min(99, target.days + 2),
-                hours: Math.min(23, target.hours + 3),
-                minutes: Math.min(59, target.minutes + 5),
-                seconds: Math.min(59, target.seconds + 8)
-            };
-            
-            setTickingNumbers(startValues);
-            
-            const duration = 1000;
-            const steps = 20;
-            const interval = duration / steps;
-            let step = 0;
-            
-            const tickInterval = setInterval(() => {
-                step++;
-                const progress = step / steps;
-                
-                setTickingNumbers({
-                    days: Math.round(startValues.days + (target.days - startValues.days) * progress),
-                    hours: Math.round(startValues.hours + (target.hours - startValues.hours) * progress),
-                    minutes: Math.round(startValues.minutes + (target.minutes - startValues.minutes) * progress),
-                    seconds: Math.round(startValues.seconds + (target.seconds - startValues.seconds) * progress)
-                });
-                
-                if (step >= steps) {
-                    clearInterval(tickInterval);
-                    setIsTicking(false);
-                }
-            }, interval);
-        }, 100);
-    };
 
     // Master synchronized glitch controller (every 5 seconds)
     useEffect(() => {
-        const binaryChars = ['01010101', '10101010', '00110011', '11001100', '11111111', '00000000'];
-        const symbolChars = ['###', '@@@', '!!!', '???', '$$$', '¥¥¥', '∞∞∞', '◊◊◊', '░░░', '▓▓▓'];
         const glitchChars = ['█', '▓', '▒', '░', '@', '#', '$', '%', '&', '0', '1'];
-        const labelGlitchChars = ['####', '0101', 'ERR!', '!@#$', '????', '$$$', '█████'];
         
         const corruptText = (text: string) => {
             const chars = text.split('');
@@ -415,19 +301,7 @@ export const FuturisticAlienHero = () => {
                 setMasterGlitch(true);
                 setShowPixelCorruption(true);
                 
-                // Set initial glitched values immediately
-                setGlitchedCountdown({
-                    days: String(Math.floor(Math.random() * 30)).padStart(2, '0'),
-                    hours: String(Math.floor(Math.random() * 24)).padStart(2, '0'),
-                    minutes: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
-                    seconds: String(Math.floor(Math.random() * 60)).padStart(2, '0')
-                });
-                setGlitchedLabels({
-                    days: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
-                    hours: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
-                    minutes: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
-                    seconds: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)]
-                });
+                // Corrupt title and subtitle
                 setCorruptedTitle(corruptText('A New World'));
                 setCorruptedSubtitle(corruptText('Awaits'));
                 
@@ -436,52 +310,28 @@ export const FuturisticAlienHero = () => {
                 const cycleInterval = setInterval(() => {
                     cycleCount++;
                     
-                    // Glitch counter numbers with random countdown values (days capped at 29)
-                    setGlitchedCountdown({
-                        days: String(Math.floor(Math.random() * 30)).padStart(2, '0'),
-                        hours: String(Math.floor(Math.random() * 24)).padStart(2, '0'),
-                        minutes: String(Math.floor(Math.random() * 60)).padStart(2, '0'),
-                        seconds: String(Math.floor(Math.random() * 60)).padStart(2, '0')
-                    });
-                    
-                    // Glitch labels
-                    setGlitchedLabels({
-                        days: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
-                        hours: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
-                        minutes: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)],
-                        seconds: labelGlitchChars[Math.floor(Math.random() * labelGlitchChars.length)]
-                    });
-                    
-                    // Corrupt title and subtitle
+                    // Continue corrupting text
                     setCorruptedTitle(corruptText('A New World'));
                     setCorruptedSubtitle(corruptText('Awaits'));
                     
                     if (cycleCount >= 6) {
                         clearInterval(cycleInterval);
-                        // End glitch after 300ms
-                        setTimeout(() => {
-                            setMasterGlitch(false);
-                            setShowPixelCorruption(false);
-                            setCorruptedTitle('A New World');
-                            setCorruptedSubtitle('Awaits');
-                            setGlitchedLabels({ days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds' });
-                            
-                            // Show popup after glitch ends
-                            setShowPopup(true);
-                            setTimeout(() => setShowPopup(false), 2000);
-                            
-                            // Trigger ticking animation after glitch
-                            triggerPostGlitchTick();
-                        }, 50);
                     }
                 }, 50);
                 
+                // End glitch after 300ms
+                setTimeout(() => {
+                    setMasterGlitch(false);
+                    setShowPixelCorruption(false);
+                    setCorruptedTitle('A New World');
+                    setCorruptedSubtitle('Awaits');
+                }, 300);
+                
                 // Schedule next glitch in 5 seconds
-                setTimeout(scheduleMasterGlitch, 5000);
+                scheduleMasterGlitch();
             }, 5000);
         };
         
-        // Start the cycle
         scheduleMasterGlitch();
         
         return () => {
@@ -765,53 +615,50 @@ export const FuturisticAlienHero = () => {
                             {masterGlitch ? corruptedSubtitle : 'Awaits'}
                         </motion.span>
                     </motion.h1>
+                    {/* App Store Buttons */}
                     <motion.div 
                         variants={fadeUpVariants} 
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 flex justify-center gap-4 sm:gap-6 md:gap-8 font-exo relative"
+                        className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
-                        <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.days : (isTicking ? tickingNumbers.days : timeRemaining.days)}
-                            </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.days}</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.hours : (isTicking ? tickingNumbers.hours : timeRemaining.hours)}
-                            </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.hours}</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.minutes : (isTicking ? tickingNumbers.minutes : timeRemaining.minutes)}
-                            </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.minutes}</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.63), 0 0 15px rgba(255, 255, 255, 0.45), 0 0 25px rgba(255, 255, 255, 0.45)' }}>
-                                {masterGlitch ? glitchedCountdown.seconds : (isTicking ? tickingNumbers.seconds : timeRemaining.seconds)}
-                            </div>
-                            <div className="text-xs sm:text-sm md:text-base text-white/70 uppercase tracking-wider mt-1">{glitchedLabels.seconds}</div>
-                        </div>
-                    </motion.div>
-                    
-                    {/* Popup text after glitch */}
-                    {showPopup && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="absolute left-1/2 -translate-x-1/2 mt-2"
-                            style={{ top: 'calc(100% + 0.5rem)' }}
+                        <a
+                            href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-transform hover:scale-105"
+                            style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
                         >
-                            <span className="text-white/80 text-xs md:text-sm uppercase tracking-widest font-exo font-thin" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.54)' }}>
-                                Countdown Starts Soon
-                            </span>
-                        </motion.div>
-                    )}
+                            <img 
+                                src={googlePlayBadge} 
+                                alt="Get it on Google Play" 
+                                className="h-14 w-auto"
+                                style={{
+                                    filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
+                                }}
+                            />
+                        </a>
+                        <button
+                            onClick={() => {
+                                toast.info('Coming Soon', {
+                                    description: 'The iOS app will be available soon!',
+                                    duration: 3000,
+                                });
+                            }}
+                            className="transition-transform hover:scale-105"
+                            style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
+                        >
+                            <img 
+                                src={appStoreBadge} 
+                                alt="Download on the App Store" 
+                                className="h-14 w-auto"
+                                style={{
+                                    filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
+                                }}
+                            />
+                        </button>
+                    </motion.div>
                     
                     <motion.div
                         variants={fadeUpVariants}
