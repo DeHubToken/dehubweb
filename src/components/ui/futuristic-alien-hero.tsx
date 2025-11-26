@@ -834,14 +834,11 @@ export const FuturisticAlienHero = () => {
             <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
                 <div className="text-center p-4 -translate-y-[40px] md:translate-y-0">
                     <motion.h1
-                        className={`font-exo text-[3.888rem] sm:text-5xl md:text-[6.3rem] lg:text-[8.4rem] font-bold uppercase tracking-wider text-white md:scale-[1.15] lg:scale-[0.9] ${masterGlitch ? 'glitch-active' : ''}`}
+                        className={`font-exo text-[3.888rem] sm:text-5xl md:text-[6.3rem] lg:text-[8.4rem] font-bold uppercase tracking-wider text-white md:scale-[1.15] lg:scale-100 ${masterGlitch ? 'glitch-active' : ''}`}
                         style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
-                            {masterGlitch ? corruptedTitle : 'A New'}
-                        </motion.span>
-                        <motion.span variants={fadeUpVariants} custom={1} initial="hidden" animate="visible" className="block -mt-4 md:mt-0">
-                            World
+                            {masterGlitch ? corruptedTitle : 'A New World'}
                         </motion.span>
                         <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block -mt-4 md:mt-2">
                             {masterGlitch ? corruptedSubtitle : 'Awaits'}
@@ -853,7 +850,7 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 -translate-y-[170px] md:translate-y-0 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
+                        className="mt-8 -translate-y-[70px] md:translate-y-0 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
                         <a
                             href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
@@ -897,7 +894,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[145px] md:translate-y-0"
+                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[45px] md:translate-y-0"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
