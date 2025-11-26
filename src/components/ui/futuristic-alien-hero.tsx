@@ -954,16 +954,21 @@ export const FuturisticAlienHero = () => {
                                         }}
                                     />
                                 )}
-                                {social.icon === "scroll" && (
-                                    <div 
-                                        style={{
-                                            fontSize: '28px',
-                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
-                                        }}
-                                    >
-                                        📜
-                                    </div>
-                                )}
+                {social.icon === "scroll" && (
+                    <div 
+                        style={{
+                            width: '28px',
+                            height: '28px',
+                            fontSize: '28px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
+                        }}
+                    >
+                        📜
+                    </div>
+                )}
                             </a>
                     ))}
                 </motion.div>
