@@ -366,7 +366,7 @@ export const FuturisticAlienHero = () => {
 
         // --- Alien Artifact & Core ---
         const simplex = new SimplexNoise();
-        const artifactGeometry = new THREE.IcosahedronGeometry(1.5, 20);
+        const artifactGeometry = new THREE.IcosahedronGeometry(1.875, 20);
         artifactGeometry.setAttribute('originalPosition', artifactGeometry.attributes.position.clone());
 
         const artifactMaterial = new THREE.MeshStandardMaterial({
