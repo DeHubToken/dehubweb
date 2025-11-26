@@ -974,7 +974,7 @@ export const FuturisticAlienHero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 3.5 }}
-                className="absolute bottom-[20px] left-[calc(50%-17px)] -translate-x-1/2 z-20"
+                className="absolute bottom-[20px] left-[calc(50%-13px)] -translate-x-1/2 z-20"
             >
                 <img 
                     src={dehubLogo} 
