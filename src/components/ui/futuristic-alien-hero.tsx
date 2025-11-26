@@ -817,38 +817,6 @@ export const FuturisticAlienHero = () => {
                         ))}
                     </motion.div>
 
-                    {/* CTA Box */}
-                    <motion.div
-                        variants={fadeUpVariants}
-                        custom={3}
-                        initial="hidden"
-                        animate="visible"
-                        className="mt-6 flex justify-center px-4 translate-y-[2px]"
-                    >
-                        <a 
-                            href="https://docs.dhb.gg" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="w-full max-w-[100px] transition-transform hover:scale-105"
-                            style={{ cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' }}
-                        >
-                            <div className="relative h-full rounded-md border-[0.75px] border-border p-2 flex items-center justify-center">
-                                <GlowingEffect
-                                    spread={80}
-                                    glow={true}
-                                    disabled={false}
-                                    proximity={120}
-                                    inactiveZone={0.01}
-                                    borderWidth={4}
-                                    blur={4}
-                                    className="brightness-95 saturate-150"
-                                />
-                                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-exo relative z-10 text-center" style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}>
-                                    read
-                                </h3>
-                            </div>
-                        </a>
-                    </motion.div>
 
                     {/* Logo at bottom */}
                     <motion.div
