@@ -892,7 +892,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0"
+                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[20px] md:translate-y-0"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
@@ -914,7 +914,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={telegramLogo}
                                         alt="Telegram"
-                                        className="w-7 h-7 md:w-10 md:h-10"
+                                        className="w-7 h-7 md:w-9 md:h-9"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -924,7 +924,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={xLogo}
                                         alt="X (Twitter)"
-                                        className="w-7 h-7 md:w-10 md:h-10"
+                                        className="w-7 h-7 md:w-9 md:h-9"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -934,7 +934,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={instagramLogo}
                                         alt="Instagram"
-                                        className="w-7 h-7 md:w-10 md:h-10"
+                                        className="w-7 h-7 md:w-9 md:h-9"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -944,7 +944,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={tiktokLogo}
                                         alt="TikTok"
-                                        className="w-7 h-7 md:w-10 md:h-10"
+                                        className="w-7 h-7 md:w-9 md:h-9"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -952,13 +952,13 @@ export const FuturisticAlienHero = () => {
                                 )}
                                 {social.icon === "scroll" && (
                                     <div 
-                                        className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center -translate-y-[2px]"
+                                        className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center -translate-y-[2px]"
                                         style={{
                                             fontSize: '24px',
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
                                     >
-                                        <span className="md:text-[32px]">📜</span>
+                                        <span className="md:text-[29px]">📜</span>
                                     </div>
                                 )}
                             </a>
