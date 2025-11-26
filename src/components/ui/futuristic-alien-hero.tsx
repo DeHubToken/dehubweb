@@ -813,7 +813,7 @@ export const FuturisticAlienHero = () => {
                         custom={2} 
                         initial="hidden" 
                         animate="visible" 
-                        className="mt-8 -translate-y-5 md:translate-y-0 flex flex-col sm:flex-row justify-center items-center gap-4"
+                        className="mt-8 -translate-y-5 md:translate-y-0 md:-ml-[15px] flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
                         <a
                             href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
