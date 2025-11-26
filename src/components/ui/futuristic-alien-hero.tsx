@@ -939,7 +939,7 @@ export const FuturisticAlienHero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 3.5 }}
-                className="absolute bottom-[20px] left-1/2 -translate-x-1/2 md:relative md:bottom-auto md:left-auto md:translate-x-0 md:mt-8 md:flex md:justify-center z-20"
+                className="absolute bottom-[20px] left-1/2 -translate-x-1/2 z-20"
             >
                 <img 
                     src={dehubLogo} 
