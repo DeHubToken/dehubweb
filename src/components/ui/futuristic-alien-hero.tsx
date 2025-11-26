@@ -467,7 +467,11 @@ export const FuturisticAlienHero = () => {
         
         // Create one instance of each buzzword at random positions
         buzzwords.forEach(word => {
-            const size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+            let size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+            // Scale down only larger buzzwords - keep small ones the same
+            if (size > 0.65) {
+                size = 0.65 + (size - 0.65) * 0.6; // Compress the upper range
+            }
             const sprite = createTextSprite(word, size);
             if (sprite) {
                 sprite.position.set(
