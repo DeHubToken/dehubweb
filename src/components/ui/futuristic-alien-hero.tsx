@@ -435,7 +435,9 @@ export const FuturisticAlienHero = () => {
             'P2E',
             'P2P',
             'PEER TO PEER',
-            'NON CUSTODIAL'
+            'NON CUSTODIAL',
+            'DAO',
+            'DEFI'
         ];
         const textSprites: THREE.Sprite[] = [];
         
