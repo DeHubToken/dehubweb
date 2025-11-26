@@ -892,7 +892,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 ml-[-3px] md:ml-[2px] flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0 md:scale-[1.18]"
+                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0 md:scale-[1.18]"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
