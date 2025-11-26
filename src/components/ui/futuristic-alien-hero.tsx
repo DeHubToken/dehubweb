@@ -838,9 +838,12 @@ export const FuturisticAlienHero = () => {
                         style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
                     >
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
-                            {masterGlitch ? corruptedTitle : 'A New World'}
+                            {masterGlitch ? corruptedTitle : 'A New'}
                         </motion.span>
-                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block -mt-4 md:mt-2">
+                        <motion.span variants={fadeUpVariants} custom={1} initial="hidden" animate="visible" className="block -mt-2 md:mt-0">
+                            World
+                        </motion.span>
+                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block -mt-2 md:mt-2">
                             {masterGlitch ? corruptedSubtitle : 'Awaits'}
                         </motion.span>
                     </motion.h1>
