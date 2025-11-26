@@ -462,7 +462,7 @@ export const FuturisticAlienHero = () => {
             const spriteMaterial = new THREE.SpriteMaterial({
                 map: texture,
                 transparent: true,
-                opacity: 0.7,
+                opacity: 0.6,
                 blending: THREE.AdditiveBlending
             });
             
@@ -505,7 +505,7 @@ export const FuturisticAlienHero = () => {
             const context = canvas.getContext('2d');
             if (!context) return;
             
-            context.fillStyle = 'rgba(255, 255, 255, 1.0)';
+            context.fillStyle = 'rgba(255, 255, 255, 0.9)';
             context.font = `bold ${Math.floor(size * 50)}px Arial`;
             context.textAlign = 'center';
             context.textBaseline = 'middle';
@@ -515,7 +515,7 @@ export const FuturisticAlienHero = () => {
             const spriteMaterial = new THREE.SpriteMaterial({
                 map: texture,
                 transparent: true,
-                opacity: 0.8, // Higher opacity for foreground
+                opacity: 0.7, // Higher opacity for foreground
                 blending: THREE.AdditiveBlending
             });
             
@@ -608,7 +608,7 @@ export const FuturisticAlienHero = () => {
                 sprite.rotation.z = Math.sin(elapsedTime * 0.2 + index) * 0.1;
                 
                 // CRT static effect - constant subtle flickering
-                const baseOpacity = spriteTypes[index] === 'foreground' ? 0.8 : 0.7;
+                const baseOpacity = spriteTypes[index] === 'foreground' ? 0.7 : 0.6;
                 const staticNoise = Math.random() * 0.15; // Random noise 0-15%
                 const scanlineFlicker = Math.sin(elapsedTime * 60 + index * 0.5) * 0.05; // Fast scanline-like pulse
                 sprite.material.opacity = baseOpacity - staticNoise + scanlineFlicker;
