@@ -954,11 +954,11 @@ export const FuturisticAlienHero = () => {
                                     <div 
                                         className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center -translate-y-[2px]"
                                         style={{
-                                            fontSize: '24px',
+                                            fontSize: '25px',
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
                                     >
-                                        <span className="md:text-[29px]">📜</span>
+                                        <span className="md:text-[30px]">📜</span>
                                     </div>
                                 )}
                             </a>
