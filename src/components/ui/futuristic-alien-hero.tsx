@@ -521,7 +521,7 @@ export const FuturisticAlienHero = () => {
                 sprite.position.set(
                     (Math.random() - 0.5) * 5,  // Smaller spread ±5
                     (Math.random() - 0.5) * 5,
-                    Math.random() * 2 - 1  // Closer to camera (z: -1 to 1)
+                    Math.random() * 2 + 1  // In front of globe (z: 1 to 3)
                 );
                 sprite.scale.set(size * 2.875 * 1.15, size * 0.71875 * 1.15, 1); // 15% bigger
                 scene.add(sprite);
