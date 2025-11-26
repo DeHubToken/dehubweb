@@ -892,7 +892,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0 md:scale-[1.35]"
+                        className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
@@ -914,8 +914,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={telegramLogo}
                                         alt="Telegram"
-                                        width="28"
-                                        height="28"
+                                        className="w-7 h-7 md:w-10 md:h-10"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -925,8 +924,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={xLogo}
                                         alt="X (Twitter)"
-                                        width="28"
-                                        height="28"
+                                        className="w-7 h-7 md:w-10 md:h-10"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -936,8 +934,7 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={instagramLogo}
                                         alt="Instagram"
-                                        width="28"
-                                        height="28"
+                                        className="w-7 h-7 md:w-10 md:h-10"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
@@ -947,31 +944,30 @@ export const FuturisticAlienHero = () => {
                                     <img 
                                         src={tiktokLogo}
                                         alt="TikTok"
-                                        width="28"
-                                        height="28"
+                                        className="w-7 h-7 md:w-10 md:h-10"
                                         style={{
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
                                     />
                                 )}
-                {social.icon === "scroll" && (
-                    <div 
-                        style={{
-                            width: '26.6px',
-                            height: '26.6px',
-                            fontSize: '26.6px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
-                        }}
-                    >
-                        📜
-                    </div>
-                )}
+                                {social.icon === "scroll" && (
+                                    <div 
+                                        style={{
+                                            width: '36px',
+                                            height: '36px',
+                                            fontSize: '36px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
+                                        }}
+                                    >
+                                        📜
+                                    </div>
+                                )}
                             </a>
-                    ))}
-                </motion.div>
+                        ))}
+                    </motion.div>
             </div>
 
             {/* Logo at bottom */}
