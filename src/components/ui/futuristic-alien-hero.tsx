@@ -572,7 +572,7 @@ export const FuturisticAlienHero = () => {
         };
 
         // Start loading buzzwords after 800ms initial delay
-        setTimeout(loadBuzzwords, 800);
+        setTimeout(loadBuzzwords, 4200);
 
         // --- Mouse/Touch Interaction ---
         let mouseX = 0, mouseY = 0;
