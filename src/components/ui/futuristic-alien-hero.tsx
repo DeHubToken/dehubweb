@@ -860,7 +860,7 @@ export const FuturisticAlienHero = () => {
                             <img 
                                 src={googlePlayBadge} 
                                 alt="Get it on Google Play" 
-                                className="h-[111.5px] md:h-[63px] w-auto"
+                                className="h-[111.5px] md:h-[63px] md:scale-[1.007] w-auto"
                                 style={{
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
