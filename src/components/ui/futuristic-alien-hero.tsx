@@ -857,7 +857,7 @@ export const FuturisticAlienHero = () => {
                         className="mt-8 -translate-y-[45px] md:translate-y-0 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
                     >
                         <a
-                            href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl=tr"
+                            href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="transition-transform hover:scale-105"
