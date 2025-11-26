@@ -490,7 +490,7 @@ export const FuturisticAlienHero = () => {
         });
 
         // Create featured foreground buzzwords (closer to camera)
-        const featuredBuzzwords = ['decentralized media', 'free speech', 'web3', 'DEPIN', 'socialfi', 'airdrops', 'W2E', 'HODL'];
+        const featuredBuzzwords = ['DECENTRALIZED MEDIA', 'FREE SPEECH', 'WEB3', 'DEPIN', 'SOCIALFI', 'AIRDROPS', 'W2E', 'HODL'];
         featuredBuzzwords.forEach(word => {
             let size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
             if (size > 0.65) {
@@ -525,7 +525,7 @@ export const FuturisticAlienHero = () => {
                     (Math.random() - 0.5) * 5,
                     Math.random() * 2 + 1  // In front of globe (z: 1 to 3)
                 );
-                sprite.scale.set(size * 2.875 * 1.15, size * 0.71875 * 1.15, 1); // 15% bigger
+                sprite.scale.set(size * 2.875, size * 0.71875, 1); // Same size as background
                 scene.add(sprite);
                 textSprites.push(sprite);
                 spriteTypes.push('foreground');
