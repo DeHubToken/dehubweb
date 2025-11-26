@@ -364,6 +364,42 @@ export const FuturisticAlienHero = () => {
         const ambientLight = new THREE.AmbientLight(0x404040, 3);
         scene.add(ambientLight);
 
+        // --- Glowing Stars ---
+        const starCount = 40;
+        const starGeometry = new THREE.BufferGeometry();
+        const starPositions = new Float32Array(starCount * 3);
+        const starSizes = new Float32Array(starCount);
+        
+        for (let i = 0; i < starCount; i++) {
+            // Random positions in a sphere around the scene
+            const radius = 8 + Math.random() * 12;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            
+            starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            starPositions[i * 3 + 2] = radius * Math.cos(phi);
+            
+            // Small random sizes
+            starSizes[i] = 0.8 + Math.random() * 1.2;
+        }
+        
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+        
+        const starMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.15,
+            transparent: true,
+            opacity: 0.8,
+            sizeAttenuation: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+
         // --- Alien Artifact & Core ---
         const simplex = new SimplexNoise();
         const artifactGeometry = new THREE.IcosahedronGeometry(1.875, 20);
@@ -642,6 +678,15 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.x = 0.1 * elapsedTime;
 
             nebula.rotation.y += 0.0002;
+
+            // Animate stars - gentle twinkling
+            stars.rotation.y += 0.0001;
+            stars.rotation.x += 0.00005;
+            starSizes.forEach((_, i) => {
+                const twinkle = Math.sin(elapsedTime * 2 + i * 0.5) * 0.3 + 0.7;
+                starGeometry.attributes.size.setX(i, (0.8 + Math.random() * 0.4) * twinkle);
+            });
+            starGeometry.attributes.size.needsUpdate = true;
 
             // Animate text sprites - constant CRT static effect
             textSprites.forEach((sprite, index) => {
