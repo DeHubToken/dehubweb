@@ -428,7 +428,14 @@ export const FuturisticAlienHero = () => {
             'HODL',
             'STAKE',
             'NO KYC',
-            'LIBERTY'
+            'LIBERTY',
+            'CENSORSHIP RESISTANT',
+            'SOCIALFI',
+            'PLAY2EARN',
+            'P2E',
+            'P2P',
+            'PEER TO PEER',
+            'NON CUSTODIAL'
         ];
         const textSprites: THREE.Sprite[] = [];
         
