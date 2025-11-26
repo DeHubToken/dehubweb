@@ -523,6 +523,7 @@ export const FuturisticAlienHero = () => {
         const nebulaCount = 20000;
         const posArray = new Float32Array(nebulaCount * 3);
         const colorArray = new Float32Array(nebulaCount * 3);
+        const nebulaPhases = new Float32Array(nebulaCount); // Random phase for each particle
         const nebulaColors = [new THREE.Color(0xffffff), new THREE.Color(0xffffff), new THREE.Color(0x505050)];
 
         for(let i = 0; i < nebulaCount; i++) {
@@ -533,6 +534,7 @@ export const FuturisticAlienHero = () => {
             colorArray[i*3 + 0] = randomColor.r;
             colorArray[i*3 + 1] = randomColor.g;
             colorArray[i*3 + 2] = randomColor.b;
+            nebulaPhases[i] = Math.random() * Math.PI * 2; // Random starting phase
         }
         nebulaGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         nebulaGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
@@ -782,6 +784,22 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.x = 0.1 * elapsedTime;
 
             nebula.rotation.y += 0.0002;
+            
+            // Animate nebula particles - very subtle flickering glow
+            const nebulaColorAttr = nebulaGeometry.attributes.color;
+            for (let i = 0; i < nebulaCount; i++) {
+                // Very subtle flicker using the particle's unique phase
+                const flicker = Math.sin(elapsedTime * 1.5 + nebulaPhases[i]) * 0.15 + 0.85; // Range 0.7 to 1.0
+                
+                // Get base color
+                const baseR = colorArray[i * 3];
+                const baseG = colorArray[i * 3 + 1];
+                const baseB = colorArray[i * 3 + 2];
+                
+                // Apply subtle flicker to color intensity
+                nebulaColorAttr.setXYZ(i, baseR * flicker, baseG * flicker, baseB * flicker);
+            }
+            nebulaColorAttr.needsUpdate = true;
 
             // Animate stars - gentle twinkling
             stars.rotation.y += 0.0001;
