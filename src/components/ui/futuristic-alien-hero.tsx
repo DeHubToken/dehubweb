@@ -831,7 +831,7 @@ export const FuturisticAlienHero = () => {
                             <img 
                                 src={appStoreBadge} 
                                 alt="Download on the App Store" 
-                                className="h-[78px] md:h-[44px] w-auto"
+                                className="h-[79.6px] md:h-[44px] w-auto"
                                 style={{
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
