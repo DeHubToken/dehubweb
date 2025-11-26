@@ -719,7 +719,7 @@ export const FuturisticAlienHero = () => {
                                 src={googlePlayBadge} 
                                 alt="Get it on Google Play" 
                                 style={{
-                                    height: '57px',
+                                    height: '60px',
                                     width: 'auto',
                                     filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))'
                                 }}
