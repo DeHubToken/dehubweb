@@ -485,6 +485,48 @@ export const FuturisticAlienHero = () => {
             }
         });
 
+        // Create featured foreground buzzwords (closer to camera)
+        const featuredBuzzwords = ['decentralized media', 'free speech', 'web3', 'DEPIN', 'socialfi', 'airdrops', 'W2E', 'HODL'];
+        featuredBuzzwords.forEach(word => {
+            let size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+            if (size > 0.65) {
+                size = 0.65 + (size - 0.65) * 0.6;
+            }
+            
+            // Create sprite with higher opacity for foreground
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 128;
+            const context = canvas.getContext('2d');
+            if (!context) return;
+            
+            context.fillStyle = 'rgba(255, 255, 255, 1.0)';
+            context.font = `bold ${Math.floor(size * 50)}px Arial`;
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(word, canvas.width / 2, canvas.height / 2);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                opacity: 0.8, // Higher opacity for foreground
+                blending: THREE.AdditiveBlending
+            });
+            
+            const sprite = new THREE.Sprite(spriteMaterial);
+            if (sprite) {
+                sprite.position.set(
+                    (Math.random() - 0.5) * 5,  // Smaller spread ±5
+                    (Math.random() - 0.5) * 5,
+                    Math.random() * 2 - 1  // Closer to camera (z: -1 to 1)
+                );
+                sprite.scale.set(size * 2.875 * 1.15, size * 0.71875 * 1.15, 1); // 15% bigger
+                scene.add(sprite);
+                textSprites.push(sprite);
+            }
+        });
+
         // --- Mouse/Touch Interaction ---
         let mouseX = 0, mouseY = 0;
         let isTouching = false;
