@@ -491,93 +491,87 @@ export const FuturisticAlienHero = () => {
             return sprite;
         };
         
-        // Load buzzwords after initial scene (delayed)
+        // Load buzzwords after initial scene (delayed and gradual)
         const loadBuzzwords = () => {
             if (buzzwordsLoaded) return;
             buzzwordsLoaded = true;
             
-            // Create one instance of each buzzword at random positions
-            buzzwords.forEach(word => {
-                let size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
-                // Scale down only larger buzzwords - keep small ones the same
-                if (size > 0.65) {
-                    size = 0.65 + (size - 0.65) * 0.6; // Compress the upper range
-                }
-                const sprite = createTextSprite(word, size);
-                if (sprite) {
-                    sprite.position.set(
-                        (Math.random() - 0.5) * 12,
-                        (Math.random() - 0.5) * 12,
-                        Math.random() * -8 - 2  // Keep buzzwords behind camera (z: -10 to -2)
-                    );
-                    // Scale is now set inside createTextSprite with dynamic aspect ratio
-                    scene.add(sprite);
-                    textSprites.push(sprite);
-                    spriteTypes.push('background');
-                }
-            });
-
-            // Create featured foreground buzzwords (closer to camera)
+            // Combine all buzzwords (background + featured)
+            const allBuzzwords = [...buzzwords];
             const featuredBuzzwords = ['DECENTRALIZED MEDIA', 'FREE SPEECH', 'WEB3', 'DEPIN', 'SOCIALFI', 'AIRDROPS', 'W2E', 'HODL'];
-            featuredBuzzwords.forEach(word => {
-                let size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
-                if (size > 0.65) {
-                    size = 0.65 + (size - 0.65) * 0.6;
-                }
-                
-                // Create sprite with higher opacity for foreground and dynamic sizing
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                if (!context) return;
-                
-                // Calculate font size first
-                const fontSize = Math.floor(size * 50);
-                context.font = `bold ${fontSize}px Arial`;
-                
-                // Measure text width BEFORE setting canvas size
-                const textMetrics = context.measureText(word);
-                const textWidth = textMetrics.width;
-                
-                // Set canvas width dynamically with padding (add 20% margin for safety)
-                const canvasWidth = Math.max(512, Math.ceil(textWidth * 1.2));
-                const canvasHeight = 128;
-                
-                canvas.width = canvasWidth;
-                canvas.height = canvasHeight;
-                
-                // Re-set font and style after resizing canvas
-                context.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                context.font = `bold ${fontSize}px Arial`;
-                context.textAlign = 'center';
-                context.textBaseline = 'middle';
-                context.fillText(word, canvas.width / 2, canvas.height / 2);
-                
-                const texture = new THREE.CanvasTexture(canvas);
-                const spriteMaterial = new THREE.SpriteMaterial({
-                    map: texture,
-                    transparent: true,
-                    opacity: 0.7, // Higher opacity for foreground
-                    blending: THREE.AdditiveBlending
-                });
-                
-                const sprite = new THREE.Sprite(spriteMaterial);
-                if (sprite) {
-                    // Scale sprite based on canvas aspect ratio
-                    const aspectRatio = canvasWidth / 512;
-                    sprite.position.set(
-                        (Math.random() - 0.5) * 5,  // Smaller spread ±5
-                        (Math.random() - 0.5) * 5,
-                        Math.random() * 2 + 1  // In front of globe (z: 1 to 3)
-                    );
-                    sprite.scale.set(size * 2.875 * 0.65 * aspectRatio, size * 0.71875 * 0.65, 1); // 35% smaller than background with aspect ratio
-                    scene.add(sprite);
-                    textSprites.push(sprite);
-                    spriteTypes.push('foreground');
-                }
+            
+            // Shuffle array for random order
+            const shuffled = [...allBuzzwords].sort(() => Math.random() - 0.5);
+            
+            // Load each buzzword gradually with staggered delay
+            shuffled.forEach((word, index) => {
+                setTimeout(() => {
+                    const isFeatured = featuredBuzzwords.includes(word);
+                    let size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+                    if (size > 0.65) {
+                        size = 0.65 + (size - 0.65) * 0.6;
+                    }
+                    
+                    if (isFeatured) {
+                        // Create featured foreground buzzword
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        if (!context) return;
+                        
+                        const fontSize = Math.floor(size * 50);
+                        context.font = `bold ${fontSize}px Arial`;
+                        const textMetrics = context.measureText(word);
+                        const textWidth = textMetrics.width;
+                        const canvasWidth = Math.max(512, Math.ceil(textWidth * 1.2));
+                        const canvasHeight = 128;
+                        
+                        canvas.width = canvasWidth;
+                        canvas.height = canvasHeight;
+                        
+                        context.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        context.font = `bold ${fontSize}px Arial`;
+                        context.textAlign = 'center';
+                        context.textBaseline = 'middle';
+                        context.fillText(word, canvas.width / 2, canvas.height / 2);
+                        
+                        const texture = new THREE.CanvasTexture(canvas);
+                        const spriteMaterial = new THREE.SpriteMaterial({
+                            map: texture,
+                            transparent: true,
+                            opacity: 0.7,
+                            blending: THREE.AdditiveBlending
+                        });
+                        
+                        const sprite = new THREE.Sprite(spriteMaterial);
+                        const aspectRatio = canvasWidth / 512;
+                        sprite.position.set(
+                            (Math.random() - 0.5) * 5,
+                            (Math.random() - 0.5) * 5,
+                            Math.random() * 2 + 1
+                        );
+                        sprite.scale.set(size * 2.875 * 0.65 * aspectRatio, size * 0.71875 * 0.65, 1);
+                        scene.add(sprite);
+                        textSprites.push(sprite);
+                        spriteTypes.push('foreground');
+                    } else {
+                        // Create background buzzword
+                        const sprite = createTextSprite(word, size);
+                        if (sprite) {
+                            sprite.position.set(
+                                (Math.random() - 0.5) * 12,
+                                (Math.random() - 0.5) * 12,
+                                Math.random() * -8 - 2
+                            );
+                            scene.add(sprite);
+                            textSprites.push(sprite);
+                            spriteTypes.push('background');
+                        }
+                    }
+                }, index * 80); // 80ms delay between each buzzword (~2.4s total for 30 words)
             });
         };
 
-        // Delay buzzword loading by 800ms to let main scene load first
+        // Start loading buzzwords after 800ms initial delay
         setTimeout(loadBuzzwords, 800);
 
         // --- Mouse/Touch Interaction ---
