@@ -759,6 +759,7 @@ export const FuturisticAlienHero = () => {
                             { icon: "music", url: "https://tiktok.com/@dehub_official", label: "TikTok" },
                             { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
                             { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
+                            { icon: "scroll", url: "https://docs.dhb.gg", label: "Documentation" },
                         ].map((social, idx) => (
                             <a
                                 key={idx}
@@ -812,6 +813,16 @@ export const FuturisticAlienHero = () => {
                                             filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
                                         }}
                                     />
+                                )}
+                                {social.icon === "scroll" && (
+                                    <div 
+                                        style={{
+                                            fontSize: '28px',
+                                            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))'
+                                        }}
+                                    >
+                                        📜
+                                    </div>
                                 )}
                             </a>
                         ))}
