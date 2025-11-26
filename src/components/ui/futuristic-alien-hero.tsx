@@ -412,11 +412,23 @@ export const FuturisticAlienHero = () => {
 
         // --- Floating Buzzwords ---
         const buzzwords = [
-            'DECENTRALIZED',
-            'CENSORSHIP-RESISTANT',
+            'DECENTRALIZED MEDIA',
+            'CENSORSHIP-RESISTANCE',
             'USER OWNED',
             'FREE SPEECH',
-            'DATA OWNERSHIP'
+            'DATA OWNERSHIP',
+            'INSTANT PAYOUTS',
+            'PPV',
+            'W2E',
+            'COMMUNITY FIRST',
+            'DEPIN',
+            'WEB3',
+            'NFT',
+            'REVENUE SHARE',
+            'HODL',
+            'STAKE',
+            'NO KYC',
+            'LIBERTY'
         ];
         const textSprites: THREE.Sprite[] = [];
         
@@ -446,21 +458,19 @@ export const FuturisticAlienHero = () => {
             return new THREE.Sprite(spriteMaterial);
         };
         
-        // Create 5 instances of each buzzword at random positions
+        // Create one instance of each buzzword at random positions
         buzzwords.forEach(word => {
-            for (let i = 0; i < 5; i++) {
-                const size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
-                const sprite = createTextSprite(word, size);
-                if (sprite) {
-                    sprite.position.set(
-                        (Math.random() - 0.5) * 12,
-                        (Math.random() - 0.5) * 12,
-                        (Math.random() - 0.5) * 12
-                    );
-                    sprite.scale.set(size * 2, size * 0.5, 1);
-                    scene.add(sprite);
-                    textSprites.push(sprite);
-                }
+            const size = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+            const sprite = createTextSprite(word, size);
+            if (sprite) {
+                sprite.position.set(
+                    (Math.random() - 0.5) * 12,
+                    (Math.random() - 0.5) * 12,
+                    (Math.random() - 0.5) * 12
+                );
+                sprite.scale.set(size * 2, size * 0.5, 1);
+                scene.add(sprite);
+                textSprites.push(sprite);
             }
         });
 
