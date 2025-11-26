@@ -957,9 +957,9 @@ export const FuturisticAlienHero = () => {
                 {social.icon === "scroll" && (
                     <div 
                         style={{
-                            width: '28px',
-                            height: '28px',
-                            fontSize: '28px',
+                            width: '26.6px',
+                            height: '26.6px',
+                            fontSize: '26.6px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
