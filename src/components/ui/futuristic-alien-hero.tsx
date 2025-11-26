@@ -484,6 +484,7 @@ export const FuturisticAlienHero = () => {
                 sprite.scale.set(size * 2.875, size * 0.71875, 1);
                 scene.add(sprite);
                 textSprites.push(sprite);
+                spriteTypes.push('background');
             }
         });
 
@@ -526,6 +527,7 @@ export const FuturisticAlienHero = () => {
                 sprite.scale.set(size * 2.875 * 1.15, size * 0.71875 * 1.15, 1); // 15% bigger
                 scene.add(sprite);
                 textSprites.push(sprite);
+                spriteTypes.push('foreground');
             }
         });
 
@@ -581,6 +583,11 @@ export const FuturisticAlienHero = () => {
         let artifactOriginalPosition = { x: 0, y: 0, z: 0 };
         let isArtifactGlitching = false;
         
+        // Buzzword glitch timing variables
+        let buzzwordGlitchTime = 0;
+        let isBuzzwordGlitching = false;
+        const spriteTypes: ('background' | 'foreground')[] = [];
+        
         const animate = () => {
             animationFrameId = requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
@@ -598,6 +605,49 @@ export const FuturisticAlienHero = () => {
             textSprites.forEach((sprite, index) => {
                 sprite.rotation.z = Math.sin(elapsedTime * 0.2 + index) * 0.1;
             });
+
+            // Buzzword glitch effect (every 5-10 seconds)
+            if (!isBuzzwordGlitching && elapsedTime - buzzwordGlitchTime > 5 + Math.random() * 5) {
+                buzzwordGlitchTime = elapsedTime;
+                isBuzzwordGlitching = true;
+                
+                // Glitch phase - rapid flickering with chromatic aberration effect
+                let flickerCount = 0;
+                const flickerInterval = setInterval(() => {
+                    textSprites.forEach((sprite) => {
+                        // Random opacity flicker
+                        sprite.material.opacity = Math.random() > 0.5 ? 0.9 : 0.3;
+                        // Jitter positions
+                        sprite.position.x += (Math.random() - 0.5) * 0.2;
+                        sprite.position.y += (Math.random() - 0.5) * 0.2;
+                    });
+                    flickerCount++;
+                    
+                    if (flickerCount > 6) {
+                        clearInterval(flickerInterval);
+                        
+                        // Randomize positions after glitch
+                        textSprites.forEach((sprite, index) => {
+                            if (spriteTypes[index] === 'foreground') {
+                                sprite.position.set(
+                                    (Math.random() - 0.5) * 5,
+                                    (Math.random() - 0.5) * 5,
+                                    Math.random() * 2 + 1  // z: 1 to 3
+                                );
+                                sprite.material.opacity = 0.8;
+                            } else {
+                                sprite.position.set(
+                                    (Math.random() - 0.5) * 12,
+                                    (Math.random() - 0.5) * 12,
+                                    Math.random() * -8 - 2  // z: -10 to -2
+                                );
+                                sprite.material.opacity = 0.7;
+                            }
+                        });
+                        isBuzzwordGlitching = false;
+                    }
+                }, 30);
+            }
 
             // Artifact position glitch (every 10-20 seconds)
             if (!isArtifactGlitching && elapsedTime - artifactGlitchTime > 10 + Math.random() * 10) {
