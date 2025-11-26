@@ -437,7 +437,8 @@ export const FuturisticAlienHero = () => {
             'PEER TO PEER',
             'NON CUSTODIAL',
             'DAO',
-            'DEFI'
+            'DEFI',
+            'LIVESTREAM'
         ];
         const textSprites: THREE.Sprite[] = [];
         const spriteTypes: ('background' | 'foreground')[] = [];
