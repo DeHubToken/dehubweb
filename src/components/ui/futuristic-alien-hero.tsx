@@ -838,7 +838,7 @@ export const FuturisticAlienHero = () => {
                         <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block">
                             {masterGlitch ? corruptedTitle : 'A New World'}
                         </motion.span>
-                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-[0.12rem] md:mt-4">
+                        <motion.span variants={fadeUpVariants} custom={1.5} initial="hidden" animate="visible" className="block mt-[0.2rem] md:mt-4">
                             {masterGlitch ? corruptedSubtitle : 'Awaits'}
                         </motion.span>
                     </motion.h1>
@@ -892,7 +892,7 @@ export const FuturisticAlienHero = () => {
                         custom={2.5}
                         initial="hidden"
                         animate="visible"
-                        className="mt-8 ml-[0.5px] md:ml-[5.5px] flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0"
+                        className="mt-8 ml-[2px] md:ml-[7px] flex items-center justify-center gap-6 -translate-y-[20px] md:translate-y-0"
                     >
                         {[
                             { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
