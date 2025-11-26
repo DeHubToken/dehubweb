@@ -479,7 +479,7 @@ export const FuturisticAlienHero = () => {
                 (Math.random() - 0.5) * 12,
                 Math.random() * -8 - 2  // Keep buzzwords behind camera (z: -10 to -2)
             );
-                sprite.scale.set(size * 2, size * 0.5, 1);
+                sprite.scale.set(size * 2.5, size * 0.625, 1);
                 scene.add(sprite);
                 textSprites.push(sprite);
             }
