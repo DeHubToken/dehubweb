@@ -781,8 +781,9 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.y = 0.1 * elapsedTime;
             artifact.rotation.x = 0.1 * elapsedTime;
 
-            // Spin center logo
-            logoMesh.rotation.y += delta * 0.8;
+            // Sync logo rotation with artifact/globe
+            logoMesh.rotation.y = artifact.rotation.y;
+            logoMesh.rotation.x = artifact.rotation.x;
 
             nebula.rotation.y += 0.0002;
 
