@@ -445,9 +445,7 @@ export const FuturisticAlienHero = () => {
         
         interface ShootingStar {
             line: THREE.Line;
-            head: THREE.Mesh;
             lineMaterial: THREE.LineBasicMaterial;
-            headMaterial: THREE.MeshBasicMaterial;
             geometry: THREE.BufferGeometry;
             active: boolean;
             progress: number;
@@ -475,22 +473,9 @@ export const FuturisticAlienHero = () => {
             const line = new THREE.Line(geometry, lineMaterial);
             scene.add(line);
             
-            const headGeometry = new THREE.SphereGeometry(0.25, 8, 8);
-            const headMaterial = new THREE.MeshBasicMaterial({
-                color: 0x88ffff, // Cyan tint
-                transparent: true,
-                opacity: 0,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
-            });
-            const head = new THREE.Mesh(headGeometry, headMaterial);
-            scene.add(head);
-            
             shootingStars.push({
                 line,
-                head,
                 lineMaterial,
-                headMaterial,
                 geometry,
                 active: false,
                 progress: 0,
@@ -853,7 +838,6 @@ export const FuturisticAlienHero = () => {
                     if (star.progress >= 1) {
                         star.active = false;
                         star.lineMaterial.opacity = 0;
-                        star.headMaterial.opacity = 0;
                     } else {
                         // Current position
                         const currentPos = new THREE.Vector3().lerpVectors(
@@ -861,9 +845,6 @@ export const FuturisticAlienHero = () => {
                             star.end,
                             star.progress
                         );
-                        
-                        // Update head position
-                        star.head.position.copy(currentPos);
                         
                         // Update tail points
                         const positions = star.geometry.attributes.position.array as Float32Array;
@@ -897,7 +878,6 @@ export const FuturisticAlienHero = () => {
                         }
                         
                         star.lineMaterial.opacity = opacity;
-                        star.headMaterial.opacity = opacity;
                     }
                 }
             });
