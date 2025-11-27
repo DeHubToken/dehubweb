@@ -9,7 +9,6 @@ import tiktokLogo from '@/assets/tiktok-logo.png';
 import instagramLogo from '@/assets/instagram-logo.png';
 import xLogo from '@/assets/x-logo.png';
 import telegramLogo from '@/assets/telegram-logo.png';
-import dehubLogo from '@/assets/dehub-logo.png';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 import googlePlayBadge from '@/assets/google-play-badge.png';
 import appStoreBadge from '@/assets/app-store-badge.svg';
@@ -1148,22 +1147,6 @@ export const FuturisticAlienHero = () => {
                     </motion.div>
             </div>
 
-            {/* Logo at bottom */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 3.5 }}
-                className="absolute bottom-[75px] md:bottom-[20px] left-[calc(50%-13px)] -translate-x-1/2 z-20"
-            >
-                <img 
-                    src={dehubLogo} 
-                    alt="DeHub Logo" 
-                    className="h-6 w-auto opacity-100"
-                    style={{
-                        filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 25px rgba(255, 255, 255, 0.5))'
-                    }}
-                />
-            </motion.div>
         </section>
         </div>
     );
