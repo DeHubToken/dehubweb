@@ -365,80 +365,6 @@ export const FuturisticAlienHero = () => {
         const ambientLight = new THREE.AmbientLight(0x404040, 3);
         scene.add(ambientLight);
 
-        // --- Glowing Stars ---
-        const starCount = 40;
-        const starGeometry = new THREE.BufferGeometry();
-        const starPositions = new Float32Array(starCount * 3);
-        const starSizes = new Float32Array(starCount);
-        
-        for (let i = 0; i < starCount; i++) {
-            // Random positions in a sphere around the scene
-            const radius = 8 + Math.random() * 12;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            
-            starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            starPositions[i * 3 + 2] = radius * Math.cos(phi);
-            
-            // Small random sizes
-            starSizes[i] = 0.8 + Math.random() * 1.2;
-        }
-        
-        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
-        
-        const starMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.15,
-            transparent: true,
-            opacity: 0.8,
-            sizeAttenuation: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-        
-        const stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
-
-        // --- Flickering Stars ---
-        const flickerCount = 20;
-        const flickerGeometry = new THREE.BufferGeometry();
-        const flickerPositions = new Float32Array(flickerCount * 3);
-        const flickerSizes = new Float32Array(flickerCount);
-        const flickerPhases = new Float32Array(flickerCount); // Random phase for each star
-        
-        for (let i = 0; i < flickerCount; i++) {
-            // Random positions in a larger sphere
-            const radius = 10 + Math.random() * 15;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            
-            flickerPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            flickerPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            flickerPositions[i * 3 + 2] = radius * Math.cos(phi);
-            
-            // Medium-small random sizes
-            flickerSizes[i] = 1.5 + Math.random() * 2;
-            flickerPhases[i] = Math.random() * Math.PI * 2; // Random starting phase
-        }
-        
-        flickerGeometry.setAttribute('position', new THREE.BufferAttribute(flickerPositions, 3));
-        flickerGeometry.setAttribute('size', new THREE.BufferAttribute(flickerSizes, 1));
-        
-        const flickerMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.25,
-            transparent: true,
-            opacity: 0.9,
-            sizeAttenuation: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-        
-        const flickeringStars = new THREE.Points(flickerGeometry, flickerMaterial);
-        scene.add(flickeringStars);
-
         // --- Shooting Stars (Multiple) ---
         const tailPointCount = 25;
         const shootingStarCount = 5; // Number of shooting stars that can exist
@@ -795,26 +721,6 @@ export const FuturisticAlienHero = () => {
             logoMesh.rotation.x = artifact.rotation.x;
 
             nebula.rotation.y += 0.0002;
-
-            // Animate stars - gentle twinkling
-            stars.rotation.y += 0.0001;
-            stars.rotation.x += 0.00005;
-            starSizes.forEach((_, i) => {
-                const twinkle = Math.sin(elapsedTime * 2 + i * 0.5) * 0.3 + 0.7;
-                starGeometry.attributes.size.setX(i, (0.8 + Math.random() * 0.4) * twinkle);
-            });
-            starGeometry.attributes.size.needsUpdate = true;
-
-            // Animate flickering stars - dramatic flashing
-            flickeringStars.rotation.y -= 0.00015;
-            flickerSizes.forEach((baseSize, i) => {
-                // Dramatic random flicker with unique phase for each star
-                const flicker = Math.abs(Math.sin(elapsedTime * 3 + flickerPhases[i]) * Math.cos(elapsedTime * 5 + flickerPhases[i] * 2));
-                const randomFlash = Math.random() < 0.02 ? Math.random() * 0.5 : 0; // Occasional bright flash
-                const finalSize = baseSize * (flicker * 0.8 + 0.2 + randomFlash);
-                flickerGeometry.attributes.size.setX(i, finalSize);
-            });
-            flickerGeometry.attributes.size.needsUpdate = true;
 
             // Shooting star logic - trigger every 8 seconds
             if (elapsedTime - lastShootingStarTime > 8) {
