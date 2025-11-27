@@ -10,6 +10,7 @@ import instagramLogo from '@/assets/instagram-logo.png';
 import xLogo from '@/assets/x-logo.png';
 import telegramLogo from '@/assets/telegram-logo.png';
 import dehubLogo from '@/assets/dehub-logo.png';
+import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 import googlePlayBadge from '@/assets/google-play-badge.png';
 import appStoreBadge from '@/assets/app-store-badge.svg';
 
@@ -502,6 +503,21 @@ export const FuturisticAlienHero = () => {
         });
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
         scene.add(artifact);
+
+        // --- Center Logo Sprite ---
+        const textureLoader = new THREE.TextureLoader();
+        const logoTexture = textureLoader.load(dehubLogoCenter);
+        const logoMaterial = new THREE.SpriteMaterial({
+            map: logoTexture,
+            transparent: true,
+            opacity: 1.0
+        });
+        const logoSprite = new THREE.Sprite(logoMaterial);
+        // Size it to be ~20% of sphere diameter (sphere radius is 1.875)
+        // 20% of diameter = 0.2 * (1.875 * 2) = 0.75
+        logoSprite.scale.set(0.75, 0.75, 1);
+        logoSprite.position.set(0, 0, 0); // Center of sphere
+        scene.add(logoSprite);
 
         // --- Nebula Particle System ---
         const nebulaGeometry = new THREE.BufferGeometry();
