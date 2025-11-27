@@ -429,22 +429,21 @@ export const FuturisticAlienHero = () => {
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
         scene.add(artifact);
 
-        // --- Center Logo 3D Plane ---
+        // --- Center Logo 3D Plane (with buzzword-style visual effect) ---
         const textureLoader = new THREE.TextureLoader();
         const logoTexture = textureLoader.load(dehubLogoCenter);
         const logoGeometry = new THREE.PlaneGeometry(0.75, 0.75);
-        const logoMaterial = new THREE.MeshBasicMaterial({
+        const logoMaterial = new THREE.SpriteMaterial({
             map: logoTexture,
             transparent: true,
-            opacity: 1.0,
-            side: THREE.DoubleSide,
-            depthTest: false,
-            depthWrite: false
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
         });
-        const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
-        logoMesh.position.set(0, 0, 0);
-        logoMesh.renderOrder = 999;
-        scene.add(logoMesh);
+        const logoSprite = new THREE.Sprite(logoMaterial);
+        logoSprite.position.set(0, 0, 0);
+        logoSprite.scale.set(0.75, 0.75, 1);
+        logoSprite.renderOrder = 999;
+        scene.add(logoSprite);
 
         // --- Nebula Particle System ---
         const nebulaGeometry = new THREE.BufferGeometry();
@@ -718,9 +717,14 @@ export const FuturisticAlienHero = () => {
             artifact.rotation.y = 0.1 * elapsedTime;
             artifact.rotation.x = 0.1 * elapsedTime;
 
-            // Sync logo rotation with artifact/globe
-            logoMesh.rotation.y = artifact.rotation.y;
-            logoMesh.rotation.x = artifact.rotation.x;
+            // Logo CRT static effect - same as buzzwords
+            const logoBaseOpacity = 0.6;
+            const logoStaticNoise = Math.random() * 0.15;
+            const logoScanlineFlicker = Math.sin(elapsedTime * 60) * 0.05;
+            logoMaterial.opacity = logoBaseOpacity - logoStaticNoise + logoScanlineFlicker;
+            
+            // Subtle rotation wobble for logo
+            logoSprite.material.rotation = Math.sin(elapsedTime * 0.2) * 0.05;
 
             nebula.rotation.y += 0.0002;
 
@@ -843,6 +847,7 @@ export const FuturisticAlienHero = () => {
                 // Glitch phase - rapid flickering with chromatic aberration effect
                 let flickerCount = 0;
                 const flickerInterval = setInterval(() => {
+                    // Glitch buzzwords
                     textSprites.forEach((sprite) => {
                         // Random opacity flicker
                         sprite.material.opacity = Math.random() > 0.5 ? 0.9 : 0.3;
@@ -850,6 +855,8 @@ export const FuturisticAlienHero = () => {
                         sprite.position.x += (Math.random() - 0.5) * 0.2;
                         sprite.position.y += (Math.random() - 0.5) * 0.2;
                     });
+                    // Glitch logo too
+                    logoMaterial.opacity = Math.random() > 0.5 ? 0.9 : 0.3;
                     flickerCount++;
                     
                     if (flickerCount > 6) {
