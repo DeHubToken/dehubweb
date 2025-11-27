@@ -504,20 +504,19 @@ export const FuturisticAlienHero = () => {
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
         scene.add(artifact);
 
-        // --- Center Logo Sprite ---
+        // --- Center Logo 3D Plane ---
         const textureLoader = new THREE.TextureLoader();
         const logoTexture = textureLoader.load(dehubLogoCenter);
-        const logoMaterial = new THREE.SpriteMaterial({
+        const logoGeometry = new THREE.PlaneGeometry(0.75, 0.75);
+        const logoMaterial = new THREE.MeshBasicMaterial({
             map: logoTexture,
             transparent: true,
-            opacity: 1.0
+            opacity: 1.0,
+            side: THREE.DoubleSide
         });
-        const logoSprite = new THREE.Sprite(logoMaterial);
-        // Size it to be ~20% of sphere diameter (sphere radius is 1.875)
-        // 20% of diameter = 0.2 * (1.875 * 2) = 0.75
-        logoSprite.scale.set(0.75, 0.75, 1);
-        logoSprite.position.set(0, 0, 0); // Center of sphere
-        scene.add(logoSprite);
+        const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
+        logoMesh.position.set(0, 0, 0);
+        scene.add(logoMesh);
 
         // --- Nebula Particle System ---
         const nebulaGeometry = new THREE.BufferGeometry();
@@ -781,6 +780,9 @@ export const FuturisticAlienHero = () => {
 
             artifact.rotation.y = 0.1 * elapsedTime;
             artifact.rotation.x = 0.1 * elapsedTime;
+
+            // Spin center logo
+            logoMesh.rotation.y += delta * 0.8;
 
             nebula.rotation.y += 0.0002;
 
