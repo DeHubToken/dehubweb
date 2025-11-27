@@ -429,32 +429,14 @@ export const FuturisticAlienHero = () => {
         const artifact = new THREE.Mesh(artifactGeometry, artifactMaterial);
         scene.add(artifact);
 
-        // --- Center Logo 3D Plane with Glow ---
+        // --- Center Logo 3D Plane ---
         const textureLoader = new THREE.TextureLoader();
         const logoTexture = textureLoader.load(dehubLogoCenter);
-        
-        // Glow plane (behind logo, larger and blurred)
-        const glowGeometry = new THREE.PlaneGeometry(1.1, 1.1);
-        const glowMaterial = new THREE.MeshBasicMaterial({
-            map: logoTexture,
-            transparent: true,
-            opacity: 0.15,
-            side: THREE.DoubleSide,
-            depthTest: false,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending
-        });
-        const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
-        glowMesh.position.set(0, 0, -0.01);
-        glowMesh.renderOrder = 998;
-        scene.add(glowMesh);
-        
-        // Main logo plane
         const logoGeometry = new THREE.PlaneGeometry(0.75, 0.75);
         const logoMaterial = new THREE.MeshBasicMaterial({
             map: logoTexture,
             transparent: true,
-            opacity: 0.6, // 40% transparency
+            opacity: 1.0,
             side: THREE.DoubleSide,
             depthTest: false,
             depthWrite: false
@@ -723,11 +705,6 @@ export const FuturisticAlienHero = () => {
         let buzzwordGlitchTime = 0;
         let isBuzzwordGlitching = false;
         
-        // Logo flicker timing variables
-        let logoFlickerTime = 0;
-        const logoBaseOpacity = 0.6;
-        const glowBaseOpacity = 0.15;
-        
         const animate = () => {
             animationFrameId = requestAnimationFrame(animate);
             const elapsedTime = clock.getElapsedTime();
@@ -744,28 +721,6 @@ export const FuturisticAlienHero = () => {
             // Sync logo rotation with artifact/globe
             logoMesh.rotation.y = artifact.rotation.y;
             logoMesh.rotation.x = artifact.rotation.x;
-            glowMesh.rotation.y = artifact.rotation.y;
-            glowMesh.rotation.x = artifact.rotation.x;
-            
-            // Logo subtle flicker effect (every 3-6 seconds)
-            if (elapsedTime - logoFlickerTime > 3 + Math.random() * 3) {
-                logoFlickerTime = elapsedTime;
-                
-                // Quick flicker sequence
-                let flickerCount = 0;
-                const flickerInterval = setInterval(() => {
-                    const flickerAmount = (Math.random() - 0.5) * 0.2;
-                    logoMaterial.opacity = logoBaseOpacity + flickerAmount;
-                    glowMaterial.opacity = glowBaseOpacity + flickerAmount * 0.5;
-                    flickerCount++;
-                    
-                    if (flickerCount > 4) {
-                        clearInterval(flickerInterval);
-                        logoMaterial.opacity = logoBaseOpacity;
-                        glowMaterial.opacity = glowBaseOpacity;
-                    }
-                }, 50);
-            }
 
             nebula.rotation.y += 0.0002;
 
