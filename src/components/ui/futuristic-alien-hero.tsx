@@ -436,7 +436,7 @@ export const FuturisticAlienHero = () => {
         const logoMaterial = new THREE.MeshBasicMaterial({
             map: logoTexture,
             transparent: true,
-            opacity: 1.0,
+            opacity: 0.5,
             side: THREE.DoubleSide,
             depthTest: false,
             depthWrite: false
@@ -721,6 +721,12 @@ export const FuturisticAlienHero = () => {
             // Sync logo rotation with artifact/globe
             logoMesh.rotation.y = artifact.rotation.y;
             logoMesh.rotation.x = artifact.rotation.x;
+            
+            // Soft flicker effect for logo
+            const flickerSpeed = 2.5;
+            const flickerAmount = 0.15;
+            const flicker = 0.5 + Math.sin(elapsedTime * flickerSpeed) * flickerAmount * 0.5 + Math.sin(elapsedTime * flickerSpeed * 1.7) * flickerAmount * 0.3;
+            logoMaterial.opacity = flicker;
 
             nebula.rotation.y += 0.0002;
 
