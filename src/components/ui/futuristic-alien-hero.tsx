@@ -526,9 +526,18 @@ export const FuturisticAlienHero = () => {
         const nebulaColors = [new THREE.Color(0xffffff), new THREE.Color(0xffffff), new THREE.Color(0x505050)];
 
         for(let i = 0; i < nebulaCount; i++) {
-            posArray[i*3 + 0] = (Math.random() - 0.5) * 20;
-            posArray[i*3 + 1] = (Math.random() - 0.5) * 20;
-            posArray[i*3 + 2] = (Math.random() - 0.5) * 20;
+            // Generate position and ensure it's not too close to center
+            let x, y, z, distFromCenter;
+            do {
+                x = (Math.random() - 0.5) * 20;
+                y = (Math.random() - 0.5) * 20;
+                z = (Math.random() - 0.5) * 20;
+                distFromCenter = Math.sqrt(x*x + y*y + z*z);
+            } while (distFromCenter < 3); // Exclude particles within radius 3 of center
+            
+            posArray[i*3 + 0] = x;
+            posArray[i*3 + 1] = y;
+            posArray[i*3 + 2] = z;
             const randomColor = nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
             colorArray[i*3 + 0] = randomColor.r;
             colorArray[i*3 + 1] = randomColor.g;
