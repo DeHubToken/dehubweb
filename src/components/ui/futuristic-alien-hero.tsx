@@ -438,10 +438,13 @@ export const FuturisticAlienHero = () => {
             map: logoTexture,
             transparent: true,
             opacity: 1.0,
-            side: THREE.DoubleSide
+            side: THREE.DoubleSide,
+            depthTest: false,
+            depthWrite: false
         });
         const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
         logoMesh.position.set(0, 0, 0);
+        logoMesh.renderOrder = 999;
         scene.add(logoMesh);
 
         // --- Nebula Particle System ---
