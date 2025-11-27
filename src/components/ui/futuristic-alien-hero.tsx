@@ -420,9 +420,9 @@ export const FuturisticAlienHero = () => {
 
         const artifactMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
-            metalness: 0.2,
-            roughness: 0.1,
-            envMapIntensity: 0.9,
+            metalness: 0.1,
+            roughness: 0.8,
+            envMapIntensity: 0.5,
             transparent: true,
             opacity: 0.8,
             premultipliedAlpha: true
