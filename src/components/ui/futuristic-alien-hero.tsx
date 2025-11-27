@@ -788,8 +788,8 @@ export const FuturisticAlienHero = () => {
             });
             flickerGeometry.attributes.size.needsUpdate = true;
 
-            // Shooting star logic - trigger every 20 seconds
-            if (elapsedTime - lastShootingStarTime > 20) {
+            // Shooting star logic - trigger every 8 seconds
+            if (elapsedTime - lastShootingStarTime > 8) {
                 lastShootingStarTime = elapsedTime;
                 
                 // Spawn 3-5 shooting stars with slight delays
