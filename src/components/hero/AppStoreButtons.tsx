@@ -34,7 +34,7 @@ export const AppStoreButtons = () => {
       custom={2} 
       initial="hidden" 
       animate="visible" 
-      className="mt-8 -translate-y-[70px] md:translate-y-0 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
+      className="-mt-[62px] md:mt-8 md:-ml-[18px] flex flex-col sm:flex-row justify-center items-center gap-4"
     >
       <a
         href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl"
