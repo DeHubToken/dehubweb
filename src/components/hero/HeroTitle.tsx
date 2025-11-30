@@ -37,7 +37,7 @@ export const HeroTitle = ({
 
   return (
     <motion.h1
-      className={`font-exo text-[3.8rem] sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white -mt-[70px] sm:mt-0 md:scale-[1.15] lg:scale-110 ${masterGlitch ? 'glitch-active' : ''} ${className}`}
+      className={`font-exo text-[3.8rem] sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white md:scale-[1.15] lg:scale-110 ${masterGlitch ? 'glitch-active' : ''} ${className}`}
       style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
     >
       {/* Mobile: 3 lines */}
