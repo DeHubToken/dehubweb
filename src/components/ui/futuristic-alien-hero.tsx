@@ -514,7 +514,9 @@ export const FuturisticAlienHero = () => {
             'DEFI',
             'LIVESTREAM',
             'ENCRYPTED',
-            'PRIVATE'
+            'PRIVATE',
+            'FTV',
+            'FUTUROV'
         ];
         const textSprites: THREE.Sprite[] = [];
         const spriteTypes: ('background' | 'foreground')[] = [];
