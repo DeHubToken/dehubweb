@@ -4,29 +4,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import * as THREE from "three";
-
-// Simplex Noise (simplified version for the nebula)
-class SimplexNoise {
-  p: Uint8Array;
-  perm: Uint8Array;
-
-  constructor() {
-    this.p = new Uint8Array(256);
-    this.perm = new Uint8Array(512);
-    for (let i = 0; i < 256; i++) this.p[i] = i;
-    for (let i = 255; i > 0; i--) {
-      const r = Math.floor(Math.random() * (i + 1));
-      const t = this.p[i];
-      this.p[i] = this.p[r];
-      this.p[r] = t;
-    }
-    for (let i = 0; i < 512; i++) this.perm[i] = this.p[i & 255];
-  }
-
-  noise3D(x: number, y: number, z: number): number {
-    return (Math.sin(x * 1.5 + z) * Math.cos(y * 1.5 + z) + 1) * 0.5 - 0.5;
-  }
-}
+import { SimplexNoise } from "@/lib/simplex-noise";
 
 const NotFound = () => {
   const location = useLocation();
@@ -114,10 +92,8 @@ const NotFound = () => {
       // Animate particle positions slightly
       const pos = geometry.attributes.position as THREE.BufferAttribute;
       for (let i = 0; i < particleCount; i++) {
-        const i3 = i * 3;
         const x = pos.getX(i);
         const y = pos.getY(i);
-        const z = pos.getZ(i);
         const noise = simplex.noise3D(x * 0.1, y * 0.1, time);
         pos.setY(i, y + noise * 0.002);
       }
