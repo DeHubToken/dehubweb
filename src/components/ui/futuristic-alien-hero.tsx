@@ -120,10 +120,10 @@ export const FuturisticAlienHero = () => {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black scanline-overlay" style={cursorStyle}>
       <PixelCorruption visible={showPixelCorruption} />
-      <canvas ref={mountRef} className="absolute top-[20px] md:top-0 left-0 w-full h-full z-0" />
+      <canvas ref={mountRef} className="absolute top-[30px] md:top-0 left-0 w-full h-full z-0" />
       
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
-        <div className="text-center p-4 -translate-y-[40px] md:translate-y-0">
+        <div className="text-center p-4 -translate-y-[30px] md:translate-y-0">
           <HeroTitle
             masterGlitch={masterGlitch}
             corruptedTitle={corruptedTitle}
