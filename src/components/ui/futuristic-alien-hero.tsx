@@ -516,7 +516,8 @@ export const FuturisticAlienHero = () => {
             'ENCRYPTED',
             'PRIVATE',
             'FTV',
-            'FUTUROV'
+            'FUTUROV',
+            'OPEN SOURCE'
         ];
         const textSprites: THREE.Sprite[] = [];
         const spriteTypes: ('background' | 'foreground')[] = [];
