@@ -128,6 +128,7 @@ export const FuturisticAlienHero = () => {
             masterGlitch={masterGlitch}
             corruptedTitle={corruptedTitle}
             corruptedSubtitle={corruptedSubtitle}
+            className="mt-[25px] md:mt-0"
           />
           <AppStoreButtons />
           <SocialLinks />
