@@ -46,7 +46,7 @@ export const AppStoreButtons = () => {
         <img 
           src={googlePlayBadge} 
           alt="Get it on Google Play" 
-          className="h-[122.65px] md:h-[94.5px] w-auto"
+          className="h-[135px] md:h-[94.5px] w-auto"
           style={{ filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))' }}
         />
       </a>
@@ -58,7 +58,7 @@ export const AppStoreButtons = () => {
         <img 
           src={appStoreBadge} 
           alt="Download on the App Store" 
-          className="h-[92px] md:h-[65.34px] w-auto"
+          className="h-[101px] md:h-[65.34px] w-auto"
           style={{ filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5))' }}
         />
       </button>
