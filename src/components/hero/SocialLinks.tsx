@@ -31,7 +31,7 @@ const SocialIcon = ({ icon }: { icon: string }) => {
         <img 
           src={telegramLogo}
           alt="Telegram"
-          className="w-7 h-7 md:w-9 md:h-9"
+          className="w-8 h-8 md:w-9 md:h-9"
           style={iconStyle}
         />
       );
@@ -40,7 +40,7 @@ const SocialIcon = ({ icon }: { icon: string }) => {
         <img 
           src={xLogo}
           alt="X (Twitter)"
-          className="w-7 h-7 md:w-9 md:h-9"
+          className="w-8 h-8 md:w-9 md:h-9"
           style={iconStyle}
         />
       );
@@ -49,7 +49,7 @@ const SocialIcon = ({ icon }: { icon: string }) => {
         <img 
           src={instagramLogo}
           alt="Instagram"
-          className="w-7 h-7 md:w-9 md:h-9"
+          className="w-8 h-8 md:w-9 md:h-9"
           style={iconStyle}
         />
       );
@@ -58,15 +58,15 @@ const SocialIcon = ({ icon }: { icon: string }) => {
         <img 
           src={tiktokLogo}
           alt="TikTok"
-          className="w-7 h-7 md:w-9 md:h-9"
+          className="w-8 h-8 md:w-9 md:h-9"
           style={iconStyle}
         />
       );
     case 'scroll':
       return (
         <div 
-          className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center -translate-y-[2px]"
-          style={{ fontSize: '26px', ...iconStyle }}
+          className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center -translate-y-[2px]"
+          style={{ fontSize: '29px', ...iconStyle }}
         >
           <span className="md:text-[32px]">📜</span>
         </div>
