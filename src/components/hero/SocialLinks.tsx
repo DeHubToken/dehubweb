@@ -83,7 +83,7 @@ export const SocialLinks = () => {
       custom={2.5}
       initial="hidden"
       animate="visible"
-      className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[20px] md:translate-y-0"
+      className="mt-8 ml-[-5px] md:ml-0 flex items-center justify-center gap-6 md:gap-7 -translate-y-[30px] md:translate-y-0"
     >
       {SOCIAL_LINKS.map((social, idx) => (
         <a
