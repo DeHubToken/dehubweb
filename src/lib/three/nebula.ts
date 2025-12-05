@@ -104,10 +104,18 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
     easterEggs.push(sprite);
   });
 
-  // Create special nebula easter eggs (third eye) - 20 random positions
+  // Create special nebula easter eggs (third eye) - 20 positions (4 guaranteed front, 16 random)
   const specialEasterEggs: THREE.Sprite[] = [];
   const thirdEyeTexture = textureLoader.load(thirdEye);
   thirdEyeTexture.colorSpace = THREE.SRGBColorSpace;
+
+  // Fixed front positions for guaranteed visibility
+  const specialFrontPositions = [
+    { x: -2, y: 1.5, z: 1.5 },   // Upper-left front
+    { x: 2.5, y: -1, z: 1 },     // Lower-right front
+    { x: -3, y: -2, z: 2 },      // Lower-left front
+    { x: 3, y: 2.5, z: 1.5 },    // Upper-right front
+  ];
 
   for (let i = 0; i < SPECIAL_EASTER_EGG_COUNT; i++) {
     const spriteMaterial = new THREE.SpriteMaterial({
@@ -119,14 +127,23 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
 
     const sprite = new THREE.Sprite(spriteMaterial);
     
-    // Random position within nebula spread, outside center
-    let x, y, z, distFromCenter;
-    do {
-      x = (Math.random() - 0.5) * SPREAD;
-      y = (Math.random() - 0.5) * SPREAD;
-      z = (Math.random() - 0.5) * SPREAD;
-      distFromCenter = Math.sqrt(x * x + y * y + z * z);
-    } while (distFromCenter < MIN_DISTANCE_FROM_CENTER);
+    let x, y, z;
+    if (i < 4) {
+      // First 4: fixed front positions for guaranteed visibility
+      const pos = specialFrontPositions[i];
+      x = pos.x;
+      y = pos.y;
+      z = pos.z;
+    } else {
+      // Remaining 16: random positions throughout nebula
+      let distFromCenter;
+      do {
+        x = (Math.random() - 0.5) * SPREAD;
+        y = (Math.random() - 0.5) * SPREAD;
+        z = (Math.random() - 0.5) * SPREAD;
+        distFromCenter = Math.sqrt(x * x + y * y + z * z);
+      } while (distFromCenter < MIN_DISTANCE_FROM_CENTER);
+    }
 
     sprite.position.set(x, y, z);
     sprite.scale.set(0.08, 0.08, 1); // Tiny, like nebula particles
