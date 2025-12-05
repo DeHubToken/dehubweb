@@ -85,7 +85,7 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
     const spriteMaterial = new THREE.SpriteMaterial({
       map: texture,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0, // Start invisible, loaded later
       blending: THREE.AdditiveBlending,
     });
 
@@ -102,6 +102,24 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
   scene.add(nebulaGroup);
 
   return { nebula, nebulaGroup, geometry, material, easterEggs };
+};
+
+// Load easter eggs with fade-in effect (call after delay)
+export const loadEasterEggs = (nebulaSystem: NebulaSystem) => {
+  nebulaSystem.easterEggs.forEach((sprite, index) => {
+    setTimeout(() => {
+      // Fade in
+      let opacity = 0;
+      const fadeIn = setInterval(() => {
+        opacity += 0.025;
+        if (opacity >= 0.25) {
+          opacity = 0.25;
+          clearInterval(fadeIn);
+        }
+        (sprite.material as THREE.SpriteMaterial).opacity = opacity;
+      }, 50);
+    }, index * 200); // Stagger each easter egg
+  });
 };
 
 export const animateNebula = (nebulaSystem: NebulaSystem) => {
