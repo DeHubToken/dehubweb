@@ -8,7 +8,7 @@ import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 import { useGlitchEffect } from '@/hooks/use-glitch-effect';
 import { TIMING } from '@/config/hero-config';
 import { createScene, createLighting, createResizeHandler, setupMouseInteraction } from '@/lib/three/scene-helpers';
-import { createNebula, animateNebula, disposeNebula } from '@/lib/three/nebula';
+import { createNebula, animateNebula, disposeNebula, loadEasterEggs } from '@/lib/three/nebula';
 import { createShootingStars, spawnShootingStars, animateShootingStars, disposeShootingStars } from '@/lib/three/shooting-stars';
 import { loadBuzzwords, animateBuzzwords, triggerBuzzwordGlitch, disposeBuzzwords, BuzzwordSystem } from '@/lib/three/buzzwords';
 import { createArtifact, animateArtifact, triggerArtifactGlitch, disposeArtifact } from '@/lib/three/artifact';
@@ -51,8 +51,11 @@ export const FuturisticAlienHero = () => {
     const handleResize = createResizeHandler(camera, renderer);
     window.addEventListener('resize', handleResize);
 
-    // Load buzzwords after delay
-    setTimeout(() => loadBuzzwords(scene, buzzwordSystem), TIMING.BUZZWORD_LOAD_DELAY);
+    // Load buzzwords and easter eggs after delay
+    setTimeout(() => {
+      loadBuzzwords(scene, buzzwordSystem);
+      loadEasterEggs(nebulaSystem);
+    }, TIMING.BUZZWORD_LOAD_DELAY);
 
     // Animation state
     const clock = new THREE.Clock();
