@@ -11,7 +11,7 @@ import easterEgg4 from '@/assets/easter-eggs/easter-egg-4.png';
 import thirdEye from '@/assets/easter-eggs/third-eye.jpg';
 
 const EASTER_EGG_IMAGES = [easterEgg1, easterEgg2, easterEgg3, easterEgg4];
-const SPECIAL_EASTER_EGG_COUNT = 120;
+const SPECIAL_EASTER_EGG_COUNT = 20;
 
 export interface NebulaSystem {
   nebula: THREE.Points;
