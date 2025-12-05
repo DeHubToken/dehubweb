@@ -7,7 +7,11 @@ import easterEgg2 from '@/assets/easter-eggs/easter-egg-2.png';
 import easterEgg3 from '@/assets/easter-eggs/easter-egg-3.png';
 import easterEgg4 from '@/assets/easter-eggs/easter-egg-4.png';
 
+// Special nebula easter egg
+import thirdEye from '@/assets/easter-eggs/third-eye.jpg';
+
 const EASTER_EGG_IMAGES = [easterEgg1, easterEgg2, easterEgg3, easterEgg4];
+const SPECIAL_EASTER_EGG_COUNT = 20;
 
 export interface NebulaSystem {
   nebula: THREE.Points;
@@ -15,6 +19,7 @@ export interface NebulaSystem {
   geometry: THREE.BufferGeometry;
   material: THREE.PointsMaterial;
   easterEggs: THREE.Sprite[];
+  specialEasterEggs: THREE.Sprite[];
 }
 
 export const createNebula = (scene: THREE.Scene): NebulaSystem => {
@@ -99,16 +104,47 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
     easterEggs.push(sprite);
   });
 
+  // Create special nebula easter eggs (third eye) - 20 random positions
+  const specialEasterEggs: THREE.Sprite[] = [];
+  const thirdEyeTexture = textureLoader.load(thirdEye);
+  thirdEyeTexture.colorSpace = THREE.SRGBColorSpace;
+
+  for (let i = 0; i < SPECIAL_EASTER_EGG_COUNT; i++) {
+    const spriteMaterial = new THREE.SpriteMaterial({
+      map: thirdEyeTexture,
+      transparent: true,
+      opacity: 0, // Start invisible
+      blending: THREE.AdditiveBlending,
+    });
+
+    const sprite = new THREE.Sprite(spriteMaterial);
+    
+    // Random position within nebula spread, outside center
+    let x, y, z, distFromCenter;
+    do {
+      x = (Math.random() - 0.5) * SPREAD;
+      y = (Math.random() - 0.5) * SPREAD;
+      z = (Math.random() - 0.5) * SPREAD;
+      distFromCenter = Math.sqrt(x * x + y * y + z * z);
+    } while (distFromCenter < MIN_DISTANCE_FROM_CENTER);
+
+    sprite.position.set(x, y, z);
+    sprite.scale.set(0.08, 0.08, 1); // Tiny, like nebula particles
+
+    nebulaGroup.add(sprite);
+    specialEasterEggs.push(sprite);
+  }
+
   scene.add(nebulaGroup);
 
-  return { nebula, nebulaGroup, geometry, material, easterEggs };
+  return { nebula, nebulaGroup, geometry, material, easterEggs, specialEasterEggs };
 };
 
 // Load easter eggs with fade-in effect (call after delay)
 export const loadEasterEggs = (nebulaSystem: NebulaSystem) => {
+  // Portrait easter eggs
   nebulaSystem.easterEggs.forEach((sprite, index) => {
     setTimeout(() => {
-      // Fade in
       let opacity = 0;
       const fadeIn = setInterval(() => {
         opacity += 0.025;
@@ -118,7 +154,22 @@ export const loadEasterEggs = (nebulaSystem: NebulaSystem) => {
         }
         (sprite.material as THREE.SpriteMaterial).opacity = opacity;
       }, 50);
-    }, index * 200); // Stagger each easter egg
+    }, index * 200);
+  });
+
+  // Special nebula easter eggs (third eye) - staggered fade in
+  nebulaSystem.specialEasterEggs.forEach((sprite, index) => {
+    setTimeout(() => {
+      let opacity = 0;
+      const fadeIn = setInterval(() => {
+        opacity += 0.02;
+        if (opacity >= 0.15) { // Lower opacity for subtle effect
+          opacity = 0.15;
+          clearInterval(fadeIn);
+        }
+        (sprite.material as THREE.SpriteMaterial).opacity = opacity;
+      }, 40);
+    }, 500 + index * 100); // Start after portraits, stagger each
   });
 };
 
@@ -130,6 +181,10 @@ export const disposeNebula = (nebulaSystem: NebulaSystem) => {
   nebulaSystem.geometry.dispose();
   nebulaSystem.material.dispose();
   nebulaSystem.easterEggs.forEach((sprite) => {
+    sprite.material.map?.dispose();
+    sprite.material.dispose();
+  });
+  nebulaSystem.specialEasterEggs.forEach((sprite) => {
     sprite.material.map?.dispose();
     sprite.material.dispose();
   });
