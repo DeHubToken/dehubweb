@@ -65,11 +65,20 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
   const nebula = new THREE.Points(geometry, material);
   nebulaGroup.add(nebula);
 
-  // Create easter egg sprites
+  // Create easter egg sprites at fixed visible positions
+  // Positioned in front quadrants so they're always visible from camera at z=5
   const easterEggs: THREE.Sprite[] = [];
   const textureLoader = new THREE.TextureLoader();
 
-  EASTER_EGG_IMAGES.forEach((imagePath) => {
+  // Fixed positions: spread around the visible area, in front of center
+  const easterEggPositions = [
+    { x: -4, y: 3, z: 2 },   // Top-left front
+    { x: 4, y: 2, z: 1 },    // Top-right front  
+    { x: -3, y: -3, z: 2 },  // Bottom-left front
+    { x: 5, y: -2, z: 1 },   // Bottom-right front
+  ];
+
+  EASTER_EGG_IMAGES.forEach((imagePath, index) => {
     const texture = textureLoader.load(imagePath);
     texture.colorSpace = THREE.SRGBColorSpace;
     
@@ -82,17 +91,9 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
 
     const sprite = new THREE.Sprite(spriteMaterial);
     
-    // Random position within nebula spread, outside center
-    let x, y, z, distFromCenter;
-    do {
-      x = (Math.random() - 0.5) * SPREAD * 0.8;
-      y = (Math.random() - 0.5) * SPREAD * 0.8;
-      z = (Math.random() - 0.5) * SPREAD * 0.8;
-      distFromCenter = Math.sqrt(x * x + y * y + z * z);
-    } while (distFromCenter < MIN_DISTANCE_FROM_CENTER * 1.5);
-
-    sprite.position.set(x, y, z);
-    sprite.scale.set(0.4, 0.4, 1); // Small size to blend with particles
+    const pos = easterEggPositions[index];
+    sprite.position.set(pos.x, pos.y, pos.z);
+    sprite.scale.set(0.5, 0.5, 1); // Slightly larger for visibility
 
     nebulaGroup.add(sprite);
     easterEggs.push(sprite);
