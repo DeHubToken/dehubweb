@@ -8,7 +8,7 @@ import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 import { useGlitchEffect } from '@/hooks/use-glitch-effect';
 import { TIMING } from '@/config/hero-config';
 import { createScene, createLighting, createResizeHandler, setupMouseInteraction } from '@/lib/three/scene-helpers';
-import { createNebula, animateNebula } from '@/lib/three/nebula';
+import { createNebula, animateNebula, disposeNebula } from '@/lib/three/nebula';
 import { createShootingStars, spawnShootingStars, animateShootingStars, disposeShootingStars } from '@/lib/three/shooting-stars';
 import { loadBuzzwords, animateBuzzwords, triggerBuzzwordGlitch, disposeBuzzwords, BuzzwordSystem } from '@/lib/three/buzzwords';
 import { createArtifact, animateArtifact, triggerArtifactGlitch, disposeArtifact } from '@/lib/three/artifact';
@@ -39,7 +39,7 @@ export const FuturisticAlienHero = () => {
     const lastShootingStarTime = { value: 0 };
 
     const artifactSystem = createArtifact(scene, dehubLogoCenter);
-    const { nebula, geometry: nebulaGeometry, material: nebulaMaterial } = createNebula(scene);
+    const nebulaSystem = createNebula(scene);
 
     const buzzwordSystem: BuzzwordSystem = { sprites: [], types: [], loaded: false };
 
@@ -78,7 +78,7 @@ export const FuturisticAlienHero = () => {
 
       // Animate systems
       animateArtifact(artifactSystem, elapsedTime);
-      animateNebula(nebula);
+      animateNebula(nebulaSystem);
       spawnShootingStars(shootingStars, elapsedTime, lastShootingStarTime);
       animateShootingStars(shootingStars, delta);
       animateBuzzwords(buzzwordSystem, elapsedTime);
@@ -110,8 +110,7 @@ export const FuturisticAlienHero = () => {
       cancelAnimationFrame(animationFrameId);
       renderer.dispose();
       disposeArtifact(artifactSystem);
-      nebulaGeometry.dispose();
-      nebulaMaterial.dispose();
+      disposeNebula(nebulaSystem);
       disposeShootingStars(shootingStars);
       disposeBuzzwords(buzzwordSystem);
     };
