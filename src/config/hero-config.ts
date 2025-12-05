@@ -32,7 +32,11 @@ export const BUZZWORDS = [
   'PRIVATE',
   'FTV',
   'FUTUROV',
-  'OPEN SOURCE'
+  'OPEN SOURCE',
+  'MCA',
+  'MCP',
+  'AI',
+  'OAK SHORE'
 ];
 
 export const FEATURED_BUZZWORDS = [
