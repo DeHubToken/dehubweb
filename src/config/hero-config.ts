@@ -36,7 +36,8 @@ export const BUZZWORDS = [
   'MCA',
   'MCP',
   'AI',
-  'OAK SHORE'
+  'OAK SHORE',
+  'LCS'
 ];
 
 export const FEATURED_BUZZWORDS = [
