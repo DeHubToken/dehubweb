@@ -93,7 +93,7 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
     
     const pos = easterEggPositions[index];
     sprite.position.set(pos.x, pos.y, pos.z);
-    sprite.scale.set(0.25, 0.25, 1); // Small easter eggs
+    sprite.scale.set(0.1875, 0.1875, 1); // Small easter eggs
 
     nebulaGroup.add(sprite);
     easterEggs.push(sprite);
