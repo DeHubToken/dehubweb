@@ -1,14 +1,27 @@
 import * as THREE from 'three';
 import { NEBULA_CONFIG } from '@/config/hero-config';
 
+// Easter egg images
+import easterEgg1 from '@/assets/easter-eggs/easter-egg-1.png';
+import easterEgg2 from '@/assets/easter-eggs/easter-egg-2.png';
+import easterEgg3 from '@/assets/easter-eggs/easter-egg-3.png';
+import easterEgg4 from '@/assets/easter-eggs/easter-egg-4.png';
+
+const EASTER_EGG_IMAGES = [easterEgg1, easterEgg2, easterEgg3, easterEgg4];
+
 export interface NebulaSystem {
   nebula: THREE.Points;
+  nebulaGroup: THREE.Group;
   geometry: THREE.BufferGeometry;
   material: THREE.PointsMaterial;
+  easterEggs: THREE.Sprite[];
 }
 
 export const createNebula = (scene: THREE.Scene): NebulaSystem => {
   const { PARTICLE_COUNT, PARTICLE_SIZE, SPREAD, MIN_DISTANCE_FROM_CENTER } = NEBULA_CONFIG;
+
+  // Create a group to hold nebula and easter eggs together
+  const nebulaGroup = new THREE.Group();
 
   const geometry = new THREE.BufferGeometry();
   const posArray = new Float32Array(PARTICLE_COUNT * 3);
@@ -50,11 +63,55 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
   });
 
   const nebula = new THREE.Points(geometry, material);
-  scene.add(nebula);
+  nebulaGroup.add(nebula);
 
-  return { nebula, geometry, material };
+  // Create easter egg sprites
+  const easterEggs: THREE.Sprite[] = [];
+  const textureLoader = new THREE.TextureLoader();
+
+  EASTER_EGG_IMAGES.forEach((imagePath) => {
+    const texture = textureLoader.load(imagePath);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    
+    const spriteMaterial = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      opacity: 0.25,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const sprite = new THREE.Sprite(spriteMaterial);
+    
+    // Random position within nebula spread, outside center
+    let x, y, z, distFromCenter;
+    do {
+      x = (Math.random() - 0.5) * SPREAD * 0.8;
+      y = (Math.random() - 0.5) * SPREAD * 0.8;
+      z = (Math.random() - 0.5) * SPREAD * 0.8;
+      distFromCenter = Math.sqrt(x * x + y * y + z * z);
+    } while (distFromCenter < MIN_DISTANCE_FROM_CENTER * 1.5);
+
+    sprite.position.set(x, y, z);
+    sprite.scale.set(0.4, 0.4, 1); // Small size to blend with particles
+
+    nebulaGroup.add(sprite);
+    easterEggs.push(sprite);
+  });
+
+  scene.add(nebulaGroup);
+
+  return { nebula, nebulaGroup, geometry, material, easterEggs };
 };
 
-export const animateNebula = (nebula: THREE.Points) => {
-  nebula.rotation.y += 0.0002;
+export const animateNebula = (nebulaSystem: NebulaSystem) => {
+  nebulaSystem.nebulaGroup.rotation.y += 0.0002;
+};
+
+export const disposeNebula = (nebulaSystem: NebulaSystem) => {
+  nebulaSystem.geometry.dispose();
+  nebulaSystem.material.dispose();
+  nebulaSystem.easterEggs.forEach((sprite) => {
+    sprite.material.map?.dispose();
+    sprite.material.dispose();
+  });
 };
