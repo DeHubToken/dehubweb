@@ -1,7 +1,13 @@
 import * as THREE from 'three';
 import { BUZZWORDS, FEATURED_BUZZWORDS, TIMING } from '@/config/hero-config';
+import ftvLogo from '@/assets/ftv-logo.png';
 
 export type SpriteType = 'background' | 'foreground';
+
+// Image buzzwords that appear alongside text buzzwords
+export const IMAGE_BUZZWORDS = [
+  { src: ftvLogo, name: 'FTV' }
+];
 
 export interface BuzzwordSystem {
   sprites: THREE.Sprite[];
@@ -47,6 +53,25 @@ const createTextSprite = (text: string, size: number): THREE.Sprite | null => {
   return sprite;
 };
 
+const createImageSprite = (imageSrc: string, size: number): Promise<THREE.Sprite> => {
+  return new Promise((resolve) => {
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(imageSrc, (texture) => {
+      const spriteMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending
+      });
+
+      const sprite = new THREE.Sprite(spriteMaterial);
+      // Scale to match text buzzword sizing
+      sprite.scale.set(size * 1.5, size * 1.5, 1);
+      resolve(sprite);
+    });
+  });
+};
+
 export const loadBuzzwords = (
   scene: THREE.Scene,
   buzzwordSystem: BuzzwordSystem
@@ -57,6 +82,7 @@ export const loadBuzzwords = (
   const allBuzzwords = [...BUZZWORDS];
   const shuffled = [...allBuzzwords].sort(() => Math.random() - 0.5);
 
+  // Load text buzzwords
   shuffled.forEach((word, index) => {
     setTimeout(() => {
       const isFeatured = FEATURED_BUZZWORDS.includes(word);
@@ -119,6 +145,26 @@ export const loadBuzzwords = (
         }
       }
     }, index * TIMING.BUZZWORD_STAGGER);
+  });
+
+  // Load image buzzwords after text buzzwords
+  const imageStartDelay = shuffled.length * TIMING.BUZZWORD_STAGGER;
+  IMAGE_BUZZWORDS.forEach((imgBuzzword, index) => {
+    setTimeout(async () => {
+      const size = Math.random() * 0.3 + 0.5;
+      const sprite = await createImageSprite(imgBuzzword.src, size);
+      
+      // Position in foreground like featured buzzwords
+      sprite.position.set(
+        (Math.random() - 0.5) * 5,
+        (Math.random() - 0.5) * 5,
+        Math.random() * 2 + 1
+      );
+      
+      scene.add(sprite);
+      buzzwordSystem.sprites.push(sprite);
+      buzzwordSystem.types.push('foreground');
+    }, imageStartDelay + index * TIMING.BUZZWORD_STAGGER);
   });
 };
 
