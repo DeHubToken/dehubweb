@@ -11,6 +11,7 @@ import fighter2Sprite from '@/assets/fighter2-sprite.png';
 import heavenSprite from '@/assets/heaven-sprite.png';
 import animeGirlSprite from '@/assets/anime-girl-sprite.png';
 import yorkieSprite from '@/assets/yorkie-sprite.png';
+import monaLisaSprite from '@/assets/mona-lisa-sprite.png';
 
 export type SpriteType = 'background' | 'foreground';
 
@@ -26,7 +27,9 @@ export const IMAGE_BUZZWORDS = [
   { src: fighter2Sprite, name: 'FIGHTER2' },
   { src: heavenSprite, name: 'HEAVEN' },
   { src: animeGirlSprite, name: 'ANIMEGIRL' },
-  { src: yorkieSprite, name: 'YORKIE' }
+  { src: yorkieSprite, name: 'YORKIE' },
+  { src: monaLisaSprite, name: 'MONALISA1' },
+  { src: monaLisaSprite, name: 'MONALISA2' }
 ];
 
 export interface BuzzwordSystem {
