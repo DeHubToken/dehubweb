@@ -2,13 +2,17 @@ import * as THREE from 'three';
 import { BUZZWORDS, FEATURED_BUZZWORDS, TIMING } from '@/config/hero-config';
 import ftvLogo from '@/assets/ftv-logo.png';
 import darthVaderPixel from '@/assets/darth-vader-pixel.png';
+import portraitSprite from '@/assets/portrait-sprite.png';
+import lionCatSprite from '@/assets/lion-cat-sprite.png';
 
 export type SpriteType = 'background' | 'foreground';
 
 // Image buzzwords that appear alongside text buzzwords
 export const IMAGE_BUZZWORDS = [
   { src: ftvLogo, name: 'FTV' },
-  { src: darthVaderPixel, name: 'DARTH' }
+  { src: darthVaderPixel, name: 'DARTH' },
+  { src: portraitSprite, name: 'PORTRAIT' },
+  { src: lionCatSprite, name: 'LIONCAT' }
 ];
 
 export interface BuzzwordSystem {
