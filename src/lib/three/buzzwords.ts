@@ -82,7 +82,7 @@ const createImageSprite = (imageSrc: string, size: number): Promise<THREE.Sprite
 
       const sprite = new THREE.Sprite(spriteMaterial);
       // Scale to match text buzzword sizing
-      sprite.scale.set(size * 0.3, size * 0.3, 1);
+      sprite.scale.set(size * 0.15, size * 0.15, 1);
       resolve(sprite);
     });
   });
