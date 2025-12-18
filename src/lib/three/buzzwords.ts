@@ -83,7 +83,7 @@ const createImageSprite = (imageSrc: string, size: number): Promise<THREE.Sprite
       const spriteMaterial = new THREE.SpriteMaterial({
         map: texture,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.6,
         blending: THREE.AdditiveBlending
       });
 
