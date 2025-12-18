@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 interface HeroTitleProps {
   masterGlitch: boolean;
@@ -22,6 +23,40 @@ const fadeUpVariants = {
   }),
 };
 
+// Flicker hook to create sprite-like effect
+const useFlicker = () => {
+  const [flickerStyle, setFlickerStyle] = useState({ opacity: 1, transform: 'translate(0, 0)' });
+
+  useEffect(() => {
+    let animationFrame: number;
+    let lastTime = 0;
+    
+    const animate = (time: number) => {
+      // Update every ~16ms (60fps)
+      if (time - lastTime > 16) {
+        const staticNoise = Math.random() * 0.15;
+        const scanlineFlicker = Math.sin(time * 0.06) * 0.05;
+        const opacity = 1 - staticNoise + scanlineFlicker;
+        
+        const jitterX = (Math.random() - 0.5) * 0.5;
+        const jitterY = (Math.random() - 0.5) * 0.5;
+        
+        setFlickerStyle({
+          opacity: Math.max(0.7, Math.min(1, opacity)),
+          transform: `translate(${jitterX}px, ${jitterY}px)`
+        });
+        lastTime = time;
+      }
+      animationFrame = requestAnimationFrame(animate);
+    };
+    
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, []);
+
+  return flickerStyle;
+};
+
 export const HeroTitle = ({
   masterGlitch,
   corruptedTitle,
@@ -30,6 +65,8 @@ export const HeroTitle = ({
   title = 'A New World',
   subtitle = 'Awaits'
 }: HeroTitleProps) => {
+  const flickerStyle = useFlicker();
+  
   // Split title for mobile 3-line layout
   const titleWords = title.split(' ');
   const mobileLine1 = titleWords.slice(0, 2).join(' '); // "A New"
@@ -38,7 +75,10 @@ export const HeroTitle = ({
   return (
     <motion.h1
       className={`font-exo text-[4.6rem] sm:text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-wider text-white md:scale-[1.15] lg:scale-110 translate-y-[20px] sm:translate-y-0 ${masterGlitch ? 'glitch-active' : ''} ${className}`}
-      style={{ textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)' }}
+      style={{ 
+        textShadow: '0 0 8px rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5)',
+        ...flickerStyle
+      }}
     >
       {/* Mobile: 3 lines */}
       <motion.span variants={fadeUpVariants} custom={0.5} initial="hidden" animate="visible" className="block sm:hidden -mt-8">
