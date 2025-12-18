@@ -6,12 +6,11 @@ import easterEgg1 from '@/assets/easter-eggs/easter-egg-1.png';
 import easterEgg2 from '@/assets/easter-eggs/easter-egg-2.png';
 import easterEgg3 from '@/assets/easter-eggs/easter-egg-3.png';
 import easterEgg4 from '@/assets/easter-eggs/easter-egg-4.png';
-import easterEgg5 from '@/assets/easter-eggs/easter-egg-5.png';
 
 // Special nebula easter egg
 import thirdEye from '@/assets/easter-eggs/third-eye.jpg';
 
-const EASTER_EGG_IMAGES = [easterEgg1, easterEgg2, easterEgg3, easterEgg4, easterEgg5];
+const EASTER_EGG_IMAGES = [easterEgg1, easterEgg2, easterEgg3, easterEgg4];
 const SPECIAL_EASTER_EGG_COUNT = 20;
 
 export interface NebulaSystem {
@@ -82,7 +81,6 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
     { x: 4, y: 2, z: 1 },    // Top-right front  
     { x: -3, y: -3, z: 2 },  // Bottom-left front
     { x: 5, y: -2, z: 1 },   // Bottom-right front
-    { x: 0, y: -3.5, z: 1.5 }, // Bottom-center front
   ];
 
   EASTER_EGG_IMAGES.forEach((imagePath, index) => {
