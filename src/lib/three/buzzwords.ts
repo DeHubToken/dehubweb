@@ -9,6 +9,7 @@ import champSprite from '@/assets/champ-sprite.png';
 import wolfSprite from '@/assets/wolf-sprite.png';
 import fighter2Sprite from '@/assets/fighter2-sprite.png';
 import heavenSprite from '@/assets/heaven-sprite.png';
+import animeGirlSprite from '@/assets/anime-girl-sprite.png';
 
 export type SpriteType = 'background' | 'foreground';
 
@@ -22,7 +23,8 @@ export const IMAGE_BUZZWORDS = [
   { src: champSprite, name: 'CHAMP' },
   { src: wolfSprite, name: 'WOLF' },
   { src: fighter2Sprite, name: 'FIGHTER2' },
-  { src: heavenSprite, name: 'HEAVEN' }
+  { src: heavenSprite, name: 'HEAVEN' },
+  { src: animeGirlSprite, name: 'ANIMEGIRL' }
 ];
 
 export interface BuzzwordSystem {
@@ -82,7 +84,7 @@ const createImageSprite = (imageSrc: string, size: number): Promise<THREE.Sprite
 
       const sprite = new THREE.Sprite(spriteMaterial);
       // Scale to match text buzzword sizing
-      sprite.scale.set(size * 0.15, size * 0.15, 1);
+      sprite.scale.set(size * 0.075, size * 0.075, 1);
       resolve(sprite);
     });
   });
