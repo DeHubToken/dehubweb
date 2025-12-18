@@ -4,6 +4,8 @@ import ftvLogo from '@/assets/ftv-logo.png';
 import darthVaderPixel from '@/assets/darth-vader-pixel.png';
 import portraitSprite from '@/assets/portrait-sprite.png';
 import lionCatSprite from '@/assets/lion-cat-sprite.png';
+import fighterSprite from '@/assets/fighter-sprite.png';
+import champSprite from '@/assets/champ-sprite.png';
 
 export type SpriteType = 'background' | 'foreground';
 
@@ -12,7 +14,9 @@ export const IMAGE_BUZZWORDS = [
   { src: ftvLogo, name: 'FTV' },
   { src: darthVaderPixel, name: 'DARTH' },
   { src: portraitSprite, name: 'PORTRAIT' },
-  { src: lionCatSprite, name: 'LIONCAT' }
+  { src: lionCatSprite, name: 'LIONCAT' },
+  { src: fighterSprite, name: 'FIGHTER' },
+  { src: champSprite, name: 'CHAMP' }
 ];
 
 export interface BuzzwordSystem {
