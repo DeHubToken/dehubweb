@@ -5,12 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
 const tabs = [
-  { label: 'All', value: 'all' },
-  { label: 'Likes', value: 'likes' },
-  { label: 'Comments', value: 'comments' },
-  { label: 'Shares', value: 'shares' },
-  { label: 'Tips', value: 'tips' },
-  { label: 'Subs', value: 'subs' },
+  { label: 'All', value: 'all', icon: null },
+  { label: 'Likes', value: 'likes', icon: Heart },
+  { label: 'Comments', value: 'comments', icon: MessageCircle },
+  { label: 'Shares', value: 'shares', icon: Share },
+  { label: 'Tips', value: 'tips', icon: DollarSign },
+  { label: 'Subs', value: 'subs', icon: Users },
 ];
 
 interface Notification {
@@ -125,13 +125,14 @@ export default function NotificationsPage() {
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.value
                     ? 'bg-white text-black'
                     : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
                 }`}
               >
-                {tab.label}
+                {tab.icon && <tab.icon className="w-4 h-4" />}
+                <span className={tab.icon ? 'hidden sm:inline' : ''}>{tab.label}</span>
               </button>
             ))}
           </div>
