@@ -1,20 +1,23 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
 
-interface AppLayoutProps {
-  showRightSidebarSearch?: boolean;
-}
+export function AppLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-export function AppLayout({ showRightSidebarSearch = true }: AppLayoutProps) {
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="flex max-w-7xl mx-auto">
-        <AppSidebar />
-        <main className="flex-1 border-r border-zinc-800 min-h-screen">
+        <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+        
+        <main className="flex-1 min-h-screen lg:border-r border-zinc-800 pt-14 lg:pt-0">
           <Outlet />
         </main>
-        <RightSidebar showSearch={showRightSidebarSearch} />
+        
+        <RightSidebar />
       </div>
     </div>
   );
