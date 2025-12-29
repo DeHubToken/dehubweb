@@ -60,7 +60,26 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             const isActive =
               item.path === '/app'
                 ? location.pathname === '/app'
-                : location.pathname.startsWith(item.path);
+                : !item.external && location.pathname.startsWith(item.path);
+
+            if (item.external) {
+              return (
+                <a
+                  key={item.label}
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => window.innerWidth < 1024 && onToggle()}
+                  className={cn(
+                    'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
+                    'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+                  )}
+                >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </a>
+              );
+            }
 
             return (
               <NavLink
