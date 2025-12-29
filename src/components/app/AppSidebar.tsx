@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
+import dehubLogo from '@/assets/dehub-logo-white.png';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     <>
       {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-white">dehub</h1>
+        <img src={dehubLogo} alt="dehub" className="h-8 w-auto" />
         <button
           onClick={onToggle}
           className="p-2 rounded-full hover:bg-zinc-800 transition-colors"
@@ -47,7 +48,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       >
         {/* Logo - Desktop only */}
         <div className="hidden lg:block mb-6">
-          <h1 className="text-2xl font-bold text-white">dehub</h1>
+          <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
         </div>
 
         {/* Mobile spacer for header */}
