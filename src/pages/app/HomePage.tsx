@@ -92,16 +92,15 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Feed Tabs - Bento Style */}
       <div className="sticky top-14 lg:top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3">
         <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex justify-start sm:justify-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
                 className={cn(
-                  'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap flex-shrink-0',
+                  'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
                   activeTab === tab.value
                     ? 'bg-zinc-800 text-white'
                     : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
