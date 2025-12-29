@@ -132,14 +132,20 @@ function HomeFeed() {
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('home');
   const [showShortsFilters, setShowShortsFilters] = useState(false);
+  const [showImagesCollage, setShowImagesCollage] = useState(false);
 
   const handleTabClick = (tabValue: string) => {
     if (tabValue === 'shorts' && activeTab === 'shorts') {
       setShowShortsFilters((prev) => !prev);
+    } else if (tabValue === 'images' && activeTab === 'images') {
+      setShowImagesCollage((prev) => !prev);
     } else {
       setActiveTab(tabValue);
       if (tabValue !== 'shorts') {
         setShowShortsFilters(false);
+      }
+      if (tabValue !== 'images') {
+        setShowImagesCollage(false);
       }
     }
   };
@@ -147,7 +153,7 @@ export default function HomePage() {
   const renderFeed = () => {
     switch (activeTab) {
       case 'images':
-        return <ImagesFeed />;
+        return <ImagesFeed showCollage={showImagesCollage} />;
       case 'videos':
         return <VideosFeed />;
       case 'shorts':

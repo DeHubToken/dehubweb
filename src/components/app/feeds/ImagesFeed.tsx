@@ -1,5 +1,6 @@
 import { Heart, MessageCircle, Bookmark, Share, MoreHorizontal } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface InstagramPost {
   id: string;
@@ -11,6 +12,10 @@ interface InstagramPost {
   caption: string;
   comments: number;
   timeAgo: string;
+}
+
+interface ImagesFeedProps {
+  showCollage?: boolean;
 }
 
 const MOCK_POSTS: InstagramPost[] = [
@@ -47,13 +52,118 @@ const MOCK_POSTS: InstagramPost[] = [
     comments: 234,
     timeAgo: '6 hours ago',
   },
+  {
+    id: '4',
+    username: 'nature_lover',
+    verified: false,
+    avatar: 'nature',
+    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=600&fit=crop',
+    likes: 3421,
+    caption: 'Lost in the wilderness 🌲 #nature #outdoors',
+    comments: 98,
+    timeAgo: '8 hours ago',
+  },
+  {
+    id: '5',
+    username: 'city_vibes',
+    verified: true,
+    avatar: 'city',
+    image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&h=600&fit=crop',
+    likes: 4102,
+    caption: 'City lights ✨ #urban #cityscape',
+    comments: 167,
+    timeAgo: '10 hours ago',
+  },
+  {
+    id: '6',
+    username: 'art_gallery',
+    verified: false,
+    avatar: 'art',
+    image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&h=600&fit=crop',
+    likes: 2891,
+    caption: 'Art speaks where words fail 🎨 #art #creative',
+    comments: 73,
+    timeAgo: '12 hours ago',
+  },
+  {
+    id: '7',
+    username: 'beach_life',
+    verified: true,
+    avatar: 'beach',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=600&fit=crop',
+    likes: 5892,
+    caption: 'Paradise found 🏝️ #beach #summer',
+    comments: 245,
+    timeAgo: '14 hours ago',
+  },
+  {
+    id: '8',
+    username: 'coffee_addict',
+    verified: false,
+    avatar: 'coffee',
+    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=600&fit=crop',
+    likes: 1567,
+    caption: 'But first, coffee ☕ #coffee #morning',
+    comments: 56,
+    timeAgo: '16 hours ago',
+  },
+  {
+    id: '9',
+    username: 'street_style',
+    verified: true,
+    avatar: 'style',
+    image: 'https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&h=600&fit=crop',
+    likes: 3245,
+    caption: 'Street vibes 🚶 #streetphotography #urban',
+    comments: 112,
+    timeAgo: '18 hours ago',
+  },
 ];
 
-export function ImagesFeed() {
+function CollageView({ posts }: { posts: InstagramPost[] }) {
+  return (
+    <div className="p-1 sm:p-2">
+      <div className="grid grid-cols-3 gap-0.5 sm:gap-1">
+        {posts.map((post, index) => {
+          // Every 3rd item (index 2, 5, 8...) is a large tile spanning 2x2
+          const isLargeTile = (index + 1) % 3 === 0 && index !== 0;
+          
+          return (
+            <div
+              key={post.id}
+              className={cn(
+                'relative aspect-square bg-zinc-800 overflow-hidden group cursor-pointer',
+                isLargeTile && 'col-span-2 row-span-2'
+              )}
+            >
+              <img
+                src={post.image}
+                alt=""
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 sm:gap-6">
+                <div className="flex items-center gap-1 sm:gap-2 text-white">
+                  <Heart className="w-4 h-4 sm:w-6 sm:h-6 fill-white" />
+                  <span className="font-semibold text-xs sm:text-base">{post.likes.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center gap-1 sm:gap-2 text-white">
+                  <MessageCircle className="w-4 h-4 sm:w-6 sm:h-6 fill-white" />
+                  <span className="font-semibold text-xs sm:text-base">{post.comments}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function EndlessScrollView({ posts }: { posts: InstagramPost[] }) {
   return (
     <div className="p-2 sm:p-3 space-y-3">
-      {/* Posts */}
-      {MOCK_POSTS.map((post) => (
+      {posts.map((post) => (
         <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between p-3">
@@ -124,5 +234,13 @@ export function ImagesFeed() {
         </div>
       ))}
     </div>
+  );
+}
+
+export function ImagesFeed({ showCollage = false }: ImagesFeedProps) {
+  return showCollage ? (
+    <CollageView posts={MOCK_POSTS} />
+  ) : (
+    <EndlessScrollView posts={MOCK_POSTS} />
   );
 }
