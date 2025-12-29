@@ -52,49 +52,51 @@ export default function ProfilePage() {
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Cover Photo */}
-          <div className="h-24 sm:h-32 bg-gradient-to-r from-zinc-700 via-zinc-600 to-zinc-700" />
+          <div className="h-28 sm:h-36 bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
           
-          {/* Avatar & Actions */}
-          <div className="px-4 sm:px-6">
-            <div className="flex justify-between items-end -mt-10 sm:-mt-12">
-              <div className="relative">
+          {/* Profile Content */}
+          <div className="px-4 sm:px-6 pb-4">
+            {/* Avatar - positioned to overlap banner */}
+            <div className="relative -mt-12 sm:-mt-14 mb-4">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1">
                 <UserAvatar 
                   name={MOCK_PROFILE.name} 
                   handle={MOCK_PROFILE.handle} 
                   size="lg" 
-                  className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-zinc-900"
+                  className="w-full h-full rounded-full"
                 />
-                <div className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
               </div>
-              
-              <div className="flex items-center gap-2 pb-2">
-                <Button 
-                  size="sm" 
-                  className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  Follow
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Message
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
-                >
-                  <Share className="w-4 h-4" />
-                </Button>
-              </div>
+              <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
+            </div>
+
+            {/* Action Buttons - separate row */}
+            <div className="flex items-center gap-2 mb-4">
+              <Button 
+                size="sm" 
+                className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
+              >
+                <UserPlus className="w-4 h-4" />
+                Follow
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Message
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+              >
+                <Share className="w-4 h-4" />
+              </Button>
             </div>
 
             {/* Profile Info */}
-            <div className="mt-4 pb-4">
+            <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-white">{MOCK_PROFILE.name}</h2>
                 {MOCK_PROFILE.verified && <VerifiedBadge className="w-5 h-5" />}
