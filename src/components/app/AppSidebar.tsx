@@ -16,7 +16,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   return (
     <>
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-3 flex items-center justify-between">
         <img src={dehubLogo} alt="dehub" className="h-8 w-auto" />
         <button
           onClick={onToggle}
