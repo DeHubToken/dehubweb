@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, Repeat2, DollarSign, Users, Share } from 'lucide-react';
+import { Settings, Heart, MessageCircle, Repeat2, DollarSign, Users, Share, Bell } from 'lucide-react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
 const tabs = [
-  { label: 'All', value: 'all', icon: null },
+  { label: 'All', value: 'all', icon: Bell },
   { label: 'Likes', value: 'likes', icon: Heart },
   { label: 'Comments', value: 'comments', icon: MessageCircle },
   { label: 'Shares', value: 'shares', icon: Share },
@@ -121,8 +121,8 @@ export default function NotificationsPage() {
                     : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
                 }`}
               >
-                {tab.icon && <tab.icon className="w-4 h-4" />}
-                <span className={tab.icon ? 'hidden sm:inline' : ''}>{tab.label}</span>
+                <tab.icon className="w-4 h-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
           </div>
