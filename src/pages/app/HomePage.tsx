@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import type { Post } from '@/types/app.types';
 import { ImagesFeed } from '@/components/app/feeds/ImagesFeed';
@@ -91,9 +92,34 @@ function PostCard({ post }: { post: Post }) {
   );
 }
 
+function StoriesBar() {
+  return (
+    <div className="bg-zinc-900 rounded-2xl p-4">
+      <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+        {['Your Story', 'alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'].map((name, i) => (
+          <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div className={`p-0.5 rounded-full ${i === 0 ? 'bg-zinc-700' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500'}`}>
+              <div className="p-0.5 bg-zinc-900 rounded-full">
+                <Avatar className="w-14 h-14">
+                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`} />
+                  <AvatarFallback className="bg-zinc-700">{name[0].toUpperCase()}</AvatarFallback>
+                </Avatar>
+              </div>
+            </div>
+            <span className="text-xs text-zinc-400 truncate w-16 text-center">
+              {i === 0 ? 'Add Story' : name}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function HomeFeed() {
   return (
     <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+      <StoriesBar />
       {MOCK_POSTS.map((post) => (
         <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
           <PostCard post={post} />
