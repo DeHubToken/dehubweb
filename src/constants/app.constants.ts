@@ -34,7 +34,7 @@ export const FEED_TABS: SearchTab[] = [
   { icon: Image, label: 'Images', value: 'images' },
   { icon: Video, label: 'Videos', value: 'videos' },
   { icon: Film, label: 'Shorts', value: 'shorts' },
-  { icon: Radio, label: 'Cams', value: 'cams' },
+  { icon: Radio, label: 'Live', value: 'live' },
 ];
 
 export const EXPLORE_TABS: SearchTab[] = [
