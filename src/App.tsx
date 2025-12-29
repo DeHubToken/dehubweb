@@ -17,6 +17,7 @@ import NotificationsPage from "./pages/app/NotificationsPage";
 import MessagesPage from "./pages/app/MessagesPage";
 import LeaderboardPage from "./pages/app/LeaderboardPage";
 import BookmarksPage from "./pages/app/BookmarksPage";
+import SettingsPage from "./pages/app/SettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -39,8 +40,7 @@ const App = () => (
             <Route path="messages" element={<MessagesPage />} />
             <Route path="leaderboard" element={<LeaderboardPage />} />
             <Route path="bookmarks" element={<BookmarksPage />} />
-            <Route path="settings" element={<PlaceholderPage title="Settings" />} />
-            <Route path="blog" element={<PlaceholderPage title="Blog" />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
