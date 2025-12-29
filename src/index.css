@@ -102,20 +102,17 @@ All colors MUST be HSL.
   }
 
   html, body {
-    overflow: hidden;
     height: 100%;
     width: 100%;
   }
 
   body {
     @apply bg-background text-foreground;
-    position: fixed;
-    touch-action: none;
+    overflow-x: hidden;
   }
 
   #root {
-    overflow: hidden;
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
   }
 }
