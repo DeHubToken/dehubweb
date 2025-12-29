@@ -25,7 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
-  { icon: FileText, label: 'Blog', path: '/app/blog' },
+  { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
   { icon: Home, label: 'Home', path: '/app' },
 ];
 

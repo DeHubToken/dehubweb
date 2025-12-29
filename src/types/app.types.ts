@@ -4,6 +4,7 @@ export interface NavItem {
   icon: LucideIcon;
   label: string;
   path: string;
+  external?: boolean;
 }
 
 export interface User {
