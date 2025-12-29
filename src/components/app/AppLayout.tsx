@@ -14,7 +14,7 @@ export function AppLayout() {
       <div className="flex max-w-7xl mx-auto w-full">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className="flex-1 pt-14 pb-20 lg:pt-0 lg:pb-0 min-w-0 w-full overflow-x-hidden">
+        <main className="flex-1 pt-14 pb-10 lg:pt-0 lg:pb-0 min-w-0 w-full overflow-x-hidden">
           <Outlet />
         </main>
         
