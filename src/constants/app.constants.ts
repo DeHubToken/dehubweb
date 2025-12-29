@@ -31,8 +31,8 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, label: 'Home', value: 'home' },
-  { icon: Image, label: 'Images', value: 'images' },
   { icon: Video, label: 'Videos', value: 'videos' },
+  { icon: Image, label: 'Images', value: 'images' },
   { icon: Film, label: 'Shorts', value: 'shorts' },
   { icon: Radio, label: 'Live', value: 'live' },
 ];
