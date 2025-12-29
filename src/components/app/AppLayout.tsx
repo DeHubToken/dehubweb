@@ -10,11 +10,11 @@ export function AppLayout() {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white">
       <div className="flex max-w-7xl mx-auto w-full">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className="flex-1 min-h-screen pt-14 pb-20 lg:pt-0 lg:pb-0 min-w-0 w-full">
+        <main className="flex-1 pt-14 pb-20 lg:pt-0 lg:pb-0 min-w-0 w-full overflow-x-hidden">
           <Outlet />
         </main>
         
