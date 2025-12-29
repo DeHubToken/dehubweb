@@ -87,14 +87,19 @@ const MOCK_SHORTS: TikTokVideo[] = [
 const DURATION_OPTIONS = ['All', '< 15s', '15-60s', '> 60s'];
 const CATEGORY_OPTIONS = ['All', 'Dance', 'Comedy', 'Food', 'Pets', 'Fitness', 'Magic'];
 
-export function ShortsFeed() {
+interface ShortsFeedProps {
+  showFilters?: boolean;
+}
+
+export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
   const [selectedDuration, setSelectedDuration] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   return (
     <div className="p-2 sm:p-3">
       {/* Filters */}
-      <div className="mb-4 space-y-3">
+      {showFilters && (
+        <div className="mb-4 space-y-3">
         {/* Duration Filter */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
           <span className="text-zinc-400 text-sm whitespace-nowrap">Duration:</span>
@@ -133,6 +138,7 @@ export function ShortsFeed() {
           ))}
         </div>
       </div>
+      )}
 
       {/* Shorts Grid - TikTok Style */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
