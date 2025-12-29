@@ -81,9 +81,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           })}
         </nav>
 
-        {/* Post Button */}
-        <div className="mt-4">
-          <Button className="w-full rounded-full bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base">
+        {/* Post Button Bento */}
+        <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
+          <Button className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base">
             Post
           </Button>
         </div>
