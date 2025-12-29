@@ -28,20 +28,20 @@ export default function ExplorePage() {
 
         {/* Tabs Bento */}
         <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex justify-start sm:justify-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex w-full">
             {EXPLORE_TABS.map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
                 className={cn(
-                  'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap flex-shrink-0',
+                  'flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
                   activeTab === tab.value
                     ? 'bg-zinc-800 text-white'
                     : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                 )}
               >
                 <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
           </div>
