@@ -133,12 +133,15 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState('home');
   const [showShortsFilters, setShowShortsFilters] = useState(false);
   const [showImagesCollage, setShowImagesCollage] = useState(false);
+  const [showVideosFilters, setShowVideosFilters] = useState(false);
 
   const handleTabClick = (tabValue: string) => {
     if (tabValue === 'shorts' && activeTab === 'shorts') {
       setShowShortsFilters((prev) => !prev);
     } else if (tabValue === 'images' && activeTab === 'images') {
       setShowImagesCollage((prev) => !prev);
+    } else if (tabValue === 'videos' && activeTab === 'videos') {
+      setShowVideosFilters((prev) => !prev);
     } else {
       setActiveTab(tabValue);
       if (tabValue !== 'shorts') {
@@ -146,6 +149,9 @@ export default function HomePage() {
       }
       if (tabValue !== 'images') {
         setShowImagesCollage(false);
+      }
+      if (tabValue !== 'videos') {
+        setShowVideosFilters(false);
       }
     }
   };
@@ -155,7 +161,7 @@ export default function HomePage() {
       case 'images':
         return <ImagesFeed showCollage={showImagesCollage} />;
       case 'videos':
-        return <VideosFeed />;
+        return <VideosFeed showFilters={showVideosFilters} />;
       case 'shorts':
         return <ShortsFeed showFilters={showShortsFilters} />;
       case 'live':

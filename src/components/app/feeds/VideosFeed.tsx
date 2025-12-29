@@ -1,5 +1,12 @@
+import { useState } from 'react';
 import { MoreVertical, ThumbsUp, ThumbsDown, Share, Clock, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface VideosFeedProps {
+  showFilters?: boolean;
+}
 
 interface YouTubeVideo {
   id: string;
@@ -12,6 +19,10 @@ interface YouTubeVideo {
   views: string;
   uploadedAgo: string;
 }
+
+const DURATION_OPTIONS = ['0-1m', '1-4m', '4-20m', '20m+'];
+const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented'];
+const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
 
 const MOCK_VIDEOS: YouTubeVideo[] = [
   {
@@ -82,9 +93,81 @@ const MOCK_VIDEOS: YouTubeVideo[] = [
   },
 ];
 
-export function VideosFeed() {
+function FilterSection({ 
+  label, 
+  options, 
+  selected, 
+  onSelect 
+}: { 
+  label: string; 
+  options: string[]; 
+  selected: string; 
+  onSelect: (value: string) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{label}</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {options.map((option) => (
+          <button
+            key={option}
+            onClick={() => onSelect(option)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              selected === option
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function VideosFeed({ showFilters = false }: VideosFeedProps) {
+  const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
+  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
+
   return (
     <div className="p-2 sm:p-3">
+      {/* Filters */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <div className="bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
+              <FilterSection
+                label="Duration"
+                options={DURATION_OPTIONS}
+                selected={selectedDuration}
+                onSelect={setSelectedDuration}
+              />
+              <FilterSection
+                label="Sort"
+                options={SORT_OPTIONS}
+                selected={selectedSort}
+                onSelect={setSelectedSort}
+              />
+              <FilterSection
+                label="Upload Date"
+                options={UPLOAD_DATE_OPTIONS}
+                selected={selectedUploadDate}
+                onSelect={setSelectedUploadDate}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
         <div className="flex gap-2 overflow-x-auto scrollbar-hide">
