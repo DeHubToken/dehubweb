@@ -4,6 +4,10 @@ import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { cn } from '@/lib/utils';
 import type { Post } from '@/types/app.types';
+import { ImagesFeed } from '@/components/app/feeds/ImagesFeed';
+import { VideosFeed } from '@/components/app/feeds/VideosFeed';
+import { ShortsFeed } from '@/components/app/feeds/ShortsFeed';
+import { LiveFeed } from '@/components/app/feeds/LiveFeed';
 
 const MOCK_POSTS: Post[] = [
   {
@@ -87,8 +91,35 @@ function PostCard({ post }: { post: Post }) {
   );
 }
 
+function HomeFeed() {
+  return (
+    <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+      {MOCK_POSTS.map((post) => (
+        <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
+          <PostCard post={post} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('home');
+
+  const renderFeed = () => {
+    switch (activeTab) {
+      case 'images':
+        return <ImagesFeed />;
+      case 'videos':
+        return <VideosFeed />;
+      case 'shorts':
+        return <ShortsFeed />;
+      case 'live':
+        return <LiveFeed />;
+      default:
+        return <HomeFeed />;
+    }
+  };
 
   return (
     <>
@@ -114,14 +145,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Posts - Bento Style */}
-      <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
-        {MOCK_POSTS.map((post) => (
-          <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
-            <PostCard post={post} />
-          </div>
-        ))}
-      </div>
+      {renderFeed()}
     </>
   );
 }
