@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
+import { cn } from '@/lib/utils';
 import type { Post } from '@/types/app.types';
 
 const MOCK_POSTS: Post[] = [
@@ -46,38 +47,38 @@ const MOCK_POSTS: Post[] = [
 
 function PostCard({ post }: { post: Post }) {
   return (
-    <article className="p-4 hover:bg-zinc-900/50 transition-colors">
+    <article className="p-4 hover:bg-zinc-800/30 transition-colors">
       <div className="flex gap-3">
-        <UserAvatar name={post.author.name} handle={post.author.handle} size="lg" />
+        <UserAvatar name={post.author.name} handle={post.author.handle} size="lg" className="hidden sm:flex" />
+        <UserAvatar name={post.author.name} handle={post.author.handle} size="md" className="flex sm:hidden" />
 
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-white">{post.author.name}</span>
-            <span className="text-zinc-500">{post.author.handle}</span>
-            <span className="text-zinc-500">·</span>
-            <span className="text-zinc-500">{post.createdAt}</span>
-            <button className="ml-auto text-zinc-500 hover:text-white transition-colors">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold text-white truncate">{post.author.name}</span>
+            <span className="text-zinc-500 text-sm truncate">{post.author.handle}</span>
+            <span className="text-zinc-500 text-sm">· {post.createdAt}</span>
+            <button className="ml-auto text-zinc-500 hover:text-white transition-colors p-1">
               <MoreHorizontal className="w-5 h-5" />
             </button>
           </div>
 
-          <p className="mt-2 text-white/90">{post.content}</p>
+          <p className="mt-2 text-white/90 text-sm sm:text-base">{post.content}</p>
 
-          <div className="flex items-center gap-8 mt-4 text-zinc-500">
-            <button className="flex items-center gap-2 hover:text-blue-400 transition-colors">
-              <MessageCircle className="w-5 h-5" />
-              <span>{post.stats.comments}</span>
+          <div className="flex items-center gap-4 sm:gap-8 mt-4 text-zinc-500">
+            <button className="flex items-center gap-1 sm:gap-2 hover:text-blue-400 transition-colors">
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm">{post.stats.comments}</span>
             </button>
-            <button className="flex items-center gap-2 hover:text-green-400 transition-colors">
-              <Repeat2 className="w-5 h-5" />
-              <span>{post.stats.reposts}</span>
+            <button className="flex items-center gap-1 sm:gap-2 hover:text-green-400 transition-colors">
+              <Repeat2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm">{post.stats.reposts}</span>
             </button>
-            <button className="flex items-center gap-2 hover:text-red-400 transition-colors">
-              <Heart className="w-5 h-5" />
-              <span>{post.stats.likes}</span>
+            <button className="flex items-center gap-1 sm:gap-2 hover:text-red-400 transition-colors">
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm">{post.stats.likes}</span>
             </button>
             <button className="hover:text-blue-400 transition-colors">
-              <Share className="w-5 h-5" />
+              <Share className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
@@ -91,30 +92,35 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Feed Tabs */}
-      <div className="sticky top-0 bg-black/80 backdrop-blur-sm border-b border-zinc-800 z-10">
-        <div className="flex justify-center gap-2 p-2">
-          {FEED_TABS.map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => setActiveTab(tab.value)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
-                activeTab === tab.value
-                  ? 'bg-zinc-800 text-white'
-                  : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
-              }`}
-            >
-              <tab.icon className="w-4 h-4" />
-              <span>{tab.label}</span>
-            </button>
-          ))}
+      {/* Feed Tabs - Bento Style */}
+      <div className="sticky top-14 lg:top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3">
+        <div className="bg-zinc-900 rounded-2xl p-2">
+          <div className="flex justify-start sm:justify-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+            {FEED_TABS.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                className={cn(
+                  'flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap flex-shrink-0',
+                  activeTab === tab.value
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+                )}
+              >
+                <tab.icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Posts */}
-      <div className="divide-y divide-zinc-800">
+      {/* Posts - Bento Style */}
+      <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {MOCK_POSTS.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
+            <PostCard post={post} />
+          </div>
         ))}
       </div>
     </>

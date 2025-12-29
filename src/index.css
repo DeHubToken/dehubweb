@@ -121,6 +121,15 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  /* Scrollbar Hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Glitch Animations */
   @keyframes glitch-rgb {
     0% {
