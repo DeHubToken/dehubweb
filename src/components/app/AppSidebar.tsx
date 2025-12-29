@@ -108,7 +108,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         </NavLink>
 
         {/* Navigation Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto">
+        <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
           {NAV_ITEMS.map((item) => {
             const isActive =
               item.path === '/app'
