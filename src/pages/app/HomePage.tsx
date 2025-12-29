@@ -123,7 +123,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3">
+      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-1 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => (
