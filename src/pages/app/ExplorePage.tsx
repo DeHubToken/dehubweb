@@ -69,11 +69,11 @@ export default function ExplorePage() {
         {/* Trending Bento */}
         <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Trending</h2>
-          <div className="divide-y divide-zinc-800">
+          <div className="space-y-3">
             {EXPLORE_TRENDING.map((item) => (
               <div
                 key={item.tag}
-                className="flex items-center justify-between py-3 first:pt-0 last:pb-0 gap-4"
+                className="flex items-center justify-between gap-4"
               >
                 <div className="min-w-0">
                   <p className="font-semibold text-white truncate">{item.tag}</p>
