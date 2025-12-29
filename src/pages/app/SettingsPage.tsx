@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useTheme } from 'next-themes';
-import { toast } from 'sonner';
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -54,19 +52,19 @@ const tabs = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
-  const { theme, setTheme } = useTheme();
+  const [theme, setTheme] = useState('system');
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
       {/* Header */}
-      <div className="bg-card rounded-2xl p-4 sm:p-6 mb-4">
+      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-            <SettingsIcon className="w-6 h-6 text-muted-foreground" />
+          <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center">
+            <SettingsIcon className="w-6 h-6 text-zinc-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground">Settings</h1>
-            <p className="text-muted-foreground text-sm">Manage your account and preferences</p>
+            <h1 className="text-xl font-bold text-white">Settings</h1>
+            <p className="text-zinc-500 text-sm">Manage your account and preferences</p>
           </div>
         </div>
 
@@ -80,8 +78,8 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.value)}
                 className={`p-3 rounded-xl transition-colors ${
                   activeTab === tab.value
-                    ? 'bg-accent text-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-zinc-500 hover:text-white hover:bg-zinc-800/50'
                 }`}
                 title={tab.label}
               >
@@ -93,11 +91,11 @@ export default function SettingsPage() {
       </div>
 
       {/* Content */}
-      <div className="bg-card rounded-2xl p-4 sm:p-6">
+      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         {activeTab === 'profile' && <ProfileSettings />}
         {activeTab === 'notifications' && <NotificationSettings />}
         {activeTab === 'privacy' && <PrivacySettings />}
-        {activeTab === 'appearance' && <AppearanceSettings theme={theme || 'system'} setTheme={setTheme} />}
+        {activeTab === 'appearance' && <AppearanceSettings theme={theme} setTheme={setTheme} />}
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
       </div>
@@ -495,10 +493,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       </div>
 
       <div className="flex justify-end">
-        <Button 
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
-          onClick={() => toast.success('Settings saved successfully!')}
-        >
+        <Button className="bg-white text-black hover:bg-zinc-200">
           Apply Changes
         </Button>
       </div>

@@ -86,15 +86,15 @@ export function VideosFeed() {
   return (
     <div className="p-2 sm:p-3">
       {/* Category Pills */}
-      <div className="bg-card rounded-2xl p-3 mb-3">
+      <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
         <div className="flex gap-2 overflow-x-auto scrollbar-hide">
           {['All', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'].map((cat, i) => (
             <button
               key={cat}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                 i === 0
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-accent text-muted-foreground hover:bg-accent/80'
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               }`}
             >
               {cat}
@@ -106,9 +106,9 @@ export function VideosFeed() {
       {/* Video Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
         {MOCK_VIDEOS.map((video) => (
-          <div key={video.id} className="bg-card rounded-2xl overflow-hidden cursor-pointer hover:bg-accent/50 transition-colors">
+          <div key={video.id} className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors">
             {/* Thumbnail */}
-            <div className="relative aspect-video bg-muted">
+            <div className="relative aspect-video bg-zinc-800">
               <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
               <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
                 {video.duration}
@@ -127,23 +127,23 @@ export function VideosFeed() {
             <div className="p-3 flex gap-3">
               <Avatar className="w-9 h-9 flex-shrink-0">
                 <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
-                <AvatarFallback className="bg-muted">{video.channel[0]}</AvatarFallback>
+                <AvatarFallback className="bg-zinc-700">{video.channel[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-foreground text-sm line-clamp-2 leading-tight mb-1">
+                <h3 className="font-medium text-white text-sm line-clamp-2 leading-tight mb-1">
                   {video.title}
                 </h3>
-                <div className="flex items-center gap-1 text-muted-foreground text-xs">
+                <div className="flex items-center gap-1 text-zinc-500 text-xs">
                   <span>{video.channel}</span>
                   {video.verified && (
-                    <CheckCircle className="w-3.5 h-3.5 text-muted-foreground" />
+                    <CheckCircle className="w-3.5 h-3.5 text-zinc-400" />
                   )}
                 </div>
-                <p className="text-muted-foreground text-xs">
+                <p className="text-zinc-500 text-xs">
                   {video.views} • {video.uploadedAgo}
                 </p>
               </div>
-              <button className="text-muted-foreground hover:text-foreground self-start">
+              <button className="text-zinc-400 hover:text-white self-start">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </div>

@@ -54,21 +54,21 @@ export function ImagesFeed() {
     <div className="p-2 sm:p-3 space-y-3">
       {/* Posts */}
       {MOCK_POSTS.map((post) => (
-        <div key={post.id} className="bg-card rounded-2xl overflow-hidden">
+        <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between p-3">
             <div className="flex items-center gap-3">
               <div className="p-0.5 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500">
-                <div className="p-0.5 bg-card rounded-full">
+                <div className="p-0.5 bg-zinc-900 rounded-full">
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.avatar}`} />
-                    <AvatarFallback className="bg-muted">{post.username[0]}</AvatarFallback>
+                    <AvatarFallback className="bg-zinc-700">{post.username[0]}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground text-sm">{post.username}</span>
+                  <span className="font-semibold text-white text-sm">{post.username}</span>
                   {post.verified && (
                     <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
@@ -77,13 +77,13 @@ export function ImagesFeed() {
                 </div>
               </div>
             </div>
-            <button className="text-muted-foreground hover:text-foreground">
+            <button className="text-zinc-400 hover:text-white">
               <MoreHorizontal className="w-5 h-5" />
             </button>
           </div>
 
           {/* Image */}
-          <div className="aspect-square bg-muted">
+          <div className="aspect-square bg-zinc-800">
             <img src={post.image} alt="" className="w-full h-full object-cover" />
           </div>
 
@@ -91,35 +91,35 @@ export function ImagesFeed() {
           <div className="p-3">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-4">
-                <button className="text-foreground hover:text-red-400 transition-colors">
+                <button className="text-white hover:text-red-400 transition-colors">
                   <Heart className="w-6 h-6" />
                 </button>
-                <button className="text-foreground hover:text-muted-foreground transition-colors">
+                <button className="text-white hover:text-zinc-400 transition-colors">
                   <MessageCircle className="w-6 h-6" />
                 </button>
-                <button className="text-foreground hover:text-muted-foreground transition-colors">
+                <button className="text-white hover:text-zinc-400 transition-colors">
                   <Share className="w-6 h-6" />
                 </button>
               </div>
-              <button className="text-foreground hover:text-muted-foreground transition-colors">
+              <button className="text-white hover:text-zinc-400 transition-colors">
                 <Bookmark className="w-6 h-6" />
               </button>
             </div>
 
-            <p className="font-semibold text-foreground text-sm mb-1">
+            <p className="font-semibold text-white text-sm mb-1">
               {post.likes.toLocaleString()} likes
             </p>
 
-            <p className="text-foreground text-sm">
+            <p className="text-white text-sm">
               <span className="font-semibold">{post.username}</span>{' '}
-              <span className="text-muted-foreground">{post.caption}</span>
+              <span className="text-zinc-300">{post.caption}</span>
             </p>
 
-            <button className="text-muted-foreground text-sm mt-1">
+            <button className="text-zinc-500 text-sm mt-1">
               View all {post.comments} comments
             </button>
 
-            <p className="text-muted-foreground text-xs mt-1">{post.timeAgo}</p>
+            <p className="text-zinc-500 text-xs mt-1">{post.timeAgo}</p>
           </div>
         </div>
       ))}

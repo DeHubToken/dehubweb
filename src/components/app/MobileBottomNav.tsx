@@ -14,7 +14,7 @@ export function MobileBottomNav() {
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-      <nav className="bg-card/80 backdrop-blur-2xl border border-border rounded-2xl mx-auto max-w-md shadow-xl">
+      <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl">
         <div className="flex items-center justify-around h-14">
           {NAV_ITEMS.map((item) => {
             const isActive = item.path === '/app' 
@@ -27,10 +27,10 @@ export function MobileBottomNav() {
                 to={item.path}
                 className={cn(
                   'flex items-center justify-center flex-1 h-full rounded-xl transition-colors',
-                  isActive ? 'text-foreground bg-accent' : 'text-muted-foreground'
+                  isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                 )}
               >
-                <item.icon className={cn('w-6 h-6', isActive && 'text-foreground')} />
+                <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
               </NavLink>
             );
           })}

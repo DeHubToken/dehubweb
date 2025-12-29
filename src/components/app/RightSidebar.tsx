@@ -12,10 +12,10 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
     <aside className="hidden xl:block w-80 h-screen sticky top-0 p-4 space-y-4 overflow-y-auto scrollbar-invisible">
       {showSearch && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
           <Input
             placeholder="Search..."
-            className="w-full pl-10 bg-card border-border rounded-full text-foreground placeholder:text-muted-foreground focus:border-ring"
+            className="w-full pl-10 bg-zinc-900 border-zinc-800 rounded-full text-white placeholder:text-zinc-500 focus:border-zinc-700"
           />
         </div>
       )}

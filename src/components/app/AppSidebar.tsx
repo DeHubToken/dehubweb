@@ -38,7 +38,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 onClick={onToggle}
                 className={cn(
                   'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
-                  'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
                 )}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -55,8 +55,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               className={cn(
                 'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
                 isActive
-                  ? 'bg-accent text-foreground font-semibold'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  ? 'bg-zinc-700/50 text-white font-semibold'
+                  : 'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
               )}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -67,8 +67,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       </nav>
 
       {/* Post Button */}
-      <div className="mt-4 pt-4 border-t border-border">
-        <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-6 text-base">
+      <div className="mt-4 pt-4 border-t border-zinc-700/50">
+        <Button className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base">
           Post
         </Button>
       </div>
@@ -78,17 +78,16 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   return (
     <>
       {/* Mobile Header with Drawer */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background px-4 py-2 flex items-center justify-between">
-        <img src={dehubLogo} alt="dehub" className="h-6 w-auto dark:block hidden" />
-        <img src={dehubLogo} alt="dehub" className="h-6 w-auto dark:hidden block invert" />
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-2 flex items-center justify-between">
+        <img src={dehubLogo} alt="dehub" className="h-6 w-auto" />
         
         <Drawer open={isOpen} onOpenChange={onToggle}>
           <DrawerTrigger asChild>
             <button
-              className="p-2 rounded-full hover:bg-accent transition-colors"
+              className="p-2 rounded-full hover:bg-zinc-800 transition-colors"
               aria-label="Toggle menu"
             >
-              <Menu className="w-6 h-6 text-foreground" />
+              <Menu className="w-6 h-6 text-white" />
             </button>
           </DrawerTrigger>
           <DrawerContent glass className="max-h-[85vh]">
@@ -103,12 +102,11 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       <aside className="hidden lg:flex sticky top-0 h-screen w-64 p-4 flex-col">
         {/* Logo */}
         <div className="mb-6">
-          <img src={dehubLogo} alt="dehub" className="h-10 w-auto dark:block hidden" />
-          <img src={dehubLogo} alt="dehub" className="h-10 w-auto dark:hidden block invert" />
+          <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
         </div>
 
         {/* Navigation Bento */}
-        <div className="bg-card rounded-2xl p-3 overflow-y-auto">
+        <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
             const isActive =
               item.path === '/app'
@@ -124,7 +122,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                   rel="noopener noreferrer"
                   className={cn(
                     'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
-                    'text-muted-foreground hover:bg-accent hover:text-foreground'
+                    'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                   )}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -140,8 +138,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 className={cn(
                   'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
                   isActive
-                    ? 'bg-accent text-foreground font-semibold'
-                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                    ? 'bg-zinc-800 text-white font-semibold'
+                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                 )}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -152,8 +150,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         </div>
 
         {/* Post Button Bento */}
-        <div className="mt-4 bg-card rounded-2xl p-3">
-          <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-6 text-base">
+        <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
+          <Button className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base">
             Post
           </Button>
         </div>

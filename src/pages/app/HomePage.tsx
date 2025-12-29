@@ -52,24 +52,24 @@ const MOCK_POSTS: Post[] = [
 
 function PostCard({ post }: { post: Post }) {
   return (
-    <article className="p-4 hover:bg-accent/30 transition-colors">
+    <article className="p-4 hover:bg-zinc-800/30 transition-colors">
       <div className="flex gap-3">
         <UserAvatar name={post.author.name} handle={post.author.handle} size="lg" className="hidden sm:flex" />
         <UserAvatar name={post.author.name} handle={post.author.handle} size="md" className="flex sm:hidden" />
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-foreground truncate">{post.author.name}</span>
-            <span className="text-muted-foreground text-sm truncate">{post.author.handle}</span>
-            <span className="text-muted-foreground text-sm">· {post.createdAt}</span>
-            <button className="ml-auto text-muted-foreground hover:text-foreground transition-colors p-1">
+            <span className="font-semibold text-white truncate">{post.author.name}</span>
+            <span className="text-zinc-500 text-sm truncate">{post.author.handle}</span>
+            <span className="text-zinc-500 text-sm">· {post.createdAt}</span>
+            <button className="ml-auto text-zinc-500 hover:text-white transition-colors p-1">
               <MoreHorizontal className="w-5 h-5" />
             </button>
           </div>
 
-          <p className="mt-2 text-foreground/90 text-sm sm:text-base">{post.content}</p>
+          <p className="mt-2 text-white/90 text-sm sm:text-base">{post.content}</p>
 
-          <div className="flex items-center gap-4 sm:gap-8 mt-4 text-muted-foreground">
+          <div className="flex items-center gap-4 sm:gap-8 mt-4 text-zinc-500">
             <button className="flex items-center gap-1 sm:gap-2 hover:text-blue-400 transition-colors">
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="text-sm">{post.stats.comments}</span>
@@ -94,19 +94,19 @@ function PostCard({ post }: { post: Post }) {
 
 function StoriesBar() {
   return (
-    <div className="bg-card rounded-2xl p-4">
+    <div className="bg-zinc-900 rounded-2xl p-4">
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
         {['Your Story', 'alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'].map((name, i) => (
           <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <div className={`p-0.5 rounded-full ${i === 0 ? 'bg-muted' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500'}`}>
-              <div className="p-0.5 bg-card rounded-full">
+            <div className={`p-0.5 rounded-full ${i === 0 ? 'bg-zinc-700' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500'}`}>
+              <div className="p-0.5 bg-zinc-900 rounded-full">
                 <Avatar className="w-14 h-14">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`} />
-                  <AvatarFallback className="bg-muted">{name[0].toUpperCase()}</AvatarFallback>
+                  <AvatarFallback className="bg-zinc-700">{name[0].toUpperCase()}</AvatarFallback>
                 </Avatar>
               </div>
             </div>
-            <span className="text-xs text-muted-foreground truncate w-16 text-center">
+            <span className="text-xs text-zinc-400 truncate w-16 text-center">
               {i === 0 ? 'Add Story' : name}
             </span>
           </div>
@@ -121,7 +121,7 @@ function HomeFeed() {
     <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       <StoriesBar />
       {MOCK_POSTS.map((post) => (
-        <div key={post.id} className="bg-card rounded-2xl overflow-hidden">
+        <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
           <PostCard post={post} />
         </div>
       ))}
@@ -149,8 +149,8 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="sticky top-0 bg-background/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
-        <div className="bg-card rounded-2xl p-2">
+      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
+        <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => (
               <button
@@ -159,8 +159,8 @@ export default function HomePage() {
                 className={cn(
                   'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
                   activeTab === tab.value
-                    ? 'bg-accent text-foreground'
-                    : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                 )}
               >
                 <tab.icon className="w-4 h-4 sm:w-4 sm:h-4" />
