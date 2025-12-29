@@ -27,13 +27,13 @@ const DrawerContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean }
 >(({ className, children, glass = false, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOverlay className={glass ? "bg-black/40 backdrop-blur-sm" : undefined} />
+    <DrawerOverlay className={glass ? "bg-black/20 backdrop-blur-md" : undefined} />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[20px] border",
         glass 
-          ? "bg-zinc-900/80 backdrop-blur-xl border-zinc-700/50 shadow-2xl" 
+          ? "bg-zinc-900/10 backdrop-blur-2xl border-white/10 shadow-2xl" 
           : "bg-background",
         className,
       )}
