@@ -26,12 +26,11 @@ export function MobileBottomNav() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors',
+                  'flex items-center justify-center flex-1 h-full rounded-xl transition-colors',
                   isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                 )}
               >
-                <item.icon className={cn('w-5 h-5', isActive && 'text-white')} />
-                <span className="text-[10px]">{item.label}</span>
+                <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
               </NavLink>
             );
           })}
