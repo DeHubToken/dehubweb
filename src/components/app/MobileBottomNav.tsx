@@ -14,7 +14,7 @@ export function MobileBottomNav() {
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-      <nav className="bg-zinc-900 rounded-2xl mx-auto max-w-md">
+      <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl">
         <div className="flex items-center justify-around h-14">
           {NAV_ITEMS.map((item) => {
             const isActive = item.path === '/app' 
