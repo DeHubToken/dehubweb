@@ -93,9 +93,9 @@ export function LiveFeed() {
   return (
     <div className="p-2 sm:p-3 space-y-4">
       {/* Categories */}
-      <div className="bg-zinc-900 rounded-2xl p-4">
+      <div className="bg-card rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-white">Categories</h2>
+          <h2 className="font-bold text-foreground">Categories</h2>
           <button className="text-purple-400 text-sm hover:underline">Show All</button>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-hide">
@@ -104,17 +104,17 @@ export function LiveFeed() {
               <div className="w-24 aspect-[3/4] rounded-lg overflow-hidden mb-2">
                 <img src={cat.image} alt="" className="w-full h-full object-cover" />
               </div>
-              <p className="text-white text-sm font-medium truncate w-24">{cat.name}</p>
-              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
+              <p className="text-foreground text-sm font-medium truncate w-24">{cat.name}</p>
+              <p className="text-muted-foreground text-xs">{cat.viewers} viewers</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Live Channels */}
-      <div className="bg-zinc-900 rounded-2xl p-4">
+      <div className="bg-card rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-white flex items-center gap-2">
+          <h2 className="font-bold text-foreground flex items-center gap-2">
             <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
             Live Channels
           </h2>
@@ -150,17 +150,17 @@ export function LiveFeed() {
               <div className="flex gap-2">
                 <Avatar className="w-9 h-9 flex-shrink-0 ring-2 ring-purple-500">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${stream.avatar}`} />
-                  <AvatarFallback className="bg-zinc-700">{stream.streamer[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-muted">{stream.streamer[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-white text-sm truncate group-hover:text-purple-400 transition-colors">
+                  <h3 className="font-medium text-foreground text-sm truncate group-hover:text-purple-400 transition-colors">
                     {stream.title}
                   </h3>
-                  <p className="text-zinc-400 text-xs">{stream.streamer}</p>
-                  <p className="text-zinc-500 text-xs">{stream.game}</p>
+                  <p className="text-muted-foreground text-xs">{stream.streamer}</p>
+                  <p className="text-muted-foreground text-xs">{stream.game}</p>
                   <div className="flex gap-1 mt-1 flex-wrap">
                     {stream.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="text-xs bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">
+                      <span key={tag} className="text-xs bg-accent text-muted-foreground px-1.5 py-0.5 rounded">
                         {tag}
                       </span>
                     ))}

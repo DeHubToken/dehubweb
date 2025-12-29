@@ -90,7 +90,7 @@ export function ShortsFeed() {
         {MOCK_SHORTS.map((short) => (
           <div
             key={short.id}
-            className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
+            className="relative aspect-[9/16] bg-card rounded-xl overflow-hidden cursor-pointer group"
           >
             {/* Thumbnail */}
             <img
@@ -107,7 +107,7 @@ export function ShortsFeed() {
               <div className="relative">
                 <Avatar className="w-10 h-10 border-2 border-white">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.username}`} />
-                  <AvatarFallback className="bg-zinc-700">{short.username[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-muted">{short.username[0]}</AvatarFallback>
                 </Avatar>
                 <button className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
                   <Plus className="w-3 h-3 text-white" />
@@ -115,21 +115,21 @@ export function ShortsFeed() {
               </div>
 
               <button className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 bg-zinc-800/60 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center">
                   <Heart className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-white text-xs font-medium">{short.likes}</span>
               </button>
 
               <button className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 bg-zinc-800/60 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center">
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-white text-xs font-medium">{short.comments}</span>
               </button>
 
               <button className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 bg-zinc-800/60 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center">
                   <Share className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-white text-xs font-medium">{short.shares}</span>

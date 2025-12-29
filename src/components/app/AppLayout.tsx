@@ -10,7 +10,7 @@ export function AppLayout() {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <div className="flex max-w-7xl mx-auto w-full">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
