@@ -1,6 +1,7 @@
 import { Heart, MessageCircle, Bookmark, Share, MoreHorizontal } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface InstagramPost {
   id: string;
@@ -238,9 +239,29 @@ function EndlessScrollView({ posts }: { posts: InstagramPost[] }) {
 }
 
 export function ImagesFeed({ showCollage = false }: ImagesFeedProps) {
-  return showCollage ? (
-    <CollageView posts={MOCK_POSTS} />
-  ) : (
-    <EndlessScrollView posts={MOCK_POSTS} />
+  return (
+    <AnimatePresence mode="wait">
+      {showCollage ? (
+        <motion.div
+          key="collage"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
+          <CollageView posts={MOCK_POSTS} />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="endless"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
+          <EndlessScrollView posts={MOCK_POSTS} />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
