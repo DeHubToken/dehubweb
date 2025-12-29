@@ -137,8 +137,8 @@ export default function HomePage() {
                     : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                 )}
               >
-                <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <tab.icon className="w-4 h-4 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
           </div>
