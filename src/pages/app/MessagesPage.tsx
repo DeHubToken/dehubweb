@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Search, MessageSquare, Settings, Lock, Archive, Image, Link2, Download } from 'lucide-react';
+import { Search, MessageSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
 
 interface Conversation {
   id: string;
@@ -125,59 +124,7 @@ export default function MessagesPage() {
           </div>
 
           <h2 className="text-2xl font-bold text-white mb-2">Your Messages</h2>
-          <p className="text-zinc-500 mb-8">Send private messages to people you follow</p>
-
-          {/* Settings Links */}
-          <div className="w-full max-w-sm space-y-2 mb-8">
-            <button className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-zinc-800 transition-colors text-left">
-              <Settings className="w-5 h-5 text-zinc-400" />
-              <span className="text-white">Message Settings</span>
-            </button>
-            <button className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-zinc-800 transition-colors text-left">
-              <Lock className="w-5 h-5 text-zinc-400" />
-              <span className="text-white">Privacy & Safety</span>
-            </button>
-            <button className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-zinc-800 transition-colors text-left">
-              <Archive className="w-5 h-5 text-zinc-400" />
-              <span className="text-white">Archived Chats</span>
-            </button>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="w-full max-w-sm grid grid-cols-2 gap-3 mb-8">
-            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
-              <Image className="w-6 h-6 text-zinc-400" />
-              <span className="text-zinc-300 text-sm">Shared Media</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
-              <Link2 className="w-6 h-6 text-zinc-400" />
-              <span className="text-zinc-300 text-sm">Shared Links</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
-              <Search className="w-6 h-6 text-zinc-400" />
-              <span className="text-zinc-300 text-sm">Search Messages</span>
-            </button>
-            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
-              <Download className="w-6 h-6 text-zinc-400" />
-              <span className="text-zinc-300 text-sm">Export Chats</span>
-            </button>
-          </div>
-
-          {/* Storage */}
-          <div className="w-full max-w-sm bg-zinc-800 rounded-xl p-4">
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-white font-medium">Storage Used</span>
-              <span className="text-zinc-400">2.1 GB of 5 GB</span>
-            </div>
-            <Progress value={42} className="h-2 mb-3" />
-            <div className="flex justify-between text-xs text-zinc-500">
-              <span>Messages: 1.2 GB</span>
-              <span>Media: 900 MB</span>
-            </div>
-            <p className="text-center text-xs text-zinc-600 mt-3">
-              Increase your stakeholdings or sign up to premium to unlock more storage
-            </p>
-          </div>
+          <p className="text-zinc-500 text-center max-w-sm">Select a conversation to start messaging or search for someone to connect with</p>
         </div>
       </div>
     </div>

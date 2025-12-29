@@ -47,6 +47,7 @@ const tabs = [
   { icon: Shield, value: 'privacy', label: 'Privacy' },
   { icon: Palette, value: 'appearance', label: 'Appearance' },
   { icon: Eye, value: 'content', label: 'Content' },
+  { icon: MessageSquare, value: 'messages', label: 'Messages' },
 ];
 
 export default function SettingsPage() {
@@ -96,6 +97,7 @@ export default function SettingsPage() {
         {activeTab === 'privacy' && <PrivacySettings />}
         {activeTab === 'appearance' && <AppearanceSettings theme={theme} setTheme={setTheme} />}
         {activeTab === 'content' && <ContentSettings />}
+        {activeTab === 'messages' && <MessagesSettings />}
       </div>
     </div>
   );
@@ -626,6 +628,78 @@ function SocialLinkInput({
           placeholder={placeholder} 
           className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
         />
+      </div>
+    </div>
+  );
+}
+
+function MessagesSettings() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <MessageSquare className="w-5 h-5 text-zinc-400" />
+        <h2 className="text-lg font-semibold text-white">Message Settings</h2>
+      </div>
+
+      {/* Message Preferences */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Preferences</h3>
+        <div className="space-y-4">
+          <SettingToggle
+            icon={Bell}
+            title="Message Notifications"
+            description="Receive notifications for new messages"
+            defaultChecked
+          />
+          <SettingToggle
+            icon={Eye}
+            title="Read Receipts"
+            description="Let others know when you've read their messages"
+            defaultChecked
+          />
+          <SettingToggle
+            icon={Lock}
+            title="End-to-End Encryption"
+            description="Encrypt all your messages for extra security"
+            defaultChecked
+          />
+        </div>
+      </div>
+
+      {/* Storage */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Storage</h3>
+        <div className="bg-zinc-800 rounded-xl p-4">
+          <div className="flex justify-between text-sm mb-2">
+            <span className="text-white font-medium">Storage Used</span>
+            <span className="text-zinc-400">2.1 GB of 5 GB</span>
+          </div>
+          <div className="w-full bg-zinc-700 rounded-full h-2 mb-3">
+            <div className="bg-white h-2 rounded-full" style={{ width: '42%' }} />
+          </div>
+          <div className="flex justify-between text-xs text-zinc-500">
+            <span>Messages: 1.2 GB</span>
+            <span>Media: 900 MB</span>
+          </div>
+          <p className="text-center text-xs text-zinc-600 mt-3">
+            Increase your stakeholdings or sign up to premium to unlock more storage
+          </p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+            <FileText className="w-6 h-6 text-zinc-400" />
+            <span className="text-zinc-300 text-sm">Archived Chats</span>
+          </button>
+          <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+            <Save className="w-6 h-6 text-zinc-400" />
+            <span className="text-zinc-300 text-sm">Export Chats</span>
+          </button>
+        </div>
       </div>
     </div>
   );
