@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from 'next-themes';
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -52,7 +53,7 @@ const tabs = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
-  const [theme, setTheme] = useState('system');
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
@@ -95,7 +96,7 @@ export default function SettingsPage() {
         {activeTab === 'profile' && <ProfileSettings />}
         {activeTab === 'notifications' && <NotificationSettings />}
         {activeTab === 'privacy' && <PrivacySettings />}
-        {activeTab === 'appearance' && <AppearanceSettings theme={theme} setTheme={setTheme} />}
+        {activeTab === 'appearance' && <AppearanceSettings theme={theme || 'system'} setTheme={setTheme} />}
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
       </div>
