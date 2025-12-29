@@ -53,9 +53,9 @@ export default function MessagesPage() {
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
-      <div className="flex gap-4 h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
-        {/* Left Panel - Conversations */}
-        <div className="w-full lg:w-80 flex-shrink-0 bg-zinc-900 rounded-2xl flex flex-col">
+      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
+        {/* Full Width Messages Panel */}
+        <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
           <div className="p-4">
             <h1 className="text-xl font-bold text-white mb-4">Messages</h1>
@@ -114,17 +114,6 @@ export default function MessagesPage() {
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Right Panel - Message Details / Welcome */}
-        <div className="hidden lg:flex flex-1 bg-zinc-900 rounded-2xl flex-col items-center justify-center p-8">
-          {/* Message Icon */}
-          <div className="w-20 h-20 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
-            <MessageSquare className="w-10 h-10 text-zinc-400" />
-          </div>
-
-          <h2 className="text-2xl font-bold text-white mb-2">Your Messages</h2>
-          <p className="text-zinc-500 text-center max-w-sm">Select a conversation to start messaging or search for someone to connect with</p>
         </div>
       </div>
     </div>
