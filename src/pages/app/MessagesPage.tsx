@@ -53,8 +53,8 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="min-h-screen p-3 sm:p-4">
-      <div className="flex gap-4 h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
+    <div className="p-3 sm:p-4">
+      <div className="flex gap-4 min-h-[calc(100vh-200px)] lg:min-h-[calc(100vh-32px)]">
         {/* Left Panel - Conversations */}
         <div className="w-full lg:w-80 flex-shrink-0 bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
