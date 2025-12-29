@@ -13,7 +13,7 @@ export function AppLayout() {
       <div className="flex max-w-7xl mx-auto">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className="flex-1 min-h-screen lg:border-r border-zinc-800 pt-14 lg:pt-0">
+        <main className="flex-1 min-h-screen pt-14 lg:pt-0">
           <Outlet />
         </main>
         
