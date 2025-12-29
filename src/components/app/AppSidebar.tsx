@@ -55,7 +55,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         <div className="h-14 lg:hidden" />
 
         {/* Navigation Bento */}
-        <nav className="flex-1 bg-zinc-900 rounded-2xl p-3 space-y-1 overflow-y-auto">
+        <nav className="bg-zinc-900 rounded-2xl p-3 space-y-1 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
             const isActive =
               item.path === '/app'
