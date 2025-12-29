@@ -79,7 +79,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     <>
       {/* Mobile Header with Drawer */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-3 flex items-center justify-between">
-        <img src={dehubLogo} alt="dehub" className="h-8 w-auto" />
+        <img src={dehubLogo} alt="dehub" className="h-6 w-auto" />
         
         <Drawer open={isOpen} onOpenChange={onToggle}>
           <DrawerTrigger asChild>
