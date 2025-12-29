@@ -46,7 +46,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen">
-      <PageHeader title={MOCK_PROFILE.name} subtitle={`${MOCK_PROFILE.postsCount} posts`} showBack={false} />
 
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Profile Card Bento */}
