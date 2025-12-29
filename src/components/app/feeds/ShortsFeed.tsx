@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Heart, MessageCircle, Share, Music2, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface TikTokVideo {
   id: string;
@@ -82,9 +84,56 @@ const MOCK_SHORTS: TikTokVideo[] = [
   },
 ];
 
+const DURATION_OPTIONS = ['All', '< 15s', '15-60s', '> 60s'];
+const CATEGORY_OPTIONS = ['All', 'Dance', 'Comedy', 'Food', 'Pets', 'Fitness', 'Magic'];
+
 export function ShortsFeed() {
+  const [selectedDuration, setSelectedDuration] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
   return (
     <div className="p-2 sm:p-3">
+      {/* Filters */}
+      <div className="mb-4 space-y-3">
+        {/* Duration Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+          <span className="text-zinc-400 text-sm whitespace-nowrap">Duration:</span>
+          {DURATION_OPTIONS.map((duration) => (
+            <button
+              key={duration}
+              onClick={() => setSelectedDuration(duration)}
+              className={cn(
+                'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors',
+                selectedDuration === duration
+                  ? 'bg-white text-black font-medium'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {duration}
+            </button>
+          ))}
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+          <span className="text-zinc-400 text-sm whitespace-nowrap">Category:</span>
+          {CATEGORY_OPTIONS.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={cn(
+                'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors',
+                selectedCategory === category
+                  ? 'bg-white text-black font-medium'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Shorts Grid - TikTok Style */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
         {MOCK_SHORTS.map((short) => (
