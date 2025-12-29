@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
+import { MobileBottomNav } from './MobileBottomNav';
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -13,12 +14,14 @@ export function AppLayout() {
       <div className="flex max-w-7xl mx-auto">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className="flex-1 min-h-screen pt-14 lg:pt-0">
+        <main className="flex-1 min-h-screen pt-14 pb-20 lg:pt-0 lg:pb-0">
           <Outlet />
         </main>
         
         <RightSidebar />
       </div>
+      
+      <MobileBottomNav />
     </div>
   );
 }
