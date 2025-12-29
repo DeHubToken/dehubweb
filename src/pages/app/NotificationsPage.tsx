@@ -99,17 +99,7 @@ export default function NotificationsPage() {
       <div className="sticky top-14 lg:top-0 bg-black/80 backdrop-blur-sm z-10 p-3 sm:p-4">
         <div className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => window.history.back()}
-                className="p-2 -ml-2 rounded-full hover:bg-zinc-800 transition-colors"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <h1 className="font-bold text-white text-lg">Notifications</h1>
-            </div>
+            <h1 className="font-bold text-white text-lg">Notifications</h1>
             <button className="p-2 rounded-full hover:bg-zinc-800 transition-colors">
               <Settings className="w-5 h-5 text-zinc-400" />
             </button>
