@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import { AppLayout } from "./components/app/AppLayout";
 import HomePage from "./pages/app/HomePage";
 import ExplorePage from "./pages/app/ExplorePage";
+import ProfilePage from "./pages/app/ProfilePage";
 import PlaceholderPage from "./pages/app/PlaceholderPage";
 
 const queryClient = new QueryClient();
@@ -29,7 +30,7 @@ const App = () => (
           <Route path="/app" element={<AppLayout />}>
             <Route index element={<HomePage />} />
             <Route path="explore" element={<ExplorePage />} />
-            <Route path="profile" element={<PlaceholderPage title="Profile" />} />
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="notifications" element={<PlaceholderPage title="Notifications" />} />
             <Route path="messages" element={<PlaceholderPage title="Messages" />} />
             <Route path="leaderboard" element={<PlaceholderPage title="Leaderboard" />} />
