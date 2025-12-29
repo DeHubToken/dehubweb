@@ -110,12 +110,12 @@ export default function NotificationsPage() {
       {/* Tabs */}
       <div className="px-3 sm:px-4 py-2">
         <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+          <div className="flex justify-evenly">
             {tabs.map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.value
                     ? 'bg-white text-black'
                     : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
