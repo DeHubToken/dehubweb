@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Heart, MessageCircle, Bookmark, Share, MoreHorizontal } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -239,12 +240,18 @@ function EndlessScrollView({ posts }: { posts: InstagramPost[] }) {
 }
 
 export function ImagesFeed({ showCollage = false }: ImagesFeedProps) {
+  const hasAnimated = useRef(false);
+  
+  // Only animate after first render (when switching views)
+  const shouldAnimate = hasAnimated.current;
+  hasAnimated.current = true;
+
   return (
     <AnimatePresence mode="wait">
       {showCollage ? (
         <motion.div
           key="collage"
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
@@ -254,7 +261,7 @@ export function ImagesFeed({ showCollage = false }: ImagesFeedProps) {
       ) : (
         <motion.div
           key="endless"
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
