@@ -40,7 +40,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       <aside
         className={cn(
           'fixed lg:sticky top-0 left-0 z-40 h-screen w-72 lg:w-64 p-4 flex flex-col',
-          'bg-black lg:bg-transparent border-r border-zinc-800',
+          'bg-black lg:bg-transparent',
           'transition-transform duration-300 ease-out',
           'lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full'
