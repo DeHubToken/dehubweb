@@ -131,6 +131,18 @@ function HomeFeed() {
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('home');
+  const [showShortsFilters, setShowShortsFilters] = useState(false);
+
+  const handleTabClick = (tabValue: string) => {
+    if (tabValue === 'shorts' && activeTab === 'shorts') {
+      setShowShortsFilters((prev) => !prev);
+    } else {
+      setActiveTab(tabValue);
+      if (tabValue !== 'shorts') {
+        setShowShortsFilters(false);
+      }
+    }
+  };
 
   const renderFeed = () => {
     switch (activeTab) {
@@ -139,7 +151,7 @@ export default function HomePage() {
       case 'videos':
         return <VideosFeed />;
       case 'shorts':
-        return <ShortsFeed />;
+        return <ShortsFeed showFilters={showShortsFilters} />;
       case 'live':
         return <LiveFeed />;
       default:
@@ -155,7 +167,7 @@ export default function HomePage() {
             {FEED_TABS.map((tab) => (
               <button
                 key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
+                onClick={() => handleTabClick(tab.value)}
                 className={cn(
                   'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
                   activeTab === tab.value
