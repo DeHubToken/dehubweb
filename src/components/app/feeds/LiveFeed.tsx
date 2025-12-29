@@ -101,7 +101,7 @@ export function LiveFeed() {
         <div className="flex gap-3 overflow-x-auto scrollbar-hide">
           {CATEGORIES.map((cat) => (
             <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-              <div className="w-24 aspect-[3/4] rounded-lg overflow-hidden mb-2 ring-2 ring-transparent group-hover:ring-purple-500 transition-all">
+              <div className="w-24 aspect-[3/4] rounded-lg overflow-hidden mb-2">
                 <img src={cat.image} alt="" className="w-full h-full object-cover" />
               </div>
               <p className="text-white text-sm font-medium truncate w-24">{cat.name}</p>
