@@ -13,28 +13,30 @@ export function MobileBottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-zinc-800">
-      <div className="flex items-center justify-around h-16">
-        {NAV_ITEMS.map((item) => {
-          const isActive = item.path === '/app' 
-            ? location.pathname === '/app'
-            : location.pathname.startsWith(item.path);
-          
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={cn(
-                'flex flex-col items-center justify-center gap-1 w-full h-full transition-colors',
-                isActive ? 'text-white' : 'text-zinc-500'
-              )}
-            >
-              <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
-              <span className="text-xs">{item.label}</span>
-            </NavLink>
-          );
-        })}
-      </div>
-    </nav>
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
+      <nav className="bg-zinc-900 rounded-2xl mx-auto max-w-md">
+        <div className="flex items-center justify-around h-14">
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.path === '/app' 
+              ? location.pathname === '/app'
+              : location.pathname.startsWith(item.path);
+            
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors',
+                  isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
+                )}
+              >
+                <item.icon className={cn('w-5 h-5', isActive && 'text-white')} />
+                <span className="text-[10px]">{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
 }
