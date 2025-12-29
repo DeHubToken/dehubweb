@@ -1,0 +1,185 @@
+import { useState } from 'react';
+import { Search, MessageSquare, Settings, Lock, Archive, Image, Link2, Download } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+
+interface Conversation {
+  id: string;
+  name: string;
+  avatar?: string;
+  lastMessage: string;
+  time: string;
+  unread?: number;
+  isLive?: boolean;
+  liveCount?: string;
+  isPinned?: boolean;
+}
+
+const conversations: Conversation[] = [
+  {
+    id: '1',
+    name: 'Public Chat',
+    lastMessage: 'Welcome to the commu...',
+    time: '',
+    isLive: true,
+    liveCount: '2.3k',
+    isPinned: true,
+  },
+  {
+    id: '2',
+    name: 'Alice Cooper',
+    lastMessage: 'Hey! How are you doing ...',
+    time: '2m',
+    unread: 2,
+  },
+  {
+    id: '3',
+    name: 'Tech Guru',
+    lastMessage: 'That new project looks a...',
+    time: '1h',
+  },
+  {
+    id: '4',
+    name: 'Design Master',
+    lastMessage: 'Can we schedule a call t...',
+    time: '3h',
+    unread: 1,
+  },
+];
+
+export default function MessagesPage() {
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  return (
+    <div className="min-h-screen p-3 sm:p-4">
+      <div className="flex gap-4 h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
+        {/* Left Panel - Conversations */}
+        <div className="w-full lg:w-80 flex-shrink-0 bg-zinc-900 rounded-2xl flex flex-col">
+          {/* Header */}
+          <div className="p-4">
+            <h1 className="text-xl font-bold text-white mb-4">Messages</h1>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Input
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+              />
+            </div>
+          </div>
+
+          {/* Conversation List */}
+          <div className="flex-1 overflow-y-auto">
+            {conversations.map((conv) => (
+              <button
+                key={conv.id}
+                onClick={() => setSelectedConversation(conv.id)}
+                className={`w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left ${
+                  selectedConversation === conv.id ? 'bg-zinc-800' : ''
+                }`}
+              >
+                <div className="relative">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${conv.name}`} />
+                    <AvatarFallback className="bg-zinc-700 text-white">
+                      {conv.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  {conv.isPinned && (
+                    <div className="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-[10px]">📌</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-white truncate">{conv.name}</span>
+                    {conv.isLive && (
+                      <>
+                        <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
+                        <span className="text-zinc-500 text-sm">{conv.liveCount}</span>
+                      </>
+                    )}
+                    {conv.time && <span className="text-zinc-500 text-sm ml-auto">{conv.time}</span>}
+                  </div>
+                  <p className="text-zinc-500 text-sm truncate">{conv.lastMessage}</p>
+                </div>
+                {conv.unread && (
+                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-xs font-bold">{conv.unread}</span>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Panel - Message Details / Welcome */}
+        <div className="hidden lg:flex flex-1 bg-zinc-900 rounded-2xl flex-col items-center justify-center p-8">
+          {/* Message Icon */}
+          <div className="w-20 h-20 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+            <MessageSquare className="w-10 h-10 text-zinc-400" />
+          </div>
+
+          <h2 className="text-2xl font-bold text-white mb-2">Your Messages</h2>
+          <p className="text-zinc-500 mb-8">Send private messages to people you follow</p>
+
+          {/* Settings Links */}
+          <div className="w-full max-w-sm space-y-2 mb-8">
+            <button className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-zinc-800 transition-colors text-left">
+              <Settings className="w-5 h-5 text-zinc-400" />
+              <span className="text-white">Message Settings</span>
+            </button>
+            <button className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-zinc-800 transition-colors text-left">
+              <Lock className="w-5 h-5 text-zinc-400" />
+              <span className="text-white">Privacy & Safety</span>
+            </button>
+            <button className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-zinc-800 transition-colors text-left">
+              <Archive className="w-5 h-5 text-zinc-400" />
+              <span className="text-white">Archived Chats</span>
+            </button>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="w-full max-w-sm grid grid-cols-2 gap-3 mb-8">
+            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+              <Image className="w-6 h-6 text-zinc-400" />
+              <span className="text-zinc-300 text-sm">Shared Media</span>
+            </button>
+            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+              <Link2 className="w-6 h-6 text-zinc-400" />
+              <span className="text-zinc-300 text-sm">Shared Links</span>
+            </button>
+            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+              <Search className="w-6 h-6 text-zinc-400" />
+              <span className="text-zinc-300 text-sm">Search Messages</span>
+            </button>
+            <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
+              <Download className="w-6 h-6 text-zinc-400" />
+              <span className="text-zinc-300 text-sm">Export Chats</span>
+            </button>
+          </div>
+
+          {/* Storage */}
+          <div className="w-full max-w-sm bg-zinc-800 rounded-xl p-4">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-white font-medium">Storage Used</span>
+              <span className="text-zinc-400">2.1 GB of 5 GB</span>
+            </div>
+            <Progress value={42} className="h-2 mb-3" />
+            <div className="flex justify-between text-xs text-zinc-500">
+              <span>Messages: 1.2 GB</span>
+              <span>Media: 900 MB</span>
+            </div>
+            <p className="text-center text-xs text-zinc-600 mt-3">
+              Increase your stakeholdings or sign up to premium to unlock more storage
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
