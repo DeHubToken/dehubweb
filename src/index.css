@@ -130,6 +130,17 @@ All colors MUST be HSL.
     display: none;
   }
 
+  /* Invisible Scrollbar - still scrollable but hidden */
+  .scrollbar-invisible {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-invisible::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
   /* Glitch Animations */
   @keyframes glitch-rgb {
     0% {
