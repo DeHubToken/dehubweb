@@ -59,20 +59,21 @@ export default function MessagesPage() {
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
           <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-xl font-bold text-white">Messages</h1>
-              <Button size="icon" className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700">
-                <Plus className="w-5 h-5 text-white" />
-              </Button>
-            </div>
-            <div className="relative">
+            <h1 className="text-xl font-bold text-white mb-4">Messages</h1>
+            <div className="relative flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
                 placeholder="Search conversations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+                className="pl-10 pr-12 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
               />
+              <Button 
+                size="icon" 
+                className="absolute right-1.5 w-7 h-7 rounded-lg bg-zinc-700 hover:bg-zinc-600"
+              >
+                <Plus className="w-4 h-4 text-white" />
+              </Button>
             </div>
           </div>
 
