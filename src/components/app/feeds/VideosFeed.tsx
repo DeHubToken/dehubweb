@@ -171,7 +171,7 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
         <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          {['All', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'].map((cat, i) => (
+          {['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'].map((cat, i) => (
             <button
               key={cat}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
