@@ -31,12 +31,12 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
   const [isPPV, setIsPPV] = useState(false);
   const [ppvAmount, setPpvAmount] = useState('');
-  const [ppvCurrency, setPpvCurrency] = useState<'USDC' | 'DHB'>('USDC');
+  const [ppvCurrency, setPpvCurrency] = useState<'USD' | 'DHB'>('USD');
   const [isWatch2Earn, setIsWatch2Earn] = useState(false);
   const [w2eViews, setW2eViews] = useState('');
   const [w2eComments, setW2eComments] = useState('');
   const [w2eTotal, setW2eTotal] = useState('');
-  const [w2eCurrency, setW2eCurrency] = useState<'USDC' | 'DHB'>('USDC');
+  const [w2eCurrency, setW2eCurrency] = useState<'USD' | 'DHB'>('USD');
   const [isTokenGated, setIsTokenGated] = useState(false);
   const [tokenContract, setTokenContract] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
@@ -308,7 +308,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
                       className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-emerald-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-emerald-500"
                     />
                     <div className="flex h-6 rounded overflow-hidden border border-emerald-500/30">
-                      <button onClick={() => setPpvCurrency('USDC')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USDC' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USDC</button>
+                      <button onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
                       <button onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                     </div>
                   </motion.div>
@@ -342,7 +342,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
                     <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
                   </div>
                   <div className="flex h-6 rounded overflow-hidden border border-blue-500/30">
-                    <button onClick={() => setW2eCurrency('USDC')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USDC' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USDC</button>
+                    <button onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
                     <button onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                   </div>
                 </div>
