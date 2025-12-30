@@ -184,15 +184,18 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 relative">
             <textarea
               ref={textareaRef}
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="What's happening?"
-              className="w-full bg-transparent text-white text-lg placeholder:text-zinc-500 resize-none outline-none min-h-[80px]"
+              className="w-full bg-transparent text-white text-lg placeholder:text-zinc-500 resize-none outline-none min-h-[80px] pb-5"
               rows={3}
             />
+            <span className={cn("absolute bottom-0 right-0 text-xs", text.length > 280 ? "text-amber-400" : "text-zinc-500")}>
+              {text.length}/280
+            </span>
 
             <AnimatePresence>
               {media.length > 0 && (
@@ -441,12 +444,6 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         </div>
       </div>
 
-      {/* Character Count */}
-      <div className="px-4 pb-3 flex justify-end">
-        <span className={cn("text-xs", text.length > 280 ? "text-amber-400" : "text-zinc-500")}>
-          {text.length}/280
-        </span>
-      </div>
     </>
   );
 
