@@ -49,7 +49,7 @@ export default function ExplorePage() {
       </div>
 
       {/* Content */}
-      <div className="p-2 sm:p-3 space-y-2">
+      <div className="p-2 sm:p-3 space-y-2 mt-[3px]">
         {/* Recent Searches Bento */}
         <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Recent Searches</h2>
@@ -67,7 +67,7 @@ export default function ExplorePage() {
         </div>
 
         {/* Trending Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
           <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Trending</h2>
           <div className="space-y-3">
             {EXPLORE_TRENDING.map((item) => (
