@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share } from 'lucide-react';
+import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -9,6 +9,8 @@ import { ImagesFeed } from '@/components/app/feeds/ImagesFeed';
 import { VideosFeed } from '@/components/app/feeds/VideosFeed';
 import { ShortsFeed } from '@/components/app/feeds/ShortsFeed';
 import { LiveFeed } from '@/components/app/feeds/LiveFeed';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
 
 const MOCK_POSTS: Post[] = [
   {
@@ -135,6 +137,15 @@ export default function HomePage() {
   const [showImagesCollage, setShowImagesCollage] = useState(false);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showFeedSettings, setShowFeedSettings] = useState(false);
+  
+  // Feed filter states
+  const [feedFilters, setFeedFilters] = useState({
+    followed: true,
+    subscribed: true,
+    category: false,
+    trending: false,
+  });
 
   // Listen for home refresh event
   useEffect(() => {
@@ -208,11 +219,74 @@ export default function HomePage() {
                 <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
+            
+            {/* Settings Button */}
+            <button
+              onClick={() => setShowFeedSettings(true)}
+              className="flex items-center justify-center px-3 py-2 rounded-xl transition-colors text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
+            >
+              <Settings2 className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
 
       {renderFeed()}
+
+      {/* Feed Settings Modal */}
+      <Dialog open={showFeedSettings} onOpenChange={setShowFeedSettings}>
+        <DialogContent className="sm:max-w-[400px] bg-zinc-900 border-zinc-800">
+          <DialogHeader>
+            <DialogTitle className="text-white">Feed Settings</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white font-medium">Followed</p>
+                <p className="text-sm text-zinc-500">Show posts from people you follow</p>
+              </div>
+              <Switch
+                checked={feedFilters.followed}
+                onCheckedChange={(checked) => setFeedFilters(prev => ({ ...prev, followed: checked }))}
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white font-medium">Subscribed</p>
+                <p className="text-sm text-zinc-500">Show posts from your subscriptions</p>
+              </div>
+              <Switch
+                checked={feedFilters.subscribed}
+                onCheckedChange={(checked) => setFeedFilters(prev => ({ ...prev, subscribed: checked }))}
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white font-medium">Category</p>
+                <p className="text-sm text-zinc-500">Filter by content categories</p>
+              </div>
+              <Switch
+                checked={feedFilters.category}
+                onCheckedChange={(checked) => setFeedFilters(prev => ({ ...prev, category: checked }))}
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white font-medium">Trending</p>
+                <p className="text-sm text-zinc-500">Show trending content first</p>
+              </div>
+              <Switch
+                checked={feedFilters.trending}
+                onCheckedChange={(checked) => setFeedFilters(prev => ({ ...prev, trending: checked }))}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
