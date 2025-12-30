@@ -234,7 +234,7 @@ export default function HomePage() {
 
       {/* Feed Settings Modal */}
       <Dialog open={showFeedSettings} onOpenChange={setShowFeedSettings}>
-        <DialogContent className="sm:max-w-[400px] bg-zinc-900 border-zinc-800">
+        <DialogContent className="sm:max-w-[400px] bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="text-white">Feed Settings</DialogTitle>
           </DialogHeader>
@@ -243,7 +243,7 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white font-medium">Followed</p>
-                <p className="text-sm text-zinc-500">Show posts from people you follow</p>
+                <p className="text-sm text-zinc-400">Show posts from people you follow</p>
               </div>
               <Switch
                 checked={feedFilters.followed}
@@ -254,7 +254,7 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white font-medium">Subscribed</p>
-                <p className="text-sm text-zinc-500">Show posts from your subscriptions</p>
+                <p className="text-sm text-zinc-400">Show posts from your subscriptions</p>
               </div>
               <Switch
                 checked={feedFilters.subscribed}
@@ -265,7 +265,7 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white font-medium">Trending</p>
-                <p className="text-sm text-zinc-500">Show trending content first</p>
+                <p className="text-sm text-zinc-400">Show trending content first</p>
               </div>
               <Switch
                 checked={feedFilters.trending}
