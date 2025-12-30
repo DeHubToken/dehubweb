@@ -49,7 +49,7 @@ export default function ExplorePage() {
       </div>
 
       {/* Content */}
-      <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+      <div className="p-2 sm:p-3 space-y-2">
         {/* Recent Searches Bento */}
         <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Recent Searches</h2>
