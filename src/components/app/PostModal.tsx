@@ -171,17 +171,10 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         </VisuallyHidden>
         
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+        <div className="flex items-center px-4 py-3 border-b border-zinc-800">
           <button onClick={handleClose} className="p-1 hover:bg-zinc-800 rounded-full transition-colors">
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <Button
-            onClick={handlePost}
-            disabled={!canPost}
-            className="rounded-full px-5 bg-white text-black hover:bg-zinc-200 font-semibold disabled:opacity-50"
-          >
-            Post
-          </Button>
         </div>
 
         {/* Content Area */}
@@ -401,21 +394,31 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
             </button>
           </div>
 
-          {/* AI Enhance Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleEnhanceWithAI}
-            disabled={!text.trim() || isEnhancing}
-            className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white gap-2"
-          >
-            {isEnhancing ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Sparkles className="w-4 h-4" />
-            )}
-            {isEnhancing ? 'Enhancing...' : 'Enhance'}
-          </Button>
+          {/* AI Enhance Button + Post Button */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleEnhanceWithAI}
+              disabled={!text.trim() || isEnhancing}
+              className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white gap-2"
+            >
+              {isEnhancing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              {isEnhancing ? 'Enhancing...' : 'Enhance'}
+            </Button>
+            
+            <Button
+              onClick={handlePost}
+              disabled={!canPost}
+              className="rounded-full px-5 bg-white text-black hover:bg-zinc-200 font-semibold disabled:opacity-50"
+            >
+              Post
+            </Button>
+          </div>
         </div>
 
         {/* Character Count */}
