@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -134,6 +134,23 @@ export default function HomePage() {
   const [showShortsFilters, setShowShortsFilters] = useState(false);
   const [showImagesCollage, setShowImagesCollage] = useState(false);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Listen for home refresh event
+  useEffect(() => {
+    const handleHomeRefresh = () => {
+      setActiveTab('home');
+      setShowShortsFilters(false);
+      setShowImagesCollage(false);
+      setShowVideosFilters(false);
+      setRefreshKey(prev => prev + 1);
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.addEventListener('home-refresh', handleHomeRefresh);
+    return () => window.removeEventListener('home-refresh', handleHomeRefresh);
+  }, []);
 
   const handleTabClick = (tabValue: string) => {
     if (tabValue === 'shorts' && activeTab === 'shorts') {
@@ -167,7 +184,7 @@ export default function HomePage() {
       case 'live':
         return <LiveFeed />;
       default:
-        return <HomeFeed />;
+        return <HomeFeed key={refreshKey} />;
     }
   };
 

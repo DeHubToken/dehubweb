@@ -50,11 +50,20 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             );
           }
 
+          const isHome = item.path === '/app';
+          const handleClick = (e: React.MouseEvent) => {
+            if (isHome && location.pathname === '/app') {
+              e.preventDefault();
+              window.dispatchEvent(new CustomEvent('home-refresh'));
+            }
+            onToggle();
+          };
+
           return (
             <NavLink
               key={item.label}
               to={item.path}
-              onClick={onToggle}
+              onClick={handleClick}
               className={cn(
                 'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
                 isActive
@@ -139,10 +148,19 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               );
             }
 
+            const isHome = item.path === '/app';
+            const handleClick = (e: React.MouseEvent) => {
+              if (isHome && location.pathname === '/app') {
+                e.preventDefault();
+                window.dispatchEvent(new CustomEvent('home-refresh'));
+              }
+            };
+
             return (
               <NavLink
                 key={item.label}
                 to={item.path}
+                onClick={handleClick}
                 className={cn(
                   'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
                   isActive
