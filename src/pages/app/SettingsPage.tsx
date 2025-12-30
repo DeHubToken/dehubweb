@@ -830,7 +830,7 @@ function GeoBlockingSelector() {
             </span>
           </div>
           <svg 
-            className={`w-4 h-4 text-zinc-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+            className={`w-4 h-4 text-zinc-500 transition-transform ${isOpen ? '' : 'rotate-180'}`} 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
@@ -840,7 +840,7 @@ function GeoBlockingSelector() {
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 w-full mt-2 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl overflow-hidden">
+          <div className="absolute z-50 w-full bottom-full mb-2 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl overflow-hidden">
             {/* Search */}
             <div className="p-2 border-b border-zinc-700">
               <input
