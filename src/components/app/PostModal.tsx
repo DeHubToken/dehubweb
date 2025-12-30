@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { X, Image, Film, Radio, Lock, Bold, Italic, AtSign, Smile, MapPin, Sparkles, Loader2, Coins, Play, Shield } from 'lucide-react';
+import { X, Image, Film, Radio, Lock, Bold, Italic, AtSign, Smile, MapPin, Sparkles, Loader2, Coins, Play, Shield, Send } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -428,18 +428,19 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
             size="sm"
             onClick={handleEnhanceWithAI}
             disabled={!text.trim() || isEnhancing}
-            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
+            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8 sm:px-3 sm:gap-1.5"
           >
             {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-            {isEnhancing ? 'AI...' : 'Enhance'}
+            <span className="hidden sm:inline">{isEnhancing ? 'AI...' : 'Enhance'}</span>
           </Button>
           
           <Button
             onClick={handlePost}
             disabled={!canPost}
-            className="rounded-full px-4 h-8 bg-white text-black hover:bg-zinc-200 font-semibold disabled:opacity-50 text-sm"
+            className="rounded-full px-3 h-8 sm:px-4 bg-white text-black hover:bg-zinc-200 font-semibold disabled:opacity-50 text-sm"
           >
-            Post
+            <span className="hidden sm:inline">Post</span>
+            <Send className="w-4 h-4 sm:hidden" />
           </Button>
         </div>
       </div>
