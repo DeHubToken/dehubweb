@@ -40,11 +40,13 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 rel="noopener noreferrer"
                 onClick={onToggle}
                 className={cn(
-                  'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
+                  'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
                   'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
                 )}
               >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
+                <div className="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                  <item.icon className="w-5 h-5" />
+                </div>
                 <span className="truncate">{item.label}</span>
               </a>
             );
@@ -65,13 +67,18 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               to={item.path}
               onClick={handleClick}
               className={cn(
-                'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
+                'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
                 isActive
                   ? 'bg-zinc-700/50 text-white font-semibold'
                   : 'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
               )}
             >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <div className={cn(
+                "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                isActive ? "bg-zinc-700" : "bg-zinc-800"
+              )}>
+                <item.icon className="w-5 h-5" />
+              </div>
               <span className="truncate">{item.label}</span>
             </NavLink>
           );
@@ -138,11 +145,13 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
+                    'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
                     'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                   )}
                 >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <div className="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-5 h-5" />
+                  </div>
                   <span className="truncate">{item.label}</span>
                 </a>
               );
@@ -162,13 +171,18 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                 to={item.path}
                 onClick={handleClick}
                 className={cn(
-                  'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
+                  'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
                   isActive
                     ? 'bg-zinc-800 text-white font-semibold'
                     : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                 )}
               >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
+                <div className={cn(
+                  "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                  isActive ? "bg-zinc-700" : "bg-zinc-800"
+                )}>
+                  <item.icon className="w-5 h-5" />
+                </div>
                 <span className="truncate">{item.label}</span>
               </NavLink>
             );
