@@ -141,10 +141,10 @@ export default function HomePage() {
   
   // Feed filter states
   const [feedFilters, setFeedFilters] = useState({
-    followed: true,
-    subscribed: true,
+    followed: false,
+    subscribed: false,
     category: false,
-    trending: false,
+    trending: true,
   });
 
   // Listen for home refresh event
