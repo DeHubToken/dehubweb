@@ -1,0 +1,105 @@
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { usePostForm } from './hooks/usePostForm';
+import { PostContentArea } from './components/PostContentArea';
+import { PostAccessToggles } from './components/PostAccessToggles';
+import { PostActionBar } from './components/PostActionBar';
+
+interface PostModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function PostModal({ isOpen, onClose }: PostModalProps) {
+  const isMobile = useIsMobile();
+  
+  const { state, actions, computed, refs } = usePostForm(onClose);
+
+  const handleClose = () => {
+    actions.resetForm();
+    onClose();
+  };
+
+  const modalContent = (
+    <>
+      <PostContentArea
+        text={state.text}
+        setText={actions.setText}
+        textareaRef={refs.textareaRef}
+        media={state.media}
+        onRemoveMedia={actions.removeMedia}
+        isLive={state.isLive}
+        canPost={computed.canPost}
+        destinations={computed.destinations}
+      />
+
+      <PostAccessToggles
+        isSubscribersOnly={state.isSubscribersOnly}
+        setIsSubscribersOnly={actions.setIsSubscribersOnly}
+        isPPV={state.isPPV}
+        setIsPPV={actions.setIsPPV}
+        ppvAmount={state.ppvAmount}
+        setPpvAmount={actions.setPpvAmount}
+        ppvCurrency={state.ppvCurrency}
+        setPpvCurrency={actions.setPpvCurrency}
+        isWatch2Earn={state.isWatch2Earn}
+        setIsWatch2Earn={actions.setIsWatch2Earn}
+        w2eViews={state.w2eViews}
+        setW2eViews={actions.setW2eViews}
+        w2eComments={state.w2eComments}
+        setW2eComments={actions.setW2eComments}
+        w2eTotal={state.w2eTotal}
+        setW2eTotal={actions.setW2eTotal}
+        w2eCurrency={state.w2eCurrency}
+        setW2eCurrency={actions.setW2eCurrency}
+        isTokenGated={state.isTokenGated}
+        setIsTokenGated={actions.setIsTokenGated}
+        tokenContract={state.tokenContract}
+        setTokenContract={actions.setTokenContract}
+        tokenAmount={state.tokenAmount}
+        setTokenAmount={actions.setTokenAmount}
+      />
+
+      <PostActionBar
+        imageInputRef={refs.imageInputRef}
+        videoInputRef={refs.videoInputRef}
+        onImageSelect={actions.handleImageSelect}
+        onVideoSelect={actions.handleVideoSelect}
+        isLive={state.isLive}
+        setIsLive={actions.setIsLive}
+        onInsertFormatting={actions.insertFormatting}
+        onEnhanceWithAI={actions.handleEnhanceWithAI}
+        onPost={actions.handlePost}
+        canPost={computed.canPost}
+        isEnhancing={state.isEnhancing}
+        hasText={!!state.text.trim()}
+      />
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={isOpen} onOpenChange={handleClose}>
+        <DrawerContent glass className="max-h-[90vh]">
+          <VisuallyHidden>
+            <DrawerTitle>Create a post</DrawerTitle>
+          </VisuallyHidden>
+          {modalContent}
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[600px] p-0 bg-zinc-900/20 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>Create a post</DialogTitle>
+        </VisuallyHidden>
+        {modalContent}
+      </DialogContent>
+    </Dialog>
+  );
+}

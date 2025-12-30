@@ -1,0 +1,55 @@
+import { Link, useLocation } from 'react-router-dom';
+import { PenSquare } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { NAV_ITEMS } from '@/constants/app.constants';
+import { SidebarNavItem } from './SidebarNavItem';
+import dehubLogo from '@/assets/dehub-logo-white.png';
+
+interface DesktopSidebarProps {
+  onPostClick: () => void;
+}
+
+export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
+  const location = useLocation();
+
+  return (
+    <aside className="hidden lg:flex sticky top-0 h-screen w-64 p-4 flex-col">
+      {/* Logo */}
+      <Link to="/app" className="mb-6 block cursor-pointer">
+        <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
+      </Link>
+
+      {/* Navigation Bento */}
+      <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
+        {NAV_ITEMS.map((item) => {
+          const isActive =
+            item.path === '/app'
+              ? location.pathname === '/app'
+              : !item.external && location.pathname.startsWith(item.path);
+
+          return (
+            <SidebarNavItem
+              key={item.label}
+              item={item}
+              isActive={isActive}
+              isHome={item.path === '/app'}
+              currentPath={location.pathname}
+              variant="desktop"
+            />
+          );
+        })}
+      </div>
+
+      {/* Post Button Bento */}
+      <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
+        <Button 
+          onClick={onPostClick}
+          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
+        >
+          <PenSquare className="w-5 h-5" />
+          Post
+        </Button>
+      </div>
+    </aside>
+  );
+}
