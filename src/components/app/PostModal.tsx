@@ -173,8 +173,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
   const destinations = getPostDestinations();
   const canPost = text.trim() || media.length > 0 || isLive;
 
-  // Shared content component
-  const ModalContent = () => (
+  // Shared content - as a variable, not a component, to avoid re-mounting on state changes
+  const modalContent = (
     <>
       {/* Content Area */}
       <div className="p-4 max-h-[60vh] overflow-y-auto">
@@ -308,8 +308,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
                       className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-emerald-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-emerald-500"
                     />
                     <div className="flex h-6 rounded overflow-hidden border border-emerald-500/30">
-                      <button onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                      <button onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                      <button type="button" onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
+                      <button type="button" onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                     </div>
                   </motion.div>
                 )}
@@ -342,8 +342,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
                     <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
                   </div>
                   <div className="flex h-6 rounded overflow-hidden border border-blue-500/30">
-                    <button onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                    <button onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                    <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
+                    <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                   </div>
                 </div>
               </motion.div>
@@ -391,33 +391,33 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={handleImageSelect} className="hidden" />
           <input ref={videoInputRef} type="file" accept="video/*" onChange={handleVideoSelect} className="hidden" />
           
-          <button onClick={() => imageInputRef.current?.click()} className="p-2 hover:bg-white/10 rounded-full transition-colors" title="Add image">
+          <button type="button" onClick={() => imageInputRef.current?.click()} className="p-2 hover:bg-white/10 rounded-full transition-colors" title="Add image">
             <Image className="w-5 h-5 text-blue-400" />
           </button>
           
-          <button onClick={() => videoInputRef.current?.click()} className="p-2 hover:bg-white/10 rounded-full transition-colors" title="Add video">
+          <button type="button" onClick={() => videoInputRef.current?.click()} className="p-2 hover:bg-white/10 rounded-full transition-colors" title="Add video">
             <Film className="w-5 h-5 text-purple-400" />
           </button>
           
-          <button onClick={() => setIsLive(!isLive)} className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} title="Go live">
+          <button type="button" onClick={() => setIsLive(!isLive)} className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} title="Go live">
             <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
           </button>
 
           <div className="w-px h-4 bg-white/10 mx-1" />
 
-          <button onClick={() => insertFormatting('bold')} className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Bold">
+          <button type="button" onClick={() => insertFormatting('bold')} className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Bold">
             <Bold className="w-4 h-4 text-zinc-400" />
           </button>
           
-          <button onClick={() => insertFormatting('italic')} className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Italic">
+          <button type="button" onClick={() => insertFormatting('italic')} className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Italic">
             <Italic className="w-4 h-4 text-zinc-400" />
           </button>
           
-          <button onClick={() => insertFormatting('mention')} className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Mention">
+          <button type="button" onClick={() => insertFormatting('mention')} className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Mention">
             <AtSign className="w-4 h-4 text-zinc-400" />
           </button>
 
-          <button className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Emoji">
+          <button type="button" className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Emoji">
             <Smile className="w-4 h-4 text-zinc-400" />
           </button>
         </div>
@@ -443,7 +443,6 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           </Button>
         </div>
       </div>
-
     </>
   );
 
@@ -455,7 +454,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           <VisuallyHidden>
             <DrawerTitle>Create a post</DrawerTitle>
           </VisuallyHidden>
-          <ModalContent />
+          {modalContent}
         </DrawerContent>
       </Drawer>
     );
@@ -467,7 +466,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         <VisuallyHidden>
           <DialogTitle>Create a post</DialogTitle>
         </VisuallyHidden>
-        <ModalContent />
+        {modalContent}
       </DialogContent>
     </Dialog>
   );
