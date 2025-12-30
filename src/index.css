@@ -110,16 +110,19 @@ All colors MUST be HSL.
   html, body {
     height: 100%;
     width: 100%;
+    background-color: black;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: black;
     overflow-x: hidden;
   }
 
   #root {
     min-height: 100vh;
     width: 100%;
+    background-color: black;
   }
 }
 
