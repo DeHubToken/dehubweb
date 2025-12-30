@@ -96,7 +96,7 @@ function PostCard({ post }: { post: Post }) {
 
 function StoriesBar() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div className="bg-zinc-900 rounded-2xl p-4 -mt-1">
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
         {['Your Story', 'alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'].map((name, i) => (
           <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
