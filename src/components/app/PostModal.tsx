@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { X, Image, Film, Radio, Lock, Bold, Italic, AtSign, Smile, MapPin, Sparkles, Loader2 } from 'lucide-react';
+import { X, Image, Film, Radio, Lock, Bold, Italic, AtSign, Smile, MapPin, Sparkles, Loader2, Coins } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,6 +26,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
   const [text, setText] = useState('');
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
+  const [isTokenGated, setIsTokenGated] = useState(false);
   const [isLive, setIsLive] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -296,6 +297,21 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
             checked={isSubscribersOnly}
             onCheckedChange={setIsSubscribersOnly}
             className="data-[state=checked]:bg-amber-500"
+          />
+        </div>
+
+        {/* Token Gated / PPV Toggle */}
+        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Coins className={cn("w-4 h-4", isTokenGated ? "text-emerald-400" : "text-zinc-500")} />
+            <span className={cn("text-sm", isTokenGated ? "text-emerald-400" : "text-zinc-400")}>
+              PPV / Watch2Earn
+            </span>
+          </div>
+          <Switch
+            checked={isTokenGated}
+            onCheckedChange={setIsTokenGated}
+            className="data-[state=checked]:bg-emerald-500"
           />
         </div>
 
