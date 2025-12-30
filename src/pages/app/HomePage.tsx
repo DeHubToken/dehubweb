@@ -141,8 +141,8 @@ export default function HomePage() {
   
   // Feed filter states
   const [feedFilters, setFeedFilters] = useState({
-    followed: false,
-    subscribed: false,
+    followed: true,
+    subscribed: true,
     trending: true,
   });
 
