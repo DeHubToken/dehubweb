@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import { PostModal } from './PostModal';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -17,6 +19,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   const navContent = (
     <>
@@ -68,7 +71,10 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
       {/* Post Button */}
       <div className="mt-4 pt-4 border-t border-zinc-700/50">
-        <Button className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base">
+        <Button 
+          onClick={() => setIsPostModalOpen(true)}
+          className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base"
+        >
           Post
         </Button>
       </div>
@@ -153,11 +159,17 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
         {/* Post Button Bento */}
         <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
-          <Button className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base">
+          <Button 
+            onClick={() => setIsPostModalOpen(true)}
+            className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base"
+          >
             Post
           </Button>
         </div>
       </aside>
+
+      {/* Post Modal */}
+      <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
     </>
   );
 }
