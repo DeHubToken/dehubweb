@@ -20,7 +20,7 @@ export function SidebarNavItem({
   variant = 'desktop' 
 }: SidebarNavItemProps) {
   const handleClick = (e: React.MouseEvent) => {
-    if (isHome && currentPath === '/app') {
+    if (isHome && currentPath.startsWith('/app')) {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('home-refresh'));
     }

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import dehubLogo from '@/assets/dehub-logo-white.png';
@@ -10,11 +10,22 @@ interface MobileHeaderProps {
 }
 
 export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname.startsWith('/app')) {
+      window.dispatchEvent(new CustomEvent('home-refresh'));
+    }
+    navigate('/app');
+  };
+
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-2 flex items-center justify-between">
-      <Link to="/app" className="block cursor-pointer">
+      <button onClick={handleLogoClick} className="block cursor-pointer">
         <img src={dehubLogo} alt="dehub" className="h-6 w-auto" />
-      </Link>
+      </button>
       
       <Drawer open={isOpen} onOpenChange={onToggle}>
         <DrawerTrigger asChild>
