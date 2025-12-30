@@ -170,12 +170,6 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           <DialogTitle>Create a post</DialogTitle>
         </VisuallyHidden>
         
-        {/* Header */}
-        <div className="flex items-center px-4 py-3 border-b border-zinc-800">
-          <button onClick={handleClose} className="p-1 hover:bg-zinc-800 rounded-full transition-colors">
-            <X className="w-5 h-5 text-zinc-400" />
-          </button>
-        </div>
 
         {/* Content Area */}
         <div className="p-4 max-h-[70vh] overflow-y-auto">
