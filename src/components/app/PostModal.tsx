@@ -463,7 +463,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] p-0 bg-black border-zinc-800 overflow-hidden">
+      <DialogContent className="sm:max-w-[600px] p-0 bg-zinc-900/20 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden">
         <VisuallyHidden>
           <DialogTitle>Create a post</DialogTitle>
         </VisuallyHidden>
