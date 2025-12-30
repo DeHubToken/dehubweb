@@ -143,7 +143,6 @@ export default function HomePage() {
   const [feedFilters, setFeedFilters] = useState({
     followed: false,
     subscribed: false,
-    category: false,
     trending: true,
   });
 
@@ -260,17 +259,6 @@ export default function HomePage() {
               <Switch
                 checked={feedFilters.subscribed}
                 onCheckedChange={(checked) => setFeedFilters(prev => ({ ...prev, subscribed: checked }))}
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-white font-medium">Category</p>
-                <p className="text-sm text-zinc-500">Filter by content categories</p>
-              </div>
-              <Switch
-                checked={feedFilters.category}
-                onCheckedChange={(checked) => setFeedFilters(prev => ({ ...prev, category: checked }))}
               />
             </div>
             
