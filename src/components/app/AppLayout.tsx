@@ -11,10 +11,10 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-clip">
-      <div className="flex max-w-7xl mx-auto w-full relative">
+      <div className="flex max-w-7xl mx-auto w-full relative min-h-screen">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className="flex-1 min-h-screen pt-10 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full">
+        <main className="flex-1 min-h-screen pt-10 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
           <Outlet />
         </main>
         
