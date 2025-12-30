@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { X, Image, Film, Radio, Lock, Bold, Italic, AtSign, Smile, MapPin, Sparkles, Loader2, Coins } from 'lucide-react';
+import { X, Image, Film, Radio, Lock, Bold, Italic, AtSign, Smile, MapPin, Sparkles, Loader2, Coins, Play, Shield } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,6 +26,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
   const [text, setText] = useState('');
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
+  const [isPPV, setIsPPV] = useState(false);
+  const [isWatch2Earn, setIsWatch2Earn] = useState(false);
   const [isTokenGated, setIsTokenGated] = useState(false);
   const [isLive, setIsLive] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -300,18 +302,48 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           />
         </div>
 
-        {/* Token Gated / PPV Toggle */}
+        {/* PPV Toggle */}
         <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Coins className={cn("w-4 h-4", isTokenGated ? "text-emerald-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isTokenGated ? "text-emerald-400" : "text-zinc-400")}>
-              PPV / Watch2Earn
+            <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-zinc-500")} />
+            <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-zinc-400")}>
+              PPV
+            </span>
+          </div>
+          <Switch
+            checked={isPPV}
+            onCheckedChange={setIsPPV}
+            className="data-[state=checked]:bg-emerald-500"
+          />
+        </div>
+
+        {/* Watch2Earn Toggle */}
+        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-zinc-500")} />
+            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-zinc-400")}>
+              Watch2Earn
+            </span>
+          </div>
+          <Switch
+            checked={isWatch2Earn}
+            onCheckedChange={setIsWatch2Earn}
+            className="data-[state=checked]:bg-blue-500"
+          />
+        </div>
+
+        {/* Token Gated Toggle */}
+        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-zinc-500")} />
+            <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-zinc-400")}>
+              Token Gated
             </span>
           </div>
           <Switch
             checked={isTokenGated}
             onCheckedChange={setIsTokenGated}
-            className="data-[state=checked]:bg-emerald-500"
+            className="data-[state=checked]:bg-purple-500"
           />
         </div>
 
