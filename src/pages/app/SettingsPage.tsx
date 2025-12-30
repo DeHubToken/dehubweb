@@ -26,7 +26,8 @@ import {
   Play,
   Sparkles,
   Save,
-  FileText
+  FileText,
+  MapPin
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -401,6 +402,44 @@ function PrivacySettings() {
               Enable
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Geo-Blocking */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Geo-Blocking</h3>
+        <p className="text-zinc-500 text-sm mb-4">Block users from specific regions from viewing your content</p>
+        <div className="space-y-4">
+          <SettingToggle
+            icon={MapPin}
+            title="North America"
+            description="Block users from USA, Canada, Mexico"
+          />
+          <SettingToggle
+            icon={MapPin}
+            title="Europe"
+            description="Block users from EU countries"
+          />
+          <SettingToggle
+            icon={MapPin}
+            title="Asia Pacific"
+            description="Block users from Asia & Oceania"
+          />
+          <SettingToggle
+            icon={MapPin}
+            title="Middle East"
+            description="Block users from Middle Eastern countries"
+          />
+          <SettingToggle
+            icon={MapPin}
+            title="Africa"
+            description="Block users from African countries"
+          />
+          <SettingToggle
+            icon={MapPin}
+            title="South America"
+            description="Block users from South American countries"
+          />
         </div>
       </div>
     </div>
