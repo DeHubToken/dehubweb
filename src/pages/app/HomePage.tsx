@@ -9,6 +9,8 @@ import { ImagesFeed } from '@/components/app/feeds/ImagesFeed';
 import { VideosFeed } from '@/components/app/feeds/VideosFeed';
 import { ShortsFeed } from '@/components/app/feeds/ShortsFeed';
 import { LiveFeed } from '@/components/app/feeds/LiveFeed';
+import { PPVFeed } from '@/components/app/feeds/PPVFeed';
+import { W2EFeed } from '@/components/app/feeds/W2EFeed';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 
@@ -185,6 +187,10 @@ export default function HomePage() {
 
   const renderFeed = () => {
     switch (activeTab) {
+      case 'ppv':
+        return <PPVFeed />;
+      case 'w2e':
+        return <W2EFeed />;
       case 'images':
         return <ImagesFeed showCollage={showImagesCollage} />;
       case 'videos':

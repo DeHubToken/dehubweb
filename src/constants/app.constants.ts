@@ -14,6 +14,8 @@ import {
   Radio,
   Users,
   FileTextIcon,
+  Coins,
+  Play,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -31,6 +33,8 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, label: 'Home', value: 'home' },
+  { icon: Coins, label: 'PPV', value: 'ppv' },
+  { icon: Play, label: 'W2E', value: 'w2e' },
   { icon: Video, label: 'Videos', value: 'videos' },
   { icon: Image, label: 'Images', value: 'images' },
   { icon: Film, label: 'Shorts', value: 'shorts' },
