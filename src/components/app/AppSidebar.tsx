@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu, PenSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -89,8 +89,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       <div className="mt-4 pt-4 border-t border-zinc-700/50">
         <Button 
           onClick={() => setIsPostModalOpen(true)}
-          className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base"
+          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
         >
+          <PenSquare className="w-5 h-5" />
           Post
         </Button>
       </div>
@@ -193,8 +194,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
           <Button 
             onClick={() => setIsPostModalOpen(true)}
-            className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base"
+            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
           >
+            <PenSquare className="w-5 h-5" />
             Post
           </Button>
         </div>
