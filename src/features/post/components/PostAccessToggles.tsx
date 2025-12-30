@@ -84,7 +84,7 @@ export function PostAccessToggles({
                     value={ppvAmount}
                     onChange={(e) => setPpvAmount(e.target.value)}
                     placeholder="0.00"
-                    className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-emerald-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-emerald-500"
+                    className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-emerald-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   <div className="flex h-6 rounded overflow-hidden border border-emerald-500/30">
                     <button type="button" onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
@@ -111,9 +111,9 @@ export function PostAccessToggles({
           {isWatch2Earn && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
               <div className="flex items-center gap-1.5 pl-6 pb-1">
-                <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="Views" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
-                <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="Comments" className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
-                <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
+                <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="Views" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="Comments" className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                 <div className="flex h-6 rounded overflow-hidden border border-blue-500/30">
                   <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
                   <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
@@ -149,7 +149,7 @@ export function PostAccessToggles({
                   value={tokenAmount}
                   onChange={(e) => setTokenAmount(e.target.value)}
                   placeholder="Min"
-                  className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500"
+                  className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
             </motion.div>
