@@ -408,39 +408,8 @@ function PrivacySettings() {
       {/* Geo-Blocking */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">Geo-Blocking</h3>
-        <p className="text-zinc-500 text-sm mb-4">Block users from specific regions from viewing your content</p>
-        <div className="space-y-4">
-          <SettingToggle
-            icon={MapPin}
-            title="North America"
-            description="Block users from USA, Canada, Mexico"
-          />
-          <SettingToggle
-            icon={MapPin}
-            title="Europe"
-            description="Block users from EU countries"
-          />
-          <SettingToggle
-            icon={MapPin}
-            title="Asia Pacific"
-            description="Block users from Asia & Oceania"
-          />
-          <SettingToggle
-            icon={MapPin}
-            title="Middle East"
-            description="Block users from Middle Eastern countries"
-          />
-          <SettingToggle
-            icon={MapPin}
-            title="Africa"
-            description="Block users from African countries"
-          />
-          <SettingToggle
-            icon={MapPin}
-            title="South America"
-            description="Block users from South American countries"
-          />
-        </div>
+        <p className="text-zinc-500 text-sm mb-4">Block users from specific countries from viewing your content</p>
+        <GeoBlockingSelector />
       </div>
     </div>
   );
@@ -739,6 +708,176 @@ function MessagesSettings() {
             <span className="text-zinc-300 text-sm">Export Chats</span>
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+const COUNTRIES = [
+  { code: 'US', name: 'United States' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'AU', name: 'Australia' },
+  { code: 'DE', name: 'Germany' },
+  { code: 'FR', name: 'France' },
+  { code: 'IT', name: 'Italy' },
+  { code: 'ES', name: 'Spain' },
+  { code: 'NL', name: 'Netherlands' },
+  { code: 'BE', name: 'Belgium' },
+  { code: 'CH', name: 'Switzerland' },
+  { code: 'AT', name: 'Austria' },
+  { code: 'SE', name: 'Sweden' },
+  { code: 'NO', name: 'Norway' },
+  { code: 'DK', name: 'Denmark' },
+  { code: 'FI', name: 'Finland' },
+  { code: 'PL', name: 'Poland' },
+  { code: 'PT', name: 'Portugal' },
+  { code: 'IE', name: 'Ireland' },
+  { code: 'GR', name: 'Greece' },
+  { code: 'CZ', name: 'Czech Republic' },
+  { code: 'RO', name: 'Romania' },
+  { code: 'HU', name: 'Hungary' },
+  { code: 'JP', name: 'Japan' },
+  { code: 'KR', name: 'South Korea' },
+  { code: 'CN', name: 'China' },
+  { code: 'IN', name: 'India' },
+  { code: 'SG', name: 'Singapore' },
+  { code: 'HK', name: 'Hong Kong' },
+  { code: 'TW', name: 'Taiwan' },
+  { code: 'TH', name: 'Thailand' },
+  { code: 'MY', name: 'Malaysia' },
+  { code: 'ID', name: 'Indonesia' },
+  { code: 'PH', name: 'Philippines' },
+  { code: 'VN', name: 'Vietnam' },
+  { code: 'NZ', name: 'New Zealand' },
+  { code: 'BR', name: 'Brazil' },
+  { code: 'MX', name: 'Mexico' },
+  { code: 'AR', name: 'Argentina' },
+  { code: 'CL', name: 'Chile' },
+  { code: 'CO', name: 'Colombia' },
+  { code: 'PE', name: 'Peru' },
+  { code: 'ZA', name: 'South Africa' },
+  { code: 'EG', name: 'Egypt' },
+  { code: 'NG', name: 'Nigeria' },
+  { code: 'KE', name: 'Kenya' },
+  { code: 'AE', name: 'United Arab Emirates' },
+  { code: 'SA', name: 'Saudi Arabia' },
+  { code: 'IL', name: 'Israel' },
+  { code: 'TR', name: 'Turkey' },
+  { code: 'RU', name: 'Russia' },
+  { code: 'UA', name: 'Ukraine' },
+];
+
+function GeoBlockingSelector() {
+  const [blockedCountries, setBlockedCountries] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filteredCountries = COUNTRIES.filter(c => 
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const toggleCountry = (code: string) => {
+    setBlockedCountries(prev => 
+      prev.includes(code) 
+        ? prev.filter(c => c !== code)
+        : [...prev, code]
+    );
+  };
+
+  const removeCountry = (code: string) => {
+    setBlockedCountries(prev => prev.filter(c => c !== code));
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Selected Countries */}
+      {blockedCountries.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {blockedCountries.map(code => {
+            const country = COUNTRIES.find(c => c.code === code);
+            return (
+              <span 
+                key={code}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg text-sm"
+              >
+                <MapPin className="w-3 h-3" />
+                {country?.name}
+                <button 
+                  onClick={() => removeCountry(code)}
+                  className="ml-1 hover:text-red-300"
+                >
+                  ×
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Dropdown */}
+      <div className="relative">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white hover:bg-zinc-700 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-zinc-500" />
+            <span className="text-zinc-400">
+              {blockedCountries.length === 0 
+                ? 'Select countries to block...' 
+                : `${blockedCountries.length} ${blockedCountries.length === 1 ? 'country' : 'countries'} blocked`}
+            </span>
+          </div>
+          <svg 
+            className={`w-4 h-4 text-zinc-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {isOpen && (
+          <div className="absolute z-50 w-full mt-2 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl overflow-hidden">
+            {/* Search */}
+            <div className="p-2 border-b border-zinc-700">
+              <input
+                type="text"
+                placeholder="Search countries..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-600 rounded-lg text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-zinc-500"
+              />
+            </div>
+
+            {/* Country List */}
+            <div className="max-h-64 overflow-y-auto">
+              {filteredCountries.map(country => (
+                <button
+                  key={country.code}
+                  onClick={() => toggleCountry(country.code)}
+                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-700 transition-colors text-left"
+                >
+                  <span className="text-white text-sm">{country.name}</span>
+                  {blockedCountries.includes(country.code) && (
+                    <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                </button>
+              ))}
+              {filteredCountries.length === 0 && (
+                <div className="px-4 py-3 text-zinc-500 text-sm text-center">
+                  No countries found
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
