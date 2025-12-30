@@ -30,8 +30,16 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
   const [isPPV, setIsPPV] = useState(false);
+  const [ppvAmount, setPpvAmount] = useState('');
+  const [ppvCurrency, setPpvCurrency] = useState<'USDC' | 'DHB'>('USDC');
   const [isWatch2Earn, setIsWatch2Earn] = useState(false);
+  const [w2eViews, setW2eViews] = useState('');
+  const [w2eComments, setW2eComments] = useState('');
+  const [w2eTotal, setW2eTotal] = useState('');
+  const [w2eCurrency, setW2eCurrency] = useState<'USDC' | 'DHB'>('USDC');
   const [isTokenGated, setIsTokenGated] = useState(false);
+  const [tokenContract, setTokenContract] = useState('');
+  const [tokenAmount, setTokenAmount] = useState('');
   const [isLive, setIsLive] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -268,7 +276,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
       </div>
 
       {/* Content Access Toggles */}
-      <div className="px-4 py-2 border-t border-white/10 space-y-0.5">
+      <div className="px-4 py-2 border-t border-white/10 space-y-1">
+        {/* Subscribers Only */}
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <Lock className={cn("w-4 h-4", isSubscribersOnly ? "text-amber-400" : "text-zinc-500")} />
@@ -277,28 +286,99 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-amber-500 scale-75" />
         </div>
 
-        <div className="flex items-center justify-between py-0.5">
-          <div className="flex items-center gap-2">
-            <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-zinc-400")}>PPV</span>
+        {/* PPV */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between py-0.5">
+            <div className="flex items-center gap-2">
+              <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-zinc-400")}>PPV</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <AnimatePresence>
+                {isPPV && (
+                  <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="flex items-center gap-1 overflow-hidden">
+                    <input
+                      type="number"
+                      value={ppvAmount}
+                      onChange={(e) => setPpvAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-emerald-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-emerald-500"
+                    />
+                    <div className="flex h-6 rounded overflow-hidden border border-emerald-500/30">
+                      <button onClick={() => setPpvCurrency('USDC')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USDC' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USDC</button>
+                      <button onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <Switch checked={isPPV} onCheckedChange={setIsPPV} className="data-[state=checked]:bg-emerald-500 scale-75" />
+            </div>
           </div>
-          <Switch checked={isPPV} onCheckedChange={setIsPPV} className="data-[state=checked]:bg-emerald-500 scale-75" />
         </div>
 
-        <div className="flex items-center justify-between py-0.5">
-          <div className="flex items-center gap-2">
-            <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-zinc-400")}>Watch2Earn</span>
+        {/* Watch2Earn */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between py-0.5">
+            <div className="flex items-center gap-2">
+              <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-zinc-400")}>Watch2Earn</span>
+            </div>
+            <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-blue-500 scale-75" />
           </div>
-          <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-blue-500 scale-75" />
+          <AnimatePresence>
+            {isWatch2Earn && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                <div className="flex items-center gap-1.5 pl-6 pb-1">
+                  <div className="flex items-center gap-1">
+                    <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="Views" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="Comments" className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500" />
+                  </div>
+                  <div className="flex h-6 rounded overflow-hidden border border-blue-500/30">
+                    <button onClick={() => setW2eCurrency('USDC')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USDC' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USDC</button>
+                    <button onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <div className="flex items-center justify-between py-0.5">
-          <div className="flex items-center gap-2">
-            <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-zinc-400")}>Token Gated</span>
+        {/* Token Gated */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between py-0.5">
+            <div className="flex items-center gap-2">
+              <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-zinc-400")}>Token Gated</span>
+            </div>
+            <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-purple-500 scale-75" />
           </div>
-          <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-purple-500 scale-75" />
+          <AnimatePresence>
+            {isTokenGated && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                <div className="flex items-center gap-1.5 pl-6 pb-1">
+                  <input
+                    type="text"
+                    value={tokenContract}
+                    onChange={(e) => setTokenContract(e.target.value)}
+                    placeholder="Contract address"
+                    className="flex-1 h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 font-mono"
+                  />
+                  <input
+                    type="number"
+                    value={tokenAmount}
+                    onChange={(e) => setTokenAmount(e.target.value)}
+                    placeholder="Min"
+                    className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500"
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
