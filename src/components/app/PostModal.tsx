@@ -401,7 +401,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
               size="sm"
               onClick={handleEnhanceWithAI}
               disabled={!text.trim() || isEnhancing}
-              className="rounded-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white gap-2"
+              className="rounded-full border-zinc-600 bg-zinc-800 text-white hover:bg-zinc-700 hover:text-white gap-2"
             >
               {isEnhancing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
