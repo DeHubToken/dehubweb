@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import { Menu, PenSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
@@ -102,9 +102,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     <>
       {/* Mobile Header with Drawer */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-2 flex items-center justify-between">
-        <a href="/app" className="block cursor-pointer">
+        <Link to="/app" className="block cursor-pointer">
           <img src={dehubLogo} alt="dehub" className="h-6 w-auto" />
-        </a>
+        </Link>
         
         <Drawer open={isOpen} onOpenChange={onToggle}>
           <DrawerTrigger asChild>
@@ -126,9 +126,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex sticky top-0 h-screen w-64 p-4 flex-col">
         {/* Logo */}
-        <a href="/app" className="mb-6 block cursor-pointer">
+        <Link to="/app" className="mb-6 block cursor-pointer">
           <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
-        </a>
+        </Link>
 
         {/* Navigation Bento */}
         <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
