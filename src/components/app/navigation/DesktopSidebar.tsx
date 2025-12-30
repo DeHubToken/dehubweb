@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PenSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
@@ -11,13 +11,22 @@ interface DesktopSidebarProps {
 
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname.startsWith('/app')) {
+      window.dispatchEvent(new CustomEvent('home-refresh'));
+    }
+    navigate('/app');
+  };
 
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-64 p-4 flex-col">
       {/* Logo */}
-      <Link to="/app" className="mb-6 block cursor-pointer">
+      <button onClick={handleLogoClick} className="mb-6 block cursor-pointer text-left">
         <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
-      </Link>
+      </button>
 
       {/* Navigation Bento */}
       <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
