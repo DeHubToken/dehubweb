@@ -287,64 +287,63 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
           </div>
         </div>
 
-        {/* Subscribers Only Toggle */}
-        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Lock className={cn("w-4 h-4", isSubscribersOnly ? "text-amber-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isSubscribersOnly ? "text-amber-400" : "text-zinc-400")}>
-              Subscribers only
-            </span>
+        {/* Content Access Toggles */}
+        <div className="px-4 py-2 border-t border-zinc-800 space-y-1">
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Lock className={cn("w-4 h-4", isSubscribersOnly ? "text-amber-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isSubscribersOnly ? "text-amber-400" : "text-zinc-400")}>
+                Subscribers only
+              </span>
+            </div>
+            <Switch
+              checked={isSubscribersOnly}
+              onCheckedChange={setIsSubscribersOnly}
+              className="data-[state=checked]:bg-amber-500 scale-90"
+            />
           </div>
-          <Switch
-            checked={isSubscribersOnly}
-            onCheckedChange={setIsSubscribersOnly}
-            className="data-[state=checked]:bg-amber-500"
-          />
-        </div>
 
-        {/* PPV Toggle */}
-        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-zinc-400")}>
-              PPV
-            </span>
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-zinc-400")}>
+                PPV
+              </span>
+            </div>
+            <Switch
+              checked={isPPV}
+              onCheckedChange={setIsPPV}
+              className="data-[state=checked]:bg-emerald-500 scale-90"
+            />
           </div>
-          <Switch
-            checked={isPPV}
-            onCheckedChange={setIsPPV}
-            className="data-[state=checked]:bg-emerald-500"
-          />
-        </div>
 
-        {/* Watch2Earn Toggle */}
-        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-zinc-400")}>
-              Watch2Earn
-            </span>
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-zinc-400")}>
+                Watch2Earn
+              </span>
+            </div>
+            <Switch
+              checked={isWatch2Earn}
+              onCheckedChange={setIsWatch2Earn}
+              className="data-[state=checked]:bg-blue-500 scale-90"
+            />
           </div>
-          <Switch
-            checked={isWatch2Earn}
-            onCheckedChange={setIsWatch2Earn}
-            className="data-[state=checked]:bg-blue-500"
-          />
-        </div>
 
-        {/* Token Gated Toggle */}
-        <div className="px-4 py-3 border-t border-zinc-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-zinc-400")}>
-              Token Gated
-            </span>
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-zinc-500")} />
+              <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-zinc-400")}>
+                Token Gated
+              </span>
+            </div>
+            <Switch
+              checked={isTokenGated}
+              onCheckedChange={setIsTokenGated}
+              className="data-[state=checked]:bg-purple-500 scale-90"
+            />
           </div>
-          <Switch
-            checked={isTokenGated}
-            onCheckedChange={setIsTokenGated}
-            className="data-[state=checked]:bg-purple-500"
-          />
         </div>
 
         {/* Action Bar */}
