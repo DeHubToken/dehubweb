@@ -21,7 +21,7 @@ export function WhoToFollow() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+              className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 hover:text-white bg-transparent"
             >
               Follow
             </Button>
