@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2 } from 'lucide-react';
+import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Video } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -100,9 +100,35 @@ function StoriesBar() {
   return (
     <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-        {['Your Story', 'alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'].map((name, i) => (
+        {/* Add Story */}
+        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+          <div className="p-0.5 rounded-full bg-zinc-700">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-14 h-14">
+                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Your Story" />
+                <AvatarFallback className="bg-zinc-700">Y</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+          <span className="text-xs text-zinc-400 truncate w-16 text-center">Add Story</span>
+        </div>
+
+        {/* Go Live */}
+        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-red-700">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <div className="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center">
+                <Video className="w-6 h-6 text-red-500" />
+              </div>
+            </div>
+          </div>
+          <span className="text-xs text-zinc-400 truncate w-16 text-center">Go Live</span>
+        </div>
+
+        {/* Other Stories */}
+        {['alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'].map((name) => (
           <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <div className={`p-0.5 rounded-full ${i === 0 ? 'bg-zinc-700' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500'}`}>
+            <div className="p-0.5 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500">
               <div className="p-0.5 bg-zinc-900 rounded-full">
                 <Avatar className="w-14 h-14">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`} />
@@ -110,9 +136,7 @@ function StoriesBar() {
                 </Avatar>
               </div>
             </div>
-            <span className="text-xs text-zinc-400 truncate w-16 text-center">
-              {i === 0 ? 'Add Story' : name}
-            </span>
+            <span className="text-xs text-zinc-400 truncate w-16 text-center">{name}</span>
           </div>
         ))}
       </div>
