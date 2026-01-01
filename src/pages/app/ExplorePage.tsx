@@ -32,7 +32,7 @@ const FilterPill = ({
     className={cn(
       'px-3 py-1.5 rounded-full text-sm font-medium transition-all',
       active
-        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+        ? 'bg-white text-black'
         : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
     )}
   >
@@ -60,7 +60,7 @@ const FilterDropdown = ({
         className={cn(
           'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all',
           value !== options[0]
-            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+            ? 'bg-white text-black'
             : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
         )}
       >
@@ -156,7 +156,7 @@ export default function ExplorePage() {
               className={cn(
                 'flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all',
                 showFilters || activeFilterCount > 0
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                  ? 'bg-white text-black'
                   : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
               )}
             >
