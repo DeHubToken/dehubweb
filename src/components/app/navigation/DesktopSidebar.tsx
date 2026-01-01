@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -12,6 +13,9 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // TODO: Replace with actual balance from auth/wallet state
+  const coinBalance = 0;
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,10 +27,16 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-64 p-4 flex-col">
-      {/* Logo */}
-      <button onClick={handleLogoClick} className="mb-6 block cursor-pointer text-left">
-        <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
-      </button>
+      {/* Logo & Coin Balance */}
+      <div className="mb-6 flex items-center justify-between">
+        <button onClick={handleLogoClick} className="block cursor-pointer">
+          <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
+        </button>
+        <div className="flex items-center gap-1.5 bg-zinc-900 rounded-full px-2.5 py-1.5">
+          <img src={dehubCoin} alt="coins" className="h-5 w-5" />
+          <span className="text-sm font-semibold text-white">{coinBalance.toLocaleString()}</span>
+        </div>
+      </div>
 
       {/* Navigation Bento */}
       <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
