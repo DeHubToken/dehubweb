@@ -3,16 +3,15 @@ import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check } from 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -110,7 +109,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
     <div className="space-y-1">
       <button
         onClick={() => setMenuView('buy')}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
           <Plus className="w-4 h-4 text-green-500" />
@@ -119,19 +118,19 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
       </button>
       <button
         onClick={handleCopyAddress}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
           {copied ? <Check className="w-4 h-4 text-blue-500" /> : <Copy className="w-4 h-4 text-blue-500" />}
         </div>
         <div className="flex flex-col">
           <span className="text-white font-medium">Receive Coins</span>
-          <span className="text-xs text-zinc-500">{walletAddress}</span>
+          <span className="text-xs text-zinc-400">{walletAddress}</span>
         </div>
       </button>
       <button
         onClick={() => setMenuView('send')}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
           <Send className="w-4 h-4 text-purple-500" />
@@ -152,7 +151,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
       </button>
       <button
         onClick={handleBuyWithCard}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
           <CreditCard className="w-4 h-4 text-orange-500" />
@@ -161,7 +160,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
       </button>
       <button
         onClick={handleBuyWithCrypto}
-        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
           <Bitcoin className="w-4 h-4 text-yellow-500" />
@@ -184,12 +183,12 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
       {!selectedUser ? (
         <>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
             <Input
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+              className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
             />
           </div>
           <div className="space-y-1 max-h-48 overflow-y-auto">
@@ -197,30 +196,30 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
               <button
                 key={user.id}
                 onClick={() => setSelectedUser(user)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-800 transition-colors text-left"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
               >
-                <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-sm font-medium">
                   {user.username[0].toUpperCase()}
                 </div>
                 <span className="text-white">@{user.username}</span>
               </button>
             ))}
             {filteredUsers.length === 0 && (
-              <p className="text-center text-zinc-500 py-4">No users found</p>
+              <p className="text-center text-zinc-400 py-4">No users found</p>
             )}
           </div>
         </>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-center gap-3 p-3 bg-zinc-800 rounded-lg">
-            <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center text-white font-medium">
+          <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
               {selectedUser.username[0].toUpperCase()}
             </div>
             <div>
               <p className="text-white font-medium">@{selectedUser.username}</p>
               <button
                 onClick={() => setSelectedUser(null)}
-                className="text-xs text-zinc-500 hover:text-zinc-300"
+                className="text-xs text-zinc-400 hover:text-zinc-300"
               >
                 Change
               </button>
@@ -235,7 +234,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
                 placeholder="0"
                 value={sendAmount}
                 onChange={(e) => setSendAmount(e.target.value)}
-                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
+                className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
               />
             </div>
           </div>
@@ -270,7 +269,8 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent 
           align="end" 
-          className="w-64 bg-zinc-900 border-zinc-800 p-2"
+          glass
+          className="w-64 p-2"
           sideOffset={8}
         >
           {getMenuContent()}
@@ -280,19 +280,19 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }}>
-      <SheetTrigger asChild>
+    <Drawer open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }}>
+      <DrawerTrigger asChild>
         {coinButton}
-      </SheetTrigger>
-      <SheetContent side="bottom" className="bg-zinc-900 border-zinc-800 rounded-t-2xl">
-        <SheetHeader className="mb-4">
-          <SheetTitle className="text-white flex items-center gap-2">
+      </DrawerTrigger>
+      <DrawerContent glass className="px-4 pb-8">
+        <DrawerHeader className="mb-2">
+          <DrawerTitle className="text-white flex items-center gap-2">
             <img src={dehubCoin} alt="coins" className="w-6 h-6" />
             {balance.toLocaleString()} Coins
-          </SheetTitle>
-        </SheetHeader>
+          </DrawerTitle>
+        </DrawerHeader>
         {getMenuContent()}
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }
