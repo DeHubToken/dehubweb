@@ -172,12 +172,12 @@ export default function ExplorePage() {
         <AnimatePresence>
           {showFilters && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="relative z-20"
             >
-              <div className="bg-zinc-900 rounded-2xl p-4 space-y-4">
+              <div className="bg-zinc-900 rounded-2xl p-4 space-y-4 pb-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-white font-semibold">Filters</h3>
                   {activeFilterCount > 0 && (
@@ -222,7 +222,7 @@ export default function ExplorePage() {
                 </div>
 
                 {/* Engagement Filters */}
-                <div className="space-y-2">
+                <div className="space-y-2 relative z-30">
                   <p className="text-xs text-zinc-500 uppercase tracking-wider">Engagement</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterDropdown
