@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import dehubCoin from '@/assets/dehub-coin.png';
 
 interface MobileHeaderProps {
   isOpen: boolean;
@@ -33,10 +33,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       
       <div className="flex items-center gap-2">
         {/* Coin Balance */}
-        <div className="flex items-center gap-1 bg-zinc-900 rounded-full px-2 py-1">
-          <img src={dehubCoin} alt="coins" className="h-4 w-4" />
-          <span className="text-xs font-semibold text-white">{coinBalance.toLocaleString()}</span>
-        </div>
+        <CoinBalanceMenu balance={coinBalance} variant="mobile" />
         
         {/* Menu Button */}
         <Drawer open={isOpen} onOpenChange={onToggle}>
