@@ -15,7 +15,7 @@ type FilterState = {
   date: string;
   likes: string;
   shares: string;
-  copies: string;
+  comments: string;
 };
 
 const FilterPill = ({ 
@@ -112,7 +112,7 @@ export default function ExplorePage() {
     date: 'Any time',
     likes: 'Any',
     shares: 'Any',
-    copies: 'Any',
+    comments: 'Any',
   });
 
   const activeFilterCount = [
@@ -121,7 +121,7 @@ export default function ExplorePage() {
     filters.date !== 'Any time',
     filters.likes !== 'Any',
     filters.shares !== 'Any',
-    filters.copies !== 'Any',
+    filters.comments !== 'Any',
   ].filter(Boolean).length;
 
   const resetFilters = () => {
@@ -131,7 +131,7 @@ export default function ExplorePage() {
       date: 'Any time',
       likes: 'Any',
       shares: 'Any',
-      copies: 'Any',
+      comments: 'Any',
     });
   };
 
@@ -238,10 +238,10 @@ export default function ExplorePage() {
                       onChange={(v) => setFilters(f => ({ ...f, shares: v }))}
                     />
                     <FilterDropdown
-                      label="Copies"
-                      value={filters.copies}
+                      label="Comments"
+                      value={filters.comments}
                       options={ENGAGEMENT_OPTIONS}
-                      onChange={(v) => setFilters(f => ({ ...f, copies: v }))}
+                      onChange={(v) => setFilters(f => ({ ...f, comments: v }))}
                     />
                   </div>
                 </div>
