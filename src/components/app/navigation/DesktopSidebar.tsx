@@ -3,8 +3,8 @@ import { PenSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
+import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import dehubCoin from '@/assets/dehub-coin.png';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -32,10 +32,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         <button onClick={handleLogoClick} className="block cursor-pointer">
           <img src={dehubLogo} alt="dehub" className="h-10 w-auto" />
         </button>
-        <div className="flex items-center gap-1.5 bg-zinc-900 rounded-full px-2.5 py-1.5">
-          <img src={dehubCoin} alt="coins" className="h-5 w-5" />
-          <span className="text-sm font-semibold text-white">{coinBalance.toLocaleString()}</span>
-        </div>
+        <CoinBalanceMenu balance={coinBalance} variant="desktop" />
       </div>
 
       {/* Navigation Bento */}
