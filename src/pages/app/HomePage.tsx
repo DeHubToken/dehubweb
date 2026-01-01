@@ -117,7 +117,7 @@ function StoriesBar() {
         <div className="flex flex-col items-center gap-1 flex-shrink-0">
           <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-red-700">
             <div className="p-0.5 bg-zinc-900 rounded-full">
-              <div className="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-zinc-900/50 backdrop-blur-sm flex items-center justify-center">
                 <Video className="w-6 h-6 text-red-500" />
               </div>
             </div>
