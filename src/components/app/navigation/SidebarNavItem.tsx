@@ -1,4 +1,4 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types/app.types';
 
@@ -19,10 +19,13 @@ export function SidebarNavItem({
   onNavigate,
   variant = 'desktop' 
 }: SidebarNavItemProps) {
+  const navigate = useNavigate();
+  
   const handleClick = (e: React.MouseEvent) => {
-    if (isHome && currentPath.startsWith('/app')) {
+    if (isHome) {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('home-refresh'));
+      navigate('/app');
     }
     onNavigate?.();
   };
