@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Plus, Video, Image } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -219,27 +218,12 @@ function HomeFeed() {
 }
 
 export default function HomePage() {
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState('home');
   const [showShortsFilters, setShowShortsFilters] = useState(false);
   const [showImagesCollage, setShowImagesCollage] = useState(false);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [showFeedSettings, setShowFeedSettings] = useState(false);
-
-  // Handle navigation state from Explore page
-  useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
-      setShowShortsFilters(false);
-      setShowImagesCollage(false);
-      setShowVideosFilters(false);
-      setRefreshKey(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Clear the state after using it
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
   
   // Feed filter states
   const [feedFilters, setFeedFilters] = useState({

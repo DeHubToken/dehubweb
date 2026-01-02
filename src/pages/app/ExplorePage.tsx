@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, X, ChevronDown, Settings2 } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { FEED_TABS, EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING } from '@/constants/app.constants';
+import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -104,7 +103,6 @@ const FilterDropdown = ({
 };
 
 export default function ExplorePage() {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -139,9 +137,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen">
-
       {/* Search Header - Bento Style */}
-      <div className="sticky top-[60px] lg:top-[60px] bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 space-y-2 sm:space-y-3">
+      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
         <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="relative flex gap-2">
