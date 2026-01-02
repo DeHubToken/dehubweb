@@ -94,7 +94,7 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('all');
 
   return (
-    <div className="min-h-screen pt-3 sm:pt-0">
+    <div className="min-h-screen mt-2 lg:mt-0">
       {/* Header */}
       <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-3 sm:p-4">
         <div className="bg-zinc-900 rounded-2xl px-4 py-3">
