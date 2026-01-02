@@ -60,7 +60,7 @@ export function MobileBottomNav() {
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center h-14 flex-1 transition-colors',
+                      'flex items-center justify-center h-14 flex-1 transition-colors rounded-xl',
                       index === 0 && 'rounded-l-2xl',
                       isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                     )}
@@ -101,7 +101,7 @@ export function MobileBottomNav() {
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center h-14 flex-1 transition-colors',
+                      'flex items-center justify-center h-14 flex-1 transition-colors rounded-xl',
                       index === 1 && 'rounded-r-2xl',
                       isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                     )}
@@ -121,7 +121,7 @@ export function MobileBottomNav() {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'flex items-center justify-center h-14 flex-shrink-0 transition-colors',
+                    'flex items-center justify-center h-14 flex-shrink-0 transition-colors rounded-xl',
                     isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                   )}
                   style={{ width: 'calc((50% - 28px) / 2)' }}
