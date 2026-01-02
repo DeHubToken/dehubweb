@@ -1,8 +1,14 @@
 import { useRef } from 'react';
-import { Heart, MessageCircle, Bookmark, Share, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Bookmark, Share, MoreHorizontal, Download, Flag, Ban, EyeOff } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface InstagramPost {
   id: string;
@@ -189,9 +195,31 @@ function EndlessScrollView({ posts }: { posts: InstagramPost[] }) {
                 </div>
               </div>
             </div>
-            <button className="text-zinc-400 hover:text-white">
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="text-zinc-400 hover:text-white">
+                  <MoreHorizontal className="w-5 h-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+                <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                  <Download className="w-4 h-4" />
+                  Download
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                  <Flag className="w-4 h-4" />
+                  Report
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                  <Ban className="w-4 h-4" />
+                  Block Creator
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                  <EyeOff className="w-4 h-4" />
+                  See Less Like This
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Image */}
