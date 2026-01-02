@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronDown, Settings2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -103,8 +104,8 @@ const FilterDropdown = ({
 };
 
 export default function ExplorePage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
-  const [activeFeedTab, setActiveFeedTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
@@ -145,13 +146,8 @@ export default function ExplorePage() {
             {FEED_TABS.map((tab) => (
               <button
                 key={tab.value}
-                onClick={() => setActiveFeedTab(tab.value)}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap',
-                  activeFeedTab === tab.value
-                    ? 'bg-zinc-800 text-white'
-                    : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
-                )}
+                onClick={() => navigate('/app', { state: { activeTab: tab.value } })}
+                className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
               >
                 <tab.icon className="w-4 h-4 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">{tab.label}</span>
