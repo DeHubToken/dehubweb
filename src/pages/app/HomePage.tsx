@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Plus, Video, Image, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, Eye } from 'lucide-react';
+import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Plus, Video, Image, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, Eye, ChevronRight, Play } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -61,6 +61,51 @@ const SAMPLE_IMAGES = [
     caption: 'Homemade pizza night 🍕 Recipe in bio! #foodie #homemade',
     comments: 156,
     timeAgo: '4 hours ago',
+  },
+];
+
+const SAMPLE_SHORTS = [
+  {
+    id: 's1',
+    username: 'dancequeen',
+    verified: true,
+    likes: '2.5M',
+    thumbnail: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=300&h=500&fit=crop',
+  },
+  {
+    id: 's2',
+    username: 'comedyking',
+    verified: false,
+    likes: '890K',
+    thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=500&fit=crop',
+  },
+  {
+    id: 's3',
+    username: 'cookingwithme',
+    verified: true,
+    likes: '1.2M',
+    thumbnail: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=500&fit=crop',
+  },
+  {
+    id: 's4',
+    username: 'petlovers',
+    verified: false,
+    likes: '3.1M',
+    thumbnail: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=500&fit=crop',
+  },
+  {
+    id: 's5',
+    username: 'fitnessguru',
+    verified: true,
+    likes: '567K',
+    thumbnail: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=500&fit=crop',
+  },
+  {
+    id: 's6',
+    username: 'magictricks',
+    verified: true,
+    likes: '4.2M',
+    thumbnail: 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=300&h=500&fit=crop',
   },
 ];
 
@@ -280,6 +325,53 @@ function LiveSampleCard() {
   );
 }
 
+function ShortsReel() {
+  return (
+    <div className="bg-zinc-900 rounded-2xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-bold text-white flex items-center gap-2">
+          <Play className="w-4 h-4 text-red-500" />
+          Shorts
+        </h3>
+        <button className="text-red-400 text-sm hover:underline flex items-center gap-1">
+          See all <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+        {SAMPLE_SHORTS.map((short) => (
+          <div
+            key={short.id}
+            className="flex-shrink-0 w-[120px] cursor-pointer group"
+          >
+            <div className="relative aspect-[9/16] rounded-xl overflow-hidden mb-2">
+              <img
+                src={short.thumbnail}
+                alt=""
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              
+              {/* Play overlay on hover */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                  <Play className="w-5 h-5 text-white fill-white" />
+                </div>
+              </div>
+              
+              {/* Likes */}
+              <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                <Heart className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">{short.likes}</span>
+              </div>
+            </div>
+            <p className="text-white text-xs truncate">@{short.username}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function StoriesBar() {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -395,6 +487,9 @@ function HomeFeed() {
       <div className="bg-zinc-900 rounded-2xl overflow-hidden">
         <PostCard post={MOCK_POSTS[1]} />
       </div>
+      
+      {/* Shorts reel after ~5 items */}
+      <ShortsReel />
       
       <ImageSampleCard post={SAMPLE_IMAGES[1]} />
       
