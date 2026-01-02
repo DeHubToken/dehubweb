@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Plus, Video, Image } from 'lucide-react';
+import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Plus, Video, Image, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, Eye } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,6 +25,56 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
+
+// Sample data for mixed feed
+const SAMPLE_VIDEO = {
+  id: 'v1',
+  thumbnail: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop',
+  duration: '12:34',
+  title: 'Building a Full Stack App in 2024 - Complete Guide',
+  channel: 'Tech Tutorials',
+  channelAvatar: 'tech',
+  verified: true,
+  views: '1.2M views',
+  uploadedAgo: '2 weeks ago',
+};
+
+const SAMPLE_IMAGES = [
+  {
+    id: 'i1',
+    username: 'travel_adventures',
+    verified: true,
+    avatar: 'travel',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
+    likes: 2453,
+    caption: 'Exploring the mountains 🏔️ Nothing beats this view! #travel #adventure',
+    comments: 89,
+    timeAgo: '2 hours ago',
+  },
+  {
+    id: 'i2',
+    username: 'foodie_life',
+    verified: false,
+    avatar: 'food',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=600&fit=crop',
+    likes: 1832,
+    caption: 'Homemade pizza night 🍕 Recipe in bio! #foodie #homemade',
+    comments: 156,
+    timeAgo: '4 hours ago',
+  },
+];
+
+const SAMPLE_LIVE = {
+  id: 'l1',
+  streamer: 'Ninja',
+  avatar: 'ninja',
+  title: '🔴 LIVE - Grinding Ranked! Road to Champion',
+  game: 'Fortnite',
+  viewers: '45.2K',
+  thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=480&h=270&fit=crop',
+  tags: ['English', 'Competitive'],
+  isLive: true,
+};
 
 const MOCK_POSTS: Post[] = [
   {
@@ -105,6 +155,128 @@ function PostCard({ post }: { post: Post }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function VideoSampleCard() {
+  return (
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${SAMPLE_VIDEO.channelAvatar}`} />
+                <AvatarFallback className="bg-zinc-700">{SAMPLE_VIDEO.channel[0]}</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-white text-sm">{SAMPLE_VIDEO.channel}</span>
+            {SAMPLE_VIDEO.verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+          </div>
+        </div>
+        <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">Video</span>
+      </div>
+      <div className="relative aspect-video bg-zinc-800">
+        <img src={SAMPLE_VIDEO.thumbnail} alt="" className="w-full h-full object-cover" />
+        <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
+          {SAMPLE_VIDEO.duration}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
+            <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
+          </div>
+        </div>
+      </div>
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-green-400 transition-colors"><ThumbsUp className="w-5 h-5" /></button>
+            <button className="text-white hover:text-red-400 transition-colors"><ThumbsDown className="w-5 h-5" /></button>
+            <button className="text-white hover:text-zinc-400 transition-colors"><MessageCircle className="w-5 h-5" /></button>
+            <button className="text-white hover:text-zinc-400 transition-colors"><Share2 className="w-5 h-5" /></button>
+          </div>
+          <button className="text-white hover:text-zinc-400 transition-colors"><Bookmark className="w-5 h-5" /></button>
+        </div>
+        <p className="font-semibold text-white text-sm">{SAMPLE_VIDEO.views}</p>
+        <h3 className="text-white text-sm mt-1">{SAMPLE_VIDEO.title}</h3>
+        <p className="text-zinc-500 text-xs mt-1">{SAMPLE_VIDEO.uploadedAgo}</p>
+      </div>
+    </div>
+  );
+}
+
+function ImageSampleCard({ post }: { post: typeof SAMPLE_IMAGES[0] }) {
+  return (
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.avatar}`} />
+                <AvatarFallback className="bg-zinc-700">{post.username[0]}</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+          <span className="font-semibold text-white text-sm">{post.username}</span>
+        </div>
+        <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">Image</span>
+      </div>
+      <div className="aspect-square bg-zinc-800">
+        <img src={post.image} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-red-400 transition-colors"><Heart className="w-5 h-5" /></button>
+            <button className="text-white hover:text-zinc-400 transition-colors"><MessageCircle className="w-5 h-5" /></button>
+            <button className="text-white hover:text-zinc-400 transition-colors"><Share2 className="w-5 h-5" /></button>
+          </div>
+          <button className="text-white hover:text-zinc-400 transition-colors"><Bookmark className="w-5 h-5" /></button>
+        </div>
+        <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
+        <p className="text-white text-sm mt-1"><span className="font-semibold">{post.username}</span> {post.caption}</p>
+        <p className="text-zinc-500 text-xs mt-1">{post.timeAgo}</p>
+      </div>
+    </div>
+  );
+}
+
+function LiveSampleCard() {
+  return (
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <Avatar className="w-8 h-8 ring-2 ring-red-500">
+            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${SAMPLE_LIVE.avatar}`} />
+            <AvatarFallback className="bg-zinc-700">{SAMPLE_LIVE.streamer[0]}</AvatarFallback>
+          </Avatar>
+          <span className="font-semibold text-white text-sm">{SAMPLE_LIVE.streamer}</span>
+        </div>
+        <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
+          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+          LIVE
+        </span>
+      </div>
+      <div className="relative aspect-video bg-zinc-800">
+        <img src={SAMPLE_LIVE.thumbnail} alt="" className="w-full h-full object-cover" />
+        <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
+          <Eye className="w-3 h-3 text-red-500" />
+          <span className="text-white text-xs font-medium">{SAMPLE_LIVE.viewers}</span>
+        </div>
+      </div>
+      <div className="p-3">
+        <h3 className="font-medium text-white text-sm">{SAMPLE_LIVE.title}</h3>
+        <p className="text-zinc-500 text-xs mt-1">{SAMPLE_LIVE.game}</p>
+        <div className="flex gap-1 mt-2">
+          {SAMPLE_LIVE.tags.map((tag) => (
+            <span key={tag} className="text-xs bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">{tag}</span>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -206,13 +378,29 @@ function StoriesBar() {
 
 function HomeFeed() {
   return (
-    <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+    <div className="p-2 sm:p-3 space-y-3">
       <StoriesBar />
-      {MOCK_POSTS.map((post) => (
-        <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
-          <PostCard post={post} />
-        </div>
-      ))}
+      
+      {/* Mixed content feed */}
+      <LiveSampleCard />
+      
+      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+        <PostCard post={MOCK_POSTS[0]} />
+      </div>
+      
+      <VideoSampleCard />
+      
+      <ImageSampleCard post={SAMPLE_IMAGES[0]} />
+      
+      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+        <PostCard post={MOCK_POSTS[1]} />
+      </div>
+      
+      <ImageSampleCard post={SAMPLE_IMAGES[1]} />
+      
+      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+        <PostCard post={MOCK_POSTS[2]} />
+      </div>
     </div>
   );
 }
