@@ -92,25 +92,6 @@ const CATEGORIES = [
 export function LiveFeed() {
   return (
     <div className="p-2 sm:p-3 space-y-4">
-      {/* Categories */}
-      <div className="bg-zinc-900 rounded-2xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-white">Categories</h2>
-          <button className="text-purple-400 text-sm hover:underline">Show All</button>
-        </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-          {CATEGORIES.map((cat) => (
-            <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-              <div className="w-24 aspect-[3/4] rounded-lg overflow-hidden mb-2">
-                <img src={cat.image} alt="" className="w-full h-full object-cover" />
-              </div>
-              <p className="text-white text-sm font-medium truncate w-24">{cat.name}</p>
-              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Live Channels */}
       <div className="bg-zinc-900 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
@@ -167,6 +148,25 @@ export function LiveFeed() {
                   </div>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="bg-zinc-900 rounded-2xl p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-bold text-white">Categories</h2>
+          <button className="text-purple-400 text-sm hover:underline">Show All</button>
+        </div>
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+          {CATEGORIES.map((cat) => (
+            <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
+              <div className="w-24 aspect-[3/4] rounded-lg overflow-hidden mb-2">
+                <img src={cat.image} alt="" className="w-full h-full object-cover" />
+              </div>
+              <p className="text-white text-sm font-medium truncate w-24">{cat.name}</p>
+              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
             </div>
           ))}
         </div>
