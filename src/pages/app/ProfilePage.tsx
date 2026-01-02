@@ -45,7 +45,7 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('posts');
 
   return (
-    <div className="min-h-screen pt-3 sm:pt-0">
+    <div className="min-h-screen">
 
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Profile Card Bento */}
