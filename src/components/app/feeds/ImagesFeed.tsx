@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Heart, MessageCircle, Bookmark, Share, MoreHorizontal, Download, Flag, Ban, EyeOff } from 'lucide-react';
+import { Heart, MessageCircle, Bookmark, Share2, MoreHorizontal, Download, Flag, Ban, EyeOff, Repeat2, Send, Link } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -237,9 +237,27 @@ function EndlessScrollView({ posts }: { posts: InstagramPost[] }) {
                 <button className="text-white hover:text-zinc-400 transition-colors">
                   <MessageCircle className="w-6 h-6" />
                 </button>
-                <button className="text-white hover:text-zinc-400 transition-colors">
-                  <Share className="w-6 h-6" />
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="text-white hover:text-zinc-400 transition-colors">
+                      <Share2 className="w-6 h-6" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="bg-zinc-800 border-zinc-700">
+                    <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                      <Repeat2 className="w-4 h-4" />
+                      Repost
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                      <Send className="w-4 h-4" />
+                      DM to
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                      <Link className="w-4 h-4" />
+                      Copy URL
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <button className="text-white hover:text-zinc-400 transition-colors">
                 <Bookmark className="w-6 h-6" />

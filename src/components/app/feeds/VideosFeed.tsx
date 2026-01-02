@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreVertical, ThumbsUp, ThumbsDown, Share, Bookmark, CheckCircle, ListPlus, Clock, Flag, Download, Ban } from 'lucide-react';
+import { MoreVertical, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, ListPlus, Clock, Flag, Download, Ban, Repeat2, Send, Link } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -271,9 +271,27 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
                   <button className="text-white hover:text-red-400 transition-colors">
                     <ThumbsDown className="w-6 h-6" />
                   </button>
-                  <button className="text-white hover:text-zinc-400 transition-colors">
-                    <Share className="w-6 h-6" />
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="text-white hover:text-zinc-400 transition-colors">
+                        <Share2 className="w-6 h-6" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="bg-zinc-800 border-zinc-700">
+                      <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                        <Repeat2 className="w-4 h-4" />
+                        Repost
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                        <Send className="w-4 h-4" />
+                        DM to
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                        <Link className="w-4 h-4" />
+                        Copy URL
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <button className="text-white hover:text-zinc-400 transition-colors">
                   <Bookmark className="w-6 h-6" />
