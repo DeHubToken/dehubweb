@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Heart, MessageCircle, MoreHorizontal, Repeat2, Share, Settings2, Plus, Video, Image } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -225,6 +225,11 @@ export default function HomePage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showFeedSettings, setShowFeedSettings] = useState(false);
   
+  // Swipe gesture refs
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const minSwipeDistance = 50;
+  
   // Feed filter states
   const [feedFilters, setFeedFilters] = useState({
     followed: true,
@@ -247,6 +252,46 @@ export default function HomePage() {
     window.addEventListener('home-refresh', handleHomeRefresh);
     return () => window.removeEventListener('home-refresh', handleHomeRefresh);
   }, []);
+  
+  // Swipe gesture handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    const tabValues = FEED_TABS.map(tab => tab.value);
+    const currentIndex = tabValues.indexOf(activeTab);
+    
+    if (isLeftSwipe && currentIndex < tabValues.length - 1) {
+      // Swipe left = go to next tab
+      const nextTab = tabValues[currentIndex + 1];
+      setActiveTab(nextTab);
+      setShowShortsFilters(false);
+      setShowImagesCollage(false);
+      setShowVideosFilters(false);
+    } else if (isRightSwipe && currentIndex > 0) {
+      // Swipe right = go to previous tab
+      const prevTab = tabValues[currentIndex - 1];
+      setActiveTab(prevTab);
+      setShowShortsFilters(false);
+      setShowImagesCollage(false);
+      setShowVideosFilters(false);
+    }
+    
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   const handleTabClick = (tabValue: string) => {
     if (tabValue === activeTab) {
@@ -290,7 +335,11 @@ export default function HomePage() {
   };
 
   return (
-    <>
+    <div 
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
@@ -366,6 +415,6 @@ export default function HomePage() {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
