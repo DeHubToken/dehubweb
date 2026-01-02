@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreVertical, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, ListPlus, Clock, Flag, Download, Ban, Repeat2, Send, Link } from 'lucide-react';
+import { MoreVertical, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, ListPlus, Clock, Flag, Download, Ban, Repeat2, Send, Link, MessageCircle, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 
 interface VideosFeedProps {
   showFilters?: boolean;
@@ -137,6 +138,20 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
   const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
+  const [expandedComments, setExpandedComments] = useState<string | null>(null);
+  const [commentText, setCommentText] = useState('');
+
+  const toggleComments = (videoId: string) => {
+    setExpandedComments(expandedComments === videoId ? null : videoId);
+    setCommentText('');
+  };
+
+  const handlePostComment = (videoId: string) => {
+    if (commentText.trim()) {
+      console.log('Posted comment on video', videoId, ':', commentText);
+      setCommentText('');
+    }
+  };
 
   return (
     <div className="p-2 sm:p-3">
@@ -271,6 +286,15 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
                   <button className="text-white hover:text-red-400 transition-colors">
                     <ThumbsDown className="w-6 h-6" />
                   </button>
+                  <button 
+                    className={cn(
+                      "transition-colors",
+                      expandedComments === video.id ? "text-blue-400" : "text-white hover:text-zinc-400"
+                    )}
+                    onClick={() => toggleComments(video.id)}
+                  >
+                    <MessageCircle className="w-6 h-6" />
+                  </button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button className="text-white hover:text-zinc-400 transition-colors">
@@ -308,6 +332,90 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
               </h3>
 
               <p className="text-zinc-500 text-xs">{video.uploadedAgo}</p>
+
+              {/* Comments Section */}
+              <AnimatePresence>
+                {expandedComments === video.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="mt-3 pt-3 border-t border-zinc-800"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-white">Comments</span>
+                      <button 
+                        onClick={() => toggleComments(video.id)}
+                        className="text-zinc-400 hover:text-white"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Comment Input */}
+                    <div className="flex gap-2 mb-3">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
+                        <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 flex gap-2">
+                        <Input
+                          placeholder="Add a comment..."
+                          value={commentText}
+                          onChange={(e) => setCommentText(e.target.value)}
+                          className="bg-zinc-800 border-zinc-700 text-white text-sm"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handlePostComment(video.id);
+                          }}
+                        />
+                        <button
+                          onClick={() => handlePostComment(video.id)}
+                          disabled={!commentText.trim()}
+                          className={cn(
+                            "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
+                            commentText.trim()
+                              ? "bg-blue-500 text-white hover:bg-blue-600"
+                              : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                          )}
+                        >
+                          Post
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Mock Comments */}
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <Avatar className="w-7 h-7">
+                          <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=commenter1" />
+                          <AvatarFallback className="bg-zinc-700">C</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-xs">
+                            <span className="font-semibold text-white">viewer_123</span>
+                            <span className="text-zinc-500 ml-2">2h ago</span>
+                          </p>
+                          <p className="text-sm text-zinc-300">Great content! Really helpful.</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Avatar className="w-7 h-7">
+                          <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=commenter2" />
+                          <AvatarFallback className="bg-zinc-700">C</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-xs">
+                            <span className="font-semibold text-white">tech_fan</span>
+                            <span className="text-zinc-500 ml-2">5h ago</span>
+                          </p>
+                          <p className="text-sm text-zinc-300">Thanks for sharing this!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         ))}
