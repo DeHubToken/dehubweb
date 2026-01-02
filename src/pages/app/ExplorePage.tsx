@@ -146,7 +146,7 @@ export default function ExplorePage() {
             {FEED_TABS.map((tab) => (
               <button
                 key={tab.value}
-                onClick={() => navigate('/app', { state: { activeTab: tab.value } })}
+                onClick={() => navigate('/app', { state: { activeTab: tab.value }, replace: true })}
                 className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
               >
                 <tab.icon className="w-4 h-4 sm:w-4 sm:h-4" />
