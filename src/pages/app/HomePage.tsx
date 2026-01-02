@@ -193,17 +193,14 @@ function PostCard({ post }: { post: Post }) {
       <div className="p-3 border-t border-zinc-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button className="text-white hover:text-red-400 transition-colors flex items-center gap-1">
-              <Heart className="w-5 h-5" />
-              <span className="text-xs">{post.stats.likes}</span>
+            <button className="text-white hover:text-green-400 transition-colors">
+              <ThumbsUp className="w-5 h-5" />
             </button>
-            <button className="text-white hover:text-zinc-400 transition-colors flex items-center gap-1">
+            <button className="text-white hover:text-red-400 transition-colors">
+              <ThumbsDown className="w-5 h-5" />
+            </button>
+            <button className="text-white hover:text-zinc-400 transition-colors">
               <MessageCircle className="w-5 h-5" />
-              <span className="text-xs">{post.stats.comments}</span>
-            </button>
-            <button className="text-white hover:text-green-400 transition-colors flex items-center gap-1">
-              <Repeat2 className="w-5 h-5" />
-              <span className="text-xs">{post.stats.reposts}</span>
             </button>
             <button className="text-white hover:text-zinc-400 transition-colors">
               <Share2 className="w-5 h-5" />
@@ -288,9 +285,10 @@ function ImageSampleCard({ post }: { post: typeof SAMPLE_IMAGES[0] }) {
         <img src={post.image} alt="" className="w-full h-full object-cover" />
       </div>
       <div className="p-3">
-        <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-4">
-            <button className="text-white hover:text-red-400 transition-colors"><Heart className="w-5 h-5" /></button>
+            <button className="text-white hover:text-green-400 transition-colors"><ThumbsUp className="w-5 h-5" /></button>
+            <button className="text-white hover:text-red-400 transition-colors"><ThumbsDown className="w-5 h-5" /></button>
             <button className="text-white hover:text-zinc-400 transition-colors"><MessageCircle className="w-5 h-5" /></button>
             <button className="text-white hover:text-zinc-400 transition-colors"><Share2 className="w-5 h-5" /></button>
           </div>
@@ -341,8 +339,11 @@ function LiveSampleCard() {
       <div className="p-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-4">
+            <button className="text-white hover:text-green-400 transition-colors">
+              <ThumbsUp className="w-5 h-5" />
+            </button>
             <button className="text-white hover:text-red-400 transition-colors">
-              <Heart className="w-5 h-5" />
+              <ThumbsDown className="w-5 h-5" />
             </button>
             <button className="text-white hover:text-zinc-400 transition-colors">
               <MessageCircle className="w-5 h-5" />
