@@ -86,7 +86,7 @@ const CATEGORIES = [
   { name: 'Just Chatting', viewers: '412K', image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=100&h=130&fit=crop' },
   { name: 'Fortnite', viewers: '189K', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&h=130&fit=crop' },
   { name: 'Valorant', viewers: '156K', image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=100&h=130&fit=crop' },
-  { name: 'Minecraft', viewers: '134K', image: 'https://images.unsplash.com/photo-1587573089734-599851c3d30e?w=100&h=130&fit=crop' },
+  { name: 'Minecraft', viewers: '134K', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b8c?w=100&h=130&fit=crop' },
 ];
 
 export function LiveFeed() {
@@ -162,10 +162,10 @@ export function LiveFeed() {
         <div className="flex gap-3 overflow-x-auto scrollbar-hide">
           {CATEGORIES.map((cat) => (
             <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-              <div className="w-24 aspect-[3/4] rounded-lg overflow-hidden mb-2">
+              <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2">
                 <img src={cat.image} alt="" className="w-full h-full object-cover" />
               </div>
-              <p className="text-white text-sm font-medium truncate w-24">{cat.name}</p>
+              <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
               <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
             </div>
           ))}
