@@ -1,0 +1,53 @@
+/**
+ * Video Card Component
+ * ====================
+ * Displays video content with thumbnail, duration, and universal styling.
+ * 
+ * @example
+ * ```tsx
+ * <VideoCard video={videoData} />
+ * ```
+ */
+
+import { CardHeader } from './CardHeader';
+import { ActionBar } from './ActionBar';
+import type { VideoItem } from '@/types/feed.types';
+
+interface VideoCardProps {
+  video: VideoItem;
+}
+
+export function VideoCard({ video }: VideoCardProps) {
+  return (
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <CardHeader
+        username={video.channel}
+        avatarSeed={video.channelAvatar}
+        verified={video.verified}
+        contentType="video"
+      />
+
+      {/* Thumbnail */}
+      <div className="relative aspect-video bg-zinc-800">
+        <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
+        <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
+          {video.duration}
+        </div>
+        {/* Play button overlay */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
+            <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
+          </div>
+        </div>
+      </div>
+
+      {/* Info & Actions */}
+      <div className="p-3">
+        <ActionBar className="p-0 mb-2" />
+        <p className="font-semibold text-white text-sm">{video.views}</p>
+        <h3 className="text-white text-sm mt-1">{video.title}</h3>
+        <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
+      </div>
+    </div>
+  );
+}

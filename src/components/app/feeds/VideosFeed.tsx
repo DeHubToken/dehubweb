@@ -1,6 +1,14 @@
+/**
+ * Videos Feed Component
+ * =====================
+ * Displays a grid/list of video content with filtering options.
+ * Uses universal card components for consistent styling.
+ * 
+ * @module components/app/feeds/VideosFeed
+ */
+
 import { useState } from 'react';
-import { MoreVertical, ThumbsUp, ThumbsDown, Share2, Bookmark, CheckCircle, ListPlus, Clock, Flag, Download, Ban, Repeat2, Send, Link, MessageCircle, X } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Repeat2, Send, Link, MessageCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -10,6 +18,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CardHeader } from '@/components/app/cards/CardHeader';
+import { ActionBar } from '@/components/app/cards/ActionBar';
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 interface VideosFeedProps {
   showFilters?: boolean;
@@ -27,9 +42,14 @@ interface YouTubeVideo {
   uploadedAgo: string;
 }
 
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
 const DURATION_OPTIONS = ['0-1m', '1-4m', '4-20m', '20m+'];
 const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented'];
 const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
+const CATEGORY_PILLS = ['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'];
 
 const MOCK_VIDEOS: YouTubeVideo[] = [
   {
@@ -100,17 +120,18 @@ const MOCK_VIDEOS: YouTubeVideo[] = [
   },
 ];
 
-function FilterSection({ 
-  label, 
-  options, 
-  selected, 
-  onSelect 
-}: { 
-  label: string; 
-  options: string[]; 
-  selected: string; 
+// ============================================================================
+// SUB-COMPONENTS
+// ============================================================================
+
+interface FilterSectionProps {
+  label: string;
+  options: string[];
+  selected: string;
   onSelect: (value: string) => void;
-}) {
+}
+
+function FilterSection({ label, options, selected, onSelect }: FilterSectionProps) {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{label}</span>
@@ -133,6 +154,183 @@ function FilterSection({
     </div>
   );
 }
+
+interface VideoCardProps {
+  video: YouTubeVideo;
+  expandedComments: string | null;
+  onToggleComments: (id: string) => void;
+  commentText: string;
+  onCommentChange: (text: string) => void;
+  onPostComment: (id: string) => void;
+}
+
+function VideoCardItem({ 
+  video, 
+  expandedComments, 
+  onToggleComments, 
+  commentText, 
+  onCommentChange,
+  onPostComment 
+}: VideoCardProps) {
+  return (
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      {/* Header with menu */}
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
+                <AvatarFallback className="bg-zinc-700">{video.channel[0]}</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-white text-sm">{video.channel}</span>
+            {video.verified && (
+              <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">Video</span>
+        <CardHeader
+          username={video.channel}
+          avatarSeed={video.channelAvatar}
+          verified={video.verified}
+          contentType="video"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="text-zinc-400 hover:text-white">
+              <MoreVertical className="w-5 h-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <ListPlus className="w-4 h-4" /> Queue
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <Clock className="w-4 h-4" /> Watch List
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <Flag className="w-4 h-4" /> Report
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <Download className="w-4 h-4" /> Download
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <Ban className="w-4 h-4" /> Block Creator
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Thumbnail */}
+      <div className="relative aspect-video bg-zinc-800">
+        <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
+        <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
+          {video.duration}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
+            <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
+          </div>
+        </div>
+      </div>
+
+      {/* Actions & Info */}
+      <div className="p-3">
+        <ActionBar 
+          className="p-0 mb-2" 
+          onComment={() => onToggleComments(video.id)}
+        />
+        <p className="font-semibold text-white text-sm mb-1">{video.views}</p>
+        <h3 className="text-white text-sm mb-1">
+          <span className="font-semibold">{video.channel}</span>{' '}
+          <span className="text-zinc-300">{video.title}</span>
+        </h3>
+        <p className="text-zinc-500 text-xs">{video.uploadedAgo}</p>
+
+        {/* Comments Section */}
+        <AnimatePresence>
+          {expandedComments === video.id && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="mt-3 pt-3 border-t border-zinc-800"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-white">Comments</span>
+                <button onClick={() => onToggleComments(video.id)} className="text-zinc-400 hover:text-white">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="flex gap-2 mb-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
+                  <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 flex gap-2">
+                  <Input
+                    placeholder="Add a comment..."
+                    value={commentText}
+                    onChange={(e) => onCommentChange(e.target.value)}
+                    className="bg-zinc-800 border-zinc-700 text-white text-sm"
+                    onKeyDown={(e) => e.key === 'Enter' && onPostComment(video.id)}
+                  />
+                  <button
+                    onClick={() => onPostComment(video.id)}
+                    disabled={!commentText.trim()}
+                    className={cn(
+                      "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
+                      commentText.trim()
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                    )}
+                  >
+                    Post
+                  </button>
+                </div>
+              </div>
+
+              {/* Mock Comments */}
+              <div className="space-y-3">
+                {[
+                  { seed: 'commenter1', name: 'viewer_123', time: '2h ago', text: 'Great content! Really helpful.' },
+                  { seed: 'commenter2', name: 'tech_fan', time: '5h ago', text: 'Thanks for sharing this!' },
+                ].map((comment) => (
+                  <div key={comment.seed} className="flex gap-2">
+                    <Avatar className="w-7 h-7">
+                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.seed}`} />
+                      <AvatarFallback className="bg-zinc-700">C</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-xs">
+                        <span className="font-semibold text-white">{comment.name}</span>
+                        <span className="text-zinc-500 ml-2">{comment.time}</span>
+                      </p>
+                      <p className="text-sm text-zinc-300">{comment.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
 
 export function VideosFeed({ showFilters = false }: VideosFeedProps) {
   const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
@@ -166,24 +364,9 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
             className="overflow-hidden"
           >
             <div className="bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
-              <FilterSection
-                label="Duration"
-                options={DURATION_OPTIONS}
-                selected={selectedDuration}
-                onSelect={setSelectedDuration}
-              />
-              <FilterSection
-                label="Sort"
-                options={SORT_OPTIONS}
-                selected={selectedSort}
-                onSelect={setSelectedSort}
-              />
-              <FilterSection
-                label="Upload Date"
-                options={UPLOAD_DATE_OPTIONS}
-                selected={selectedUploadDate}
-                onSelect={setSelectedUploadDate}
-              />
+              <FilterSection label="Duration" options={DURATION_OPTIONS} selected={selectedDuration} onSelect={setSelectedDuration} />
+              <FilterSection label="Sort" options={SORT_OPTIONS} selected={selectedSort} onSelect={setSelectedSort} />
+              <FilterSection label="Upload Date" options={UPLOAD_DATE_OPTIONS} selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
             </div>
           </motion.div>
         )}
@@ -192,14 +375,13 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
         <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          {['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'].map((cat, i) => (
+          {CATEGORY_PILLS.map((cat, i) => (
             <button
               key={cat}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                i === 0
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              }`}
+              className={cn(
+                'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
+                i === 0 ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
             >
               {cat}
             </button>
@@ -210,214 +392,15 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
       {/* Video Grid */}
       <div className="space-y-3">
         {MOCK_VIDEOS.map((video) => (
-          <div key={video.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
-            {/* Header - Username/Avatar */}
-            <div className="flex items-center justify-between p-3">
-              <div className="flex items-center gap-3">
-                <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                  <div className="p-0.5 bg-zinc-900 rounded-full">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
-                      <AvatarFallback className="bg-zinc-700">{video.channel[0]}</AvatarFallback>
-                    </Avatar>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center gap-1">
-                    <span className="font-semibold text-white text-sm">{video.channel}</span>
-                    {video.verified && (
-                      <CheckCircle className="w-4 h-4 text-blue-500" />
-                    )}
-                  </div>
-                </div>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="text-zinc-400 hover:text-white">
-                    <MoreVertical className="w-5 h-5" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                    <ListPlus className="w-4 h-4" />
-                    Queue
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                    <Clock className="w-4 h-4" />
-                    Watch List
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                    <Flag className="w-4 h-4" />
-                    Report
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                    <Download className="w-4 h-4" />
-                    Download
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                    <Ban className="w-4 h-4" />
-                    Block Creator
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Video Thumbnail */}
-            <div className="relative aspect-video bg-zinc-800">
-              <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
-              <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
-                {video.duration}
-              </div>
-              {/* Play button overlay */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
-                  <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
-                </div>
-              </div>
-            </div>
-
-            {/* Actions & Info */}
-            <div className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-4">
-                  <button className="text-white hover:text-green-400 transition-colors">
-                    <ThumbsUp className="w-6 h-6" />
-                  </button>
-                  <button className="text-white hover:text-red-400 transition-colors">
-                    <ThumbsDown className="w-6 h-6" />
-                  </button>
-                  <button 
-                    className={cn(
-                      "transition-colors",
-                      expandedComments === video.id ? "text-blue-400" : "text-white hover:text-zinc-400"
-                    )}
-                    onClick={() => toggleComments(video.id)}
-                  >
-                    <MessageCircle className="w-6 h-6" />
-                  </button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="text-white hover:text-zinc-400 transition-colors">
-                        <Share2 className="w-6 h-6" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="bg-zinc-800 border-zinc-700">
-                      <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                        <Repeat2 className="w-4 h-4" />
-                        Repost
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                        <Send className="w-4 h-4" />
-                        DM to
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                        <Link className="w-4 h-4" />
-                        Copy URL
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <button className="text-white hover:text-zinc-400 transition-colors">
-                  <Bookmark className="w-6 h-6" />
-                </button>
-              </div>
-
-              <p className="font-semibold text-white text-sm mb-1">
-                {video.views}
-              </p>
-
-              <h3 className="text-white text-sm mb-1">
-                <span className="font-semibold">{video.channel}</span>{' '}
-                <span className="text-zinc-300">{video.title}</span>
-              </h3>
-
-              <p className="text-zinc-500 text-xs">{video.uploadedAgo}</p>
-
-              {/* Comments Section */}
-              <AnimatePresence>
-                {expandedComments === video.id && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-3 pt-3 border-t border-zinc-800"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-white">Comments</span>
-                      <button 
-                        onClick={() => toggleComments(video.id)}
-                        className="text-zinc-400 hover:text-white"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    {/* Comment Input */}
-                    <div className="flex gap-2 mb-3">
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
-                        <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 flex gap-2">
-                        <Input
-                          placeholder="Add a comment..."
-                          value={commentText}
-                          onChange={(e) => setCommentText(e.target.value)}
-                          className="bg-zinc-800 border-zinc-700 text-white text-sm"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handlePostComment(video.id);
-                          }}
-                        />
-                        <button
-                          onClick={() => handlePostComment(video.id)}
-                          disabled={!commentText.trim()}
-                          className={cn(
-                            "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
-                            commentText.trim()
-                              ? "bg-blue-500 text-white hover:bg-blue-600"
-                              : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
-                          )}
-                        >
-                          Post
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Mock Comments */}
-                    <div className="space-y-3">
-                      <div className="flex gap-2">
-                        <Avatar className="w-7 h-7">
-                          <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=commenter1" />
-                          <AvatarFallback className="bg-zinc-700">C</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-xs">
-                            <span className="font-semibold text-white">viewer_123</span>
-                            <span className="text-zinc-500 ml-2">2h ago</span>
-                          </p>
-                          <p className="text-sm text-zinc-300">Great content! Really helpful.</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Avatar className="w-7 h-7">
-                          <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=commenter2" />
-                          <AvatarFallback className="bg-zinc-700">C</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-xs">
-                            <span className="font-semibold text-white">tech_fan</span>
-                            <span className="text-zinc-500 ml-2">5h ago</span>
-                          </p>
-                          <p className="text-sm text-zinc-300">Thanks for sharing this!</p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
+          <VideoCard
+            key={video.id}
+            video={video}
+            expandedComments={expandedComments}
+            onToggleComments={toggleComments}
+            commentText={commentText}
+            onCommentChange={setCommentText}
+            onPostComment={handlePostComment}
+          />
         ))}
       </div>
     </div>
