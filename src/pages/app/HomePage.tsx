@@ -163,43 +163,58 @@ const MOCK_POSTS: Post[] = [
 
 function PostCard({ post }: { post: Post }) {
   return (
-    <article className="p-4 hover:bg-zinc-800/30 transition-colors">
-      <div className="flex gap-3">
-        <UserAvatar name={post.author.name} handle={post.author.handle} size="lg" className="hidden sm:flex" />
-        <UserAvatar name={post.author.name} handle={post.author.handle} size="md" className="flex sm:hidden" />
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-white truncate">{post.author.name}</span>
-            <span className="text-zinc-500 text-sm truncate">{post.author.handle}</span>
-            <span className="text-zinc-500 text-sm">· {post.createdAt}</span>
-            <button className="ml-auto text-zinc-500 hover:text-white transition-colors p-1">
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.author.handle}`} />
+                <AvatarFallback className="bg-zinc-700">{post.author.name[0]}</AvatarFallback>
+              </Avatar>
+            </div>
           </div>
-
-          <p className="mt-2 text-white/90 text-sm sm:text-base">{post.content}</p>
-
-          <div className="flex items-center gap-4 sm:gap-8 mt-4 text-zinc-500">
-            <button className="flex items-center gap-1 sm:gap-2 hover:text-blue-400 transition-colors">
-              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-sm">{post.stats.comments}</span>
-            </button>
-            <button className="flex items-center gap-1 sm:gap-2 hover:text-green-400 transition-colors">
-              <Repeat2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-sm">{post.stats.reposts}</span>
-            </button>
-            <button className="flex items-center gap-1 sm:gap-2 hover:text-red-400 transition-colors">
-              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-sm">{post.stats.likes}</span>
-            </button>
-            <button className="hover:text-blue-400 transition-colors">
-              <Share className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-white text-sm">{post.author.name}</span>
+            {post.author.verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
           </div>
         </div>
+        <span className="text-xs bg-zinc-500/20 text-zinc-400 px-2 py-0.5 rounded-full">Post</span>
       </div>
-    </article>
+
+      {/* Content */}
+      <div className="px-3 pb-3">
+        <p className="text-white/90 text-sm sm:text-base">{post.content}</p>
+        <p className="text-zinc-500 text-xs mt-2">{post.createdAt}</p>
+      </div>
+
+      {/* Actions */}
+      <div className="p-3 border-t border-zinc-800">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-red-400 transition-colors flex items-center gap-1">
+              <Heart className="w-5 h-5" />
+              <span className="text-xs">{post.stats.likes}</span>
+            </button>
+            <button className="text-white hover:text-zinc-400 transition-colors flex items-center gap-1">
+              <MessageCircle className="w-5 h-5" />
+              <span className="text-xs">{post.stats.comments}</span>
+            </button>
+            <button className="text-white hover:text-green-400 transition-colors flex items-center gap-1">
+              <Repeat2 className="w-5 h-5" />
+              <span className="text-xs">{post.stats.reposts}</span>
+            </button>
+            <button className="text-white hover:text-zinc-400 transition-colors">
+              <Share2 className="w-5 h-5" />
+            </button>
+          </div>
+          <button className="text-white hover:text-zinc-400 transition-colors">
+            <Bookmark className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -292,19 +307,28 @@ function ImageSampleCard({ post }: { post: typeof SAMPLE_IMAGES[0] }) {
 function LiveSampleCard() {
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      {/* Header */}
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-3">
-          <Avatar className="w-8 h-8 ring-2 ring-red-500">
-            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${SAMPLE_LIVE.avatar}`} />
-            <AvatarFallback className="bg-zinc-700">{SAMPLE_LIVE.streamer[0]}</AvatarFallback>
-          </Avatar>
-          <span className="font-semibold text-white text-sm">{SAMPLE_LIVE.streamer}</span>
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${SAMPLE_LIVE.avatar}`} />
+                <AvatarFallback className="bg-zinc-700">{SAMPLE_LIVE.streamer[0]}</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-white text-sm">{SAMPLE_LIVE.streamer}</span>
+          </div>
         </div>
         <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
           <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
           LIVE
         </span>
       </div>
+
+      {/* Thumbnail */}
       <div className="relative aspect-video bg-zinc-800">
         <img src={SAMPLE_LIVE.thumbnail} alt="" className="w-full h-full object-cover" />
         <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
@@ -312,14 +336,28 @@ function LiveSampleCard() {
           <span className="text-white text-xs font-medium">{SAMPLE_LIVE.viewers}</span>
         </div>
       </div>
+
+      {/* Actions & Info */}
       <div className="p-3">
-        <h3 className="font-medium text-white text-sm">{SAMPLE_LIVE.title}</h3>
-        <p className="text-zinc-500 text-xs mt-1">{SAMPLE_LIVE.game}</p>
-        <div className="flex gap-1 mt-2">
-          {SAMPLE_LIVE.tags.map((tag) => (
-            <span key={tag} className="text-xs bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">{tag}</span>
-          ))}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-red-400 transition-colors">
+              <Heart className="w-5 h-5" />
+            </button>
+            <button className="text-white hover:text-zinc-400 transition-colors">
+              <MessageCircle className="w-5 h-5" />
+            </button>
+            <button className="text-white hover:text-zinc-400 transition-colors">
+              <Share2 className="w-5 h-5" />
+            </button>
+          </div>
+          <button className="text-white hover:text-zinc-400 transition-colors">
+            <Bookmark className="w-5 h-5" />
+          </button>
         </div>
+        <p className="font-semibold text-white text-sm">{SAMPLE_LIVE.viewers} watching</p>
+        <h3 className="text-white text-sm mt-1">{SAMPLE_LIVE.title}</h3>
+        <p className="text-zinc-500 text-xs mt-1">{SAMPLE_LIVE.game}</p>
       </div>
     </div>
   );
@@ -476,26 +514,20 @@ function HomeFeed() {
       {/* Mixed content feed */}
       <LiveSampleCard />
       
-      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-        <PostCard post={MOCK_POSTS[0]} />
-      </div>
+      <PostCard post={MOCK_POSTS[0]} />
       
       <VideoSampleCard />
       
       <ImageSampleCard post={SAMPLE_IMAGES[0]} />
       
-      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-        <PostCard post={MOCK_POSTS[1]} />
-      </div>
+      <PostCard post={MOCK_POSTS[1]} />
       
       {/* Shorts reel after ~5 items */}
       <ShortsReel />
       
       <ImageSampleCard post={SAMPLE_IMAGES[1]} />
       
-      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-        <PostCard post={MOCK_POSTS[2]} />
-      </div>
+      <PostCard post={MOCK_POSTS[2]} />
     </div>
   );
 }
