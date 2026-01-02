@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,43 +19,16 @@ export function MobileBottomNav() {
   const location = useLocation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
-      setScrollProgress(progress);
-    };
-
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden relative">
-          {/* Center Create Button + Dots */}
-          <div className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none">
-            {/* Scroll indicator dots */}
-            <div className="flex gap-1 pt-1">
-              <div 
-                className="w-1 h-1 rounded-full bg-white transition-opacity"
-                style={{ opacity: 1 - scrollProgress * 0.7 }}
-              />
-              <div 
-                className="w-1 h-1 rounded-full bg-white transition-opacity"
-                style={{ opacity: 0.3 + scrollProgress * 0.7 }}
-              />
-            </div>
-            {/* Create button */}
+          {/* Center Create Button */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20">
             <button
               onClick={() => setIsPostModalOpen(true)}
-              className="mt-0.5 w-10 h-10 rounded-full bg-white flex items-center justify-center pointer-events-auto"
+              className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
             >
               <Plus className="w-6 h-6 text-black" />
             </button>
