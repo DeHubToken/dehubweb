@@ -7,7 +7,7 @@ import { PostModal } from './PostModal';
 const ALL_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: Mail, label: 'Messages', path: '/app/messages' },
-  { icon: Search, label: 'Search', path: '/app/explore' },
+  { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },

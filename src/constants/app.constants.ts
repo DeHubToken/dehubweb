@@ -21,7 +21,7 @@ import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/type
 
 export const NAV_ITEMS: NavItem[] = [
   { icon: User, label: 'Profile', path: '/app/profile' },
-  { icon: Search, label: 'Search', path: '/app/explore' },
+  { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: Mail, label: 'Messages', path: '/app/messages' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
