@@ -34,15 +34,15 @@ export function MobileBottomNav() {
             </button>
           </div>
 
-          {/* Scrollable nav items */}
+          {/* Nav items container */}
           <div 
             ref={scrollRef}
             className="flex items-center h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
-            {/* Left side items */}
-            <div className="flex items-center justify-around flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
-              {ALL_NAV_ITEMS.slice(0, 2).map((item) => {
+            {/* Left side items - 2 buttons */}
+            <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
+              {ALL_NAV_ITEMS.slice(0, 2).map((item, index) => {
                 const isActive = item.path === '/app' 
                   ? location.pathname === '/app'
                   : location.pathname.startsWith(item.path);
@@ -52,7 +52,8 @@ export function MobileBottomNav() {
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center w-12 h-12 rounded-xl transition-colors',
+                      'flex items-center justify-center h-14 flex-1 transition-colors',
+                      index === 0 && 'rounded-l-2xl',
                       isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                     )}
                   >
@@ -65,21 +66,26 @@ export function MobileBottomNav() {
             {/* Center spacer for create button */}
             <div className="flex-shrink-0 w-14" />
 
-            {/* Right side items (scrollable) */}
-            <div className="flex items-center gap-1 flex-shrink-0 pr-3">
-              {ALL_NAV_ITEMS.slice(2).map((item) => {
+            {/* Right side items - 2 buttons visible, rest scrollable */}
+            <div className="flex items-center flex-shrink-0" style={{ minWidth: 'calc(50% - 28px)' }}>
+              {ALL_NAV_ITEMS.slice(2).map((item, index, arr) => {
                 const isActive = item.path === '/app' 
                   ? location.pathname === '/app'
                   : location.pathname.startsWith(item.path);
+                const isLast = index === arr.length - 1;
+                const isFirstTwo = index < 2;
                 
                 return (
                   <NavLink
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center w-12 h-12 rounded-xl transition-colors flex-shrink-0',
+                      'flex items-center justify-center h-14 transition-colors flex-shrink-0',
+                      isFirstTwo ? 'flex-1' : 'w-14',
+                      isLast && 'rounded-r-2xl',
                       isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                     )}
+                    style={{ minWidth: isFirstTwo ? undefined : '3.5rem' }}
                   >
                     <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
                   </NavLink>
