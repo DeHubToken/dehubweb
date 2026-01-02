@@ -214,7 +214,7 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
             {/* Header - Username/Avatar */}
             <div className="flex items-center justify-between p-3">
               <div className="flex items-center gap-3">
-                <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500">
+                <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
                   <div className="p-0.5 bg-zinc-900 rounded-full">
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
