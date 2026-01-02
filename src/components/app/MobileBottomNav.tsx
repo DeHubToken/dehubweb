@@ -107,8 +107,6 @@ export function MobileBottomNav() {
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            className="touch-pan-x"
-            style={{ touchAction: 'pan-x' }}
           >
             <AnimatePresence mode="wait">
               {!showSecondary ? (
