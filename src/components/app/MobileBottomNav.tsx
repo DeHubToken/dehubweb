@@ -86,7 +86,7 @@ export function MobileBottomNav() {
               })}
             </div>
 
-            {/* Additional items - accessible via scroll */}
+            {/* Additional items - accessible via scroll, same width as main buttons */}
             {ALL_NAV_ITEMS.slice(4).map((item) => {
               const isActive = location.pathname.startsWith(item.path);
               
@@ -95,9 +95,10 @@ export function MobileBottomNav() {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'flex items-center justify-center h-14 w-14 flex-shrink-0 transition-colors',
+                    'flex items-center justify-center h-14 flex-shrink-0 transition-colors',
                     isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                   )}
+                  style={{ width: 'calc((50% - 28px) / 2)' }}
                 >
                   <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
                 </NavLink>
