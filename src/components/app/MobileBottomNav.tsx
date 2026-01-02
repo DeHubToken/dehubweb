@@ -23,17 +23,7 @@ export function MobileBottomNav() {
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden relative">
-          {/* Center Create Button */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
-            <button
-              onClick={() => setIsPostModalOpen(true)}
-              className="w-10 h-10 rounded-full bg-white flex items-center justify-center pointer-events-auto"
-            >
-              <Plus className="w-6 h-6 text-black" />
-            </button>
-          </div>
-
+        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden">
           {/* Nav items container */}
           <div 
             ref={scrollRef}
@@ -63,8 +53,15 @@ export function MobileBottomNav() {
               })}
             </div>
 
-            {/* Center spacer for create button */}
-            <div className="flex-shrink-0 w-14" />
+            {/* Center Create Button - now in flow */}
+            <button
+              onClick={() => setIsPostModalOpen(true)}
+              className="flex-shrink-0 w-14 h-14 flex items-center justify-center"
+            >
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                <Plus className="w-6 h-6 text-black" />
+              </div>
+            </button>
 
             {/* Right side items - 2 buttons visible, rest scrollable */}
             <div className="flex items-center flex-shrink-0" style={{ minWidth: 'calc(50% - 28px)' }}>
