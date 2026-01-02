@@ -6,6 +6,7 @@ import fortniteCategory from '@/assets/fortnite-category.png';
 import valorantCategory from '@/assets/valorant-category.png';
 import leagueCategory from '@/assets/league-category.png';
 import apexCategory from '@/assets/apex-category.png';
+import justchattingCategory from '@/assets/justchatting-category.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface TwitchStream {
@@ -90,7 +91,7 @@ const MOCK_STREAMS: TwitchStream[] = [
 ];
 
 const CATEGORIES = [
-  { name: 'Just Chatting', viewers: '412K', image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=100&h=130&fit=crop' },
+  { name: 'Just Chatting', viewers: '412K', image: justchattingCategory },
   { name: 'Fortnite', viewers: '189K', image: fortniteCategory },
   { name: 'Valorant', viewers: '156K', image: valorantCategory },
   { name: 'Minecraft', viewers: '134K', image: minecraftCategory },
