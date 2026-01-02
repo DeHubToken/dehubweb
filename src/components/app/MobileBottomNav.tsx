@@ -35,8 +35,8 @@ export function MobileBottomNav() {
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Calculate opacity: 1 at scroll 0, fades to 0 as user scrolls
-  const buttonOpacity = 1 - scrollProgress;
+  // Calculate opacity: fades to 0 immediately on any scroll
+  const buttonOpacity = scrollProgress > 0.02 ? 0 : 1;
 
   return (
     <>
