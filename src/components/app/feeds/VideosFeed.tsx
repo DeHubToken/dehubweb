@@ -175,57 +175,39 @@ function VideoCardItem({
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
       {/* Header with menu */}
-      <div className="flex items-center justify-between p-3">
-        <div className="flex items-center gap-3">
-          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-            <div className="p-0.5 bg-zinc-900 rounded-full">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
-                <AvatarFallback className="bg-zinc-700">{video.channel[0]}</AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="font-semibold text-white text-sm">{video.channel}</span>
-            {video.verified && (
-              <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-              </svg>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">Video</span>
+      <div className="flex items-center justify-between">
         <CardHeader
           username={video.channel}
           avatarSeed={video.channelAvatar}
           verified={video.verified}
           contentType="video"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="text-zinc-400 hover:text-white">
-              <MoreVertical className="w-5 h-5" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-              <ListPlus className="w-4 h-4" /> Queue
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-              <Clock className="w-4 h-4" /> Watch List
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-              <Flag className="w-4 h-4" /> Report
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-              <Download className="w-4 h-4" /> Download
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-              <Ban className="w-4 h-4" /> Block Creator
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="pr-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="text-zinc-400 hover:text-white">
+                <MoreVertical className="w-5 h-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <ListPlus className="w-4 h-4" /> Queue
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Clock className="w-4 h-4" /> Watch List
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Flag className="w-4 h-4" /> Report
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Download className="w-4 h-4" /> Download
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Ban className="w-4 h-4" /> Block Creator
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       {/* Thumbnail */}
@@ -392,7 +374,7 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
       {/* Video Grid */}
       <div className="space-y-3">
         {MOCK_VIDEOS.map((video) => (
-          <VideoCard
+          <VideoCardItem
             key={video.id}
             video={video}
             expandedComments={expandedComments}
