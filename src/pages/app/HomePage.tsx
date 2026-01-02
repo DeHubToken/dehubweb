@@ -249,23 +249,24 @@ export default function HomePage() {
   }, []);
 
   const handleTabClick = (tabValue: string) => {
-    if (tabValue === 'shorts' && activeTab === 'shorts') {
-      setShowShortsFilters((prev) => !prev);
-    } else if (tabValue === 'images' && activeTab === 'images') {
-      setShowImagesCollage((prev) => !prev);
-    } else if (tabValue === 'videos' && activeTab === 'videos') {
-      setShowVideosFilters((prev) => !prev);
+    if (tabValue === activeTab) {
+      // Same tab clicked - refresh the content
+      setRefreshKey(prev => prev + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Handle specific toggles
+      if (tabValue === 'shorts') {
+        setShowShortsFilters((prev) => !prev);
+      } else if (tabValue === 'images') {
+        setShowImagesCollage((prev) => !prev);
+      } else if (tabValue === 'videos') {
+        setShowVideosFilters((prev) => !prev);
+      }
     } else {
       setActiveTab(tabValue);
-      if (tabValue !== 'shorts') {
-        setShowShortsFilters(false);
-      }
-      if (tabValue !== 'images') {
-        setShowImagesCollage(false);
-      }
-      if (tabValue !== 'videos') {
-        setShowVideosFilters(false);
-      }
+      setShowShortsFilters(false);
+      setShowImagesCollage(false);
+      setShowVideosFilters(false);
     }
   };
 
@@ -282,7 +283,7 @@ export default function HomePage() {
       case 'shorts':
         return <ShortsFeed showFilters={showShortsFilters} />;
       case 'live':
-        return <LiveFeed />;
+        return <LiveFeed key={refreshKey} />;
       default:
         return <HomeFeed key={refreshKey} />;
     }
