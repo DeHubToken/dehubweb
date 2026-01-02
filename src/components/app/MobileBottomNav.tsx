@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
-import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const PRIMARY_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
@@ -25,22 +25,31 @@ export function MobileBottomNav() {
   const location = useLocation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showSecondary, setShowSecondary] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const dragThreshold = 50;
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  const handleDragEnd = (event: any, info: any) => {
-    const offset = info.offset.x;
-    const velocity = info.velocity.x;
+  const minSwipeDistance = 50;
 
-    if (offset < -dragThreshold || velocity < -500) {
-      // Swiped left - show secondary
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) {
       setShowSecondary(true);
-    } else if (offset > dragThreshold || velocity > 500) {
-      // Swiped right - show primary
+    } else if (isRightSwipe) {
       setShowSecondary(false);
     }
-    animate(x, 0, { type: 'spring', stiffness: 300, damping: 30 });
   };
 
   const renderNavItems = (items: typeof PRIMARY_NAV_ITEMS, isPrimary: boolean) => (
@@ -94,73 +103,34 @@ export function MobileBottomNav() {
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav 
-          ref={containerRef}
-          className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden relative"
+          className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
-          {/* Page indicator dots */}
-          <div className="absolute top-1 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            <div className={cn(
-              "w-1.5 h-1.5 rounded-full transition-colors",
-              !showSecondary ? "bg-white" : "bg-zinc-600"
-            )} />
-            <div className={cn(
-              "w-1.5 h-1.5 rounded-full transition-colors",
-              showSecondary ? "bg-white" : "bg-zinc-600"
-            )} />
-          </div>
-
-          <motion.div
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={handleDragEnd}
-            style={{ x }}
-            className="cursor-grab active:cursor-grabbing"
-          >
-            <AnimatePresence mode="wait">
-              {!showSecondary ? (
-                <motion.div
-                  key="primary"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {renderNavItems(PRIMARY_NAV_ITEMS, true)}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="secondary"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {renderNavItems(SECONDARY_NAV_ITEMS, false)}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* Swipe hint arrows */}
-          <button 
-            onClick={() => setShowSecondary(false)}
-            className={cn(
-              "absolute left-1 top-1/2 -translate-y-1/2 p-1 rounded-full transition-opacity",
-              showSecondary ? "opacity-50 hover:opacity-100" : "opacity-0 pointer-events-none"
+          <AnimatePresence mode="wait">
+            {!showSecondary ? (
+              <motion.div
+                key="primary"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {renderNavItems(PRIMARY_NAV_ITEMS, true)}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="secondary"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {renderNavItems(SECONDARY_NAV_ITEMS, false)}
+              </motion.div>
             )}
-          >
-            <ChevronLeft className="w-4 h-4 text-zinc-400" />
-          </button>
-          <button 
-            onClick={() => setShowSecondary(true)}
-            className={cn(
-              "absolute right-1 top-1/2 -translate-y-1/2 p-1 rounded-full transition-opacity",
-              !showSecondary ? "opacity-50 hover:opacity-100" : "opacity-0 pointer-events-none"
-            )}
-          >
-            <ChevronRight className="w-4 h-4 text-zinc-400" />
-          </button>
+          </AnimatePresence>
         </nav>
       </div>
 
