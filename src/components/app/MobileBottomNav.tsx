@@ -43,7 +43,7 @@ export function MobileBottomNav() {
     animate(x, 0, { type: 'spring', stiffness: 300, damping: 30 });
   };
 
-  const renderNavItems = (items: typeof PRIMARY_NAV_ITEMS) => (
+  const renderNavItems = (items: typeof PRIMARY_NAV_ITEMS, isPrimary: boolean) => (
     <div className="flex items-center justify-around h-14 w-full">
       {items.map((item, index) => {
         // Create button
@@ -54,9 +54,18 @@ export function MobileBottomNav() {
               onClick={() => setIsPostModalOpen(true)}
               className="flex items-center justify-center flex-1 h-full"
             >
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-                <Plus className="w-6 h-6 text-black" />
-              </div>
+              <motion.div 
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                animate={{ 
+                  backgroundColor: isPrimary ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0)',
+                }}
+                transition={{ duration: 0.2 }}
+              >
+                <Plus className={cn(
+                  "w-6 h-6 transition-colors duration-200",
+                  isPrimary ? "text-black" : "text-zinc-500"
+                )} />
+              </motion.div>
             </button>
           );
         }
@@ -117,7 +126,7 @@ export function MobileBottomNav() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {renderNavItems(PRIMARY_NAV_ITEMS)}
+                  {renderNavItems(PRIMARY_NAV_ITEMS, true)}
                 </motion.div>
               ) : (
                 <motion.div
@@ -127,7 +136,7 @@ export function MobileBottomNav() {
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {renderNavItems(SECONDARY_NAV_ITEMS)}
+                  {renderNavItems(SECONDARY_NAV_ITEMS, false)}
                 </motion.div>
               )}
             </AnimatePresence>
