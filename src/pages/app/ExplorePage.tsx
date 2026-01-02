@@ -139,30 +139,6 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Top Feed Tabs Nav - Desktop only */}
-      <div className="hidden lg:block sticky top-0 bg-black/80 backdrop-blur-sm z-20 p-2 sm:p-3 mt-2 lg:mt-0">
-        <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-            {FEED_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => navigate('/app', { state: { activeTab: tab.value } })}
-                className="flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
-              >
-                <tab.icon className="w-4 h-4 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
-            
-            {/* Settings Button */}
-            <button
-              className="flex items-center justify-center px-3 py-2 rounded-xl transition-colors text-zinc-400 hover:bg-zinc-800/50 hover:text-white"
-            >
-              <Settings2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Search Header - Bento Style */}
       <div className="sticky top-[60px] lg:top-[60px] bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 space-y-2 sm:space-y-3">
