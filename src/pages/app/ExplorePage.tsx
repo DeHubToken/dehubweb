@@ -139,8 +139,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Top Feed Tabs Nav */}
-      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-20 p-2 sm:p-3 mt-2 lg:mt-0">
+      {/* Top Feed Tabs Nav - Desktop only */}
+      <div className="hidden lg:block sticky top-0 bg-black/80 backdrop-blur-sm z-20 p-2 sm:p-3 mt-2 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => (
