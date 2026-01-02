@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,24 @@ export function MobileBottomNav() {
   const location = useLocation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const progress = maxScroll > 0 ? Math.min(container.scrollLeft / maxScroll, 1) : 0;
+      setScrollProgress(progress);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Calculate opacity: 1 at scroll 0, fades to 0 as user scrolls
+  const buttonOpacity = 1 - scrollProgress;
 
   return (
     <>
@@ -53,13 +71,21 @@ export function MobileBottomNav() {
               })}
             </div>
 
-            {/* Center Create Button - now in flow */}
+            {/* Center Create Button - fades as user scrolls */}
             <button
               onClick={() => setIsPostModalOpen(true)}
               className="flex-shrink-0 w-14 h-14 flex items-center justify-center"
             >
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-                <Plus className="w-6 h-6 text-black" />
+              <div 
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-150"
+                style={{ 
+                  backgroundColor: `rgba(255, 255, 255, ${buttonOpacity})`,
+                }}
+              >
+                <Plus 
+                  className="w-6 h-6 transition-colors duration-150" 
+                  style={{ color: buttonOpacity > 0.5 ? 'black' : 'white' }}
+                />
               </div>
             </button>
 
