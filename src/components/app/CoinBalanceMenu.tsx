@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check } from 'lucide-react';
+import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Coins } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,7 @@ interface CoinBalanceMenuProps {
   variant: 'desktop' | 'mobile';
 }
 
-type MenuView = 'main' | 'buy' | 'send';
+type MenuView = 'main' | 'buy' | 'send' | 'history' | 'stake';
 
 // Mock users for send functionality
 const MOCK_USERS = [
@@ -33,6 +33,15 @@ const MOCK_USERS = [
   { id: '5', username: 'blockchain_dev', avatar: null },
 ];
 
+// Mock transaction history
+const MOCK_TRANSACTIONS = [
+  { id: '1', type: 'received', amount: 500, from: 'alex_web3', date: '2024-01-15' },
+  { id: '2', type: 'sent', amount: 200, to: 'crypto_queen', date: '2024-01-14' },
+  { id: '3', type: 'staked', amount: 1000, date: '2024-01-13' },
+  { id: '4', type: 'earned', amount: 50, description: 'Staking reward', date: '2024-01-12' },
+  { id: '5', type: 'received', amount: 300, from: 'nft_collector', date: '2024-01-10' },
+];
+
 export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +49,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<typeof MOCK_USERS[0] | null>(null);
   const [sendAmount, setSendAmount] = useState('');
+  const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
 
   // TODO: Replace with actual wallet address
@@ -85,11 +95,35 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
     setSendAmount('');
   };
 
+  const handleStakeCoins = () => {
+    if (!stakeAmount || Number(stakeAmount) <= 0) return;
+    toast({
+      title: 'Coins Staked',
+      description: `Successfully staked ${stakeAmount} coins`,
+    });
+    setIsOpen(false);
+    setMenuView('main');
+    setStakeAmount('');
+  };
+
+  const handleStakeAll = () => {
+    if (balance <= 0) {
+      toast({
+        title: 'No Coins',
+        description: 'You have no coins to stake',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setStakeAmount(balance.toString());
+  };
+
   const resetMenu = () => {
     setMenuView('main');
     setSearchQuery('');
     setSelectedUser(null);
     setSendAmount('');
+    setStakeAmount('');
   };
 
   const filteredUsers = MOCK_USERS.filter((user) =>
@@ -136,6 +170,24 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
           <Send className="w-4 h-4 text-purple-500" />
         </div>
         <span className="text-white font-medium">Send Coins</span>
+      </button>
+      <button
+        onClick={() => setMenuView('history')}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+      >
+        <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
+          <History className="w-4 h-4 text-cyan-500" />
+        </div>
+        <span className="text-white font-medium">Transaction History</span>
+      </button>
+      <button
+        onClick={() => setMenuView('stake')}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+      >
+        <div className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
+          <Coins className="w-4 h-4 text-yellow-500" />
+        </div>
+        <span className="text-white font-medium">Stake Coins</span>
       </button>
     </div>
   );
@@ -250,12 +302,129 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
     </div>
   );
 
+  const historyMenuContent = (
+    <div className="space-y-3">
+      <button
+        onClick={() => setMenuView('main')}
+        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span className="text-sm">Back</span>
+      </button>
+      
+      <h3 className="text-white font-medium text-sm">Transaction History</h3>
+      
+      <div className="space-y-2 max-h-64 overflow-y-auto">
+        {MOCK_TRANSACTIONS.map((tx) => (
+          <div
+            key={tx.id}
+            className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
+          >
+            <div className="flex items-center gap-3">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                tx.type === 'received' || tx.type === 'earned' 
+                  ? 'bg-green-500/20' 
+                  : tx.type === 'staked' 
+                    ? 'bg-yellow-500/20' 
+                    : 'bg-red-500/20'
+              }`}>
+                {tx.type === 'received' || tx.type === 'earned' ? (
+                  <Plus className={`w-4 h-4 ${tx.type === 'received' || tx.type === 'earned' ? 'text-green-500' : ''}`} />
+                ) : tx.type === 'staked' ? (
+                  <Coins className="w-4 h-4 text-yellow-500" />
+                ) : (
+                  <Send className="w-4 h-4 text-red-500" />
+                )}
+              </div>
+              <div>
+                <p className="text-white text-sm font-medium capitalize">{tx.type}</p>
+                <p className="text-xs text-zinc-400">
+                  {tx.from && `from @${tx.from}`}
+                  {tx.to && `to @${tx.to}`}
+                  {tx.description && tx.description}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className={`text-sm font-medium ${
+                tx.type === 'received' || tx.type === 'earned' 
+                  ? 'text-green-500' 
+                  : tx.type === 'staked' 
+                    ? 'text-yellow-500' 
+                    : 'text-red-500'
+              }`}>
+                {tx.type === 'received' || tx.type === 'earned' ? '+' : '-'}{tx.amount}
+              </p>
+              <p className="text-xs text-zinc-400">{tx.date}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const stakeMenuContent = (
+    <div className="space-y-4">
+      <button
+        onClick={() => setMenuView('main')}
+        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span className="text-sm">Back</span>
+      </button>
+      
+      <div className="p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+        <div className="flex items-center gap-2 mb-1">
+          <Coins className="w-4 h-4 text-yellow-500" />
+          <span className="text-yellow-500 font-medium text-sm">Staking</span>
+        </div>
+        <p className="text-xs text-zinc-400">Stake your coins to earn rewards over time.</p>
+      </div>
+      
+      <div>
+        <label className="text-sm text-zinc-400 mb-1 block">Amount to Stake</label>
+        <div className="relative">
+          <img src={dehubCoin} alt="coins" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+          <Input
+            type="number"
+            placeholder="0"
+            value={stakeAmount}
+            onChange={(e) => setStakeAmount(e.target.value)}
+            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
+          />
+        </div>
+        <p className="text-xs text-zinc-400 mt-1">Available: {balance.toLocaleString()} coins</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <Button
+          onClick={handleStakeAll}
+          variant="outline"
+          className="flex-1 border-white/10 text-white hover:bg-white/10"
+        >
+          Stake All
+        </Button>
+        <Button
+          onClick={handleStakeCoins}
+          disabled={!stakeAmount || Number(stakeAmount) <= 0 || Number(stakeAmount) > balance}
+          className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white"
+        >
+          Stake
+        </Button>
+      </div>
+    </div>
+  );
+
   const getMenuContent = () => {
     switch (menuView) {
       case 'buy':
         return buyMenuContent;
       case 'send':
         return sendMenuContent;
+      case 'history':
+        return historyMenuContent;
+      case 'stake':
+        return stakeMenuContent;
       default:
         return mainMenuContent;
     }
