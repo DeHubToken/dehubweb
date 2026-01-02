@@ -99,7 +99,7 @@ export function LiveFeed() {
             <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
             Live Channels
           </h2>
-          <button className="text-purple-400 text-sm hover:underline">Show All</button>
+          <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
@@ -129,12 +129,12 @@ export function LiveFeed() {
 
               {/* Info */}
               <div className="flex gap-2">
-                <Avatar className="w-9 h-9 flex-shrink-0 ring-2 ring-purple-500">
+                <Avatar className="w-9 h-9 flex-shrink-0 ring-2 ring-red-500">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${stream.avatar}`} />
                   <AvatarFallback className="bg-zinc-700">{stream.streamer[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-white text-sm truncate group-hover:text-purple-400 transition-colors">
+                  <h3 className="font-medium text-white text-sm truncate group-hover:text-red-400 transition-colors">
                     {stream.title}
                   </h3>
                   <p className="text-zinc-400 text-xs">{stream.streamer}</p>
@@ -157,7 +157,7 @@ export function LiveFeed() {
       <div className="bg-zinc-900 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-bold text-white">Categories</h2>
-          <button className="text-purple-400 text-sm hover:underline">Show All</button>
+          <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
         <div className="flex gap-3 overflow-x-auto scrollbar-hide">
           {CATEGORIES.map((cat) => (
