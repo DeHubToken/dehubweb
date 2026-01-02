@@ -390,7 +390,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
             placeholder="0"
             value={stakeAmount}
             onChange={(e) => setStakeAmount(e.target.value)}
-            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400"
+            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
         </div>
         <p className="text-xs text-zinc-400 mt-1">Available: {balance.toLocaleString()} coins</p>
@@ -400,7 +400,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         <Button
           onClick={handleStakeAll}
           variant="outline"
-          className="flex-1 border-white/10 text-white hover:bg-white/10"
+          className="flex-1 border-white/10 bg-white text-black hover:bg-white/90"
         >
           Stake All
         </Button>
