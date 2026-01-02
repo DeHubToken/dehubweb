@@ -1,22 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
-import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 
-const PRIMARY_NAV_ITEMS = [
+const ALL_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: Mail, label: 'Messages', path: '/app/messages' },
-  { icon: null, label: 'Create', path: null }, // Placeholder for create button
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: User, label: 'Profile', path: '/app/profile' },
-];
-
-const SECONDARY_NAV_ITEMS = [
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
-  { icon: null, label: 'Create', path: null }, // Placeholder for create button
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
 ];
@@ -24,134 +18,102 @@ const SECONDARY_NAV_ITEMS = [
 export function MobileBottomNav() {
   const location = useLocation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-  const [showSecondary, setShowSecondary] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const dragThreshold = 50;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  const handleDragEnd = (event: any, info: any) => {
-    const offset = info.offset.x;
-    const velocity = info.velocity.x;
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
 
-    if (offset < -dragThreshold || velocity < -500) {
-      // Swiped left - show secondary
-      setShowSecondary(true);
-    } else if (offset > dragThreshold || velocity > 500) {
-      // Swiped right - show primary
-      setShowSecondary(false);
-    }
-    animate(x, 0, { type: 'spring', stiffness: 300, damping: 30 });
-  };
+    const handleScroll = () => {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
+      setScrollProgress(progress);
+    };
 
-  const renderNavItems = (items: typeof PRIMARY_NAV_ITEMS) => (
-    <div className="flex items-center justify-around h-14 w-full">
-      {items.map((item, index) => {
-        // Create button
-        if (item.path === null) {
-          return (
-            <button
-              key={`create-${index}`}
-              onClick={() => setIsPostModalOpen(true)}
-              className="flex items-center justify-center flex-1 h-full"
-            >
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-                <Plus className="w-6 h-6 text-black" />
-              </div>
-            </button>
-          );
-        }
-
-        const isActive = item.path === '/app' 
-          ? location.pathname === '/app'
-          : location.pathname.startsWith(item.path);
-        
-        return (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={cn(
-              'flex items-center justify-center flex-1 h-full rounded-xl transition-colors',
-              isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
-            )}
-          >
-            <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
-          </NavLink>
-        );
-      })}
-    </div>
-  );
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-        <nav 
-          ref={containerRef}
-          className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden relative"
-        >
-          {/* Page indicator dots */}
-          <div className="absolute top-1 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            <div className={cn(
-              "w-1.5 h-1.5 rounded-full transition-colors",
-              !showSecondary ? "bg-white" : "bg-zinc-600"
-            )} />
-            <div className={cn(
-              "w-1.5 h-1.5 rounded-full transition-colors",
-              showSecondary ? "bg-white" : "bg-zinc-600"
-            )} />
+        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden relative">
+          {/* Center Create Button + Dots */}
+          <div className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none">
+            {/* Scroll indicator dots */}
+            <div className="flex gap-1 pt-1">
+              <div 
+                className="w-1 h-1 rounded-full bg-white transition-opacity"
+                style={{ opacity: 1 - scrollProgress * 0.7 }}
+              />
+              <div 
+                className="w-1 h-1 rounded-full bg-white transition-opacity"
+                style={{ opacity: 0.3 + scrollProgress * 0.7 }}
+              />
+            </div>
+            {/* Create button */}
+            <button
+              onClick={() => setIsPostModalOpen(true)}
+              className="mt-0.5 w-10 h-10 rounded-full bg-white flex items-center justify-center pointer-events-auto"
+            >
+              <Plus className="w-6 h-6 text-black" />
+            </button>
           </div>
 
-          <motion.div
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={handleDragEnd}
-            style={{ x }}
-            className="cursor-grab active:cursor-grabbing"
+          {/* Scrollable nav items */}
+          <div 
+            ref={scrollRef}
+            className="flex items-center h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            style={{ scrollSnapType: 'x proximity' }}
           >
-            <AnimatePresence mode="wait">
-              {!showSecondary ? (
-                <motion.div
-                  key="primary"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {renderNavItems(PRIMARY_NAV_ITEMS)}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="secondary"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {renderNavItems(SECONDARY_NAV_ITEMS)}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            {/* Left side items */}
+            <div className="flex items-center justify-around flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
+              {ALL_NAV_ITEMS.slice(0, 2).map((item) => {
+                const isActive = item.path === '/app' 
+                  ? location.pathname === '/app'
+                  : location.pathname.startsWith(item.path);
+                
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      'flex items-center justify-center w-12 h-12 rounded-xl transition-colors',
+                      isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
+                    )}
+                  >
+                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                  </NavLink>
+                );
+              })}
+            </div>
 
-          {/* Swipe hint arrows */}
-          <button 
-            onClick={() => setShowSecondary(false)}
-            className={cn(
-              "absolute left-1 top-1/2 -translate-y-1/2 p-1 rounded-full transition-opacity",
-              showSecondary ? "opacity-50 hover:opacity-100" : "opacity-0 pointer-events-none"
-            )}
-          >
-            <ChevronLeft className="w-4 h-4 text-zinc-400" />
-          </button>
-          <button 
-            onClick={() => setShowSecondary(true)}
-            className={cn(
-              "absolute right-1 top-1/2 -translate-y-1/2 p-1 rounded-full transition-opacity",
-              !showSecondary ? "opacity-50 hover:opacity-100" : "opacity-0 pointer-events-none"
-            )}
-          >
-            <ChevronRight className="w-4 h-4 text-zinc-400" />
-          </button>
+            {/* Center spacer for create button */}
+            <div className="flex-shrink-0 w-14" />
+
+            {/* Right side items (scrollable) */}
+            <div className="flex items-center gap-1 flex-shrink-0 pr-3">
+              {ALL_NAV_ITEMS.slice(2).map((item) => {
+                const isActive = item.path === '/app' 
+                  ? location.pathname === '/app'
+                  : location.pathname.startsWith(item.path);
+                
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      'flex items-center justify-center w-12 h-12 rounded-xl transition-colors flex-shrink-0',
+                      isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
+                    )}
+                  >
+                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                  </NavLink>
+                );
+              })}
+            </div>
+          </div>
         </nav>
       </div>
 
