@@ -102,35 +102,38 @@ export function MobileBottomNav() {
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-        <nav 
-          className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden"
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-        >
-          <AnimatePresence mode="wait">
-            {!showSecondary ? (
-              <motion.div
-                key="primary"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-              >
-                {renderNavItems(PRIMARY_NAV_ITEMS, true)}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="secondary"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.2 }}
-              >
-                {renderNavItems(SECONDARY_NAV_ITEMS, false)}
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden">
+          <div
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            className="touch-pan-x"
+            style={{ touchAction: 'pan-x' }}
+          >
+            <AnimatePresence mode="wait">
+              {!showSecondary ? (
+                <motion.div
+                  key="primary"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {renderNavItems(PRIMARY_NAV_ITEMS, true)}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="secondary"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {renderNavItems(SECONDARY_NAV_ITEMS, false)}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </nav>
       </div>
 
