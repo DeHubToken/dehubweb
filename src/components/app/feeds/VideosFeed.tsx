@@ -1,8 +1,14 @@
 import { useState } from 'react';
-import { MoreVertical, ThumbsUp, ThumbsDown, Share, Clock, CheckCircle } from 'lucide-react';
+import { MoreVertical, ThumbsUp, ThumbsDown, Share, Bookmark, CheckCircle, ListPlus, Clock, Flag, Download, Ban } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface VideosFeedProps {
   showFilters?: boolean;
@@ -210,9 +216,35 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
                   </div>
                 </div>
               </div>
-              <button className="text-zinc-400 hover:text-white">
-                <MoreVertical className="w-5 h-5" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="text-zinc-400 hover:text-white">
+                    <MoreVertical className="w-5 h-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                    <ListPlus className="w-4 h-4" />
+                    Queue
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                    <Clock className="w-4 h-4" />
+                    Watch List
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                    <Flag className="w-4 h-4" />
+                    Report
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                    <Download className="w-4 h-4" />
+                    Download
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                    <Ban className="w-4 h-4" />
+                    Block Creator
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Video Thumbnail */}
@@ -244,7 +276,7 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
                   </button>
                 </div>
                 <button className="text-white hover:text-zinc-400 transition-colors">
-                  <Clock className="w-6 h-6" />
+                  <Bookmark className="w-6 h-6" />
                 </button>
               </div>
 
