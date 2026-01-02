@@ -86,7 +86,13 @@ const CATEGORIES = [
   { name: 'Just Chatting', viewers: '412K', image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=100&h=130&fit=crop' },
   { name: 'Fortnite', viewers: '189K', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&h=130&fit=crop' },
   { name: 'Valorant', viewers: '156K', image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=100&h=130&fit=crop' },
-  { name: 'Minecraft', viewers: '134K', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b8c?w=100&h=130&fit=crop' },
+  { name: 'Minecraft', viewers: '134K', image: 'https://images.unsplash.com/photo-1587573088697-b4fa28693d62?w=100&h=130&fit=crop' },
+  { name: 'League of Legends', viewers: '298K', image: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?w=100&h=130&fit=crop' },
+  { name: 'Call of Duty', viewers: '167K', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b0e?w=100&h=130&fit=crop' },
+  { name: 'GTA V', viewers: '145K', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=100&h=130&fit=crop' },
+  { name: 'Apex Legends', viewers: '112K', image: 'https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=100&h=130&fit=crop' },
+  { name: 'Music', viewers: '89K', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=130&fit=crop' },
+  { name: 'Art', viewers: '67K', image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=100&h=130&fit=crop' },
 ];
 
 export function LiveFeed() {
