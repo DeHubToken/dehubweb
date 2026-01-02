@@ -63,32 +63,46 @@ export function MobileBottomNav() {
               </div>
             </button>
 
-            {/* Right side items - 2 buttons visible, rest scrollable */}
-            <div className="flex items-center flex-shrink-0" style={{ minWidth: 'calc(50% - 28px)' }}>
-              {ALL_NAV_ITEMS.slice(2).map((item, index, arr) => {
+            {/* Right side items - first 2 match left side width */}
+            <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
+              {ALL_NAV_ITEMS.slice(2, 4).map((item, index) => {
                 const isActive = item.path === '/app' 
                   ? location.pathname === '/app'
                   : location.pathname.startsWith(item.path);
-                const isLast = index === arr.length - 1;
-                const isFirstTwo = index < 2;
                 
                 return (
                   <NavLink
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center h-14 transition-colors flex-shrink-0',
-                      isFirstTwo ? 'flex-1' : 'w-14',
-                      isLast && 'rounded-r-2xl',
+                      'flex items-center justify-center h-14 flex-1 transition-colors',
+                      index === 1 && 'rounded-r-2xl',
                       isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
                     )}
-                    style={{ minWidth: isFirstTwo ? undefined : '3.5rem' }}
                   >
                     <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
                   </NavLink>
                 );
               })}
             </div>
+
+            {/* Additional items - accessible via scroll */}
+            {ALL_NAV_ITEMS.slice(4).map((item) => {
+              const isActive = location.pathname.startsWith(item.path);
+              
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    'flex items-center justify-center h-14 w-14 flex-shrink-0 transition-colors',
+                    isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
+                  )}
+                >
+                  <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                </NavLink>
+              );
+            })}
           </div>
         </nav>
       </div>
