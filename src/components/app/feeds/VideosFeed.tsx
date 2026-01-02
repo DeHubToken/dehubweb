@@ -187,48 +187,77 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
       </div>
 
       {/* Video Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+      <div className="space-y-3">
         {MOCK_VIDEOS.map((video) => (
-          <div key={video.id} className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors">
-            {/* Thumbnail */}
+          <div key={video.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
+            {/* Header - Username/Avatar */}
+            <div className="flex items-center justify-between p-3">
+              <div className="flex items-center gap-3">
+                <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500">
+                  <div className="p-0.5 bg-zinc-900 rounded-full">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
+                      <AvatarFallback className="bg-zinc-700">{video.channel[0]}</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="font-semibold text-white text-sm">{video.channel}</span>
+                    {video.verified && (
+                      <CheckCircle className="w-4 h-4 text-blue-500" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button className="text-zinc-400 hover:text-white">
+                <MoreVertical className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Video Thumbnail */}
             <div className="relative aspect-video bg-zinc-800">
               <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
               <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
                 {video.duration}
               </div>
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
-                <div className="flex gap-2">
-                  <button className="p-2 bg-black/60 rounded-full">
-                    <Clock className="w-5 h-5 text-white" />
-                  </button>
+              {/* Play button overlay */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
+                  <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
                 </div>
               </div>
             </div>
 
-            {/* Info */}
-            <div className="p-3 flex gap-3">
-              <Avatar className="w-9 h-9 flex-shrink-0">
-                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channelAvatar}`} />
-                <AvatarFallback className="bg-zinc-700">{video.channel[0]}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-white text-sm line-clamp-2 leading-tight mb-1">
-                  {video.title}
-                </h3>
-                <div className="flex items-center gap-1 text-zinc-500 text-xs">
-                  <span>{video.channel}</span>
-                  {video.verified && (
-                    <CheckCircle className="w-3.5 h-3.5 text-zinc-400" />
-                  )}
+            {/* Actions & Info */}
+            <div className="p-3">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-4">
+                  <button className="text-white hover:text-green-400 transition-colors">
+                    <ThumbsUp className="w-6 h-6" />
+                  </button>
+                  <button className="text-white hover:text-red-400 transition-colors">
+                    <ThumbsDown className="w-6 h-6" />
+                  </button>
+                  <button className="text-white hover:text-zinc-400 transition-colors">
+                    <Share className="w-6 h-6" />
+                  </button>
                 </div>
-                <p className="text-zinc-500 text-xs">
-                  {video.views} • {video.uploadedAgo}
-                </p>
+                <button className="text-white hover:text-zinc-400 transition-colors">
+                  <Clock className="w-6 h-6" />
+                </button>
               </div>
-              <button className="text-zinc-400 hover:text-white self-start">
-                <MoreVertical className="w-5 h-5" />
-              </button>
+
+              <p className="font-semibold text-white text-sm mb-1">
+                {video.views}
+              </p>
+
+              <h3 className="text-white text-sm mb-1">
+                <span className="font-semibold">{video.channel}</span>{' '}
+                <span className="text-zinc-300">{video.title}</span>
+              </h3>
+
+              <p className="text-zinc-500 text-xs">{video.uploadedAgo}</p>
             </div>
           </div>
         ))}
