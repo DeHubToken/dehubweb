@@ -137,8 +137,8 @@ function StoriesBar() {
         onClick={handleAddStory}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-          <Image className="w-4 h-4 text-purple-500" />
+        <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+          <Image className="w-4 h-4 text-orange-500" />
         </div>
         <span className="text-white font-medium">Add Story</span>
       </button>
@@ -147,7 +147,7 @@ function StoriesBar() {
 
   const triggerButton = (
     <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
-      <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-purple-500 to-pink-500">
+      <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
         <div className="p-0.5 bg-zinc-900 rounded-full">
           <div className="w-14 h-14 rounded-full bg-zinc-900/50 backdrop-blur-sm flex items-center justify-center">
             <Plus className="w-6 h-6 text-white" />
@@ -188,7 +188,7 @@ function StoriesBar() {
         {/* Other Stories */}
         {['alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'].map((name) => (
           <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <div className="p-0.5 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500">
+            <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
               <div className="p-0.5 bg-zinc-900 rounded-full">
                 <Avatar className="w-14 h-14">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`} />
