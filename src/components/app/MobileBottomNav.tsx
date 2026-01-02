@@ -7,6 +7,7 @@ import { PostModal } from './PostModal';
 const ALL_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: Mail, label: 'Messages', path: '/app/messages' },
+  { icon: Plus, label: 'Create', path: null, isCreate: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
@@ -19,100 +20,83 @@ export function MobileBottomNav() {
   const location = useLocation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const createButtonRef = useRef<HTMLButtonElement>(null);
+  const [createButtonOpacity, setCreateButtonOpacity] = useState(1);
 
   useEffect(() => {
     const container = scrollRef.current;
-    if (!container) return;
+    const createButton = createButtonRef.current;
+    if (!container || !createButton) return;
 
     const handleScroll = () => {
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
-      setScrollProgress(progress);
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = createButton.getBoundingClientRect();
+      
+      // Calculate how centered the button is
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      const buttonCenter = buttonRect.left + buttonRect.width / 2;
+      const distanceFromCenter = Math.abs(containerCenter - buttonCenter);
+      const maxDistance = containerRect.width / 3;
+      
+      // Fade based on distance from center (1 when centered, 0 when far)
+      const opacity = Math.max(0, 1 - distanceFromCenter / maxDistance);
+      setCreateButtonOpacity(opacity);
     };
 
     container.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
-        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden relative">
-          {/* Center Create Button + Dots */}
-          <div className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none">
-            {/* Scroll indicator dots */}
-            <div className="flex gap-1 pt-1">
-              <div 
-                className="w-1 h-1 rounded-full bg-white transition-opacity"
-                style={{ opacity: 1 - scrollProgress * 0.7 }}
-              />
-              <div 
-                className="w-1 h-1 rounded-full bg-white transition-opacity"
-                style={{ opacity: 0.3 + scrollProgress * 0.7 }}
-              />
-            </div>
-            {/* Create button */}
-            <button
-              onClick={() => setIsPostModalOpen(true)}
-              className="mt-0.5 w-10 h-10 rounded-full bg-white flex items-center justify-center pointer-events-auto"
-            >
-              <Plus className="w-6 h-6 text-black" />
-            </button>
-          </div>
-
+        <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-md shadow-xl overflow-hidden">
           {/* Scrollable nav items */}
           <div 
             ref={scrollRef}
-            className="flex items-center h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            className="flex items-center justify-around h-14 overflow-x-auto scrollbar-hide scroll-smooth px-2"
             style={{ scrollSnapType: 'x proximity' }}
           >
-            {/* Left side items */}
-            <div className="flex items-center justify-around flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
-              {ALL_NAV_ITEMS.slice(0, 2).map((item) => {
-                const isActive = item.path === '/app' 
-                  ? location.pathname === '/app'
-                  : location.pathname.startsWith(item.path);
-                
+            {ALL_NAV_ITEMS.map((item, index) => {
+              if (item.isCreate) {
                 return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      'flex items-center justify-center w-12 h-12 rounded-xl transition-colors',
-                      isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
-                    )}
+                  <button
+                    key="create"
+                    ref={createButtonRef}
+                    onClick={() => setIsPostModalOpen(true)}
+                    className="flex-shrink-0 w-12 h-12 flex items-center justify-center"
                   >
-                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
-                  </NavLink>
+                    <div 
+                      className="w-10 h-10 rounded-full bg-white flex items-center justify-center transition-all duration-200"
+                      style={{ 
+                        opacity: 0.4 + createButtonOpacity * 0.6,
+                        transform: `scale(${0.85 + createButtonOpacity * 0.15})`
+                      }}
+                    >
+                      <Plus className="w-6 h-6 text-black" />
+                    </div>
+                  </button>
                 );
-              })}
-            </div>
+              }
 
-            {/* Center spacer for create button */}
-            <div className="flex-shrink-0 w-14" />
-
-            {/* Right side items (scrollable) */}
-            <div className="flex items-center gap-1 flex-shrink-0 pr-3">
-              {ALL_NAV_ITEMS.slice(2).map((item) => {
-                const isActive = item.path === '/app' 
-                  ? location.pathname === '/app'
-                  : location.pathname.startsWith(item.path);
-                
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      'flex items-center justify-center w-12 h-12 rounded-xl transition-colors flex-shrink-0',
-                      isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
-                    )}
-                  >
-                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
-                  </NavLink>
-                );
-              })}
-            </div>
+              const isActive = item.path === '/app' 
+                ? location.pathname === '/app'
+                : location.pathname.startsWith(item.path!);
+              
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path!}
+                  className={cn(
+                    'flex items-center justify-center w-12 h-12 rounded-xl transition-colors flex-shrink-0',
+                    isActive ? 'text-white bg-zinc-800' : 'text-zinc-500'
+                  )}
+                >
+                  <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                </NavLink>
+              );
+            })}
           </div>
         </nav>
       </div>
