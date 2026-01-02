@@ -4,6 +4,8 @@ import codCategory from '@/assets/cod-category.png';
 import gtaCategory from '@/assets/gta-category.png';
 import fortniteCategory from '@/assets/fortnite-category.png';
 import valorantCategory from '@/assets/valorant-category.png';
+import leagueCategory from '@/assets/league-category.png';
+import apexCategory from '@/assets/apex-category.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface TwitchStream {
@@ -92,10 +94,10 @@ const CATEGORIES = [
   { name: 'Fortnite', viewers: '189K', image: fortniteCategory },
   { name: 'Valorant', viewers: '156K', image: valorantCategory },
   { name: 'Minecraft', viewers: '134K', image: minecraftCategory },
-  { name: 'League of Legends', viewers: '298K', image: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?w=100&h=130&fit=crop' },
+  { name: 'League of Legends', viewers: '298K', image: leagueCategory },
   { name: 'Call of Duty', viewers: '167K', image: codCategory },
   { name: 'GTA V', viewers: '145K', image: gtaCategory },
-  { name: 'Apex Legends', viewers: '112K', image: 'https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=100&h=130&fit=crop' },
+  { name: 'Apex Legends', viewers: '112K', image: apexCategory },
   { name: 'Music', viewers: '89K', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=130&fit=crop' },
   { name: 'Art', viewers: '67K', image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=100&h=130&fit=crop' },
 ];
