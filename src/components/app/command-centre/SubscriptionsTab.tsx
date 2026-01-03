@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { TrendingDown, Info, Settings2, Coins, ChevronLeft, ChevronRight } from 'lucide-react';
+import { TrendingDown, Info, Settings2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 const topSubscriptions = [
   { date: '12 Aug', username: 'Username', tier: 'Tier name', duration: '6m', amount: '450 DH' },
@@ -68,7 +69,7 @@ export function SubscriptionsTab() {
           </div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-3xl font-bold text-white">7670</span>
-            <Coins className="w-5 h-5 text-yellow-500" />
+            <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
           </div>
           <p className="text-zinc-500 text-sm mb-6">You are subscribed to <span className="text-white">16 users</span></p>
 
@@ -149,7 +150,7 @@ export function SubscriptionsTab() {
                   <td className="py-2">
                     {tx.amount !== '-' && (
                       <span className="flex items-center gap-1">
-                        {tx.amount} <Coins className="w-3 h-3 text-yellow-500" />
+                        {tx.amount} <img src={dehubCoin} alt="DeHub" className="w-3 h-3" />
                       </span>
                     )}
                     {tx.amount === '-' && '-'}

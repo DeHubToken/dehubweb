@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { TrendingUp, Info, Settings2, Coins } from 'lucide-react';
+import { TrendingUp, Info, Settings2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, ComposedChart } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 const chartData = [
   { month: 'Jan', income: 45000, expenditure: 30000 },
@@ -63,7 +64,7 @@ export function TransactionsTab() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-3xl sm:text-4xl font-bold text-white">490,890</span>
-                <Coins className="w-5 h-5 text-yellow-500" />
+                <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
               </div>
               <p className="text-zinc-500 text-sm mt-1"><span className="text-white">50,698 DeHub</span> more than last month.</p>
             </div>
