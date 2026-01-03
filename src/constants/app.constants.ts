@@ -16,7 +16,7 @@ import {
   FileTextIcon,
   Coins,
   Play,
-  Wallet,
+  LayoutDashboard,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -25,7 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: Mail, label: 'Messages', path: '/app/messages' },
-  { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
+  { icon: LayoutDashboard, label: 'Command Centre', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
