@@ -181,29 +181,29 @@ function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) 
           <button
             onClick={() => onLike(comment.id)}
             className={cn(
-              "flex items-center gap-1.5 text-xs transition-colors",
-              comment.isLiked ? "text-green-500" : "text-zinc-500 hover:text-zinc-300"
+              "transition-colors",
+              comment.isLiked ? "text-green-400" : "text-white hover:text-green-400"
             )}
+            aria-label="Like"
           >
-            <ThumbsUp className="w-3.5 h-3.5" />
-            <span>{comment.likes}</span>
+            <ThumbsUp className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDislike(comment.id)}
             className={cn(
-              "flex items-center gap-1.5 text-xs transition-colors",
-              comment.isDisliked ? "text-red-500" : "text-zinc-500 hover:text-zinc-300"
+              "transition-colors",
+              comment.isDisliked ? "text-red-400" : "text-white hover:text-red-400"
             )}
+            aria-label="Dislike"
           >
-            <ThumbsDown className="w-3.5 h-3.5" />
-            <span>{comment.dislikes}</span>
+            <ThumbsDown className="w-4 h-4" />
           </button>
           <button
             onClick={() => onReply(comment.id)}
-            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="text-white hover:text-zinc-400 transition-colors"
+            aria-label="Reply"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>Reply</span>
+            <MessageCircle className="w-4 h-4" />
           </button>
         </div>
       </div>
