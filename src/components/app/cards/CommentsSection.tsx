@@ -360,14 +360,14 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                 <ChevronDown className="w-3 h-3" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+            <DropdownMenuContent align="end" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
               {SORT_OPTIONS.map((option) => (
                 <DropdownMenuItem
                   key={option.value}
                   onClick={() => setSortBy(option.value as 'recent' | 'liked')}
                   className={cn(
-                    "text-white hover:bg-zinc-700 cursor-pointer",
-                    sortBy === option.value && "bg-zinc-700"
+                    "text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white",
+                    sortBy === option.value && "text-white"
                   )}
                 >
                   {option.label}
