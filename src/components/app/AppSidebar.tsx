@@ -41,18 +41,15 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         })}
       </nav>
 
-      {/* Post Button - fixed at bottom with blur fade */}
-      <div className="sticky bottom-0 mt-4">
-        <div className="absolute inset-x-0 -top-8 h-8 bg-gradient-to-t from-zinc-900/95 to-transparent pointer-events-none" />
-        <div className="pt-4 pb-4 bg-zinc-900/95 backdrop-blur-md">
-          <Button 
-            onClick={() => setIsPostModalOpen(true)}
-            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
-          >
-            <PenSquare className="w-5 h-5" />
-            Post
-          </Button>
-        </div>
+      {/* Post Button - fixed at bottom */}
+      <div className="sticky bottom-0 pt-4 pb-4 bg-gradient-to-t from-zinc-900 via-zinc-900 to-transparent mt-4">
+        <Button 
+          onClick={() => setIsPostModalOpen(true)}
+          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
+        >
+          <PenSquare className="w-5 h-5" />
+          Post
+        </Button>
       </div>
     </>
   );
