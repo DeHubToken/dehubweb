@@ -8,7 +8,7 @@ export default function CommandCentrePage() {
   const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <div className="p-2 sm:p-3 pt-12 sm:pt-3 min-h-screen">
+    <div className="p-2 sm:p-3 pt-16 lg:pt-3 min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h1 className="text-xl sm:text-2xl font-bold text-white">Command Center</h1>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
