@@ -187,17 +187,23 @@ export default function HomePage() {
    */
   useEffect(() => {
     const handleHomeRefresh = () => {
+      // Scroll to top first
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+      document.body.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
       if (activeTab === 'home') {
-        // Already on home, show toast
-        toast.info('No new posts', {
-          description: 'Check back later for fresh content',
-          duration: 2000,
-        });
+        // Already on home, show toast after a brief delay
+        setTimeout(() => {
+          toast.info('No new posts', {
+            description: 'Check back later for fresh content',
+            duration: 2000,
+          });
+        }, 300);
       }
       setActiveTab('home');
       resetFilters();
       setRefreshKey(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.addEventListener('home-refresh', handleHomeRefresh);
