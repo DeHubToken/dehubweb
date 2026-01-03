@@ -343,9 +343,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       {/* Close button - always visible */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center z-20 transition-colors"
+        className="absolute top-4 right-4 w-8 h-8 lg:w-10 lg:h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center z-20 transition-colors"
       >
-        <X className="w-5 h-5 text-white" />
+        <X className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
       </button>
 
       {/* Mobile header controls */}
