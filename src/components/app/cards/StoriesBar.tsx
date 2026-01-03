@@ -25,9 +25,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+interface StoryUser {
+  name: string;
+  avatar: string;
+}
+
 interface StoriesBarProps {
-  /** Array of user seeds for generating story avatars */
-  users: string[];
+  /** Array of story users with name and avatar URL */
+  users: StoryUser[];
 }
 
 export function StoriesBar({ users }: StoriesBarProps) {
@@ -108,17 +113,17 @@ export function StoriesBar({ users }: StoriesBarProps) {
         )}
 
         {/* User Stories */}
-        {users.map((name) => (
-          <div key={name} className="flex flex-col items-center gap-1 flex-shrink-0">
+        {users.map((user) => (
+          <div key={user.name} className="flex flex-col items-center gap-1 flex-shrink-0">
             <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
               <div className="p-0.5 bg-zinc-900 rounded-full">
                 <Avatar className="w-14 h-14">
-                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`} />
-                  <AvatarFallback className="bg-zinc-700">{name[0].toUpperCase()}</AvatarFallback>
+                  <AvatarImage src={user.avatar} className="object-cover" />
+                  <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
                 </Avatar>
               </div>
             </div>
-            <span className="text-xs text-zinc-400 truncate w-16 text-center">{name}</span>
+            <span className="text-xs text-zinc-400 truncate w-16 text-center">{user.name}</span>
           </div>
         ))}
       </div>
