@@ -51,13 +51,25 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
               className="flex-shrink-0 w-[120px] cursor-pointer group"
             >
               {/* Thumbnail */}
-              <div className="relative aspect-[9/16] rounded-xl overflow-hidden mb-2">
+              <div className="relative aspect-[9/16] rounded-xl overflow-hidden">
                 <img
                   src={short.thumbnail}
                   alt=""
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                
+                {/* Creator info at top */}
+                <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
+                    <img 
+                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.username}`}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-white text-[10px] font-medium truncate">{short.username}</span>
+                </div>
                 
                 {/* Play overlay on hover */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -66,15 +78,12 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   </div>
                 </div>
                 
-                {/* Likes */}
+                {/* Likes at bottom */}
                 <div className="absolute bottom-2 left-2 flex items-center gap-1">
                   <Heart className="w-3 h-3 text-white" />
                   <span className="text-white text-xs font-medium">{short.likes}</span>
                 </div>
               </div>
-
-              {/* Username */}
-              <p className="text-white text-xs truncate">@{short.username}</p>
             </div>
           ))}
         </div>
