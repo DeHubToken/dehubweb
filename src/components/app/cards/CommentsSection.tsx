@@ -10,7 +10,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { X, Search, ThumbsUp, MessageCircle, Quote, ArrowUpDown, ChevronDown } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageCircle, Quote, ArrowUpDown, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -33,8 +33,10 @@ export interface Comment {
   avatar: string;
   text: string;
   likes: number;
+  dislikes: number;
   timeAgo: string;
   isLiked?: boolean;
+  isDisliked?: boolean;
 }
 
 interface CommentsSectionProps {
@@ -118,6 +120,7 @@ export function generateRandomComments(count: number, seed: string): Comment[] {
       avatar: AVATAR_POOL[(seedNum * 3) % AVATAR_POOL.length],
       text: REPLY_TEMPLATES[(seedNum * 11) % REPLY_TEMPLATES.length],
       likes: Math.floor(Math.pow(Math.random(), 2) * 500) + (seedNum % 50),
+      dislikes: Math.floor(Math.pow(Math.random(), 2) * 50) + (seedNum % 10),
       timeAgo: TIME_OPTIONS[(seedNum * 2) % TIME_OPTIONS.length],
     });
   }
@@ -134,6 +137,7 @@ export function generateRandomQuotes(count: number, seed: string): Comment[] {
       avatar: AVATAR_POOL[(seedNum * 4) % AVATAR_POOL.length],
       text: QUOTE_TEMPLATES[(seedNum * 3) % QUOTE_TEMPLATES.length],
       likes: Math.floor(Math.pow(Math.random(), 2) * 300) + (seedNum % 30),
+      dislikes: Math.floor(Math.pow(Math.random(), 2) * 30) + (seedNum % 5),
       timeAgo: TIME_OPTIONS[(seedNum * 3) % TIME_OPTIONS.length],
     });
   }
@@ -152,9 +156,11 @@ const SORT_OPTIONS = [
 interface CommentItemProps {
   comment: Comment;
   onLike: (id: string) => void;
+  onDislike: (id: string) => void;
+  onReply: (id: string) => void;
 }
 
-function CommentItem({ comment, onLike }: CommentItemProps) {
+function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -171,16 +177,35 @@ function CommentItem({ comment, onLike }: CommentItemProps) {
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
         <p className="text-zinc-300 text-sm leading-relaxed break-words">{comment.text}</p>
-        <button
-          onClick={() => onLike(comment.id)}
-          className={cn(
-            "flex items-center gap-1.5 mt-2 text-xs transition-colors",
-            comment.isLiked ? "text-red-500" : "text-zinc-500 hover:text-zinc-300"
-          )}
-        >
-          <ThumbsUp className="w-3.5 h-3.5" />
-          <span>{comment.likes}</span>
-        </button>
+        <div className="flex items-center gap-4 mt-2">
+          <button
+            onClick={() => onLike(comment.id)}
+            className={cn(
+              "flex items-center gap-1.5 text-xs transition-colors",
+              comment.isLiked ? "text-green-500" : "text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            <ThumbsUp className="w-3.5 h-3.5" />
+            <span>{comment.likes}</span>
+          </button>
+          <button
+            onClick={() => onDislike(comment.id)}
+            className={cn(
+              "flex items-center gap-1.5 text-xs transition-colors",
+              comment.isDisliked ? "text-red-500" : "text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            <ThumbsDown className="w-3.5 h-3.5" />
+            <span>{comment.dislikes}</span>
+          </button>
+          <button
+            onClick={() => onReply(comment.id)}
+            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+            <span>Reply</span>
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -223,7 +248,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
     const updateComments = (comments: Comment[]) =>
       comments.map((c) =>
         c.id === commentId
-          ? { ...c, likes: c.isLiked ? c.likes - 1 : c.likes + 1, isLiked: !c.isLiked }
+          ? { ...c, likes: c.isLiked ? c.likes - 1 : c.likes + 1, isLiked: !c.isLiked, isDisliked: false }
           : c
       );
 
@@ -231,6 +256,28 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
       setReplies(updateComments);
     } else {
       setQuotes(updateComments);
+    }
+  };
+
+  const handleDislike = (commentId: string) => {
+    const updateComments = (comments: Comment[]) =>
+      comments.map((c) =>
+        c.id === commentId
+          ? { ...c, dislikes: c.isDisliked ? c.dislikes - 1 : c.dislikes + 1, isDisliked: !c.isDisliked, isLiked: false }
+          : c
+      );
+
+    if (activeTab === 'replies') {
+      setReplies(updateComments);
+    } else {
+      setQuotes(updateComments);
+    }
+  };
+
+  const handleReply = (commentId: string) => {
+    const comment = (activeTab === 'replies' ? replies : quotes).find(c => c.id === commentId);
+    if (comment) {
+      setNewComment(`@${comment.username} `);
     }
   };
 
@@ -243,6 +290,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser',
       text: newComment,
       likes: 0,
+      dislikes: 0,
       timeAgo: 'Just now',
     };
 
@@ -335,7 +383,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             <AnimatePresence mode="popLayout">
               {filteredComments.length > 0 ? (
                 filteredComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} />
+                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} />
                 ))
               ) : (
                 <motion.p
@@ -355,7 +403,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             <AnimatePresence mode="popLayout">
               {filteredComments.length > 0 ? (
                 filteredComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} />
+                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} />
                 ))
               ) : (
                 <motion.p
