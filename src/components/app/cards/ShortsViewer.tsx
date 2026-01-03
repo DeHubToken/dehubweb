@@ -125,7 +125,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         
         {/* Left Side Panel - Desktop Only */}
         {!isMobile && (
-          <div className="w-[280px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
+          <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
             <div className="bg-zinc-900/50 rounded-2xl p-4 mb-3">
               <div className="flex items-center gap-3">
