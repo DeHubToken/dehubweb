@@ -33,6 +33,7 @@ import {
 // UI components
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
 
 // Mock data
 import { 
@@ -186,6 +187,13 @@ export default function HomePage() {
    */
   useEffect(() => {
     const handleHomeRefresh = () => {
+      if (activeTab === 'home') {
+        // Already on home, show toast
+        toast.info('No new posts', {
+          description: 'Check back later for fresh content',
+          duration: 2000,
+        });
+      }
       setActiveTab('home');
       resetFilters();
       setRefreshKey(prev => prev + 1);
@@ -194,7 +202,7 @@ export default function HomePage() {
 
     window.addEventListener('home-refresh', handleHomeRefresh);
     return () => window.removeEventListener('home-refresh', handleHomeRefresh);
-  }, []);
+  }, [activeTab]);
 
   /**
    * Reset all filter states.
