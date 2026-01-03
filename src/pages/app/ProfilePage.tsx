@@ -126,7 +126,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2">
+        <div className="bg-zinc-900 rounded-2xl p-2 relative">
           <div className="flex overflow-x-auto scrollbar-hide">
             {PROFILE_TABS.map((tab) => (
               <button
@@ -144,6 +144,8 @@ export default function ProfilePage() {
               </button>
             ))}
           </div>
+          {/* Right fade indicator */}
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none rounded-r-2xl" />
         </div>
 
         {/* Posts Bento */}
