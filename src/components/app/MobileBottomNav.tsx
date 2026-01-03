@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings, LayoutDashboard } from 'lucide-react';
+import { Home, Mail, Plus, Bell, User, Trophy, Bookmark, Settings, LayoutDashboard, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 
 const ALL_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: Mail, label: 'Messages', path: '/app/messages' },
-  { icon: Search, label: 'Explore', path: '/app/explore' },
+  { icon: null, label: 'All', path: '/app/explore', isTextOnly: true },
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: LayoutDashboard, label: 'Command Centre', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
@@ -76,7 +76,11 @@ export function MobileBottomNav() {
                       isActive ? 'text-white' : 'text-zinc-500'
                     )}
                   >
-                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                    {item.icon ? (
+                      <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                    ) : (
+                      <span className={cn('text-sm font-semibold', isActive && 'text-white')}>{item.label}</span>
+                    )}
                   </NavLink>
                 );
               })}
@@ -117,7 +121,11 @@ export function MobileBottomNav() {
                       isActive ? 'text-white' : 'text-zinc-500'
                     )}
                   >
-                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                    {item.icon ? (
+                      <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                    ) : (
+                      <span className={cn('text-sm font-semibold', isActive && 'text-white')}>{item.label}</span>
+                    )}
                   </NavLink>
                 );
               })}
@@ -137,7 +145,11 @@ export function MobileBottomNav() {
                   )}
                   style={{ width: 'calc((50% - 28px) / 2)' }}
                 >
-                  <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                  {item.icon ? (
+                    <item.icon className={cn('w-6 h-6', isActive && 'text-white')} />
+                  ) : (
+                    <span className={cn('text-sm font-semibold', isActive && 'text-white')}>{item.label}</span>
+                  )}
                 </NavLink>
               );
             })}
