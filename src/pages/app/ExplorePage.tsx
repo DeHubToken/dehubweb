@@ -264,8 +264,18 @@ export default function ExplorePage() {
                     : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                 )}
               >
-                <tab.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
+                {tab.value === 'all' ? (
+                  <>
+                    <span className="sm:hidden">All</span>
+                    <tab.icon className="w-4 h-4 hidden sm:block" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </>
+                ) : (
+                  <>
+                    <tab.icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </>
+                )}
               </button>
             ))}
           </div>
