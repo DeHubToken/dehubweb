@@ -1,12 +1,12 @@
 /**
  * Shorts Viewer Component
  * =======================
- * Full-screen mobile shorts viewer with comments overlay.
+ * Full-screen mobile shorts viewer with video playback and comments overlay.
  */
 
-import { useState } from 'react';
-import { X, Heart, MessageCircle, Share2, MoreHorizontal, Send } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { X, Heart, Share2, Send, Volume2, VolumeX } from 'lucide-react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import type { ShortVideo } from '@/types/feed.types';
 
@@ -29,20 +29,46 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [comment, setComment] = useState('');
   const [isLiked, setIsLiked] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const currentShort = shorts[currentIndex];
 
-  const handleSwipeUp = () => {
+  // Auto-play video when short changes
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {
+        // Autoplay may be blocked, user needs to interact
+      });
+    }
+    setIsLiked(false);
+  }, [currentIndex]);
+
+  const goToNext = () => {
     if (currentIndex < shorts.length - 1) {
       setCurrentIndex(currentIndex + 1);
-      setIsLiked(false);
     }
   };
 
-  const handleSwipeDown = () => {
+  const goToPrev = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
-      setIsLiked(false);
+    }
+  };
+
+  const handleDragEnd = (_: any, info: PanInfo) => {
+    if (info.offset.y < -100) {
+      goToNext();
+    } else if (info.offset.y > 100) {
+      goToPrev();
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
   };
 
@@ -53,25 +79,48 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 bg-black"
     >
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img
-          src={currentShort.thumbnail}
-          alt=""
+      {/* Video Container with Swipe */}
+      <motion.div
+        className="absolute inset-0"
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+      >
+        <video
+          ref={videoRef}
+          src={currentShort.videoUrl}
           className="w-full h-full object-cover"
+          loop
+          playsInline
+          autoPlay
+          muted={isMuted}
+          poster={currentShort.thumbnail}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
+      </motion.div>
 
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
         <span className="text-white/70 text-sm font-medium">Live stories</span>
-        <button
-          onClick={onClose}
-          className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
-        >
-          <X className="w-4 h-4 text-white" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleMute}
+            className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
+          >
+            {isMuted ? (
+              <VolumeX className="w-4 h-4 text-white" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-white" />
+            )}
+          </button>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
+          >
+            <X className="w-4 h-4 text-white" />
+          </button>
+        </div>
       </div>
 
       {/* Creator Info */}
@@ -82,7 +131,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             <AvatarFallback>{currentShort.username[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-white text-sm font-medium">creatorname</span>
+            <span className="text-white text-sm font-medium">{currentShort.username}</span>
             <span className="text-white/60 text-xs">{currentShort.likes} viewers</span>
           </div>
           <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-full">
@@ -150,16 +199,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         </div>
       </div>
 
-      {/* Swipe areas (invisible) */}
-      <div
-        className="absolute top-0 left-0 right-0 h-1/2 z-5"
-        onClick={handleSwipeDown}
-      />
-      <div
-        className="absolute bottom-1/3 left-0 right-0 h-1/3 z-5"
-        onClick={handleSwipeUp}
-      />
-
       {/* Progress indicators */}
       <div className="absolute top-12 left-4 right-4 flex gap-1 z-10">
         {shorts.map((_, idx) => (
@@ -170,6 +209,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             }`}
           />
         ))}
+      </div>
+
+      {/* Swipe hint */}
+      <div className="absolute bottom-32 left-1/2 -translate-x-1/2 text-white/40 text-xs animate-pulse z-10">
+        Swipe up for next
       </div>
     </motion.div>
   );
