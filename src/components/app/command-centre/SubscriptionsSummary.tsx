@@ -1,5 +1,6 @@
-import { TrendingUp, Info, Settings2, Coins, Check } from 'lucide-react';
+import { TrendingUp, Info, Settings2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 const tierData = [
   { tier: 'Active subscribers', count: 72, active: true },
@@ -44,7 +45,7 @@ export function SubscriptionsSummary() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-2xl font-bold text-emerald-400">169,009</span>
-          <Coins className="w-5 h-5 text-yellow-500" />
+          <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
         </div>
         <p className="text-zinc-500 text-sm mt-1">You generated <span className="text-white">140,277.47 DeHub</span> last month.</p>
       </div>
