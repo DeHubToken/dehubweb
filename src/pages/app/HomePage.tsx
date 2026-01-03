@@ -224,14 +224,14 @@ export default function HomePage() {
    */
   const handleTabClick = (tabValue: string) => {
     if (tabValue === activeTab) {
-      // Same tab clicked - scroll to top and refresh
+      // Same tab clicked - always scroll to top
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      setRefreshKey(prev => prev + 1);
       
       if (tabValue === 'home') {
-        // Home tab - show no new posts toast
+        // Home tab - refresh feed and show no new posts toast
+        setRefreshKey(prev => prev + 1);
         setTimeout(() => {
           toast.info('No new posts', {
             description: 'Check back later for fresh content',
