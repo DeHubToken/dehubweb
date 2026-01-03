@@ -98,6 +98,7 @@ export interface ShortVideo extends BaseFeedItem {
   verified: boolean;
   likes: string;
   thumbnail: string;
+  videoUrl: string;
   description?: string;
   sound?: string;
   comments?: string;
