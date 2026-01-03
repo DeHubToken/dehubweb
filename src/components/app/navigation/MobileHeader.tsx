@@ -40,7 +40,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         {/* Notifications Button */}
         <button
           onClick={() => navigate('/app/notifications')}
-          className={`p-2 rounded-full transition-colors ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'hover:bg-zinc-800 text-zinc-400'}`}
+          className={`p-2 rounded-full transition-colors ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'text-zinc-400'}`}
           aria-label="Notifications"
         >
           <Bell className="w-5 h-5" />
@@ -50,7 +50,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         <Drawer open={isOpen} onOpenChange={onToggle}>
           <DrawerTrigger asChild>
             <button
-              className="p-2 rounded-full hover:bg-zinc-800 transition-colors"
+              className="p-2 rounded-full transition-colors"
               aria-label="Toggle menu"
             >
               <Menu className="w-6 h-6 text-white" />
