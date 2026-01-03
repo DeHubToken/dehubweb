@@ -158,7 +158,7 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
             {/* Right Side Actions */}
-            <div className="absolute right-2 bottom-20 flex flex-col items-center gap-4">
+            <div className="absolute right-2 bottom-16 flex flex-col items-center gap-3">
               <div className="relative">
                 <Avatar className="w-10 h-10 border-2 border-white">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.username}`} />
@@ -170,33 +170,33 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
               </div>
 
               <button className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 bg-zinc-800/60 rounded-full flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-white" />
+                <div className="w-9 h-9 bg-zinc-800/60 rounded-full flex items-center justify-center">
+                  <Heart className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white text-xs font-medium">{short.likes}</span>
+                <span className="text-white text-[10px] font-medium">{short.likes}</span>
               </button>
 
               <button className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 bg-zinc-800/60 rounded-full flex items-center justify-center">
-                  <MessageCircle className="w-5 h-5 text-white" />
+                <div className="w-9 h-9 bg-zinc-800/60 rounded-full flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white text-xs font-medium">{short.comments}</span>
+                <span className="text-white text-[10px] font-medium">{short.comments}</span>
               </button>
 
               <button className="flex flex-col items-center gap-1">
-                <div className="w-10 h-10 bg-zinc-800/60 rounded-full flex items-center justify-center">
-                  <Share className="w-5 h-5 text-white" />
+                <div className="w-9 h-9 bg-zinc-800/60 rounded-full flex items-center justify-center">
+                  <Share className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white text-xs font-medium">{short.shares}</span>
+                <span className="text-white text-[10px] font-medium">{short.shares}</span>
               </button>
 
-              <button className="w-8 h-8 rounded-full border-2 border-white overflow-hidden animate-spin" style={{ animationDuration: '3s' }}>
+              <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden">
                 <img
                   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.sound}`}
                   alt=""
                   className="w-full h-full object-cover"
                 />
-              </button>
+              </div>
             </div>
 
             {/* Bottom Info */}
