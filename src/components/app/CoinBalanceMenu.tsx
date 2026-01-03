@@ -131,9 +131,9 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
   );
 
   const coinButton = (
-    <div className={`flex items-center gap-1.5 bg-zinc-900 rounded-full cursor-pointer hover:bg-zinc-800 transition-colors ${variant === 'desktop' ? 'px-2.5 py-1.5' : 'px-2 py-1'}`}>
-      <img src={dehubCoin} alt="coins" className={variant === 'desktop' ? 'h-5 w-5' : 'h-4 w-4'} />
-      <span className={`font-semibold text-white ${variant === 'desktop' ? 'text-sm' : 'text-xs'}`}>
+    <div className={`flex items-center gap-1.5 cursor-pointer transition-colors ${variant === 'desktop' ? 'bg-zinc-900 rounded-full px-2.5 py-1.5 hover:bg-zinc-800' : 'p-2 rounded-full hover:bg-zinc-800'}`}>
+      <img src={dehubCoin} alt="coins" className={variant === 'desktop' ? 'h-5 w-5' : 'h-5 w-5'} />
+      <span className={`font-semibold text-white ${variant === 'desktop' ? 'text-sm' : 'text-sm'}`}>
         {balance.toLocaleString()}
       </span>
     </div>
