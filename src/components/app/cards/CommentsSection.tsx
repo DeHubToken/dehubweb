@@ -329,35 +329,6 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
           </DropdownMenu>
         </div>
 
-        {/* New Comment Input */}
-        <div className="flex gap-2 mb-3">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser" />
-            <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 flex gap-2">
-            <Input
-              placeholder={activeTab === 'replies' ? 'Add a reply...' : 'Add a quote...'}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
-              onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
-            />
-            <button
-              onClick={handlePostComment}
-              disabled={!newComment.trim()}
-              className={cn(
-                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                newComment.trim()
-                  ? "bg-blue-500 text-white hover:bg-blue-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
-              )}
-            >
-              Post
-            </button>
-          </div>
-        </div>
-
         {/* Comments List */}
         <TabsContent value="replies" className="mt-0">
           <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
@@ -398,6 +369,35 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             </AnimatePresence>
           </div>
         </TabsContent>
+
+        {/* New Comment Input - at the bottom */}
+        <div className="flex gap-2 mt-3 pt-3 border-t border-zinc-800">
+          <Avatar className="w-8 h-8">
+            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser" />
+            <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 flex gap-2">
+            <Input
+              placeholder={activeTab === 'replies' ? 'Add a reply...' : 'Add a quote...'}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+              onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
+            />
+            <button
+              onClick={handlePostComment}
+              disabled={!newComment.trim()}
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                newComment.trim()
+                  ? "bg-blue-500 text-white hover:bg-blue-600"
+                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+              )}
+            >
+              Post
+            </button>
+          </div>
+        </div>
       </Tabs>
     </motion.div>
   );
