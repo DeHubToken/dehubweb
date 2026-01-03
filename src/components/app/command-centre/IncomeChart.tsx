@@ -51,18 +51,35 @@ export function IncomeChart() {
         ))}
       </div>
 
-      {/* Donut Chart */}
-      <div className="flex items-center justify-center">
-        <div className="relative w-48 h-48">
+      {/* Donut Chart with Legend */}
+      <div className="flex items-center justify-center gap-6">
+        {/* Legend - Left side */}
+        <div className="space-y-3">
+          {data.map((item, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: item.color }} 
+              />
+              <span className="text-sm text-zinc-300">
+                <span className="font-medium" style={{ color: item.color }}>{item.value}%</span>
+                {' '}{item.name}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Chart */}
+        <div className="w-40 h-40">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={55}
-                outerRadius={80}
-                paddingAngle={2}
+                innerRadius={45}
+                outerRadius={70}
+                paddingAngle={3}
                 dataKey="value"
               >
                 {data.map((entry, index) => (
@@ -71,11 +88,6 @@ export function IncomeChart() {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          
-          {/* Legend overlays */}
-          <div className="absolute top-2 left-0 text-xs text-yellow-400">29% Tips</div>
-          <div className="absolute top-2 right-0 text-xs text-red-400">35% Deposits</div>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-emerald-400">47% Subscriptions</div>
         </div>
       </div>
     </div>
