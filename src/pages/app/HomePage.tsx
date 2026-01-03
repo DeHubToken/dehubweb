@@ -224,13 +224,27 @@ export default function HomePage() {
    */
   const handleTabClick = (tabValue: string) => {
     if (tabValue === activeTab) {
-      // Same tab clicked - refresh and toggle specific filter
-      setRefreshKey(prev => prev + 1);
+      // Same tab clicked - scroll to top and refresh
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+      document.body.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      setRefreshKey(prev => prev + 1);
       
-      if (tabValue === 'shorts') setShowShortsFilters(prev => !prev);
-      else if (tabValue === 'images') setShowImagesCollage(prev => !prev);
-      else if (tabValue === 'videos') setShowVideosFilters(prev => !prev);
+      if (tabValue === 'home') {
+        // Home tab - show no new posts toast
+        setTimeout(() => {
+          toast.info('No new posts', {
+            description: 'Check back later for fresh content',
+            duration: 2000,
+          });
+        }, 300);
+      } else if (tabValue === 'shorts') {
+        setShowShortsFilters(prev => !prev);
+      } else if (tabValue === 'images') {
+        setShowImagesCollage(prev => !prev);
+      } else if (tabValue === 'videos') {
+        setShowVideosFilters(prev => !prev);
+      }
     } else {
       setActiveTab(tabValue);
       resetFilters();
