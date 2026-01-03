@@ -125,31 +125,31 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         
         {/* Left Side Panel - Desktop Only */}
         {!isMobile && (
-          <div className="w-[300px] h-[calc(100vh-80px)] max-h-[800px] flex flex-col justify-end pb-4">
-            {/* Creator Info */}
-            <div className="mb-4">
-              <div className="flex items-center gap-3 mb-3">
+          <div className="w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
+            {/* Creator Info - Top */}
+            <div className="bg-zinc-900/50 rounded-2xl p-4 mb-3">
+              <div className="flex items-center gap-3">
                 <Avatar className="w-12 h-12 border-2 border-white/20">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentShort.username}`} />
                   <AvatarFallback>{currentShort.username[0]}</AvatarFallback>
                 </Avatar>
-                <div>
+                <div className="flex-1 min-w-0">
                   <p className="text-white font-semibold">@{currentShort.username}</p>
                   <p className="text-white/60 text-sm">{currentShort.likes} likes</p>
                 </div>
-                <button className="ml-auto bg-white text-black text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-white/90 transition-colors">
+                <button className="bg-white text-black text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-white/90 transition-colors">
                   Follow
                 </button>
               </div>
               {currentShort.description && (
-                <p className="text-white/80 text-sm">{currentShort.description}</p>
+                <p className="text-white/80 text-sm mt-3">{currentShort.description}</p>
               )}
             </div>
 
-            {/* Comments */}
-            <div className="bg-zinc-900/50 rounded-2xl p-4 max-h-[300px] overflow-y-auto scrollbar-hide">
-              <p className="text-white/60 text-xs mb-3">Comments</p>
-              <div className="space-y-3">
+            {/* Comments - Rest of panel */}
+            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-4 flex flex-col min-h-0">
+              <p className="text-white/60 text-xs mb-3 flex-shrink-0">Comments</p>
+              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3">
                 {MOCK_COMMENTS.map((c) => (
                   <div key={c.id} className="flex items-start gap-2">
                     <Avatar className="w-7 h-7 flex-shrink-0">
@@ -162,6 +162,37 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                     </div>
                   </div>
                 ))}
+                {/* More comments for scrolling */}
+                {[...Array(10)].map((_, i) => (
+                  <div key={`extra-${i}`} className="flex items-start gap-2">
+                    <Avatar className="w-7 h-7 flex-shrink-0">
+                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=extra${i}`} />
+                      <AvatarFallback>U</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-white text-sm font-medium">user_{i + 100}</span>
+                      <p className="text-white/70 text-sm">Great content! 🔥</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Comment input */}
+              <div className="flex-shrink-0 mt-3 pt-3 border-t border-white/10">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="flex-1 bg-zinc-800 text-white placeholder-white/40 text-sm rounded-full px-4 py-2 border border-white/10 focus:outline-none focus:border-white/30"
+                  />
+                  {comment && (
+                    <button className="text-primary">
+                      <Send className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
