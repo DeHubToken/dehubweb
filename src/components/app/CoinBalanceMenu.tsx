@@ -475,14 +475,8 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         {coinButton}
       </DrawerTrigger>
       <DrawerContent glass className="px-4 pb-8">
-        <DrawerHeader className="mb-2">
-          <DrawerTitle className="text-white flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <img src={dehubCoin} alt="coins" className="w-6 h-6" />
-              {balance.toLocaleString()} Coins
-            </div>
-            <span className="text-zinc-400 text-sm">${dollarValue}</span>
-          </DrawerTitle>
+        <DrawerHeader className="sr-only">
+          <DrawerTitle>Coin Menu</DrawerTitle>
         </DrawerHeader>
         {getMenuContent()}
       </DrawerContent>
