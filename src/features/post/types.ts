@@ -1,8 +1,15 @@
+export interface AudioFile {
+  blob: Blob;
+  url: string;
+  duration: number;
+}
+
 export interface MediaFile {
   file: File;
   preview: string;
   type: 'image' | 'video';
   duration?: number;
+  audio?: AudioFile;
 }
 
 export type Currency = 'USD' | 'DHB';
@@ -45,6 +52,8 @@ export interface PostFormActions {
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   removeMedia: (index: number) => void;
+  addAudioToMedia: (index: number, audio: AudioFile) => void;
+  removeAudioFromMedia: (index: number) => void;
   handleEnhanceWithAI: () => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;
