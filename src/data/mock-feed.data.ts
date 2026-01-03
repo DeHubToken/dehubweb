@@ -173,4 +173,8 @@ export const SAMPLE_LIVE: LiveStream = {
 /**
  * Stories data for the stories bar
  */
-export const STORY_USERS = ['alice', 'bob', 'charlie', 'diana', 'evan', 'fiona'];
+export const STORY_USERS = [
+  'alice', 'bob', 'charlie', 'diana', 'evan', 'fiona',
+  'grace', 'henry', 'ivy', 'jack', 'kate', 'leo',
+  'maya', 'noah', 'olivia', 'paul'
+];
