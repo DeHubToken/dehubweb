@@ -53,7 +53,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
               className="p-2 rounded-full transition-colors"
               aria-label="Toggle menu"
             >
-              <Menu className="w-6 h-6 text-white" />
+              <Menu className="w-6 h-6 text-zinc-400" />
             </button>
           </DrawerTrigger>
           <DrawerContent glass className="max-h-[85vh]">
