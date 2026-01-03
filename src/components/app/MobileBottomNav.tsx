@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings } from 'lucide-react';
+import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 
@@ -9,6 +9,7 @@ const ALL_NAV_ITEMS = [
   { icon: Mail, label: 'Messages', path: '/app/messages' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: User, label: 'Profile', path: '/app/profile' },
+  { icon: LayoutDashboard, label: 'Command Centre', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
