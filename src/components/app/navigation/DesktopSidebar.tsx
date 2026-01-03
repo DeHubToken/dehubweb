@@ -37,18 +37,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
       {/* Navigation Bento */}
       <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
-        {NAV_ITEMS.map((item) => {
-          const isActive =
-            item.path === '/app'
-              ? location.pathname === '/app'
-              : !item.external && location.pathname.startsWith(item.path);
+        {NAV_ITEMS.filter((item) => item.path !== '/app').map((item) => {
+          const isActive = !item.external && location.pathname.startsWith(item.path);
 
           return (
             <SidebarNavItem
               key={item.label}
               item={item}
               isActive={isActive}
-              isHome={item.path === '/app'}
+              isHome={false}
               currentPath={location.pathname}
               variant="desktop"
             />
