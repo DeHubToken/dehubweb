@@ -139,8 +139,21 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
     </div>
   );
 
+  // Mock dollar value calculation (e.g., 1 coin = $0.05)
+  const dollarValue = (balance * 0.05).toFixed(2);
+
   const mainMenuContent = (
     <div className="space-y-1">
+      {/* Balance display for desktop */}
+      <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src={dehubCoin} alt="coins" className="w-5 h-5" />
+            <span className="text-white font-semibold">{balance.toLocaleString()}</span>
+          </div>
+          <span className="text-zinc-400 text-sm">${dollarValue}</span>
+        </div>
+      </div>
       <button
         onClick={() => setMenuView('buy')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
@@ -463,9 +476,12 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
       </DrawerTrigger>
       <DrawerContent glass className="px-4 pb-8">
         <DrawerHeader className="mb-2">
-          <DrawerTitle className="text-white flex items-center gap-2">
-            <img src={dehubCoin} alt="coins" className="w-6 h-6" />
-            {balance.toLocaleString()} Coins
+          <DrawerTitle className="text-white flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <img src={dehubCoin} alt="coins" className="w-6 h-6" />
+              {balance.toLocaleString()} Coins
+            </div>
+            <span className="text-zinc-400 text-sm">${dollarValue}</span>
           </DrawerTitle>
         </DrawerHeader>
         {getMenuContent()}
