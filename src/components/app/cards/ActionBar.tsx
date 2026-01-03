@@ -13,8 +13,15 @@
  * ```
  */
 
-import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Bookmark } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface ActionBarProps {
   /** Handler for like action */
@@ -25,6 +32,10 @@ interface ActionBarProps {
   onComment?: () => void;
   /** Handler for share action */
   onShare?: () => void;
+  /** Handler for repost action */
+  onRepost?: () => void;
+  /** Handler for quote action */
+  onQuote?: () => void;
   /** Handler for bookmark action */
   onBookmark?: () => void;
   /** Additional CSS classes */
@@ -37,11 +48,28 @@ export function ActionBar({
   onLike, 
   onDislike, 
   onComment, 
-  onShare, 
+  onShare,
+  onRepost,
+  onQuote,
   onBookmark,
   className,
   showBorder = false 
 }: ActionBarProps) {
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('Link copied to clipboard');
+  };
+
+  const handleRepost = () => {
+    onRepost?.();
+    toast.success('Reposted!');
+  };
+
+  const handleQuote = () => {
+    onQuote?.();
+    toast.success('Quote created!');
+  };
+
   return (
     <div className={cn(
       "p-3",
@@ -72,13 +100,41 @@ export function ActionBar({
           >
             <MessageCircle className="w-5 h-5" />
           </button>
-          <button 
-            onClick={onShare}
-            className="text-white hover:text-zinc-400 transition-colors"
-            aria-label="Share"
-          >
-            <Share2 className="w-5 h-5" />
-          </button>
+          
+          {/* Share Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button 
+                className="text-white hover:text-zinc-400 transition-colors"
+                aria-label="Share"
+              >
+                <Share2 className="w-5 h-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
+              <DropdownMenuItem 
+                onClick={handleRepost}
+                className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+              >
+                <Repeat2 className="w-4 h-4" />
+                Repost
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleQuote}
+                className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+              >
+                <Quote className="w-4 h-4" />
+                Quote
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleCopyLink}
+                className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+              >
+                <Link className="w-4 h-4" />
+                Copy Link
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Bookmark action */}
