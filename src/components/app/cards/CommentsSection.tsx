@@ -312,12 +312,6 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
       transition={{ duration: 0.2 }}
       className="mt-3 pt-3 border-t border-zinc-800"
     >
-      {/* Header with close button */}
-      <div className="flex items-center justify-end mb-3">
-        <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors">
-          <X className="w-4 h-4" />
-        </button>
-      </div>
 
       {/* Search & Sort - moved above tabs */}
       <div className="flex gap-2 mb-3">
