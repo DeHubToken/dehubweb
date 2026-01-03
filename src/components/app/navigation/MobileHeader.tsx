@@ -56,8 +56,8 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
               <Menu className="w-6 h-6 text-white" />
             </button>
           </DrawerTrigger>
-          <DrawerContent glass className="max-h-[85vh] flex flex-col">
-            <div className="flex-1 overflow-y-auto p-4">
+          <DrawerContent glass className="max-h-[85vh]">
+            <div className="p-4 pb-8 overflow-y-auto">
               {children}
             </div>
           </DrawerContent>
