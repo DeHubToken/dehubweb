@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, Share, Music2, Plus } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Music2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TikTokVideo {
@@ -157,47 +156,6 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-            {/* Right Side Actions */}
-            <div className="absolute right-2 bottom-16 flex flex-col items-center gap-3">
-              <div className="relative">
-                <Avatar className="w-10 h-10 border-2 border-white">
-                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.username}`} />
-                  <AvatarFallback className="bg-zinc-700">{short.username[0]}</AvatarFallback>
-                </Avatar>
-                <button className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                  <Plus className="w-3 h-3 text-white" />
-                </button>
-              </div>
-
-              <button className="flex flex-col items-center gap-1">
-                <div className="w-9 h-9 bg-zinc-800/60 rounded-full flex items-center justify-center">
-                  <Heart className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-white text-[10px] font-medium">{short.likes}</span>
-              </button>
-
-              <button className="flex flex-col items-center gap-1">
-                <div className="w-9 h-9 bg-zinc-800/60 rounded-full flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-white text-[10px] font-medium">{short.comments}</span>
-              </button>
-
-              <button className="flex flex-col items-center gap-1">
-                <div className="w-9 h-9 bg-zinc-800/60 rounded-full flex items-center justify-center">
-                  <Share className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-white text-[10px] font-medium">{short.shares}</span>
-              </button>
-
-              <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden">
-                <img
-                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.sound}`}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
 
             {/* Bottom Info */}
             <div className="absolute bottom-2 left-2 right-14">
