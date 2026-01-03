@@ -127,22 +127,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         {!isMobile && (
           <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
-            <div className="bg-zinc-900/50 rounded-2xl p-4 mb-3">
-              <div className="flex items-center gap-3">
-                <Avatar className="w-12 h-12 border-2 border-white/20">
+            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
+              <div className="flex items-center gap-2 lg:gap-3">
+                <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0">
                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentShort.username}`} />
                   <AvatarFallback>{currentShort.username[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold">@{currentShort.username}</p>
-                  <p className="text-white/60 text-sm">{currentShort.likes} likes</p>
+                  <p className="text-white font-semibold text-sm lg:text-base truncate">@{currentShort.username}</p>
+                  <p className="text-white/60 text-xs lg:text-sm">{currentShort.likes} likes</p>
                 </div>
-                <button className="bg-white text-black text-sm font-semibold px-4 py-1.5 rounded-full hover:bg-white/90 transition-colors">
+                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-full hover:bg-white/90 transition-colors flex-shrink-0">
                   Follow
                 </button>
               </div>
               {currentShort.description && (
-                <p className="text-white/80 text-sm mt-3">{currentShort.description}</p>
+                <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
               )}
             </div>
 
