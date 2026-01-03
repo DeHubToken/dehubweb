@@ -58,25 +58,36 @@ const SWIPE_THRESHOLD = 50;
 
 /**
  * Mixed content feed for the home tab.
- * Displays a curated mix of all content types.
+ * Displays a curated mix of all content types, shuffled on refresh.
  */
-function HomeFeed() {
+function HomeFeed({ shuffleKey }: { shuffleKey: number }) {
+  // Create shuffled content based on key
+  const feedItems = [
+    { type: 'live', component: <LiveCard stream={SAMPLE_LIVE} key="live" /> },
+    { type: 'post1', component: <PostCard post={MOCK_POSTS[0]} key="post1" /> },
+    { type: 'video', component: <VideoCard video={SAMPLE_VIDEO} key="video" /> },
+    { type: 'image1', component: <ImageCard post={SAMPLE_IMAGES[0]} key="image1" /> },
+    { type: 'post2', component: <PostCard post={MOCK_POSTS[1]} key="post2" /> },
+    { type: 'image2', component: <ImageCard post={SAMPLE_IMAGES[1]} key="image2" /> },
+    { type: 'post3', component: <PostCard post={MOCK_POSTS[2]} key="post3" /> },
+  ];
+
+  // Shuffle based on the key - seeded shuffle for consistency during same session
+  const shuffled = [...feedItems].sort(() => {
+    const seed = Math.sin(shuffleKey * 9999) * 10000;
+    return seed - Math.floor(seed) - 0.5;
+  });
+
+  // Insert shorts reel at a random position (after index 3-5)
+  const shortsPosition = 3 + (shuffleKey % 3);
+
   return (
     <div className="p-2 sm:p-3 space-y-3">
       <StoriesBar users={STORY_USERS} />
       
-      {/* Mixed content feed - samples from all types */}
-      <LiveCard stream={SAMPLE_LIVE} />
-      <PostCard post={MOCK_POSTS[0]} />
-      <VideoCard video={SAMPLE_VIDEO} />
-      <ImageCard post={SAMPLE_IMAGES[0]} />
-      <PostCard post={MOCK_POSTS[1]} />
-      
-      {/* Shorts reel after ~5 items */}
+      {shuffled.slice(0, shortsPosition).map(item => item.component)}
       <ShortsReel shorts={SAMPLE_SHORTS} />
-      
-      <ImageCard post={SAMPLE_IMAGES[1]} />
-      <PostCard post={MOCK_POSTS[2]} />
+      {shuffled.slice(shortsPosition).map(item => item.component)}
     </div>
   );
 }
@@ -192,17 +203,9 @@ export default function HomePage() {
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      if (activeTab === 'home') {
-        // Already on home, show toast after a brief delay
-        setTimeout(() => {
-          toast.info('No new posts', {
-            description: 'Check back later for fresh content',
-            duration: 2000,
-          });
-        }, 300);
-      }
       setActiveTab('home');
       resetFilters();
+      // Increment refresh key to trigger re-shuffle
       setRefreshKey(prev => prev + 1);
     };
 
@@ -230,14 +233,8 @@ export default function HomePage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
       if (tabValue === 'home') {
-        // Home tab - refresh feed and show no new posts toast
+        // Home tab - refresh/shuffle feed
         setRefreshKey(prev => prev + 1);
-        setTimeout(() => {
-          toast.info('No new posts', {
-            description: 'Check back later for fresh content',
-            duration: 2000,
-          });
-        }, 300);
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
       } else if (tabValue === 'images') {
@@ -305,7 +302,7 @@ export default function HomePage() {
       case 'live':
         return <LiveFeed key={refreshKey} />;
       default:
-        return <HomeFeed key={refreshKey} />;
+        return <HomeFeed shuffleKey={refreshKey} />;
     }
   };
 
