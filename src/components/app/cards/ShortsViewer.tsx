@@ -31,7 +31,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [comment, setComment] = useState('');
   const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   const currentShort = shorts[currentIndex];
@@ -56,6 +58,48 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     }
   };
 
+  // Handle mouse wheel scrolling
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      if (isScrolling) return;
+      
+      const threshold = 50;
+      if (Math.abs(e.deltaY) < threshold) return;
+
+      setIsScrolling(true);
+      
+      if (e.deltaY > 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+
+      // Debounce to prevent rapid scrolling
+      setTimeout(() => setIsScrolling(false), 500);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [currentIndex, isScrolling]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown' || e.key === 'j') goToNext();
+      else if (e.key === 'ArrowUp' || e.key === 'k') goToPrev();
+      else if (e.key === 'Escape') onClose();
+      else if (e.key === 'm') toggleMute();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex]);
+
   const handleDragEnd = (_: any, info: PanInfo) => {
     if (info.offset.y < -100) goToNext();
     else if (info.offset.y > 100) goToPrev();
@@ -70,6 +114,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
