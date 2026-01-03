@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Mail, Plus, Bell, User, Search, Trophy, Bookmark, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
@@ -16,9 +16,19 @@ const ALL_NAV_ITEMS = [
 
 export function MobileBottomNav() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleNavClick = (e: React.MouseEvent, path: string) => {
+    // If clicking Home while already on Home, trigger refresh
+    if (path === '/app' && location.pathname === '/app') {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('home-refresh'));
+      navigate('/app');
+    }
+  };
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -58,6 +68,7 @@ export function MobileBottomNav() {
                   <NavLink
                     key={item.path}
                     to={item.path}
+                    onClick={(e) => handleNavClick(e, item.path)}
                     className={cn(
                       'flex items-center justify-center h-14 flex-1 transition-colors',
                       index === 0 && 'rounded-l-2xl',
