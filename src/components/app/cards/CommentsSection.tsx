@@ -27,9 +27,8 @@ import {
 // TYPES
 // ============================================================================
 
-interface Comment {
+export interface Comment {
   id: string;
-  userId: string;
   username: string;
   avatar: string;
   text: string;
@@ -40,27 +39,106 @@ interface Comment {
 
 interface CommentsSectionProps {
   onClose: () => void;
-  contentId?: string;
+  initialReplies?: Comment[];
+  initialQuotes?: Comment[];
 }
 
 // ============================================================================
-// MOCK DATA
+// AVATAR POOL
 // ============================================================================
 
-const MOCK_REPLIES: Comment[] = [
-  { id: 'r1', userId: 'u1', username: 'viewer_123', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face', text: 'Great content! Really helpful for my project.', likes: 42, timeAgo: '2h ago' },
-  { id: 'r2', userId: 'u2', username: 'tech_fan', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face', text: 'Thanks for sharing this! Been looking for exactly this.', likes: 18, timeAgo: '5h ago' },
-  { id: 'r3', userId: 'u3', username: 'dev_master', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face', text: 'Can you do a follow-up on advanced techniques?', likes: 156, timeAgo: '1d ago' },
-  { id: 'r4', userId: 'u4', username: 'code_ninja', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face', text: 'This is exactly what I needed. Subscribed!', likes: 8, timeAgo: '2d ago' },
-  { id: 'r5', userId: 'u5', username: 'web_wizard', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face', text: 'The explanation at 5:30 was perfect.', likes: 234, timeAgo: '3d ago' },
-  { id: 'r6', userId: 'u6', username: 'learner_42', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face', text: 'Finally understand this concept!', likes: 67, timeAgo: '4d ago' },
+const AVATAR_POOL = [
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=100&h=100&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=100&h=100&fit=crop&crop=face',
 ];
 
-const MOCK_QUOTES: Comment[] = [
-  { id: 'q1', userId: 'u7', username: 'blogger_joe', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face', text: '"Building a Full Stack App" - This changed how I approach development. A must-watch for anyone starting out.', likes: 89, timeAgo: '1h ago' },
-  { id: 'q2', userId: 'u8', username: 'startup_sarah', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face', text: 'As mentioned in this video, "The key is to start simple and iterate." Words to live by.', likes: 312, timeAgo: '6h ago' },
-  { id: 'q3', userId: 'u9', username: 'indie_dev', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face', text: 'Shared this with my team. The section on architecture is gold.', likes: 45, timeAgo: '2d ago' },
+const USERNAMES = [
+  'crypto_whale', 'nft_hunter', 'web3_dev', 'pixel_artist', 'code_ninja',
+  'design_guru', 'tech_savvy', 'future_builder', 'digital_nomad', 'chain_master',
+  'block_smith', 'token_trader', 'meta_verse', 'ai_enthusiast', 'game_changer',
+  'trend_setter', 'vibe_check', 'moon_shot', 'diamond_hands', 'rocket_fuel'
 ];
+
+const REPLY_TEMPLATES = [
+  "This is absolutely incredible! 🔥",
+  "Best content I've seen today",
+  "Can't believe how good this is",
+  "Sharing this with everyone I know",
+  "The quality here is insane",
+  "You never disappoint! 👏",
+  "This deserves way more attention",
+  "Literally made my day",
+  "How do you even do this??",
+  "Take my follow, you earned it",
+  "Underrated content right here",
+  "Been following for months, still amazed",
+  "This is why I'm on this app",
+  "Absolutely legendary stuff",
+  "Saving this for later 💾",
+  "The vibes are immaculate ✨",
+  "You're going places with this",
+  "Next level content creation",
+  "This hit different 💯",
+  "Pure gold, nothing less"
+];
+
+const QUOTE_TEMPLATES = [
+  "\"This content\" - shared with my whole team, they loved it",
+  "Reposting because everyone needs to see this masterpiece",
+  "When they said \"quality over quantity\" they meant this",
+  "This is exactly what I've been looking for. Quoted for visibility.",
+  "Adding this to my collection of goated content",
+  "\"Peak content\" - and I stand by that quote",
+  "Sharing this gem with the timeline",
+  "This deserves a spotlight quote for sure"
+];
+
+const TIME_OPTIONS = ['Just now', '1m ago', '5m ago', '15m ago', '30m ago', '1h ago', '2h ago', '4h ago', '8h ago', '1d ago', '2d ago', '3d ago', '1w ago'];
+
+export function generateRandomComments(count: number, seed: string): Comment[] {
+  const comments: Comment[] = [];
+  for (let i = 0; i < count; i++) {
+    const seedNum = seed.charCodeAt(0) + i;
+    comments.push({
+      id: `${seed}-reply-${i}`,
+      username: USERNAMES[(seedNum * 7) % USERNAMES.length],
+      avatar: AVATAR_POOL[(seedNum * 3) % AVATAR_POOL.length],
+      text: REPLY_TEMPLATES[(seedNum * 11) % REPLY_TEMPLATES.length],
+      likes: Math.floor(Math.pow(Math.random(), 2) * 500) + (seedNum % 50),
+      timeAgo: TIME_OPTIONS[(seedNum * 2) % TIME_OPTIONS.length],
+    });
+  }
+  return comments.sort((a, b) => b.likes - a.likes);
+}
+
+export function generateRandomQuotes(count: number, seed: string): Comment[] {
+  const quotes: Comment[] = [];
+  for (let i = 0; i < count; i++) {
+    const seedNum = seed.charCodeAt(0) + i + 100;
+    quotes.push({
+      id: `${seed}-quote-${i}`,
+      username: USERNAMES[(seedNum * 5) % USERNAMES.length],
+      avatar: AVATAR_POOL[(seedNum * 4) % AVATAR_POOL.length],
+      text: QUOTE_TEMPLATES[(seedNum * 3) % QUOTE_TEMPLATES.length],
+      likes: Math.floor(Math.pow(Math.random(), 2) * 300) + (seedNum % 30),
+      timeAgo: TIME_OPTIONS[(seedNum * 3) % TIME_OPTIONS.length],
+    });
+  }
+  return quotes.sort((a, b) => b.likes - a.likes);
+}
 
 const SORT_OPTIONS = [
   { value: 'recent', label: 'Most Recent' },
@@ -112,12 +190,12 @@ function CommentItem({ comment, onLike }: CommentItemProps) {
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ onClose }: CommentsSectionProps) {
+export function CommentsSection({ onClose, initialReplies = [], initialQuotes = [] }: CommentsSectionProps) {
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes'>('replies');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'liked'>('recent');
-  const [replies, setReplies] = useState(MOCK_REPLIES);
-  const [quotes, setQuotes] = useState(MOCK_QUOTES);
+  const [replies, setReplies] = useState<Comment[]>(initialReplies);
+  const [quotes, setQuotes] = useState<Comment[]>(initialQuotes);
   const [newComment, setNewComment] = useState('');
 
   // Filter and sort comments
@@ -161,7 +239,6 @@ export function CommentsSection({ onClose }: CommentsSectionProps) {
 
     const newItem: Comment = {
       id: `new-${Date.now()}`,
-      userId: 'current-user',
       username: 'you',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser',
       text: newComment,

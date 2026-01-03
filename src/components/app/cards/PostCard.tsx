@@ -9,8 +9,11 @@
  * ```
  */
 
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
+import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
 import type { TextPost } from '@/types/feed.types';
 
 interface PostCardProps {
@@ -18,6 +21,8 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const [showComments, setShowComments] = useState(false);
+
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
       <CardHeader
@@ -33,7 +38,20 @@ export function PostCard({ post }: PostCardProps) {
         <p className="text-zinc-500 text-xs mt-2">{post.createdAt}</p>
       </div>
 
-      <ActionBar showBorder />
+      <ActionBar showBorder onComment={() => setShowComments(!showComments)} />
+
+      {/* Comments Section */}
+      <div className="px-3 pb-3">
+        <AnimatePresence>
+          {showComments && (
+            <CommentsSection 
+              onClose={() => setShowComments(false)} 
+              initialReplies={generateRandomComments(15, post.id)}
+              initialQuotes={generateRandomQuotes(5, post.id)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
