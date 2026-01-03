@@ -1,13 +1,30 @@
-import { useState } from 'react';
-import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Search, SlidersHorizontal, X, ChevronDown, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING } from '@/constants/app.constants';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
+
+// Mock search results
+const MOCK_USERS = [
+  { id: '1', name: 'Alex Johnson', handle: '@alexj', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face', verified: true },
+  { id: '2', name: 'Sarah Miller', handle: '@sarahm', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face', verified: true },
+  { id: '3', name: 'Mike Chen', handle: '@mikechen', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face', verified: false },
+  { id: '4', name: 'Emma Wilson', handle: '@emmaw', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face', verified: true },
+  { id: '5', name: 'David Park', handle: '@davidp', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face', verified: false },
+];
+
+const MOCK_POSTS = [
+  { id: '1', author: 'Alex Johnson', handle: '@alexj', content: 'Just discovered an amazing new fitness routine! 💪', likes: 234, time: '2h ago' },
+  { id: '2', author: 'Sarah Miller', handle: '@sarahm', content: 'Cooking up something special tonight 🍳', likes: 567, time: '4h ago' },
+  { id: '3', author: 'Mike Chen', handle: '@mikechen', content: 'New music dropping soon! Stay tuned 🎵', likes: 892, time: '6h ago' },
+  { id: '4', author: 'Emma Wilson', handle: '@emmaw', content: 'Art is not what you see, but what you make others see 🎨', likes: 1203, time: '8h ago' },
+];
 
 type FilterState = {
   w2e: boolean;
@@ -114,6 +131,25 @@ export default function ExplorePage() {
     shares: 'Any',
     comments: 'Any',
   });
+
+  const isSearching = searchQuery.length >= 3;
+
+  // Filter results based on search query and active tab
+  const searchResults = useMemo(() => {
+    if (!isSearching) return { users: [], posts: [] };
+    
+    const query = searchQuery.toLowerCase();
+    
+    const users = MOCK_USERS.filter(
+      u => u.name.toLowerCase().includes(query) || u.handle.toLowerCase().includes(query)
+    );
+    
+    const posts = MOCK_POSTS.filter(
+      p => p.content.toLowerCase().includes(query) || p.author.toLowerCase().includes(query)
+    );
+    
+    return { users, posts };
+  }, [searchQuery, isSearching]);
 
   const activeFilterCount = [
     filters.w2e,
@@ -284,46 +320,145 @@ export default function ExplorePage() {
 
       {/* Content */}
       <div className="p-2 sm:p-3 space-y-2 mt-[3px]">
-        {/* Recent Searches Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Recent Searches</h2>
-          <div className="flex flex-wrap gap-2">
-            {RECENT_SEARCHES.map((term) => (
-              <button
-                key={term}
-                onClick={() => setSearchQuery(term)}
-                className="px-3 sm:px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors text-sm"
-              >
-                {term}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Trending Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
-          <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Trending</h2>
-          <div className="space-y-3">
-            {EXPLORE_TRENDING.map((item) => (
-              <div
-                key={item.tag}
-                className="flex items-center justify-between gap-4"
-              >
-                <div className="min-w-0">
-                  <p className="font-semibold text-white truncate">{item.tag}</p>
-                  <p className="text-zinc-500 text-sm">{item.postCount}</p>
+        <AnimatePresence mode="wait">
+          {isSearching ? (
+            <motion.div
+              key="search-results"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-2"
+            >
+              {/* Search Results Header */}
+              <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg sm:text-xl font-bold text-white">
+                    Results for "{searchQuery}"
+                  </h2>
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="text-zinc-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0"
-                >
-                  Follow
-                </Button>
+
+                {/* People Results */}
+                {(activeTab === 'all' || activeTab === 'people') && searchResults.users.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">People</h3>
+                    <div className="space-y-3">
+                      {searchResults.users.map((user) => (
+                        <div key={user.id} className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-10 h-10">
+                              <AvatarImage src={user.avatar} className="object-cover" />
+                              <AvatarFallback className="bg-zinc-700">{user.name[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-white font-medium flex items-center gap-1">
+                                {user.name}
+                                {user.verified && (
+                                  <span className="text-blue-400 text-xs">✓</span>
+                                )}
+                              </p>
+                              <p className="text-zinc-500 text-sm">{user.handle}</p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+                          >
+                            Follow
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Posts Results */}
+                {(activeTab === 'all' || activeTab === 'posts') && searchResults.posts.length > 0 && (
+                  <div>
+                    <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">Posts</h3>
+                    <div className="space-y-3">
+                      {searchResults.posts.map((post) => (
+                        <div key={post.id} className="p-3 bg-zinc-800 rounded-xl">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-white font-medium">{post.author}</span>
+                            <span className="text-zinc-500 text-sm">{post.handle}</span>
+                            <span className="text-zinc-600">·</span>
+                            <span className="text-zinc-500 text-sm">{post.time}</span>
+                          </div>
+                          <p className="text-zinc-300">{post.content}</p>
+                          <p className="text-zinc-500 text-sm mt-2">{post.likes} likes</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* No Results */}
+                {searchResults.users.length === 0 && searchResults.posts.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-zinc-400">No results found for "{searchQuery}"</p>
+                    <p className="text-zinc-500 text-sm mt-1">Try searching for something else</p>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="default-content"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-2"
+            >
+              {/* Recent Searches Bento */}
+              <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Recent Searches</h2>
+                <div className="flex flex-wrap gap-2">
+                  {RECENT_SEARCHES.map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => setSearchQuery(term)}
+                      className="px-3 sm:px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors text-sm"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trending Bento */}
+              <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Trending</h2>
+                <div className="space-y-3">
+                  {EXPLORE_TRENDING.map((item) => (
+                    <div
+                      key={item.tag}
+                      className="flex items-center justify-between gap-4"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-semibold text-white truncate">{item.tag}</p>
+                        <p className="text-zinc-500 text-sm">{item.postCount}</p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0"
+                      >
+                        Follow
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
