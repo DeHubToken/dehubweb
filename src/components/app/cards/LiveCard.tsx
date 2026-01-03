@@ -9,9 +9,12 @@
  * ```
  */
 
+import { useState } from 'react';
 import { Eye } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
+import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
 import type { LiveStream } from '@/types/feed.types';
 
 interface LiveCardProps {
@@ -19,6 +22,8 @@ interface LiveCardProps {
 }
 
 export function LiveCard({ stream }: LiveCardProps) {
+  const [showComments, setShowComments] = useState(false);
+
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
       <CardHeader
@@ -39,10 +44,21 @@ export function LiveCard({ stream }: LiveCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar className="p-0 mb-2" />
+        <ActionBar className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
         <p className="font-semibold text-white text-sm">{stream.viewers} watching</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
+
+        {/* Comments Section */}
+        <AnimatePresence>
+          {showComments && (
+            <CommentsSection 
+              onClose={() => setShowComments(false)} 
+              initialReplies={generateRandomComments(15, stream.id)}
+              initialQuotes={generateRandomQuotes(5, stream.id)}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

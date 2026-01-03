@@ -20,7 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
-import { CommentsSection } from '@/components/app/cards/CommentsSection';
+import { CommentsSection, generateRandomComments, generateRandomQuotes } from '@/components/app/cards/CommentsSection';
 
 // ============================================================================
 // TYPES
@@ -235,7 +235,8 @@ function VideoCardItem({
           {expandedComments === video.id && (
             <CommentsSection 
               onClose={() => onToggleComments(video.id)} 
-              contentId={video.id}
+              initialReplies={generateRandomComments(15, video.id)}
+              initialQuotes={generateRandomQuotes(5, video.id)}
             />
           )}
         </AnimatePresence>
