@@ -19,7 +19,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
   const mobileNavContent = (
     <>
-      {/* Navigation Items */}
+      {/* Navigation Items - scrollable */}
       <nav className="space-y-1">
         {NAV_ITEMS.map((item) => {
           const isActive =
@@ -41,8 +41,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         })}
       </nav>
 
-      {/* Post Button */}
-      <div className="mt-4 pt-4 border-t border-zinc-700/50">
+      {/* Post Button - fixed at bottom */}
+      <div className="sticky bottom-0 pt-4 pb-4 bg-gradient-to-t from-zinc-900 via-zinc-900 to-transparent mt-4">
         <Button 
           onClick={() => setIsPostModalOpen(true)}
           className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
