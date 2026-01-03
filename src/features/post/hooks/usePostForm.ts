@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed } from '../types';
+import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile } from '../types';
 
 interface UsePostFormReturn {
   state: PostFormState;
@@ -91,9 +91,27 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
-      URL.revokeObjectURL(prev[index].preview);
+      const item = prev[index];
+      URL.revokeObjectURL(item.preview);
+      if (item.audio) URL.revokeObjectURL(item.audio.url);
       return prev.filter((_, i) => i !== index);
     });
+  }, []);
+
+  const addAudioToMedia = useCallback((index: number, audio: AudioFile) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, audio } : m
+    ));
+  }, []);
+
+  const removeAudioFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => {
+      if (i === index && m.audio) {
+        URL.revokeObjectURL(m.audio.url);
+        return { ...m, audio: undefined };
+      }
+      return m;
+    }));
   }, []);
 
   const handleEnhanceWithAI = useCallback(async () => {
@@ -210,6 +228,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       handleImageSelect,
       handleVideoSelect,
       removeMedia,
+      addAudioToMedia,
+      removeAudioFromMedia,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,

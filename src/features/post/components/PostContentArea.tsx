@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
-import type { MediaFile } from '../types';
+import type { MediaFile, AudioFile } from '../types';
 
 interface PostContentAreaProps {
   text: string;
@@ -10,6 +10,8 @@ interface PostContentAreaProps {
   textareaRef: React.RefObject<HTMLTextAreaElement>;
   media: MediaFile[];
   onRemoveMedia: (index: number) => void;
+  onAddAudio: (index: number, audio: AudioFile) => void;
+  onRemoveAudio: (index: number) => void;
   isLive: boolean;
   canPost: boolean;
   destinations: string[];
@@ -21,6 +23,8 @@ export function PostContentArea({
   textareaRef,
   media,
   onRemoveMedia,
+  onAddAudio,
+  onRemoveAudio,
   isLive,
   canPost,
   destinations,
@@ -46,7 +50,12 @@ export function PostContentArea({
             {text.length}/280
           </span>
 
-          <PostMediaPreview media={media} onRemove={onRemoveMedia} />
+          <PostMediaPreview 
+            media={media} 
+            onRemove={onRemoveMedia}
+            onAddAudio={onAddAudio}
+            onRemoveAudio={onRemoveAudio}
+          />
 
           <AnimatePresence>
             {isLive && (
