@@ -111,7 +111,7 @@ export const SAMPLE_SHORTS: ShortVideo[] = [
     verified: true,
     likes: '2.5M',
     thumbnail: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=300&h=500&fit=crop',
-    videoUrl: 'https://videos.pexels.com/video-files/3015510/3015510-uhd_1440_2732_24fps.mp4',
+    videoUrl: 'https://cdn.pixabay.com/video/2020/05/25/40130-424930941_large.mp4',
   },
   {
     id: 'short-2',
@@ -120,7 +120,7 @@ export const SAMPLE_SHORTS: ShortVideo[] = [
     verified: false,
     likes: '890K',
     thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=500&fit=crop',
-    videoUrl: 'https://videos.pexels.com/video-files/5532771/5532771-uhd_1440_2560_25fps.mp4',
+    videoUrl: 'https://cdn.pixabay.com/video/2019/06/10/24250-341906218_large.mp4',
   },
   {
     id: 'short-3',
@@ -129,7 +129,7 @@ export const SAMPLE_SHORTS: ShortVideo[] = [
     verified: true,
     likes: '1.2M',
     thumbnail: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=500&fit=crop',
-    videoUrl: 'https://videos.pexels.com/video-files/4434242/4434242-uhd_1440_2560_24fps.mp4',
+    videoUrl: 'https://cdn.pixabay.com/video/2021/08/20/85910-593197655_large.mp4',
   },
   {
     id: 'short-4',
@@ -138,7 +138,7 @@ export const SAMPLE_SHORTS: ShortVideo[] = [
     verified: false,
     likes: '3.1M',
     thumbnail: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=500&fit=crop',
-    videoUrl: 'https://videos.pexels.com/video-files/4763824/4763824-uhd_1440_2560_24fps.mp4',
+    videoUrl: 'https://cdn.pixabay.com/video/2020/07/30/46026-447087612_large.mp4',
   },
   {
     id: 'short-5',
@@ -147,7 +147,7 @@ export const SAMPLE_SHORTS: ShortVideo[] = [
     verified: true,
     likes: '567K',
     thumbnail: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=500&fit=crop',
-    videoUrl: 'https://videos.pexels.com/video-files/6394054/6394054-uhd_1080_1920_25fps.mp4',
+    videoUrl: 'https://cdn.pixabay.com/video/2019/07/26/25661-350561837_large.mp4',
   },
   {
     id: 'short-6',
@@ -156,7 +156,7 @@ export const SAMPLE_SHORTS: ShortVideo[] = [
     verified: true,
     likes: '4.2M',
     thumbnail: 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=300&h=500&fit=crop',
-    videoUrl: 'https://videos.pexels.com/video-files/5377684/5377684-uhd_1440_2560_25fps.mp4',
+    videoUrl: 'https://cdn.pixabay.com/video/2020/02/12/32032-391539961_large.mp4',
   },
 ];
 
