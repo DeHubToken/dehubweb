@@ -57,8 +57,7 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'flex items-center w-full rounded-xl transition-colors',
-        variant === 'mobile' ? 'gap-3 px-3 py-2.5' : 'gap-2.5 px-2.5 py-2',
+        'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
         isActive
           ? variant === 'mobile'
             ? 'bg-zinc-700/50 text-white font-semibold'
@@ -69,13 +68,12 @@ export function SidebarNavItem({
       )}
     >
       <div className={cn(
-        "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-        variant === 'mobile' ? 'w-9 h-9' : 'w-8 h-8',
+        "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
         isActive ? "bg-zinc-700" : "bg-zinc-800"
       )}>
-        <item.icon className={cn(variant === 'mobile' ? 'w-5 h-5' : 'w-4.5 h-4.5')} />
+        <item.icon className="w-5 h-5" />
       </div>
-      <span className={cn("truncate", variant === 'desktop' && 'text-[0.9rem]')}>{item.label}</span>
+      <span className="truncate">{item.label}</span>
     </NavLink>
   );
 }
