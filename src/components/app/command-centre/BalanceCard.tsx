@@ -1,6 +1,7 @@
-import { TrendingUp, Info, Settings2, Coins } from 'lucide-react';
+import { TrendingUp, Info, Settings2 } from 'lucide-react';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { useState } from 'react';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 const chartData = [
   { month: 'Jan', balance: 45000 },
@@ -30,7 +31,7 @@ export function BalanceCard() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-3xl sm:text-4xl font-bold text-white">128,990,890</span>
-            <Coins className="w-5 h-5 text-yellow-500" />
+            <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
           </div>
           <p className="text-zinc-500 text-sm mt-1">You gained <span className="text-white">345,678 DeHub</span> last month.</p>
         </div>
