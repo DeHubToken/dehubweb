@@ -8,7 +8,7 @@
  */
 
 import { useState } from 'react';
-import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Repeat2, Send, Link, MessageCircle, X } from 'lucide-react';
+import { MoreVertical, ListPlus, Clock, Flag, Download, Ban } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,10 +17,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
+import { CommentsSection } from '@/components/app/cards/CommentsSection';
 
 // ============================================================================
 // TYPES
@@ -159,18 +159,12 @@ interface VideoCardProps {
   video: YouTubeVideo;
   expandedComments: string | null;
   onToggleComments: (id: string) => void;
-  commentText: string;
-  onCommentChange: (text: string) => void;
-  onPostComment: (id: string) => void;
 }
 
 function VideoCardItem({ 
   video, 
   expandedComments, 
-  onToggleComments, 
-  commentText, 
-  onCommentChange,
-  onPostComment 
+  onToggleComments
 }: VideoCardProps) {
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -239,70 +233,10 @@ function VideoCardItem({
         {/* Comments Section */}
         <AnimatePresence>
           {expandedComments === video.id && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="mt-3 pt-3 border-t border-zinc-800"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-white">Comments</span>
-                <button onClick={() => onToggleComments(video.id)} className="text-zinc-400 hover:text-white">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="flex gap-2 mb-3">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
-                  <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 flex gap-2">
-                  <Input
-                    placeholder="Add a comment..."
-                    value={commentText}
-                    onChange={(e) => onCommentChange(e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-white text-sm"
-                    onKeyDown={(e) => e.key === 'Enter' && onPostComment(video.id)}
-                  />
-                  <button
-                    onClick={() => onPostComment(video.id)}
-                    disabled={!commentText.trim()}
-                    className={cn(
-                      "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
-                      commentText.trim()
-                        ? "bg-blue-500 text-white hover:bg-blue-600"
-                        : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
-                    )}
-                  >
-                    Post
-                  </button>
-                </div>
-              </div>
-
-              {/* Mock Comments */}
-              <div className="space-y-3">
-                {[
-                  { seed: 'commenter1', name: 'viewer_123', time: '2h ago', text: 'Great content! Really helpful.' },
-                  { seed: 'commenter2', name: 'tech_fan', time: '5h ago', text: 'Thanks for sharing this!' },
-                ].map((comment) => (
-                  <div key={comment.seed} className="flex gap-2">
-                    <Avatar className="w-7 h-7">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.seed}`} />
-                      <AvatarFallback className="bg-zinc-700">C</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-xs">
-                        <span className="font-semibold text-white">{comment.name}</span>
-                        <span className="text-zinc-500 ml-2">{comment.time}</span>
-                      </p>
-                      <p className="text-sm text-zinc-300">{comment.text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+            <CommentsSection 
+              onClose={() => onToggleComments(video.id)} 
+              contentId={video.id}
+            />
           )}
         </AnimatePresence>
       </div>
@@ -319,18 +253,9 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
   const [expandedComments, setExpandedComments] = useState<string | null>(null);
-  const [commentText, setCommentText] = useState('');
 
   const toggleComments = (videoId: string) => {
     setExpandedComments(expandedComments === videoId ? null : videoId);
-    setCommentText('');
-  };
-
-  const handlePostComment = (videoId: string) => {
-    if (commentText.trim()) {
-      console.log('Posted comment on video', videoId, ':', commentText);
-      setCommentText('');
-    }
   };
 
   return (
@@ -379,9 +304,6 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
             video={video}
             expandedComments={expandedComments}
             onToggleComments={toggleComments}
-            commentText={commentText}
-            onCommentChange={setCommentText}
-            onPostComment={handlePostComment}
           />
         ))}
       </div>
