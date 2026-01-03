@@ -10,10 +10,17 @@
  */
 
 import { useState } from 'react';
-import { Play, ChevronRight, Heart } from 'lucide-react';
+import { Play, ChevronRight, Heart, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
 import type { ShortVideo } from '@/types/feed.types';
+
+// Generate random view count based on id
+const getViewCount = (id: string) => {
+  const seed = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const views = Math.floor((seed * 5678) % 500000) + 10000;
+  return views >= 1000 ? `${(views / 1000).toFixed(1)}K` : views.toString();
+};
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
@@ -78,10 +85,16 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   </div>
                 </div>
                 
-                {/* Likes at bottom */}
-                <div className="absolute bottom-2 left-2 flex items-center gap-1">
-                  <Heart className="w-3 h-3 text-white" />
-                  <span className="text-white text-xs font-medium">{short.likes}</span>
+                {/* Stats at bottom */}
+                <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <Eye className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-medium">{getViewCount(short.id)}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-medium">{short.likes}</span>
+                  </div>
                 </div>
               </div>
             </div>
