@@ -101,38 +101,35 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       </motion.div>
 
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10">
-        <span className="text-white/70 text-sm font-medium">Live stories</span>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleMute}
-            className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
-          >
-            {isMuted ? (
-              <VolumeX className="w-4 h-4 text-white" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-white" />
-            )}
-          </button>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
-        </div>
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+        <button
+          onClick={toggleMute}
+          className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
+        >
+          {isMuted ? (
+            <VolumeX className="w-4 h-4 text-white" />
+          ) : (
+            <Volume2 className="w-4 h-4 text-white" />
+          )}
+        </button>
+        <button
+          onClick={onClose}
+          className="w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center"
+        >
+          <X className="w-4 h-4 text-white" />
+        </button>
       </div>
 
       {/* Creator Info */}
-      <div className="absolute top-16 left-4 z-10">
+      <div className="absolute top-4 left-4 z-10">
         <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
           <Avatar className="w-8 h-8 border border-white/20">
             <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentShort.username}`} />
             <AvatarFallback>{currentShort.username[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-white text-sm font-medium">{currentShort.username}</span>
-            <span className="text-white/60 text-xs">{currentShort.likes} viewers</span>
+            <span className="text-white text-sm font-medium">@{currentShort.username}</span>
+            <span className="text-white/60 text-xs">{currentShort.likes} likes</span>
           </div>
           <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-full">
             Follow
@@ -197,18 +194,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             <Share2 className="w-5 h-5 text-white" />
           </button>
         </div>
-      </div>
-
-      {/* Progress indicators */}
-      <div className="absolute top-12 left-4 right-4 flex gap-1 z-10">
-        {shorts.map((_, idx) => (
-          <div
-            key={idx}
-            className={`h-0.5 flex-1 rounded-full transition-colors ${
-              idx === currentIndex ? 'bg-white' : 'bg-white/30'
-            }`}
-          />
-        ))}
       </div>
 
       {/* Swipe hint */}
