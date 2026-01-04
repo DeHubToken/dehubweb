@@ -9,7 +9,7 @@ const ALL_NAV_ITEMS = [
   { icon: Mail, label: 'Messages', path: '/app/messages' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: User, label: 'Profile', path: '/app/profile' },
-  { icon: LayoutDashboard, label: 'Command Centre', path: '/app/command-centre' },
+  { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
