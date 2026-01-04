@@ -71,11 +71,18 @@ export function MobileBottomNav() {
                     to={item.path}
                     onClick={(e) => handleNavClick(e, item.path)}
                     className={cn(
-                      'flex items-center justify-center h-14 flex-1 transition-colors text-white',
+                      'flex items-center justify-center h-14 flex-1 transition-all duration-200 text-white',
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
-                    <item.icon className="w-6 h-6" />
+                    <item.icon 
+                      className={cn(
+                        'w-6 h-6 transition-all duration-200',
+                        isActive 
+                          ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
+                          : 'hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
+                      )} 
+                    />
                   </NavLink>
                 );
               })}
@@ -111,11 +118,18 @@ export function MobileBottomNav() {
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center h-14 flex-1 transition-colors text-white',
+                      'flex items-center justify-center h-14 flex-1 transition-all duration-200 text-white',
                       index === 1 && 'rounded-r-2xl'
                     )}
                   >
-                    <item.icon className="w-6 h-6" />
+                    <item.icon 
+                      className={cn(
+                        'w-6 h-6 transition-all duration-200',
+                        isActive 
+                          ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
+                          : 'hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
+                      )} 
+                    />
                   </NavLink>
                 );
               })}
@@ -129,10 +143,17 @@ export function MobileBottomNav() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  className="flex items-center justify-center h-14 flex-shrink-0 transition-colors text-white"
+                  className="flex items-center justify-center h-14 flex-shrink-0 transition-all duration-200 text-white"
                   style={{ width: 'calc((50% - 28px) / 2)' }}
                 >
-                  <item.icon className="w-6 h-6" />
+                  <item.icon 
+                    className={cn(
+                      'w-6 h-6 transition-all duration-200',
+                      isActive 
+                        ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
+                        : 'hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
+                    )} 
+                  />
                 </NavLink>
               );
             })}
