@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { WhoToFollow } from './WhoToFollow';
+import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
 
 interface RightSidebarProps {
@@ -21,7 +21,7 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
           </div>
         </div>
       )}
-      <WhoToFollow />
+      <TabbedSidePanel />
       <WhatsHappening />
     </aside>
   );
