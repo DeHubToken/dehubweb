@@ -23,6 +23,7 @@ export function TabbedSidePanel() {
           const Icon = tab.icon;
           return (
             <button
+              type="button"
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 flex items-center justify-center transition-colors ${
