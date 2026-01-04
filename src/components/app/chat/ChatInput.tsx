@@ -187,7 +187,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-purple-400 hover:text-purple-300 hover:bg-zinc-700"
+            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
             onClick={handleEnhanceText}
             disabled={isEnhancing}
             title="AI Enhance - Fix spelling & grammar"
@@ -201,21 +201,15 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
           
           <Button
             type="button"
+            variant="ghost"
             size="icon"
-            className="h-8 w-8 bg-green-500 hover:bg-green-600 text-white"
+            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
             onClick={handleSend}
             disabled={!message.trim() && !imagePreview}
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-5 h-5" />
           </Button>
         </div>
-      </div>
-      
-      <div className="flex items-center justify-between mt-2 px-1">
-        <span className="text-[10px] text-zinc-500">Press Enter to send, Shift+Enter for new line</span>
-        <span className="text-[10px] text-purple-400 flex items-center gap-1">
-          <Sparkles className="w-3 h-3" /> AI enhances spelling & grammar
-        </span>
       </div>
     </div>
   );
