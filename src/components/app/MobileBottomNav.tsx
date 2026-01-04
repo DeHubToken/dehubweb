@@ -55,11 +55,11 @@ export function MobileBottomNav() {
           {/* Nav items container */}
           <div 
             ref={scrollRef}
-            className="flex items-center h-14 overflow-x-auto scrollbar-hide scroll-smooth"
+            className="flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
             {/* Left side items - 2 buttons */}
-            <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
+            <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
               {ALL_NAV_ITEMS.slice(0, 2).map((item, index) => {
                 const isActive = item.path === '/app' 
                   ? location.pathname === '/app'
@@ -71,13 +71,13 @@ export function MobileBottomNav() {
                     to={item.path}
                     onClick={(e) => handleNavClick(e, item.path)}
                     className={cn(
-                      'flex items-center justify-center h-14 flex-1 transition-all duration-200 text-white',
+                      'flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
                     <item.icon 
                       className={cn(
-                        'w-6 h-6 transition-all duration-200',
+                        'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
                         isActive 
                           ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
                           : 'hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
@@ -91,23 +91,23 @@ export function MobileBottomNav() {
             {/* Center Create Button - fades as user scrolls */}
             <button
               onClick={() => setIsPostModalOpen(true)}
-              className="flex-shrink-0 w-14 h-14 flex items-center justify-center"
+              className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center"
             >
               <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300"
                 style={{ 
                   backgroundColor: `rgba(255, 255, 255, ${buttonOpacity})`,
                 }}
               >
                 <Plus 
-                  className="w-6 h-6 transition-colors duration-300" 
+                  className="w-5 h-5 md:w-6 md:h-6 transition-colors duration-300" 
                   style={{ color: buttonOpacity > 0.5 ? 'black' : 'rgb(113, 113, 122)' }}
                 />
               </div>
             </button>
 
             {/* Right side items - first 2 match left side width */}
-            <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 28px)' }}>
+            <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
               {ALL_NAV_ITEMS.slice(2, 4).map((item, index) => {
                 const isActive = item.path === '/app' 
                   ? location.pathname === '/app'
@@ -118,13 +118,13 @@ export function MobileBottomNav() {
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      'flex items-center justify-center h-14 flex-1 transition-all duration-200 text-white',
+                      'flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
                       index === 1 && 'rounded-r-2xl'
                     )}
                   >
                     <item.icon 
                       className={cn(
-                        'w-6 h-6 transition-all duration-200',
+                        'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
                         isActive 
                           ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
                           : 'hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
@@ -143,12 +143,12 @@ export function MobileBottomNav() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  className="flex items-center justify-center h-14 flex-shrink-0 transition-all duration-200 text-white"
-                  style={{ width: 'calc((50% - 28px) / 2)' }}
+                  className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                  style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
                   <item.icon 
                     className={cn(
-                      'w-6 h-6 transition-all duration-200',
+                      'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
                       isActive 
                         ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]' 
                         : 'hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
