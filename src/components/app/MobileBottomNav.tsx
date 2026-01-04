@@ -101,7 +101,7 @@ export function MobileBottomNav() {
               >
                 <Plus 
                   className="w-5 h-5 md:w-6 md:h-6 transition-colors duration-300" 
-                  style={{ color: buttonOpacity > 0.5 ? 'black' : 'rgb(113, 113, 122)' }}
+                  style={{ color: buttonOpacity > 0.5 ? 'black' : 'white' }}
                 />
               </div>
             </button>
