@@ -155,7 +155,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="min-h-[32px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="min-h-[32px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-[2px] focus-visible:ring-0 focus-visible:ring-offset-0"
             rows={1}
           />
         </div>
