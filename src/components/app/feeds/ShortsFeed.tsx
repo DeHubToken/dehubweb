@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Music2 } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Music2, Loader2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { SAMPLE_SHORTS } from '@/data/mock-feed.data';
@@ -8,6 +8,7 @@ import type { ShortVideo } from '@/types/feed.types';
 
 const DURATION_OPTIONS = ['All', '< 15s', '15-60s', '> 60s'];
 const CATEGORY_OPTIONS = ['All', 'Dance', 'Comedy', 'Food', 'Pets', 'Fitness', 'Magic'];
+const ITEMS_PER_PAGE = 9;
 
 interface ShortsFeedProps {
   showFilters?: boolean;
@@ -18,6 +19,40 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [displayedCount, setDisplayedCount] = useState(ITEMS_PER_PAGE);
+  const [isLoading, setIsLoading] = useState(false);
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+  const displayedShorts = SAMPLE_SHORTS.slice(0, displayedCount);
+  const hasMore = displayedCount < SAMPLE_SHORTS.length;
+
+  const loadMore = useCallback(() => {
+    if (isLoading || !hasMore) return;
+    
+    setIsLoading(true);
+    // Simulate network delay
+    setTimeout(() => {
+      setDisplayedCount(prev => Math.min(prev + ITEMS_PER_PAGE, SAMPLE_SHORTS.length));
+      setIsLoading(false);
+    }, 500);
+  }, [isLoading, hasMore]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, isLoading, loadMore]);
 
   const handleShortClick = (index: number) => {
     setSelectedIndex(index);
@@ -72,9 +107,12 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
 
         {/* Shorts Grid - TikTok Style */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
-          {SAMPLE_SHORTS.map((short, index) => (
-            <div
+          {displayedShorts.map((short, index) => (
+            <motion.div
               key={short.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: (index % ITEMS_PER_PAGE) * 0.05 }}
               onClick={() => handleShortClick(index)}
               className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
             >
@@ -109,8 +147,18 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
                   </svg>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
+        </div>
+
+        {/* Infinite scroll loader */}
+        <div ref={loaderRef} className="flex justify-center py-6">
+          {isLoading && (
+            <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
+          )}
+          {!hasMore && displayedCount > ITEMS_PER_PAGE && (
+            <p className="text-zinc-500 text-sm">No more shorts to load</p>
+          )}
         </div>
       </div>
 
