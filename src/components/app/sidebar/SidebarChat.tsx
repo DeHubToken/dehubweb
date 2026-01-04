@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
-import { Send, Smile, Users } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Send, Smile, Users, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+const MESSAGES_PER_PAGE = 15;
 interface ChatMessage {
   id: string;
   userName: string;
@@ -115,24 +116,73 @@ const initialMessages: ChatMessage[] = [
 ];
 
 export function SidebarChat() {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [displayedMessages, setDisplayedMessages] = useState<ChatMessage[]>(() => 
+    initialMessages.slice(-MESSAGES_PER_PAGE)
+  );
   const [newMessage, setNewMessage] = useState('');
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(initialMessages.length > MESSAGES_PER_PAGE);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isInitialMount = useRef(true);
 
+  // Calculate how many messages are loaded
+  const loadedCount = displayedMessages.length;
+
+  // Scroll to bottom only on initial mount and new messages
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [messages]);
+    if (isInitialMount.current) {
+      bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+      isInitialMount.current = false;
+    }
+  }, []);
+
+  // Load more messages when scrolling to top
+  const handleScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container || isLoadingMore || !hasMore) return;
+
+    if (container.scrollTop < 50) {
+      setIsLoadingMore(true);
+      const previousHeight = container.scrollHeight;
+      
+      setTimeout(() => {
+        const currentIndex = initialMessages.length - loadedCount;
+        const newStartIndex = Math.max(0, currentIndex - MESSAGES_PER_PAGE);
+        const newMessages = initialMessages.slice(newStartIndex, currentIndex);
+        
+        if (newMessages.length > 0) {
+          setDisplayedMessages(prev => [...newMessages, ...prev]);
+          setHasMore(newStartIndex > 0);
+          
+          // Maintain scroll position
+          requestAnimationFrame(() => {
+            if (container) {
+              container.scrollTop = container.scrollHeight - previousHeight;
+            }
+          });
+        }
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  }, [isLoadingMore, hasMore, loadedCount]);
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
     
-    setMessages(prev => [...prev, {
+    const newMsg: ChatMessage = {
       id: Date.now().toString(),
       userName: 'You',
       content: newMessage.trim(),
       timestamp: new Date(),
-    }]);
+    };
+    setDisplayedMessages(prev => [...prev, newMsg]);
     setNewMessage('');
+    
+    // Scroll to bottom for new message
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -153,8 +203,17 @@ export function SidebarChat() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-2 space-y-2">
-        {messages.map((msg) => (
+      <div 
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto py-2 space-y-2"
+      >
+        {isLoadingMore && (
+          <div className="flex justify-center py-2">
+            <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+          </div>
+        )}
+        {displayedMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-2">
             <Avatar className="w-6 h-6 flex-shrink-0">
               <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.userName}`} />

@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Users, Settings, MoreVertical } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { ArrowLeft, Users, Settings, MoreVertical, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 
+const MESSAGES_PER_PAGE = 15;
 interface PublicChatProps {
   onBack: () => void;
   liveCount?: string;
@@ -116,14 +116,55 @@ const INITIAL_MESSAGES: Message[] = [
 ];
 
 export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
-  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [displayedMessages, setDisplayedMessages] = useState<Message[]>(() => 
+    INITIAL_MESSAGES.slice(-MESSAGES_PER_PAGE)
+  );
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(INITIAL_MESSAGES.length > MESSAGES_PER_PAGE);
+  const isInitialMount = useRef(true);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Calculate how many messages are loaded
+  const loadedCount = displayedMessages.length;
+
+  // Scroll to bottom only on initial mount
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [messages]);
+    if (isInitialMount.current) {
+      bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+      isInitialMount.current = false;
+    }
+  }, []);
+
+  // Load more messages when scrolling to top
+  const handleScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container || isLoadingMore || !hasMore) return;
+
+    if (container.scrollTop < 50) {
+      setIsLoadingMore(true);
+      const previousHeight = container.scrollHeight;
+      
+      setTimeout(() => {
+        const currentIndex = INITIAL_MESSAGES.length - loadedCount;
+        const newStartIndex = Math.max(0, currentIndex - MESSAGES_PER_PAGE);
+        const newMessages = INITIAL_MESSAGES.slice(newStartIndex, currentIndex);
+        
+        if (newMessages.length > 0) {
+          setDisplayedMessages(prev => [...newMessages, ...prev]);
+          setHasMore(newStartIndex > 0);
+          
+          // Maintain scroll position
+          requestAnimationFrame(() => {
+            if (container) {
+              container.scrollTop = container.scrollHeight - previousHeight;
+            }
+          });
+        }
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  }, [isLoadingMore, hasMore, loadedCount]);
 
   const handleSendMessage = (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => {
     const newMessage: Message = {
@@ -136,7 +177,12 @@ export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
       imageUrl,
     };
     
-    setMessages(prev => [...prev, newMessage]);
+    setDisplayedMessages(prev => [...prev, newMessage]);
+    
+    // Scroll to bottom for new message
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
   };
 
   return (
@@ -184,14 +230,21 @@ export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
       </div>
       
       {/* Messages Area */}
-      <ScrollArea className="flex-1" ref={scrollRef}>
-        <div className="py-2">
-          {messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
-          ))}
-          <div ref={bottomRef} />
-        </div>
-      </ScrollArea>
+      <div 
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto py-2"
+      >
+        {isLoadingMore && (
+          <div className="flex justify-center py-3">
+            <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+          </div>
+        )}
+        {displayedMessages.map((message) => (
+          <ChatMessage key={message.id} message={message} />
+        ))}
+        <div ref={bottomRef} />
+      </div>
       
       {/* Input Area */}
       <ChatInput onSendMessage={handleSendMessage} />
