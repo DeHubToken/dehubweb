@@ -119,7 +119,7 @@ export function SubscriptionsTab() {
         <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <span className="text-zinc-400 text-sm">Transaction history</span>
+              <span className="text-zinc-400 text-sm">Transactions</span>
               <p className="text-zinc-500 text-xs">(last 30 days)</p>
             </div>
             <div className="flex items-center gap-2">

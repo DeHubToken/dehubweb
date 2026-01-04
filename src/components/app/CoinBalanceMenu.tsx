@@ -205,7 +205,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <History className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Transaction History</span>
+        <span className="text-white font-medium">Transactions</span>
       </button>
       <button
         onClick={() => setMenuView('stake')}
@@ -339,7 +339,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         <span className="text-sm">Back</span>
       </button>
       
-      <h3 className="text-white font-medium text-sm">Transaction History</h3>
+      <h3 className="text-white font-medium text-sm">Transactions</h3>
       
       <div className="space-y-2 max-h-64 overflow-y-auto">
         {MOCK_TRANSACTIONS.map((tx) => (
