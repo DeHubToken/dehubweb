@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Smile, Users, Loader2 } from 'lucide-react';
+import { Send, Smile, Users, Loader2, ArrowDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -122,6 +122,7 @@ export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(initialMessages.length > MESSAGES_PER_PAGE);
+  const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isInitialMount = useRef(true);
@@ -140,7 +141,13 @@ export function SidebarChat() {
   // Load more messages when scrolling to top
   const handleScroll = useCallback(() => {
     const container = scrollContainerRef.current;
-    if (!container || isLoadingMore || !hasMore) return;
+    if (!container) return;
+
+    // Check if user has scrolled up (show jump to latest button)
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    setShowJumpToLatest(distanceFromBottom > 100);
+
+    if (isLoadingMore || !hasMore) return;
 
     if (container.scrollTop < 50) {
       setIsLoadingMore(true);
@@ -166,6 +173,10 @@ export function SidebarChat() {
       }, 300);
     }
   }, [isLoadingMore, hasMore, loadedCount]);
+
+  const jumpToLatest = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
@@ -203,31 +214,45 @@ export function SidebarChat() {
       </div>
 
       {/* Messages */}
-      <div 
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
-        className="flex-1 overflow-y-auto py-2 space-y-2"
-      >
-        {isLoadingMore && (
-          <div className="flex justify-center py-2">
-            <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-          </div>
-        )}
-        {displayedMessages.map((msg) => (
-          <div key={msg.id} className="flex items-start gap-2">
-            <Avatar className="w-6 h-6 flex-shrink-0">
-              <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.userName}`} />
-              <AvatarFallback className="bg-zinc-700 text-white text-[10px]">
-                {msg.userName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <span className="text-xs font-semibold text-white">{msg.userName}</span>
-              <p className="text-xs text-zinc-300 break-words">{msg.content}</p>
+      <div className="relative flex-1">
+        <div 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="absolute inset-0 overflow-y-auto py-2 space-y-2"
+        >
+          {isLoadingMore && (
+            <div className="flex justify-center py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
             </div>
-          </div>
-        ))}
-        <div ref={bottomRef} />
+          )}
+          {displayedMessages.map((msg) => (
+            <div key={msg.id} className="flex items-start gap-2">
+              <Avatar className="w-6 h-6 flex-shrink-0">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.userName}`} />
+                <AvatarFallback className="bg-zinc-700 text-white text-[10px]">
+                  {msg.userName.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <span className="text-xs font-semibold text-white">{msg.userName}</span>
+                <p className="text-xs text-zinc-300 break-words">{msg.content}</p>
+              </div>
+            </div>
+          ))}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Jump to latest button */}
+        {showJumpToLatest && (
+          <Button
+            onClick={jumpToLatest}
+            size="sm"
+            className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg z-10 rounded-full px-3 py-1 h-7 text-xs gap-1"
+          >
+            <ArrowDown className="w-3 h-3" />
+            Jump to latest
+          </Button>
+        )}
       </div>
 
       {/* Input */}
