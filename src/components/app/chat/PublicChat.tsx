@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, Users, Settings, MoreVertical, Loader2 } from 'lucide-react';
+import { ArrowLeft, Users, Settings, MoreVertical, Loader2, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -123,6 +123,7 @@ export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(INITIAL_MESSAGES.length > MESSAGES_PER_PAGE);
+  const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const isInitialMount = useRef(true);
 
   // Calculate how many messages are loaded
@@ -139,7 +140,13 @@ export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
   // Load more messages when scrolling to top
   const handleScroll = useCallback(() => {
     const container = scrollContainerRef.current;
-    if (!container || isLoadingMore || !hasMore) return;
+    if (!container) return;
+
+    // Check if user has scrolled up (show jump to latest button)
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    setShowJumpToLatest(distanceFromBottom > 100);
+
+    if (isLoadingMore || !hasMore) return;
 
     if (container.scrollTop < 50) {
       setIsLoadingMore(true);
@@ -165,6 +172,10 @@ export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
       }, 300);
     }
   }, [isLoadingMore, hasMore, loadedCount]);
+
+  const jumpToLatest = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
 
   const handleSendMessage = (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => {
     const newMessage: Message = {
@@ -230,20 +241,34 @@ export function PublicChat({ onBack, liveCount = '2.3k' }: PublicChatProps) {
       </div>
       
       {/* Messages Area */}
-      <div 
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
-        className="flex-1 overflow-y-auto py-2"
-      >
-        {isLoadingMore && (
-          <div className="flex justify-center py-3">
-            <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
-          </div>
+      <div className="relative flex-1">
+        <div 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="absolute inset-0 overflow-y-auto py-2"
+        >
+          {isLoadingMore && (
+            <div className="flex justify-center py-3">
+              <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+            </div>
+          )}
+          {displayedMessages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Jump to latest button */}
+        {showJumpToLatest && (
+          <Button
+            onClick={jumpToLatest}
+            size="sm"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg z-10 rounded-full px-4 py-2 gap-1.5"
+          >
+            <ArrowDown className="w-4 h-4" />
+            Jump to latest
+          </Button>
         )}
-        {displayedMessages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
-        <div ref={bottomRef} />
       </div>
       
       {/* Input Area */}
