@@ -3,6 +3,7 @@ import { Search, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { PublicChat } from '@/components/app/chat';
 
 interface Conversation {
   id: string;
@@ -51,6 +52,24 @@ const conversations: Conversation[] = [
 export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Check if Public Chat is selected
+  const isPublicChatOpen = selectedConversation === '1';
+  const selectedConv = conversations.find(c => c.id === selectedConversation);
+
+  // If Public Chat is open, show full-screen chat
+  if (isPublicChatOpen) {
+    return (
+      <div className="min-h-screen p-3 sm:p-4 mt-2 lg:mt-0">
+        <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
+          <PublicChat 
+            onBack={() => setSelectedConversation(null)} 
+            liveCount={selectedConv?.liveCount}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-3 sm:p-4 mt-2 lg:mt-0">
