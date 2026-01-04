@@ -147,15 +147,15 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       )}
       
       {/* Input Area */}
-      <div className="flex items-end gap-2">
-        <div className="flex-1 relative">
+      <div className="flex items-center gap-2">
+        <div className="flex-1">
           <Textarea
             ref={textareaRef}
             placeholder="Type a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="min-h-[40px] max-h-32 resize-none bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl pr-12 py-2"
+            className="min-h-[32px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             rows={1}
           />
         </div>
