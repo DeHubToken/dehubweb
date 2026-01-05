@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Settings2, Loader2 } from 'lucide-react';
+import { Settings2, Loader2, RefreshCw } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 
@@ -48,6 +48,7 @@ import {
 /** Minimum swipe distance to trigger tab change */
 const SWIPE_THRESHOLD = 50;
 const PAGE_SIZE = 15;
+const PULL_THRESHOLD = 80;
 
 // ============================================================================
 // HOME FEED COMPONENT
@@ -57,7 +58,7 @@ const PAGE_SIZE = 15;
  * Mixed content feed for the home tab with infinite scroll.
  * Displays a curated mix of all content types, paginated.
  */
-function HomeFeed({ shuffleKey }: { shuffleKey: number }) {
+function HomeFeed({ shuffleKey, isRefreshing }: { shuffleKey: number; isRefreshing: boolean }) {
   const [items, setItems] = useState<UnifiedFeedItem[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -125,9 +126,25 @@ function HomeFeed({ shuffleKey }: { shuffleKey: number }) {
 
   return (
     <div className="p-2 sm:p-3 space-y-3">
+      {/* Refresh indicator */}
+      <div 
+        className={cn(
+          "flex items-center justify-center gap-2 py-3 transition-all duration-300 overflow-hidden",
+          isRefreshing ? "opacity-100 max-h-12" : "opacity-0 max-h-0"
+        )}
+      >
+        <RefreshCw className="w-4 h-4 text-primary animate-spin" />
+        <span className="text-sm text-primary font-medium">Refreshing feed...</span>
+      </div>
+
       <StoriesBar users={STORY_USERS} />
       
-      {items.map((item, index) => renderFeedItem(item, index))}
+      <div className={cn(
+        "transition-opacity duration-300",
+        isRefreshing ? "opacity-50" : "opacity-100"
+      )}>
+        {items.map((item, index) => renderFeedItem(item, index))}
+      </div>
       
       {/* Infinite scroll loader */}
       <div ref={loaderRef} className="py-4 flex justify-center">
@@ -224,6 +241,12 @@ export default function HomePage() {
   // Tab state
   const [activeTab, setActiveTab] = useState('home');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Pull-to-refresh state
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isPulling, setIsPulling] = useState(false);
+  const pullStartY = useRef<number | null>(null);
   
   // Filter states for each feed type
   const [showShortsFilters, setShowShortsFilters] = useState(false);
@@ -243,6 +266,29 @@ export default function HomePage() {
   const touchEndX = useRef<number | null>(null);
 
   // --------------------------------------------------------------------------
+  // REFRESH HANDLER
+  // --------------------------------------------------------------------------
+
+  const triggerRefresh = useCallback(() => {
+    if (isRefreshing) return;
+    
+    setIsRefreshing(true);
+    
+    // Scroll to top
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Simulate refresh delay then update
+    setTimeout(() => {
+      setRefreshKey(prev => prev + 1);
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 300);
+    }, 800);
+  }, [isRefreshing]);
+
+  // --------------------------------------------------------------------------
   // EVENT HANDLERS
   // --------------------------------------------------------------------------
 
@@ -251,20 +297,14 @@ export default function HomePage() {
    */
   useEffect(() => {
     const handleHomeRefresh = () => {
-      // Scroll to top first
-      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-      document.body.scrollTo({ top: 0, behavior: 'smooth' });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
       setActiveTab('home');
       resetFilters();
-      // Increment refresh key to trigger re-shuffle
-      setRefreshKey(prev => prev + 1);
+      triggerRefresh();
     };
 
     window.addEventListener('home-refresh', handleHomeRefresh);
     return () => window.removeEventListener('home-refresh', handleHomeRefresh);
-  }, [activeTab]);
+  }, [triggerRefresh]);
 
   /**
    * Reset all filter states.
@@ -286,8 +326,8 @@ export default function HomePage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
       if (tabValue === 'home') {
-        // Home tab - refresh/shuffle feed
-        setRefreshKey(prev => prev + 1);
+        // Home tab - refresh/shuffle feed with animation
+        triggerRefresh();
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
       } else if (tabValue === 'images') {
@@ -302,19 +342,45 @@ export default function HomePage() {
   };
 
   // --------------------------------------------------------------------------
-  // SWIPE GESTURE HANDLERS
+  // SWIPE & PULL-TO-REFRESH GESTURE HANDLERS
   // --------------------------------------------------------------------------
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
+    
+    // Check if at top of page for pull-to-refresh
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    if (scrollTop <= 0 && activeTab === 'home') {
+      pullStartY.current = e.touches[0].clientY;
+      setIsPulling(true);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
+    
+    // Handle pull-to-refresh
+    if (isPulling && pullStartY.current !== null && activeTab === 'home') {
+      const currentY = e.touches[0].clientY;
+      const distance = Math.max(0, currentY - pullStartY.current);
+      // Apply resistance - the further you pull, the harder it gets
+      const resistedDistance = Math.min(distance * 0.5, PULL_THRESHOLD * 1.5);
+      setPullDistance(resistedDistance);
+    }
   };
 
   const handleTouchEnd = () => {
+    // Handle pull-to-refresh release
+    if (isPulling && pullDistance >= PULL_THRESHOLD && activeTab === 'home') {
+      triggerRefresh();
+    }
+    
+    setPullDistance(0);
+    setIsPulling(false);
+    pullStartY.current = null;
+    
+    // Handle horizontal swipe for tab switching
     if (!touchStartX.current || !touchEndX.current) return;
     
     const distance = touchStartX.current - touchEndX.current;
@@ -355,7 +421,7 @@ export default function HomePage() {
       case 'live':
         return <LiveFeed key={refreshKey} />;
       default:
-        return <HomeFeed shuffleKey={refreshKey} />;
+        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} />;
     }
   };
 
@@ -369,6 +435,37 @@ export default function HomePage() {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Pull-to-refresh indicator */}
+      {activeTab === 'home' && (pullDistance > 0 || isRefreshing) && (
+        <div 
+          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200 lg:hidden"
+          style={{ 
+            height: isRefreshing ? 60 : pullDistance,
+            opacity: isRefreshing ? 1 : Math.min(pullDistance / PULL_THRESHOLD, 1)
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <RefreshCw 
+              className={cn(
+                "w-5 h-5 text-primary transition-transform",
+                isRefreshing && "animate-spin",
+                !isRefreshing && pullDistance >= PULL_THRESHOLD && "scale-110"
+              )} 
+              style={{ 
+                transform: isRefreshing ? undefined : `rotate(${pullDistance * 3}deg)` 
+              }}
+            />
+            <span className="text-sm text-white font-medium">
+              {isRefreshing 
+                ? "Refreshing..." 
+                : pullDistance >= PULL_THRESHOLD 
+                  ? "Release to refresh" 
+                  : "Pull to refresh"
+              }
+            </span>
+          </div>
+        </div>
+      )}
       {/* Tab Navigation */}
       <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">
