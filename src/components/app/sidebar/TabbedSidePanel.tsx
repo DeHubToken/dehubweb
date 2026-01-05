@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { UserPlus, Trophy, MessageCircle } from 'lucide-react';
+import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
 
 type TabType = 'follow' | 'leaderboard' | 'chat';
 
-const tabs: { id: TabType; icon: typeof UserPlus }[] = [
-  { id: 'follow', icon: UserPlus },
+const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
+  { id: 'follow', icon: SquareUserRound },
   { id: 'leaderboard', icon: Trophy },
-  { id: 'chat', icon: MessageCircle },
+  { id: 'chat', icon: MessagesSquare },
 ];
 
 export function TabbedSidePanel() {
