@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,7 +64,7 @@ export function ActionBar({
   showBorder = false 
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const isTouchDevice = useIsTouchDevice();
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -142,7 +142,7 @@ export function ActionBar({
           </button>
           
           {/* Share - Sheet for mobile, Dropdown for desktop */}
-          {isMobile ? (
+          {isTouchDevice ? (
             <>
               <button 
                 onClick={() => setSheetOpen(true)}
