@@ -182,7 +182,7 @@ function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) 
             onClick={() => onLike(comment.id)}
             className={cn(
               "transition-colors",
-              comment.isLiked ? "text-green-400" : "text-white hover:text-green-400"
+              comment.isLiked ? "text-zinc-400" : "text-white hover:text-zinc-400"
             )}
             aria-label="Like"
           >
@@ -192,7 +192,7 @@ function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) 
             onClick={() => onDislike(comment.id)}
             className={cn(
               "transition-colors",
-              comment.isDisliked ? "text-red-400" : "text-white hover:text-red-400"
+              comment.isDisliked ? "text-zinc-400" : "text-white hover:text-zinc-400"
             )}
             aria-label="Dislike"
           >
