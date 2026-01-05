@@ -102,7 +102,7 @@ export function ActionBar({
           </button>
           
           {/* Share Dropdown */}
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <button 
                 className="text-white hover:text-zinc-400 transition-colors"
