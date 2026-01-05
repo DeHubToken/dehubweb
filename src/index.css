@@ -128,12 +128,14 @@ All colors MUST be HSL.
     height: 100%;
     width: 100%;
     background-color: black;
+    overscroll-behavior: none;
   }
 
   body {
     @apply text-foreground;
     background-color: black;
     overflow-x: hidden;
+    overscroll-behavior-y: none;
   }
 
   #root {
