@@ -14,7 +14,7 @@
  */
 
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, MessagesSquare, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -138,7 +138,7 @@ export function ActionBar({
             className="text-white hover:text-zinc-400 transition-colors"
             aria-label="Comment"
           >
-            <MessagesSquare className="w-5 h-5" />
+            <MessageSquare className="w-5 h-5" />
           </button>
           
           {/* Share - Sheet for mobile, Dropdown for desktop */}
