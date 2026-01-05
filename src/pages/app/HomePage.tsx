@@ -128,7 +128,7 @@ function HomeFeed({ shuffleKey, isRefreshing }: { shuffleKey: number; isRefreshi
     <div className="p-2 sm:p-3 space-y-3">
       {isRefreshing ? (
         <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          <Loader2 className="w-10 h-10 text-white animate-spin" />
         </div>
       ) : (
         <>
