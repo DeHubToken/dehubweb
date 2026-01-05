@@ -464,7 +464,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         <DropdownMenuContent 
           align="end" 
           glass
-          className="w-64 p-2"
+          className="w-72 p-3"
           sideOffset={8}
         >
           {getMenuContent()}
