@@ -152,14 +152,14 @@ export function PostAccessToggles({
                   value={tokenContract}
                   onChange={(e) => setTokenContract(e.target.value)}
                   placeholder="Contract address"
-                  className="flex-1 h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 font-mono"
+                  className="flex-[0.85] h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 font-mono"
                 />
                 <input
                   type="number"
                   value={tokenAmount}
                   onChange={(e) => setTokenAmount(e.target.value)}
                   placeholder="Min"
-                  className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="flex-[0.15] min-w-[60px] h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
             </motion.div>
