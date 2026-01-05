@@ -99,12 +99,18 @@ All colors MUST be HSL.
 @layer base {
   * {
     @apply border-border;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
   }
 
-  *::-webkit-scrollbar {
-    display: none;
+  /* Hide scrollbars on mobile only */
+  @media (max-width: 1023px) {
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    *::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   /* Hide number input spinners globally */
