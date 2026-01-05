@@ -16,12 +16,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-1',
     type: 'post',
-    author: {
-      id: 'a1',
-      name: 'Alice Cooper',
-      handle: '@alice_cooper',
-      verified: false,
-    },
+    author: { id: 'a1', name: 'Alice Cooper', handle: '@alice_cooper', verified: false },
     content: 'Just discovered this amazing new tech stack! The future is looking bright 🚀',
     createdAt: '2h',
     stats: { comments: 23, reposts: 12, likes: 124 },
@@ -29,12 +24,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-2',
     type: 'post',
-    author: {
-      id: 'a2',
-      name: 'Fitness Pro',
-      handle: '@fitnesspro',
-      verified: false,
-    },
+    author: { id: 'a2', name: 'Fitness Pro', handle: '@fitnesspro', verified: false },
     content: 'Morning workout complete! 💪 Feeling stronger every day. #fitness #motivation',
     createdAt: '3h',
     stats: { comments: 8, reposts: 5, likes: 89 },
@@ -42,12 +32,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-3',
     type: 'post',
-    author: {
-      id: 'a3',
-      name: 'Tech Insider',
-      handle: '@techinsider',
-      verified: true,
-    },
+    author: { id: 'a3', name: 'Tech Insider', handle: '@techinsider', verified: true },
     content: 'Breaking: New AI developments are reshaping how we think about creativity and automation. Thread 🧵',
     createdAt: '5h',
     stats: { comments: 156, reposts: 234, likes: 1024 },
@@ -55,85 +40,284 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-4',
     type: 'post',
-    author: {
-      id: 'a4',
-      name: 'Gaming Wizard',
-      handle: '@gamingwiz',
-      verified: true,
-    },
-    content: 'Just hit Diamond rank after 200 hours! The grind was worth it 🎮✨ Anyone else pushing for the top?',
+    author: { id: 'a4', name: 'Gaming Wizard', handle: '@gamingwiz', verified: true },
+    content: 'Just hit Diamond rank after 200 hours! The grind was worth it 🎮✨',
     createdAt: '1h',
     stats: { comments: 87, reposts: 34, likes: 567 },
   },
   {
     id: 'post-5',
     type: 'post',
-    author: {
-      id: 'a5',
-      name: 'Crypto Analyst',
-      handle: '@cryptoanalyst',
-      verified: true,
-    },
-    content: 'Market update: Interesting patterns forming in the charts. Stay vigilant and always DYOR 📊💎',
+    author: { id: 'a5', name: 'Crypto Analyst', handle: '@cryptoanalyst', verified: true },
+    content: 'Market update: Interesting patterns forming in the charts. Stay vigilant 📊💎',
     createdAt: '4h',
     stats: { comments: 234, reposts: 89, likes: 1567 },
   },
   {
     id: 'post-6',
     type: 'post',
-    author: {
-      id: 'a6',
-      name: 'Travel Nomad',
-      handle: '@travelnomad',
-      verified: false,
-    },
-    content: 'Currently watching the sunset in Bali 🌅 Life is too short to stay in one place. Where should I go next?',
+    author: { id: 'a6', name: 'Travel Nomad', handle: '@travelnomad', verified: false },
+    content: 'Currently watching the sunset in Bali 🌅 Life is too short to stay in one place.',
     createdAt: '6h',
     stats: { comments: 145, reposts: 67, likes: 2341 },
   },
   {
     id: 'post-7',
     type: 'post',
-    author: {
-      id: 'a7',
-      name: 'Music Producer',
-      handle: '@beatmaker',
-      verified: true,
-    },
-    content: 'New track dropping at midnight! 🎵 Been working on this one for months. Link in bio 🔥',
+    author: { id: 'a7', name: 'Music Producer', handle: '@beatmaker', verified: true },
+    content: 'New track dropping at midnight! 🎵 Been working on this one for months. 🔥',
     createdAt: '30m',
     stats: { comments: 312, reposts: 456, likes: 3421 },
   },
   {
     id: 'post-8',
     type: 'post',
-    author: {
-      id: 'a8',
-      name: 'Startup Founder',
-      handle: '@startuplife',
-      verified: false,
-    },
-    content: 'Just closed our Series A! 🚀 Grateful for the team and investors who believed in us from day one.',
+    author: { id: 'a8', name: 'Startup Founder', handle: '@startuplife', verified: false },
+    content: 'Just closed our Series A! 🚀 Grateful for the team who believed in us.',
     createdAt: '8h',
     stats: { comments: 89, reposts: 123, likes: 987 },
+  },
+  {
+    id: 'post-9',
+    type: 'post',
+    author: { id: 'a9', name: 'Coffee Addict', handle: '@coffeelovers', verified: false },
+    content: 'Third cup of the day ☕ Does anyone else have a coffee problem or is it just me?',
+    createdAt: '15m',
+    stats: { comments: 45, reposts: 12, likes: 234 },
+  },
+  {
+    id: 'post-10',
+    type: 'post',
+    author: { id: 'a10', name: 'Book Worm', handle: '@readingtime', verified: true },
+    content: 'Just finished "Atomic Habits" - absolutely life changing! 📚 What should I read next?',
+    createdAt: '7h',
+    stats: { comments: 189, reposts: 78, likes: 1456 },
+  },
+  {
+    id: 'post-11',
+    type: 'post',
+    author: { id: 'a11', name: 'Plant Parent', handle: '@plantmom', verified: false },
+    content: 'My monstera just unfurled a new leaf! 🌿 The patience finally paid off.',
+    createdAt: '4h',
+    stats: { comments: 67, reposts: 23, likes: 567 },
+  },
+  {
+    id: 'post-12',
+    type: 'post',
+    author: { id: 'a12', name: 'Night Owl', handle: '@nightcoder', verified: true },
+    content: '3AM coding sessions hit different. Just solved a bug that took me 6 hours 🦉💻',
+    createdAt: '9h',
+    stats: { comments: 234, reposts: 89, likes: 2341 },
+  },
+  {
+    id: 'post-13',
+    type: 'post',
+    author: { id: 'a13', name: 'Yoga Master', handle: '@zenlife', verified: false },
+    content: 'Remember to breathe deeply today 🧘‍♀️ Your mental health matters more than any deadline.',
+    createdAt: '2h',
+    stats: { comments: 56, reposts: 145, likes: 890 },
+  },
+  {
+    id: 'post-14',
+    type: 'post',
+    author: { id: 'a14', name: 'Foodie Explorer', handle: '@tastehunter', verified: true },
+    content: 'Found the best ramen spot in the city! 🍜 The broth was absolutely perfect.',
+    createdAt: '5h',
+    stats: { comments: 123, reposts: 34, likes: 678 },
+  },
+  {
+    id: 'post-15',
+    type: 'post',
+    author: { id: 'a15', name: 'Dog Dad', handle: '@puppylove', verified: false },
+    content: 'My golden retriever just learned a new trick! 🐕 Proud parent moment.',
+    createdAt: '1h',
+    stats: { comments: 89, reposts: 56, likes: 1234 },
+  },
+  {
+    id: 'post-16',
+    type: 'post',
+    author: { id: 'a16', name: 'Minimalist', handle: '@lessismore', verified: true },
+    content: 'Donated 50% of my wardrobe today. The freedom is incredible! ✨',
+    createdAt: '12h',
+    stats: { comments: 167, reposts: 234, likes: 2567 },
+  },
+  {
+    id: 'post-17',
+    type: 'post',
+    author: { id: 'a17', name: 'Art Collector', handle: '@artlover', verified: false },
+    content: 'Just acquired a new piece from an emerging artist 🎨 Supporting local talent is everything.',
+    createdAt: '8h',
+    stats: { comments: 45, reposts: 23, likes: 456 },
+  },
+  {
+    id: 'post-18',
+    type: 'post',
+    author: { id: 'a18', name: 'Marathon Runner', handle: '@runforlife', verified: true },
+    content: 'Completed my 100th marathon today! 🏃‍♂️ Never give up on your goals.',
+    createdAt: '3h',
+    stats: { comments: 567, reposts: 890, likes: 8901 },
+  },
+  {
+    id: 'post-19',
+    type: 'post',
+    author: { id: 'a19', name: 'DIY Queen', handle: '@craftymom', verified: false },
+    content: 'Built a bookshelf from scratch this weekend! 🔨 Who knew power tools were so fun?',
+    createdAt: '1d',
+    stats: { comments: 78, reposts: 45, likes: 567 },
+  },
+  {
+    id: 'post-20',
+    type: 'post',
+    author: { id: 'a20', name: 'Movie Buff', handle: '@cinephile', verified: true },
+    content: 'Just watched the new Nolan film. Mind = BLOWN 🎬 No spoilers but WOW.',
+    createdAt: '6h',
+    stats: { comments: 345, reposts: 123, likes: 3456 },
+  },
+  {
+    id: 'post-21',
+    type: 'post',
+    author: { id: 'a21', name: 'Chef Life', handle: '@homecooking', verified: false },
+    content: 'Finally perfected my grandmother\'s pasta recipe 🍝 She would be proud.',
+    createdAt: '4h',
+    stats: { comments: 89, reposts: 34, likes: 678 },
+  },
+  {
+    id: 'post-22',
+    type: 'post',
+    author: { id: 'a22', name: 'Sunset Chaser', handle: '@goldenhour', verified: true },
+    content: 'Tonight\'s sunset was absolutely magical 🌅 Nature never disappoints.',
+    createdAt: '2h',
+    stats: { comments: 234, reposts: 178, likes: 4567 },
+  },
+  {
+    id: 'post-23',
+    type: 'post',
+    author: { id: 'a23', name: 'Language Learner', handle: '@polyglot', verified: false },
+    content: 'Day 365 of learning Japanese 🇯🇵 Finally had my first full conversation!',
+    createdAt: '10h',
+    stats: { comments: 156, reposts: 89, likes: 2345 },
+  },
+  {
+    id: 'post-24',
+    type: 'post',
+    author: { id: 'a24', name: 'Space Nerd', handle: '@stargazer', verified: true },
+    content: 'Captured Jupiter and its moons through my telescope last night 🔭✨',
+    createdAt: '14h',
+    stats: { comments: 234, reposts: 345, likes: 5678 },
+  },
+  {
+    id: 'post-25',
+    type: 'post',
+    author: { id: 'a25', name: 'Guitar Hero', handle: '@sixstrings', verified: false },
+    content: 'Finally nailed that solo I\'ve been practicing for months 🎸 Persistence pays off!',
+    createdAt: '5h',
+    stats: { comments: 67, reposts: 23, likes: 456 },
   },
 ];
 
 /**
- * Sample video for the home feed preview
+ * Sample videos for the home feed
  */
-export const SAMPLE_VIDEO: VideoItem = {
-  id: 'video-1',
-  type: 'video',
-  thumbnail: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop',
-  duration: '12:34',
-  title: 'Building a Full Stack App in 2024 - Complete Guide',
-  channel: 'Tech Tutorials',
-  channelAvatar: 'tech',
-  verified: true,
-  views: '1.2M views',
-  uploadedAgo: '2 weeks ago',
-};
+export const SAMPLE_VIDEOS: VideoItem[] = [
+  {
+    id: 'video-1',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop',
+    duration: '12:34',
+    title: 'Building a Full Stack App in 2024 - Complete Guide',
+    channel: 'Tech Tutorials',
+    channelAvatar: 'tech',
+    verified: true,
+    views: '1.2M views',
+    uploadedAgo: '2 weeks ago',
+  },
+  {
+    id: 'video-2',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=480&h=270&fit=crop',
+    duration: '8:45',
+    title: '10 VS Code Tips That Will Blow Your Mind',
+    channel: 'Dev Hacks',
+    channelAvatar: 'dev',
+    verified: true,
+    views: '890K views',
+    uploadedAgo: '1 week ago',
+  },
+  {
+    id: 'video-3',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=480&h=270&fit=crop',
+    duration: '15:22',
+    title: 'React 19 - Everything You Need to Know',
+    channel: 'Frontend Masters',
+    channelAvatar: 'frontend',
+    verified: true,
+    views: '2.3M views',
+    uploadedAgo: '3 days ago',
+  },
+  {
+    id: 'video-4',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=480&h=270&fit=crop',
+    duration: '21:08',
+    title: 'Machine Learning for Beginners - Full Course',
+    channel: 'AI Academy',
+    channelAvatar: 'ai',
+    verified: true,
+    views: '4.5M views',
+    uploadedAgo: '1 month ago',
+  },
+  {
+    id: 'video-5',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=480&h=270&fit=crop',
+    duration: '6:30',
+    title: 'Git Commands Every Developer Should Know',
+    channel: 'Code Basics',
+    channelAvatar: 'code',
+    verified: false,
+    views: '567K views',
+    uploadedAgo: '5 days ago',
+  },
+  {
+    id: 'video-6',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=480&h=270&fit=crop',
+    duration: '18:45',
+    title: 'Building a Twitter Clone with Next.js',
+    channel: 'Build With Me',
+    channelAvatar: 'build',
+    verified: true,
+    views: '1.8M views',
+    uploadedAgo: '2 weeks ago',
+  },
+  {
+    id: 'video-7',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=480&h=270&fit=crop',
+    duration: '10:12',
+    title: 'CSS Grid vs Flexbox - When to Use What',
+    channel: 'CSS Pro',
+    channelAvatar: 'css',
+    verified: false,
+    views: '345K views',
+    uploadedAgo: '4 days ago',
+  },
+  {
+    id: 'video-8',
+    type: 'video',
+    thumbnail: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=480&h=270&fit=crop',
+    duration: '25:00',
+    title: 'Docker Tutorial for Absolute Beginners',
+    channel: 'DevOps Daily',
+    channelAvatar: 'devops',
+    verified: true,
+    views: '3.2M views',
+    uploadedAgo: '3 weeks ago',
+  },
+];
+
+export const SAMPLE_VIDEO: VideoItem = SAMPLE_VIDEOS[0];
 
 /**
  * Sample images for the home feed preview
@@ -147,7 +331,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     avatar: 'travel',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
     likes: 2453,
-    caption: 'Exploring the mountains 🏔️ Nothing beats this view! #travel #adventure',
+    caption: 'Exploring the mountains 🏔️ Nothing beats this view!',
     comments: 89,
     timeAgo: '2 hours ago',
   },
@@ -159,7 +343,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     avatar: 'food',
     image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=600&fit=crop',
     likes: 1832,
-    caption: 'Homemade pizza night 🍕 Recipe in bio! #foodie #homemade',
+    caption: 'Homemade pizza night 🍕 Recipe in bio!',
     comments: 156,
     timeAgo: '4 hours ago',
   },
@@ -171,7 +355,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     avatar: 'urban',
     image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&h=600&fit=crop',
     likes: 4521,
-    caption: 'City lights never get old ✨ #cityscape #nightphotography',
+    caption: 'City lights never get old ✨',
     comments: 234,
     timeAgo: '1 hour ago',
   },
@@ -183,7 +367,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     avatar: 'nature',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=600&fit=crop',
     likes: 3876,
-    caption: 'Found this hidden gem while hiking 🌲 #nature #forest',
+    caption: 'Found this hidden gem while hiking 🌲',
     comments: 178,
     timeAgo: '3 hours ago',
   },
@@ -195,7 +379,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     avatar: 'pets',
     image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600&h=600&fit=crop',
     likes: 8934,
-    caption: 'Meet my new best friend! 🐕 #puppy #dogsofinstagram',
+    caption: 'Meet my new best friend! 🐕',
     comments: 567,
     timeAgo: '5 hours ago',
   },
@@ -207,9 +391,81 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     avatar: 'fashion',
     image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=600&fit=crop',
     likes: 5678,
-    caption: 'New collection just dropped 👗 Link in bio! #fashion #style',
+    caption: 'New collection just dropped 👗',
     comments: 345,
     timeAgo: '6 hours ago',
+  },
+  {
+    id: 'image-7',
+    type: 'image',
+    username: 'coffee_culture',
+    verified: false,
+    avatar: 'coffee',
+    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=600&fit=crop',
+    likes: 2341,
+    caption: 'Morning ritual ☕ Perfect latte art today',
+    comments: 123,
+    timeAgo: '30 minutes ago',
+  },
+  {
+    id: 'image-8',
+    type: 'image',
+    username: 'fitness_journey',
+    verified: true,
+    avatar: 'fitness',
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&h=600&fit=crop',
+    likes: 6789,
+    caption: 'Progress not perfection 💪',
+    comments: 456,
+    timeAgo: '2 hours ago',
+  },
+  {
+    id: 'image-9',
+    type: 'image',
+    username: 'sunset_lover',
+    verified: false,
+    avatar: 'sunset',
+    image: 'https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=600&h=600&fit=crop',
+    likes: 9876,
+    caption: 'Golden hour magic 🌅',
+    comments: 678,
+    timeAgo: '1 hour ago',
+  },
+  {
+    id: 'image-10',
+    type: 'image',
+    username: 'architecture_daily',
+    verified: true,
+    avatar: 'arch',
+    image: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=600&h=600&fit=crop',
+    likes: 4567,
+    caption: 'Lines and symmetry 📐',
+    comments: 234,
+    timeAgo: '4 hours ago',
+  },
+  {
+    id: 'image-11',
+    type: 'image',
+    username: 'beach_vibes',
+    verified: false,
+    avatar: 'beach',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=600&fit=crop',
+    likes: 7654,
+    caption: 'Paradise found 🏝️',
+    comments: 345,
+    timeAgo: '5 hours ago',
+  },
+  {
+    id: 'image-12',
+    type: 'image',
+    username: 'car_enthusiast',
+    verified: true,
+    avatar: 'cars',
+    image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&h=600&fit=crop',
+    likes: 5432,
+    caption: 'Dream machine 🚗',
+    comments: 567,
+    timeAgo: '3 hours ago',
   },
 ];
 
@@ -648,3 +904,87 @@ export const STORY_USERS: StoryUser[] = [
   { name: 'Olivia', avatar: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=150&h=150&fit=crop&crop=face' },
   { name: 'Paul', avatar: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop&crop=face' },
 ];
+
+/**
+ * Unified feed item type for mixed content
+ */
+export type UnifiedFeedItem = 
+  | { type: 'post'; data: TextPost }
+  | { type: 'video'; data: VideoItem }
+  | { type: 'image'; data: ImagePost }
+  | { type: 'live'; data: LiveStream }
+  | { type: 'shorts'; data: ShortVideo[] };
+
+/**
+ * Generate a mixed feed with all content types
+ * Creates 50+ items shuffled together
+ */
+export function generateMixedFeed(seed: number = 0): UnifiedFeedItem[] {
+  const items: UnifiedFeedItem[] = [];
+  
+  // Add all posts
+  MOCK_POSTS.forEach(post => {
+    items.push({ type: 'post', data: post });
+  });
+  
+  // Add all videos
+  SAMPLE_VIDEOS.forEach(video => {
+    items.push({ type: 'video', data: video });
+  });
+  
+  // Add all images
+  SAMPLE_IMAGES.forEach(image => {
+    items.push({ type: 'image', data: image });
+  });
+  
+  // Add live streams
+  SAMPLE_LIVE_STREAMS.forEach(stream => {
+    items.push({ type: 'live', data: stream });
+  });
+  
+  // Shuffle based on seed for consistent but randomized order
+  const shuffled = [...items].sort(() => {
+    const rng = Math.sin(seed * 9999 + items.length) * 10000;
+    return rng - Math.floor(rng) - 0.5;
+  });
+  
+  // Insert shorts reels at specific positions (every ~12 items)
+  const withShorts: UnifiedFeedItem[] = [];
+  const shortsChunks = [
+    SAMPLE_SHORTS.slice(0, 10),
+    SAMPLE_SHORTS.slice(10, 20),
+    SAMPLE_SHORTS.slice(20, 30),
+    SAMPLE_SHORTS.slice(30, 36),
+  ];
+  
+  let shortsIndex = 0;
+  shuffled.forEach((item, index) => {
+    withShorts.push(item);
+    // Add shorts reel every 12 items
+    if ((index + 1) % 12 === 0 && shortsIndex < shortsChunks.length) {
+      withShorts.push({ type: 'shorts', data: shortsChunks[shortsIndex] });
+      shortsIndex++;
+    }
+  });
+  
+  return withShorts;
+}
+
+/**
+ * Get paginated feed items
+ */
+export function getPaginatedFeed(
+  page: number, 
+  pageSize: number = 15, 
+  seed: number = 0
+): { items: UnifiedFeedItem[]; hasMore: boolean } {
+  const allItems = generateMixedFeed(seed);
+  const start = page * pageSize;
+  const end = start + pageSize;
+  const items = allItems.slice(start, end);
+  
+  return {
+    items,
+    hasMore: end < allItems.length,
+  };
+}

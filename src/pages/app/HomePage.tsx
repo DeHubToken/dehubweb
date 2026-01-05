@@ -7,8 +7,8 @@
  * @module pages/app/HomePage
  */
 
-import { useState, useEffect, useRef } from 'react';
-import { Settings2 } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Settings2, Loader2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 
@@ -33,16 +33,12 @@ import {
 // UI components
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
-import { toast } from 'sonner';
 
 // Mock data
 import { 
-  MOCK_POSTS, 
-  SAMPLE_VIDEO, 
-  SAMPLE_IMAGES, 
-  SAMPLE_SHORTS, 
-  SAMPLE_LIVE,
-  STORY_USERS 
+  STORY_USERS,
+  getPaginatedFeed,
+  type UnifiedFeedItem,
 } from '@/data/mock-feed.data';
 
 // ============================================================================
@@ -51,43 +47,100 @@ import {
 
 /** Minimum swipe distance to trigger tab change */
 const SWIPE_THRESHOLD = 50;
+const PAGE_SIZE = 15;
 
 // ============================================================================
 // HOME FEED COMPONENT
 // ============================================================================
 
 /**
- * Mixed content feed for the home tab.
- * Displays a curated mix of all content types, shuffled on refresh.
+ * Mixed content feed for the home tab with infinite scroll.
+ * Displays a curated mix of all content types, paginated.
  */
 function HomeFeed({ shuffleKey }: { shuffleKey: number }) {
-  // Create shuffled content based on key
-  const feedItems = [
-    { type: 'live', component: <LiveCard stream={SAMPLE_LIVE} key="live" /> },
-    { type: 'post1', component: <PostCard post={MOCK_POSTS[0]} key="post1" /> },
-    { type: 'video', component: <VideoCard video={SAMPLE_VIDEO} key="video" /> },
-    { type: 'image1', component: <ImageCard post={SAMPLE_IMAGES[0]} key="image1" /> },
-    { type: 'post2', component: <PostCard post={MOCK_POSTS[1]} key="post2" /> },
-    { type: 'image2', component: <ImageCard post={SAMPLE_IMAGES[1]} key="image2" /> },
-    { type: 'post3', component: <PostCard post={MOCK_POSTS[2]} key="post3" /> },
-  ];
+  const [items, setItems] = useState<UnifiedFeedItem[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Shuffle based on the key - seeded shuffle for consistency during same session
-  const shuffled = [...feedItems].sort(() => {
-    const seed = Math.sin(shuffleKey * 9999) * 10000;
-    return seed - Math.floor(seed) - 0.5;
-  });
+  // Load initial items
+  useEffect(() => {
+    setItems([]);
+    setPage(0);
+    setHasMore(true);
+    const { items: initialItems, hasMore: more } = getPaginatedFeed(0, PAGE_SIZE, shuffleKey);
+    setItems(initialItems);
+    setHasMore(more);
+  }, [shuffleKey]);
 
-  // Insert shorts reel at a random position (after index 3-5)
-  const shortsPosition = 3 + (shuffleKey % 3);
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!loaderRef.current || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoading && hasMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, isLoading, page, shuffleKey]);
+
+  const loadMore = useCallback(() => {
+    if (isLoading || !hasMore) return;
+    
+    setIsLoading(true);
+    // Simulate network delay
+    setTimeout(() => {
+      const nextPage = page + 1;
+      const { items: newItems, hasMore: more } = getPaginatedFeed(nextPage, PAGE_SIZE, shuffleKey);
+      setItems(prev => [...prev, ...newItems]);
+      setPage(nextPage);
+      setHasMore(more);
+      setIsLoading(false);
+    }, 500);
+  }, [page, shuffleKey, isLoading, hasMore]);
+
+  const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
+    switch (item.type) {
+      case 'post':
+        return <PostCard key={`post-${item.data.id}-${index}`} post={item.data} />;
+      case 'video':
+        return <VideoCard key={`video-${item.data.id}-${index}`} video={item.data} />;
+      case 'image':
+        return <ImageCard key={`image-${item.data.id}-${index}`} post={item.data} />;
+      case 'live':
+        return <LiveCard key={`live-${item.data.id}-${index}`} stream={item.data} />;
+      case 'shorts':
+        return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="p-2 sm:p-3 space-y-3">
       <StoriesBar users={STORY_USERS} />
       
-      {shuffled.slice(0, shortsPosition).map(item => item.component)}
-      <ShortsReel shorts={SAMPLE_SHORTS} />
-      {shuffled.slice(shortsPosition).map(item => item.component)}
+      {items.map((item, index) => renderFeedItem(item, index))}
+      
+      {/* Infinite scroll loader */}
+      <div ref={loaderRef} className="py-4 flex justify-center">
+        {isLoading && (
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-sm">Loading more...</span>
+          </div>
+        )}
+        {!hasMore && items.length > 0 && (
+          <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+        )}
+      </div>
     </div>
   );
 }
