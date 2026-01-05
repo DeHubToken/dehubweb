@@ -36,7 +36,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       </div>
 
       {/* Navigation Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-3 overflow-y-auto space-y-[3px]">
+      <div className="bg-zinc-900 rounded-2xl p-3 space-y-[3px]">
         {NAV_ITEMS.filter((item) => item.path !== '/app').map((item) => {
           const isActive = !item.external && location.pathname.startsWith(item.path);
 
