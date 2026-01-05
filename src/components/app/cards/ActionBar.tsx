@@ -14,7 +14,7 @@
  */
 
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, MessagesSquare, Share, BookmarkCheck, Repeat2, Quote, Link } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessagesSquare, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -149,7 +149,7 @@ export function ActionBar({
                 className="text-white hover:text-zinc-400 transition-colors"
                 aria-label="Share"
               >
-                <Share className="w-5 h-5" />
+                <Share2 className="w-5 h-5" />
               </button>
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetContent side="bottom" className="bg-zinc-900 border-zinc-800 rounded-t-2xl">
@@ -169,7 +169,7 @@ export function ActionBar({
                   className="text-white hover:text-zinc-400 transition-colors"
                   aria-label="Share"
                 >
-                  <Share className="w-5 h-5" />
+                  <Share2 className="w-5 h-5" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
@@ -205,7 +205,7 @@ export function ActionBar({
           className="text-white hover:text-zinc-400 transition-colors"
           aria-label="Bookmark"
         >
-          <BookmarkCheck className="w-5 h-5" />
+          <Bookmark className="w-5 h-5" />
         </button>
       </div>
     </div>
