@@ -1,4 +1,4 @@
-import { Users, Eye, MoreVertical } from 'lucide-react';
+import { Users, Eye, MoreVertical, Loader2 } from 'lucide-react';
 import minecraftCategory from '@/assets/minecraft-category.png';
 import codCategory from '@/assets/cod-category.png';
 import gtaCategory from '@/assets/gta-category.png';
@@ -103,7 +103,21 @@ const CATEGORIES = [
   { name: 'Art', viewers: '67K', image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=100&h=130&fit=crop' },
 ];
 
-export function LiveFeed() {
+interface LiveFeedProps {
+  isRefreshing?: boolean;
+}
+
+export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
+  if (isRefreshing) {
+    return (
+      <div className="p-2 sm:p-3">
+        <div className="flex items-center justify-center py-32">
+          <Loader2 className="w-10 h-10 text-white animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-2 sm:p-3 space-y-4">
       {/* Live Channels */}

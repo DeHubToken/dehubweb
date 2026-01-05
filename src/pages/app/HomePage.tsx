@@ -316,8 +316,8 @@ export default function HomePage() {
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      if (tabValue === 'home') {
-        // Home tab - refresh/shuffle feed with animation
+      if (tabValue === 'home' || tabValue === 'live') {
+        // Home/Live tab - refresh feed with animation
         triggerRefresh();
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
@@ -340,9 +340,9 @@ export default function HomePage() {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
     
-    // Check if at top of page for pull-to-refresh
+    // Check if at top of page for pull-to-refresh (home or live tabs)
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0 && activeTab === 'home') {
+    if (scrollTop <= 0 && (activeTab === 'home' || activeTab === 'live')) {
       pullStartY.current = e.touches[0].clientY;
       setIsPulling(true);
     }
@@ -352,7 +352,7 @@ export default function HomePage() {
     touchEndX.current = e.touches[0].clientX;
     
     // Handle pull-to-refresh
-    if (isPulling && pullStartY.current !== null && activeTab === 'home') {
+    if (isPulling && pullStartY.current !== null && (activeTab === 'home' || activeTab === 'live')) {
       const currentY = e.touches[0].clientY;
       const distance = Math.max(0, currentY - pullStartY.current);
       // Apply resistance - the further you pull, the harder it gets
@@ -363,7 +363,7 @@ export default function HomePage() {
 
   const handleTouchEnd = () => {
     // Handle pull-to-refresh release
-    if (isPulling && pullDistance >= PULL_THRESHOLD && activeTab === 'home') {
+    if (isPulling && pullDistance >= PULL_THRESHOLD && (activeTab === 'home' || activeTab === 'live')) {
       triggerRefresh();
     }
     
@@ -399,14 +399,14 @@ export default function HomePage() {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0 && activeTab === 'home') {
+    if (scrollTop <= 0 && (activeTab === 'home' || activeTab === 'live')) {
       pullStartY.current = e.clientY;
       setIsPulling(true);
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (isPulling && pullStartY.current !== null && activeTab === 'home') {
+    if (isPulling && pullStartY.current !== null && (activeTab === 'home' || activeTab === 'live')) {
       const distance = Math.max(0, e.clientY - pullStartY.current);
       const resistedDistance = Math.min(distance * 0.5, PULL_THRESHOLD * 1.5);
       setPullDistance(resistedDistance);
@@ -414,7 +414,7 @@ export default function HomePage() {
   };
 
   const handleMouseUp = () => {
-    if (isPulling && pullDistance >= PULL_THRESHOLD && activeTab === 'home') {
+    if (isPulling && pullDistance >= PULL_THRESHOLD && (activeTab === 'home' || activeTab === 'live')) {
       triggerRefresh();
     }
     
@@ -448,7 +448,7 @@ export default function HomePage() {
       case 'shorts':
         return <ShortsFeed showFilters={showShortsFilters} />;
       case 'live':
-        return <LiveFeed key={refreshKey} />;
+        return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
       default:
         return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} />;
     }
@@ -469,7 +469,7 @@ export default function HomePage() {
       onMouseLeave={handleMouseLeave}
     >
       {/* Pull-to-refresh indicator - only show when pulling, not when refreshing */}
-      {activeTab === 'home' && pullDistance > 0 && !isRefreshing && (
+      {(activeTab === 'home' || activeTab === 'live') && pullDistance > 0 && !isRefreshing && (
         <div 
           className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200"
           style={{ 
