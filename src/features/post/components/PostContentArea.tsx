@@ -43,7 +43,7 @@ export function PostContentArea({
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="What's happening?"
-            className="w-full bg-transparent text-white text-lg placeholder:text-zinc-500 resize-none outline-none min-h-[80px] pb-5"
+            className="w-full bg-transparent text-white text-lg placeholder:text-white/70 resize-none outline-none min-h-[80px] pb-5"
             rows={3}
           />
           <span className={cn("absolute bottom-0 right-0 text-xs", text.length > 280 ? "text-amber-400" : "text-zinc-500")}>
