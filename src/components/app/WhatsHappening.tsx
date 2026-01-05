@@ -11,7 +11,7 @@ export function WhatsHappening() {
             className="hover:bg-zinc-800 -mx-2 px-2 py-1 rounded-lg cursor-pointer transition-colors"
           >
             <p className="font-semibold text-white">{item.tag}</p>
-            <p className="text-zinc-500 text-sm">{item.postCount}</p>
+            <p className="text-white/70 text-sm">{item.postCount}</p>
           </div>
         ))}
       </div>
