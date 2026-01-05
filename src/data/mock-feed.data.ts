@@ -919,6 +919,32 @@ export type UnifiedFeedItem =
  * Generate a mixed feed with all content types
  * Creates 50+ items shuffled together
  */
+/**
+ * Seeded random number generator for consistent shuffling
+ */
+function seededRandom(seed: number): () => number {
+  let s = seed;
+  return () => {
+    s = Math.sin(s * 9999) * 10000;
+    return s - Math.floor(s);
+  };
+}
+
+/**
+ * Fisher-Yates shuffle with seeded randomness
+ */
+function shuffleArray<T>(array: T[], seed: number): T[] {
+  const result = [...array];
+  const random = seededRandom(seed);
+  
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  
+  return result;
+}
+
 export function generateMixedFeed(seed: number = 0): UnifiedFeedItem[] {
   const items: UnifiedFeedItem[] = [];
   
@@ -942,11 +968,8 @@ export function generateMixedFeed(seed: number = 0): UnifiedFeedItem[] {
     items.push({ type: 'live', data: stream });
   });
   
-  // Shuffle based on seed for consistent but randomized order
-  const shuffled = [...items].sort(() => {
-    const rng = Math.sin(seed * 9999 + items.length) * 10000;
-    return rng - Math.floor(rng) - 0.5;
-  });
+  // Properly shuffle using Fisher-Yates algorithm
+  const shuffled = shuffleArray(items, seed + 1);
   
   // Insert shorts reels at specific positions (every ~12 items)
   const withShorts: UnifiedFeedItem[] = [];
