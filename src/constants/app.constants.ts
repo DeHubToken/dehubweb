@@ -2,12 +2,12 @@ import {
   Home,
   Search,
   Bell,
-  Mail,
+  MessageSquare,
   Trophy,
   Bookmark,
-  Settings,
+  SlidersHorizontal,
   FileText,
-  User,
+  SquareUser,
   Image,
   Video,
   Film,
@@ -21,14 +21,14 @@ import {
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
 export const NAV_ITEMS: NavItem[] = [
-  { icon: User, label: 'Profile', path: '/app/profile' },
+  { icon: SquareUser, label: 'Profile', path: '/app/profile' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
-  { icon: Mail, label: 'Messages', path: '/app/messages' },
+  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
-  { icon: Settings, label: 'Settings', path: '/app/settings' },
+  { icon: SlidersHorizontal, label: 'Settings', path: '/app/settings' },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
   { icon: Home, label: 'Home', path: '/app' },
 ];
