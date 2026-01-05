@@ -127,15 +127,12 @@ function HomeFeed({ shuffleKey, isRefreshing }: { shuffleKey: number; isRefreshi
   return (
     <div className="p-2 sm:p-3 space-y-3">
       {/* Refresh indicator */}
-      <div 
-        className={cn(
-          "flex items-center justify-center gap-2 py-3 transition-all duration-300 overflow-hidden",
-          isRefreshing ? "opacity-100 max-h-12" : "opacity-0 max-h-0"
-        )}
-      >
-        <RefreshCw className="w-4 h-4 text-primary animate-spin" />
-        <span className="text-sm text-primary font-medium">Refreshing feed...</span>
-      </div>
+      {isRefreshing && (
+        <div className="flex items-center justify-center gap-2 py-3">
+          <RefreshCw className="w-4 h-4 text-primary animate-spin" />
+          <span className="text-sm text-primary font-medium">Refreshing feed...</span>
+        </div>
+      )}
 
       <StoriesBar users={STORY_USERS} />
       
