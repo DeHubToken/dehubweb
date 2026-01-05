@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import dehubCoin from '@/assets/dehub-coin.png';
+import usdcLogo from '@/assets/usdc-logo.png';
 
 interface CoinBalanceMenuProps {
   balance: number;
@@ -151,11 +152,9 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
           <img src={dehubCoin} alt="coins" className="w-5 h-5" />
           <span className="text-white font-semibold">{balance.toLocaleString()}</span>
         </div>
-        {/* USD Balance with USDT logo */}
+        {/* USD Balance with USDC logo */}
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center">
-            <span className="text-white text-[10px] font-bold">$</span>
-          </div>
+          <img src={usdcLogo} alt="USD" className="w-5 h-5" />
           <span className="text-zinc-400 font-medium">${dollarValue}</span>
         </div>
       </div>
