@@ -13,7 +13,7 @@
  * ```
  */
 
-import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessagesSquare, Share, BookmarkCheck, Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -98,7 +98,7 @@ export function ActionBar({
             className="text-white hover:text-zinc-400 transition-colors"
             aria-label="Comment"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessagesSquare className="w-5 h-5" />
           </button>
           
           {/* Share Dropdown */}
@@ -108,7 +108,7 @@ export function ActionBar({
                 className="text-white hover:text-zinc-400 transition-colors"
                 aria-label="Share"
               >
-                <Share2 className="w-5 h-5" />
+                <Share className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
@@ -143,7 +143,7 @@ export function ActionBar({
           className="text-white hover:text-zinc-400 transition-colors"
           aria-label="Bookmark"
         >
-          <Bookmark className="w-5 h-5" />
+          <BookmarkCheck className="w-5 h-5" />
         </button>
       </div>
     </div>
