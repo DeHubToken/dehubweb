@@ -13,15 +13,23 @@
  * ```
  */
 
+import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, MessagesSquare, Share, BookmarkCheck, Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 
 interface ActionBarProps {
   /** Handler for like action */
@@ -55,20 +63,52 @@ export function ActionBar({
   className,
   showBorder = false 
 }: ActionBarProps) {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const isMobile = useIsMobile();
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     toast.success('Link copied to clipboard');
+    setSheetOpen(false);
   };
 
   const handleRepost = () => {
     onRepost?.();
     toast.success('Reposted!');
+    setSheetOpen(false);
   };
 
   const handleQuote = () => {
     onQuote?.();
     toast.success('Quote created!');
+    setSheetOpen(false);
   };
+
+  const ShareOptions = () => (
+    <>
+      <button
+        onClick={handleRepost}
+        className="flex items-center gap-3 w-full p-3 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+      >
+        <Repeat2 className="w-5 h-5" />
+        <span>Repost</span>
+      </button>
+      <button
+        onClick={handleQuote}
+        className="flex items-center gap-3 w-full p-3 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+      >
+        <Quote className="w-5 h-5" />
+        <span>Quote</span>
+      </button>
+      <button
+        onClick={handleCopyLink}
+        className="flex items-center gap-3 w-full p-3 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+      >
+        <Link className="w-5 h-5" />
+        <span>Copy Link</span>
+      </button>
+    </>
+  );
 
   return (
     <div className={cn(
@@ -101,40 +141,62 @@ export function ActionBar({
             <MessagesSquare className="w-5 h-5" />
           </button>
           
-          {/* Share Dropdown */}
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
+          {/* Share - Sheet for mobile, Dropdown for desktop */}
+          {isMobile ? (
+            <>
               <button 
+                onClick={() => setSheetOpen(true)}
                 className="text-white hover:text-zinc-400 transition-colors"
                 aria-label="Share"
               >
                 <Share className="w-5 h-5" />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
-              <DropdownMenuItem 
-                onClick={handleRepost}
-                className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
-              >
-                <Repeat2 className="w-4 h-4" />
-                Repost
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={handleQuote}
-                className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
-              >
-                <Quote className="w-4 h-4" />
-                Quote
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={handleCopyLink}
-                className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
-              >
-                <Link className="w-4 h-4" />
-                Copy Link
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                <SheetContent side="bottom" className="bg-zinc-900 border-zinc-800 rounded-t-2xl">
+                  <SheetHeader>
+                    <SheetTitle className="text-white">Share</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-1 mt-4">
+                    <ShareOptions />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </>
+          ) : (
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <button 
+                  className="text-white hover:text-zinc-400 transition-colors"
+                  aria-label="Share"
+                >
+                  <Share className="w-5 h-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
+                <DropdownMenuItem 
+                  onClick={handleRepost}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Repeat2 className="w-4 h-4" />
+                  Repost
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleQuote}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Quote className="w-4 h-4" />
+                  Quote
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleCopyLink}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Link className="w-4 h-4" />
+                  Copy Link
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
 
         {/* Bookmark action */}
