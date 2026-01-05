@@ -62,8 +62,8 @@ export function PostAccessToggles({
       {/* Subscribers Only */}
       <div className="flex items-center justify-between py-0.5">
         <div className="flex items-center gap-2">
-          <Lock className={cn("w-4 h-4", isSubscribersOnly ? "text-amber-400" : "text-zinc-500")} />
-          <span className={cn("text-sm", isSubscribersOnly ? "text-amber-400" : "text-zinc-400")}>Subscribers only</span>
+          <Lock className={cn("w-4 h-4", isSubscribersOnly ? "text-amber-400" : "text-white")} />
+          <span className={cn("text-sm", isSubscribersOnly ? "text-amber-400" : "text-white")}>Subscribers only</span>
         </div>
         <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-amber-500 scale-75" />
       </div>
@@ -72,8 +72,8 @@ export function PostAccessToggles({
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-zinc-400")}>PPV</span>
+            <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-white")} />
+            <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-white")}>PPV</span>
           </div>
           <div className="flex items-center gap-2">
             <AnimatePresence>
@@ -102,8 +102,8 @@ export function PostAccessToggles({
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-zinc-400")}>Watch2Earn</span>
+            <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-white")} />
+            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-white")}>Watch2Earn</span>
           </div>
           <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-blue-500 scale-75" />
         </div>
@@ -138,8 +138,8 @@ export function PostAccessToggles({
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-zinc-500")} />
-            <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-zinc-400")}>Token Gated</span>
+            <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-white")} />
+            <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-white")}>Token Gated</span>
           </div>
           <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-purple-500 scale-75" />
         </div>
