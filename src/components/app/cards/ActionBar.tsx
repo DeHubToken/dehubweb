@@ -121,14 +121,14 @@ export function ActionBar({
         <div className="flex items-center gap-4">
           <button 
             onClick={onLike}
-            className="text-white hover:text-green-400 transition-colors"
+            className="text-white hover:text-zinc-400 transition-colors"
             aria-label="Like"
           >
             <ThumbsUp className="w-5 h-5" />
           </button>
           <button 
             onClick={onDislike}
-            className="text-white hover:text-red-400 transition-colors"
+            className="text-white hover:text-zinc-400 transition-colors"
             aria-label="Dislike"
           >
             <ThumbsDown className="w-5 h-5" />
