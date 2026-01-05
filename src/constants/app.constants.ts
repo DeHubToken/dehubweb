@@ -7,7 +7,7 @@ import {
   Bookmark,
   SlidersHorizontal,
   FileText,
-  SquareUser,
+  User,
   Image,
   Video,
   Film,
@@ -21,7 +21,7 @@ import {
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
 export const NAV_ITEMS: NavItem[] = [
-  { icon: SquareUser, label: 'Profile', path: '/app/profile' },
+  { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
