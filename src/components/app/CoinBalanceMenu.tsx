@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -455,24 +450,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
     }
   };
 
-  if (variant === 'desktop') {
-    return (
-      <DropdownMenu open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }}>
-        <DropdownMenuTrigger asChild>
-          {coinButton}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent 
-          align="end" 
-          glass
-          className="w-72 p-3"
-          sideOffset={8}
-        >
-          {getMenuContent()}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  }
-
+  // Use Drawer (sheet) for both desktop and mobile
   return (
     <Drawer open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }}>
       <DrawerTrigger asChild>
