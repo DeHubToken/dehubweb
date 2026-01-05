@@ -1,4 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile } from '../types';
 
 interface UsePostFormReturn {
@@ -115,18 +117,35 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
 
   const handleEnhanceWithAI = useCallback(async () => {
-    if (!text.trim()) return;
+    if (!text.trim()) {
+      toast.error('Enter some text to enhance');
+      return;
+    }
     setIsEnhancing(true);
     
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const enhanced = text
-      .split('. ')
-      .map(s => s.charAt(0).toUpperCase() + s.slice(1))
-      .join('. ');
-    
-    setText(enhanced);
-    setIsEnhancing(false);
+    try {
+      const { data, error } = await supabase.functions.invoke('enhance-text', {
+        body: { text: text.trim() }
+      });
+
+      if (error) {
+        console.error('Enhancement error:', error);
+        toast.error(error.message || 'Failed to enhance text');
+        return;
+      }
+
+      if (data?.enhancedText) {
+        setText(data.enhancedText);
+        toast.success('Text enhanced!');
+      } else if (data?.error) {
+        toast.error(data.error);
+      }
+    } catch (err) {
+      console.error('Enhancement error:', err);
+      toast.error('Failed to enhance text');
+    } finally {
+      setIsEnhancing(false);
+    }
   }, [text]);
 
   const insertFormatting = useCallback((format: 'bold' | 'italic' | 'mention') => {

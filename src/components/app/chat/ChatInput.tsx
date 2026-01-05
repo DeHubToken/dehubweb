@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Image, Send, Sparkles, Loader2, X } from 'lucide-react';
 import { EmojiPicker } from './EmojiPicker';
 import { GifPicker } from './GifPicker';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface ChatInputProps {
@@ -70,54 +71,30 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
     
     setIsEnhancing(true);
     
-    // Simulate AI enhancement - in production, call an API
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Simple mock enhancement: capitalize first letter, fix common typos, add punctuation
-    let enhanced = message.trim();
-    
-    // Capitalize first letter of sentences
-    enhanced = enhanced.replace(/(^|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
-    
-    // Ensure first letter is capitalized
-    enhanced = enhanced.charAt(0).toUpperCase() + enhanced.slice(1);
-    
-    // Add period if missing punctuation at end
-    if (!/[.!?]$/.test(enhanced)) {
-      enhanced += '.';
+    try {
+      const { data, error } = await supabase.functions.invoke('enhance-text', {
+        body: { text: message.trim() }
+      });
+
+      if (error) {
+        console.error('Enhancement error:', error);
+        toast.error(error.message || 'Failed to enhance text');
+        return;
+      }
+
+      if (data?.enhancedText) {
+        setMessage(data.enhancedText);
+        toast.success('Text enhanced!');
+      } else if (data?.error) {
+        toast.error(data.error);
+      }
+    } catch (err) {
+      console.error('Enhancement error:', err);
+      toast.error('Failed to enhance text');
+    } finally {
+      setIsEnhancing(false);
+      textareaRef.current?.focus();
     }
-    
-    // Common typo fixes
-    const typoFixes: Record<string, string> = {
-      'teh': 'the',
-      'dont': "don't",
-      'cant': "can't",
-      'wont': "won't",
-      'im': "I'm",
-      'youre': "you're",
-      'theyre': "they're",
-      'thats': "that's",
-      'whats': "what's",
-      'heres': "here's",
-      'ur': 'your',
-      'u': 'you',
-      'r': 'are',
-      'thx': 'thanks',
-      'pls': 'please',
-      'bc': 'because',
-      'b4': 'before',
-      'w/': 'with',
-    };
-    
-    Object.entries(typoFixes).forEach(([typo, fix]) => {
-      const regex = new RegExp(`\\b${typo}\\b`, 'gi');
-      enhanced = enhanced.replace(regex, fix);
-    });
-    
-    setMessage(enhanced);
-    setIsEnhancing(false);
-    toast.success('Text enhanced!');
-    textareaRef.current?.focus();
   };
 
   const removeImagePreview = () => {
