@@ -400,6 +400,44 @@ export default function HomePage() {
   };
 
   // --------------------------------------------------------------------------
+  // MOUSE HANDLERS FOR DESKTOP PULL-TO-REFRESH
+  // --------------------------------------------------------------------------
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    if (scrollTop <= 0 && activeTab === 'home') {
+      pullStartY.current = e.clientY;
+      setIsPulling(true);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isPulling && pullStartY.current !== null && activeTab === 'home') {
+      const distance = Math.max(0, e.clientY - pullStartY.current);
+      const resistedDistance = Math.min(distance * 0.5, PULL_THRESHOLD * 1.5);
+      setPullDistance(resistedDistance);
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isPulling && pullDistance >= PULL_THRESHOLD && activeTab === 'home') {
+      triggerRefresh();
+    }
+    
+    setPullDistance(0);
+    setIsPulling(false);
+    pullStartY.current = null;
+  };
+
+  const handleMouseLeave = () => {
+    if (isPulling) {
+      setPullDistance(0);
+      setIsPulling(false);
+      pullStartY.current = null;
+    }
+  };
+
+  // --------------------------------------------------------------------------
   // RENDER FEED BASED ON ACTIVE TAB
   // --------------------------------------------------------------------------
 
@@ -431,11 +469,15 @@ export default function HomePage() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Pull-to-refresh indicator */}
       {activeTab === 'home' && (pullDistance > 0 || isRefreshing) && (
         <div 
-          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200 lg:hidden"
+          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200"
           style={{ 
             height: isRefreshing ? 60 : pullDistance,
             opacity: isRefreshing ? 1 : Math.min(pullDistance / PULL_THRESHOLD, 1)
