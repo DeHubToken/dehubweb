@@ -126,35 +126,29 @@ function HomeFeed({ shuffleKey, isRefreshing }: { shuffleKey: number; isRefreshi
 
   return (
     <div className="p-2 sm:p-3 space-y-3">
-      {/* Refresh indicator */}
-      {isRefreshing && (
-        <div className="flex items-center justify-center gap-2 py-3">
-          <RefreshCw className="w-4 h-4 text-primary animate-spin" />
-          <span className="text-sm text-primary font-medium">Refreshing feed...</span>
+      {isRefreshing ? (
+        <div className="flex items-center justify-center py-32">
+          <Loader2 className="w-8 h-8 text-primary animate-spin" />
         </div>
-      )}
-
-      <StoriesBar users={STORY_USERS} />
-      
-      <div className={cn(
-        "transition-opacity duration-300",
-        isRefreshing ? "opacity-50" : "opacity-100"
-      )}>
-        {items.map((item, index) => renderFeedItem(item, index))}
-      </div>
-      
-      {/* Infinite scroll loader */}
-      <div ref={loaderRef} className="py-4 flex justify-center">
-        {isLoading && (
-          <div className="flex items-center gap-2 text-zinc-400">
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm">Loading more...</span>
+      ) : (
+        <>
+          <StoriesBar users={STORY_USERS} />
+          {items.map((item, index) => renderFeedItem(item, index))}
+          
+          {/* Infinite scroll loader */}
+          <div ref={loaderRef} className="py-4 flex justify-center">
+            {isLoading && (
+              <div className="flex items-center gap-2 text-zinc-400">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="text-sm">Loading more...</span>
+              </div>
+            )}
+            {!hasMore && items.length > 0 && (
+              <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+            )}
           </div>
-        )}
-        {!hasMore && items.length > 0 && (
-          <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }
@@ -474,35 +468,21 @@ export default function HomePage() {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Pull-to-refresh indicator */}
-      {activeTab === 'home' && (pullDistance > 0 || isRefreshing) && (
+      {/* Pull-to-refresh indicator - only show when pulling, not when refreshing */}
+      {activeTab === 'home' && pullDistance > 0 && !isRefreshing && (
         <div 
           className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200"
           style={{ 
-            height: isRefreshing ? 60 : pullDistance,
-            opacity: isRefreshing ? 1 : Math.min(pullDistance / PULL_THRESHOLD, 1)
+            height: pullDistance,
+            opacity: Math.min(pullDistance / PULL_THRESHOLD, 1)
           }}
         >
-          <div className="flex items-center gap-2">
-            <RefreshCw 
-              className={cn(
-                "w-5 h-5 text-primary transition-transform",
-                isRefreshing && "animate-spin",
-                !isRefreshing && pullDistance >= PULL_THRESHOLD && "scale-110"
-              )} 
-              style={{ 
-                transform: isRefreshing ? undefined : `rotate(${pullDistance * 3}deg)` 
-              }}
-            />
-            <span className="text-sm text-white font-medium">
-              {isRefreshing 
-                ? "Refreshing..." 
-                : pullDistance >= PULL_THRESHOLD 
-                  ? "Release to refresh" 
-                  : "Pull to refresh"
-              }
-            </span>
-          </div>
+          <Loader2 
+            className="w-6 h-6 text-primary transition-transform"
+            style={{ 
+              transform: `rotate(${pullDistance * 4}deg)` 
+            }}
+          />
         </div>
       )}
       {/* Tab Navigation */}
