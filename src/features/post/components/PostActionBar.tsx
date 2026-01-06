@@ -105,7 +105,7 @@ export function PostActionBar({
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('video')}
-                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                  className="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors"
                   title="Live Video"
                 >
                   <Video className="w-5 h-5 text-red-400" />
@@ -113,7 +113,7 @@ export function PostActionBar({
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('townhall')}
-                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                  className="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors"
                   title="Town Hall"
                 >
                   <Headphones className="w-5 h-5 text-purple-400" />
