@@ -1,4 +1,4 @@
-import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +15,7 @@ interface PostActionBarProps {
   canPost: boolean;
   isEnhancing: boolean;
   hasText: boolean;
+  hasImage?: boolean;
 }
 
 export function PostActionBar({
@@ -30,6 +31,7 @@ export function PostActionBar({
   canPost,
   isEnhancing,
   hasText,
+  hasImage,
 }: PostActionBarProps) {
   return (
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
@@ -63,6 +65,17 @@ export function PostActionBar({
         >
           <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
         </button>
+
+        {hasImage && (
+          <button 
+            type="button" 
+            className="p-2 hover:bg-white/10 rounded-full transition-colors relative group" 
+            title="Audio added to images"
+          >
+            <Mic className="w-5 h-5 text-emerald-400" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full" />
+          </button>
+        )}
 
         <div className="w-px h-4 bg-white/10 mx-1" />
 

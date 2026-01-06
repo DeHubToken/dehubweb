@@ -211,34 +211,53 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio }:
                         </button>
                       </div>
                     ) : showAudioOptions === index ? (
-                      // Show upload/record options
-                      <div className="flex items-center gap-1">
+                      // Show upload/record options with liquid glass effect
+                      <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => triggerAudioUpload(index)}
-                          className="flex items-center gap-1.5 bg-black/70 backdrop-blur-sm px-2.5 py-1.5 rounded-full text-white text-xs hover:bg-black/80 transition-colors"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                            bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                            backdrop-blur-xl border border-white/20
+                            shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                            hover:shadow-[0_8px_32px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
+                            hover:border-blue-400/40 hover:from-blue-500/20 hover:via-blue-400/10 hover:to-transparent"
                         >
                           <Upload className="w-3 h-3" />
                           Upload
                         </button>
                         <button
                           onClick={() => handleStartRecording(index)}
-                          className="flex items-center gap-1.5 bg-black/70 backdrop-blur-sm px-2.5 py-1.5 rounded-full text-white text-xs hover:bg-black/80 transition-colors"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                            bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                            backdrop-blur-xl border border-white/20
+                            shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                            hover:shadow-[0_8px_32px_rgba(239,68,68,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
+                            hover:border-red-400/40 hover:from-red-500/20 hover:via-red-400/10 hover:to-transparent"
                         >
                           <Mic className="w-3 h-3 text-red-400" />
                           Record
                         </button>
                         <button
                           onClick={() => setShowAudioOptions(null)}
-                          className="flex items-center justify-center w-6 h-6 bg-black/70 backdrop-blur-sm rounded-full text-white hover:bg-black/80 transition-colors"
+                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                            bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                            backdrop-blur-xl border border-white/20
+                            shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                            hover:border-white/40"
                         >
                           <X className="w-3 h-3" />
                         </button>
                       </div>
                     ) : (
-                      // No audio - show add audio button
+                      // No audio - show add audio button with liquid glass effect
                       <button
                         onClick={() => setShowAudioOptions(index)}
-                        className="flex items-center gap-1.5 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full text-white text-xs hover:bg-black/80 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                          bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                          backdrop-blur-xl border border-white/20
+                          shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                          hover:shadow-[0_8px_32px_rgba(239,68,68,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]
+                          hover:border-red-400/30"
                       >
                         <Mic className="w-3 h-3 text-red-400" />
                         Add audio
