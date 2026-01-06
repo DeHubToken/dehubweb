@@ -28,7 +28,7 @@ export function TabbedSidePanel() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 flex items-center justify-center transition-colors ${
                 activeTab === tab.id
-                  ? 'text-white border-b-2 border-green-500 bg-zinc-800/50'
+                  ? 'text-white bg-zinc-800/50'
                   : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
               }`}
             >
