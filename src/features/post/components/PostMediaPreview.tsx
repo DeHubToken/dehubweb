@@ -24,6 +24,7 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio }:
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioInputRef = useRef<HTMLInputElement | null>(null);
   const pendingUploadIndex = useRef<number | null>(null);
+  const recordingTimeRef = useRef(0);
 
   useEffect(() => {
     return () => {
@@ -51,24 +52,26 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio }:
       mediaRecorder.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         const url = URL.createObjectURL(blob);
-        onAddAudio(index, { blob, url, duration: recordingTime });
+        // Use ref value to capture correct duration
+        onAddAudio(index, { blob, url, duration: recordingTimeRef.current });
         stream.getTracks().forEach(track => track.stop());
         setRecordingIndex(null);
         setRecordingTime(0);
+        recordingTimeRef.current = 0;
       };
 
       mediaRecorder.start();
       setRecordingIndex(index);
       setRecordingTime(0);
+      recordingTimeRef.current = 0;
 
       timerRef.current = setInterval(() => {
-        setRecordingTime(prev => {
-          if (prev >= MAX_DURATION - 1) {
-            stopRecording();
-            return prev;
-          }
-          return prev + 1;
-        });
+        recordingTimeRef.current += 1;
+        setRecordingTime(recordingTimeRef.current);
+        
+        if (recordingTimeRef.current >= MAX_DURATION) {
+          stopRecording();
+        }
       }, 1000);
     } catch (err) {
       console.error('Failed to start recording:', err);
