@@ -92,38 +92,48 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-1">
       <button
         onClick={handleCopyProfileUrl}
-        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <Copy className="w-5 h-5 text-zinc-400" />
-        <span className="text-white">Copy profile URL</span>
+        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <Copy className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-white font-medium">Copy profile URL</span>
       </button>
       <button
         onClick={handleCopyUsername}
-        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <AtSign className="w-5 h-5 text-zinc-400" />
-        <span className="text-white">Copy username</span>
+        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <AtSign className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-white font-medium">Copy username</span>
       </button>
       <button
         onClick={handleCopyAddress}
-        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <Wallet className="w-5 h-5 text-zinc-400" />
-        <span className="text-white">Copy address</span>
+        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <Wallet className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-white font-medium">Copy address</span>
       </button>
       <button
         onClick={handleSendCoins}
-        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <Send className="w-5 h-5 text-zinc-400" />
-        <span className="text-white">Send coins</span>
+        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <Send className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-white font-medium">Send coins</span>
       </button>
       <button
         onClick={handleToggleNotifications}
-        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <Bell className="w-5 h-5 text-zinc-400" />
-        <span className="text-white">Notify</span>
+        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <Bell className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-white font-medium">Notify</span>
       </button>
     </div>
   );
@@ -200,42 +210,52 @@ export default function ProfilePage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent 
                     align="end" 
-                    className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-xl min-w-[200px]"
+                    className="bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-xl min-w-[220px] p-1"
                   >
                     <DropdownMenuItem 
                       onClick={handleCopyProfileUrl}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
                     >
-                      <Copy className="w-4 h-4 text-zinc-400" />
-                      <span className="text-white">Copy profile URL</span>
+                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                        <Copy className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-white font-medium text-sm">Copy profile URL</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleCopyUsername}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
                     >
-                      <AtSign className="w-4 h-4 text-zinc-400" />
-                      <span className="text-white">Copy username</span>
+                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                        <AtSign className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-white font-medium text-sm">Copy username</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleCopyAddress}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
                     >
-                      <Wallet className="w-4 h-4 text-zinc-400" />
-                      <span className="text-white">Copy address</span>
+                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                        <Wallet className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-white font-medium text-sm">Copy address</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleSendCoins}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
                     >
-                      <Send className="w-4 h-4 text-zinc-400" />
-                      <span className="text-white">Send coins</span>
+                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                        <Send className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-white font-medium text-sm">Send coins</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleToggleNotifications}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer"
                     >
-                      <Bell className="w-4 h-4 text-zinc-400" />
-                      <span className="text-white">Notify</span>
+                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
+                        <Bell className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-white font-medium text-sm">Notify</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
