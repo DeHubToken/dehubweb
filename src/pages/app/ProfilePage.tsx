@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
   Home, Link2, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, Heart, Share, UserPlus, Copy, AtSign, Wallet, Coins
+  Calendar, Heart, Share, UserPlus, Copy, AtSign, Wallet, Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -110,7 +110,7 @@ export default function ProfilePage() {
         onClick={handleSendCoins}
         className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
       >
-        <Coins className="w-5 h-5 text-zinc-400" />
+        <Send className="w-5 h-5 text-zinc-400" />
         <span className="text-white">Send coins</span>
       </button>
     </div>
@@ -218,7 +218,7 @@ export default function ProfilePage() {
                       onClick={handleSendCoins}
                       className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
                     >
-                      <Coins className="w-4 h-4 text-zinc-400" />
+                      <Send className="w-4 h-4 text-zinc-400" />
                       <span className="text-white">Send coins</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
