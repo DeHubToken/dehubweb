@@ -10,6 +10,7 @@ interface UsePostFormReturn {
   refs: {
     imageInputRef: React.RefObject<HTMLInputElement>;
     videoInputRef: React.RefObject<HTMLInputElement>;
+    audioInputRef: React.RefObject<HTMLInputElement>;
     textareaRef: React.RefObject<HTMLTextAreaElement>;
   };
 }
@@ -36,6 +37,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Computed values
@@ -150,6 +152,34 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return m;
     }));
   }, []);
+
+  const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    // Only allow audio when there are images
+    if (!hasImage) {
+      toast.error('Add images first to attach audio');
+      e.target.value = '';
+      return;
+    }
+
+    const file = files[0];
+    const url = URL.createObjectURL(file);
+    
+    // Create audio element to get duration
+    const audio = new Audio(url);
+    audio.onloadedmetadata = () => {
+      const duration = Math.round(audio.duration);
+      // Add audio to all images
+      setMedia(prev => prev.map(m => 
+        m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
+      ));
+      toast.success('Audio added to images');
+    };
+    
+    e.target.value = '';
+  }, [hasImage]);
 
   const handleEnhanceWithAI = useCallback(async () => {
     if (!text.trim()) {
@@ -282,6 +312,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       handleImageSelect,
       handleVideoSelect,
       removeMedia,
+      handleAudioSelect,
       addAudioToMedia,
       removeAudioFromMedia,
       handleEnhanceWithAI,
@@ -299,6 +330,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     refs: {
       imageInputRef,
       videoInputRef,
+      audioInputRef,
       textareaRef,
     },
   };
