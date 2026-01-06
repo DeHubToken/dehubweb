@@ -62,34 +62,69 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const files = e.target.files;
     if (!files) return;
 
-    Array.from(files).forEach(file => {
+    // Can't add images if there's already a video
+    if (hasVideo) {
+      toast.error('Remove the video first to add images');
+      e.target.value = '';
+      return;
+    }
+
+    const currentImageCount = media.filter(m => m.type === 'image').length;
+    const availableSlots = 4 - currentImageCount;
+    
+    if (availableSlots <= 0) {
+      toast.error('Maximum 4 images allowed');
+      e.target.value = '';
+      return;
+    }
+
+    const filesToAdd = Array.from(files).slice(0, availableSlots);
+    
+    if (files.length > availableSlots) {
+      toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max 4)`);
+    }
+
+    filesToAdd.forEach(file => {
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
     e.target.value = '';
-  }, []);
+  }, [hasVideo, media]);
 
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
-    for (const file of Array.from(files)) {
-      const preview = URL.createObjectURL(file);
-      
-      const video = document.createElement('video');
-      video.preload = 'metadata';
-      video.src = preview;
-      
-      const duration = await new Promise<number>((resolve) => {
-        video.onloadedmetadata = () => {
-          resolve(video.duration);
-        };
-      });
-
-      setMedia(prev => [...prev, { file, preview, type: 'video', duration }]);
+    // Can't add video if there are already images
+    if (hasImage) {
+      toast.error('Remove images first to add a video');
+      e.target.value = '';
+      return;
     }
+
+    // Can't add more than 1 video
+    if (hasVideo) {
+      toast.error('Only 1 video allowed per post');
+      e.target.value = '';
+      return;
+    }
+
+    const file = files[0]; // Only take the first video
+    const preview = URL.createObjectURL(file);
+    
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.src = preview;
+    
+    const duration = await new Promise<number>((resolve) => {
+      video.onloadedmetadata = () => {
+        resolve(video.duration);
+      };
+    });
+
+    setMedia([{ file, preview, type: 'video', duration }]);
     e.target.value = '';
-  }, []);
+  }, [hasImage, hasVideo]);
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
