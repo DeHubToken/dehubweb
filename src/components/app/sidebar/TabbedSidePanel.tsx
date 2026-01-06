@@ -26,13 +26,16 @@ export function TabbedSidePanel() {
               type="button"
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 flex items-center justify-center transition-colors ${
+              className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
                 activeTab === tab.id
-                  ? 'text-white bg-zinc-800/50'
+                  ? 'text-white'
                   : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
               }`}
             >
-              <Icon className="w-5 h-5" />
+              {activeTab === tab.id && (
+                <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+              )}
+              <Icon className="w-5 h-5 relative z-10" />
             </button>
           );
         })}
