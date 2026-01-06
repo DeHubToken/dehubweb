@@ -123,7 +123,7 @@ export default function ProfilePage() {
         className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
       >
         <Bell className="w-5 h-5 text-zinc-400" />
-        <span className="text-white">Turn on notifications</span>
+        <span className="text-white">Notify</span>
       </button>
     </div>
   );
@@ -204,38 +204,38 @@ export default function ProfilePage() {
                   >
                     <DropdownMenuItem 
                       onClick={handleCopyProfileUrl}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
                     >
                       <Copy className="w-4 h-4 text-zinc-400" />
                       <span className="text-white">Copy profile URL</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleCopyUsername}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
                     >
                       <AtSign className="w-4 h-4 text-zinc-400" />
                       <span className="text-white">Copy username</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleCopyAddress}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
                     >
                       <Wallet className="w-4 h-4 text-zinc-400" />
                       <span className="text-white">Copy address</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleSendCoins}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
                     >
                       <Send className="w-4 h-4 text-zinc-400" />
                       <span className="text-white">Send coins</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleToggleNotifications}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 focus:bg-white/5 cursor-pointer focus:text-white"
                     >
                       <Bell className="w-4 h-4 text-zinc-400" />
-                      <span className="text-white">Turn on notifications</span>
+                      <span className="text-white">Notify</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
