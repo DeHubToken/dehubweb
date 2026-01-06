@@ -18,7 +18,7 @@ export function TabbedSidePanel() {
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
       {/* Tab Icons */}
-      <div className="flex border-b border-zinc-800">
+      <div className="flex">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
