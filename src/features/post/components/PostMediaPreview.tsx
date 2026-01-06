@@ -176,7 +176,7 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio }:
             <div key={index} className="relative rounded-xl overflow-hidden bg-zinc-900">
               {m.type === 'image' ? (
                 <div className="relative">
-                  <img src={m.preview} alt="" className="w-full h-32 object-cover" />
+                  <img src={m.preview} alt="" className="w-full h-auto max-h-80 object-contain" />
                   
                   {/* Audio controls for images */}
                   <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
