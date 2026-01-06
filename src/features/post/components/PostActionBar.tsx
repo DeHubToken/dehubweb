@@ -96,12 +96,12 @@ export function PostActionBar({
               </button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1.5 bg-zinc-900/95 backdrop-blur-xl border border-white/10" 
+              className="w-auto p-1 bg-transparent border-none shadow-none" 
               align="center"
               side="top"
-              sideOffset={8}
+              sideOffset={4}
             >
-              <div className="flex items-center gap-1">
+              <div className="flex flex-col items-center gap-1">
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('video')}
