@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile } from '../types';
+import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 
 interface UsePostFormReturn {
   state: PostFormState;
@@ -31,7 +31,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isTokenGated, setIsTokenGated] = useState(false);
   const [tokenContract, setTokenContract] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
-  const [isLive, setIsLive] = useState(false);
+  const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
 
   // Refs
@@ -44,6 +44,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const hasVideo = media.some(m => m.type === 'video');
   const hasImage = media.some(m => m.type === 'image');
   const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
+  const isLive = liveMode !== null;
 
   const getPostDestinations = useCallback(() => {
     const destinations: string[] = ['Home'];
@@ -263,16 +264,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setIsTokenGated(false);
     setTokenContract('');
     setTokenAmount('');
-    setIsLive(false);
+    setLiveMode(null);
   }, []);
 
   const handlePost = useCallback(() => {
     console.log('Posting to:', destinations);
-    console.log('Content:', { text, media, isSubscribersOnly, isLive });
+    console.log('Content:', { text, media, isSubscribersOnly, liveMode });
     
     resetForm();
     onClose();
-  }, [destinations, text, media, isSubscribersOnly, isLive, resetForm, onClose]);
+  }, [destinations, text, media, isSubscribersOnly, liveMode, resetForm, onClose]);
 
   return {
     state: {
@@ -290,7 +291,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       isTokenGated,
       tokenContract,
       tokenAmount,
-      isLive,
+      liveMode,
       isEnhancing,
     },
     actions: {
@@ -308,7 +309,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setIsTokenGated,
       setTokenContract,
       setTokenAmount,
-      setIsLive,
+      setLiveMode,
       handleImageSelect,
       handleVideoSelect,
       removeMedia,
