@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
-import type { MediaFile, AudioFile } from '../types';
+import type { MediaFile, AudioFile, LiveMode } from '../types';
 
 interface PostContentAreaProps {
   text: string;
@@ -12,7 +12,7 @@ interface PostContentAreaProps {
   onRemoveMedia: (index: number) => void;
   onAddAudio: (index: number, audio: AudioFile) => void;
   onRemoveAudio: (index: number) => void;
-  isLive: boolean;
+  liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
 }
@@ -25,10 +25,11 @@ export function PostContentArea({
   onRemoveMedia,
   onAddAudio,
   onRemoveAudio,
-  isLive,
+  liveMode,
   canPost,
   destinations,
 }: PostContentAreaProps) {
+  const isLive = liveMode !== null;
   return (
     <div className="p-4 max-h-[60vh] overflow-y-auto">
       <div className="flex gap-3">
@@ -66,7 +67,9 @@ export function PostContentArea({
                 className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-2"
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-red-400 text-sm font-medium">Live stream will be created</span>
+                <span className="text-red-400 text-sm font-medium">
+                  {liveMode === 'video' ? 'Live Video' : 'Town Hall'} stream will be created
+                </span>
               </motion.div>
             )}
           </AnimatePresence>

@@ -14,6 +14,8 @@ export interface MediaFile {
 
 export type Currency = 'USD' | 'DHB';
 
+export type LiveMode = 'video' | 'townhall' | null;
+
 export interface PostFormState {
   text: string;
   media: MediaFile[];
@@ -29,7 +31,7 @@ export interface PostFormState {
   isTokenGated: boolean;
   tokenContract: string;
   tokenAmount: string;
-  isLive: boolean;
+  liveMode: LiveMode;
   isEnhancing: boolean;
 }
 
@@ -48,7 +50,7 @@ export interface PostFormActions {
   setIsTokenGated: (value: boolean) => void;
   setTokenContract: (value: string) => void;
   setTokenAmount: (value: string) => void;
-  setIsLive: (value: boolean) => void;
+  setLiveMode: (value: LiveMode) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

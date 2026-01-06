@@ -1,6 +1,9 @@
-import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send, Mic, Music } from 'lucide-react';
+import { useState } from 'react';
+import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import type { LiveMode } from '../types';
 
 interface PostActionBarProps {
   imageInputRef: React.RefObject<HTMLInputElement>;
@@ -9,8 +12,8 @@ interface PostActionBarProps {
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isLive: boolean;
-  setIsLive: (value: boolean) => void;
+  liveMode: LiveMode;
+  setLiveMode: (value: LiveMode) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   onEnhanceWithAI: () => void;
   onPost: () => void;
@@ -27,8 +30,8 @@ export function PostActionBar({
   onImageSelect,
   onVideoSelect,
   onAudioSelect,
-  isLive,
-  setIsLive,
+  liveMode,
+  setLiveMode,
   onInsertFormatting,
   onEnhanceWithAI,
   onPost,
@@ -37,6 +40,14 @@ export function PostActionBar({
   hasText,
   hasImage,
 }: PostActionBarProps) {
+  const [livePopoverOpen, setLivePopoverOpen] = useState(false);
+  const isLive = liveMode !== null;
+
+  const handleSelectLiveMode = (mode: LiveMode) => {
+    setLiveMode(mode);
+    setLivePopoverOpen(false);
+  };
+
   return (
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
@@ -67,14 +78,59 @@ export function PostActionBar({
         )}
         
         {!hasImage && (
-          <button 
-            type="button" 
-            onClick={() => setIsLive(!isLive)} 
-            className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} 
-            title="Go live"
-          >
-            <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
-          </button>
+          <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen}>
+            <PopoverTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => {
+                  if (isLive) {
+                    setLiveMode(null);
+                  } else {
+                    setLivePopoverOpen(true);
+                  }
+                }}
+                className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} 
+                title="Go live"
+              >
+                <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent 
+              className="w-64 p-0 bg-zinc-900/95 backdrop-blur-xl border border-white/10" 
+              align="start"
+              sideOffset={8}
+            >
+              <div className="p-2">
+                <p className="text-xs text-zinc-400 px-2 py-1.5 font-medium">Choose Live Type</p>
+                <button
+                  type="button"
+                  onClick={() => handleSelectLiveMode('video')}
+                  className="w-full flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="p-2 rounded-full bg-red-500/20">
+                    <Video className="w-4 h-4 text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">Live Video</p>
+                    <p className="text-xs text-zinc-400">Stream video like Twitch</p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectLiveMode('townhall')}
+                  className="w-full flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+                >
+                  <div className="p-2 rounded-full bg-purple-500/20">
+                    <Headphones className="w-4 h-4 text-purple-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">Town Hall</p>
+                    <p className="text-xs text-zinc-400">Audio spaces like Twitter</p>
+                  </div>
+                </button>
+              </div>
+            </PopoverContent>
+          </Popover>
         )}
 
         {hasImage && (

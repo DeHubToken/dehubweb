@@ -32,7 +32,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         onRemoveMedia={actions.removeMedia}
         onAddAudio={actions.addAudioToMedia}
         onRemoveAudio={actions.removeAudioFromMedia}
-        isLive={state.isLive}
+        liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}
       />
@@ -71,8 +71,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         onImageSelect={actions.handleImageSelect}
         onVideoSelect={actions.handleVideoSelect}
         onAudioSelect={actions.handleAudioSelect}
-        isLive={state.isLive}
-        setIsLive={actions.setIsLive}
+        liveMode={state.liveMode}
+        setLiveMode={actions.setLiveMode}
         onInsertFormatting={actions.insertFormatting}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={actions.handlePost}
