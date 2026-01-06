@@ -7,21 +7,14 @@ import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { cn } from '@/lib/utils';
-import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { toast } from 'sonner';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 
 const PROFILE_TABS = [
   { icon: Home, label: 'Posts', value: 'posts', count: 142 },
@@ -58,7 +51,6 @@ const MOCK_POST = {
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('posts');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
-  const isTouchDevice = useIsTouchDevice();
 
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.gg/${MOCK_PROFILE.handle.replace('@', '')}`);
@@ -179,87 +171,23 @@ export default function ProfilePage() {
                 <MessageCircle className="w-4 h-4" />
                 Message
               </Button>
-              {isTouchDevice ? (
-                <Sheet open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
-                  <SheetTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent 
-                    side="bottom" 
-                    className="bg-zinc-900/95 backdrop-blur-xl border-t border-white/10 rounded-t-3xl"
+              <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
+                <DrawerTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
                   >
-                    <ShareOptions />
-                  </SheetContent>
-                </Sheet>
-              ) : (
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent 
-                    align="end" 
-                    className="bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-xl min-w-[220px] p-1"
-                  >
-                    <DropdownMenuItem 
-                      onClick={handleCopyProfileUrl}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
-                    >
-                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                        <Copy className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <span className="text-white font-medium text-sm">Copy profile URL</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={handleCopyUsername}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
-                    >
-                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                        <AtSign className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <span className="text-white font-medium text-sm">Copy username</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={handleCopyAddress}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
-                    >
-                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                        <Wallet className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <span className="text-white font-medium text-sm">Copy address</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={handleSendCoins}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer mb-1"
-                    >
-                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                        <Send className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <span className="text-white font-medium text-sm">Send coins</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={handleToggleNotifications}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                    >
-                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-                        <Bell className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <span className="text-white font-medium text-sm">Notify</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent glass className="px-4 pb-8">
+                  <DrawerHeader className="sr-only">
+                    <DrawerTitle>Profile Options</DrawerTitle>
+                  </DrawerHeader>
+                  <ShareOptions />
+                </DrawerContent>
+              </Drawer>
             </div>
 
             {/* Profile Info */}
