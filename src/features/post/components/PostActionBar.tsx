@@ -105,7 +105,7 @@ export function PostActionBar({
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('video')}
-                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all shadow-lg"
+                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                   title="Live Video"
                 >
                   <Video className="w-5 h-5 text-red-400" />
@@ -113,7 +113,7 @@ export function PostActionBar({
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('townhall')}
-                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all shadow-lg"
+                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                   title="Town Hall"
                 >
                   <Headphones className="w-5 h-5 text-purple-400" />
