@@ -179,7 +179,7 @@ export default function ProfilePage() {
                   </SheetContent>
                 </Sheet>
               ) : (
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
