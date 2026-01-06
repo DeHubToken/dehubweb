@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import { 
   Home, Link2, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, Heart, Share, UserPlus
+  Calendar, Heart, Share, UserPlus, Copy, AtSign, Wallet, Coins
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PageHeader } from '@/components/app/PageHeader';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { cn } from '@/lib/utils';
+import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 const PROFILE_TABS = [
   { icon: Home, label: 'Posts', value: 'posts', count: 142 },
@@ -43,6 +57,64 @@ const MOCK_POST = {
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('posts');
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const isTouchDevice = useIsTouchDevice();
+
+  const handleCopyProfileUrl = () => {
+    navigator.clipboard.writeText(`https://dehub.gg/${MOCK_PROFILE.handle.replace('@', '')}`);
+    toast.success('Profile URL copied to clipboard');
+    setShareSheetOpen(false);
+  };
+
+  const handleCopyUsername = () => {
+    navigator.clipboard.writeText(MOCK_PROFILE.handle);
+    toast.success('Username copied to clipboard');
+    setShareSheetOpen(false);
+  };
+
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText('0x1234...5678'); // Mock wallet address
+    toast.success('Address copied to clipboard');
+    setShareSheetOpen(false);
+  };
+
+  const handleSendCoins = () => {
+    toast.info('Send coins feature coming soon');
+    setShareSheetOpen(false);
+  };
+
+  const ShareOptions = () => (
+    <div className="flex flex-col gap-1">
+      <button
+        onClick={handleCopyProfileUrl}
+        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+      >
+        <Copy className="w-5 h-5 text-zinc-400" />
+        <span className="text-white">Copy profile URL</span>
+      </button>
+      <button
+        onClick={handleCopyUsername}
+        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+      >
+        <AtSign className="w-5 h-5 text-zinc-400" />
+        <span className="text-white">Copy username</span>
+      </button>
+      <button
+        onClick={handleCopyAddress}
+        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+      >
+        <Wallet className="w-5 h-5 text-zinc-400" />
+        <span className="text-white">Copy address</span>
+      </button>
+      <button
+        onClick={handleSendCoins}
+        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+      >
+        <Coins className="w-5 h-5 text-zinc-400" />
+        <span className="text-white">Send coins</span>
+      </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen">
@@ -85,13 +157,73 @@ export default function ProfilePage() {
                 <MessageCircle className="w-4 h-4" />
                 Message
               </Button>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
-              >
-                <Share className="w-4 h-4" />
-              </Button>
+              {isTouchDevice ? (
+                <Sheet open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
+                  <SheetTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+                    >
+                      <Share className="w-4 h-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent 
+                    side="bottom" 
+                    className="bg-zinc-900/95 backdrop-blur-xl border-t border-white/10 rounded-t-3xl"
+                  >
+                    <SheetHeader className="pb-2">
+                      <SheetTitle className="text-white text-lg">Share Profile</SheetTitle>
+                    </SheetHeader>
+                    <ShareOptions />
+                  </SheetContent>
+                </Sheet>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+                    >
+                      <Share className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent 
+                    align="end" 
+                    className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-xl min-w-[200px]"
+                  >
+                    <DropdownMenuItem 
+                      onClick={handleCopyProfileUrl}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                    >
+                      <Copy className="w-4 h-4 text-zinc-400" />
+                      <span className="text-white">Copy profile URL</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={handleCopyUsername}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                    >
+                      <AtSign className="w-4 h-4 text-zinc-400" />
+                      <span className="text-white">Copy username</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={handleCopyAddress}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                    >
+                      <Wallet className="w-4 h-4 text-zinc-400" />
+                      <span className="text-white">Copy address</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={handleSendCoins}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                    >
+                      <Coins className="w-4 h-4 text-zinc-400" />
+                      <span className="text-white">Send coins</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             {/* Profile Info */}
