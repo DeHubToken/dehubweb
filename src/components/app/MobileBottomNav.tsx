@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, Bell, User, Search, Trophy, Bookmark, SlidersHorizontal, LayoutDashboard } from 'lucide-react';
+import { Home, MessageSquare, Plus, Bell, User, Search, Trophy, Bookmark, Settings, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 
@@ -12,7 +12,7 @@ const ALL_NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
-  { icon: SlidersHorizontal, label: 'Settings', path: '/app/settings' },
+  { icon: Settings, label: 'Settings', path: '/app/settings' },
 ];
 
 export function MobileBottomNav() {

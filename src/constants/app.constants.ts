@@ -5,7 +5,7 @@ import {
   MessageSquare,
   Trophy,
   Bookmark,
-  SlidersHorizontal,
+  Settings,
   FileText,
   User,
   Image,
@@ -28,7 +28,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
-  { icon: SlidersHorizontal, label: 'Settings', path: '/app/settings' },
+  { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: FileText, label: 'Blog', path: 'https://docs.dhb.gg/docs/blog', external: true },
   { icon: Home, label: 'Home', path: '/app' },
 ];
