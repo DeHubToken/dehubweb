@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
   Home, Link2, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, Heart, Share, UserPlus, Copy, AtSign, Wallet, Send
+  Calendar, Heart, Share, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -83,6 +83,11 @@ export default function ProfilePage() {
     setShareSheetOpen(false);
   };
 
+  const handleToggleNotifications = () => {
+    toast.success('Notifications enabled for this profile');
+    setShareSheetOpen(false);
+  };
+
   const ShareOptions = () => (
     <div className="flex flex-col gap-1">
       <button
@@ -112,6 +117,13 @@ export default function ProfilePage() {
       >
         <Send className="w-5 h-5 text-zinc-400" />
         <span className="text-white">Send coins</span>
+      </button>
+      <button
+        onClick={handleToggleNotifications}
+        className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+      >
+        <Bell className="w-5 h-5 text-zinc-400" />
+        <span className="text-white">Turn on notifications</span>
       </button>
     </div>
   );
@@ -165,16 +177,13 @@ export default function ProfilePage() {
                       size="icon" 
                       className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
                     >
-                      <Share className="w-4 h-4" />
+                      <Plus className="w-4 h-4" />
                     </Button>
                   </SheetTrigger>
                   <SheetContent 
                     side="bottom" 
                     className="bg-zinc-900/95 backdrop-blur-xl border-t border-white/10 rounded-t-3xl"
                   >
-                    <SheetHeader className="pb-2">
-                      <SheetTitle className="text-white text-lg">Share Profile</SheetTitle>
-                    </SheetHeader>
                     <ShareOptions />
                   </SheetContent>
                 </Sheet>
@@ -186,7 +195,7 @@ export default function ProfilePage() {
                       size="icon" 
                       className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
                     >
-                      <Share className="w-4 h-4" />
+                      <Plus className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent 
@@ -220,6 +229,13 @@ export default function ProfilePage() {
                     >
                       <Send className="w-4 h-4 text-zinc-400" />
                       <span className="text-white">Send coins</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={handleToggleNotifications}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer"
+                    >
+                      <Bell className="w-4 h-4 text-zinc-400" />
+                      <span className="text-white">Turn on notifications</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
