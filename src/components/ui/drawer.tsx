@@ -3,8 +3,8 @@ import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
 
-const Drawer = ({ shouldScaleBackground = false, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+const Drawer = ({ shouldScaleBackground = false, modal = false, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} modal={modal} {...props} />
 );
 Drawer.displayName = "Drawer";
 
