@@ -67,8 +67,10 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
       <PostActionBar
         imageInputRef={refs.imageInputRef}
         videoInputRef={refs.videoInputRef}
+        audioInputRef={refs.audioInputRef}
         onImageSelect={actions.handleImageSelect}
         onVideoSelect={actions.handleVideoSelect}
+        onAudioSelect={actions.handleAudioSelect}
         isLive={state.isLive}
         setIsLive={actions.setIsLive}
         onInsertFormatting={actions.insertFormatting}

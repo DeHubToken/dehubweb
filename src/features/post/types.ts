@@ -51,6 +51,7 @@ export interface PostFormActions {
   setIsLive: (value: boolean) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removeMedia: (index: number) => void;
   addAudioToMedia: (index: number, audio: AudioFile) => void;
   removeAudioFromMedia: (index: number) => void;

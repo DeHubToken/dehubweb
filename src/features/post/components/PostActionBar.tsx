@@ -1,12 +1,14 @@
-import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send, Mic } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send, Mic, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface PostActionBarProps {
   imageInputRef: React.RefObject<HTMLInputElement>;
   videoInputRef: React.RefObject<HTMLInputElement>;
+  audioInputRef: React.RefObject<HTMLInputElement>;
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isLive: boolean;
   setIsLive: (value: boolean) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
@@ -21,8 +23,10 @@ interface PostActionBarProps {
 export function PostActionBar({
   imageInputRef,
   videoInputRef,
+  audioInputRef,
   onImageSelect,
   onVideoSelect,
+  onAudioSelect,
   isLive,
   setIsLive,
   onInsertFormatting,
@@ -38,6 +42,7 @@ export function PostActionBar({
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
+        <input ref={audioInputRef} type="file" accept="audio/*" onChange={onAudioSelect} className="hidden" />
         
         <button 
           type="button" 
@@ -71,14 +76,23 @@ export function PostActionBar({
         )}
 
         {hasImage && (
-          <button 
-            type="button" 
-            className="p-2 hover:bg-white/10 rounded-full transition-colors relative group" 
-            title="Audio added to images"
-          >
-            <Mic className="w-5 h-5 text-emerald-400" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full" />
-          </button>
+          <>
+            <button 
+              type="button" 
+              className="p-2 hover:bg-white/10 rounded-full transition-colors" 
+              title="Record audio"
+            >
+              <Mic className="w-5 h-5 text-emerald-400" />
+            </button>
+            <button 
+              type="button" 
+              onClick={() => audioInputRef.current?.click()}
+              className="p-2 hover:bg-white/10 rounded-full transition-colors" 
+              title="Upload audio"
+            >
+              <Music className="w-5 h-5 text-emerald-400" />
+            </button>
+          </>
         )}
 
         <div className="w-px h-4 bg-white/10 mx-1" />
