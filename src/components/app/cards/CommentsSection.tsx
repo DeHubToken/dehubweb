@@ -1,7 +1,7 @@
 /**
  * Comments Section Component
  * ==========================
- * Full-featured comments UI with tabs (Replies/Quotes), search, and sorting.
+ * Full-featured comments UI with tabs (Replies/Quotes), search, sorting, and voice notes.
  * 
  * @example
  * ```tsx
@@ -9,8 +9,8 @@
  * ```
  */
 
-import { useState, useMemo } from 'react';
-import { X, Search, ThumbsUp, ThumbsDown, MessageCircle, Quote, ArrowUpDown, ChevronDown } from 'lucide-react';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageCircle, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,6 +27,11 @@ import {
 // TYPES
 // ============================================================================
 
+export interface VoiceNote {
+  url: string;
+  duration: number;
+}
+
 export interface Comment {
   id: string;
   username: string;
@@ -37,6 +42,7 @@ export interface Comment {
   timeAgo: string;
   isLiked?: boolean;
   isDisliked?: boolean;
+  voiceNote?: VoiceNote;
 }
 
 interface CommentsSectionProps {
@@ -160,6 +166,50 @@ interface CommentItemProps {
   onReply: (id: string) => void;
 }
 
+interface VoiceNotePlayerProps {
+  voiceNote: VoiceNote;
+}
+
+function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(voiceNote.url);
+      audioRef.current.onended = () => setIsPlaying(false);
+    }
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  return (
+    <button
+      onClick={togglePlay}
+      className="flex items-center gap-1.5 bg-zinc-700/50 px-2 py-1 rounded-full text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
+    >
+      {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+      <span>{voiceNote.duration}s</span>
+    </button>
+  );
+}
+
 function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) {
   return (
     <motion.div
@@ -176,7 +226,14 @@ function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) 
           <span className="font-semibold text-white text-sm">{comment.username}</span>
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
-        <p className="text-zinc-300 text-sm leading-relaxed break-words">{comment.text}</p>
+        {comment.text && (
+          <p className="text-zinc-300 text-sm leading-relaxed break-words">{comment.text}</p>
+        )}
+        {comment.voiceNote && (
+          <div className="mt-1">
+            <VoiceNotePlayer voiceNote={comment.voiceNote} />
+          </div>
+        )}
         <div className="flex items-center gap-4 mt-2">
           <button
             onClick={() => onLike(comment.id)}
@@ -222,6 +279,105 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
   const [replies, setReplies] = useState<Comment[]>(initialReplies);
   const [quotes, setQuotes] = useState<Comment[]>(initialQuotes);
   const [newComment, setNewComment] = useState('');
+  
+  // Voice note recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [voiceNote, setVoiceNote] = useState<VoiceNote | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingTimeRef = useRef(0);
+  const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+
+  const MAX_VOICE_DURATION = 30;
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (playbackAudioRef.current) {
+        playbackAudioRef.current.pause();
+        playbackAudioRef.current = null;
+      }
+    };
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const url = URL.createObjectURL(blob);
+        setVoiceNote({ url, duration: recordingTimeRef.current });
+        stream.getTracks().forEach(track => track.stop());
+        setIsRecording(false);
+        setRecordingTime(0);
+        recordingTimeRef.current = 0;
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      recordingTimeRef.current = 0;
+
+      timerRef.current = setInterval(() => {
+        recordingTimeRef.current += 1;
+        setRecordingTime(recordingTimeRef.current);
+        
+        if (recordingTimeRef.current >= MAX_VOICE_DURATION) {
+          stopRecording();
+        }
+      }, 1000);
+    } catch (err) {
+      console.error('Failed to start recording:', err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const removeVoiceNote = () => {
+    if (voiceNote) {
+      URL.revokeObjectURL(voiceNote.url);
+      setVoiceNote(null);
+    }
+  };
+
+  const togglePreviewPlayback = () => {
+    if (!voiceNote) return;
+
+    if (!playbackAudioRef.current) {
+      playbackAudioRef.current = new Audio(voiceNote.url);
+      playbackAudioRef.current.onended = () => setIsPlayingPreview(false);
+    }
+
+    if (isPlayingPreview) {
+      playbackAudioRef.current.pause();
+      playbackAudioRef.current.currentTime = 0;
+      setIsPlayingPreview(false);
+    } else {
+      playbackAudioRef.current.play();
+      setIsPlayingPreview(true);
+    }
+  };
 
   // Filter and sort comments
   const filteredComments = useMemo(() => {
@@ -282,7 +438,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
   };
 
   const handlePostComment = () => {
-    if (!newComment.trim()) return;
+    if (!newComment.trim() && !voiceNote) return;
 
     const newItem: Comment = {
       id: `new-${Date.now()}`,
@@ -292,6 +448,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
       likes: 0,
       dislikes: 0,
       timeAgo: 'Just now',
+      voiceNote: voiceNote || undefined,
     };
 
     if (activeTab === 'replies') {
@@ -300,7 +457,10 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
       setQuotes([newItem, ...quotes]);
     }
     setNewComment('');
+    setVoiceNote(null);
   };
+
+  const canPost = newComment.trim() || voiceNote;
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
 
@@ -412,31 +572,82 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
         </TabsContent>
 
         {/* New Comment Input - at the bottom */}
-        <div className="flex gap-2 mt-3 pt-3 border-t border-zinc-800">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser" />
-            <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 flex gap-2">
-            <Input
-              placeholder={activeTab === 'replies' ? 'Add a reply...' : 'Add a quote...'}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
-              onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
-            />
-            <button
-              onClick={handlePostComment}
-              disabled={!newComment.trim()}
-              className={cn(
-                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                newComment.trim()
-                  ? "bg-blue-500 text-white hover:bg-blue-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+        <div className="mt-3 pt-3 border-t border-zinc-800">
+          {/* Voice note preview */}
+          {voiceNote && (
+            <div className="flex items-center gap-2 mb-2 bg-zinc-800 rounded-lg px-3 py-2">
+              <button
+                onClick={togglePreviewPlayback}
+                className="w-7 h-7 flex items-center justify-center bg-zinc-700 rounded-full text-white hover:bg-zinc-600 transition-colors"
+              >
+                {isPlayingPreview ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              </button>
+              <div className="flex-1 flex items-center gap-2">
+                <div className="h-1 flex-1 bg-zinc-600 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: '100%' }} />
+                </div>
+                <span className="text-xs text-zinc-400">{voiceNote.duration}s</span>
+              </div>
+              <button
+                onClick={removeVoiceNote}
+                className="w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-300 transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Recording indicator */}
+          {isRecording && (
+            <div className="flex items-center gap-2 mb-2 bg-red-500/20 rounded-lg px-3 py-2">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <span className="text-sm text-red-400">Recording... {recordingTime}s / {MAX_VOICE_DURATION}s</span>
+              <button
+                onClick={stopRecording}
+                className="ml-auto flex items-center gap-1.5 bg-red-500 px-2.5 py-1 rounded-full text-white text-xs font-medium"
+              >
+                <Square className="w-3 h-3 fill-white" />
+                Stop
+              </button>
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser" />
+              <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 flex gap-2">
+              <Input
+                placeholder={activeTab === 'replies' ? 'Add a reply...' : 'Add a quote...'}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+                onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
+                disabled={isRecording}
+              />
+              {!isRecording && !voiceNote && (
+                <button
+                  onClick={startRecording}
+                  className="w-9 h-9 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                  aria-label="Record voice note"
+                >
+                  <Mic className="w-4 h-4" />
+                </button>
               )}
-            >
-              Post
-            </button>
+              <button
+                onClick={handlePostComment}
+                disabled={!canPost || isRecording}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                  canPost && !isRecording
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                )}
+              >
+                Post
+              </button>
+            </div>
           </div>
         </div>
       </Tabs>
