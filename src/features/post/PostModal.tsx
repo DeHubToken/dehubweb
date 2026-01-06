@@ -77,6 +77,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         hasText={!!state.text.trim()}
+        hasImage={computed.hasImage}
       />
     </>
   );
