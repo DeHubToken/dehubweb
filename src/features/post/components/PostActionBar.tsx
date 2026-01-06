@@ -96,37 +96,27 @@ export function PostActionBar({
               </button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-64 p-0 bg-zinc-900/95 backdrop-blur-xl border border-white/10" 
-              align="start"
+              className="w-auto p-1.5 bg-zinc-900/95 backdrop-blur-xl border border-white/10" 
+              align="center"
+              side="top"
               sideOffset={8}
             >
-              <div className="p-2">
-                <p className="text-xs text-zinc-400 px-2 py-1.5 font-medium">Choose Live Type</p>
+              <div className="flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('video')}
-                  className="w-full flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                  title="Live Video"
                 >
-                  <div className="p-2 rounded-full bg-red-500/20">
-                    <Video className="w-4 h-4 text-red-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Live Video</p>
-                    <p className="text-xs text-zinc-400">Stream video like Twitch</p>
-                  </div>
+                  <Video className="w-5 h-5 text-red-400" />
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSelectLiveMode('townhall')}
-                  className="w-full flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                  title="Town Hall"
                 >
-                  <div className="p-2 rounded-full bg-purple-500/20">
-                    <Headphones className="w-4 h-4 text-purple-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-white">Town Hall</p>
-                    <p className="text-xs text-zinc-400">Audio spaces like Twitter</p>
-                  </div>
+                  <Headphones className="w-5 h-5 text-purple-400" />
                 </button>
               </div>
             </PopoverContent>
