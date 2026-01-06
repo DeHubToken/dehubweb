@@ -101,16 +101,14 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  /* Hide scrollbars on mobile only */
-  @media (max-width: 1023px) {
-    * {
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
+  /* GLOBAL RULE: Hide ALL scrollbars on ALL screen sizes while preserving scroll functionality */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
 
-    *::-webkit-scrollbar {
-      display: none;
-    }
+  *::-webkit-scrollbar {
+    display: none;
   }
 
   /* Hide number input spinners globally */
