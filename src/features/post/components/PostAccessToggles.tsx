@@ -1,4 +1,4 @@
-import { Lock, Coins, Play, Shield, Eye, MessageCircle } from 'lucide-react';
+import { Lock, CreditCard, Play, Shield, Eye, MessageCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -72,7 +72,7 @@ export function PostAccessToggles({
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Coins className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-white")} />
+            <CreditCard className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-white")} />
             <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-white")}>PPV</span>
           </div>
           <div className="flex items-center gap-2">
