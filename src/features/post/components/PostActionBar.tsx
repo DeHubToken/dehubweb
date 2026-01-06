@@ -44,16 +44,18 @@ export function PostActionBar({
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/*" onChange={onAudioSelect} className="hidden" />
         
-        <button 
-          type="button" 
-          onClick={() => imageInputRef.current?.click()} 
-          className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-          title="Add image"
-        >
-          <Image className="w-5 h-5 text-blue-400" />
-        </button>
+        {!isLive && (
+          <button 
+            type="button" 
+            onClick={() => imageInputRef.current?.click()} 
+            className="p-2 hover:bg-white/10 rounded-full transition-colors" 
+            title="Add image"
+          >
+            <Image className="w-5 h-5 text-blue-400" />
+          </button>
+        )}
         
-        {!hasImage && (
+        {!hasImage && !isLive && (
           <button 
             type="button" 
             onClick={() => videoInputRef.current?.click()} 
@@ -148,10 +150,15 @@ export function PostActionBar({
         <Button
           onClick={onPost}
           disabled={!canPost}
-          className="rounded-full px-3 h-8 sm:px-4 bg-white text-black hover:bg-zinc-200 font-semibold disabled:opacity-50 text-sm"
+          className={cn(
+            "rounded-full px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
+            isLive 
+              ? "bg-red-500 text-white hover:bg-red-600" 
+              : "bg-white text-black hover:bg-zinc-200"
+          )}
         >
-          <span className="hidden sm:inline">Post</span>
-          <Send className="w-4 h-4 sm:hidden" />
+          <span className="hidden sm:inline">{isLive ? 'Go Live' : 'Post'}</span>
+          {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
         </Button>
       </div>
     </div>
