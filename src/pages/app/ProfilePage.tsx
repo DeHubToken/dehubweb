@@ -51,7 +51,7 @@ export default function ProfilePage() {
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Cover Photo */}
-          <div className="h-28 sm:h-36 bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
+          <div className="aspect-[3/1] bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
           
           {/* Profile Content */}
           <div className="px-4 sm:px-6 pb-4">
