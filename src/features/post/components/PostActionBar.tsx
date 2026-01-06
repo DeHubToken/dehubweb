@@ -48,23 +48,27 @@ export function PostActionBar({
           <Image className="w-5 h-5 text-blue-400" />
         </button>
         
-        <button 
-          type="button" 
-          onClick={() => videoInputRef.current?.click()} 
-          className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-          title="Add video"
-        >
-          <Film className="w-5 h-5 text-purple-400" />
-        </button>
+        {!hasImage && (
+          <button 
+            type="button" 
+            onClick={() => videoInputRef.current?.click()} 
+            className="p-2 hover:bg-white/10 rounded-full transition-colors" 
+            title="Add video"
+          >
+            <Film className="w-5 h-5 text-purple-400" />
+          </button>
+        )}
         
-        <button 
-          type="button" 
-          onClick={() => setIsLive(!isLive)} 
-          className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} 
-          title="Go live"
-        >
-          <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
-        </button>
+        {!hasImage && (
+          <button 
+            type="button" 
+            onClick={() => setIsLive(!isLive)} 
+            className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} 
+            title="Go live"
+          >
+            <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
+          </button>
+        )}
 
         {hasImage && (
           <button 
