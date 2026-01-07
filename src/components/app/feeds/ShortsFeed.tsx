@@ -8,6 +8,8 @@ import type { ShortVideo } from '@/types/feed.types';
 
 const DURATION_OPTIONS = ['All', '< 15s', '15-60s', '> 60s'];
 const CATEGORY_OPTIONS = ['All', 'Dance', 'Comedy', 'Food', 'Pets', 'Fitness', 'Magic'];
+const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented'];
+const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
 const ITEMS_PER_PAGE = 9;
 
 interface ShortsFeedProps {
@@ -19,6 +21,8 @@ interface ShortsFeedProps {
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
   const [selectedDuration, setSelectedDuration] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedSort, setSelectedSort] = useState('New to Old');
+  const [selectedUploadDate, setSelectedUploadDate] = useState('All Time');
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [displayedCount, setDisplayedCount] = useState(ITEMS_PER_PAGE);
@@ -123,6 +127,44 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 )}
               >
                 {category}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort Filter */}
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            <span className="text-zinc-400 text-sm whitespace-nowrap">Sort:</span>
+            {SORT_OPTIONS.map((sort) => (
+              <button
+                key={sort}
+                onClick={() => setSelectedSort(sort)}
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors',
+                  selectedSort === sort
+                    ? 'bg-white text-black font-medium'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {sort}
+              </button>
+            ))}
+          </div>
+
+          {/* Upload Date Filter */}
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            <span className="text-zinc-400 text-sm whitespace-nowrap">Upload Date:</span>
+            {UPLOAD_DATE_OPTIONS.map((date) => (
+              <button
+                key={date}
+                onClick={() => setSelectedUploadDate(date)}
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors',
+                  selectedUploadDate === date
+                    ? 'bg-white text-black font-medium'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {date}
               </button>
             ))}
           </div>
