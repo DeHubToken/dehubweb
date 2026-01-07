@@ -36,18 +36,24 @@ const generateMockPostInfo = (postId: string) => {
   // Generate a timestamp within the last 30 days
   const timestamp = new Date(Date.now() - (absHash % 30) * 24 * 60 * 60 * 1000);
   
-  // Generate mock owners (not listing)
-  const ownerCount = (absHash % 3) + 1;
+  // Generate mock owners and listings that total 100%
+  const ownerCount = (absHash % 3) + 2; // 2-4 owners
+  const listingCount = (absHash % 3); // 0-2 listings
+  const totalHolders = ownerCount + listingCount;
+  
+  // Distribute 100% among all holders
+  const basePercentage = Math.floor(100 / totalHolders);
+  const remainder = 100 - (basePercentage * totalHolders);
+  
   const owners: Owner[] = Array.from({ length: ownerCount }, (_, i) => ({
     address: `0x${((absHash + i * 12345) >>> 0).toString(16).padStart(40, 'f').slice(0, 40)}`,
-    percentage: i === 0 ? 50 - (ownerCount - 1) * 5 : 5 + (i * 2),
+    percentage: basePercentage + (i === 0 ? remainder : 0), // Give remainder to first owner
   }));
   
   // Generate mock listings (fractions for sale)
-  const listingCount = (absHash % 4);
   const listings: Listing[] = Array.from({ length: listingCount }, (_, i) => ({
     address: `0x${((absHash + (i + 10) * 54321) >>> 0).toString(16).padStart(40, 'f').slice(0, 40)}`,
-    percentage: 5 + (i * 3),
+    percentage: basePercentage,
     price: ((absHash % 100) + 10 + i * 25) / 10,
     currency: 'ETH',
   }));
