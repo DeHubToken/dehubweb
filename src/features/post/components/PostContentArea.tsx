@@ -3,7 +3,8 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
+import { Link } from 'lucide-react';
 
 interface PostContentAreaProps {
   text: string;
@@ -20,6 +21,27 @@ interface PostContentAreaProps {
   canPost: boolean;
   destinations: string[];
   hasVideo: boolean;
+}
+
+// URL regex pattern
+const URL_REGEX = /(https?:\/\/[^\s<]+)/g;
+
+// Shorten URL for display
+function shortenUrl(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname.replace('www.', '');
+    // Show domain + truncated path
+    const path = urlObj.pathname;
+    if (path && path !== '/') {
+      const shortPath = path.length > 10 ? path.substring(0, 10) + '...' : path;
+      return domain + shortPath;
+    }
+    return domain;
+  } catch {
+    // Fallback: just truncate
+    return url.length > 25 ? url.substring(0, 22) + '...' : url;
+  }
 }
 
 export function PostContentArea({
@@ -39,23 +61,182 @@ export function PostContentArea({
   hasVideo,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
-
-  // Get plain text length for character count
-  const getPlainTextLength = useCallback(() => {
-    if (!editorRef.current) return 0;
-    return editorRef.current.innerText.length;
-  }, [editorRef]);
+  const isProcessingLinks = useRef(false);
 
   const charCount = text.length;
+
+  // Save and restore cursor position
+  const saveCursorPosition = useCallback(() => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return null;
+    
+    const range = selection.getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(editorRef.current!);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    
+    return preCaretRange.toString().length;
+  }, [editorRef]);
+
+  const restoreCursorPosition = useCallback((position: number) => {
+    if (!editorRef.current || position === null) return;
+    
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const walker = document.createTreeWalker(
+      editorRef.current,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+
+    let currentPos = 0;
+    let node: Text | null = null;
+
+    while (walker.nextNode()) {
+      node = walker.currentNode as Text;
+      const nodeLength = node.textContent?.length || 0;
+      
+      if (currentPos + nodeLength >= position) {
+        const range = document.createRange();
+        range.setStart(node, Math.min(position - currentPos, nodeLength));
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return;
+      }
+      currentPos += nodeLength;
+    }
+  }, [editorRef]);
+
+  // Process links in the content
+  const processLinks = useCallback(() => {
+    if (!editorRef.current || isProcessingLinks.current) return;
+    
+    const editor = editorRef.current;
+    const html = editor.innerHTML;
+    
+    // Check if there are unprocessed URLs (not already in link chips)
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Get text content without link chips
+    const linkChips = tempDiv.querySelectorAll('[data-link-chip]');
+    linkChips.forEach(chip => chip.remove());
+    const textWithoutChips = tempDiv.textContent || '';
+    
+    if (!URL_REGEX.test(textWithoutChips)) return;
+    
+    isProcessingLinks.current = true;
+    const cursorPos = saveCursorPosition();
+    
+    // Process text nodes only (not link chips)
+    const walker = document.createTreeWalker(
+      editor,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          // Skip text inside link chips
+          if ((node.parentElement as HTMLElement)?.closest('[data-link-chip]')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const nodesToProcess: { node: Text; matches: RegExpMatchArray[] }[] = [];
+    
+    while (walker.nextNode()) {
+      const textNode = walker.currentNode as Text;
+      const text = textNode.textContent || '';
+      const matches = [...text.matchAll(URL_REGEX)];
+      
+      if (matches.length > 0) {
+        nodesToProcess.push({ node: textNode, matches });
+      }
+    }
+
+    // Process nodes in reverse to maintain positions
+    for (let i = nodesToProcess.length - 1; i >= 0; i--) {
+      const { node, matches } = nodesToProcess[i];
+      const text = node.textContent || '';
+      
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+      
+      for (const match of matches) {
+        const url = match[0];
+        const index = match.index!;
+        
+        // Text before the URL
+        if (index > lastIndex) {
+          fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+        }
+        
+        // Create link chip
+        const chip = document.createElement('span');
+        chip.setAttribute('data-link-chip', 'true');
+        chip.setAttribute('data-url', url);
+        chip.contentEditable = 'false';
+        chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors';
+        chip.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>${shortenUrl(url)}</span>`;
+        chip.onclick = () => window.open(url, '_blank', 'noopener,noreferrer');
+        
+        fragment.appendChild(chip);
+        lastIndex = index + url.length;
+      }
+      
+      // Text after the last URL
+      if (lastIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+      }
+      
+      node.parentNode?.replaceChild(fragment, node);
+    }
+
+    // Restore cursor
+    if (cursorPos !== null) {
+      setTimeout(() => {
+        restoreCursorPosition(cursorPos);
+        isProcessingLinks.current = false;
+      }, 0);
+    } else {
+      isProcessingLinks.current = false;
+    }
+  }, [editorRef, saveCursorPosition, restoreCursorPosition]);
 
   // Handle input changes
   const handleInput = useCallback(() => {
     if (!editorRef.current) return;
-    const html = editorRef.current.innerHTML;
-    // Convert to plain text for state (preserving line breaks)
-    const plainText = editorRef.current.innerText;
+    
+    // Get plain text including URLs from chips
+    let plainText = '';
+    const walker = document.createTreeWalker(
+      editorRef.current,
+      NodeFilter.SHOW_ALL,
+      null
+    );
+    
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.nodeType === Node.TEXT_NODE) {
+        plainText += node.textContent;
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        if (el.hasAttribute('data-link-chip')) {
+          plainText += el.getAttribute('data-url') || '';
+          // Skip children of link chip
+          walker.nextSibling();
+        }
+      }
+    }
+    
     setText(plainText);
-  }, [editorRef, setText]);
+    
+    // Process links after a short delay (debounce)
+    setTimeout(processLinks, 300);
+  }, [editorRef, setText, processLinks]);
 
   // Sync content when text is cleared (e.g., on form reset)
   useEffect(() => {
