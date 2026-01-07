@@ -266,6 +266,29 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, o
                     )}
                   </div>
                 </div>
+              ) : m.type === 'audio' ? (
+                // Standalone audio post preview
+                <div className="relative p-4 flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <Music className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-medium text-sm truncate">{m.file.name}</p>
+                    <p className="text-zinc-400 text-xs">
+                      {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => playingIndex === index ? stopAudio() : playAudio(m.preview, index)}
+                    className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center hover:bg-emerald-600 transition-colors"
+                  >
+                    {playingIndex === index ? (
+                      <Pause className="w-5 h-5 text-white" />
+                    ) : (
+                      <Play className="w-5 h-5 text-white fill-white" />
+                    )}
+                  </button>
+                </div>
               ) : (
                 <div className="relative">
                   <video src={m.preview} className="w-full h-32 object-cover" />

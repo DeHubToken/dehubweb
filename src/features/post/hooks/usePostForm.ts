@@ -43,6 +43,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   // Computed values
   const hasVideo = media.some(m => m.type === 'video');
   const hasImage = media.some(m => m.type === 'image');
+  const hasAudio = media.some(m => m.type === 'audio');
   const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
   const hasMusicVideo = media.some(m => m.type === 'video' && m.isMusicVideo);
   const isLive = liveMode !== null;
@@ -50,14 +51,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const getPostDestinations = useCallback(() => {
     const destinations: string[] = ['Home'];
     if (hasImage) destinations.push('Images');
+    if (hasAudio) destinations.push('Music');
     if (hasVideo) {
       destinations.push('Videos');
       if (isShort) destinations.push('Shorts');
       if (hasMusicVideo) destinations.push('Music');
     }
     if (isLive) destinations.push('Live');
-    return destinations;
-  }, [hasImage, hasVideo, isShort, hasMusicVideo, isLive]);
+    // Remove duplicate Music entries
+    return [...new Set(destinations)];
+  }, [hasImage, hasAudio, hasVideo, isShort, hasMusicVideo, isLive]);
 
   const destinations = getPostDestinations();
   const canPost = Boolean(text.trim() || media.length > 0 || isLive);
@@ -166,25 +169,25 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Only allow audio when there are images
-    if (!hasImage) {
-      toast.error('Add images first to attach audio');
-      e.target.value = '';
-      return;
-    }
-
     const file = files[0];
     const url = URL.createObjectURL(file);
     
     // Create audio element to get duration
-    const audio = new Audio(url);
-    audio.onloadedmetadata = () => {
-      const duration = Math.round(audio.duration);
-      // Add audio to all images
-      setMedia(prev => prev.map(m => 
-        m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
-      ));
-      toast.success('Audio added to images');
+    const audioEl = new Audio(url);
+    audioEl.onloadedmetadata = () => {
+      const duration = Math.round(audioEl.duration);
+      
+      if (hasImage) {
+        // Add audio to all images
+        setMedia(prev => prev.map(m => 
+          m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
+        ));
+        toast.success('Audio added to images');
+      } else {
+        // Standalone audio post
+        setMedia(prev => [...prev, { file, preview: url, type: 'audio', duration }]);
+        toast.success('Audio uploaded');
+      }
     };
     
     e.target.value = '';
@@ -333,6 +336,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     computed: {
       hasVideo,
       hasImage,
+      hasAudio,
       isShort,
       destinations,
       canPost,

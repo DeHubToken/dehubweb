@@ -7,7 +7,7 @@ export interface AudioFile {
 export interface MediaFile {
   file: File;
   preview: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'audio';
   duration?: number;
   audio?: AudioFile;
   isMusicVideo?: boolean;
@@ -68,6 +68,7 @@ export interface PostFormActions {
 export interface PostFormComputed {
   hasVideo: boolean;
   hasImage: boolean;
+  hasAudio: boolean;
   isShort: boolean;
   destinations: string[];
   canPost: boolean;
