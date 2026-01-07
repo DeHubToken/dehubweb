@@ -23,25 +23,24 @@ interface PostContentAreaProps {
   hasVideo: boolean;
 }
 
-// URL regex pattern
-const URL_REGEX = /(https?:\/\/[^\s<]+)/g;
+// URL regex pattern - create fresh each time to avoid state issues with global flag
+const createUrlRegex = () => /(https?:\/\/[^\s<]+)/g;
 
-// Shorten URL for display
-function shortenUrl(url: string): string {
-  try {
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname.replace('www.', '');
-    // Show domain + truncated path
-    const path = urlObj.pathname;
-    if (path && path !== '/') {
-      const shortPath = path.length > 10 ? path.substring(0, 10) + '...' : path;
-      return domain + shortPath;
-    }
-    return domain;
-  } catch {
-    // Fallback: just truncate
-    return url.length > 25 ? url.substring(0, 22) + '...' : url;
-  }
+// Create a link chip element
+function createLinkChip(url: string): HTMLSpanElement {
+  const chip = document.createElement('span');
+  chip.setAttribute('data-link-chip', 'true');
+  chip.setAttribute('data-url', url);
+  chip.contentEditable = 'false';
+  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors';
+  chip.innerHTML = `🔗`;
+  chip.title = url;
+  chip.onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  return chip;
 }
 
 export function PostContentArea({
@@ -125,7 +124,7 @@ export function PostContentArea({
     linkChips.forEach(chip => chip.remove());
     const textWithoutChips = tempDiv.textContent || '';
     
-    if (!URL_REGEX.test(textWithoutChips)) return;
+    if (!createUrlRegex().test(textWithoutChips)) return;
     
     isProcessingLinks.current = true;
     const cursorPos = saveCursorPosition();
@@ -149,8 +148,8 @@ export function PostContentArea({
     
     while (walker.nextNode()) {
       const textNode = walker.currentNode as Text;
-      const text = textNode.textContent || '';
-      const matches = [...text.matchAll(URL_REGEX)];
+      const nodeText = textNode.textContent || '';
+      const matches = [...nodeText.matchAll(createUrlRegex())];
       
       if (matches.length > 0) {
         nodesToProcess.push({ node: textNode, matches });
@@ -160,7 +159,7 @@ export function PostContentArea({
     // Process nodes in reverse to maintain positions
     for (let i = nodesToProcess.length - 1; i >= 0; i--) {
       const { node, matches } = nodesToProcess[i];
-      const text = node.textContent || '';
+      const nodeText = node.textContent || '';
       
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
@@ -171,25 +170,17 @@ export function PostContentArea({
         
         // Text before the URL
         if (index > lastIndex) {
-          fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+          fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex, index)));
         }
         
-        // Create link chip
-        const chip = document.createElement('span');
-        chip.setAttribute('data-link-chip', 'true');
-        chip.setAttribute('data-url', url);
-        chip.contentEditable = 'false';
-        chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors';
-        chip.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>${shortenUrl(url)}</span>`;
-        chip.onclick = () => window.open(url, '_blank', 'noopener,noreferrer');
-        
-        fragment.appendChild(chip);
+        // Create link chip using helper function
+        fragment.appendChild(createLinkChip(url));
         lastIndex = index + url.length;
       }
       
       // Text after the last URL
-      if (lastIndex < text.length) {
-        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+      if (lastIndex < nodeText.length) {
+        fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex)));
       }
       
       node.parentNode?.replaceChild(fragment, node);
@@ -238,6 +229,62 @@ export function PostContentArea({
     setTimeout(processLinks, 300);
   }, [editorRef, setText, processLinks]);
 
+  // Handle paste - process links immediately
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    e.preventDefault();
+    
+    const pastedText = e.clipboardData.getData('text/plain');
+    if (!pastedText) return;
+    
+    const urlRegex = createUrlRegex();
+    const hasUrls = urlRegex.test(pastedText);
+    
+    if (hasUrls) {
+      // Process URLs in pasted text and insert with chips
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+      
+      // Reset regex and find all matches
+      const matches = [...pastedText.matchAll(createUrlRegex())];
+      
+      for (const match of matches) {
+        const url = match[0];
+        const index = match.index!;
+        
+        // Text before the URL
+        if (index > lastIndex) {
+          fragment.appendChild(document.createTextNode(pastedText.substring(lastIndex, index)));
+        }
+        
+        // Create link chip
+        fragment.appendChild(createLinkChip(url));
+        lastIndex = index + url.length;
+      }
+      
+      // Text after the last URL
+      if (lastIndex < pastedText.length) {
+        fragment.appendChild(document.createTextNode(pastedText.substring(lastIndex)));
+      }
+      
+      // Insert at cursor
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(fragment);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    } else {
+      // No URLs, just insert plain text
+      document.execCommand('insertText', false, pastedText);
+    }
+    
+    // Update state
+    handleInput();
+  }, [handleInput]);
+
   // Sync content when text is cleared (e.g., on form reset)
   useEffect(() => {
     if (text === '' && editorRef.current && editorRef.current.innerHTML !== '') {
@@ -258,6 +305,7 @@ export function PostContentArea({
             ref={editorRef}
             contentEditable
             onInput={handleInput}
+            onPaste={handlePaste}
             data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
             className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[80px] pb-5 empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
