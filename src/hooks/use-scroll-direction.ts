@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface UseScrollDirectionOptions {
   threshold?: number;
@@ -6,7 +6,7 @@ interface UseScrollDirectionOptions {
 
 export function useScrollDirection({ threshold = 10 }: UseScrollDirectionOptions = {}) {
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,23 +15,29 @@ export function useScrollDirection({ threshold = 10 }: UseScrollDirectionOptions
       // Always show nav at top of page
       if (currentScrollY < threshold) {
         setIsVisible(true);
-        setLastScrollY(currentScrollY);
+        lastScrollY.current = currentScrollY;
         return;
       }
 
-      const scrollDiff = currentScrollY - lastScrollY;
+      const scrollDiff = currentScrollY - lastScrollY.current;
 
       // Only update if scroll exceeds threshold to prevent jitter
       if (Math.abs(scrollDiff) >= threshold) {
         // Scrolling down = hide, scrolling up = show
         setIsVisible(scrollDiff < 0);
-        setLastScrollY(currentScrollY);
+        lastScrollY.current = currentScrollY;
       }
     };
 
+    // Listen to both window scroll and touch events for better mobile support
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, threshold]);
+    document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll, { capture: true });
+    };
+  }, [threshold]);
 
   return isVisible;
 }
