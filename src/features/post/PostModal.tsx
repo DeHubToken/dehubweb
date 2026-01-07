@@ -38,6 +38,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}
+        hasVideo={computed.hasVideo}
       />
 
       <PostAccessToggles
