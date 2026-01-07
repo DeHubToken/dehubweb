@@ -8,9 +8,8 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ShoppingCart, ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 
 interface Owner {
@@ -57,11 +56,21 @@ const generateMockPostInfo = (postId: string) => {
     currency: 'ETH',
   }));
   
+  // Generate engagement stats
+  const likes = (absHash % 50000) + 1000;
+  const dislikes = Math.floor(likes * ((absHash % 20) + 5) / 100); // 5-25% ratio
+  const shares = Math.floor(likes * ((absHash % 30) + 10) / 100); // 10-40% of likes
+  const likeRatio = Math.round((likes / (likes + dislikes)) * 100);
+  
   return {
     txHash,
     timestamp,
     owners,
     listings,
+    likes,
+    dislikes,
+    shares,
+    likeRatio,
   };
 };
 
@@ -114,8 +123,60 @@ export default function PostInfoPage() {
         </div>
       </div>
       
-      <ScrollArea className="h-[calc(100vh-65px)]">
+      <div className="h-[calc(100vh-65px)] overflow-y-auto scrollbar-none">
         <div className="p-4 space-y-6">
+          {/* Engagement Stats */}
+          <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+            <h2 className="text-sm font-medium text-white/60 mb-3">Engagement</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Like/Dislike Ratio */}
+              <div className="col-span-2 bg-white/5 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-white/60">Like Ratio</span>
+                  <span className="text-lg font-bold text-green-400">{postInfo.likeRatio}%</span>
+                </div>
+                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full"
+                    style={{ width: `${postInfo.likeRatio}%` }}
+                  />
+                </div>
+              </div>
+              
+              {/* Likes */}
+              <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <ThumbsUp className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">{postInfo.likes.toLocaleString()}</p>
+                  <p className="text-xs text-white/60">Likes</p>
+                </div>
+              </div>
+              
+              {/* Dislikes */}
+              <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <ThumbsDown className="w-5 h-5 text-red-400" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">{postInfo.dislikes.toLocaleString()}</p>
+                  <p className="text-xs text-white/60">Dislikes</p>
+                </div>
+              </div>
+              
+              {/* Shares */}
+              <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                  <Share2 className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-white">{postInfo.shares.toLocaleString()}</p>
+                  <p className="text-xs text-white/60">Total Shares</p>
+                </div>
+              </div>
+            </div>
+          </section>
           {/* Transaction Hash */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
             <h2 className="text-sm font-medium text-white/60 mb-2">Transaction Hash</h2>
@@ -236,7 +297,7 @@ export default function PostInfoPage() {
             </p>
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
