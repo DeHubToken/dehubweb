@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronRight } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronRight, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -30,7 +30,7 @@ interface PostActionBarProps {
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
-  onEnhanceWithAI: (mode: 'spellcheck' | 'style', style?: string) => void;
+  onEnhanceWithAI: (mode: 'spellcheck' | 'grammar' | 'style', style?: string) => void;
   onPost: () => void;
   canPost: boolean;
   isEnhancing: boolean;
@@ -67,6 +67,11 @@ export function PostActionBar({
 
   const handleSpellCheck = () => {
     onEnhanceWithAI('spellcheck');
+    setEnhancePopoverOpen(false);
+  };
+
+  const handleGrammar = () => {
+    onEnhanceWithAI('grammar');
     setEnhancePopoverOpen(false);
   };
 
@@ -317,6 +322,15 @@ export function PostActionBar({
             >
               <SpellCheck className="w-4 h-4 text-blue-400" />
               Spell Check
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleGrammar}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
+            >
+              <Type className="w-4 h-4 text-emerald-400" />
+              Fix Grammar
             </button>
             
             <Popover open={styleSubmenuOpen} onOpenChange={setStyleSubmenuOpen}>

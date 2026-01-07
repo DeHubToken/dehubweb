@@ -48,6 +48,8 @@ serve(async (req) => {
     
     if (mode === 'style' && style && STYLE_PROMPTS[style]) {
       systemPrompt = `${STYLE_PROMPTS[style]} Return ONLY the rewritten text, nothing else - no explanations, no quotes, no additional commentary.`;
+    } else if (mode === 'grammar') {
+      systemPrompt = 'You are a grammar and punctuation expert. Fix grammar, capitalization, punctuation, and sentence structure to make the text read perfectly. Ensure proper capitalization at the start of sentences and for proper nouns. Add missing punctuation. Fix run-on sentences. Keep the original meaning and tone. Return ONLY the corrected text, nothing else.';
     } else {
       // Default spellcheck mode
       systemPrompt = 'You are a spell checker. Fix ONLY spelling mistakes and obvious typos. Do NOT change grammar, style, punctuation, or word choice. Keep the text exactly as written except for fixing misspelled words. Return ONLY the corrected text, nothing else.';

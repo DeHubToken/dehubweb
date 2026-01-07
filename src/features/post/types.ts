@@ -62,7 +62,7 @@ export interface PostFormActions {
   toggleMusicVideo: (index: number) => void;
   addThumbnailToMedia: (index: number, thumbnailUrl: string) => void;
   removeThumbnailFromMedia: (index: number) => void;
-  handleEnhanceWithAI: (mode?: 'spellcheck' | 'style', style?: string) => Promise<void>;
+  handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;
   resetForm: () => void;
