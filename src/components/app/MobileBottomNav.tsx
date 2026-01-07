@@ -3,7 +3,6 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
-import { GeneralAIChat } from './chat/GeneralAIChat';
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
@@ -11,7 +10,7 @@ const LEFT_NAV_ITEMS = [
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
 ];
 
-// Right side: Explore, AI button (special)
+// Right side: Explore, AI link
 const RIGHT_NAV_ITEMS = [
   { icon: Search, label: 'Explore', path: '/app/explore' },
 ];
@@ -28,7 +27,6 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -57,6 +55,7 @@ export function MobileBottomNav() {
 
   // Calculate opacity: fades quickly on scroll (reaches 0 at ~10% scroll)
   const buttonOpacity = Math.max(0, 1 - scrollProgress * 10);
+  const isAIActive = location.pathname === '/app/assistant';
 
   return (
     <>
@@ -117,7 +116,7 @@ export function MobileBottomNav() {
               </div>
             </button>
 
-            {/* Right side items - Explore + AI button */}
+            {/* Right side items - Explore + AI link */}
             <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
               {RIGHT_NAV_ITEMS.map((item) => {
                 const isActive = location.pathname.startsWith(item.path);
@@ -141,20 +140,20 @@ export function MobileBottomNav() {
                 );
               })}
               
-              {/* AI Button */}
-              <button
-                onClick={() => setIsAIChatOpen(true)}
+              {/* AI Link - navigates to dedicated page */}
+              <NavLink
+                to="/app/assistant"
                 className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
               >
                 <Sparkles 
                   className={cn(
                     'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
-                    isAIChatOpen 
+                    isAIActive 
                       ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                       : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                   )} 
                 />
-              </button>
+              </NavLink>
             </div>
 
             {/* Additional items - accessible via scroll */}
@@ -184,7 +183,6 @@ export function MobileBottomNav() {
       </div>
 
       <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
-      <GeneralAIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
     </>
   );
 }
