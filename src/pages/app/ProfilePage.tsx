@@ -168,10 +168,10 @@ type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'song
 
 const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
   { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
+  { icon: Star, label: 'Subs', value: 'subscribers', count: 10 },
   { icon: MessageCircle, label: 'Replies', value: 'replies', count: 10 },
   { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
   { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
-  { icon: Star, label: 'Subs', value: 'subscribers', count: 10 },
   { icon: Play, label: 'Songs', value: 'songs', count: 10 },
   { icon: Radio, label: 'Live', value: 'live', count: 10 },
 ];
