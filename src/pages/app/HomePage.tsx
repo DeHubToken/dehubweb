@@ -58,6 +58,7 @@ export default function HomePage() {
     followed: true,
     subscribed: true,
     trending: true,
+    latest: false,
   });
   
   // Swipe gesture refs

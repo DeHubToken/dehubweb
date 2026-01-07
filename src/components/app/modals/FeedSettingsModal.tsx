@@ -13,6 +13,7 @@ export interface FeedFilters {
   followed: boolean;
   subscribed: boolean;
   trending: boolean;
+  latest: boolean;
 }
 
 interface FeedSettingsModalProps {
@@ -29,7 +30,14 @@ export function FeedSettingsModal({
   onFiltersChange 
 }: FeedSettingsModalProps) {
   const updateFilter = (key: keyof FeedFilters, value: boolean) => {
-    onFiltersChange({ ...filters, [key]: value });
+    // Mutually exclusive: trending and latest can't both be on
+    if (key === 'latest' && value) {
+      onFiltersChange({ ...filters, latest: true, trending: false });
+    } else if (key === 'trending' && value) {
+      onFiltersChange({ ...filters, trending: true, latest: false });
+    } else {
+      onFiltersChange({ ...filters, [key]: value });
+    }
   };
 
   return (
@@ -70,6 +78,17 @@ export function FeedSettingsModal({
             <Switch
               checked={filters.trending}
               onCheckedChange={(checked) => updateFilter('trending', checked)}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-white font-medium">Latest</p>
+              <p className="text-sm text-zinc-400">Show latest content first</p>
+            </div>
+            <Switch
+              checked={filters.latest}
+              onCheckedChange={(checked) => updateFilter('latest', checked)}
             />
           </div>
         </div>
