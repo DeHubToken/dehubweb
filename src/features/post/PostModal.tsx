@@ -35,6 +35,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         canPost={computed.canPost}
         destinations={computed.destinations}
         hasVideo={computed.hasVideo}
+        hasImage={computed.hasImage}
+        onFileDrop={actions.handleFileDrop}
       />
 
       <PostAccessToggles

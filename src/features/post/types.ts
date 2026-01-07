@@ -56,6 +56,7 @@ export interface PostFormActions {
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFileDrop: (files: FileList) => void;
   removeMedia: (index: number) => void;
   addAudioToMedia: (index: number, audio: AudioFile) => void;
   removeAudioFromMedia: (index: number) => void;

@@ -3,8 +3,8 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
-import { useEffect, useCallback, useRef } from 'react';
-import { Link } from 'lucide-react';
+import { useEffect, useCallback, useRef, useState } from 'react';
+import { Link, Upload } from 'lucide-react';
 
 interface PostContentAreaProps {
   text: string;
@@ -21,6 +21,8 @@ interface PostContentAreaProps {
   canPost: boolean;
   destinations: string[];
   hasVideo: boolean;
+  hasImage: boolean;
+  onFileDrop: (files: FileList) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -58,9 +60,13 @@ export function PostContentArea({
   canPost,
   destinations,
   hasVideo,
+  hasImage,
+  onFileDrop,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragCounterRef = useRef(0);
 
   const charCount = text.length;
 
@@ -285,6 +291,42 @@ export function PostContentArea({
     handleInput();
   }, [handleInput]);
 
+  // Handle drag and drop
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current++;
+    if (e.dataTransfer.types.includes('Files')) {
+      setIsDragging(true);
+    }
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current--;
+    if (dragCounterRef.current === 0) {
+      setIsDragging(false);
+    }
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    dragCounterRef.current = 0;
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      onFileDrop(files);
+    }
+  }, [onFileDrop]);
+
   // Sync content when text is cleared (e.g., on form reset)
   useEffect(() => {
     if (text === '' && editorRef.current && editorRef.current.innerHTML !== '') {
@@ -293,7 +335,30 @@ export function PostContentArea({
   }, [text, editorRef]);
 
   return (
-    <div className="p-4 max-h-[60vh] overflow-y-auto">
+    <div 
+      className="p-4 max-h-[60vh] overflow-y-auto relative"
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      {/* Drag overlay */}
+      <AnimatePresence>
+        {isDragging && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-primary rounded-xl"
+          >
+            <Upload className="w-10 h-10 text-primary mb-2" />
+            <p className="text-primary font-medium">Drop files here</p>
+            <p className="text-primary/60 text-sm mt-1">
+              {hasVideo ? 'Images not allowed with video' : hasImage ? 'Videos not allowed with images' : 'Images, videos, or audio'}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="flex gap-3">
         <Avatar className="w-10 h-10 flex-shrink-0">
           <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
