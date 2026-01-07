@@ -3,6 +3,7 @@ import { Send, Smile, Users, Loader2, ArrowDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { TranslatableText } from '../TranslatableText';
 
 const MESSAGES_PER_PAGE = 15;
 interface ChatMessage {
@@ -235,7 +236,7 @@ export function SidebarChat() {
               </Avatar>
               <div className="min-w-0">
                 <span className="text-xs font-semibold text-white">{msg.userName}</span>
-                <p className="text-xs text-zinc-300 break-words">{msg.content}</p>
+                <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
               </div>
             </div>
           ))}

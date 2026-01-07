@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { TranslatableText } from '../TranslatableText';
 
 export interface Message {
   id: string;
@@ -36,7 +37,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         </div>
         
         {message.type === 'text' && (
-          <p className="text-zinc-300 text-sm break-words">{message.content}</p>
+          <TranslatableText text={message.content} className="text-zinc-300 text-sm break-words" as="p" />
         )}
         
         {message.type === 'image' && message.imageUrl && (
@@ -47,7 +48,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
               className="max-w-xs max-h-64 rounded-lg object-cover"
             />
             {message.content && (
-              <p className="text-zinc-300 text-sm mt-1">{message.content}</p>
+              <TranslatableText text={message.content} className="text-zinc-300 text-sm mt-1" as="p" />
             )}
           </div>
         )}

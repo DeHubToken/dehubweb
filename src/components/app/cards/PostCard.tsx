@@ -15,6 +15,7 @@ import { AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
+import { TranslatableText } from '../TranslatableText';
 import type { TextPost } from '@/types/feed.types';
 
 interface PostCardProps {
@@ -42,7 +43,7 @@ export function PostCard({ post }: PostCardProps) {
 
       {/* Content */}
       <div className="px-3 pb-3">
-        <p className="text-white/90 text-sm sm:text-base">{post.content}</p>
+        <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
         <div className="flex items-center gap-3 mt-2">
           <span className="text-zinc-500 text-xs">{post.createdAt}</span>
           <span className="flex items-center gap-1 text-zinc-500 text-xs">
