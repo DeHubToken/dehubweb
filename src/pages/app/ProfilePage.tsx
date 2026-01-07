@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { 
   Home, Link2, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, Heart, Share, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell
+  Calendar, Share, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { PostCard } from '@/components/app/cards/PostCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { VideoCard } from '@/components/app/cards/VideoCard';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -15,17 +18,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-
-const PROFILE_TABS = [
-  { icon: Home, label: 'Posts', value: 'posts', count: 142 },
-  { icon: Link2, label: 'Links', value: 'links', count: 0 },
-  { icon: MessageCircle, label: 'Replies', value: 'replies', count: 28 },
-  { icon: Image, label: 'Images', value: 'images', count: 30 },
-  { icon: Video, label: 'Videos', value: 'videos', count: 18 },
-  { icon: Star, label: 'Favorites', value: 'favorites', count: 12 },
-  { icon: Play, label: 'Clips', value: 'clips', count: 16 },
-  { icon: Radio, label: 'Live', value: 'live', count: 5 },
-];
+import { MOCK_POSTS, SAMPLE_IMAGES, SAMPLE_VIDEOS } from '@/data/mock-feed.data';
+import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 
 const MOCK_PROFILE = {
   name: 'Alice Cooper',
@@ -38,18 +32,46 @@ const MOCK_PROFILE = {
   postsCount: 142,
 };
 
-const MOCK_POST = {
-  id: '1',
-  author: MOCK_PROFILE,
-  content: 'Just finished an amazing workout session! Feeling stronger every day 💪',
-  createdAt: '2h',
-  category: 'Thought',
-  pinned: true,
-  stats: { likes: 234, comments: 12, shares: 5 },
-};
+// Filter/modify mock data to appear as if from the profile user
+const PROFILE_POSTS: TextPost[] = MOCK_POSTS.slice(0, 5).map(post => ({
+  ...post,
+  author: {
+    id: 'profile-user',
+    name: MOCK_PROFILE.name,
+    handle: MOCK_PROFILE.handle,
+    verified: MOCK_PROFILE.verified,
+  },
+}));
+
+const PROFILE_IMAGES: ImagePost[] = SAMPLE_IMAGES.slice(0, 6).map(img => ({
+  ...img,
+  username: MOCK_PROFILE.name,
+  avatar: MOCK_PROFILE.handle,
+  verified: MOCK_PROFILE.verified,
+}));
+
+const PROFILE_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 4).map(vid => ({
+  ...vid,
+  channel: MOCK_PROFILE.name,
+  channelAvatar: MOCK_PROFILE.handle,
+  verified: MOCK_PROFILE.verified,
+}));
+
+type TabValue = 'posts' | 'links' | 'replies' | 'images' | 'videos' | 'favorites' | 'clips' | 'live';
+
+const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
+  { icon: Home, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
+  { icon: Link2, label: 'Links', value: 'links', count: 0 },
+  { icon: MessageCircle, label: 'Replies', value: 'replies', count: 28 },
+  { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
+  { icon: Video, label: 'Videos', value: 'videos', count: PROFILE_VIDEOS.length },
+  { icon: Star, label: 'Favorites', value: 'favorites', count: 12 },
+  { icon: Play, label: 'Clips', value: 'clips', count: 16 },
+  { icon: Radio, label: 'Live', value: 'live', count: 5 },
+];
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState('posts');
+  const [activeTab, setActiveTab] = useState<TabValue>('posts');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
 
   const handleCopyProfileUrl = () => {
@@ -65,7 +87,7 @@ export default function ProfilePage() {
   };
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText('0x1234...5678'); // Mock wallet address
+    navigator.clipboard.writeText('0x1234...5678');
     toast.success('Address copied to clipboard');
     setShareSheetOpen(false);
   };
@@ -130,9 +152,49 @@ export default function ProfilePage() {
     </div>
   );
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'posts':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_POSTS.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        );
+      case 'images':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_IMAGES.map((image) => (
+              <ImageCard key={image.id} post={image} />
+            ))}
+          </div>
+        );
+      case 'videos':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_VIDEOS.map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+          </div>
+        );
+      case 'links':
+      case 'replies':
+      case 'favorites':
+      case 'clips':
+      case 'live':
+        return (
+          <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+            <p className="text-zinc-500">No {activeTab} yet</p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen">
-
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3 mt-2 lg:mt-0">
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -244,53 +306,8 @@ export default function ProfilePage() {
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none rounded-r-2xl" />
         </div>
 
-        {/* Posts Bento */}
-        <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-          <article className="p-4">
-            <div className="flex gap-3">
-              <UserAvatar name={MOCK_POST.author.name} handle={MOCK_POST.author.handle} size="md" />
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-semibold text-white">{MOCK_POST.author.name}</span>
-                  {MOCK_POST.author.verified && <VerifiedBadge />}
-                  <span className="text-zinc-500 text-sm">{MOCK_POST.author.handle}</span>
-                  <span className="text-zinc-500 text-sm">· {MOCK_POST.createdAt}</span>
-                </div>
-                
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-zinc-500 text-xs flex items-center gap-1">
-                    <MessageCircle className="w-3 h-3" />
-                    {MOCK_POST.category}
-                  </span>
-                  {MOCK_POST.pinned && (
-                    <span className="text-amber-500 text-xs flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-current" />
-                      Pinned
-                    </span>
-                  )}
-                </div>
-                
-                <p className="mt-2 text-white/90">{MOCK_POST.content}</p>
-                
-                <div className="flex items-center gap-6 mt-4 text-zinc-500">
-                  <button className="flex items-center gap-2 hover:text-red-400 transition-colors">
-                    <Heart className="w-5 h-5" />
-                    <span className="text-sm">{MOCK_POST.stats.likes}</span>
-                  </button>
-                  <button className="flex items-center gap-2 hover:text-blue-400 transition-colors">
-                    <MessageCircle className="w-5 h-5" />
-                    <span className="text-sm">{MOCK_POST.stats.comments}</span>
-                  </button>
-                  <button className="flex items-center gap-2 hover:text-green-400 transition-colors">
-                    <Share className="w-5 h-5" />
-                    <span className="text-sm">{MOCK_POST.stats.shares}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
+        {/* Tab Content */}
+        {renderTabContent()}
       </div>
     </div>
   );
