@@ -2,9 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
+import { LinkPreviews } from './LinkPreviews';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Link, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 interface PostContentAreaProps {
   text: string;
@@ -388,6 +389,9 @@ export function PostContentArea({
             onAddThumbnail={onAddThumbnail}
             onRemoveThumbnail={onRemoveThumbnail}
           />
+
+          {/* Link previews */}
+          <LinkPreviews text={text} />
 
           <AnimatePresence>
             {isLive && (
