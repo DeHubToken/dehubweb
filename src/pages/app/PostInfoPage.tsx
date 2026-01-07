@@ -133,11 +133,11 @@ export default function PostInfoPage() {
               <div className="col-span-2 bg-white/5 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-white/60">Like Ratio</span>
-                  <span className="text-lg font-bold text-green-400">{postInfo.likeRatio}%</span>
+                  <span className="text-lg font-bold text-white">{postInfo.likeRatio}%</span>
                 </div>
                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full"
+                    className="h-full bg-white rounded-full"
                     style={{ width: `${postInfo.likeRatio}%` }}
                   />
                 </div>
@@ -145,9 +145,7 @@ export default function PostInfoPage() {
               
               {/* Likes */}
               <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <ThumbsUp className="w-5 h-5 text-green-400" />
-                </div>
+                <ThumbsUp className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{postInfo.likes.toLocaleString()}</p>
                   <p className="text-xs text-white/60">Likes</p>
@@ -156,9 +154,7 @@ export default function PostInfoPage() {
               
               {/* Dislikes */}
               <div className="bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
-                  <ThumbsDown className="w-5 h-5 text-red-400" />
-                </div>
+                <ThumbsDown className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{postInfo.dislikes.toLocaleString()}</p>
                   <p className="text-xs text-white/60">Dislikes</p>
@@ -167,9 +163,7 @@ export default function PostInfoPage() {
               
               {/* Shares */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  <Share2 className="w-5 h-5 text-blue-400" />
-                </div>
+                <Share2 className="w-5 h-5 text-white" />
                 <div>
                   <p className="text-lg font-bold text-white">{postInfo.shares.toLocaleString()}</p>
                   <p className="text-xs text-white/60">Total Shares</p>
