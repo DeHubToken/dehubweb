@@ -106,12 +106,12 @@ function VideoCardItem({
         <div className="flex items-center gap-1 pr-3">
           <motion.button
             onClick={() => setShowAIChat(true)}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="text-zinc-400 hover:text-white transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Ask AI about this video"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-5 h-5" />
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
