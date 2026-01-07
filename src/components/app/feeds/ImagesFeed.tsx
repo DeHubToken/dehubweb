@@ -7,11 +7,12 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo } from 'react';
-import { Heart, MessageCircle, Bookmark, Share2, MoreHorizontal, Download, Flag, Ban, EyeOff, Repeat2, Send, Link, Loader2 } from 'lucide-react';
+import { useRef, useMemo, useState } from 'react';
+import { Heart, MessageCircle, Bookmark, Share2, MoreHorizontal, Download, Flag, Ban, EyeOff, Repeat2, Send, Link, Loader2, Sparkles } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,118 +76,148 @@ function CollageView({ posts }: { posts: ImagePost[] }) {
   );
 }
 
-function EndlessScrollView({ posts }: { posts: ImagePost[] }) {
+function ImageCardItem({ post }: { post: ImagePost }) {
+  const [showAIChat, setShowAIChat] = useState(false);
+
   return (
-    <div className="p-2 sm:p-3 space-y-3">
-      {posts.map((post) => (
-        <div key={post.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between p-3">
-            <div className="flex items-center gap-3">
-              <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                <div className="p-0.5 bg-zinc-900 rounded-full">
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.avatar}`} />
-                    <AvatarFallback className="bg-zinc-700">{post.username[0]}</AvatarFallback>
-                  </Avatar>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  <span className="font-semibold text-white text-sm">{post.username}</span>
-                  {post.verified && (
-                    <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                    </svg>
-                  )}
-                </div>
-              </div>
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-3">
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.avatar}`} />
+                <AvatarFallback className="bg-zinc-700">{post.username[0]}</AvatarFallback>
+              </Avatar>
             </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-1">
+              <span className="font-semibold text-white text-sm">{post.username}</span>
+              {post.verified && (
+                <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <motion.button
+            onClick={() => setShowAIChat(true)}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Ask AI about this image"
+          >
+            <Sparkles className="w-4 h-4" />
+          </motion.button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                <MoreHorizontal className="w-5 h-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Download className="w-4 h-4" />
+                Download
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Flag className="w-4 h-4" />
+                Report
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Ban className="w-4 h-4" />
+                Block Creator
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <EyeOff className="w-4 h-4" />
+                See Less Like This
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* Image */}
+      <div className="aspect-square bg-zinc-800">
+        <img src={post.image} alt="" className="w-full h-full object-cover" />
+      </div>
+
+      {/* Actions */}
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-red-400 transition-colors">
+              <Heart className="w-6 h-6" />
+            </button>
+            <button className="text-white hover:text-zinc-400 transition-colors">
+              <MessageCircle className="w-6 h-6" />
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="text-zinc-400 hover:text-white">
-                  <MoreHorizontal className="w-5 h-5" />
+                <button className="text-white hover:text-zinc-400 transition-colors">
+                  <Share2 className="w-6 h-6" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuContent align="start" className="bg-zinc-800 border-zinc-700">
                 <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                  <Download className="w-4 h-4" />
-                  Download
+                  <Repeat2 className="w-4 h-4" />
+                  Repost
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                  <Flag className="w-4 h-4" />
-                  Report
+                  <Send className="w-4 h-4" />
+                  DM to
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                  <Ban className="w-4 h-4" />
-                  Block Creator
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                  <EyeOff className="w-4 h-4" />
-                  See Less Like This
+                  <Link className="w-4 h-4" />
+                  Copy URL
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-          {/* Image */}
-          <div className="aspect-square bg-zinc-800">
-            <img src={post.image} alt="" className="w-full h-full object-cover" />
-          </div>
-
-          {/* Actions */}
-          <div className="p-3">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-4">
-                <button className="text-white hover:text-red-400 transition-colors">
-                  <Heart className="w-6 h-6" />
-                </button>
-                <button className="text-white hover:text-zinc-400 transition-colors">
-                  <MessageCircle className="w-6 h-6" />
-                </button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="text-white hover:text-zinc-400 transition-colors">
-                      <Share2 className="w-6 h-6" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="bg-zinc-800 border-zinc-700">
-                    <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                      <Repeat2 className="w-4 h-4" />
-                      Repost
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                      <Send className="w-4 h-4" />
-                      DM to
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                      <Link className="w-4 h-4" />
-                      Copy URL
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <button className="text-white hover:text-zinc-400 transition-colors">
-                <Bookmark className="w-6 h-6" />
-              </button>
-            </div>
-
-            <p className="font-semibold text-white text-sm mb-1">
-              {post.likes.toLocaleString()} likes
-            </p>
-
-            <p className="text-white text-sm">
-              <span className="font-semibold">{post.username}</span>{' '}
-              <span className="text-zinc-300">{post.caption}</span>
-            </p>
-
-            <button className="text-zinc-500 text-sm mt-1">
-              View all {post.comments} comments
-            </button>
-
-            <p className="text-zinc-500 text-xs mt-1">{post.timeAgo}</p>
-          </div>
+          <button className="text-white hover:text-zinc-400 transition-colors">
+            <Bookmark className="w-6 h-6" />
+          </button>
         </div>
+
+        <p className="font-semibold text-white text-sm mb-1">
+          {post.likes.toLocaleString()} likes
+        </p>
+
+        <p className="text-white text-sm">
+          <span className="font-semibold">{post.username}</span>{' '}
+          <span className="text-zinc-300">{post.caption}</span>
+        </p>
+
+        <button className="text-zinc-500 text-sm mt-1">
+          View all {post.comments} comments
+        </button>
+
+        <p className="text-zinc-500 text-xs mt-1">{post.timeAgo}</p>
+      </div>
+
+      {/* AI Chat */}
+      <PostAIChat
+        isOpen={showAIChat}
+        onClose={() => setShowAIChat(false)}
+        postContext={{
+          type: 'image',
+          author: post.username,
+          caption: post.caption
+        }}
+      />
+    </div>
+  );
+}
+
+function EndlessScrollView({ posts }: { posts: ImagePost[] }) {
+  return (
+    <div className="p-2 sm:p-3 space-y-3">
+      {posts.map((post) => (
+        <ImageCardItem key={post.id} post={post} />
       ))}
     </div>
   );

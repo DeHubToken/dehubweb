@@ -10,15 +10,20 @@
  */
 
 import { useState } from 'react';
-import { Eye } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
 import { TranslatableText } from '../TranslatableText';
-import { AIButton } from './AIButton';
 import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { ImagePost } from '@/types/feed.types';
 
 interface ImageCardProps {
@@ -31,17 +36,51 @@ export function ImageCard({ post }: ImageCardProps) {
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-      <CardHeader
-        username={post.username}
-        avatarSeed={post.avatar}
-        verified={post.verified}
-        contentType="image"
-      />
+      {/* Header with AI and menu buttons */}
+      <div className="flex items-center justify-between">
+        <CardHeader
+          username={post.username}
+          avatarSeed={post.avatar}
+          verified={post.verified}
+          contentType="image"
+        />
+        <div className="flex items-center gap-1 pr-3">
+          <motion.button
+            onClick={() => setShowAIChat(true)}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Ask AI about this post"
+          >
+            <Sparkles className="w-4 h-4" />
+          </motion.button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                <MoreVertical className="w-5 h-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Download className="w-4 h-4" /> Download
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Flag className="w-4 h-4" /> Report
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Ban className="w-4 h-4" /> Block Creator
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <EyeOff className="w-4 h-4" /> See Less Like This
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
       {/* Image */}
       <div className="aspect-square bg-zinc-800 relative">
         <img src={post.image} alt="" className="w-full h-full object-cover" />
-        <AIButton onClick={() => setShowAIChat(true)} />
         {/* View count overlay */}
         <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
           <Eye className="w-3 h-3 text-white" />
