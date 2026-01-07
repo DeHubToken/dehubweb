@@ -12,6 +12,7 @@ interface PostContentAreaProps {
   onRemoveMedia: (index: number) => void;
   onAddAudio: (index: number, audio: AudioFile) => void;
   onRemoveAudio: (index: number) => void;
+  onToggleMusicVideo: (index: number) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -25,6 +26,7 @@ export function PostContentArea({
   onRemoveMedia,
   onAddAudio,
   onRemoveAudio,
+  onToggleMusicVideo,
   liveMode,
   canPost,
   destinations,
@@ -56,6 +58,7 @@ export function PostContentArea({
             onRemove={onRemoveMedia}
             onAddAudio={onAddAudio}
             onRemoveAudio={onRemoveAudio}
+            onToggleMusicVideo={onToggleMusicVideo}
           />
 
           <AnimatePresence>
@@ -90,6 +93,7 @@ export function PostContentArea({
                       "text-xs px-1.5 py-0.5 rounded-full",
                       dest === 'Shorts' ? 'bg-emerald-500/20 text-emerald-400' :
                       dest === 'Live' ? 'bg-red-500/20 text-red-400' :
+                      dest === 'Music' ? 'bg-purple-500/20 text-purple-400' :
                       'bg-zinc-800 text-zinc-400'
                     )}
                   >

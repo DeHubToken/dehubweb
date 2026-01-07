@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, Film, Radio, Bold, Italic, AtSign, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Headphones } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Headphones, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -75,6 +75,45 @@ export function PostActionBar({
           >
             <Film className="w-5 h-5 text-purple-400" />
           </button>
+        )}
+
+        {/* Audio button with popover for upload/record options */}
+        {!isLive && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <button 
+                type="button" 
+                className="p-2 hover:bg-white/10 rounded-full transition-colors" 
+                title="Add audio"
+              >
+                <Music className="w-5 h-5 text-emerald-400" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent 
+              className="w-auto p-1 bg-transparent border-none shadow-none" 
+              align="center"
+              side="top"
+              sideOffset={4}
+            >
+              <div className="flex flex-col items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => audioInputRef.current?.click()}
+                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                  title="Upload Audio"
+                >
+                  <Upload className="w-5 h-5 text-emerald-400" />
+                </button>
+                <button
+                  type="button"
+                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                  title="Record Audio"
+                >
+                  <Mic className="w-5 h-5 text-red-400" />
+                </button>
+              </div>
+            </PopoverContent>
+          </Popover>
         )}
         
         {!hasImage && (
@@ -161,15 +200,6 @@ export function PostActionBar({
           title="Italic"
         >
           <Italic className="w-4 h-4 text-zinc-400" />
-        </button>
-        
-        <button 
-          type="button" 
-          onClick={() => onInsertFormatting('mention')} 
-          className="p-1.5 hover:bg-white/10 rounded-full transition-colors" 
-          title="Mention"
-        >
-          <AtSign className="w-4 h-4 text-zinc-400" />
         </button>
 
         <button 
