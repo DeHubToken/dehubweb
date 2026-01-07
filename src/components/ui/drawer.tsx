@@ -3,7 +3,7 @@ import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
 
-const Drawer = ({ shouldScaleBackground = false, modal = false, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+const Drawer = ({ shouldScaleBackground = false, modal = true, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} modal={modal} {...props} />
 );
 Drawer.displayName = "Drawer";
@@ -41,7 +41,7 @@ const DrawerContent = React.forwardRef<
     >
       <div className={cn(
         "mx-auto mt-4 h-1.5 w-12 rounded-full",
-        glass ? "bg-zinc-500/50" : "bg-muted"
+        glass ? "bg-white/50" : "bg-muted"
       )} />
       {children}
     </DrawerPrimitive.Content>
