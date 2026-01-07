@@ -349,7 +349,7 @@ export function PostContentArea({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-primary rounded-xl"
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-white rounded-xl"
           >
             <Upload className="w-10 h-10 text-white mb-2" />
             <p className="text-white font-medium">Drop files here</p>
