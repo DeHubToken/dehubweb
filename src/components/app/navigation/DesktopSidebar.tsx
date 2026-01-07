@@ -65,7 +65,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     onClick={() => setIsAIChatOpen(true)}
                     className={cn(
                       'flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left transition-all duration-200',
-                      'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                      'text-white hover:bg-zinc-800'
                     )}
                   >
                     <Sparkles className="w-5 h-5" />
