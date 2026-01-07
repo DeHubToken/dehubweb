@@ -11,7 +11,7 @@ interface UsePostFormReturn {
     imageInputRef: React.RefObject<HTMLInputElement>;
     videoInputRef: React.RefObject<HTMLInputElement>;
     audioInputRef: React.RefObject<HTMLInputElement>;
-    textareaRef: React.RefObject<HTMLTextAreaElement>;
+    editorRef: React.RefObject<HTMLDivElement>;
   };
 }
 
@@ -38,7 +38,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   // Computed values
   const hasVideo = media.some(m => m.type === 'video');
@@ -247,39 +247,29 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [text]);
 
   const insertFormatting = useCallback((format: 'bold' | 'italic' | 'mention') => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+    const editor = editorRef.current;
+    if (!editor) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = text.substring(start, end);
+    // Focus the editor first
+    editor.focus();
 
-    let newText = '';
-    let cursorOffset = 0;
-
+    // Use execCommand for WYSIWYG formatting
     switch (format) {
       case 'bold':
-        newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
-        cursorOffset = selectedText ? 4 : 2;
+        document.execCommand('bold', false);
         break;
       case 'italic':
-        newText = text.substring(0, start) + `_${selectedText}_` + text.substring(end);
-        cursorOffset = selectedText ? 2 : 1;
+        document.execCommand('italic', false);
         break;
       case 'mention':
-        newText = text.substring(0, start) + `@${selectedText}` + text.substring(end);
-        cursorOffset = 1;
+        document.execCommand('insertText', false, '@');
         break;
     }
 
-    setText(newText);
-    
-    setTimeout(() => {
-      textarea.focus();
-      const newCursorPos = selectedText ? end + cursorOffset : start + cursorOffset;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 0);
-  }, [text]);
+    // Update the text state with plain text
+    const plainText = editor.innerText;
+    setText(plainText);
+  }, []);
 
   const resetForm = useCallback(() => {
     setText('');
@@ -368,7 +358,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       imageInputRef,
       videoInputRef,
       audioInputRef,
-      textareaRef,
+      editorRef,
     },
   };
 }
