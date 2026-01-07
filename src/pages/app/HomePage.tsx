@@ -503,12 +503,11 @@ export default function HomePage() {
                 key={tab.value}
                 onClick={() => handleTabClick(tab.value)}
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl transition-colors text-sm whitespace-nowrap text-white',
+                  'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl transition-colors text-white',
                   activeTab === tab.value && 'bg-zinc-800'
                 )}
               >
                 <tab.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
             

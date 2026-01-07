@@ -48,6 +48,7 @@ export const EXPLORE_TABS: SearchTab[] = [
   { icon: FileTextIcon, label: 'Posts', value: 'posts' },
   { icon: Image, label: 'Images', value: 'images' },
   { icon: Video, label: 'Videos', value: 'videos' },
+  { icon: Play, label: 'Music', value: 'music' },
   { icon: Radio, label: 'Live', value: 'live' },
 ];
 
