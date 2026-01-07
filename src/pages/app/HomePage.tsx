@@ -2,7 +2,7 @@
  * Home Page
  * =========
  * Main feed page with tab-based navigation between content types.
- * Features swipe gestures for mobile navigation and mixed content home feed.
+ * Features swipe gestures for mobile navigation and pull-to-refresh.
  * 
  * @module pages/app/HomePage
  */
@@ -11,36 +11,22 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Settings2, Loader2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
+import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 
 // Feed components
-import { ImagesFeed } from '@/components/app/feeds/ImagesFeed';
-import { VideosFeed } from '@/components/app/feeds/VideosFeed';
-import { ShortsFeed } from '@/components/app/feeds/ShortsFeed';
-import { LiveFeed } from '@/components/app/feeds/LiveFeed';
-import { PPVFeed } from '@/components/app/feeds/PPVFeed';
-import { W2EFeed } from '@/components/app/feeds/W2EFeed';
-import { MusicFeed } from '@/components/app/feeds/MusicFeed';
+import {
+  HomeFeed,
+  ImagesFeed,
+  VideosFeed,
+  ShortsFeed,
+  LiveFeed,
+  PPVFeed,
+  W2EFeed,
+  MusicFeed,
+} from '@/components/app/feeds';
 
-// Card components
-import { 
-  PostCard, 
-  VideoCard, 
-  ImageCard, 
-  LiveCard, 
-  ShortsReel, 
-  StoriesBar 
-} from '@/components/app/cards';
-
-// UI components
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Switch } from '@/components/ui/switch';
-
-// Mock data
-import { 
-  STORY_USERS,
-  getPaginatedFeed,
-  type UnifiedFeedItem,
-} from '@/data/mock-feed.data';
+// Modal components
+import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 
 // ============================================================================
 // CONSTANTS
@@ -48,182 +34,7 @@ import {
 
 /** Minimum swipe distance to trigger tab change */
 const SWIPE_THRESHOLD = 50;
-const PAGE_SIZE = 15;
 const PULL_THRESHOLD = 80;
-
-// ============================================================================
-// HOME FEED COMPONENT
-// ============================================================================
-
-/**
- * Mixed content feed for the home tab with infinite scroll.
- * Displays a curated mix of all content types, paginated.
- */
-function HomeFeed({ shuffleKey, isRefreshing }: { shuffleKey: number; isRefreshing: boolean }) {
-  const [items, setItems] = useState<UnifiedFeedItem[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const loaderRef = useRef<HTMLDivElement>(null);
-
-  // Load initial items
-  useEffect(() => {
-    setItems([]);
-    setPage(0);
-    setHasMore(true);
-    const { items: initialItems, hasMore: more } = getPaginatedFeed(0, PAGE_SIZE, shuffleKey);
-    setItems(initialItems);
-    setHasMore(more);
-  }, [shuffleKey]);
-
-  // Infinite scroll observer
-  useEffect(() => {
-    if (!loaderRef.current || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !isLoading && hasMore) {
-          loadMore();
-        }
-      },
-      { threshold: 0.1, rootMargin: '100px' }
-    );
-
-    observer.observe(loaderRef.current);
-    return () => observer.disconnect();
-  }, [hasMore, isLoading, page, shuffleKey]);
-
-  const loadMore = useCallback(() => {
-    if (isLoading || !hasMore) return;
-    
-    setIsLoading(true);
-    // Simulate network delay
-    setTimeout(() => {
-      const nextPage = page + 1;
-      const { items: newItems, hasMore: more } = getPaginatedFeed(nextPage, PAGE_SIZE, shuffleKey);
-      setItems(prev => [...prev, ...newItems]);
-      setPage(nextPage);
-      setHasMore(more);
-      setIsLoading(false);
-    }, 500);
-  }, [page, shuffleKey, isLoading, hasMore]);
-
-  const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
-    switch (item.type) {
-      case 'post':
-        return <PostCard key={`post-${item.data.id}-${index}`} post={item.data} />;
-      case 'video':
-        return <VideoCard key={`video-${item.data.id}-${index}`} video={item.data} />;
-      case 'image':
-        return <ImageCard key={`image-${item.data.id}-${index}`} post={item.data} />;
-      case 'live':
-        return <LiveCard key={`live-${item.data.id}-${index}`} stream={item.data} />;
-      case 'shorts':
-        return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="p-2 sm:p-3 space-y-3">
-      {isRefreshing ? (
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-        </div>
-      ) : (
-        <>
-          <StoriesBar users={STORY_USERS} />
-          {items.map((item, index) => renderFeedItem(item, index))}
-          
-          {/* Infinite scroll loader */}
-          <div ref={loaderRef} className="py-4 flex justify-center">
-            {isLoading && (
-              <div className="flex items-center gap-2 text-zinc-400">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span className="text-sm">Loading more...</span>
-              </div>
-            )}
-            {!hasMore && items.length > 0 && (
-              <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
-            )}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-// ============================================================================
-// FEED SETTINGS MODAL
-// ============================================================================
-
-interface FeedFilters {
-  followed: boolean;
-  subscribed: boolean;
-  trending: boolean;
-}
-
-interface FeedSettingsProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  filters: FeedFilters;
-  onFiltersChange: (filters: FeedFilters) => void;
-}
-
-/**
- * Modal for configuring feed preferences.
- */
-function FeedSettingsModal({ open, onOpenChange, filters, onFiltersChange }: FeedSettingsProps) {
-  const updateFilter = (key: keyof FeedFilters, value: boolean) => {
-    onFiltersChange({ ...filters, [key]: value });
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px] bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-white">Feed Settings</DialogTitle>
-        </DialogHeader>
-        
-        <div className="space-y-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white font-medium">Followed</p>
-              <p className="text-sm text-zinc-400">Show posts from people you follow</p>
-            </div>
-            <Switch
-              checked={filters.followed}
-              onCheckedChange={(checked) => updateFilter('followed', checked)}
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white font-medium">Subscribed</p>
-              <p className="text-sm text-zinc-400">Show posts from your subscriptions</p>
-            </div>
-            <Switch
-              checked={filters.subscribed}
-              onCheckedChange={(checked) => updateFilter('subscribed', checked)}
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white font-medium">Trending</p>
-              <p className="text-sm text-zinc-400">Show trending content first</p>
-            </div>
-            <Switch
-              checked={filters.trending}
-              onCheckedChange={(checked) => updateFilter('trending', checked)}
-            />
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 // ============================================================================
 // MAIN COMPONENT
@@ -231,18 +42,9 @@ function FeedSettingsModal({ open, onOpenChange, filters, onFiltersChange }: Fee
 
 export default function HomePage() {
   // Tab state
-  
-  // Tab state
   const [activeTab, setActiveTab] = useState('home');
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  
-  // Pull-to-refresh state
-  const [pullDistance, setPullDistance] = useState(0);
-  const [isPulling, setIsPulling] = useState(false);
-  const pullStartY = useRef<number | null>(null);
-  const wheelAccumulator = useRef<number>(0);
-  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Filter states for each feed type
   const [showShortsFilters, setShowShortsFilters] = useState(false);
@@ -286,6 +88,16 @@ export default function HomePage() {
   }, [isRefreshing]);
 
   // --------------------------------------------------------------------------
+  // PULL-TO-REFRESH HOOK
+  // --------------------------------------------------------------------------
+
+  const { pullDistance, handlers: pullHandlers } = usePullToRefresh({
+    pullThreshold: PULL_THRESHOLD,
+    onRefresh: triggerRefresh,
+    isRefreshing,
+  });
+
+  // --------------------------------------------------------------------------
   // EVENT HANDLERS
   // --------------------------------------------------------------------------
 
@@ -324,7 +136,6 @@ export default function HomePage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
       if (tabValue === 'home' || tabValue === 'live') {
-        // Home/Live tab - refresh feed with animation
         triggerRefresh();
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
@@ -343,43 +154,22 @@ export default function HomePage() {
   };
 
   // --------------------------------------------------------------------------
-  // SWIPE & PULL-TO-REFRESH GESTURE HANDLERS
+  // SWIPE GESTURE HANDLERS
   // --------------------------------------------------------------------------
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
-    
-    // Check if at top of page for pull-to-refresh (works on all tabs)
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0) {
-      pullStartY.current = e.touches[0].clientY;
-      setIsPulling(true);
-    }
+    pullHandlers.onTouchStart(e);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
-    
-    // Handle pull-to-refresh for all tabs
-    if (isPulling && pullStartY.current !== null) {
-      const currentY = e.touches[0].clientY;
-      const distance = Math.max(0, currentY - pullStartY.current);
-      // Apply resistance - the further you pull, the harder it gets
-      const resistedDistance = Math.min(distance * 0.5, PULL_THRESHOLD * 1.5);
-      setPullDistance(resistedDistance);
-    }
+    pullHandlers.onTouchMove(e);
   };
 
   const handleTouchEnd = () => {
-    // Handle pull-to-refresh release for all tabs
-    if (isPulling && pullDistance >= PULL_THRESHOLD) {
-      triggerRefresh();
-    }
-    
-    setPullDistance(0);
-    setIsPulling(false);
-    pullStartY.current = null;
+    pullHandlers.onTouchEnd();
     
     // Handle horizontal swipe for tab switching
     if (!touchStartX.current || !touchEndX.current) return;
@@ -402,102 +192,6 @@ export default function HomePage() {
     touchStartX.current = null;
     touchEndX.current = null;
   };
-
-  // --------------------------------------------------------------------------
-  // MOUSE HANDLERS FOR DESKTOP PULL-TO-REFRESH
-  // --------------------------------------------------------------------------
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0) {
-      pullStartY.current = e.clientY;
-      setIsPulling(true);
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isPulling && pullStartY.current !== null) {
-      const distance = Math.max(0, e.clientY - pullStartY.current);
-      const resistedDistance = Math.min(distance * 0.5, PULL_THRESHOLD * 1.5);
-      setPullDistance(resistedDistance);
-    }
-  };
-
-  const handleMouseUp = () => {
-    if (isPulling && pullDistance >= PULL_THRESHOLD) {
-      triggerRefresh();
-    }
-    
-    setPullDistance(0);
-    setIsPulling(false);
-    pullStartY.current = null;
-  };
-
-  const handleMouseLeave = () => {
-    if (isPulling) {
-      setPullDistance(0);
-      setIsPulling(false);
-      pullStartY.current = null;
-    }
-  };
-
-  // --------------------------------------------------------------------------
-  // WHEEL HANDLER FOR DESKTOP PULL-TO-REFRESH
-  // --------------------------------------------------------------------------
-
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      if (isRefreshing) return;
-      
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      
-      // Only activate when at top of page and scrolling UP (negative deltaY)
-      if (scrollTop <= 5 && e.deltaY < 0) {
-        e.preventDefault();
-        
-        // Accumulate wheel delta
-        wheelAccumulator.current += Math.abs(e.deltaY);
-        const resistedDistance = Math.min(wheelAccumulator.current * 0.3, PULL_THRESHOLD * 1.5);
-        setPullDistance(resistedDistance);
-        setIsPulling(true);
-        
-        // Reset timeout
-        if (wheelTimeout.current) {
-          clearTimeout(wheelTimeout.current);
-        }
-        
-        // Check if threshold reached
-        if (resistedDistance >= PULL_THRESHOLD) {
-          triggerRefresh();
-          wheelAccumulator.current = 0;
-          setPullDistance(0);
-          setIsPulling(false);
-        } else {
-          // Reset accumulator after a pause
-          wheelTimeout.current = setTimeout(() => {
-            wheelAccumulator.current = 0;
-            setPullDistance(0);
-            setIsPulling(false);
-          }, 300);
-        }
-      } else if (scrollTop > 5 || e.deltaY > 0) {
-        // Reset if scrolling down or not at top
-        wheelAccumulator.current = 0;
-        if (isPulling && !isRefreshing) {
-          setPullDistance(0);
-          setIsPulling(false);
-        }
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      if (wheelTimeout.current) {
-        clearTimeout(wheelTimeout.current);
-      }
-    };
-  }, [isPulling, isRefreshing, triggerRefresh]);
 
   // --------------------------------------------------------------------------
   // RENDER FEED BASED ON ACTIVE TAB
@@ -533,12 +227,12 @@ export default function HomePage() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
+      onMouseDown={pullHandlers.onMouseDown}
+      onMouseMove={pullHandlers.onMouseMove}
+      onMouseUp={pullHandlers.onMouseUp}
+      onMouseLeave={pullHandlers.onMouseLeave}
     >
-      {/* Pull-to-refresh indicator - works on all tabs */}
+      {/* Pull-to-refresh indicator */}
       {pullDistance > 0 && !isRefreshing && (
         <div 
           className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200"
@@ -555,6 +249,7 @@ export default function HomePage() {
           />
         </div>
       )}
+
       {/* Tab Navigation */}
       <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">

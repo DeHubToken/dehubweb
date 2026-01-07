@@ -16,18 +16,12 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
 import { TranslatableText } from '../TranslatableText';
+import { getViewCount } from '@/lib/feed-utils';
 import type { TextPost } from '@/types/feed.types';
 
 interface PostCardProps {
   post: TextPost;
 }
-
-// Generate random view count based on post id
-const getViewCount = (id: string) => {
-  const seed = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const views = Math.floor((seed * 1234) % 50000) + 500;
-  return views >= 1000 ? `${(views / 1000).toFixed(1)}K` : views.toString();
-};
 
 export function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
