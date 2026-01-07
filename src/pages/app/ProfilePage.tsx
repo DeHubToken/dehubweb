@@ -70,6 +70,100 @@ const EXTRA_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 2).map((vid, i) => ({
 
 const ALL_PROFILE_VIDEOS = [...PROFILE_VIDEOS, ...EXTRA_VIDEOS];
 
+// Realistic reply threads - original posts that Alice replied to
+const REPLY_THREADS = [
+  {
+    id: 'reply-1',
+    originalPost: {
+      author: { id: 'user-1', name: 'Marcus Chen', handle: '@marcusdev', verified: true },
+      content: 'Just shipped our new AI feature and the response has been incredible! 🚀 Sometimes you just have to trust the process.',
+      stats: { comments: 89, reposts: 234, likes: 1205 },
+    },
+    reply: 'Congrats Marcus! The new AI integration looks amazing. Would love to chat about how you handled the edge cases - we\'re working on something similar.',
+  },
+  {
+    id: 'reply-2',
+    originalPost: {
+      author: { id: 'user-2', name: 'Sarah Williams', handle: '@sarahwrites', verified: false },
+      content: 'Hot take: Most startups fail not because of bad ideas, but because founders don\'t know when to pivot. Thoughts?',
+      stats: { comments: 156, reposts: 89, likes: 892 },
+    },
+    reply: 'This is so true! We almost went under in 2023 because I was too attached to our original vision. Best decision I ever made was listening to users and pivoting.',
+  },
+  {
+    id: 'reply-3',
+    originalPost: {
+      author: { id: 'user-3', name: 'TechCrunch', handle: '@techcrunch', verified: true },
+      content: 'Breaking: OpenAI announces new partnership with major enterprise clients. The AI arms race continues to heat up.',
+      stats: { comments: 423, reposts: 1567, likes: 4521 },
+    },
+    reply: 'This is going to change the game for smaller companies. We need to stay nimble and focus on what makes us unique. Exciting times!',
+  },
+  {
+    id: 'reply-4',
+    originalPost: {
+      author: { id: 'user-4', name: 'Dev Community', handle: '@devdotcom', verified: true },
+      content: 'What\'s the one piece of advice you\'d give to junior developers starting their career in 2024?',
+      stats: { comments: 892, reposts: 345, likes: 2103 },
+    },
+    reply: 'Learn to read code before you learn to write it. Spend time in open source repos, understand patterns, and don\'t be afraid to ask "why" about everything.',
+  },
+  {
+    id: 'reply-5',
+    originalPost: {
+      author: { id: 'user-5', name: 'James Rodriguez', handle: '@jamesbuilds', verified: false },
+      content: 'Finally hit 10k users on my side project! 🎉 Never thought a weekend hack would turn into this. Persistence pays off.',
+      stats: { comments: 67, reposts: 123, likes: 1456 },
+    },
+    reply: 'That\'s incredible James! 🙌 The jump from side project to real product is the hardest part. What\'s next on your roadmap?',
+  },
+  {
+    id: 'reply-6',
+    originalPost: {
+      author: { id: 'user-6', name: 'Elena Vasquez', handle: '@elenavtech', verified: true },
+      content: 'Reminder: Taking breaks isn\'t laziness, it\'s maintenance. Your brain needs downtime to process and create. Go touch grass sometimes.',
+      stats: { comments: 234, reposts: 567, likes: 3421 },
+    },
+    reply: 'Needed to hear this today. Been grinding on a feature for 12 hours straight. Time to step away and come back fresh tomorrow. Thanks Elena! 💚',
+  },
+  {
+    id: 'reply-7',
+    originalPost: {
+      author: { id: 'user-7', name: 'Startup Grind', handle: '@startupgrind', verified: true },
+      content: 'What\'s the biggest lesson you learned from a failed project?',
+      stats: { comments: 445, reposts: 234, likes: 1876 },
+    },
+    reply: 'Never fall in love with your solution, fall in love with the problem. My first startup failed because I built what I wanted, not what users needed.',
+  },
+  {
+    id: 'reply-8',
+    originalPost: {
+      author: { id: 'user-8', name: 'Nina Patel', handle: '@ninadesigns', verified: false },
+      content: 'Design systems are not about making things look the same. They\'re about making things work the same. Consistency > uniformity.',
+      stats: { comments: 89, reposts: 312, likes: 2134 },
+    },
+    reply: 'This distinction is so important! We spent 3 months building our design system and it\'s been worth every hour. Happy to share our approach if helpful.',
+  },
+  {
+    id: 'reply-9',
+    originalPost: {
+      author: { id: 'user-9', name: 'Product Hunt', handle: '@producthunt', verified: true },
+      content: 'What product would you build if you had unlimited resources and time?',
+      stats: { comments: 1234, reposts: 456, likes: 5678 },
+    },
+    reply: 'A truly private, decentralized social platform where users own their data and algorithms are transparent. The future of social needs to be rebuilt from the ground up.',
+  },
+  {
+    id: 'reply-10',
+    originalPost: {
+      author: { id: 'user-10', name: 'Alex Turner', handle: '@alexcodes', verified: false },
+      content: 'Just discovered that my "clever" solution from 6 months ago is now my biggest tech debt. Past me was not as smart as I thought. 😅',
+      stats: { comments: 156, reposts: 234, likes: 1876 },
+    },
+    reply: 'Haha this is the most relatable thing I\'ve seen all week. I have a folder called "what was I thinking" full of code I wrote at 2am. We\'ve all been there! 😂',
+  },
+];
+
 type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live';
 
 const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
@@ -219,11 +313,66 @@ export default function ProfilePage() {
       case 'replies':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {PROFILE_POSTS.slice(0, 10).map((post, i) => (
-              <PostCard key={`reply-${post.id}-${i}`} post={{
-                ...post,
-                content: `@someone ${post.content}`,
-              }} />
+            {REPLY_THREADS.map((thread) => (
+              <div key={thread.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
+                {/* Original post (what Alice replied to) */}
+                <div className="p-3 sm:p-4 border-b border-zinc-800">
+                  <div className="flex items-start gap-3">
+                    <UserAvatar 
+                      name={thread.originalPost.author.name} 
+                      handle={thread.originalPost.author.handle} 
+                      size="md" 
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-white truncate">
+                          {thread.originalPost.author.name}
+                        </span>
+                        {thread.originalPost.author.verified && <VerifiedBadge className="w-4 h-4" />}
+                        <span className="text-zinc-500 text-sm truncate">
+                          {thread.originalPost.author.handle}
+                        </span>
+                      </div>
+                      <p className="text-white/90 text-sm sm:text-base mt-1">
+                        {thread.originalPost.content}
+                      </p>
+                      <div className="flex items-center gap-4 mt-2 text-zinc-500 text-xs">
+                        <span>{thread.originalPost.stats.comments} replies</span>
+                        <span>{thread.originalPost.stats.reposts} reposts</span>
+                        <span>{thread.originalPost.stats.likes} likes</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Alice's reply */}
+                <div className="p-3 sm:p-4 bg-zinc-800/30">
+                  <div className="flex items-start gap-3">
+                    <div className="flex flex-col items-center">
+                      <div className="w-0.5 h-3 bg-zinc-700 -mt-4 mb-1" />
+                      <UserAvatar 
+                        name={MOCK_PROFILE.name} 
+                        handle={MOCK_PROFILE.handle} 
+                        size="md" 
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-white truncate">
+                          {MOCK_PROFILE.name}
+                        </span>
+                        {MOCK_PROFILE.verified && <VerifiedBadge className="w-4 h-4" />}
+                        <span className="text-zinc-500 text-sm truncate">
+                          {MOCK_PROFILE.handle}
+                        </span>
+                        <span className="text-zinc-600 text-xs">· replying</span>
+                      </div>
+                      <p className="text-white/90 text-sm sm:text-base mt-1">
+                        {thread.reply}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         );
