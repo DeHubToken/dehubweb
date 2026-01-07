@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell
+  Calendar, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -85,6 +85,8 @@ const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.gg/${MOCK_PROFILE.handle.replace('@', '')}`);
@@ -210,12 +212,51 @@ export default function ProfilePage() {
       case 'subscribers':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {PROFILE_POSTS.slice(0, 5).map((post) => (
-              <PostCard key={`sub-${post.id}`} post={post} />
-            ))}
-            {PROFILE_IMAGES.slice(0, 5).map((image) => (
-              <ImageCard key={`sub-${image.id}`} post={image} />
-            ))}
+            {!isSubscribed ? (
+              <>
+                {/* Blurred content with subscribe prompt */}
+                <div className="relative">
+                  <div className="blur-lg pointer-events-none select-none">
+                    {PROFILE_POSTS.slice(0, 2).map((post) => (
+                      <div key={`sub-blur-${post.id}`} className="mb-2">
+                        <PostCard post={post} />
+                      </div>
+                    ))}
+                  </div>
+                  {/* Subscribe overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm rounded-2xl">
+                    <div className="text-center p-6">
+                      <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
+                        <Lock className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-white font-bold text-xl mb-2">Subscribers Only</h3>
+                      <p className="text-zinc-400 text-sm mb-4 max-w-xs">
+                        Subscribe to {MOCK_PROFILE.name} to unlock exclusive content
+                      </p>
+                      <Button 
+                        onClick={() => {
+                          setIsSubscribed(true);
+                          toast.success(`Subscribed to ${MOCK_PROFILE.name}!`);
+                        }}
+                        className="rounded-full bg-purple-600 hover:bg-purple-700 text-white gap-2"
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        Subscribe for $4.99/mo
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {PROFILE_POSTS.slice(0, 5).map((post) => (
+                  <PostCard key={`sub-${post.id}`} post={post} />
+                ))}
+                {PROFILE_IMAGES.slice(0, 5).map((image) => (
+                  <ImageCard key={`sub-${image.id}`} post={image} />
+                ))}
+              </>
+            )}
           </div>
         );
       case 'songs':
@@ -270,14 +311,41 @@ export default function ProfilePage() {
 
             {/* Action Buttons - separate row */}
             <div className="flex items-center gap-2 mb-4">
-              <Button 
-                size="sm" 
-                className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
-              >
-                <UserPlus className="w-4 h-4" />
-                Follow
-              </Button>
-              <Button 
+              {!isFollowing ? (
+                <Button 
+                  size="sm" 
+                  className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
+                  onClick={() => {
+                    setIsFollowing(true);
+                    toast.success(`Following ${MOCK_PROFILE.name}`);
+                  }}
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Follow
+                </Button>
+              ) : !isSubscribed ? (
+                <Button 
+                  size="sm" 
+                  className="rounded-full bg-purple-600 hover:bg-purple-700 text-white gap-2"
+                  onClick={() => {
+                    setIsSubscribed(true);
+                    toast.success(`Subscribed to ${MOCK_PROFILE.name}!`);
+                  }}
+                >
+                  <Star className="w-4 h-4" />
+                  Subscribe
+                </Button>
+              ) : (
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="rounded-full border-purple-600 text-purple-400 hover:bg-purple-600/10 gap-2"
+                >
+                  <Star className="w-4 h-4 fill-current" />
+                  Subscribed
+                </Button>
+              )}
+              <Button
                 variant="outline" 
                 size="sm" 
                 className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
