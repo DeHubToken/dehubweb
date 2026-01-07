@@ -214,7 +214,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     e.target.value = '';
   }, [hasImage]);
 
-  const handleEnhanceWithAI = useCallback(async (mode: 'spellcheck' | 'style' = 'spellcheck', style?: string) => {
+  const handleEnhanceWithAI = useCallback(async (mode: 'spellcheck' | 'grammar' | 'style' = 'spellcheck', style?: string) => {
     if (!text.trim()) {
       toast.error('Enter some text first');
       return;
