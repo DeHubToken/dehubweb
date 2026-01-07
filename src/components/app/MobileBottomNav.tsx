@@ -134,7 +134,7 @@ export function MobileBottomNav() {
                         isActive 
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                        item.label === 'Explore' && 'ml-[4px]'
+                        item.label === 'Explore' && 'ml-[4px] -scale-x-100'
                       )} 
                     />
                   </NavLink>
