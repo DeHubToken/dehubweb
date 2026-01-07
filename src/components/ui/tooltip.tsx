@@ -1,3 +1,16 @@
+/**
+ * DESIGN SYSTEM RULE: Always use this Tooltip component instead of the native
+ * HTML `title` attribute. The `title` attribute creates ugly black browser tooltips.
+ * This component provides our liquid glass styled tooltips.
+ * 
+ * Usage:
+ * <Tooltip>
+ *   <TooltipTrigger asChild><button>Hover me</button></TooltipTrigger>
+ *   <TooltipContent>Tooltip text</TooltipContent>
+ * </Tooltip>
+ * 
+ * NEVER use: title="Some tooltip" on elements
+ */
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
