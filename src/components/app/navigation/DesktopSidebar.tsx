@@ -64,12 +64,14 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   <button
                     onClick={() => setIsAIChatOpen(true)}
                     className={cn(
-                      'flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left transition-all duration-200',
-                      'text-white hover:bg-zinc-800'
+                      'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left transition-colors',
+                      'text-white hover:bg-zinc-800/50'
                     )}
                   >
-                    <Sparkles className="w-5 h-5" />
-                    <span className="font-medium">AI</span>
+                    <div className="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <span className="truncate">AI</span>
                   </button>
                 )}
               </div>
