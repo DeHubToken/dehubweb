@@ -187,7 +187,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-primary" />
+                <Sparkles className="w-5 h-5 text-white" />
                 <DrawerTitle className="text-white">AI Assistant</DrawerTitle>
               </div>
               <Button
@@ -211,7 +211,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       <DialogContent className="max-w-lg h-[600px] p-0 bg-black/80 backdrop-blur-2xl border-white/10 flex flex-col">
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" />
+            <Sparkles className="w-5 h-5 text-white" />
             <DialogTitle className="text-white">AI Assistant</DialogTitle>
           </div>
         </DialogHeader>
