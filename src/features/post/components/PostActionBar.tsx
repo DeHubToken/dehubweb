@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronRight, Type } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import type { LiveMode } from '../types';
 
@@ -55,9 +58,10 @@ export function PostActionBar({
   hasText,
   hasImage,
 }: PostActionBarProps) {
+  const isMobile = useIsMobile();
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
-  const [enhancePopoverOpen, setEnhancePopoverOpen] = useState(false);
-  const [styleSubmenuOpen, setStyleSubmenuOpen] = useState(false);
+  const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
+  const [styleView, setStyleView] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
@@ -67,19 +71,88 @@ export function PostActionBar({
 
   const handleSpellCheck = () => {
     onEnhanceWithAI('spellcheck');
-    setEnhancePopoverOpen(false);
+    setEnhanceSheetOpen(false);
+    setStyleView(false);
   };
 
   const handleGrammar = () => {
     onEnhanceWithAI('grammar');
-    setEnhancePopoverOpen(false);
+    setEnhanceSheetOpen(false);
+    setStyleView(false);
   };
 
   const handleStyleSelect = (styleId: string) => {
     onEnhanceWithAI('style', styleId);
-    setEnhancePopoverOpen(false);
-    setStyleSubmenuOpen(false);
+    setEnhanceSheetOpen(false);
+    setStyleView(false);
   };
+
+  const handleCloseEnhance = () => {
+    setEnhanceSheetOpen(false);
+    setStyleView(false);
+  };
+
+  // Shared menu content for both mobile and desktop
+  const enhanceMenuContent = (
+    <div className="flex flex-col">
+      {styleView ? (
+        <>
+          <button
+            type="button"
+            onClick={() => setStyleView(false)}
+            className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-400 hover:bg-white/5 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back
+          </button>
+          <div className="border-t border-white/10" />
+          {STYLE_OPTIONS.map((style) => (
+            <button
+              key={style.id}
+              type="button"
+              onClick={() => handleStyleSelect(style.id)}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+            >
+              <span className="text-lg">{style.emoji}</span>
+              {style.label}
+            </button>
+          ))}
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={handleSpellCheck}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <SpellCheck className="w-5 h-5 text-blue-400" />
+            Spell Check
+          </button>
+          
+          <button
+            type="button"
+            onClick={handleGrammar}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <Type className="w-5 h-5 text-emerald-400" />
+            Fix Grammar
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => setStyleView(true)}
+            className="flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Palette className="w-5 h-5 text-purple-400" />
+              Change Style
+            </div>
+            <span className="text-zinc-500">→</span>
+          </button>
+        </>
+      )}
+    </div>
+  );
 
   return (
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
@@ -297,76 +370,55 @@ export function PostActionBar({
       </div>
 
       <div className="flex items-center gap-2">
-        <Popover open={enhancePopoverOpen} onOpenChange={setEnhancePopoverOpen}>
-          <PopoverTrigger asChild>
+        {/* Mobile: Drawer */}
+        {isMobile ? (
+          <>
             <Button
               variant="outline"
               size="sm"
               disabled={!hasText || isEnhancing}
-              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8 sm:px-3 sm:gap-1.5"
+              onClick={() => setEnhanceSheetOpen(true)}
+              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
             >
               {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-              <span className="hidden sm:inline">{isEnhancing ? 'AI...' : 'AI'}</span>
             </Button>
-          </PopoverTrigger>
-          <PopoverContent 
-            className="w-48 p-1 bg-zinc-900/95 backdrop-blur-xl border border-white/10" 
-            align="end"
-            side="top"
-            sideOffset={4}
-          >
-            <button
-              type="button"
-              onClick={handleSpellCheck}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
-            >
-              <SpellCheck className="w-4 h-4 text-blue-400" />
-              Spell Check
-            </button>
             
-            <button
-              type="button"
-              onClick={handleGrammar}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
-            >
-              <Type className="w-4 h-4 text-emerald-400" />
-              Fix Grammar
-            </button>
-            
-            <Popover open={styleSubmenuOpen} onOpenChange={setStyleSubmenuOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <Palette className="w-4 h-4 text-purple-400" />
-                    Change Style
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-zinc-500" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent 
-                className="w-44 p-1 bg-zinc-900/95 backdrop-blur-xl border border-white/10 max-h-64 overflow-y-auto" 
-                align="start"
-                side="left"
-                sideOffset={4}
+            <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
+              <DrawerContent className="bg-black/80 backdrop-blur-2xl border-t border-white/10">
+                <DrawerHeader className="border-b border-white/10">
+                  <DrawerTitle className="text-white flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-purple-400" />
+                    {styleView ? 'Choose Style' : 'Enhance'}
+                  </DrawerTitle>
+                </DrawerHeader>
+                {enhanceMenuContent}
+              </DrawerContent>
+            </Drawer>
+          </>
+        ) : (
+          /* Desktop: Popover */
+          <Popover open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!hasText || isEnhancing}
+                className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8 sm:px-3 sm:gap-1.5"
               >
-                {STYLE_OPTIONS.map((style) => (
-                  <button
-                    key={style.id}
-                    type="button"
-                    onClick={() => handleStyleSelect(style.id)}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
-                  >
-                    <span>{style.emoji}</span>
-                    {style.label}
-                  </button>
-                ))}
-              </PopoverContent>
-            </Popover>
-          </PopoverContent>
-        </Popover>
+                {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                <span>{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent 
+              className="w-52 p-0 bg-black/60 backdrop-blur-2xl border border-white/10 overflow-hidden" 
+              align="end"
+              side="top"
+              sideOffset={4}
+            >
+              {enhanceMenuContent}
+            </PopoverContent>
+          </Popover>
+        )}
         
         <Button
           onClick={onPost}
