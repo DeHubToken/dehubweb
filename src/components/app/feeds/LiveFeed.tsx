@@ -167,13 +167,6 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
                   </h3>
                   <p className="text-zinc-400 text-xs">{stream.streamer}</p>
                   <p className="text-zinc-500 text-xs">{stream.game}</p>
-                  <div className="flex gap-1 mt-1 flex-wrap">
-                    {stream.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="text-xs bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
