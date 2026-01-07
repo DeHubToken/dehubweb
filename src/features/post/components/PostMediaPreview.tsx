@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
+import { AudioVisualizer } from '@/components/app/audio';
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -339,20 +340,46 @@ export function PostMediaPreview({
                   </div>
                 </div>
               ) : m.type === 'audio' ? (
-                // Standalone audio post preview
-                <div className="relative p-4 flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <Music className="w-6 h-6 text-emerald-400" />
+                // Standalone audio post preview with visualizer
+                <div className="relative">
+                  {/* Visualizer background */}
+                  <AudioVisualizer
+                    audioUrl={m.preview}
+                    isPlaying={playingIndex === index}
+                    onPlayPause={() => {
+                      if (playingIndex === index) {
+                        setPlayingIndex(null);
+                      } else {
+                        setPlayingIndex(index);
+                      }
+                    }}
+                    className="w-full h-40"
+                    showStylePicker={true}
+                  />
+                  
+                  {/* Track info overlay */}
+                  <div className="absolute top-3 left-3 right-3 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                      <Music className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium text-sm truncate drop-shadow-lg">{m.file.name}</p>
+                      <p className="text-white/70 text-xs drop-shadow">
+                        {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm truncate">{m.file.name}</p>
-                    <p className="text-zinc-400 text-xs">
-                      {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
-                    </p>
-                  </div>
+                  
+                  {/* Play/Pause button overlay */}
                   <button
-                    onClick={() => playingIndex === index ? stopAudio() : playAudio(m.preview, index)}
-                    className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center hover:bg-emerald-600 transition-colors"
+                    onClick={() => {
+                      if (playingIndex === index) {
+                        setPlayingIndex(null);
+                      } else {
+                        setPlayingIndex(index);
+                      }
+                    }}
+                    className="absolute bottom-3 left-3 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30"
                   >
                     {playingIndex === index ? (
                       <Pause className="w-5 h-5 text-white" />
