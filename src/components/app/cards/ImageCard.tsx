@@ -47,7 +47,7 @@ export function ImageCard({ post }: ImageCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
+        <ActionBar postId={post.id} className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
         <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
         <p className="text-white text-sm mt-1">
           <span className="font-semibold">{post.username}</span> <TranslatableText text={post.caption} className="inline" as="span" />
