@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
@@ -30,15 +31,43 @@ export function PostMediaPreview({
   const [recordingTime, setRecordingTime] = useState(0);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [showAudioOptions, setShowAudioOptions] = useState<number | null>(null);
+  const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
+  const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
   const audioInputRef = useRef<HTMLInputElement | null>(null);
   const thumbnailInputRef = useRef<HTMLInputElement | null>(null);
   const pendingUploadIndex = useRef<number | null>(null);
   const pendingThumbnailIndex = useRef<number | null>(null);
   const recordingTimeRef = useRef(0);
+
+  // Simulate video processing when video is added
+  useEffect(() => {
+    media.forEach((m, index) => {
+      if (m.type === 'video' && !processingVideos.has(index)) {
+        // Start simulated processing for new videos
+        setProcessingVideos(prev => new Map(prev).set(index, 0));
+        
+        const interval = setInterval(() => {
+          setProcessingVideos(prev => {
+            const current = prev.get(index) ?? 0;
+            if (current >= 100) {
+              clearInterval(interval);
+              const next = new Map(prev);
+              next.delete(index);
+              return next;
+            }
+            return new Map(prev).set(index, Math.min(current + Math.random() * 15 + 5, 100));
+          });
+        }, 200);
+
+        return () => clearInterval(interval);
+      }
+    });
+  }, [media.length]);
 
   useEffect(() => {
     return () => {
@@ -334,6 +363,18 @@ export function PostMediaPreview({
                 </div>
               ) : (
                 <div className="relative">
+                  {/* Processing overlay */}
+                  {processingVideos.has(index) && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
+                      <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
+                      <p className="text-white text-sm font-medium mb-2">Processing video...</p>
+                      <div className="w-3/4 max-w-[200px]">
+                        <Progress value={processingVideos.get(index) ?? 0} className="h-2" />
+                      </div>
+                      <p className="text-zinc-400 text-xs mt-1">{Math.round(processingVideos.get(index) ?? 0)}%</p>
+                    </div>
+                  )}
+                  
                   {/* Show thumbnail if set, otherwise show video */}
                   {m.thumbnail ? (
                     <div className="relative">
@@ -358,10 +399,70 @@ export function PostMediaPreview({
                       </Tooltip>
                     </div>
                   ) : (
-                    <video src={m.preview} className="w-full h-auto max-h-80 object-cover rounded-2xl" />
+                    <div className="relative">
+                      <video 
+                        ref={(el) => {
+                          if (el) videoRefs.current.set(index, el);
+                        }}
+                        src={m.preview} 
+                        className="w-full h-auto max-h-80 object-cover rounded-2xl"
+                        onClick={() => {
+                          const video = videoRefs.current.get(index);
+                          if (!video || processingVideos.has(index)) return;
+                          
+                          if (playingVideoIndex === index) {
+                            video.pause();
+                            setPlayingVideoIndex(null);
+                          } else {
+                            // Pause any other playing video
+                            videoRefs.current.forEach((v, i) => {
+                              if (i !== index) v.pause();
+                            });
+                            video.play();
+                            setPlayingVideoIndex(index);
+                          }
+                        }}
+                        onEnded={() => setPlayingVideoIndex(null)}
+                        onPause={() => {
+                          if (playingVideoIndex === index) setPlayingVideoIndex(null);
+                        }}
+                      />
+                      {/* Play/Pause overlay */}
+                      {!processingVideos.has(index) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const video = videoRefs.current.get(index);
+                            if (!video) return;
+                            
+                            if (playingVideoIndex === index) {
+                              video.pause();
+                              setPlayingVideoIndex(null);
+                            } else {
+                              videoRefs.current.forEach((v, i) => {
+                                if (i !== index) v.pause();
+                              });
+                              video.play();
+                              setPlayingVideoIndex(index);
+                            }
+                          }}
+                          className="absolute inset-0 flex items-center justify-center group"
+                        >
+                          <div className={`w-12 h-12 rounded-full bg-black/60 flex items-center justify-center transition-opacity ${
+                            playingVideoIndex === index ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+                          }`}>
+                            {playingVideoIndex === index ? (
+                              <Pause className="w-6 h-6 text-white" />
+                            ) : (
+                              <Play className="w-6 h-6 text-white fill-white" />
+                            )}
+                          </div>
+                        </button>
+                      )}
+                    </div>
                   )}
                   {m.duration && (
-                    <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white">
+                    <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
                       {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
                       {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
                     </div>
