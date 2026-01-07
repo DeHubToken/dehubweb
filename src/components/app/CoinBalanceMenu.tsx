@@ -138,7 +138,14 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
   );
 
   // Mock dollar value calculation (e.g., 1 coin = $0.05)
-  const dollarValue = (balance * 0.05).toFixed(2);
+  const rawDollarValue = balance * 0.05;
+  const dollarValue = rawDollarValue === 0 ? '0' : rawDollarValue.toFixed(2);
+  
+  // Format balance: show 0 when zero, otherwise show with 2 decimals if has decimals
+  const formatBalance = (value: number) => {
+    if (value === 0) return '0';
+    return value % 1 === 0 ? value.toLocaleString() : value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
 
   const mainMenuContent = (
     <div className="space-y-1">
@@ -147,7 +154,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
         {/* DeHub Coin Balance */}
         <div className="flex items-center gap-2">
           <img src={dehubCoin} alt="coins" className="w-5 h-5" />
-          <span className="text-white font-semibold">{balance.toLocaleString()}</span>
+          <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
         {/* USD Balance with USDC logo */}
         <div className="flex items-center gap-2">
