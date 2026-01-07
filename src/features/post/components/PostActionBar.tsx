@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, Type } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -92,8 +92,8 @@ export function PostActionBar({
     setStyleView(false);
   };
 
-  // Shared menu content for both mobile and desktop
-  const enhanceMenuContent = (
+  // Mobile menu content (uses inline view switching)
+  const mobileMenuContent = (
     <div className="flex flex-col">
       {styleView ? (
         <>
@@ -147,10 +147,66 @@ export function PostActionBar({
               <Palette className="w-5 h-5 text-purple-400" />
               Change Style
             </div>
-            <span className="text-zinc-500">→</span>
+            <ChevronRight className="w-4 h-4 text-zinc-500" />
           </button>
         </>
       )}
+    </div>
+  );
+
+  // Desktop menu content (uses nested popover for styles)
+  const desktopMenuContent = (
+    <div className="flex flex-col">
+      <button
+        type="button"
+        onClick={handleSpellCheck}
+        className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+      >
+        <SpellCheck className="w-5 h-5 text-blue-400" />
+        Spell Check
+      </button>
+      
+      <button
+        type="button"
+        onClick={handleGrammar}
+        className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+      >
+        <Type className="w-5 h-5 text-emerald-400" />
+        Fix Grammar
+      </button>
+      
+      <Popover open={styleView} onOpenChange={setStyleView}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className="flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Palette className="w-5 h-5 text-purple-400" />
+              Change Style
+            </div>
+            <ChevronRight className="w-4 h-4 text-zinc-500" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent 
+          className="w-44 p-0 bg-black/60 backdrop-blur-2xl border border-white/10 max-h-72 overflow-y-auto" 
+          align="start"
+          side="right"
+          sideOffset={4}
+        >
+          {STYLE_OPTIONS.map((style) => (
+            <button
+              key={style.id}
+              type="button"
+              onClick={() => handleStyleSelect(style.id)}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+            >
+              <span className="text-lg">{style.emoji}</span>
+              {style.label}
+            </button>
+          ))}
+        </PopoverContent>
+      </Popover>
     </div>
   );
 
@@ -391,7 +447,7 @@ export function PostActionBar({
                     {styleView ? 'Choose Style' : 'Enhance'}
                   </DrawerTitle>
                 </DrawerHeader>
-                {enhanceMenuContent}
+                {mobileMenuContent}
               </DrawerContent>
             </Drawer>
           </>
@@ -415,7 +471,7 @@ export function PostActionBar({
               side="top"
               sideOffset={4}
             >
-              {enhanceMenuContent}
+              {desktopMenuContent}
             </PopoverContent>
           </Popover>
         )}
