@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { GLASS_STYLES } from '@/constants/app.constants';
 import type { LiveMode } from '../types';
 
 const STYLE_OPTIONS = [
@@ -189,7 +190,7 @@ export function PostActionBar({
           </button>
         </PopoverTrigger>
         <PopoverContent 
-          className="w-44 p-0 bg-black/60 backdrop-blur-2xl border border-white/10 max-h-72 overflow-y-auto" 
+          className={cn("w-44 p-0 max-h-72 overflow-y-auto", GLASS_STYLES.popover)}
           align="start"
           side="right"
           sideOffset={4}
@@ -440,7 +441,7 @@ export function PostActionBar({
             </Button>
             
             <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
-              <DrawerContent className="bg-black/80 backdrop-blur-2xl border-t border-white/10">
+              <DrawerContent className={GLASS_STYLES.drawer}>
                 <DrawerHeader className="border-b border-white/10">
                   <DrawerTitle className="text-white flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-purple-400" />
@@ -466,7 +467,7 @@ export function PostActionBar({
               </Button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-52 p-0 bg-black/60 backdrop-blur-2xl border border-white/10 overflow-hidden" 
+              className={cn("w-52 p-0 overflow-hidden", GLASS_STYLES.popover)}
               align="end"
               side="top"
               sideOffset={4}
