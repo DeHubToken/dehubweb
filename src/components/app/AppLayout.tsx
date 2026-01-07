@@ -3,9 +3,12 @@ import { Outlet } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
+import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
+import { PostModal } from '@/features/post/PostModal';
 
-export function AppLayout() {
+function AppLayoutContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles } = useGlobalDropZone();
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
@@ -22,6 +25,22 @@ export function AppLayout() {
       </div>
       
       <MobileBottomNav />
+      
+      {/* Global Post Modal for drag & drop */}
+      <PostModal 
+        isOpen={isPostModalOpen} 
+        onClose={closePostModal}
+        initialFiles={pendingFiles}
+        onFilesProcessed={clearPendingFiles}
+      />
     </div>
+  );
+}
+
+export function AppLayout() {
+  return (
+    <GlobalDropZoneProvider>
+      <AppLayoutContent />
+    </GlobalDropZoneProvider>
   );
 }
