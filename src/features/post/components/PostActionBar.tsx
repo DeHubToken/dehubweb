@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Headphones, Upload } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { LiveMode } from '../types';
 
@@ -56,39 +57,51 @@ export function PostActionBar({
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
         
         {!isLive && (
-          <button 
-            type="button" 
-            onClick={() => imageInputRef.current?.click()} 
-            className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-            title="Add image"
-          >
-            <Image className="w-5 h-5 text-blue-400" />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => imageInputRef.current?.click()} 
+                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              >
+                <Image className="w-5 h-5 text-blue-400" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Add image</TooltipContent>
+          </Tooltip>
         )}
         
         {!hasImage && !isLive && (
-          <button 
-            type="button" 
-            onClick={() => videoInputRef.current?.click()} 
-            className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-            title="Add video"
-          >
-            <Film className="w-5 h-5 text-purple-400" />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => videoInputRef.current?.click()} 
+                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              >
+                <Film className="w-5 h-5 text-purple-400" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Add video</TooltipContent>
+          </Tooltip>
         )}
 
         {/* Audio button with popover for upload/record options */}
         {!isLive && (
           <Popover>
-            <PopoverTrigger asChild>
-              <button 
-                type="button" 
-                className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-                title="Add audio"
-              >
-                <Music className="w-5 h-5 text-emerald-400" />
-              </button>
-            </PopoverTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <button 
+                    type="button" 
+                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                  >
+                    <Music className="w-5 h-5 text-emerald-400" />
+                  </button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Add audio</TooltipContent>
+            </Tooltip>
             <PopoverContent 
               className="w-auto p-1 bg-transparent border-none shadow-none" 
               align="center"
@@ -96,21 +109,29 @@ export function PostActionBar({
               sideOffset={4}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => audioInputRef.current?.click()}
-                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                  title="Upload Audio"
-                >
-                  <Upload className="w-5 h-5 text-emerald-400" />
-                </button>
-                <button
-                  type="button"
-                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                  title="Record Audio"
-                >
-                  <Mic className="w-5 h-5 text-red-400" />
-                </button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => audioInputRef.current?.click()}
+                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                      <Upload className="w-5 h-5 text-emerald-400" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Upload Audio</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                      <Mic className="w-5 h-5 text-red-400" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Record Audio</TooltipContent>
+                </Tooltip>
               </div>
             </PopoverContent>
           </Popover>
@@ -118,22 +139,26 @@ export function PostActionBar({
         
         {!hasImage && (
           <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen}>
-            <PopoverTrigger asChild>
-              <button 
-                type="button" 
-                onClick={() => {
-                  if (isLive) {
-                    setLiveMode(null);
-                  } else {
-                    setLivePopoverOpen(true);
-                  }
-                }}
-                className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")} 
-                title="Go live"
-              >
-                <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
-              </button>
-            </PopoverTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      if (isLive) {
+                        setLiveMode(null);
+                      } else {
+                        setLivePopoverOpen(true);
+                      }
+                    }}
+                    className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")}
+                  >
+                    <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
+                  </button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Go live</TooltipContent>
+            </Tooltip>
             <PopoverContent 
               className="w-auto p-1 bg-transparent border-none shadow-none" 
               align="center"
@@ -141,22 +166,30 @@ export function PostActionBar({
               sideOffset={4}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => handleSelectLiveMode('video')}
-                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                  title="Live Video"
-                >
-                  <Video className="w-5 h-5 text-red-400" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSelectLiveMode('townhall')}
-                  className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                  title="Town Hall"
-                >
-                  <Mic className="w-5 h-5 text-purple-400" />
-                </button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectLiveMode('video')}
+                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                      <Video className="w-5 h-5 text-red-400" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Live Video</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectLiveMode('townhall')}
+                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                      <Mic className="w-5 h-5 text-purple-400" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Town Hall</TooltipContent>
+                </Tooltip>
               </div>
             </PopoverContent>
           </Popover>
@@ -164,51 +197,71 @@ export function PostActionBar({
 
         {hasImage && (
           <>
-            <button 
-              type="button" 
-              className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-              title="Record audio"
-            >
-              <Mic className="w-5 h-5 text-emerald-400" />
-            </button>
-            <button 
-              type="button" 
-              onClick={() => audioInputRef.current?.click()}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors" 
-              title="Upload audio"
-            >
-              <Music className="w-5 h-5 text-emerald-400" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  type="button" 
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <Mic className="w-5 h-5 text-emerald-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Record audio</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  type="button" 
+                  onClick={() => audioInputRef.current?.click()}
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <Music className="w-5 h-5 text-emerald-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Upload audio</TooltipContent>
+            </Tooltip>
           </>
         )}
 
         <div className="w-px h-4 bg-white/10 mx-1" />
 
-        <button 
-          type="button" 
-          onClick={() => onInsertFormatting('bold')} 
-          className="p-1.5 hover:bg-white/10 rounded-full transition-colors" 
-          title="Bold"
-        >
-          <Bold className="w-4 h-4 text-zinc-400" />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              type="button" 
+              onClick={() => onInsertFormatting('bold')} 
+              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+            >
+              <Bold className="w-4 h-4 text-zinc-400" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>Bold</TooltipContent>
+        </Tooltip>
         
-        <button 
-          type="button" 
-          onClick={() => onInsertFormatting('italic')} 
-          className="p-1.5 hover:bg-white/10 rounded-full transition-colors" 
-          title="Italic"
-        >
-          <Italic className="w-4 h-4 text-zinc-400" />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              type="button" 
+              onClick={() => onInsertFormatting('italic')} 
+              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+            >
+              <Italic className="w-4 h-4 text-zinc-400" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>Italic</TooltipContent>
+        </Tooltip>
 
-        <button 
-          type="button" 
-          className="p-1.5 hover:bg-white/10 rounded-full transition-colors" 
-          title="Emoji"
-        >
-          <Smile className="w-4 h-4 text-zinc-400" />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              type="button" 
+              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+            >
+              <Smile className="w-4 h-4 text-zinc-400" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>Emoji</TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="flex items-center gap-2">
