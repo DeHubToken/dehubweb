@@ -69,11 +69,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
+    processImageFiles(Array.from(files));
+    e.target.value = '';
+  }, []);
 
+  const processImageFiles = useCallback((files: File[]) => {
     // Can't add images if there's already a video
     if (hasVideo) {
       toast.error('Remove the video first to add images');
-      e.target.value = '';
       return;
     }
 
@@ -82,11 +85,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     
     if (availableSlots <= 0) {
       toast.error('Maximum 4 images allowed');
-      e.target.value = '';
       return;
     }
 
-    const filesToAdd = Array.from(files).slice(0, availableSlots);
+    const filesToAdd = files.filter(f => f.type.startsWith('image/')).slice(0, availableSlots);
     
     if (files.length > availableSlots) {
       toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max 4)`);
@@ -96,28 +98,28 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-    e.target.value = '';
   }, [hasVideo, media]);
-
+    
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+    await processVideoFile(files[0]);
+    e.target.value = '';
+  }, []);
 
+  const processVideoFile = useCallback(async (file: File) => {
     // Can't add video if there are already images
     if (hasImage) {
       toast.error('Remove images first to add a video');
-      e.target.value = '';
       return;
     }
 
     // Can't add more than 1 video
     if (hasVideo) {
       toast.error('Only 1 video allowed per post');
-      e.target.value = '';
       return;
     }
 
-    const file = files[0]; // Only take the first video
     const preview = URL.createObjectURL(file);
     
     const video = document.createElement('video');
@@ -131,7 +133,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     });
 
     setMedia([{ file, preview, type: 'video', duration }]);
-    e.target.value = '';
   }, [hasImage, hasVideo]);
 
   const removeMedia = useCallback((index: number) => {
@@ -143,6 +144,52 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       return prev.filter((_, i) => i !== index);
     });
   }, []);
+
+  const processAudioFile = useCallback((file: File) => {
+    const url = URL.createObjectURL(file);
+    
+    // Create audio element to get duration
+    const audioEl = new Audio(url);
+    audioEl.onloadedmetadata = () => {
+      const duration = Math.round(audioEl.duration);
+      
+      if (hasImage) {
+        // Add audio to all images
+        setMedia(prev => prev.map(m => 
+          m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
+        ));
+        toast.success('Audio added to images');
+      } else {
+        // Standalone audio post
+        setMedia(prev => [...prev, { file, preview: url, type: 'audio', duration }]);
+        toast.success('Audio uploaded');
+      }
+    };
+  }, [hasImage]);
+
+  const handleFileDrop = useCallback((files: FileList) => {
+    const fileArray = Array.from(files);
+    
+    // Separate files by type
+    const imageFiles = fileArray.filter(f => f.type.startsWith('image/'));
+    const videoFiles = fileArray.filter(f => f.type.startsWith('video/'));
+    const audioFiles = fileArray.filter(f => f.type.startsWith('audio/'));
+    
+    // Process based on what was dropped
+    if (videoFiles.length > 0) {
+      processVideoFile(videoFiles[0]);
+    } else if (imageFiles.length > 0) {
+      processImageFiles(imageFiles);
+    }
+    
+    // Audio can be added alongside images
+    if (audioFiles.length > 0 && (hasImage || imageFiles.length > 0)) {
+      // Wait a tick for images to be added first
+      setTimeout(() => processAudioFile(audioFiles[0]), 100);
+    } else if (audioFiles.length > 0 && !hasVideo && !videoFiles.length) {
+      processAudioFile(audioFiles[0]);
+    }
+  }, [processVideoFile, processImageFiles, processAudioFile, hasImage, hasVideo]);
 
   const addAudioToMedia = useCallback((index: number, audio: AudioFile) => {
     setMedia(prev => prev.map((m, i) => 
@@ -190,29 +237,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const file = files[0];
-    const url = URL.createObjectURL(file);
-    
-    // Create audio element to get duration
-    const audioEl = new Audio(url);
-    audioEl.onloadedmetadata = () => {
-      const duration = Math.round(audioEl.duration);
-      
-      if (hasImage) {
-        // Add audio to all images
-        setMedia(prev => prev.map(m => 
-          m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
-        ));
-        toast.success('Audio added to images');
-      } else {
-        // Standalone audio post
-        setMedia(prev => [...prev, { file, preview: url, type: 'audio', duration }]);
-        toast.success('Audio uploaded');
-      }
-    };
-    
+    processAudioFile(files[0]);
     e.target.value = '';
-  }, [hasImage]);
+  }, [processAudioFile]);
 
   const handleEnhanceWithAI = useCallback(async (mode: 'spellcheck' | 'grammar' | 'style' = 'spellcheck', style?: string) => {
     if (!text.trim()) {
@@ -338,6 +365,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setLiveMode,
       handleImageSelect,
       handleVideoSelect,
+      handleFileDrop,
       removeMedia,
       handleAudioSelect,
       addAudioToMedia,
