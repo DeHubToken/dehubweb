@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
@@ -10,11 +10,21 @@ interface PostMediaPreviewProps {
   onAddAudio: (index: number, audio: AudioFile) => void;
   onRemoveAudio: (index: number) => void;
   onToggleMusicVideo?: (index: number) => void;
+  onAddThumbnail?: (index: number, thumbnailUrl: string) => void;
+  onRemoveThumbnail?: (index: number) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
 
-export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, onToggleMusicVideo }: PostMediaPreviewProps) {
+export function PostMediaPreview({ 
+  media, 
+  onRemove, 
+  onAddAudio, 
+  onRemoveAudio, 
+  onToggleMusicVideo,
+  onAddThumbnail,
+  onRemoveThumbnail 
+}: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
@@ -24,7 +34,9 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, o
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioInputRef = useRef<HTMLInputElement | null>(null);
+  const thumbnailInputRef = useRef<HTMLInputElement | null>(null);
   const pendingUploadIndex = useRef<number | null>(null);
+  const pendingThumbnailIndex = useRef<number | null>(null);
   const recordingTimeRef = useRef(0);
 
   useEffect(() => {
@@ -150,6 +162,27 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, o
     startRecording(index);
   };
 
+  const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const index = pendingThumbnailIndex.current;
+    if (!file || index === null) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    onAddThumbnail?.(index, url);
+    e.target.value = '';
+    pendingThumbnailIndex.current = null;
+  };
+
+  const triggerThumbnailUpload = (index: number) => {
+    pendingThumbnailIndex.current = index;
+    thumbnailInputRef.current?.click();
+  };
+
   if (media.length === 0) return null;
 
   return (
@@ -162,7 +195,14 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, o
         className="hidden"
         onChange={handleAudioUpload}
       />
-      
+      {/* Hidden thumbnail input */}
+      <input
+        ref={thumbnailInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleThumbnailUpload}
+      />
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -291,27 +331,65 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, o
                 </div>
               ) : (
                 <div className="relative">
-                  <video src={m.preview} className="w-full h-auto max-h-80 object-contain" />
+                  {/* Show thumbnail if set, otherwise show video */}
+                  {m.thumbnail ? (
+                    <div className="relative">
+                      <img src={m.thumbnail} alt="Video thumbnail" className="w-full h-auto max-h-80 object-contain" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center">
+                          <Play className="w-6 h-6 text-white fill-white" />
+                        </div>
+                      </div>
+                      {/* Remove thumbnail button */}
+                      <button
+                        type="button"
+                        onClick={() => onRemoveThumbnail?.(index)}
+                        className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-full transition-colors"
+                        title="Remove thumbnail"
+                      >
+                        <Trash2 className="w-3 h-3 text-white" />
+                      </button>
+                    </div>
+                  ) : (
+                    <video src={m.preview} className="w-full h-auto max-h-80 object-contain" />
+                  )}
                   {m.duration && (
                     <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white">
                       {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
                       {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
                     </div>
                   )}
-                  {/* Music Video Toggle */}
-                  <button
-                    type="button"
-                    onClick={() => onToggleMusicVideo?.(index)}
-                    className={`absolute bottom-2 right-2 flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
-                      ${m.isMusicVideo 
-                        ? 'bg-emerald-500 text-white' 
-                        : 'bg-black/70 text-zinc-300 hover:bg-black/90'
-                      }`}
-                    title="Mark as music video"
-                  >
-                    <Music className="w-3 h-3" />
-                    {m.isMusicVideo ? 'Music Video' : 'Music?'}
-                  </button>
+                  {/* Video action buttons */}
+                  <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                    {/* Thumbnail button */}
+                    <button
+                      type="button"
+                      onClick={() => triggerThumbnailUpload(index)}
+                      className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                        ${m.thumbnail 
+                          ? 'bg-blue-500 text-white' 
+                          : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                        }`}
+                      title="Add custom thumbnail"
+                    >
+                      <ImageIcon className="w-3 h-3" />
+                      {m.thumbnail ? 'Thumbnail' : 'Thumbnail'}
+                    </button>
+                    {/* Music Video Toggle */}
+                    <button
+                      type="button"
+                      onClick={() => onToggleMusicVideo?.(index)}
+                      className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                        ${m.isMusicVideo 
+                          ? 'bg-emerald-500 text-white' 
+                          : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                        }`}
+                      title="Mark as music video"
+                    >
+                      <Music className="w-3 h-3" />
+                      {m.isMusicVideo ? 'Music Video' : 'Music?'}
+                    </button>
+                  </div>
                 </div>
               )}
               <button

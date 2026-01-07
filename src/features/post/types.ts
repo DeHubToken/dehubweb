@@ -11,6 +11,7 @@ export interface MediaFile {
   duration?: number;
   audio?: AudioFile;
   isMusicVideo?: boolean;
+  thumbnail?: string;
 }
 
 export type Currency = 'USD' | 'DHB';
@@ -59,6 +60,8 @@ export interface PostFormActions {
   addAudioToMedia: (index: number, audio: AudioFile) => void;
   removeAudioFromMedia: (index: number) => void;
   toggleMusicVideo: (index: number) => void;
+  addThumbnailToMedia: (index: number, thumbnailUrl: string) => void;
+  removeThumbnailFromMedia: (index: number) => void;
   handleEnhanceWithAI: () => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;
