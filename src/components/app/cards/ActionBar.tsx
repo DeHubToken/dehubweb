@@ -14,7 +14,8 @@
  */
 
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
@@ -32,6 +33,8 @@ import {
 } from '@/components/ui/sheet';
 
 interface ActionBarProps {
+  /** Post ID for info navigation */
+  postId?: string;
   /** Handler for like action */
   onLike?: () => void;
   /** Handler for dislike action */
@@ -53,6 +56,7 @@ interface ActionBarProps {
 }
 
 export function ActionBar({ 
+  postId,
   onLike, 
   onDislike, 
   onComment, 
@@ -65,6 +69,13 @@ export function ActionBar({
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const isTouchDevice = useIsTouchDevice();
+  const navigate = useNavigate();
+
+  const handleInfoClick = () => {
+    if (postId) {
+      navigate(`/app/post/${postId}/info`);
+    }
+  };
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -199,14 +210,23 @@ export function ActionBar({
           )}
         </div>
 
-        {/* Bookmark action */}
-        <button 
-          onClick={onBookmark}
-          className="text-white hover:text-zinc-400 transition-colors"
-          aria-label="Bookmark"
-        >
-          <Bookmark className="w-5 h-5" />
-        </button>
+        {/* Right side actions */}
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={onBookmark}
+            className="text-white hover:text-zinc-400 transition-colors"
+            aria-label="Bookmark"
+          >
+            <Bookmark className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={handleInfoClick}
+            className="text-white hover:text-zinc-400 transition-colors"
+            aria-label="Post info"
+          >
+            <Info className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );

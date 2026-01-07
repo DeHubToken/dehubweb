@@ -144,6 +144,7 @@ function VideoCardItem({
       {/* Actions & Info */}
       <div className="p-3">
         <ActionBar 
+          postId={video.id}
           className="p-0 mb-2" 
           onComment={() => onToggleComments(video.id)}
         />

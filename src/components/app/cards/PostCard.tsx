@@ -47,7 +47,7 @@ export function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      <ActionBar onComment={() => setShowComments(!showComments)} />
+      <ActionBar postId={post.id} onComment={() => setShowComments(!showComments)} />
 
       {/* Comments Section */}
       <div className="px-3 pb-3">

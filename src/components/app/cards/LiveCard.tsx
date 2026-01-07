@@ -44,7 +44,7 @@ export function LiveCard({ stream }: LiveCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
+        <ActionBar postId={stream.id} className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
         <p className="font-semibold text-white text-sm">{stream.viewers} watching</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
