@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
@@ -343,14 +344,18 @@ export function PostMediaPreview({
                         </div>
                       </div>
                       {/* Remove thumbnail button */}
-                      <button
-                        type="button"
-                        onClick={() => onRemoveThumbnail?.(index)}
-                        className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-full transition-colors"
-                        title="Remove thumbnail"
-                      >
-                        <Trash2 className="w-3 h-3 text-white" />
-                      </button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => onRemoveThumbnail?.(index)}
+                            className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-full transition-colors"
+                          >
+                            <Trash2 className="w-3 h-3 text-white" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Remove thumbnail</TooltipContent>
+                      </Tooltip>
                     </div>
                   ) : (
                     <video src={m.preview} className="w-full h-auto max-h-80 object-cover rounded-2xl" />
@@ -364,33 +369,41 @@ export function PostMediaPreview({
                   {/* Video action buttons */}
                   <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
                     {/* Thumbnail button */}
-                    <button
-                      type="button"
-                      onClick={() => triggerThumbnailUpload(index)}
-                      className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
-                        ${m.thumbnail 
-                          ? 'bg-blue-500 text-white' 
-                          : 'bg-black/70 text-zinc-300 hover:bg-black/90'
-                        }`}
-                      title="Add custom thumbnail"
-                    >
-                      <ImageIcon className="w-3 h-3" />
-                      {m.thumbnail ? 'Thumbnail' : 'Thumbnail'}
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => triggerThumbnailUpload(index)}
+                          className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                            ${m.thumbnail 
+                              ? 'bg-blue-500 text-white' 
+                              : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                            }`}
+                        >
+                          <ImageIcon className="w-3 h-3" />
+                          {m.thumbnail ? 'Thumbnail' : 'Thumbnail'}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Add custom thumbnail</TooltipContent>
+                    </Tooltip>
                     {/* Music Video Toggle */}
-                    <button
-                      type="button"
-                      onClick={() => onToggleMusicVideo?.(index)}
-                      className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
-                        ${m.isMusicVideo 
-                          ? 'bg-emerald-500 text-white' 
-                          : 'bg-black/70 text-zinc-300 hover:bg-black/90'
-                        }`}
-                      title="Mark as music video"
-                    >
-                      <Music className="w-3 h-3" />
-                      {m.isMusicVideo ? 'Music Video' : 'Music?'}
-                    </button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => onToggleMusicVideo?.(index)}
+                          className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                            ${m.isMusicVideo 
+                              ? 'bg-emerald-500 text-white' 
+                              : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                            }`}
+                        >
+                          <Music className="w-3 h-3" />
+                          {m.isMusicVideo ? 'Music Video' : 'Music?'}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Mark as music video</TooltipContent>
+                    </Tooltip>
                   </div>
                 </div>
               )}
