@@ -33,7 +33,7 @@ const MOCK_PROFILE = {
 };
 
 // Filter/modify mock data to appear as if from the profile user
-const PROFILE_POSTS: TextPost[] = MOCK_POSTS.slice(0, 5).map(post => ({
+const PROFILE_POSTS: TextPost[] = MOCK_POSTS.slice(0, 10).map(post => ({
   ...post,
   author: {
     id: 'profile-user',
@@ -43,31 +43,44 @@ const PROFILE_POSTS: TextPost[] = MOCK_POSTS.slice(0, 5).map(post => ({
   },
 }));
 
-const PROFILE_IMAGES: ImagePost[] = SAMPLE_IMAGES.slice(0, 6).map(img => ({
+const PROFILE_IMAGES: ImagePost[] = SAMPLE_IMAGES.slice(0, 10).map(img => ({
   ...img,
   username: MOCK_PROFILE.name,
   avatar: MOCK_PROFILE.handle,
   verified: MOCK_PROFILE.verified,
 }));
 
-const PROFILE_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 4).map(vid => ({
+const PROFILE_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 8).map((vid, i) => ({
   ...vid,
+  id: `profile-video-${i}`,
   channel: MOCK_PROFILE.name,
   channelAvatar: MOCK_PROFILE.handle,
   verified: MOCK_PROFILE.verified,
 }));
 
+// Generate additional videos to reach 10
+const EXTRA_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 2).map((vid, i) => ({
+  ...vid,
+  id: `profile-video-extra-${i}`,
+  channel: MOCK_PROFILE.name,
+  channelAvatar: MOCK_PROFILE.handle,
+  verified: MOCK_PROFILE.verified,
+  title: i === 0 ? 'Behind the Scenes - Day in My Life' : 'Q&A Session with Followers',
+}));
+
+const ALL_PROFILE_VIDEOS = [...PROFILE_VIDEOS, ...EXTRA_VIDEOS];
+
 type TabValue = 'posts' | 'links' | 'replies' | 'images' | 'videos' | 'favorites' | 'clips' | 'live';
 
 const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
   { icon: Home, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
-  { icon: Link2, label: 'Links', value: 'links', count: 0 },
-  { icon: MessageCircle, label: 'Replies', value: 'replies', count: 28 },
+  { icon: Link2, label: 'Links', value: 'links', count: 10 },
+  { icon: MessageCircle, label: 'Replies', value: 'replies', count: 10 },
   { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
-  { icon: Video, label: 'Videos', value: 'videos', count: PROFILE_VIDEOS.length },
-  { icon: Star, label: 'Favorites', value: 'favorites', count: 12 },
-  { icon: Play, label: 'Clips', value: 'clips', count: 16 },
-  { icon: Radio, label: 'Live', value: 'live', count: 5 },
+  { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
+  { icon: Star, label: 'Favorites', value: 'favorites', count: 10 },
+  { icon: Play, label: 'Clips', value: 'clips', count: 10 },
+  { icon: Radio, label: 'Live', value: 'live', count: 10 },
 ];
 
 export default function ProfilePage() {
@@ -173,7 +186,7 @@ export default function ProfilePage() {
       case 'videos':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {PROFILE_VIDEOS.map((video) => (
+            {ALL_PROFILE_VIDEOS.map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
