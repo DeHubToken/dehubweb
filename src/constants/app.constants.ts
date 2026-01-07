@@ -75,3 +75,25 @@ export const EXPLORE_TRENDING: Array<{ tag: string; postCount: string }> = [
   { tag: '#music', postCount: '745 posts' },
   { tag: '#art', postCount: '527 posts' },
 ];
+
+// ============================================
+// GLASS MORPHISM STYLES - UNIVERSAL RULE
+// ============================================
+// ALL popovers, dropdowns, sheets, drawers, menus, and overlays
+// MUST use these styles for consistency. NO EXCEPTIONS.
+// ============================================
+
+export const GLASS_STYLES = {
+  // For Popovers, Dropdowns, Menus - floating elements
+  popover: "bg-black/40 backdrop-blur-2xl border border-white/10",
+  
+  // For Drawers, Sheets - bottom/side panels
+  drawer: "bg-black/40 backdrop-blur-2xl border-t border-white/10",
+  sheet: "bg-black/40 backdrop-blur-2xl border-l border-white/10",
+  
+  // For Dialogs, Modals - centered overlays  
+  dialog: "bg-black/40 backdrop-blur-2xl border border-white/10",
+  
+  // For Cards with glass effect
+  card: "bg-white/5 backdrop-blur-xl border border-white/10",
+} as const;
