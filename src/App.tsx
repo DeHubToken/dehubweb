@@ -21,6 +21,7 @@ import SettingsPage from "./pages/app/SettingsPage";
 import CommandCentrePage from "./pages/app/CommandCentrePage";
 import MusicPage from "./pages/app/MusicPage";
 import PostInfoPage from "./pages/app/PostInfoPage";
+import AssistantPage from "./pages/app/AssistantPage";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="profile" element={<ProfilePage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="messages" element={<MessagesPage />} />
+            <Route path="assistant" element={<AssistantPage />} />
             <Route path="leaderboard" element={<LeaderboardPage />} />
             <Route path="bookmarks" element={<BookmarksPage />} />
             <Route path="settings" element={<SettingsPage />} />
