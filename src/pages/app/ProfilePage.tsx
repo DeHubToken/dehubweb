@@ -506,10 +506,14 @@ export default function ProfilePage() {
                 <Button 
                   size="sm" 
                   variant="outline"
-                  className="rounded-full border-purple-600 text-purple-400 hover:bg-purple-600/10 gap-2"
+                  className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
+                  onClick={() => {
+                    setIsSubscribed(false);
+                    toast.success(`Unsubscribed from ${MOCK_PROFILE.name}`);
+                  }}
                 >
-                  <Star className="w-4 h-4 fill-current" />
-                  Subscribed
+                  <Star className="w-4 h-4" />
+                  Unsubscribe
                 </Button>
               )}
               <Button
