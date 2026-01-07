@@ -351,9 +351,9 @@ export function PostContentArea({
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-primary rounded-xl"
           >
-            <Upload className="w-10 h-10 text-primary mb-2" />
-            <p className="text-primary font-medium">Drop files here</p>
-            <p className="text-primary/60 text-sm mt-1">
+            <Upload className="w-10 h-10 text-white mb-2" />
+            <p className="text-white font-medium">Drop files here</p>
+            <p className="text-white/60 text-sm mt-1">
               {hasVideo ? 'Images not allowed with video' : hasImage ? 'Videos not allowed with images' : 'Images, videos, or audio'}
             </p>
           </motion.div>
