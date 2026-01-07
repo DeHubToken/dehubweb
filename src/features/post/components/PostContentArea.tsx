@@ -18,6 +18,7 @@ interface PostContentAreaProps {
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
+  hasVideo: boolean;
 }
 
 export function PostContentArea({
@@ -34,6 +35,7 @@ export function PostContentArea({
   liveMode,
   canPost,
   destinations,
+  hasVideo,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   return (
@@ -49,7 +51,7 @@ export function PostContentArea({
             ref={textareaRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="What's happening?"
+            placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
             className="w-full bg-transparent text-white text-lg placeholder:text-white/70 resize-none outline-none min-h-[80px] pb-5"
             rows={3}
           />
