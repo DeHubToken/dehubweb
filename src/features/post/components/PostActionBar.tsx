@@ -3,9 +3,7 @@ import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, 
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import type { LiveMode } from '../types';
@@ -59,7 +57,6 @@ export function PostActionBar({
   hasText,
   hasImage,
 }: PostActionBarProps) {
-  const isMobile = useIsMobile();
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
@@ -93,8 +90,8 @@ export function PostActionBar({
     setStyleView(false);
   };
 
-  // Mobile menu content (uses inline view switching)
-  const mobileMenuContent = (
+  // Menu content - used in Drawer on all devices
+  const menuContent = (
     <div className="flex flex-col">
       {styleView ? (
         <>
@@ -152,62 +149,6 @@ export function PostActionBar({
           </button>
         </>
       )}
-    </div>
-  );
-
-  // Desktop menu content (uses nested popover for styles)
-  const desktopMenuContent = (
-    <div className="flex flex-col">
-      <button
-        type="button"
-        onClick={handleSpellCheck}
-        className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
-      >
-        <SpellCheck className="w-5 h-5 text-blue-400" />
-        Spell Check
-      </button>
-      
-      <button
-        type="button"
-        onClick={handleGrammar}
-        className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
-      >
-        <Type className="w-5 h-5 text-emerald-400" />
-        Fix Grammar
-      </button>
-      
-      <Popover open={styleView} onOpenChange={setStyleView}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <Palette className="w-5 h-5 text-purple-400" />
-              Change Style
-            </div>
-            <ChevronRight className="w-4 h-4 text-zinc-500" />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent 
-          className={cn("w-44 p-0 max-h-72 overflow-y-auto", GLASS_STYLES.popover)}
-          align="start"
-          side="right"
-          sideOffset={4}
-        >
-          {STYLE_OPTIONS.map((style) => (
-            <button
-              key={style.id}
-              type="button"
-              onClick={() => handleStyleSelect(style.id)}
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
-            >
-              <span className="text-lg">{style.emoji}</span>
-              {style.label}
-            </button>
-          ))}
-        </PopoverContent>
-      </Popover>
     </div>
   );
 
@@ -427,55 +368,29 @@ export function PostActionBar({
       </div>
 
       <div className="flex items-center gap-2">
-        {/* Mobile: Drawer */}
-        {isMobile ? (
-          <>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={!hasText || isEnhancing}
-              onClick={() => setEnhanceSheetOpen(true)}
-              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
-            >
-              {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-            </Button>
-            
-            <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
-              <DrawerContent className={GLASS_STYLES.drawer}>
-                <DrawerHeader className="border-b border-white/10">
-                  <DrawerTitle className="text-white flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-purple-400" />
-                    {styleView ? 'Choose Style' : 'Enhance'}
-                  </DrawerTitle>
-                </DrawerHeader>
-                {mobileMenuContent}
-              </DrawerContent>
-            </Drawer>
-          </>
-        ) : (
-          /* Desktop: Popover */
-          <Popover open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={!hasText || isEnhancing}
-                className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8 sm:px-3 sm:gap-1.5"
-              >
-                {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                <span>{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent 
-              className={cn("w-52 p-0 overflow-hidden", GLASS_STYLES.popover)}
-              align="end"
-              side="top"
-              sideOffset={4}
-            >
-              {desktopMenuContent}
-            </PopoverContent>
-          </Popover>
-        )}
+        {/* Enhance: Always use Drawer/Sheet on all devices */}
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!hasText || isEnhancing}
+          onClick={() => setEnhanceSheetOpen(true)}
+          className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
+        >
+          {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+          <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
+        </Button>
+        
+        <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
+          <DrawerContent className={GLASS_STYLES.drawer}>
+            <DrawerHeader className="border-b border-white/10">
+              <DrawerTitle className="text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-400" />
+                {styleView ? 'Choose Style' : 'Enhance'}
+              </DrawerTitle>
+            </DrawerHeader>
+            {menuContent}
+          </DrawerContent>
+        </Drawer>
         
         <Button
           onClick={onPost}
