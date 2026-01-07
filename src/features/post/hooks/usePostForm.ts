@@ -44,6 +44,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const hasVideo = media.some(m => m.type === 'video');
   const hasImage = media.some(m => m.type === 'image');
   const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
+  const hasMusicVideo = media.some(m => m.type === 'video' && m.isMusicVideo);
   const isLive = liveMode !== null;
 
   const getPostDestinations = useCallback(() => {
@@ -52,10 +53,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     if (hasVideo) {
       destinations.push('Videos');
       if (isShort) destinations.push('Shorts');
+      if (hasMusicVideo) destinations.push('Music');
     }
     if (isLive) destinations.push('Live');
     return destinations;
-  }, [hasImage, hasVideo, isShort, isLive]);
+  }, [hasImage, hasVideo, isShort, hasMusicVideo, isLive]);
 
   const destinations = getPostDestinations();
   const canPost = Boolean(text.trim() || media.length > 0 || isLive);
@@ -152,6 +154,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
       return m;
     }));
+  }, []);
+
+  const toggleMusicVideo = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index && m.type === 'video' ? { ...m, isMusicVideo: !m.isMusicVideo } : m
+    ));
   }, []);
 
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -316,6 +324,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       handleAudioSelect,
       addAudioToMedia,
       removeAudioFromMedia,
+      toggleMusicVideo,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
@@ -9,11 +9,12 @@ interface PostMediaPreviewProps {
   onRemove: (index: number) => void;
   onAddAudio: (index: number, audio: AudioFile) => void;
   onRemoveAudio: (index: number) => void;
+  onToggleMusicVideo?: (index: number) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
 
-export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio }: PostMediaPreviewProps) {
+export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, onToggleMusicVideo }: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
@@ -274,6 +275,20 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio }:
                       {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
                     </div>
                   )}
+                  {/* Music Video Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => onToggleMusicVideo?.(index)}
+                    className={`absolute bottom-2 right-2 flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                      ${m.isMusicVideo 
+                        ? 'bg-emerald-500 text-white' 
+                        : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                      }`}
+                    title="Mark as music video"
+                  >
+                    <Music className="w-3 h-3" />
+                    {m.isMusicVideo ? 'Music Video' : 'Music?'}
+                  </button>
                 </div>
               )}
               <button
