@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
-  Home, Link2, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, Share, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell
+  Home, MessageCircle, Image, Video, Star, Play, Radio,
+  Calendar, UserPlus, Copy, AtSign, Wallet, Send, Plus, Bell
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -70,21 +70,20 @@ const EXTRA_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 2).map((vid, i) => ({
 
 const ALL_PROFILE_VIDEOS = [...PROFILE_VIDEOS, ...EXTRA_VIDEOS];
 
-type TabValue = 'posts' | 'links' | 'replies' | 'images' | 'videos' | 'favorites' | 'clips' | 'live';
+type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live';
 
 const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
-  { icon: Home, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
-  { icon: Link2, label: 'Links', value: 'links', count: 10 },
+  { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
   { icon: MessageCircle, label: 'Replies', value: 'replies', count: 10 },
   { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
   { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
-  { icon: Star, label: 'Favorites', value: 'favorites', count: 10 },
-  { icon: Play, label: 'Clips', value: 'clips', count: 10 },
+  { icon: Star, label: 'Subs', value: 'subscribers', count: 10 },
+  { icon: Play, label: 'Songs', value: 'songs', count: 10 },
   { icon: Radio, label: 'Live', value: 'live', count: 10 },
 ];
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState<TabValue>('posts');
+  const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
 
   const handleCopyProfileUrl = () => {
@@ -167,11 +166,17 @@ export default function ProfilePage() {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'posts':
+      case 'home':
         return (
           <div className="space-y-2 sm:space-y-3">
             {PROFILE_POSTS.map((post) => (
               <PostCard key={post.id} post={post} />
+            ))}
+            {PROFILE_IMAGES.map((image) => (
+              <ImageCard key={image.id} post={image} />
+            ))}
+            {ALL_PROFILE_VIDEOS.map((video) => (
+              <VideoCard key={video.id} video={video} />
             ))}
           </div>
         );
@@ -191,14 +196,48 @@ export default function ProfilePage() {
             ))}
           </div>
         );
-      case 'links':
       case 'replies':
-      case 'favorites':
-      case 'clips':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_POSTS.slice(0, 10).map((post, i) => (
+              <PostCard key={`reply-${post.id}-${i}`} post={{
+                ...post,
+                content: `@someone ${post.content}`,
+              }} />
+            ))}
+          </div>
+        );
+      case 'subscribers':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_POSTS.slice(0, 5).map((post) => (
+              <PostCard key={`sub-${post.id}`} post={post} />
+            ))}
+            {PROFILE_IMAGES.slice(0, 5).map((image) => (
+              <ImageCard key={`sub-${image.id}`} post={image} />
+            ))}
+          </div>
+        );
+      case 'songs':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_POSTS.slice(0, 10).map((post, i) => (
+              <PostCard key={`song-${post.id}-${i}`} post={{
+                ...post,
+                content: `🎵 Now playing: Track ${i + 1} - ${post.content.slice(0, 30)}...`,
+              }} />
+            ))}
+          </div>
+        );
       case 'live':
         return (
-          <div className="bg-zinc-900 rounded-2xl p-8 text-center">
-            <p className="text-zinc-500">No {activeTab} yet</p>
+          <div className="space-y-2 sm:space-y-3">
+            {ALL_PROFILE_VIDEOS.slice(0, 10).map((video, i) => (
+              <VideoCard key={`live-${video.id}-${i}`} video={{
+                ...video,
+                title: `Live Stream #${i + 1} - ${video.title}`,
+              }} />
+            ))}
           </div>
         );
       default:
