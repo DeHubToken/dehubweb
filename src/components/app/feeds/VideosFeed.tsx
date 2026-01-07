@@ -7,8 +7,8 @@
  * @module components/app/feeds/VideosFeed
  */
 
-import { useState } from 'react';
-import { MoreVertical, ListPlus, Clock, Flag, Download, Ban } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -28,6 +28,8 @@ import { CommentsSection, generateRandomComments, generateRandomQuotes } from '@
 
 interface VideosFeedProps {
   showFilters?: boolean;
+  isRefreshing?: boolean;
+  refreshKey?: number;
 }
 
 interface YouTubeVideo {
@@ -249,15 +251,33 @@ function VideoCardItem({
 // MAIN COMPONENT
 // ============================================================================
 
-export function VideosFeed({ showFilters = false }: VideosFeedProps) {
+export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
   const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
   const [expandedComments, setExpandedComments] = useState<string | null>(null);
 
+  // Shuffle videos on refresh
+  const shuffledVideos = useMemo(() => {
+    const shuffled = [...MOCK_VIDEOS];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor((Math.abs(Math.sin(refreshKey + i)) * (i + 1)));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [refreshKey]);
+
   const toggleComments = (videoId: string) => {
     setExpandedComments(expandedComments === videoId ? null : videoId);
   };
+
+  if (isRefreshing) {
+    return (
+      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
+        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-2 sm:p-3">
@@ -299,7 +319,7 @@ export function VideosFeed({ showFilters = false }: VideosFeedProps) {
 
       {/* Video Grid */}
       <div className="space-y-3">
-        {MOCK_VIDEOS.map((video) => (
+        {shuffledVideos.map((video) => (
           <VideoCardItem
             key={video.id}
             video={video}

@@ -6,8 +6,8 @@
  * @module components/app/feeds/MusicFeed
  */
 
-import { useState } from 'react';
-import { Play, Music, Mic2, Radio, Disc3 } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Play, Music, Mic2, Radio, Disc3, Loader2 } from 'lucide-react';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { cn } from '@/lib/utils';
@@ -242,17 +242,38 @@ function AudioTrackCard({ track }: { track: AudioTrack }) {
 
 interface MusicFeedProps {
   showFilters?: boolean;
+  isRefreshing?: boolean;
+  refreshKey?: number;
 }
 
-export function MusicFeed({ showFilters = false }: MusicFeedProps) {
+export function MusicFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
+
+  // Shuffle content on refresh
+  const shuffledVideos = useMemo(() => {
+    const shuffled = [...MUSIC_VIDEOS];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor((Math.abs(Math.sin(refreshKey + i)) * (i + 1)));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [refreshKey]);
+
+  const shuffledTracks = useMemo(() => {
+    const shuffled = [...AUDIO_TRACKS];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor((Math.abs(Math.sin(refreshKey + i + 100)) * (i + 1)));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [refreshKey]);
 
   const renderContent = () => {
     switch (activeSubTab) {
       case 'tracks':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {AUDIO_TRACKS.map((track) => (
+            {shuffledTracks.map((track) => (
               <AudioTrackCard key={track.id} track={track} />
             ))}
           </div>
@@ -260,7 +281,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
       case 'videos':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {MUSIC_VIDEOS.map((video) => (
+            {shuffledVideos.map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
@@ -268,7 +289,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
       case 'podcasts':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {AUDIO_TRACKS.slice(0, 5).map((track, i) => (
+            {shuffledTracks.slice(0, 5).map((track, i) => (
               <AudioTrackCard 
                 key={`podcast-${track.id}`} 
                 track={{
@@ -285,7 +306,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
       case 'live':
         return (
           <div className="space-y-2 sm:space-y-3">
-            {MUSIC_VIDEOS.slice(0, 3).map((video, i) => (
+            {shuffledVideos.slice(0, 3).map((video, i) => (
               <VideoCard 
                 key={`live-${video.id}`} 
                 video={{
@@ -307,7 +328,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
             <div className="mb-4">
               <h3 className="text-white font-semibold mb-3 px-1">Featured Music Videos</h3>
               <div className="space-y-2 sm:space-y-3">
-                {MUSIC_VIDEOS.slice(0, 3).map((video) => (
+                {shuffledVideos.slice(0, 3).map((video) => (
                   <VideoCard key={video.id} video={video} />
                 ))}
               </div>
@@ -317,7 +338,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
             <div>
               <h3 className="text-white font-semibold mb-3 px-1">Trending Tracks</h3>
               <div className="space-y-2 sm:space-y-3">
-                {AUDIO_TRACKS.slice(0, 5).map((track) => (
+                {shuffledTracks.slice(0, 5).map((track) => (
                   <AudioTrackCard key={track.id} track={track} />
                 ))}
               </div>
@@ -327,7 +348,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
             <div>
               <h3 className="text-white font-semibold mb-3 px-1">More Videos</h3>
               <div className="space-y-2 sm:space-y-3">
-                {MUSIC_VIDEOS.slice(3).map((video) => (
+                {shuffledVideos.slice(3).map((video) => (
                   <VideoCard key={video.id} video={video} />
                 ))}
               </div>
@@ -337,7 +358,7 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
             <div>
               <h3 className="text-white font-semibold mb-3 px-1">New Releases</h3>
               <div className="space-y-2 sm:space-y-3">
-                {AUDIO_TRACKS.slice(5).map((track) => (
+                {shuffledTracks.slice(5).map((track) => (
                   <AudioTrackCard key={track.id} track={track} />
                 ))}
               </div>
@@ -346,6 +367,14 @@ export function MusicFeed({ showFilters = false }: MusicFeedProps) {
         );
     }
   };
+
+  if (isRefreshing) {
+    return (
+      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
+        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-2 sm:p-3">

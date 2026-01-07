@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Music2, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -12,9 +12,11 @@ const ITEMS_PER_PAGE = 9;
 
 interface ShortsFeedProps {
   showFilters?: boolean;
+  isRefreshing?: boolean;
+  refreshKey?: number;
 }
 
-export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
+export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
   const [selectedDuration, setSelectedDuration] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -23,14 +25,23 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
   const [isLoading, setIsLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const displayedShorts = SAMPLE_SHORTS.slice(0, displayedCount);
-  const hasMore = displayedCount < SAMPLE_SHORTS.length;
+  // Shuffle shorts on refresh
+  const shuffledShorts = useMemo(() => {
+    const shuffled = [...SAMPLE_SHORTS];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor((Math.abs(Math.sin(refreshKey + i)) * (i + 1)));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [refreshKey]);
+
+  const displayedShorts = shuffledShorts.slice(0, displayedCount);
+  const hasMore = displayedCount < shuffledShorts.length;
 
   const loadMore = useCallback(() => {
     if (isLoading || !hasMore) return;
     
     setIsLoading(true);
-    // Simulate network delay
     setTimeout(() => {
       setDisplayedCount(prev => Math.min(prev + ITEMS_PER_PAGE, SAMPLE_SHORTS.length));
       setIsLoading(false);
@@ -54,10 +65,23 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
     return () => observer.disconnect();
   }, [hasMore, isLoading, loadMore]);
 
+  // Reset displayed count on refresh
+  useEffect(() => {
+    setDisplayedCount(ITEMS_PER_PAGE);
+  }, [refreshKey]);
+
   const handleShortClick = (index: number) => {
     setSelectedIndex(index);
     setViewerOpen(true);
   };
+
+  if (isRefreshing) {
+    return (
+      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
+        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -166,7 +190,7 @@ export function ShortsFeed({ showFilters = false }: ShortsFeedProps) {
       <AnimatePresence>
         {viewerOpen && (
           <ShortsViewer
-            shorts={SAMPLE_SHORTS}
+            shorts={shuffledShorts}
             initialIndex={selectedIndex}
             onClose={() => setViewerOpen(false)}
           />

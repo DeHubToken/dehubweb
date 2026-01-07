@@ -348,9 +348,9 @@ export default function HomePage() {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
     
-    // Check if at top of page for pull-to-refresh (home or live tabs)
+    // Check if at top of page for pull-to-refresh (works on all tabs)
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0 && (activeTab === 'home' || activeTab === 'live')) {
+    if (scrollTop <= 0) {
       pullStartY.current = e.touches[0].clientY;
       setIsPulling(true);
     }
@@ -359,8 +359,8 @@ export default function HomePage() {
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
     
-    // Handle pull-to-refresh
-    if (isPulling && pullStartY.current !== null && (activeTab === 'home' || activeTab === 'live')) {
+    // Handle pull-to-refresh for all tabs
+    if (isPulling && pullStartY.current !== null) {
       const currentY = e.touches[0].clientY;
       const distance = Math.max(0, currentY - pullStartY.current);
       // Apply resistance - the further you pull, the harder it gets
@@ -370,8 +370,8 @@ export default function HomePage() {
   };
 
   const handleTouchEnd = () => {
-    // Handle pull-to-refresh release
-    if (isPulling && pullDistance >= PULL_THRESHOLD && (activeTab === 'home' || activeTab === 'live')) {
+    // Handle pull-to-refresh release for all tabs
+    if (isPulling && pullDistance >= PULL_THRESHOLD) {
       triggerRefresh();
     }
     
@@ -407,14 +407,14 @@ export default function HomePage() {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0 && (activeTab === 'home' || activeTab === 'live')) {
+    if (scrollTop <= 0) {
       pullStartY.current = e.clientY;
       setIsPulling(true);
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (isPulling && pullStartY.current !== null && (activeTab === 'home' || activeTab === 'live')) {
+    if (isPulling && pullStartY.current !== null) {
       const distance = Math.max(0, e.clientY - pullStartY.current);
       const resistedDistance = Math.min(distance * 0.5, PULL_THRESHOLD * 1.5);
       setPullDistance(resistedDistance);
@@ -422,7 +422,7 @@ export default function HomePage() {
   };
 
   const handleMouseUp = () => {
-    if (isPulling && pullDistance >= PULL_THRESHOLD && (activeTab === 'home' || activeTab === 'live')) {
+    if (isPulling && pullDistance >= PULL_THRESHOLD) {
       triggerRefresh();
     }
     
@@ -452,13 +452,13 @@ export default function HomePage() {
       case 'images':
         return <ImagesFeed showCollage={showImagesCollage} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       case 'videos':
-        return <VideosFeed showFilters={showVideosFilters} />;
+        return <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       case 'shorts':
-        return <ShortsFeed showFilters={showShortsFilters} />;
+        return <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       case 'live':
         return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
       case 'music':
-        return <MusicFeed showFilters={showMusicFilters} />;
+        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       default:
         return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} />;
     }
@@ -478,8 +478,8 @@ export default function HomePage() {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Pull-to-refresh indicator - only show when pulling, not when refreshing */}
-      {(activeTab === 'home' || activeTab === 'live') && pullDistance > 0 && !isRefreshing && (
+      {/* Pull-to-refresh indicator - works on all tabs */}
+      {pullDistance > 0 && !isRefreshing && (
         <div 
           className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200"
           style={{ 
