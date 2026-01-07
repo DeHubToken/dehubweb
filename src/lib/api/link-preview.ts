@@ -45,7 +45,15 @@ export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | n
 }
 
 export function extractUrlsFromText(text: string): string[] {
-  const urlRegex = /(https?:\/\/[^\s<]+)/g;
+  // Match URLs but be more careful about boundaries
+  const urlRegex = /(https?:\/\/[^\s<>\u0080-\uFFFF]+)/g;
   const matches = text.match(urlRegex);
-  return matches ? [...new Set(matches)] : [];
+  if (!matches) return [];
+  
+  // Clean URLs - remove trailing punctuation that shouldn't be part of URLs
+  const cleaned = matches.map(url => 
+    url.replace(/[.,;:!?)}\]]+$/, '') // Remove trailing punctuation
+  );
+  
+  return [...new Set(cleaned)];
 }
