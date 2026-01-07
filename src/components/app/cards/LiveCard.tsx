@@ -15,6 +15,8 @@ import { AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
+import { AIButton } from './AIButton';
+import { PostAIChat } from './PostAIChat';
 import type { LiveStream } from '@/types/feed.types';
 
 interface LiveCardProps {
@@ -23,6 +25,7 @@ interface LiveCardProps {
 
 export function LiveCard({ stream }: LiveCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -36,6 +39,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       {/* Thumbnail */}
       <div className="relative aspect-video bg-zinc-800">
         <img src={stream.thumbnail} alt="" className="w-full h-full object-cover" />
+        <AIButton onClick={() => setShowAIChat(true)} />
         <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
           <Eye className="w-3 h-3 text-red-500" />
           <span className="text-white text-xs font-medium">{stream.viewers}</span>
@@ -60,6 +64,19 @@ export function LiveCard({ stream }: LiveCardProps) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* AI Chat */}
+      <PostAIChat
+        isOpen={showAIChat}
+        onClose={() => setShowAIChat(false)}
+        postContext={{
+          type: 'live',
+          author: stream.streamer,
+          title: stream.title,
+          game: stream.game,
+          viewers: stream.viewers
+        }}
+      />
     </div>
   );
 }

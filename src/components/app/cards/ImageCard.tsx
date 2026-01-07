@@ -16,6 +16,8 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
 import { TranslatableText } from '../TranslatableText';
+import { AIButton } from './AIButton';
+import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
 import type { ImagePost } from '@/types/feed.types';
 
@@ -25,6 +27,7 @@ interface ImageCardProps {
 
 export function ImageCard({ post }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -38,6 +41,7 @@ export function ImageCard({ post }: ImageCardProps) {
       {/* Image */}
       <div className="aspect-square bg-zinc-800 relative">
         <img src={post.image} alt="" className="w-full h-full object-cover" />
+        <AIButton onClick={() => setShowAIChat(true)} />
         {/* View count overlay */}
         <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
           <Eye className="w-3 h-3 text-white" />
@@ -65,6 +69,17 @@ export function ImageCard({ post }: ImageCardProps) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* AI Chat */}
+      <PostAIChat
+        isOpen={showAIChat}
+        onClose={() => setShowAIChat(false)}
+        postContext={{
+          type: 'image',
+          author: post.username,
+          caption: post.caption
+        }}
+      />
     </div>
   );
 }

@@ -10,12 +10,13 @@
  */
 
 import { useState } from 'react';
-import { Eye } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { Eye, Sparkles } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
 import { TranslatableText } from '../TranslatableText';
+import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
 import type { TextPost } from '@/types/feed.types';
 
@@ -25,15 +26,27 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       <CardHeader
         username={post.author.name}
         avatarSeed={post.author.handle}
         verified={post.author.verified}
         contentType="post"
       />
+
+      {/* AI Button for text posts - positioned in header area */}
+      <motion.button
+        onClick={() => setShowAIChat(true)}
+        className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-black/80 hover:border-white/40 transition-all"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        aria-label="Ask AI about this post"
+      >
+        <Sparkles className="w-4 h-4" />
+      </motion.button>
 
       {/* Content */}
       <div className="px-3 pb-3">
@@ -61,6 +74,17 @@ export function PostCard({ post }: PostCardProps) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* AI Chat */}
+      <PostAIChat
+        isOpen={showAIChat}
+        onClose={() => setShowAIChat(false)}
+        postContext={{
+          type: 'post',
+          author: post.author.name,
+          caption: post.content
+        }}
+      />
     </div>
   );
 }
