@@ -328,6 +328,7 @@ export default function HomePage() {
         setShowShortsFilters(prev => !prev);
       } else if (tabValue === 'images') {
         setShowImagesCollage(prev => !prev);
+        triggerRefresh();
       } else if (tabValue === 'videos') {
         setShowVideosFilters(prev => !prev);
       } else if (tabValue === 'music') {
@@ -449,7 +450,7 @@ export default function HomePage() {
       case 'w2e':
         return <W2EFeed />;
       case 'images':
-        return <ImagesFeed showCollage={showImagesCollage} />;
+        return <ImagesFeed showCollage={showImagesCollage} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       case 'videos':
         return <VideosFeed showFilters={showVideosFilters} />;
       case 'shorts':
