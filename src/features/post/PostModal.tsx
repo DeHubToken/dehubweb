@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -8,10 +9,20 @@ import { PostActionBar } from './components/PostActionBar';
 interface PostModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialFiles?: FileList | null;
+  onFilesProcessed?: () => void;
 }
 
-export function PostModal({ isOpen, onClose }: PostModalProps) {
+export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
+
+  // Process initial files when modal opens with pending files
+  useEffect(() => {
+    if (isOpen && initialFiles && initialFiles.length > 0) {
+      actions.handleFileDrop(initialFiles);
+      onFilesProcessed?.();
+    }
+  }, [isOpen, initialFiles, actions.handleFileDrop, onFilesProcessed]);
 
   const handleClose = () => {
     actions.resetForm();
