@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Settings2, Loader2, RefreshCw } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -229,6 +230,8 @@ function FeedSettingsModal({ open, onOpenChange, filters, onFiltersChange }: Fee
 // ============================================================================
 
 export default function HomePage() {
+  const navigate = useNavigate();
+  
   // Tab state
   const [activeTab, setActiveTab] = useState('home');
   const [refreshKey, setRefreshKey] = useState(0);
@@ -310,6 +313,12 @@ export default function HomePage() {
    * Handle tab click - toggle filters on same tab, switch on different tab.
    */
   const handleTabClick = (tabValue: string) => {
+    // Music tab navigates to dedicated page
+    if (tabValue === 'music') {
+      navigate('/app/music');
+      return;
+    }
+    
     if (tabValue === activeTab) {
       // Same tab clicked - always scroll to top
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });

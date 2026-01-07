@@ -19,6 +19,7 @@ import LeaderboardPage from "./pages/app/LeaderboardPage";
 import BookmarksPage from "./pages/app/BookmarksPage";
 import SettingsPage from "./pages/app/SettingsPage";
 import CommandCentrePage from "./pages/app/CommandCentrePage";
+import MusicPage from "./pages/app/MusicPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="bookmarks" element={<BookmarksPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="command-centre" element={<CommandCentrePage />} />
+            <Route path="music" element={<MusicPage />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
