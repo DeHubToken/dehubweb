@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Settings2, Loader2, ChevronDown } from 'lucide-react';
+import { Settings2, Loader2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -91,7 +91,7 @@ export default function HomePage() {
   // PULL-TO-REFRESH HOOK
   // --------------------------------------------------------------------------
 
-  const { pullDistance, showTopBounce, handlers: pullHandlers } = usePullToRefresh({
+  const { pullDistance, handlers: pullHandlers } = usePullToRefresh({
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
@@ -232,17 +232,6 @@ export default function HomePage() {
       onMouseUp={pullHandlers.onMouseUp}
       onMouseLeave={pullHandlers.onMouseLeave}
     >
-      {/* Top bounce indicator - shows when user arrives at top */}
-      {showTopBounce && (
-        <div 
-          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-primary/20 backdrop-blur-sm animate-bounce-once"
-          style={{ height: 40 }}
-        >
-          <ChevronDown className="w-5 h-5 text-primary animate-pulse" />
-          <span className="ml-2 text-xs text-primary font-medium">Pull down to refresh</span>
-        </div>
-      )}
-
       {/* Pull-to-refresh indicator */}
       {pullDistance > 0 && !isRefreshing && (
         <div 

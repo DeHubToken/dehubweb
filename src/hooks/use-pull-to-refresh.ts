@@ -23,10 +23,6 @@ interface UsePullToRefreshOptions {
 interface UsePullToRefreshReturn {
   pullDistance: number;
   isPulling: boolean;
-  /** True when user just arrived at top - show bounce indicator */
-  showTopBounce: boolean;
-  /** True when user can now pull to refresh (after bounce) */
-  canRefresh: boolean;
   handlers: {
     onTouchStart: (e: React.TouchEvent) => void;
     onTouchMove: (e: React.TouchEvent) => void;
@@ -45,15 +41,11 @@ export function usePullToRefresh({
 }: UsePullToRefreshOptions): UsePullToRefreshReturn {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
-  const [showTopBounce, setShowTopBounce] = useState(false);
-  const [canRefresh, setCanRefresh] = useState(false);
-  
   const pullStartY = useRef<number | null>(null);
+  const wasAtTopOnStart = useRef<boolean>(false);
   const wheelAccumulator = useRef<number>(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
-  const lastScrollY = useRef<number>(0);
-  const gestureEnded = useRef<boolean>(true);
-  const bounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollTop = useRef<number>(0);
 
   // Helper to check if we're truly at the top
   const isAtTop = useCallback(() => {
@@ -65,85 +57,29 @@ export function usePullToRefresh({
     return scrollTop <= 2;
   }, []);
 
-  // Track scroll to detect when user ARRIVES at top
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = Math.max(
-        window.scrollY,
-        document.documentElement.scrollTop,
-        document.body.scrollTop
-      );
-      const wasScrollingDown = currentScrollY < lastScrollY.current;
-      const atTop = currentScrollY <= 2;
-      
-      // User just arrived at top from scrolling up
-      if (atTop && wasScrollingDown && lastScrollY.current > 10) {
-        // Show bounce animation
-        setShowTopBounce(true);
-        setCanRefresh(false);
-        
-        // After bounce animation, enable refresh capability
-        if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
-        bounceTimeout.current = setTimeout(() => {
-          setShowTopBounce(false);
-          setCanRefresh(true);
-        }, 600);
-      }
-      
-      // If user scrolls away from top, reset everything
-      if (!atTop) {
-        setCanRefresh(false);
-        setShowTopBounce(false);
-        if (bounceTimeout.current) {
-          clearTimeout(bounceTimeout.current);
-          bounceTimeout.current = null;
-        }
-      }
-      
-      lastScrollY.current = currentScrollY;
-    };
-    
-    // Check on mount - if already at top, allow refresh
-    if (isAtTop()) {
-      setCanRefresh(true);
-    }
-    lastScrollY.current = Math.max(
-      window.scrollY,
-      document.documentElement.scrollTop,
-      document.body.scrollTop
-    );
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (bounceTimeout.current) clearTimeout(bounceTimeout.current);
-    };
-  }, [isAtTop]);
-
   // Trigger the refresh
   const triggerRefresh = useCallback(() => {
     if (!isRefreshing) {
       onRefresh();
-      // After refresh, reset canRefresh so user needs to do the bounce again
-      setCanRefresh(false);
     }
   }, [isRefreshing, onRefresh]);
 
   // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    gestureEnded.current = false;
-    // Only allow if canRefresh is true (after bounce or already at top)
-    if (canRefresh && isAtTop()) {
+    // Only allow pull-to-refresh if we're at the very top when touch starts
+    wasAtTopOnStart.current = isAtTop();
+    if (wasAtTopOnStart.current) {
       pullStartY.current = e.touches[0].clientY;
-    } else {
-      pullStartY.current = null;
     }
-  }, [isAtTop, canRefresh]);
+  }, [isAtTop]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (pullStartY.current === null) return;
+    // Only process if we started at the top AND we're still at the top
+    if (!wasAtTopOnStart.current || pullStartY.current === null) return;
     if (!isAtTop()) {
+      // User scrolled away from top, cancel pull
       pullStartY.current = null;
+      wasAtTopOnStart.current = false;
       setPullDistance(0);
       setIsPulling(false);
       return;
@@ -152,41 +88,42 @@ export function usePullToRefresh({
     const currentY = e.touches[0].clientY;
     const distance = currentY - pullStartY.current;
     
+    // Only start pulling if moving downward
     if (distance > 0) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
     } else {
+      // Moving up while at top, don't show indicator
       setPullDistance(0);
       setIsPulling(false);
     }
   }, [isAtTop, pullThreshold]);
 
   const handleTouchEnd = useCallback(() => {
-    gestureEnded.current = true;
-    if (isPulling && pullDistance >= pullThreshold && canRefresh) {
+    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
       triggerRefresh();
     }
     
     setPullDistance(0);
     setIsPulling(false);
     pullStartY.current = null;
-  }, [isPulling, pullDistance, pullThreshold, triggerRefresh, canRefresh]);
+    wasAtTopOnStart.current = false;
+  }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
 
   // Mouse handlers for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    gestureEnded.current = false;
-    if (canRefresh && isAtTop()) {
+    wasAtTopOnStart.current = isAtTop();
+    if (wasAtTopOnStart.current) {
       pullStartY.current = e.clientY;
-    } else {
-      pullStartY.current = null;
     }
-  }, [isAtTop, canRefresh]);
+  }, [isAtTop]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (pullStartY.current === null) return;
+    if (!wasAtTopOnStart.current || pullStartY.current === null) return;
     if (!isAtTop()) {
       pullStartY.current = null;
+      wasAtTopOnStart.current = false;
       setPullDistance(0);
       setIsPulling(false);
       return;
@@ -204,21 +141,22 @@ export function usePullToRefresh({
   }, [isAtTop, pullThreshold]);
 
   const handleMouseUp = useCallback(() => {
-    gestureEnded.current = true;
-    if (isPulling && pullDistance >= pullThreshold && canRefresh) {
+    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
       triggerRefresh();
     }
     
     setPullDistance(0);
     setIsPulling(false);
     pullStartY.current = null;
-  }, [isPulling, pullDistance, pullThreshold, triggerRefresh, canRefresh]);
+    wasAtTopOnStart.current = false;
+  }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
 
   const handleMouseLeave = useCallback(() => {
     if (isPulling) {
       setPullDistance(0);
       setIsPulling(false);
       pullStartY.current = null;
+      wasAtTopOnStart.current = false;
     }
   }, [isPulling]);
 
@@ -227,8 +165,10 @@ export function usePullToRefresh({
     const handleWheel = (e: WheelEvent) => {
       if (isRefreshing) return;
       
-      // Only trigger if canRefresh is true and at top
-      if (canRefresh && isAtTop() && e.deltaY < 0) {
+      const atTop = isAtTop();
+      
+      // Only trigger on scroll up (deltaY < 0) when already at top
+      if (atTop && e.deltaY < 0) {
         e.preventDefault();
         
         wheelAccumulator.current += Math.abs(e.deltaY);
@@ -253,6 +193,7 @@ export function usePullToRefresh({
           }, 300);
         }
       } else {
+        // Not at top or scrolling down - reset
         wheelAccumulator.current = 0;
         if (isPulling && !isRefreshing) {
           setPullDistance(0);
@@ -268,13 +209,11 @@ export function usePullToRefresh({
         clearTimeout(wheelTimeout.current);
       }
     };
-  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop, canRefresh]);
+  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop]);
 
   return {
     pullDistance,
     isPulling,
-    showTopBounce,
-    canRefresh,
     handlers: {
       onTouchStart: handleTouchStart,
       onTouchMove: handleTouchMove,
