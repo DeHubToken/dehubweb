@@ -70,18 +70,33 @@ serve(async (req) => {
   }
 
   try {
-    const { url } = await req.json();
+    const { url: rawUrl } = await req.json();
 
-    if (!url) {
+    if (!rawUrl) {
       return new Response(
         JSON.stringify({ error: "URL is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // Clean and validate URL - remove any non-ASCII characters
+    const url = rawUrl.replace(/[^\x00-\x7F]/g, '').trim();
+    
+    // Validate URL format
+    try {
+      new URL(url);
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Invalid URL format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("Fetching preview for:", url);
+
     // Fetch the page with a timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     const response = await fetch(url, {
       headers: {
