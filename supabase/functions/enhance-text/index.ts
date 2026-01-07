@@ -5,14 +5,27 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const STYLE_PROMPTS: Record<string, string> = {
+  'old-english': 'Rewrite the text in Old English style with "thee", "thou", "hath", "doth", and archaic vocabulary. Make it sound like Shakespeare or medieval literature.',
+  'cockney': 'Rewrite the text in Cockney accent/dialect with rhyming slang, dropped H sounds, and East London expressions. Keep it authentic to working-class London speech.',
+  'celtic': 'Rewrite the text with Celtic/Irish flair, using expressions like "sure", "grand", "aye", adding lyrical Irish turns of phrase and Gaelic-influenced grammar.',
+  'scouse': 'Rewrite the text in Scouse (Liverpool) dialect with expressions like "la", "boss", "sound", "dead good", and characteristic Liverpool speech patterns.',
+  'wild-west': 'Rewrite the text in Wild West cowboy style with "howdy", "partner", "reckon", "y\'all", and frontier American expressions from the Old West.',
+  'asian-uncle': 'Rewrite the text in the style of a stereotypical Asian uncle with wisdom, proverbs, comparing everything to the old days, and wholesome advice.',
+  'russian-mafia': 'Rewrite the text in Russian mafia boss style with dramatic pauses, referring to "family", speaking in third person occasionally, and ominous undertones.',
+  'pirate': 'Rewrite the text in pirate speak with "arr", "matey", "shiver me timbers", "ye", "be", and nautical references. Make it sound like a sea captain.',
+  'alien': 'Rewrite the text as if an alien is trying to communicate with humans, using slightly formal/clinical language, curious observations about "human customs", and occasional misunderstandings.',
+  'e-girl': 'Rewrite the text in e-girl/internet culture style with "uwu", "owo", emoticons, elongated words like "pleaseee", lots of enthusiasm, and cute expressions.',
+  'chad': 'Rewrite the text in "chad" bro culture style with "bro", "dude", "gains", gym references, excessive confidence, and motivational energy.',
+};
+
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { text } = await req.json();
+    const { text, mode = 'spellcheck', style } = await req.json();
     
     if (!text || typeof text !== 'string') {
       console.error('Invalid text input:', text);
@@ -31,7 +44,16 @@ serve(async (req) => {
       );
     }
 
-    console.log('Enhancing text:', text.substring(0, 50) + (text.length > 50 ? '...' : ''));
+    let systemPrompt: string;
+    
+    if (mode === 'style' && style && STYLE_PROMPTS[style]) {
+      systemPrompt = `${STYLE_PROMPTS[style]} Return ONLY the rewritten text, nothing else - no explanations, no quotes, no additional commentary.`;
+    } else {
+      // Default spellcheck mode
+      systemPrompt = 'You are a spell checker. Fix ONLY spelling mistakes and obvious typos. Do NOT change grammar, style, punctuation, or word choice. Keep the text exactly as written except for fixing misspelled words. Return ONLY the corrected text, nothing else.';
+    }
+
+    console.log('Processing text:', text.substring(0, 50), 'mode:', mode, 'style:', style);
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -42,14 +64,8 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          {
-            role: 'system',
-            content: 'You are a text enhancement assistant. Improve the grammar, spelling, punctuation, and clarity of the given text while preserving the original meaning, tone, and style. Keep the text casual if it was casual, formal if it was formal. Return ONLY the enhanced text, nothing else - no explanations, no quotes, no additional commentary.'
-          },
-          {
-            role: 'user',
-            content: text
-          }
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: text }
         ],
       }),
     });
@@ -84,12 +100,12 @@ serve(async (req) => {
     if (!enhancedText) {
       console.error('No enhanced text in response:', data);
       return new Response(
-        JSON.stringify({ error: 'Failed to enhance text' }),
+        JSON.stringify({ error: 'Failed to process text' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Enhanced text:', enhancedText.substring(0, 50) + (enhancedText.length > 50 ? '...' : ''));
+    console.log('Result:', enhancedText.substring(0, 50));
 
     return new Response(
       JSON.stringify({ enhancedText }),

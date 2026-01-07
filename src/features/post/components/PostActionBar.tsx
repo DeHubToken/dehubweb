@@ -1,10 +1,24 @@
 import { useState } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { LiveMode } from '../types';
+
+const STYLE_OPTIONS = [
+  { id: 'old-english', label: 'Old English', emoji: '🏰' },
+  { id: 'cockney', label: 'Cockney', emoji: '🎩' },
+  { id: 'celtic', label: 'Celtic', emoji: '☘️' },
+  { id: 'scouse', label: 'Scouse', emoji: '⚽' },
+  { id: 'wild-west', label: 'Wild West', emoji: '🤠' },
+  { id: 'asian-uncle', label: 'Asian Uncle', emoji: '👴' },
+  { id: 'russian-mafia', label: 'Russian Mafia', emoji: '🎰' },
+  { id: 'pirate', label: 'Pirate', emoji: '🏴‍☠️' },
+  { id: 'alien', label: 'Alien', emoji: '👽' },
+  { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
+  { id: 'chad', label: 'Chad', emoji: '💪' },
+] as const;
 
 interface PostActionBarProps {
   imageInputRef: React.RefObject<HTMLInputElement>;
@@ -16,7 +30,7 @@ interface PostActionBarProps {
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
-  onEnhanceWithAI: () => void;
+  onEnhanceWithAI: (mode: 'spellcheck' | 'style', style?: string) => void;
   onPost: () => void;
   canPost: boolean;
   isEnhancing: boolean;
@@ -42,11 +56,24 @@ export function PostActionBar({
   hasImage,
 }: PostActionBarProps) {
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
+  const [enhancePopoverOpen, setEnhancePopoverOpen] = useState(false);
+  const [styleSubmenuOpen, setStyleSubmenuOpen] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
+  };
+
+  const handleSpellCheck = () => {
+    onEnhanceWithAI('spellcheck');
+    setEnhancePopoverOpen(false);
+  };
+
+  const handleStyleSelect = (styleId: string) => {
+    onEnhanceWithAI('style', styleId);
+    setEnhancePopoverOpen(false);
+    setStyleSubmenuOpen(false);
   };
 
   return (
@@ -265,16 +292,67 @@ export function PostActionBar({
       </div>
 
       <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onEnhanceWithAI}
-          disabled={!hasText || isEnhancing}
-          className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8 sm:px-3 sm:gap-1.5"
-        >
-          {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-          <span className="hidden sm:inline">{isEnhancing ? 'AI...' : 'Enhance'}</span>
-        </Button>
+        <Popover open={enhancePopoverOpen} onOpenChange={setEnhancePopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={!hasText || isEnhancing}
+              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8 sm:px-3 sm:gap-1.5"
+            >
+              {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+              <span className="hidden sm:inline">{isEnhancing ? 'AI...' : 'AI'}</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent 
+            className="w-48 p-1 bg-zinc-900/95 backdrop-blur-xl border border-white/10" 
+            align="end"
+            side="top"
+            sideOffset={4}
+          >
+            <button
+              type="button"
+              onClick={handleSpellCheck}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
+            >
+              <SpellCheck className="w-4 h-4 text-blue-400" />
+              Spell Check
+            </button>
+            
+            <Popover open={styleSubmenuOpen} onOpenChange={setStyleSubmenuOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Palette className="w-4 h-4 text-purple-400" />
+                    Change Style
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-500" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent 
+                className="w-44 p-1 bg-zinc-900/95 backdrop-blur-xl border border-white/10 max-h-64 overflow-y-auto" 
+                align="start"
+                side="left"
+                sideOffset={4}
+              >
+                {STYLE_OPTIONS.map((style) => (
+                  <button
+                    key={style.id}
+                    type="button"
+                    onClick={() => handleStyleSelect(style.id)}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors"
+                  >
+                    <span>{style.emoji}</span>
+                    {style.label}
+                  </button>
+                ))}
+              </PopoverContent>
+            </Popover>
+          </PopoverContent>
+        </Popover>
         
         <Button
           onClick={onPost}

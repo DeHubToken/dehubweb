@@ -214,33 +214,37 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     e.target.value = '';
   }, [hasImage]);
 
-  const handleEnhanceWithAI = useCallback(async () => {
+  const handleEnhanceWithAI = useCallback(async (mode: 'spellcheck' | 'style' = 'spellcheck', style?: string) => {
     if (!text.trim()) {
-      toast.error('Enter some text to enhance');
+      toast.error('Enter some text first');
       return;
     }
     setIsEnhancing(true);
     
     try {
       const { data, error } = await supabase.functions.invoke('enhance-text', {
-        body: { text: text.trim() }
+        body: { text: text.trim(), mode, style }
       });
 
       if (error) {
         console.error('Enhancement error:', error);
-        toast.error(error.message || 'Failed to enhance text');
+        toast.error(error.message || 'Failed to process text');
         return;
       }
 
       if (data?.enhancedText) {
         setText(data.enhancedText);
-        toast.success('Text enhanced!');
+        // Update the editor content as well
+        if (editorRef.current) {
+          editorRef.current.innerText = data.enhancedText;
+        }
+        toast.success(mode === 'spellcheck' ? 'Spell checked!' : 'Style applied!');
       } else if (data?.error) {
         toast.error(data.error);
       }
     } catch (err) {
       console.error('Enhancement error:', err);
-      toast.error('Failed to enhance text');
+      toast.error('Failed to process text');
     } finally {
       setIsEnhancing(false);
     }
