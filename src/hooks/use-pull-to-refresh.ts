@@ -45,7 +45,10 @@ export function usePullToRefresh({
   const wasAtTopOnStart = useRef<boolean>(false);
   const wheelAccumulator = useRef<number>(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
-  const lastScrollTop = useRef<number>(0);
+  
+  // Track if user is "settled" at top (was at top BEFORE any gesture)
+  const isSettledAtTop = useRef<boolean>(false);
+  const scrollDebounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Helper to check if we're truly at the top
   const isAtTop = useCallback(() => {
@@ -57,6 +60,46 @@ export function usePullToRefresh({
     return scrollTop <= 2;
   }, []);
 
+  // Track scroll to determine "settled at top" state
+  useEffect(() => {
+    const handleScroll = () => {
+      const atTop = isAtTop();
+      
+      // If we scroll away from top, immediately mark as not settled
+      if (!atTop) {
+        isSettledAtTop.current = false;
+        if (scrollDebounceTimer.current) {
+          clearTimeout(scrollDebounceTimer.current);
+          scrollDebounceTimer.current = null;
+        }
+        return;
+      }
+      
+      // At top - debounce before marking as "settled"
+      if (scrollDebounceTimer.current) {
+        clearTimeout(scrollDebounceTimer.current);
+      }
+      scrollDebounceTimer.current = setTimeout(() => {
+        if (isAtTop()) {
+          isSettledAtTop.current = true;
+        }
+      }, 150);
+    };
+    
+    // Check on mount - if already at top, mark as settled
+    if (isAtTop()) {
+      isSettledAtTop.current = true;
+    }
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollDebounceTimer.current) {
+        clearTimeout(scrollDebounceTimer.current);
+      }
+    };
+  }, [isAtTop]);
+
   // Trigger the refresh
   const triggerRefresh = useCallback(() => {
     if (!isRefreshing) {
@@ -66,18 +109,18 @@ export function usePullToRefresh({
 
   // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    // Only allow pull-to-refresh if we're at the very top when touch starts
-    wasAtTopOnStart.current = isAtTop();
-    if (wasAtTopOnStart.current) {
+    // Only allow if user was SETTLED at top before this touch
+    if (isSettledAtTop.current && isAtTop()) {
+      wasAtTopOnStart.current = true;
       pullStartY.current = e.touches[0].clientY;
+    } else {
+      wasAtTopOnStart.current = false;
     }
   }, [isAtTop]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    // Only process if we started at the top AND we're still at the top
     if (!wasAtTopOnStart.current || pullStartY.current === null) return;
     if (!isAtTop()) {
-      // User scrolled away from top, cancel pull
       pullStartY.current = null;
       wasAtTopOnStart.current = false;
       setPullDistance(0);
@@ -88,13 +131,11 @@ export function usePullToRefresh({
     const currentY = e.touches[0].clientY;
     const distance = currentY - pullStartY.current;
     
-    // Only start pulling if moving downward
     if (distance > 0) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
     } else {
-      // Moving up while at top, don't show indicator
       setPullDistance(0);
       setIsPulling(false);
     }
@@ -113,9 +154,11 @@ export function usePullToRefresh({
 
   // Mouse handlers for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    wasAtTopOnStart.current = isAtTop();
-    if (wasAtTopOnStart.current) {
+    if (isSettledAtTop.current && isAtTop()) {
+      wasAtTopOnStart.current = true;
       pullStartY.current = e.clientY;
+    } else {
+      wasAtTopOnStart.current = false;
     }
   }, [isAtTop]);
 
@@ -165,10 +208,8 @@ export function usePullToRefresh({
     const handleWheel = (e: WheelEvent) => {
       if (isRefreshing) return;
       
-      const atTop = isAtTop();
-      
-      // Only trigger on scroll up (deltaY < 0) when already at top
-      if (atTop && e.deltaY < 0) {
+      // Only trigger if user was SETTLED at top before this wheel gesture
+      if (isSettledAtTop.current && isAtTop() && e.deltaY < 0) {
         e.preventDefault();
         
         wheelAccumulator.current += Math.abs(e.deltaY);
@@ -193,7 +234,6 @@ export function usePullToRefresh({
           }, 300);
         }
       } else {
-        // Not at top or scrolling down - reset
         wheelAccumulator.current = 0;
         if (isPulling && !isRefreshing) {
           setPullDistance(0);
