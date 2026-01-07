@@ -15,12 +15,12 @@ import { Button } from '@/components/ui/button';
 
 interface Owner {
   address: string;
-  percentage: number;
+  fractions: number;
 }
 
 interface Listing {
   address: string;
-  percentage: number;
+  fractions: number;
   price: number;
   currency: string;
 }
@@ -36,24 +36,24 @@ const generateMockPostInfo = (postId: string) => {
   // Generate a timestamp within the last 30 days
   const timestamp = new Date(Date.now() - (absHash % 30) * 24 * 60 * 60 * 1000);
   
-  // Generate mock owners and listings that total 100%
+  // Generate mock owners and listings that total 1000 fractions
   const ownerCount = (absHash % 3) + 2; // 2-4 owners
   const listingCount = (absHash % 3); // 0-2 listings
   const totalHolders = ownerCount + listingCount;
   
-  // Distribute 100% among all holders
-  const basePercentage = Math.floor(100 / totalHolders);
-  const remainder = 100 - (basePercentage * totalHolders);
+  // Distribute 1000 fractions among all holders
+  const baseFractions = Math.floor(1000 / totalHolders);
+  const remainder = 1000 - (baseFractions * totalHolders);
   
   const owners: Owner[] = Array.from({ length: ownerCount }, (_, i) => ({
     address: `0x${((absHash + i * 12345) >>> 0).toString(16).padStart(40, 'f').slice(0, 40)}`,
-    percentage: basePercentage + (i === 0 ? remainder : 0), // Give remainder to first owner
+    fractions: baseFractions + (i === 0 ? remainder : 0), // Give remainder to first owner
   }));
   
   // Generate mock listings (fractions for sale)
   const listings: Listing[] = Array.from({ length: listingCount }, (_, i) => ({
     address: `0x${((absHash + (i + 10) * 54321) >>> 0).toString(16).padStart(40, 'f').slice(0, 40)}`,
-    percentage: basePercentage,
+    fractions: baseFractions,
     price: ((absHash % 100) + 10 + i * 25) / 10,
     currency: 'ETH',
   }));
@@ -164,7 +164,7 @@ export default function PostInfoPage() {
                   className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-medium">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-white text-xs font-medium">
                       {index + 1}
                     </div>
                     <div>
@@ -172,7 +172,7 @@ export default function PostInfoPage() {
                         {truncateAddress(owner.address)}
                       </p>
                       <p className="text-xs text-white/60">
-                        {owner.percentage}% ownership
+                        {owner.fractions}/1000 fractions
                       </p>
                     </div>
                   </div>
@@ -209,7 +209,7 @@ export default function PostInfoPage() {
                           {truncateAddress(listing.address)}
                         </p>
                         <p className="text-xs text-white/60">
-                          {listing.percentage}% • {listing.price} {listing.currency}
+                          {listing.fractions}/1000 • {listing.price} {listing.currency}
                         </p>
                       </div>
                     </div>
