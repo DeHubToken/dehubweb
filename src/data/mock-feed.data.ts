@@ -213,6 +213,38 @@ export const MOCK_POSTS: TextPost[] = [
     createdAt: '5h',
     stats: { comments: 67, reposts: 23, likes: 456 },
   },
+  {
+    id: 'post-26',
+    type: 'post',
+    author: { id: 'a26', name: 'María García', handle: '@mariagarcia', verified: true },
+    content: '¡Buenos días a todos! Hoy es un día perfecto para aprender algo nuevo. La vida es corta, aprovéchala al máximo. 🌞',
+    createdAt: '1h',
+    stats: { comments: 45, reposts: 23, likes: 678 },
+  },
+  {
+    id: 'post-27',
+    type: 'post',
+    author: { id: 'a27', name: 'أحمد محمد', handle: '@ahmed_mohammed', verified: false },
+    content: 'صباح الخير! اليوم بدأت مشروعًا جديدًا وأنا متحمس جدًا. الحياة مليئة بالفرص الرائعة. 🚀',
+    createdAt: '2h',
+    stats: { comments: 34, reposts: 12, likes: 456 },
+  },
+  {
+    id: 'post-28',
+    type: 'post',
+    author: { id: 'a28', name: '李明', handle: '@liming_tech', verified: true },
+    content: '今天学习了很多新的编程技巧！人工智能真的很神奇。每天进步一点点，积累成巨大的改变。💻',
+    createdAt: '3h',
+    stats: { comments: 89, reposts: 45, likes: 1234 },
+  },
+  {
+    id: 'post-29',
+    type: 'post',
+    author: { id: 'a29', name: '김지수', handle: '@jisoo_kim', verified: true },
+    content: '오늘 서울에서 멋진 카페를 발견했어요! 커피도 맛있고 분위기도 최고였습니다. 여러분도 꼭 가보세요! ☕',
+    createdAt: '30m',
+    stats: { comments: 56, reposts: 34, likes: 890 },
+  },
 ];
 
 /**
