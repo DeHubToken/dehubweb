@@ -15,6 +15,7 @@ import { AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
+import { TranslatableText } from '../TranslatableText';
 import type { ImagePost } from '@/types/feed.types';
 
 interface ImageCardProps {
@@ -55,7 +56,7 @@ export function ImageCard({ post }: ImageCardProps) {
         <ActionBar className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
         <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
         <p className="text-white text-sm mt-1">
-          <span className="font-semibold">{post.username}</span> {post.caption}
+          <span className="font-semibold">{post.username}</span> <TranslatableText text={post.caption} className="inline" as="span" />
         </p>
         <p className="text-zinc-500 text-xs mt-1">{post.timeAgo}</p>
 

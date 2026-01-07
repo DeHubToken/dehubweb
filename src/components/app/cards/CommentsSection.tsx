@@ -22,6 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { TranslatableText } from '../TranslatableText';
 
 // ============================================================================
 // TYPES
@@ -227,7 +228,7 @@ function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) 
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
         {comment.text && (
-          <p className="text-zinc-300 text-sm leading-relaxed break-words">{comment.text}</p>
+          <TranslatableText text={comment.text} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
         )}
         {comment.voiceNote && (
           <div className="mt-1">

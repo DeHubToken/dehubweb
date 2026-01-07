@@ -12,6 +12,7 @@
 import { Eye } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
+import { TranslatableText } from '../TranslatableText';
 import type { VideoItem } from '@/types/feed.types';
 
 interface VideoCardProps {
@@ -50,7 +51,7 @@ export function VideoCard({ video }: VideoCardProps) {
       {/* Info & Actions */}
       <div className="p-3">
         <ActionBar className="p-0 mb-2" />
-        <h3 className="text-white text-sm font-medium">{video.title}</h3>
+        <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
         <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
       </div>
     </div>
