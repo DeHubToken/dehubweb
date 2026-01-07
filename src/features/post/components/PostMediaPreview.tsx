@@ -208,16 +208,18 @@ export function PostMediaPreview({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="mt-2 grid gap-2"
-          style={{
-            gridTemplateColumns: media.length === 1 ? '1fr' : 'repeat(2, 1fr)',
-          }}
+          className="mt-2 flex flex-wrap gap-2"
         >
           {media.map((m, index) => (
-            <div key={index} className="relative rounded-xl overflow-hidden bg-zinc-900">
+            <div 
+              key={index} 
+              className={`relative rounded-2xl overflow-hidden bg-zinc-900 ${
+                media.length === 1 ? 'w-full max-w-xs' : 'w-[calc(50%-0.25rem)]'
+              }`}
+            >
               {m.type === 'image' ? (
                 <div className="relative">
-                  <img src={m.preview} alt="" className="w-full h-auto max-h-80 object-contain" />
+                  <img src={m.preview} alt="" className="w-full h-auto max-h-80 object-cover rounded-2xl" />
                   
                   {/* Audio controls for images */}
                   <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
@@ -334,7 +336,7 @@ export function PostMediaPreview({
                   {/* Show thumbnail if set, otherwise show video */}
                   {m.thumbnail ? (
                     <div className="relative">
-                      <img src={m.thumbnail} alt="Video thumbnail" className="w-full h-auto max-h-80 object-contain" />
+                      <img src={m.thumbnail} alt="Video thumbnail" className="w-full h-auto max-h-80 object-cover rounded-2xl" />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center">
                           <Play className="w-6 h-6 text-white fill-white" />
@@ -351,7 +353,7 @@ export function PostMediaPreview({
                       </button>
                     </div>
                   ) : (
-                    <video src={m.preview} className="w-full h-auto max-h-80 object-contain" />
+                    <video src={m.preview} className="w-full h-auto max-h-80 object-cover rounded-2xl" />
                   )}
                   {m.duration && (
                     <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white">
