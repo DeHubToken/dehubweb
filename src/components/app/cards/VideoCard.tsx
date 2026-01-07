@@ -10,12 +10,18 @@
  */
 
 import { useState } from 'react';
-import { Eye } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { TranslatableText } from '../TranslatableText';
-import { AIButton } from './AIButton';
 import { PostAIChat } from './PostAIChat';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { VideoItem } from '@/types/feed.types';
 
 interface VideoCardProps {
@@ -27,17 +33,54 @@ export function VideoCard({ video }: VideoCardProps) {
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-      <CardHeader
-        username={video.channel}
-        avatarSeed={video.channelAvatar}
-        verified={video.verified}
-        contentType="video"
-      />
+      {/* Header with AI and menu buttons */}
+      <div className="flex items-center justify-between">
+        <CardHeader
+          username={video.channel}
+          avatarSeed={video.channelAvatar}
+          verified={video.verified}
+          contentType="video"
+        />
+        <div className="flex items-center gap-1 pr-3">
+          <motion.button
+            onClick={() => setShowAIChat(true)}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Ask AI about this video"
+          >
+            <Sparkles className="w-4 h-4" />
+          </motion.button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                <MoreVertical className="w-5 h-5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <ListPlus className="w-4 h-4" /> Queue
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Clock className="w-4 h-4" /> Watch List
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Flag className="w-4 h-4" /> Report
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Download className="w-4 h-4" /> Download
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+                <Ban className="w-4 h-4" /> Block Creator
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
       {/* Thumbnail */}
       <div className="relative aspect-video bg-zinc-800">
         <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
-        <AIButton onClick={() => setShowAIChat(true)} />
         <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
           {video.duration}
         </div>

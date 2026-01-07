@@ -8,9 +8,10 @@
  */
 
 import { useState, useMemo } from 'react';
-import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -90,9 +91,11 @@ function VideoCardItem({
   expandedComments, 
   onToggleComments
 }: VideoCardProps) {
+  const [showAIChat, setShowAIChat] = useState(false);
+
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-      {/* Header with menu */}
+      {/* Header with AI and menu */}
       <div className="flex items-center justify-between">
         <CardHeader
           username={video.channel}
@@ -100,10 +103,19 @@ function VideoCardItem({
           verified={video.verified}
           contentType="video"
         />
-        <div className="pr-3">
+        <div className="flex items-center gap-1 pr-3">
+          <motion.button
+            onClick={() => setShowAIChat(true)}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Ask AI about this video"
+          >
+            <Sparkles className="w-4 h-4" />
+          </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="text-zinc-400 hover:text-white">
+              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>
@@ -166,6 +178,17 @@ function VideoCardItem({
           )}
         </AnimatePresence>
       </div>
+
+      {/* AI Chat */}
+      <PostAIChat
+        isOpen={showAIChat}
+        onClose={() => setShowAIChat(false)}
+        postContext={{
+          type: 'video',
+          author: video.channel,
+          title: video.title
+        }}
+      />
     </div>
   );
 }
