@@ -303,13 +303,10 @@ export default function MusicPage() {
         return (
           <div className="space-y-2 sm:space-y-3">
             {/* Featured Music Videos */}
-            <div className="mb-4">
-              <h3 className="text-white font-semibold mb-3 px-1">Featured Music Videos</h3>
-              <div className="space-y-2 sm:space-y-3">
-                {MUSIC_VIDEOS.slice(0, 3).map((video) => (
-                  <VideoCard key={video.id} video={video} />
-                ))}
-              </div>
+            <div className="mb-4 space-y-2 sm:space-y-3">
+              {MUSIC_VIDEOS.slice(0, 3).map((video) => (
+                <VideoCard key={video.id} video={video} />
+              ))}
             </div>
             
             {/* Audio Tracks */}
