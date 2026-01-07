@@ -106,7 +106,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
             <DropdownMenuTrigger asChild>
               {triggerButton}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 p-2" align="start" sideOffset={8}>
+            <DropdownMenuContent className="w-48 p-2 bg-black/40 backdrop-blur-2xl border border-white/10" align="start" sideOffset={8}>
               {menuContent}
             </DropdownMenuContent>
           </DropdownMenu>
