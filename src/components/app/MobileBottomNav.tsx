@@ -4,7 +4,7 @@ import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, La
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { GeneralAIChat } from './chat/GeneralAIChat';
-import { useScrollDirection } from '@/hooks/use-scroll-direction';
+
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
@@ -31,7 +31,6 @@ export function MobileBottomNav() {
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const isNavVisible = useScrollDirection({ threshold: 10 });
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
     // If clicking Home while already on Home, trigger refresh
@@ -61,11 +60,7 @@ export function MobileBottomNav() {
 
   return (
     <>
-      <div 
-        className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 transition-transform duration-300 ${
-          isNavVisible ? 'translate-y-0' : 'translate-y-full'
-        }`}
-      >
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
         <nav className="bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[95%] md:max-w-md shadow-xl overflow-hidden">
           {/* Nav items container */}
           <div 
