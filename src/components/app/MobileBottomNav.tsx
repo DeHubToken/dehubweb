@@ -5,14 +5,15 @@ import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { GeneralAIChat } from './chat/GeneralAIChat';
 
-// First 3 are left side, then AI button (special), then rest scroll
+// Left side: Home, AI button (special)
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
-  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
 ];
 
+// Right side: Explore, Messages
 const RIGHT_NAV_ITEMS = [
   { icon: Search, label: 'Explore', path: '/app/explore' },
+  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
 ];
 
 const SCROLL_NAV_ITEMS = [
@@ -67,7 +68,7 @@ export function MobileBottomNav() {
             className="flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
-            {/* Left side items - 2 buttons (Home, Messages) */}
+            {/* Left side items - Home + AI button */}
             <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
               {LEFT_NAV_ITEMS.map((item, index) => {
                 const isActive = item.path === '/app' 
@@ -89,13 +90,27 @@ export function MobileBottomNav() {
                         'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
                         isActive 
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                          : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                        item.label === 'Messages' && '-scale-x-100'
+                          : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
                       )} 
                     />
                   </NavLink>
                 );
               })}
+              
+              {/* AI Button - on left side now */}
+              <button
+                onClick={() => setIsAIChatOpen(true)}
+                className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
+              >
+                <Sparkles 
+                  className={cn(
+                    'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                    isAIChatOpen 
+                      ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
+                      : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
+                  )} 
+                />
+              </button>
             </div>
 
             {/* Center Create Button - fades as user scrolls */}
@@ -116,16 +131,19 @@ export function MobileBottomNav() {
               </div>
             </button>
 
-            {/* Right side items - Explore + AI button */}
+            {/* Right side items - Explore + Messages */}
             <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
-              {RIGHT_NAV_ITEMS.map((item) => {
+              {RIGHT_NAV_ITEMS.map((item, index) => {
                 const isActive = location.pathname.startsWith(item.path);
                 
                 return (
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
+                    className={cn(
+                      'flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
+                      index === RIGHT_NAV_ITEMS.length - 1 && 'rounded-r-2xl'
+                    )}
                   >
                     <item.icon 
                       className={cn(
@@ -133,27 +151,12 @@ export function MobileBottomNav() {
                         isActive 
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                        item.label === 'Explore' && '-scale-x-100'
+                        (item.label === 'Explore' || item.label === 'Messages') && '-scale-x-100'
                       )} 
                     />
                   </NavLink>
                 );
               })}
-              
-              {/* AI Button */}
-              <button
-                onClick={() => setIsAIChatOpen(true)}
-                className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
-              >
-                <Sparkles 
-                  className={cn(
-                    'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
-                    isAIChatOpen 
-                      ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                      : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
-                  )} 
-                />
-              </button>
             </div>
 
             {/* Additional items - accessible via scroll */}
