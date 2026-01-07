@@ -206,7 +206,8 @@ function ImageCardItem({ post }: { post: ImagePost }) {
         postContext={{
           type: 'image',
           author: post.username,
-          caption: post.caption
+          caption: post.caption,
+          imageUrl: post.image
         }}
       />
     </div>

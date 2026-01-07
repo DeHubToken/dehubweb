@@ -186,7 +186,8 @@ function VideoCardItem({
         postContext={{
           type: 'video',
           author: video.channel,
-          title: video.title
+          title: video.title,
+          imageUrl: video.thumbnail
         }}
       />
     </div>
