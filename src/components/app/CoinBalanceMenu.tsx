@@ -454,7 +454,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
 
   // Use Drawer (sheet) for both desktop and mobile
   return (
-    <Drawer open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }}>
+    <Drawer open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }} modal={true}>
       <DrawerTrigger asChild>
         {coinButton}
       </DrawerTrigger>
