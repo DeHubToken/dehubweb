@@ -95,15 +95,6 @@ export function PostActionBar({
     <div className="flex flex-col">
       {styleView ? (
         <>
-          <button
-            type="button"
-            onClick={() => setStyleView(false)}
-            className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-400 hover:bg-white/5 transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back
-          </button>
-          <div className="border-t border-white/10" />
           {STYLE_OPTIONS.map((style) => (
             <button
               key={style.id}
@@ -383,6 +374,16 @@ export function PostActionBar({
         <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
           <DrawerContent className={GLASS_STYLES.drawer}>
             <DrawerHeader className="border-b border-white/10">
+              {styleView && (
+                <button
+                  type="button"
+                  onClick={() => setStyleView(false)}
+                  className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors mb-2"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Back
+                </button>
+              )}
               <DrawerTitle className="text-white flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-purple-400" />
                 {styleView ? 'Choose Style' : 'Enhance'}

@@ -1,7 +1,5 @@
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { usePostForm } from './hooks/usePostForm';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
@@ -13,8 +11,6 @@ interface PostModalProps {
 }
 
 export function PostModal({ isOpen, onClose }: PostModalProps) {
-  const isMobile = useIsMobile();
-  
   const { state, actions, computed, refs } = usePostForm(onClose);
 
   const handleClose = () => {
@@ -88,27 +84,15 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
     </>
   );
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={handleClose}>
-        <DrawerContent glass className="max-h-[90vh]">
-          <VisuallyHidden>
-            <DrawerTitle>Create a post</DrawerTitle>
-          </VisuallyHidden>
-          {modalContent}
-        </DrawerContent>
-      </Drawer>
-    );
-  }
-
+  // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] p-0 bg-zinc-900/20 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden">
+    <Drawer open={isOpen} onOpenChange={handleClose}>
+      <DrawerContent glass className="max-h-[90vh]">
         <VisuallyHidden>
-          <DialogTitle>Create a post</DialogTitle>
+          <DrawerTitle>Create a post</DrawerTitle>
         </VisuallyHidden>
         {modalContent}
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }
