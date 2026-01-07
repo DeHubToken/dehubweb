@@ -241,6 +241,8 @@ export default function HomePage() {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
   const pullStartY = useRef<number | null>(null);
+  const wheelAccumulator = useRef<number>(0);
+  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Filter states for each feed type
   const [showShortsFilters, setShowShortsFilters] = useState(false);
@@ -438,6 +440,64 @@ export default function HomePage() {
       pullStartY.current = null;
     }
   };
+
+  // --------------------------------------------------------------------------
+  // WHEEL HANDLER FOR DESKTOP PULL-TO-REFRESH
+  // --------------------------------------------------------------------------
+
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (isRefreshing) return;
+      
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      
+      // Only activate when at top of page and scrolling UP (negative deltaY)
+      if (scrollTop <= 5 && e.deltaY < 0) {
+        e.preventDefault();
+        
+        // Accumulate wheel delta
+        wheelAccumulator.current += Math.abs(e.deltaY);
+        const resistedDistance = Math.min(wheelAccumulator.current * 0.3, PULL_THRESHOLD * 1.5);
+        setPullDistance(resistedDistance);
+        setIsPulling(true);
+        
+        // Reset timeout
+        if (wheelTimeout.current) {
+          clearTimeout(wheelTimeout.current);
+        }
+        
+        // Check if threshold reached
+        if (resistedDistance >= PULL_THRESHOLD) {
+          triggerRefresh();
+          wheelAccumulator.current = 0;
+          setPullDistance(0);
+          setIsPulling(false);
+        } else {
+          // Reset accumulator after a pause
+          wheelTimeout.current = setTimeout(() => {
+            wheelAccumulator.current = 0;
+            setPullDistance(0);
+            setIsPulling(false);
+          }, 300);
+        }
+      } else if (scrollTop > 5 || e.deltaY > 0) {
+        // Reset if scrolling down or not at top
+        wheelAccumulator.current = 0;
+        if (isPulling && !isRefreshing) {
+          setPullDistance(0);
+          setIsPulling(false);
+        }
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      if (wheelTimeout.current) {
+        clearTimeout(wheelTimeout.current);
+      }
+    };
+  }, [isPulling, isRefreshing, triggerRefresh]);
 
   // --------------------------------------------------------------------------
   // RENDER FEED BASED ON ACTIVE TAB
