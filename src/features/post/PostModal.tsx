@@ -33,6 +33,8 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
         onAddAudio={actions.addAudioToMedia}
         onRemoveAudio={actions.removeAudioFromMedia}
         onToggleMusicVideo={actions.toggleMusicVideo}
+        onAddThumbnail={actions.addThumbnailToMedia}
+        onRemoveThumbnail={actions.removeThumbnailFromMedia}
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}

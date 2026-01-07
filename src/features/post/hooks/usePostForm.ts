@@ -139,6 +139,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       const item = prev[index];
       URL.revokeObjectURL(item.preview);
       if (item.audio) URL.revokeObjectURL(item.audio.url);
+      if (item.thumbnail) URL.revokeObjectURL(item.thumbnail);
       return prev.filter((_, i) => i !== index);
     });
   }, []);
@@ -163,6 +164,26 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setMedia(prev => prev.map((m, i) => 
       i === index && m.type === 'video' ? { ...m, isMusicVideo: !m.isMusicVideo } : m
     ));
+  }, []);
+
+  const addThumbnailToMedia = useCallback((index: number, thumbnailUrl: string) => {
+    setMedia(prev => prev.map((m, i) => {
+      if (i === index && m.type === 'video') {
+        if (m.thumbnail) URL.revokeObjectURL(m.thumbnail);
+        return { ...m, thumbnail: thumbnailUrl };
+      }
+      return m;
+    }));
+  }, []);
+
+  const removeThumbnailFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => {
+      if (i === index && m.thumbnail) {
+        URL.revokeObjectURL(m.thumbnail);
+        return { ...m, thumbnail: undefined };
+      }
+      return m;
+    }));
   }, []);
 
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -328,6 +349,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       addAudioToMedia,
       removeAudioFromMedia,
       toggleMusicVideo,
+      addThumbnailToMedia,
+      removeThumbnailFromMedia,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,
