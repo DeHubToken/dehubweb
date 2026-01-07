@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -164,7 +164,16 @@ const REPLY_THREADS = [
   },
 ];
 
-type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live';
+type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
+
+// Mock fractions holdings
+const MOCK_FRACTIONS = [
+  { id: 'frac-1', postId: 'image-1', thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop', author: '@gamer_pro', fractions: 150, totalValue: 0.45, currency: 'ETH' },
+  { id: 'frac-2', postId: 'video-3', thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&h=100&fit=crop', author: '@esports_daily', fractions: 75, totalValue: 0.22, currency: 'ETH' },
+  { id: 'frac-3', postId: 'image-5', thumbnail: 'https://images.unsplash.com/photo-1493711662062-fa541f7f76ce?w=100&h=100&fit=crop', author: '@digital_art', fractions: 200, totalValue: 0.8, currency: 'ETH' },
+  { id: 'frac-4', postId: 'video-7', thumbnail: 'https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?w=100&h=100&fit=crop', author: '@streamking', fractions: 50, totalValue: 0.15, currency: 'ETH' },
+  { id: 'frac-5', postId: 'image-12', thumbnail: 'https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=100&h=100&fit=crop', author: '@nft_collector', fractions: 300, totalValue: 1.2, currency: 'ETH' },
+];
 
 const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
   { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
@@ -174,6 +183,7 @@ const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: 
   { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
   { icon: Play, label: 'Songs', value: 'songs', count: 10 },
   { icon: Radio, label: 'Live', value: 'live', count: 10 },
+  { icon: PieChart, label: 'Fractions', value: 'fractions', count: MOCK_FRACTIONS.length },
 ];
 
 export default function ProfilePage() {
@@ -445,6 +455,48 @@ export default function ProfilePage() {
                 ...video,
                 title: `Live Stream #${i + 1} - ${video.title}`,
               }} />
+            ))}
+          </div>
+        );
+      case 'fractions':
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {/* Holdings Summary */}
+            <div className="bg-zinc-900 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-white font-semibold">Your Holdings</h3>
+                <span className="text-white/60 text-sm">
+                  {MOCK_FRACTIONS.reduce((acc, f) => acc + f.fractions, 0)}/5000 total fractions
+                </span>
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {MOCK_FRACTIONS.reduce((acc, f) => acc + f.totalValue, 0).toFixed(2)} ETH
+              </div>
+              <p className="text-white/40 text-sm mt-1">Estimated portfolio value</p>
+            </div>
+            
+            {/* Holdings List */}
+            {MOCK_FRACTIONS.map((holding) => (
+              <div 
+                key={holding.id}
+                className="bg-zinc-900 rounded-2xl p-4 flex items-center gap-4"
+              >
+                <img 
+                  src={holding.thumbnail} 
+                  alt="Post thumbnail"
+                  className="w-16 h-16 rounded-xl object-cover"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium truncate">{holding.author}</p>
+                  <p className="text-white/60 text-sm">
+                    {holding.fractions}/1000 fractions
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-white font-semibold">{holding.totalValue} {holding.currency}</p>
+                  <p className="text-white/40 text-xs">Value</p>
+                </div>
+              </div>
             ))}
           </div>
         );
