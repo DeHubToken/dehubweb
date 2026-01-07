@@ -212,7 +212,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   if (isMobile) {
     return (
       <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-        <DrawerContent className="h-[85vh] bg-black/80 backdrop-blur-2xl border-white/10">
+        <DrawerContent glass className="h-[85vh]">
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-lg h-[600px] p-0 bg-black/80 backdrop-blur-2xl border-white/10 flex flex-col">
+      <DialogContent className="max-w-lg h-[600px] p-0 bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl flex flex-col">
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-white" />
