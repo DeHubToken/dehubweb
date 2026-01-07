@@ -291,7 +291,7 @@ export function PostMediaPreview({ media, onRemove, onAddAudio, onRemoveAudio, o
                 </div>
               ) : (
                 <div className="relative">
-                  <video src={m.preview} className="w-full h-32 object-cover" />
+                  <video src={m.preview} className="w-full h-auto max-h-80 object-contain" />
                   {m.duration && (
                     <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white">
                       {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
