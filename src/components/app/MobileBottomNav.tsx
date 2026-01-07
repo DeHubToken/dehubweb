@@ -1,13 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, Bell, User, Search, Trophy, Bookmark, Settings, LayoutDashboard } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
+import { GeneralAIChat } from './chat/GeneralAIChat';
 
-const ALL_NAV_ITEMS = [
+// First 3 are left side, then AI button (special), then rest scroll
+const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
+];
+
+const RIGHT_NAV_ITEMS = [
   { icon: Search, label: 'Explore', path: '/app/explore' },
+];
+
+const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
@@ -19,6 +27,7 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -58,9 +67,9 @@ export function MobileBottomNav() {
             className="flex items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
-            {/* Left side items - 2 buttons */}
+            {/* Left side items - 2 buttons (Home, Messages) */}
             <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
-              {ALL_NAV_ITEMS.slice(0, 2).map((item, index) => {
+              {LEFT_NAV_ITEMS.map((item, index) => {
                 const isActive = item.path === '/app' 
                   ? location.pathname === '/app'
                   : location.pathname.startsWith(item.path);
@@ -106,21 +115,16 @@ export function MobileBottomNav() {
               </div>
             </button>
 
-            {/* Right side items - first 2 match left side width */}
+            {/* Right side items - Explore + AI button */}
             <div className="flex items-center flex-shrink-0" style={{ width: 'calc(50% - 24px)' }}>
-              {ALL_NAV_ITEMS.slice(2, 4).map((item, index) => {
-                const isActive = item.path === '/app' 
-                  ? location.pathname === '/app'
-                  : location.pathname.startsWith(item.path);
+              {RIGHT_NAV_ITEMS.map((item) => {
+                const isActive = location.pathname.startsWith(item.path);
                 
                 return (
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    className={cn(
-                      'flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
-                      index === 1 && 'rounded-r-2xl'
-                    )}
+                    className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
                   >
                     <item.icon 
                       className={cn(
@@ -133,10 +137,25 @@ export function MobileBottomNav() {
                   </NavLink>
                 );
               })}
+              
+              {/* AI Button */}
+              <button
+                onClick={() => setIsAIChatOpen(true)}
+                className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
+              >
+                <Sparkles 
+                  className={cn(
+                    'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                    isAIChatOpen 
+                      ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
+                      : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
+                  )} 
+                />
+              </button>
             </div>
 
-            {/* Additional items - accessible via scroll, same width as main buttons */}
-            {ALL_NAV_ITEMS.slice(4).map((item) => {
+            {/* Additional items - accessible via scroll */}
+            {SCROLL_NAV_ITEMS.map((item) => {
               const isActive = location.pathname.startsWith(item.path);
               
               return (
@@ -162,6 +181,7 @@ export function MobileBottomNav() {
       </div>
 
       <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
+      <GeneralAIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 /**
- * Post AI Chat Component
- * ======================
- * Grok-style AI chat interface for post context and analysis.
+ * General AI Chat Component
+ * =========================
+ * Grok-style AI chat interface for general questions.
  */
 
 import { useState, useRef, useEffect } from 'react';
@@ -20,24 +20,12 @@ interface Message {
   content: string;
 }
 
-interface PostContext {
-  type: 'image' | 'video' | 'live' | 'post';
-  author?: string;
-  caption?: string;
-  title?: string;
-  game?: string;
-  viewers?: string;
-  thumbnail?: string;
-  imageUrl?: string;
-}
-
-interface PostAIChatProps {
+interface GeneralAIChatProps {
   isOpen: boolean;
   onClose: () => void;
-  postContext: PostContext;
 }
 
-export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
+export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
   const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -45,17 +33,16 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Generate initial context message
+  // Generate initial welcome message
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const contextDescription = getContextDescription(postContext);
       setMessages([{
         id: 'initial',
         role: 'assistant',
-        content: `I can see this ${postContext.type}. ${contextDescription}\n\nWhat would you like to know about it?`
+        content: `Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.`
       }]);
     }
-  }, [isOpen, postContext]);
+  }, [isOpen]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -71,21 +58,6 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     }
   }, [isOpen]);
 
-  const getContextDescription = (ctx: PostContext): string => {
-    switch (ctx.type) {
-      case 'image':
-        return `It's an image post by @${ctx.author || 'unknown'}${ctx.caption ? `. Caption: "${ctx.caption}"` : ''}`;
-      case 'video':
-        return `It's a video titled "${ctx.title || 'Untitled'}" by ${ctx.author || 'unknown'}`;
-      case 'live':
-        return `It's a live stream by ${ctx.author || 'unknown'}${ctx.title ? ` titled "${ctx.title}"` : ''}${ctx.game ? ` playing ${ctx.game}` : ''}${ctx.viewers ? ` with ${ctx.viewers} viewers` : ''}`;
-      case 'post':
-        return `It's a text post by @${ctx.author || 'unknown'}${ctx.caption ? `: "${ctx.caption}"` : ''}`;
-      default:
-        return '';
-    }
-  };
-
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -100,13 +72,12 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('post-ai-chat', {
+      const { data, error } = await supabase.functions.invoke('general-ai-chat', {
         body: {
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
             content: m.content
-          })),
-          postContext
+          }))
         }
       });
 
@@ -193,7 +164,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about this post..."
+            placeholder="Ask me anything..."
             className="flex-1 bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <Button

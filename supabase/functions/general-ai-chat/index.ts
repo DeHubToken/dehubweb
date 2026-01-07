@@ -6,17 +6,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface PostContext {
-  type: 'image' | 'video' | 'live' | 'post';
-  author?: string;
-  caption?: string;
-  title?: string;
-  game?: string;
-  viewers?: string;
-  thumbnail?: string;
-  imageUrl?: string;
-}
-
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -28,58 +17,16 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, postContext } = await req.json() as { 
-      messages: Message[]; 
-      postContext: PostContext 
-    };
+    const { messages } = await req.json() as { messages: Message[] };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     if (!lovableApiKey) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    // Build context about the post
-    let contextInfo = `You are an AI assistant helping users understand content on a social media platform. `;
-    contextInfo += `The user is looking at a ${postContext.type}. `;
-    
-    if (postContext.author) {
-      contextInfo += `It was posted by ${postContext.author}. `;
-    }
-    if (postContext.caption) {
-      contextInfo += `The caption/content is: "${postContext.caption}". `;
-    }
-    if (postContext.title) {
-      contextInfo += `The title is: "${postContext.title}". `;
-    }
-    if (postContext.game) {
-      contextInfo += `They are playing/streaming: ${postContext.game}. `;
-    }
-    if (postContext.viewers) {
-      contextInfo += `Current viewers: ${postContext.viewers}. `;
-    }
+    const systemPrompt = `You are a helpful AI assistant on a social media platform called DeHub. You help users with any questions they have - whether about the platform, general knowledge, or just casual conversation.
 
-    contextInfo += `\n\nYou can see images and analyze their visual content. Help the user understand the content, provide insights, answer questions about what's shown in the image/video, or discuss the topic. Be conversational, helpful, and concise.`;
-
-    // Build messages array - include image in first user message if available
-    const apiMessages: any[] = [{ role: 'system', content: contextInfo }];
-    
-    // If we have an image URL, include it with the first user message
-    const hasImage = postContext.imageUrl && postContext.type === 'image';
-    
-    messages.forEach((msg, index) => {
-      if (hasImage && msg.role === 'user' && index === messages.length - 1) {
-        // Include image with the latest user message for vision analysis
-        apiMessages.push({
-          role: 'user',
-          content: [
-            { type: 'image_url', image_url: { url: postContext.imageUrl } },
-            { type: 'text', text: msg.content }
-          ]
-        });
-      } else {
-        apiMessages.push({ role: msg.role, content: msg.content });
-      }
-    });
+Be conversational, helpful, and concise. Keep responses friendly and to the point.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -89,7 +36,10 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
-        messages: apiMessages,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...messages
+        ],
         max_completion_tokens: 500,
       }),
     });
@@ -122,7 +72,7 @@ serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error in post-ai-chat:', error);
+    console.error('Error in general-ai-chat:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
       JSON.stringify({ error: errorMessage }),
