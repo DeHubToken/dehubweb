@@ -42,8 +42,20 @@ export function usePullToRefresh({
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
   const pullStartY = useRef<number | null>(null);
+  const wasAtTopOnStart = useRef<boolean>(false);
   const wheelAccumulator = useRef<number>(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollTop = useRef<number>(0);
+
+  // Helper to check if we're truly at the top
+  const isAtTop = useCallback(() => {
+    const scrollTop = Math.max(
+      window.scrollY,
+      document.documentElement.scrollTop,
+      document.body.scrollTop
+    );
+    return scrollTop <= 2;
+  }, []);
 
   // Trigger the refresh
   const triggerRefresh = useCallback(() => {
@@ -54,57 +66,89 @@ export function usePullToRefresh({
 
   // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0) {
+    // Only allow pull-to-refresh if we're at the very top when touch starts
+    wasAtTopOnStart.current = isAtTop();
+    if (wasAtTopOnStart.current) {
       pullStartY.current = e.touches[0].clientY;
-      setIsPulling(true);
     }
-  }, []);
+  }, [isAtTop]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (isPulling && pullStartY.current !== null) {
-      const currentY = e.touches[0].clientY;
-      const distance = Math.max(0, currentY - pullStartY.current);
+    // Only process if we started at the top AND we're still at the top
+    if (!wasAtTopOnStart.current || pullStartY.current === null) return;
+    if (!isAtTop()) {
+      // User scrolled away from top, cancel pull
+      pullStartY.current = null;
+      wasAtTopOnStart.current = false;
+      setPullDistance(0);
+      setIsPulling(false);
+      return;
+    }
+
+    const currentY = e.touches[0].clientY;
+    const distance = currentY - pullStartY.current;
+    
+    // Only start pulling if moving downward
+    if (distance > 0) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
+      setIsPulling(true);
+    } else {
+      // Moving up while at top, don't show indicator
+      setPullDistance(0);
+      setIsPulling(false);
     }
-  }, [isPulling, pullThreshold]);
+  }, [isAtTop, pullThreshold]);
 
   const handleTouchEnd = useCallback(() => {
-    if (isPulling && pullDistance >= pullThreshold) {
+    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
       triggerRefresh();
     }
     
     setPullDistance(0);
     setIsPulling(false);
     pullStartY.current = null;
+    wasAtTopOnStart.current = false;
   }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
 
   // Mouse handlers for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    if (scrollTop <= 0) {
+    wasAtTopOnStart.current = isAtTop();
+    if (wasAtTopOnStart.current) {
       pullStartY.current = e.clientY;
-      setIsPulling(true);
     }
-  }, []);
+  }, [isAtTop]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (isPulling && pullStartY.current !== null) {
-      const distance = Math.max(0, e.clientY - pullStartY.current);
+    if (!wasAtTopOnStart.current || pullStartY.current === null) return;
+    if (!isAtTop()) {
+      pullStartY.current = null;
+      wasAtTopOnStart.current = false;
+      setPullDistance(0);
+      setIsPulling(false);
+      return;
+    }
+
+    const distance = e.clientY - pullStartY.current;
+    if (distance > 0) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
+      setIsPulling(true);
+    } else {
+      setPullDistance(0);
+      setIsPulling(false);
     }
-  }, [isPulling, pullThreshold]);
+  }, [isAtTop, pullThreshold]);
 
   const handleMouseUp = useCallback(() => {
-    if (isPulling && pullDistance >= pullThreshold) {
+    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
       triggerRefresh();
     }
     
     setPullDistance(0);
     setIsPulling(false);
     pullStartY.current = null;
+    wasAtTopOnStart.current = false;
   }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
 
   const handleMouseLeave = useCallback(() => {
@@ -112,6 +156,7 @@ export function usePullToRefresh({
       setPullDistance(0);
       setIsPulling(false);
       pullStartY.current = null;
+      wasAtTopOnStart.current = false;
     }
   }, [isPulling]);
 
@@ -120,9 +165,10 @@ export function usePullToRefresh({
     const handleWheel = (e: WheelEvent) => {
       if (isRefreshing) return;
       
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const atTop = isAtTop();
       
-      if (scrollTop <= 5 && e.deltaY < 0) {
+      // Only trigger on scroll up (deltaY < 0) when already at top
+      if (atTop && e.deltaY < 0) {
         e.preventDefault();
         
         wheelAccumulator.current += Math.abs(e.deltaY);
@@ -146,7 +192,8 @@ export function usePullToRefresh({
             setIsPulling(false);
           }, 300);
         }
-      } else if (scrollTop > 5 || e.deltaY > 0) {
+      } else {
+        // Not at top or scrolling down - reset
         wheelAccumulator.current = 0;
         if (isPulling && !isRefreshing) {
           setPullDistance(0);
@@ -162,7 +209,7 @@ export function usePullToRefresh({
         clearTimeout(wheelTimeout.current);
       }
     };
-  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh]);
+  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop]);
 
   return {
     pullDistance,
