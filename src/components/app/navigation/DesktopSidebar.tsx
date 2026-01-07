@@ -71,7 +71,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     <div className="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
                       <Sparkles className="w-5 h-5" />
                     </div>
-                    <span className="truncate">AI</span>
+                    <span className="truncate">Assistant</span>
                   </button>
                 )}
               </div>
