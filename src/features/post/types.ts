@@ -4,6 +4,14 @@ export interface AudioFile {
   duration: number;
 }
 
+export interface LinkPreviewData {
+  url: string;
+  title: string;
+  description: string;
+  image: string | null;
+  siteName: string;
+}
+
 export interface MediaFile {
   file: File;
   preview: string;
