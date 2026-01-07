@@ -8,8 +8,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Settings2, Loader2, RefreshCw } from 'lucide-react';
+import { Settings2, Loader2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 
@@ -20,6 +19,7 @@ import { ShortsFeed } from '@/components/app/feeds/ShortsFeed';
 import { LiveFeed } from '@/components/app/feeds/LiveFeed';
 import { PPVFeed } from '@/components/app/feeds/PPVFeed';
 import { W2EFeed } from '@/components/app/feeds/W2EFeed';
+import { MusicFeed } from '@/components/app/feeds/MusicFeed';
 
 // Card components
 import { 
@@ -230,7 +230,7 @@ function FeedSettingsModal({ open, onOpenChange, filters, onFiltersChange }: Fee
 // ============================================================================
 
 export default function HomePage() {
-  const navigate = useNavigate();
+  // Tab state
   
   // Tab state
   const [activeTab, setActiveTab] = useState('home');
@@ -246,6 +246,7 @@ export default function HomePage() {
   const [showShortsFilters, setShowShortsFilters] = useState(false);
   const [showImagesCollage, setShowImagesCollage] = useState(false);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
+  const [showMusicFilters, setShowMusicFilters] = useState(false);
   
   // Settings modal
   const [showFeedSettings, setShowFeedSettings] = useState(false);
@@ -307,18 +308,13 @@ export default function HomePage() {
     setShowShortsFilters(false);
     setShowImagesCollage(false);
     setShowVideosFilters(false);
+    setShowMusicFilters(false);
   };
 
   /**
    * Handle tab click - toggle filters on same tab, switch on different tab.
    */
   const handleTabClick = (tabValue: string) => {
-    // Music tab navigates to dedicated page
-    if (tabValue === 'music') {
-      navigate('/app/music');
-      return;
-    }
-    
     if (tabValue === activeTab) {
       // Same tab clicked - always scroll to top
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -334,6 +330,8 @@ export default function HomePage() {
         setShowImagesCollage(prev => !prev);
       } else if (tabValue === 'videos') {
         setShowVideosFilters(prev => !prev);
+      } else if (tabValue === 'music') {
+        setShowMusicFilters(prev => !prev);
       }
     } else {
       setActiveTab(tabValue);
@@ -458,6 +456,8 @@ export default function HomePage() {
         return <ShortsFeed showFilters={showShortsFilters} />;
       case 'live':
         return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
+      case 'music':
+        return <MusicFeed showFilters={showMusicFilters} />;
       default:
         return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} />;
     }
