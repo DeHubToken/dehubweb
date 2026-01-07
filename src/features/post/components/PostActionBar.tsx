@@ -53,7 +53,7 @@ export function PostActionBar({
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
-        <input ref={audioInputRef} type="file" accept="audio/*" onChange={onAudioSelect} className="hidden" />
+        <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
         
         {!isLive && (
           <button 
@@ -155,7 +155,7 @@ export function PostActionBar({
                   className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                   title="Town Hall"
                 >
-                  <Headphones className="w-5 h-5 text-purple-400" />
+                  <Mic className="w-5 h-5 text-purple-400" />
                 </button>
               </div>
             </PopoverContent>
