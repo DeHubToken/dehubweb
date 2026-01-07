@@ -27,7 +27,7 @@ export function PostModal({ isOpen, onClose }: PostModalProps) {
       <PostContentArea
         text={state.text}
         setText={actions.setText}
-        textareaRef={refs.textareaRef}
+        editorRef={refs.editorRef}
         media={state.media}
         onRemoveMedia={actions.removeMedia}
         onAddAudio={actions.addAudioToMedia}

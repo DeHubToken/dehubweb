@@ -3,11 +3,12 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
+import { useEffect, useCallback } from 'react';
 
 interface PostContentAreaProps {
   text: string;
   setText: (text: string) => void;
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
+  editorRef: React.RefObject<HTMLDivElement>;
   media: MediaFile[];
   onRemoveMedia: (index: number) => void;
   onAddAudio: (index: number, audio: AudioFile) => void;
@@ -24,7 +25,7 @@ interface PostContentAreaProps {
 export function PostContentArea({
   text,
   setText,
-  textareaRef,
+  editorRef,
   media,
   onRemoveMedia,
   onAddAudio,
@@ -38,6 +39,31 @@ export function PostContentArea({
   hasVideo,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
+
+  // Get plain text length for character count
+  const getPlainTextLength = useCallback(() => {
+    if (!editorRef.current) return 0;
+    return editorRef.current.innerText.length;
+  }, [editorRef]);
+
+  const charCount = text.length;
+
+  // Handle input changes
+  const handleInput = useCallback(() => {
+    if (!editorRef.current) return;
+    const html = editorRef.current.innerHTML;
+    // Convert to plain text for state (preserving line breaks)
+    const plainText = editorRef.current.innerText;
+    setText(plainText);
+  }, [editorRef, setText]);
+
+  // Sync content when text is cleared (e.g., on form reset)
+  useEffect(() => {
+    if (text === '' && editorRef.current && editorRef.current.innerHTML !== '') {
+      editorRef.current.innerHTML = '';
+    }
+  }, [text, editorRef]);
+
   return (
     <div className="p-4 max-h-[60vh] overflow-y-auto">
       <div className="flex gap-3">
@@ -47,16 +73,16 @@ export function PostContentArea({
         </Avatar>
 
         <div className="flex-1 min-w-0 relative">
-          <textarea
-            ref={textareaRef}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-            className="w-full bg-transparent text-white text-lg placeholder:text-white/70 resize-none outline-none min-h-[80px] pb-5"
-            rows={3}
+          <div
+            ref={editorRef}
+            contentEditable
+            onInput={handleInput}
+            data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
+            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[80px] pb-5 empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
-          <span className={cn("absolute bottom-0 right-0 text-xs", text.length > 280 ? "text-amber-400" : "text-white")}>
-            {text.length}/280
+          <span className={cn("absolute bottom-0 right-0 text-xs", charCount > 280 ? "text-amber-400" : "text-white")}>
+            {charCount}/280
           </span>
 
           <PostMediaPreview 
