@@ -36,24 +36,23 @@ const generateMockPostInfo = (postId: string) => {
   // Generate a timestamp within the last 30 days
   const timestamp = new Date(Date.now() - (absHash % 30) * 24 * 60 * 60 * 1000);
   
-  // Generate mock owners and listings that total 1000 fractions
+  // Generate mock owners that total 1000 fractions
   const ownerCount = (absHash % 3) + 2; // 2-4 owners
-  const listingCount = (absHash % 3); // 0-2 listings
-  const totalHolders = ownerCount + listingCount;
   
-  // Distribute 1000 fractions among all holders
-  const baseFractions = Math.floor(1000 / totalHolders);
-  const remainder = 1000 - (baseFractions * totalHolders);
+  // Distribute 1000 fractions among owners only
+  const baseFractions = Math.floor(1000 / ownerCount);
+  const remainder = 1000 - (baseFractions * ownerCount);
   
   const owners: Owner[] = Array.from({ length: ownerCount }, (_, i) => ({
     address: `0x${((absHash + i * 12345) >>> 0).toString(16).padStart(40, 'f').slice(0, 40)}`,
     fractions: baseFractions + (i === 0 ? remainder : 0), // Give remainder to first owner
   }));
   
-  // Generate mock listings (fractions for sale)
+  // Generate mock listings (fractions for sale - subset of what owners have listed)
+  const listingCount = (absHash % 3); // 0-2 listings
   const listings: Listing[] = Array.from({ length: listingCount }, (_, i) => ({
     address: `0x${((absHash + (i + 10) * 54321) >>> 0).toString(16).padStart(40, 'f').slice(0, 40)}`,
-    fractions: baseFractions,
+    fractions: 50 + (i * 25), // Small portions listed for sale
     price: ((absHash % 100) + 10 + i * 25) / 10,
     currency: 'ETH',
   }));
