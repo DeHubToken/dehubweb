@@ -9,10 +9,13 @@
  * ```
  */
 
+import { useState } from 'react';
 import { Eye } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { TranslatableText } from '../TranslatableText';
+import { AIButton } from './AIButton';
+import { PostAIChat } from './PostAIChat';
 import type { VideoItem } from '@/types/feed.types';
 
 interface VideoCardProps {
@@ -20,6 +23,8 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video }: VideoCardProps) {
+  const [showAIChat, setShowAIChat] = useState(false);
+
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
       <CardHeader
@@ -32,6 +37,7 @@ export function VideoCard({ video }: VideoCardProps) {
       {/* Thumbnail */}
       <div className="relative aspect-video bg-zinc-800">
         <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
+        <AIButton onClick={() => setShowAIChat(true)} />
         <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
           {video.duration}
         </div>
@@ -41,7 +47,7 @@ export function VideoCard({ video }: VideoCardProps) {
           <span className="text-white text-xs font-medium">{video.views}</span>
         </div>
         {/* Play button overlay */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
             <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
           </div>
@@ -54,6 +60,17 @@ export function VideoCard({ video }: VideoCardProps) {
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
         <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
       </div>
+
+      {/* AI Chat */}
+      <PostAIChat
+        isOpen={showAIChat}
+        onClose={() => setShowAIChat(false)}
+        postContext={{
+          type: 'video',
+          author: video.channel,
+          title: video.title
+        }}
+      />
     </div>
   );
 }
