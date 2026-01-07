@@ -216,7 +216,7 @@ export default function ProfilePage() {
                 </button>
               </div>
               
-              <p className="text-zinc-500 text-sm mt-2">Not followed by anyone you're following</p>
+              <p className="text-zinc-500 text-sm mt-2">No mutuals</p>
             </div>
           </div>
         </div>
