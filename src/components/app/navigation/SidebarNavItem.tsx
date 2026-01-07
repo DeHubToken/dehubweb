@@ -38,10 +38,10 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
+          'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors text-white',
           variant === 'mobile'
-            ? 'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
-            : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+            ? 'hover:bg-zinc-700/50'
+            : 'hover:bg-zinc-800/50'
         )}
       >
         <div className="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
@@ -57,14 +57,14 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors',
+        'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-colors text-white',
         isActive
           ? variant === 'mobile'
-            ? 'bg-zinc-700/50 text-white font-semibold'
-            : 'bg-zinc-800 text-white font-semibold'
+            ? 'bg-zinc-700/50 font-semibold'
+            : 'bg-zinc-800 font-semibold'
           : variant === 'mobile'
-            ? 'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
-            : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
+            ? 'hover:bg-zinc-700/50'
+            : 'hover:bg-zinc-800/50'
       )}
     >
       <div className={cn(
