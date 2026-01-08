@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { PostCard } from '@/components/app/cards/PostCard';
@@ -20,6 +21,7 @@ import {
 } from '@/components/ui/drawer';
 import { MOCK_POSTS, SAMPLE_IMAGES, SAMPLE_VIDEOS } from '@/data/mock-feed.data';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 const MOCK_PROFILE = {
   name: 'Alice Cooper',
@@ -191,6 +193,8 @@ export default function ProfilePage() {
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
+  const [offerAmount, setOfferAmount] = useState('');
 
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.gg/${MOCK_PROFILE.handle.replace('@', '')}`);
@@ -225,6 +229,21 @@ export default function ProfilePage() {
     setIsSubscribed(false);
     toast.success(`Unfollowed ${MOCK_PROFILE.name}`);
     setShareSheetOpen(false);
+  };
+
+  const handleMakeOffer = () => {
+    setShareSheetOpen(false);
+    setOfferDrawerOpen(true);
+  };
+
+  const handleSubmitOffer = () => {
+    if (!offerAmount || parseFloat(offerAmount) <= 0) {
+      toast.error('Please enter a valid offer amount');
+      return;
+    }
+    toast.success(`Offer of ${offerAmount} DHB submitted for ${MOCK_PROFILE.handle}`);
+    setOfferDrawerOpen(false);
+    setOfferAmount('');
   };
 
   const ShareOptions = () => (
@@ -284,6 +303,15 @@ export default function ProfilePage() {
           <Bell className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Notify</span>
+      </button>
+      <button
+        onClick={handleMakeOffer}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-purple-500/10 backdrop-blur-md border border-purple-500/20 hover:bg-purple-500/20 transition-colors text-left"
+      >
+        <div className="w-8 h-8 rounded-full bg-purple-500/20 backdrop-blur-sm flex items-center justify-center">
+          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+        </div>
+        <span className="text-purple-400 font-medium">Make Offer</span>
       </button>
     </div>
   );
@@ -652,6 +680,43 @@ export default function ProfilePage() {
         {/* Tab Content */}
         {renderTabContent()}
       </div>
+
+      {/* Make Offer Drawer */}
+      <Drawer open={offerDrawerOpen} onOpenChange={setOfferDrawerOpen}>
+        <DrawerContent glass className="px-4 pb-8">
+          <DrawerHeader className="text-left">
+            <DrawerTitle className="text-white">Make Offer for {MOCK_PROFILE.handle}</DrawerTitle>
+          </DrawerHeader>
+          <div className="space-y-4">
+            <p className="text-zinc-400 text-sm">
+              Enter the amount of DHB tokens you'd like to offer to acquire this username.
+            </p>
+            
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+              </div>
+              <Input
+                type="number"
+                placeholder="0"
+                value={offerAmount}
+                onChange={(e) => setOfferAmount(e.target.value)}
+                className="pl-10 pr-14 bg-zinc-800 border-zinc-700 text-white"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-medium">
+                DHB
+              </span>
+            </div>
+            
+            <Button 
+              onClick={handleSubmitOffer}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+            >
+              Submit Offer
+            </Button>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
