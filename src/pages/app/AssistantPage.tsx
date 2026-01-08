@@ -63,13 +63,13 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
   
   useEffect(() => {
     if (phase === 'skeleton') {
-      // Animate progress from 0 to 100 over ~8 seconds (typical image gen time)
+      // Animate progress from 0 to 100 over ~10 seconds (typical image gen time)
       const interval = setInterval(() => {
         setProgress(prev => {
-          // Slow down as we approach 95% (never reach 100 until actual completion)
-          if (prev >= 95) return prev;
-          const increment = Math.max(0.5, (95 - prev) / 50);
-          return Math.min(95, prev + increment);
+          // Slow down as we approach 100%
+          if (prev >= 100) return 100;
+          const increment = Math.max(0.3, (100 - prev) / 40);
+          return Math.min(100, prev + increment);
         });
       }, 100);
       
@@ -92,12 +92,13 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
     );
   }
   
-  // Calculate skeleton size based on progress - direct 1:1 mapping
-  // Final size matches typical generated image size
+  // Calculate skeleton size - starts small, grows 2x+ by 100%
   const finalSize = 320;
-  const minSize = 40; // Start small but visible
+  const minSize = 80; // Start at ~25% of final size so it grows ~4x total
   const currentScale = progress / 100;
-  const size = Math.round(minSize + (finalSize - minSize) * currentScale);
+  // Use easeOutQuad for more dramatic growth feel
+  const easedScale = 1 - (1 - currentScale) * (1 - currentScale);
+  const size = Math.round(minSize + (finalSize - minSize) * easedScale);
   
   return (
     <motion.div
