@@ -289,18 +289,69 @@ export default function AssistantPage() {
     setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Process image file helper
+  const processImageFile = (file: File) => {
+    if (!file.type.startsWith('image/')) return;
     
     const reader = new FileReader();
     reader.onload = (event) => {
       setAttachedImage(event.target?.result as string);
+      toast.success('Image attached');
     };
     reader.readAsDataURL(file);
-    
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processImageFile(file);
     // Reset input
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Handle paste event for images
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (file) processImageFile(file);
+        return;
+      }
+    }
+  };
+
+  // Drag and drop state
+  const [isDragging, setIsDragging] = useState(false);
+  
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+  
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set to false if leaving the container
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsDragging(false);
+    }
+  };
+  
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer?.files;
+    if (!files?.length) return;
+    
+    const imageFile = Array.from(files).find(f => f.type.startsWith('image/'));
+    if (imageFile) processImageFile(imageFile);
   };
 
   // Poll for video generation status
@@ -690,7 +741,29 @@ export default function AssistantPage() {
   );
 
   return (
-    <div className="flex flex-col h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)] lg:h-screen lg:max-h-screen">
+    <div 
+      className="flex flex-col h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)] lg:h-screen lg:max-h-screen relative"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {/* Drag overlay */}
+      <AnimatePresence>
+        {isDragging && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center pointer-events-none"
+          >
+            <div className="flex flex-col items-center gap-3 p-8 rounded-2xl bg-white/10 border border-white/20">
+              <ImageIcon className="w-12 h-12 text-white/80" />
+              <p className="text-white text-lg font-medium">Drop image here</p>
+              <p className="text-white/50 text-sm">to attach for editing</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
@@ -1008,6 +1081,7 @@ export default function AssistantPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
             placeholder={attachedImage ? "Describe how to edit this image..." : "Ask me anything or generate an image..."}
             className="flex-1 bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
