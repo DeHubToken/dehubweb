@@ -224,6 +224,40 @@ export default function AssistantPage() {
             placeholder="Ask me anything..."
             className="flex-1 bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
+          
+          {/* Style toggle next to send */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10"
+              >
+                <span className="text-base">{currentStyle.emoji}</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent 
+              align="end" 
+              side="top"
+              className="w-48 p-1 mb-2"
+            >
+              <div className="flex flex-col max-h-64 overflow-y-auto">
+                {STYLE_OPTIONS.map((style) => (
+                  <button
+                    key={style.id}
+                    onClick={() => setSelectedStyle(style.id)}
+                    className={`flex items-center gap-3 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors ${
+                      selectedStyle === style.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span>{style.emoji}</span>
+                    <span>{style.label}</span>
+                  </button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+
           <Button
             size="icon"
             onClick={handleSend}
