@@ -80,21 +80,21 @@ export default function SettingsPage() {
         </div>
 
         {/* Tab Icons */}
-        <div className="flex gap-1.5 sm:gap-2">
+        <div className="flex gap-[6px] sm:gap-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`p-2.5 sm:p-3 rounded-xl transition-colors ${
+                className={`p-[11px] sm:p-3 rounded-xl transition-colors ${
                   activeTab === tab.value
                     ? 'bg-zinc-800 text-white'
                     : 'text-zinc-500 hover:text-white hover:bg-zinc-800/50'
                 }`}
                 title={tab.label}
               >
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Icon className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
               </button>
             );
           })}
