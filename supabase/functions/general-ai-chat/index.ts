@@ -237,9 +237,15 @@ When users ask about legitimacy, mention the 2021 origins, UK company registrati
 
 ${needsSearch && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Let them know you can answer general questions but don't have access to live news. Suggest they ask about DeHub or other topics you can help with.` : ''}
 
-IMPORTANT: Always keep your responses under 1400 words to ensure they never get cut off.`;
+IMPORTANT FORMATTING RULES:
+- Always keep your responses under 1400 words to ensure they never get cut off
+- Use **bold** for emphasis (with double asterisks)
+- Use bullet points with - for lists
+- Format links as [text](url) - the URL should be the full https:// link
+- NEVER use asterisks or underscores for any other purpose than markdown formatting
+- Keep formatting clean and consistent`;
     
-    const systemPrompt = personalityModifier 
+    const systemPrompt = personalityModifier
       ? `${basePrompt}\n\nIMPORTANT STYLE: ${personalityModifier}`
       : basePrompt;
 
