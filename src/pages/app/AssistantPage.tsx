@@ -9,7 +9,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Share } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -432,19 +432,26 @@ export default function AssistantPage() {
                         <MarkdownText content={message.content} className="text-sm" />
                       </div>
                     )}
-                    <img 
-                      src={message.imageUrl} 
-                      alt="Generated" 
-                      className="max-w-full rounded-lg"
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => handlePostImage(message.imageUrl!)}
-                      className="w-full gap-2 rounded-full"
-                    >
-                      <Share className="w-4 h-4" />
-                      Post
-                    </Button>
+                    {/* Image container with + button overlay */}
+                    <div className="relative">
+                      <img 
+                        src={message.imageUrl} 
+                        alt="Generated" 
+                        className="max-w-full rounded-lg"
+                      />
+                      {/* Liquid glass + button */}
+                      <button
+                        onClick={() => handlePostImage(message.imageUrl!)}
+                        className="absolute bottom-3 right-3 flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                          bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                          backdrop-blur-xl border border-white/30
+                          shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                          hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                          hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                      >
+                        <Plus className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   /* Text messages - with bubble wrapper */
