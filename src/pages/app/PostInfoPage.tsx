@@ -279,7 +279,7 @@ export default function PostInfoPage() {
               </div>
             ) : (
               <p className="text-sm text-white/40 text-center py-4">
-                No fractions currently listed for sale
+                No fractions currently listed for sale yet, let the owner know you're interested!
               </p>
             )}
           </section>
