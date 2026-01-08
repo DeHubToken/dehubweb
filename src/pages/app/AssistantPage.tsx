@@ -126,7 +126,7 @@ export default function AssistantPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)]">
+    <div className="flex flex-col h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)] lg:h-screen lg:max-h-screen pb-20 lg:pb-0">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
