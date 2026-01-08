@@ -35,7 +35,9 @@ const IMAGE_KEYWORDS = [
   'change this image', 'put', 'add to this image', 'remove from',
   'generate an image', 'create an image', 'make an image',
   'generate a', 'create a', 'draw a', 'draw me', 'make me',
-  'photo of', 'picture of', 'image of', 'illustration of'
+  'photo of', 'picture of', 'image of', 'illustration of',
+  'show me', 'show a', 'give me', 'i want', 'can you show',
+  'what does', 'look like', 'visualize', 'render', 'depict'
 ];
 
 function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
