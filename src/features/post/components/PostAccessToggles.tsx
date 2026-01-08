@@ -1,4 +1,4 @@
-import { Lock, CreditCard, Play, Shield, Eye, MessageCircle } from 'lucide-react';
+import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,12 +98,12 @@ export function PostAccessToggles({
         </div>
       </div>
 
-      {/* Watch2Earn */}
+      {/* Bounty */}
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Play className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-white")} />
-            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-white")}>Watch2Earn</span>
+            <Gift className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-white")} />
+            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-white")}>Bounty</span>
           </div>
           <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-blue-500 scale-75" />
         </div>

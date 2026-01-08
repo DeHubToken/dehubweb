@@ -1,13 +1,13 @@
-import { Play, Eye, MessageCircle, Coins } from 'lucide-react';
+import { Gift, Eye, MessageCircle, Coins } from 'lucide-react';
 
 export function W2EFeed() {
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center mb-4">
-          <Play className="w-8 h-8 text-blue-400" />
+          <Gift className="w-8 h-8 text-blue-400" />
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">Watch2Earn</h3>
+        <h3 className="text-xl font-semibold text-white mb-2">Bounty</h3>
         <p className="text-zinc-400 max-w-md">
           Earn rewards by watching content and engaging with creators.
         </p>

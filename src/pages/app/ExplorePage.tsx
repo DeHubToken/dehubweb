@@ -232,7 +232,7 @@ export default function ExplorePage() {
                   <p className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</p>
                   <div className="flex flex-wrap gap-2">
                     <FilterPill
-                      label="Watch2Earn"
+                      label="Bounty"
                       active={filters.w2e}
                       onClick={() => setFilters(f => ({ ...f, w2e: !f.w2e }))}
                     />
