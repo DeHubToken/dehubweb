@@ -11,7 +11,30 @@ export interface VideoModel {
   duration: string;
   tier: 'premium' | 'standard' | 'fast';
   emoji: string;
+  /** Base cost in USD (before markup) */
+  baseCostUsd: number;
 }
+
+/**
+ * Markup percentage for video generation (100% = 2x cost)
+ */
+export const VIDEO_GENERATION_MARKUP = 1.0; // 100% markup
+
+/**
+ * Calculate the final cost in USD with markup
+ */
+export const getVideoCostUsd = (model: VideoModel): number => {
+  return model.baseCostUsd * (1 + VIDEO_GENERATION_MARKUP);
+};
+
+/**
+ * Calculate the cost in DHB tokens
+ */
+export const getVideoCostDhb = (model: VideoModel, dhbPriceUsd: number): number => {
+  if (dhbPriceUsd <= 0) return 0;
+  const costUsd = getVideoCostUsd(model);
+  return costUsd / dhbPriceUsd;
+};
 
 export const VIDEO_MODELS: Record<string, VideoModel> = {
   'kling-2.6-pro': {
@@ -22,6 +45,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5-10s',
     tier: 'premium',
     emoji: '🎬',
+    baseCostUsd: 1.10, // Average of 5s ($0.80) and 10s ($1.40)
   },
   'luma-ray2': {
     id: 'luma-ray2',
@@ -31,6 +55,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5s',
     tier: 'premium',
     emoji: '✨',
+    baseCostUsd: 0.65, // ~$0.50-0.80 average
   },
   'runway-gen4': {
     id: 'runway-gen4',
@@ -40,6 +65,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '10s',
     tier: 'premium',
     emoji: '🚀',
+    baseCostUsd: 0.50, // $0.50 for 10s
   },
   'minimax-video': {
     id: 'minimax-video',
@@ -49,6 +75,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '6s',
     tier: 'standard',
     emoji: '⚡',
+    baseCostUsd: 0.22, // ~$0.15-0.30 average
   },
   'ltx-video': {
     id: 'ltx-video',
@@ -58,6 +85,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5s',
     tier: 'fast',
     emoji: '💨',
+    baseCostUsd: 0.085, // ~$0.085
   },
 };
 
