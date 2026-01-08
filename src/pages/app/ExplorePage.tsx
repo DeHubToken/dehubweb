@@ -92,7 +92,7 @@ const FilterDropdown = ({
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="absolute top-full left-0 mt-2 bg-zinc-900 border border-zinc-700 rounded-xl p-1 min-w-[120px] z-50 shadow-xl"
+              className="absolute top-full left-0 mt-2 bg-zinc-900/70 backdrop-blur-xl border border-white/10 rounded-2xl p-1 min-w-[120px] z-50 shadow-2xl"
             >
               {options.map((option) => (
                 <button
@@ -102,10 +102,10 @@ const FilterDropdown = ({
                     setOpen(false);
                   }}
                   className={cn(
-                    'w-full text-left px-3 py-2 rounded-lg text-sm transition-colors',
+                    'w-full text-left px-3 py-2 rounded-xl text-sm transition-colors',
                     value === option
-                      ? 'bg-zinc-800 text-white'
-                      : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                      ? 'bg-white/10 text-white'
+                      : 'text-zinc-400 hover:bg-white/10 hover:text-white'
                   )}
                 >
                   {option}

@@ -163,7 +163,7 @@ export function ActionBar({
                 <Share2 className="w-5 h-5" />
               </button>
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                <SheetContent side="bottom" className="bg-zinc-900 border-zinc-800 rounded-t-2xl">
+                <SheetContent side="bottom" className="bg-zinc-900/70 backdrop-blur-xl border-0 rounded-t-2xl">
                   <SheetHeader>
                     <SheetTitle className="text-white">Share</SheetTitle>
                   </SheetHeader>
@@ -183,7 +183,7 @@ export function ActionBar({
                   <Share2 className="w-5 h-5" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
+              <DropdownMenuContent align="start" className="min-w-[180px]">
                 <DropdownMenuItem 
                   onClick={handleRepost}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
