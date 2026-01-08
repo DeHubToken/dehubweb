@@ -10,7 +10,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { X, Search, ThumbsUp, ThumbsDown, MessageCircle, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -272,7 +272,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark 
               className="text-white hover:text-zinc-400 transition-colors"
               aria-label="Reply"
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageSquare className="w-4 h-4" />
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -567,7 +567,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             value="replies"
             className="flex-1 data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 rounded-md py-1.5 text-sm gap-1.5"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
+            <MessageSquare className="w-3.5 h-3.5" />
             Replies
             <span className="text-xs text-zinc-500 ml-1">({replies.length})</span>
           </TabsTrigger>
