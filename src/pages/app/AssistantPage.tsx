@@ -9,7 +9,8 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip } from 'lucide-react';
+import { toast } from 'sonner';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -444,18 +445,60 @@ export default function AssistantPage() {
                         alt="" 
                         className="absolute bottom-3 left-3 h-5 opacity-60 pointer-events-none"
                       />
-                      {/* Liquid glass + button */}
-                      <button
-                        onClick={() => handlePostImage(message.imageUrl!)}
-                        className="absolute bottom-3 right-3 flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
-                          bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                          backdrop-blur-xl border border-white/30
-                          shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                          hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                          hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                      >
-                        <Plus className="w-5 h-5" />
-                      </button>
+                      {/* Action buttons row */}
+                      <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                        {/* Attach to edit button */}
+                        <button
+                          onClick={() => {
+                            setAttachedImage(message.imageUrl!);
+                            inputRef.current?.focus();
+                            toast.success('Image attached - describe your edits');
+                          }}
+                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                            backdrop-blur-xl border border-white/30
+                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                            hover:shadow-[0_12px_40px_rgba(168,85,247,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                            hover:border-purple-400/50 hover:from-purple-500/30 hover:via-purple-400/15 hover:to-transparent"
+                        >
+                          <Paperclip className="w-5 h-5" />
+                        </button>
+                        {/* Copy button */}
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(message.imageUrl!);
+                              const blob = await response.blob();
+                              await navigator.clipboard.write([
+                                new ClipboardItem({ [blob.type]: blob })
+                              ]);
+                              toast.success('Image copied to clipboard');
+                            } catch (err) {
+                              toast.error('Failed to copy image');
+                            }
+                          }}
+                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                            backdrop-blur-xl border border-white/30
+                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                            hover:shadow-[0_12px_40px_rgba(34,197,94,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                            hover:border-green-400/50 hover:from-green-500/30 hover:via-green-400/15 hover:to-transparent"
+                        >
+                          <Copy className="w-5 h-5" />
+                        </button>
+                        {/* Post button */}
+                        <button
+                          onClick={() => handlePostImage(message.imageUrl!)}
+                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                            backdrop-blur-xl border border-white/30
+                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                            hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                            hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                        >
+                          <Plus className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ) : (
