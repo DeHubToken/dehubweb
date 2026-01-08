@@ -373,7 +373,7 @@ function PrivacySettings() {
             </div>
           </div>
           <Select defaultValue="everyone">
-            <SelectTrigger className="w-32 bg-zinc-800 border-zinc-700 text-white">
+            <SelectTrigger className="w-32 bg-zinc-800 border-zinc-700 text-white rounded-md">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-zinc-800 border-zinc-700">
@@ -397,7 +397,7 @@ function PrivacySettings() {
                 <p className="text-zinc-500 text-sm">Last updated 30 days ago</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
+            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md">
               Change Password
             </Button>
           </div>
@@ -409,7 +409,7 @@ function PrivacySettings() {
                 <p className="text-zinc-500 text-sm">Add an extra layer of security</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
+            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md">
               Enable
             </Button>
           </div>
@@ -450,7 +450,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                 onClick={() => setTheme(option.value)}
                 className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors ${
                   theme === option.value
-                    ? 'bg-zinc-800 border-2 border-purple-500'
+                    ? 'bg-zinc-800 border-2 border-white'
                     : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
                 }`}
               >
