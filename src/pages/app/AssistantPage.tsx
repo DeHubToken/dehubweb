@@ -773,15 +773,6 @@ export default function AssistantPage() {
                         }}
                         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                       />
-                      {/* Pulsing video icon */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <motion.div
-                          animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                          <Video className="w-16 h-16 text-white/40" />
-                        </motion.div>
-                      </div>
                       {/* Progress bar at bottom */}
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
                         <motion.div 
