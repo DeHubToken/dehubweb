@@ -8,7 +8,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, Search, MessageSquare, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -16,6 +16,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
+
+type ChatMode = 'chat' | 'search';
 
 interface Message {
   id: string;
@@ -28,6 +30,7 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
+  const [chatMode, setChatMode] = useState<ChatMode>('chat');
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -35,13 +38,16 @@ export default function AssistantPage() {
 
   const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
 
-  // Generate initial welcome message
+  // Generate initial welcome message based on mode
   useEffect(() => {
     if (messages.length === 0) {
+      const welcomeMessage = chatMode === 'search' 
+        ? `Hi! I'm your AI assistant with **real-time web search**. Ask me about current news, live events, or anything you want me to search for online! 🌐`
+        : `Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.`;
       setMessages([{
         id: 'initial',
         role: 'assistant',
-        content: `Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.`
+        content: welcomeMessage
       }]);
     }
   }, []);
@@ -71,19 +77,40 @@ export default function AssistantPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const query = input.trim();
     setInput('');
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('general-ai-chat', {
-        body: {
-          messages: [...messages, userMessage].map(m => ({
-            role: m.role,
-            content: m.content
-          })),
-          style: selectedStyle
-        }
-      });
+      let data, error;
+      
+      if (chatMode === 'search') {
+        // Use web search function
+        const result = await supabase.functions.invoke('ai-web-search', {
+          body: {
+            messages: [...messages, userMessage].map(m => ({
+              role: m.role,
+              content: m.content
+            })),
+            query
+          }
+        });
+        data = result.data;
+        error = result.error;
+      } else {
+        // Use regular chat function
+        const result = await supabase.functions.invoke('general-ai-chat', {
+          body: {
+            messages: [...messages, userMessage].map(m => ({
+              role: m.role,
+              content: m.content
+            })),
+            style: selectedStyle
+          }
+        });
+        data = result.data;
+        error = result.error;
+      }
 
       if (error) throw error;
 
@@ -104,6 +131,19 @@ export default function AssistantPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  const handleModeChange = (mode: ChatMode) => {
+    setChatMode(mode);
+    // Reset conversation when switching modes
+    const welcomeMessage = mode === 'search' 
+      ? `Hi! I'm your AI assistant with **real-time web search**. Ask me about current news, live events, or anything you want me to search for online! 🌐`
+      : `Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.`;
+    setMessages([{
+      id: 'initial',
+      role: 'assistant',
+      content: welcomeMessage
+    }]);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -145,25 +185,63 @@ export default function AssistantPage() {
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
+            {chatMode === 'search' ? (
+              <Globe className="w-5 h-5 text-white" />
+            ) : (
+              <Sparkles className="w-5 h-5 text-white" />
+            )}
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
-            <p className="text-sm text-white/50">Ask me anything</p>
+            <h1 className="text-lg font-semibold text-white">
+              {chatMode === 'search' ? 'Web Search' : 'AI Assistant'}
+            </h1>
+            <p className="text-sm text-white/50">
+              {chatMode === 'search' ? 'Real-time web results' : 'Ask me anything'}
+            </p>
           </div>
         </div>
 
-        {/* Style Selector Button - opens Drawer on all devices */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setStyleSheetOpen(true)}
-          className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
-        >
-          <span>{currentStyle.emoji}</span>
-          <span className="hidden sm:inline">{currentStyle.label}</span>
-          <ChevronDown className="w-3 h-3 text-white/50" />
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Mode Toggle */}
+          <div className="flex items-center bg-white/5 rounded-full p-1">
+            <button
+              onClick={() => handleModeChange('chat')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                chatMode === 'chat' 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Chat</span>
+            </button>
+            <button
+              onClick={() => handleModeChange('search')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                chatMode === 'search' 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Search</span>
+            </button>
+          </div>
+
+          {/* Style Selector Button - only show in chat mode */}
+          {chatMode === 'chat' && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setStyleSheetOpen(true)}
+              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+            >
+              <span>{currentStyle.emoji}</span>
+              <span className="hidden sm:inline">{currentStyle.label}</span>
+              <ChevronDown className="w-3 h-3 text-white/50" />
+            </Button>
+          )}
+        </div>
 
         {/* Style Drawer - same pattern as PostActionBar enhance */}
         <Drawer open={styleSheetOpen} onOpenChange={setStyleSheetOpen}>
@@ -232,7 +310,7 @@ export default function AssistantPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask me anything..."
+            placeholder={chatMode === 'search' ? "Search the web..." : "Ask me anything..."}
             className="flex-1 bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           
