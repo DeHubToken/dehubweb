@@ -14,23 +14,14 @@ export interface VideoModel {
 }
 
 export const VIDEO_MODELS: Record<string, VideoModel> = {
-  'kling-1.6-pro': {
-    id: 'kling-1.6-pro',
-    name: 'Kling 1.6 Pro',
-    description: 'Best cinematic quality, professional-grade',
+  'kling-2.6-pro': {
+    id: 'kling-2.6-pro',
+    name: 'Kling 2.6 Pro',
+    description: 'Top-tier cinematic with native audio',
     supports: ['text-to-video', 'image-to-video'],
     duration: '5-10s',
     tier: 'premium',
     emoji: '🎬',
-  },
-  'kling-1.5-pro': {
-    id: 'kling-1.5-pro',
-    name: 'Kling 1.5 Pro',
-    description: 'High quality, reliable cinematic output',
-    supports: ['text-to-video', 'image-to-video'],
-    duration: '5-10s',
-    tier: 'premium',
-    emoji: '🎥',
   },
   'luma-ray2': {
     id: 'luma-ray2',
@@ -58,15 +49,6 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '6s',
     tier: 'standard',
     emoji: '⚡',
-  },
-  'wan-2.1': {
-    id: 'wan-2.1',
-    name: 'Wan 2.1',
-    description: 'Open source, excellent value',
-    supports: ['text-to-video', 'image-to-video'],
-    duration: '5s',
-    tier: 'standard',
-    emoji: '🌊',
   },
   'ltx-video': {
     id: 'ltx-video',

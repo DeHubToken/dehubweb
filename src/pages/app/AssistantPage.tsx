@@ -240,7 +240,7 @@ export default function AssistantPage() {
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
-  const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-1.6-pro');
+  const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
   const [videoModelSheetOpen, setVideoModelSheetOpen] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
