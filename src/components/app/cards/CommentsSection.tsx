@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { TranslatableText } from '../TranslatableText';
+import { AudioVisualizer } from '../audio';
 
 // ============================================================================
 // TYPES
@@ -623,27 +624,26 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
 
         {/* New Comment Input - at the bottom */}
         <div className="mt-3 pt-3 border-t border-zinc-800">
-          {/* Voice note preview */}
+          {/* Voice note preview with visualizer */}
           {voiceNote && (
-            <div className="flex items-center gap-2 mb-2 bg-zinc-800 rounded-lg px-3 py-2">
-              <button
-                onClick={togglePreviewPlayback}
-                className="w-7 h-7 flex items-center justify-center bg-zinc-700 rounded-full text-white hover:bg-zinc-600 transition-colors"
-              >
-                {isPlayingPreview ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              </button>
-              <div className="flex-1 flex items-center gap-2">
-                <div className="h-1 flex-1 bg-zinc-600 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: '100%' }} />
-                </div>
-                <span className="text-xs text-zinc-400">{voiceNote.duration}s</span>
+            <div className="mb-3 rounded-xl overflow-hidden bg-zinc-800/50">
+              <AudioVisualizer
+                audioUrl={voiceNote.url}
+                isPlaying={isPlayingPreview}
+                onPlayPause={togglePreviewPlayback}
+                className="w-full h-28"
+                showStylePicker={true}
+              />
+              <div className="flex items-center justify-between px-3 py-2 bg-zinc-800/80">
+                <span className="text-xs text-zinc-400">{voiceNote.duration}s voice note</span>
+                <button
+                  onClick={removeVoiceNote}
+                  className="flex items-center gap-1.5 text-red-400 hover:text-red-300 transition-colors text-xs"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Remove
+                </button>
               </div>
-              <button
-                onClick={removeVoiceNote}
-                className="w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-300 transition-colors"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
             </div>
           )}
 
@@ -691,8 +691,8 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
                   canPost && !isRecording
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                    ? "bg-zinc-700 text-white hover:bg-zinc-600"
+                    : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                 )}
               >
                 Post
