@@ -159,6 +159,20 @@ serve(async (req) => {
     const data = await response.json();
     console.log('Image generation response received');
 
+    // Check for PROHIBITED_CONTENT error from Google
+    const choiceError = data.choices?.[0]?.error;
+    if (choiceError?.message === 'PROHIBITED_CONTENT') {
+      console.log('Content blocked by Google safety filter (PROHIBITED_CONTENT)');
+      return new Response(
+        JSON.stringify({ 
+          error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
+          safetyBlocked: true,
+          clearHistory: true // Signal frontend to clear conversation history
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Check for safety filter - return family-friendly message
     const finishReason = data.choices?.[0]?.native_finish_reason || data.choices?.[0]?.finish_reason;
     if (finishReason === 'IMAGE_SAFETY') {
@@ -166,7 +180,8 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
-          safetyBlocked: true 
+          safetyBlocked: true,
+          clearHistory: true
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -197,7 +212,8 @@ serve(async (req) => {
         return new Response(
           JSON.stringify({ 
             error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
-            safetyBlocked: true 
+            safetyBlocked: true,
+            clearHistory: true // Signal frontend to clear conversation history
           }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
