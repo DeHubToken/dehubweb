@@ -662,8 +662,8 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             </div>
           )}
 
-          <div className="flex gap-2">
-            <Avatar className="w-8 h-8">
+          <div className="flex gap-2 pb-4">
+            <Avatar className="w-8 h-8 flex-shrink-0">
               <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser" />
               <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
             </Avatar>
@@ -674,12 +674,18 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                 onChange={(e) => setNewComment(e.target.value)}
                 className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
                 onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
+                onFocus={(e) => {
+                  // Scroll input into view on focus to prevent being hidden behind nav
+                  setTimeout(() => {
+                    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }, 100);
+                }}
                 disabled={isRecording}
               />
               {!isRecording && !voiceNote && (
                 <button
                   onClick={startRecording}
-                  className="w-9 h-9 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
+                  className="w-9 h-9 flex-shrink-0 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
                   aria-label="Record voice note"
                 >
                   <Mic className="w-4 h-4" />
@@ -689,7 +695,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                 onClick={handlePostComment}
                 disabled={!canPost || isRecording}
                 className={cn(
-                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0",
                   canPost && !isRecording
                     ? "bg-zinc-700 text-white hover:bg-zinc-600"
                     : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
