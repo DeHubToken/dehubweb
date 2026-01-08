@@ -79,13 +79,28 @@ serve(async (req) => {
     const data = await response.json();
     console.log('Image generation response received');
 
+    // Check for safety filter
+    const finishReason = data.choices?.[0]?.native_finish_reason || data.choices?.[0]?.finish_reason;
+    if (finishReason === 'IMAGE_SAFETY') {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Your request was blocked by content safety filters. Try rephrasing with different wording.',
+          safetyBlocked: true 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Extract the generated image
     const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     const textResponse = data.choices?.[0]?.message?.content || '';
 
     if (!imageUrl) {
       console.error('No image in response:', JSON.stringify(data).substring(0, 500));
-      throw new Error('No image was generated. Try rephrasing your request.');
+      return new Response(
+        JSON.stringify({ error: 'No image was generated. Try rephrasing your request.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     return new Response(
