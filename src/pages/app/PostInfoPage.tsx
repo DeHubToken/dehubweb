@@ -62,6 +62,9 @@ const generateMockPostInfo = (postId: string) => {
   const shares = Math.floor(likes * ((absHash % 30) + 10) / 100); // 10-40% of likes
   const likeRatio = Math.round((likes / (likes + dislikes)) * 100);
   
+  // Generate ad revenue
+  const adRevenue = ((absHash % 10000) + 500) / 100; // $5.00 - $105.00
+  
   return {
     txHash,
     timestamp,
@@ -71,6 +74,7 @@ const generateMockPostInfo = (postId: string) => {
     dislikes,
     shares,
     likeRatio,
+    adRevenue,
   };
 };
 
@@ -125,6 +129,41 @@ export default function PostInfoPage() {
       
       <div className="h-[calc(100vh-65px)] overflow-y-auto scrollbar-none">
         <div className="p-4 space-y-6">
+          {/* Transaction & Mint Info */}
+          <section className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-4">
+            <div>
+              <h2 className="text-sm font-medium text-white/60 mb-2">Minted On</h2>
+              <div className="space-y-1">
+                <p className="text-white font-medium">{formatDate(postInfo.timestamp)}</p>
+                <p className="text-sm text-white/60">{formatTime(postInfo.timestamp)}</p>
+              </div>
+            </div>
+            <div className="border-t border-white/10 pt-4">
+              <h2 className="text-sm font-medium text-white/60 mb-2">Transaction Hash</h2>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm text-white bg-white/5 p-3 rounded-lg font-mono break-all">
+                  {postInfo.txHash}
+                </code>
+                <button
+                  onClick={() => copyToClipboard(postInfo.txHash, 'Transaction hash')}
+                  className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
+                  aria-label="Copy transaction hash"
+                >
+                  <Copy className="w-4 h-4" />
+                </button>
+                <a
+                  href={`https://etherscan.io/tx/${postInfo.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
+                  aria-label="View on Etherscan"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </section>
+
           {/* Engagement Stats */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
             <h2 className="text-sm font-medium text-white/60 mb-3">Engagement</h2>
@@ -171,38 +210,13 @@ export default function PostInfoPage() {
               </div>
             </div>
           </section>
-          {/* Transaction Hash */}
+
+          {/* Ad Revenue */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h2 className="text-sm font-medium text-white/60 mb-2">Transaction Hash</h2>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 text-sm text-white bg-white/5 p-3 rounded-lg font-mono break-all">
-                {postInfo.txHash}
-              </code>
-              <button
-                onClick={() => copyToClipboard(postInfo.txHash, 'Transaction hash')}
-                className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                aria-label="Copy transaction hash"
-              >
-                <Copy className="w-4 h-4" />
-              </button>
-              <a
-                href={`https://etherscan.io/tx/${postInfo.txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                aria-label="View on Etherscan"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-          </section>
-          
-          {/* Timestamp */}
-          <section className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h2 className="text-sm font-medium text-white/60 mb-2">Minted On</h2>
-            <div className="space-y-1">
-              <p className="text-white font-medium">{formatDate(postInfo.timestamp)}</p>
-              <p className="text-sm text-white/60">{formatTime(postInfo.timestamp)}</p>
+            <h2 className="text-sm font-medium text-white/60 mb-3">Ad Revenue</h2>
+            <div className="bg-white/5 rounded-lg p-3">
+              <p className="text-2xl font-bold text-white">${postInfo.adRevenue.toFixed(2)}</p>
+              <p className="text-xs text-white/60">Total revenue generated</p>
             </div>
           </section>
           
