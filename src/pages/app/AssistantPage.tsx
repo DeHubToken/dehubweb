@@ -245,12 +245,16 @@ export default function AssistantPage() {
 
         if (error) throw error;
         
-        // Check for error in response (like safety blocks)
+        // Check for error in response (like safety blocks or content refusals)
         if (data.error) {
+          const errorMessage = data.safetyBlocked 
+            ? "This content can't be generated on DeHub - we're a family-friendly platform! Try something else 🎨"
+            : data.error;
+          
           setMessages(prev => [...prev, {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: data.error
+            content: errorMessage
           }]);
           return;
         }

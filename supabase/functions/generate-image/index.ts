@@ -178,8 +178,36 @@ serve(async (req) => {
 
     if (!imageUrl) {
       console.error('No image in response:', JSON.stringify(data).substring(0, 500));
+      
+      // Check if AI refused due to content policy
+      const refusalPhrases = [
+        'cannot create', 'cannot fulfill', 'cannot generate', 'cannot provide',
+        'i cannot', "i'm unable", 'not able to', 'inappropriate', 
+        'sexually explicit', 'harmful', 'cannot make', 'unable to create',
+        'cannot produce', 'refuse', 'not appropriate'
+      ];
+      
+      const lowerTextResponse = textResponse.toLowerCase();
+      const isContentRefusal = refusalPhrases.some(phrase => 
+        lowerTextResponse.includes(phrase)
+      );
+      
+      if (isContentRefusal) {
+        console.log('Content refusal detected in AI response');
+        return new Response(
+          JSON.stringify({ 
+            error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
+            safetyBlocked: true 
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      // For other failures, return the AI's response or a generic message
       return new Response(
-        JSON.stringify({ error: 'No image was generated. Try rephrasing your request.' }),
+        JSON.stringify({ 
+          error: textResponse || 'Could not generate image. Try a different description.',
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
