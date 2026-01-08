@@ -24,24 +24,25 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    // Use Gemini with Google Search grounding for real-time web search
-    const systemPrompt = `You are a helpful AI assistant with real-time web search capabilities. You can search the web to find current information, news, and up-to-date data.
+    // Use Gemini Pro for better knowledge-based responses
+    const systemPrompt = `You are a knowledgeable AI assistant that provides informative answers on current events, news, and general knowledge topics.
 
-When answering:
-1. Provide accurate, current information from web sources
-2. Include relevant details and context
-3. If you find multiple sources, synthesize the information
-4. For news queries, prioritize recent articles
-5. Always be helpful and conversational
+Your knowledge includes information up to your training cutoff. When answering:
 
-Format your responses clearly with:
-- Bold headers for sections (**Header**)
-- Bullet points for lists
-- Links when referencing sources
+1. **For news/current events queries**: Provide context about ongoing topics, recent developments you're aware of, and relevant background information. Be clear about what you know.
 
-IMPORTANT: Keep responses under 1200 words to avoid cutoffs.`;
+2. **For factual queries**: Give accurate, well-structured answers with relevant details.
 
-    // Use Gemini 2.5 Pro which has better grounding/search capabilities
+3. **For trending topics**: Share what you know about popular subjects, viral content, and cultural moments.
+
+**Formatting Guidelines:**
+- Use **bold** for key terms and headlines
+- Use bullet points for lists
+- Keep responses informative but concise
+- If you don't have specific real-time data, provide useful context or suggest how users can find current info
+
+**Important**: You don't have live internet access, but you have extensive knowledge. Be helpful and informative based on what you know. Don't apologize unnecessarily - just provide value.`;
+
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -49,32 +50,13 @@ IMPORTANT: Keep responses under 1200 words to avoid cutoffs.`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-2.5-pro',
         messages: [
           { role: 'system', content: systemPrompt },
-          ...messages,
-          { 
-            role: 'user', 
-            content: `Search the web and answer this query with current, up-to-date information: ${query}`
-          }
+          ...messages.slice(-6), // Keep last 6 messages for context
+          { role: 'user', content: query }
         ],
         max_completion_tokens: 1500,
-        // Enable Google Search grounding for real-time web results
-        tools: [{
-          type: 'function',
-          function: {
-            name: 'google_search',
-            description: 'Search Google for real-time information',
-            parameters: {
-              type: 'object',
-              properties: {
-                query: { type: 'string', description: 'Search query' }
-              },
-              required: ['query']
-            }
-          }
-        }],
-        tool_choice: 'auto'
       }),
     });
 
@@ -99,9 +81,20 @@ IMPORTANT: Keep responses under 1200 words to avoid cutoffs.`;
     }
 
     const data = await response.json();
-    console.log('AI response data:', JSON.stringify(data, null, 2));
+    console.log('AI response received, finish_reason:', data.choices?.[0]?.finish_reason);
     
-    const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t find relevant information for your query.';
+    const aiResponse = data.choices?.[0]?.message?.content;
+    
+    if (!aiResponse) {
+      console.error('Empty response from AI:', JSON.stringify(data));
+      return new Response(
+        JSON.stringify({ 
+          response: "I couldn't generate a response. Please try rephrasing your question.",
+          isSearchResult: true 
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     return new Response(
       JSON.stringify({ 
