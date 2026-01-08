@@ -665,10 +665,31 @@ const MOCK_OFFERS_MADE = [
   { handle: '@vip', amount: 4500, status: 'pending', date: '2025-01-07' },
 ];
 
-const MOCK_NFT_FRACTIONS = [
-  { name: 'CryptoPunk #7804', fraction: 2.5, totalValue: 125000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=punk1' },
-  { name: 'Bored Ape #3429', fraction: 0.8, totalValue: 85000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=ape1' },
-  { name: 'Azuki #9021', fraction: 5.0, totalValue: 42000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=azuki1' },
+const MOCK_FRACTIONS = [
+  { 
+    id: 'image-1',
+    creator: 'travel_adventures',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
+    caption: 'Exploring the mountains 🏔️',
+    fraction: 2.5, 
+    totalValue: 12500 
+  },
+  { 
+    id: 'image-3',
+    creator: 'urban_explorer',
+    image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&h=600&fit=crop',
+    caption: 'City lights never get old ✨',
+    fraction: 0.8, 
+    totalValue: 8500 
+  },
+  { 
+    id: 'image-9',
+    creator: 'sunset_lover',
+    image: 'https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=600&h=600&fit=crop',
+    caption: 'Golden hour magic 🌅',
+    fraction: 5.0, 
+    totalValue: 4200 
+  },
 ];
 
 const MOCK_WALLET_ADDRESS = '0x7a3B...F92d8E4c1Ab7';
@@ -740,35 +761,35 @@ function AssetsSettings() {
         </button>
       </div>
 
-      {/* NFT Fractions */}
+      {/* Fractions */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <PieChart className="w-4 h-4" />
-          NFT Fractions You Own
+          Fractions You Own
         </h3>
         <div className="space-y-3">
-          {MOCK_NFT_FRACTIONS.map((nft, idx) => (
-            <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+          {MOCK_FRACTIONS.map((post) => (
+            <div key={post.id} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
               <div className="flex items-center gap-3">
                 <img 
-                  src={nft.image} 
-                  alt={nft.name} 
-                  className="w-12 h-12 rounded-lg bg-zinc-700"
+                  src={post.image} 
+                  alt={post.caption} 
+                  className="w-12 h-12 rounded-lg bg-zinc-700 object-cover"
                 />
                 <div>
-                  <p className="text-white font-medium">{nft.name}</p>
-                  <p className="text-zinc-500 text-sm">{nft.fraction}% ownership</p>
+                  <p className="text-white font-medium text-sm line-clamp-1">{post.caption}</p>
+                  <p className="text-zinc-500 text-sm">@{post.creator} · {post.fraction}% ownership</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-white font-medium">${((nft.totalValue * nft.fraction) / 100).toLocaleString()}</p>
-                <p className="text-zinc-500 text-sm">of ${nft.totalValue.toLocaleString()}</p>
+                <p className="text-white font-medium">${((post.totalValue * post.fraction) / 100).toLocaleString()}</p>
+                <p className="text-zinc-500 text-sm">of ${post.totalValue.toLocaleString()}</p>
               </div>
             </div>
           ))}
-          {MOCK_NFT_FRACTIONS.length === 0 && (
+          {MOCK_FRACTIONS.length === 0 && (
             <div className="text-center py-8 text-zinc-500">
-              You don't own any NFT fractions yet
+              You don't own any fractions yet
             </div>
           )}
         </div>
