@@ -6,14 +6,14 @@ import {
   drawBars,
   drawWaveform,
   drawCircular,
-  drawParticles,
+  drawSpectrum,
   drawMirror,
   drawRings,
-  drawStarfield,
+  drawPulse,
   drawTerrain,
-  resetParticles,
+  resetSpectrum,
   resetRings,
-  resetStarfield,
+  resetPulse,
   resetTerrain,
 } from './visualizer-styles';
 
@@ -29,10 +29,10 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'bars', label: 'Bars' },
   { value: 'waveform', label: 'Wave' },
   { value: 'circular', label: 'Radial' },
-  { value: 'particles', label: 'Burst' },
+  { value: 'spectrum', label: 'Spectrum' },
   { value: 'mirror', label: 'Mirror' },
   { value: 'rings', label: 'Rings' },
-  { value: 'starfield', label: 'Stars' },
+  { value: 'pulse', label: 'Pulse' },
   { value: 'terrain', label: 'Terrain' },
 ];
 
@@ -112,8 +112,8 @@ export function AudioVisualizer({
       case 'circular':
         drawCircular(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
-      case 'particles':
-        drawParticles(ctx, frequencyData, canvas.width, canvas.height, hue);
+      case 'spectrum':
+        drawSpectrum(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
       case 'mirror':
         drawMirror(ctx, frequencyData, canvas.width, canvas.height, hue);
@@ -121,8 +121,8 @@ export function AudioVisualizer({
       case 'rings':
         drawRings(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
-      case 'starfield':
-        drawStarfield(ctx, frequencyData, canvas.width, canvas.height, hue);
+      case 'pulse':
+        drawPulse(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
       case 'terrain':
         drawTerrain(ctx, frequencyData, canvas.width, canvas.height, hue);
@@ -154,9 +154,9 @@ export function AudioVisualizer({
 
   useEffect(() => {
     // Reset visualizer state when switching styles
-    resetParticles();
+    resetSpectrum();
     resetRings();
-    resetStarfield();
+    resetPulse();
     resetTerrain();
   }, [style]);
 
@@ -171,9 +171,9 @@ export function AudioVisualizer({
       }
       // Don't close AudioContext as it may be reused
       isConnectedRef.current = false;
-      resetParticles();
+      resetSpectrum();
       resetRings();
-      resetStarfield();
+      resetPulse();
       resetTerrain();
     };
   }, []);
