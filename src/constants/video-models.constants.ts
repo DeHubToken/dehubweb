@@ -59,15 +59,6 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     tier: 'fast',
     emoji: '💨',
   },
-  'hunyuan-video': {
-    id: 'hunyuan-video',
-    name: 'Hunyuan Video',
-    description: 'Creative artistic style',
-    supports: ['text-to-video'],
-    duration: '5s',
-    tier: 'standard',
-    emoji: '🎨',
-  },
 };
 
 export const VIDEO_MODEL_OPTIONS = Object.values(VIDEO_MODELS);

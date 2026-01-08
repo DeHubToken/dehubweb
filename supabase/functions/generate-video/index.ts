@@ -50,14 +50,6 @@ const VIDEO_MODELS = {
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s',
   },
-  // Hunyuan - Chinese model, creative
-  'hunyuan-video': {
-    id: 'tencent/hunyuan-video',
-    name: 'Hunyuan Video',
-    description: 'Creative and artistic style',
-    supports: ['text-to-video'],
-    duration: '5s',
-  },
 } as const;
 
 type ModelKey = keyof typeof VIDEO_MODELS;
@@ -191,11 +183,6 @@ serve(async (req) => {
         };
         break;
 
-      case 'hunyuan-video':
-        input = {
-          prompt,
-        };
-        break;
 
       default:
         input = { prompt };
