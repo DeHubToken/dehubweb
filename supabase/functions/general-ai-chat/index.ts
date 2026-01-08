@@ -33,6 +33,63 @@ const PERSONALITY_STYLES: Record<string, string> = {
   'hopeless-romantic': 'Speak like a hopeless romantic - dreamy, poetic, with flowery language and metaphors about love and destiny.',
 };
 
+// Keywords that indicate user wants live/current information
+const LIVE_SEARCH_KEYWORDS = [
+  'news', 'today', 'latest', 'current', 'now', 'recent', 'breaking',
+  'happening', 'update', 'live', 'real-time', 'realtime', 'right now',
+  'this week', 'this month', 'yesterday', 'tonight', 'morning',
+  'price', 'stock', 'market', 'weather', 'score', 'game',
+  'trending', 'viral', 'new release', 'just announced', 'just released',
+  'election', 'vote', 'poll', 'results', '2025', '2026',
+  'what happened', 'whats happening', "what's happening", 'did you hear',
+  'search for', 'look up', 'find me', 'google', 'search the web'
+];
+
+function requiresWebSearch(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
+async function searchWithPerplexity(query: string, perplexityKey: string): Promise<string> {
+  console.log('Searching with Perplexity:', query);
+  
+  const response = await fetch('https://api.perplexity.ai/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${perplexityKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'sonar',
+      messages: [
+        { role: 'system', content: 'Be precise and concise. Provide current, accurate information with sources when relevant.' },
+        { role: 'user', content: query }
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Perplexity API error:', response.status, errorText);
+    throw new Error(`Perplexity API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const content = data.choices?.[0]?.message?.content || '';
+  const citations = data.citations || [];
+  
+  // Format response with citations if available
+  let formattedResponse = content;
+  if (citations.length > 0) {
+    formattedResponse += '\n\n**Sources:**\n';
+    citations.slice(0, 5).forEach((url: string, i: number) => {
+      formattedResponse += `- [Source ${i + 1}](${url})\n`;
+    });
+  }
+  
+  return formattedResponse;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -42,10 +99,35 @@ serve(async (req) => {
     const { messages, style = 'normal' } = await req.json() as { messages: Message[]; style?: string };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
+    
     if (!lovableApiKey) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
+    // Get the latest user message
+    const latestUserMessage = messages.filter(m => m.role === 'user').pop();
+    const userQuery = latestUserMessage?.content || '';
+    
+    // Check if this query needs web search
+    const needsSearch = requiresWebSearch(userQuery);
+    console.log('Query:', userQuery, '| Needs search:', needsSearch, '| Has Perplexity key:', !!perplexityKey);
+
+    // If web search is needed and Perplexity is configured, use it
+    if (needsSearch && perplexityKey) {
+      try {
+        const searchResult = await searchWithPerplexity(userQuery, perplexityKey);
+        return new Response(
+          JSON.stringify({ response: searchResult, searchUsed: true }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (searchError) {
+        console.error('Perplexity search failed, falling back to regular AI:', searchError);
+        // Fall through to regular AI if search fails
+      }
+    }
+
+    // Regular AI response (DeHub knowledge + general)
     const personalityModifier = PERSONALITY_STYLES[style] || '';
     const basePrompt = `You are the official AI assistant for DeHub - a decentralised, user-owned social media platform and alternative to legacy apps like YouTube, X, Rumble, Twitch, and Patreon.
 
@@ -142,6 +224,8 @@ When users ask about buying DHB, direct them to PancakeSwap (BSC) or Uniswap (Ba
 When users ask about the team, share the founder backgrounds - it builds trust.
 When users ask about legitimacy, mention the 2021 origins, UK company registration, and First Class agency credentials.
 
+${needsSearch && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Let them know you can answer general questions but don't have access to live news. Suggest they ask about DeHub or other topics you can help with.` : ''}
+
 IMPORTANT: Always keep your responses under 1400 words to ensure they never get cut off.`;
     
     const systemPrompt = personalityModifier 
@@ -188,7 +272,7 @@ IMPORTANT: Always keep your responses under 1400 words to ensure they never get 
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t generate a response.';
 
     return new Response(
-      JSON.stringify({ response: aiResponse }),
+      JSON.stringify({ response: aiResponse, searchUsed: false }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
