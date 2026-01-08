@@ -400,49 +400,54 @@ export default function AssistantPage() {
                 exit={{ opacity: 0 }}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-white/10 text-white'
-                  }`}
-                >
-                  {/* Show attached image for user messages */}
-                  {message.attachedImage && (
-                    <div className="mb-2">
-                      <img 
-                        src={message.attachedImage} 
-                        alt="Attached" 
-                        className="max-w-full max-h-48 rounded-lg object-contain"
-                      />
-                    </div>
-                  )}
-                  {message.role === 'assistant' ? (
-                    <>
+                {message.role === 'assistant' && message.imageUrl ? (
+                  /* Image-only messages - no bubble wrapper */
+                  <div className="max-w-[85%] flex flex-col gap-2">
+                    {message.content && (
+                      <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                        <MarkdownText content={message.content} className="text-sm" />
+                      </div>
+                    )}
+                    <img 
+                      src={message.imageUrl} 
+                      alt="Generated" 
+                      className="max-w-full rounded-lg"
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() => handlePostImage(message.imageUrl!)}
+                      className="w-full gap-2 rounded-full"
+                    >
+                      <Share className="w-4 h-4" />
+                      Post
+                    </Button>
+                  </div>
+                ) : (
+                  /* Text messages - with bubble wrapper */
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
+                      message.role === 'user'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-white/10 text-white'
+                    }`}
+                  >
+                    {/* Show attached image for user messages */}
+                    {message.attachedImage && (
+                      <div className="mb-2">
+                        <img 
+                          src={message.attachedImage} 
+                          alt="Attached" 
+                          className="max-w-full max-h-48 rounded-lg object-contain"
+                        />
+                      </div>
+                    )}
+                    {message.role === 'assistant' ? (
                       <MarkdownText content={message.content} className="text-sm" />
-                      {/* Show generated image for assistant messages */}
-                      {message.imageUrl && (
-                        <>
-                          <img 
-                            src={message.imageUrl} 
-                            alt="Generated" 
-                            className="max-w-full rounded-lg mt-2"
-                          />
-                          <Button
-                            size="sm"
-                            onClick={() => handlePostImage(message.imageUrl!)}
-                            className="w-full gap-2 rounded-full mt-2"
-                          >
-                            <Share className="w-4 h-4" />
-                            Post
-                          </Button>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  )}
-                </div>
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    )}
+                  </div>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
