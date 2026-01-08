@@ -5,8 +5,6 @@ import { usePostForm } from './hooks/usePostForm';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
-import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard';
-import { cn } from '@/lib/utils';
 
 interface PostModalProps {
   isOpen: boolean;
@@ -17,7 +15,6 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
-  const isKeyboardOpen = useMobileKeyboard();
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
@@ -51,7 +48,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         hasVideo={computed.hasVideo}
         hasImage={computed.hasImage}
         onFileDrop={actions.handleFileDrop}
-        isKeyboardOpen={isKeyboardOpen}
       />
 
       <PostAccessToggles
@@ -104,14 +100,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
     <Drawer open={isOpen} onOpenChange={handleClose}>
-      <DrawerContent 
-        glass 
-        className={cn(
-          "max-h-[90vh] transition-all duration-200",
-          // When keyboard is open on mobile, go full screen
-          isKeyboardOpen && "!max-h-[100vh] !h-[100vh] !rounded-none !mt-0"
-        )}
-      >
+      <DrawerContent glass className="max-h-[90vh]">
         <VisuallyHidden>
           <DrawerTitle>Create a post</DrawerTitle>
         </VisuallyHidden>

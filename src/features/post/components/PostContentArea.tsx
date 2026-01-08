@@ -24,7 +24,6 @@ interface PostContentAreaProps {
   hasVideo: boolean;
   hasImage: boolean;
   onFileDrop: (files: FileList) => void;
-  isKeyboardOpen?: boolean;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -64,7 +63,6 @@ export function PostContentArea({
   hasVideo,
   hasImage,
   onFileDrop,
-  isKeyboardOpen = false,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -339,12 +337,7 @@ export function PostContentArea({
 
   return (
     <div 
-      className={cn(
-        "p-4 relative transition-all duration-200",
-        isKeyboardOpen 
-          ? "flex-1 overflow-y-auto" 
-          : "max-h-[60vh] overflow-y-auto"
-      )}
+      className="p-4 max-h-[60vh] overflow-y-auto relative"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
