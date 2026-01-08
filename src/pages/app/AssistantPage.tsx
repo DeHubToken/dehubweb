@@ -9,7 +9,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Share } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -17,6 +17,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
+import { PostModal } from '@/features/post';
 
 interface Message {
   id: string;
@@ -51,6 +52,8 @@ export default function AssistantPage() {
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
+  const [postModalOpen, setPostModalOpen] = useState(false);
+  const [postModalFiles, setPostModalFiles] = useState<FileList | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -194,6 +197,25 @@ export default function AssistantPage() {
     setStyleSheetOpen(false);
   };
 
+  // Convert base64 image to FileList for PostModal
+  const handlePostImage = async (imageUrl: string) => {
+    try {
+      // Extract base64 data
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], 'ai-generated-image.png', { type: 'image/png' });
+      
+      // Create a DataTransfer to build FileList
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      
+      setPostModalFiles(dataTransfer.files);
+      setPostModalOpen(true);
+    } catch (error) {
+      console.error('Error preparing image for post:', error);
+    }
+  };
+
   // Style options content - same pattern as PostActionBar enhance menu
   const styleMenuContent = (
     <div className="h-[50vh] overflow-y-auto">
@@ -289,12 +311,20 @@ export default function AssistantPage() {
                       <MarkdownText content={message.content} className="text-sm" />
                       {/* Show generated image for assistant messages */}
                       {message.imageUrl && (
-                        <div className="mt-2">
+                        <div className="mt-2 space-y-2">
                           <img 
                             src={message.imageUrl} 
                             alt="Generated" 
                             className="max-w-full rounded-lg"
                           />
+                          <Button
+                            size="sm"
+                            onClick={() => handlePostImage(message.imageUrl!)}
+                            className="w-full gap-2 rounded-full"
+                          >
+                            <Share className="w-4 h-4" />
+                            Post
+                          </Button>
                         </div>
                       )}
                     </>
@@ -391,6 +421,14 @@ export default function AssistantPage() {
           </Button>
         </div>
       </div>
+
+      {/* Post Modal */}
+      <PostModal
+        isOpen={postModalOpen}
+        onClose={() => setPostModalOpen(false)}
+        initialFiles={postModalFiles}
+        onFilesProcessed={() => setPostModalFiles(null)}
+      />
     </div>
   );
 }

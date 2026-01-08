@@ -8,7 +8,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Sparkles, Loader2, ImageIcon } from 'lucide-react';
+import { X, Send, Sparkles, Loader2, ImageIcon, Share } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -17,6 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
+import { PostModal } from '@/features/post';
 
 interface Message {
   id: string;
@@ -54,6 +55,8 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
+  const [postModalOpen, setPostModalOpen] = useState(false);
+  const [postModalFiles, setPostModalFiles] = useState<FileList | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -190,6 +193,23 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
     onClose();
   };
 
+  // Convert base64 image to FileList for PostModal
+  const handlePostImage = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], 'ai-generated-image.png', { type: 'image/png' });
+      
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      
+      setPostModalFiles(dataTransfer.files);
+      setPostModalOpen(true);
+    } catch (error) {
+      console.error('Error preparing image for post:', error);
+    }
+  };
+
   const chatContent = (
     <div className="flex flex-col h-full">
       {/* Messages */}
@@ -226,12 +246,20 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                       <MarkdownText content={message.content} className="text-sm" />
                       {/* Show generated image for assistant messages */}
                       {message.imageUrl && (
-                        <div className="mt-2">
+                        <div className="mt-2 space-y-2">
                           <img 
                             src={message.imageUrl} 
                             alt="Generated" 
                             className="max-w-full rounded-lg"
                           />
+                          <Button
+                            size="sm"
+                            onClick={() => handlePostImage(message.imageUrl!)}
+                            className="w-full gap-2 rounded-full"
+                          >
+                            <Share className="w-4 h-4" />
+                            Post
+                          </Button>
                         </div>
                       )}
                     </>
@@ -320,43 +348,61 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-        <DrawerContent glass className="h-[85vh]">
-          <DrawerHeader className="border-b border-white/10 pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-white" />
-                <DrawerTitle className="text-white">AI Assistant</DrawerTitle>
+      <>
+        <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+          <DrawerContent glass className="h-[85vh]">
+            <DrawerHeader className="border-b border-white/10 pb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-white" />
+                  <DrawerTitle className="text-white">AI Assistant</DrawerTitle>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClose}
+                  className="text-white/60 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClose}
-                className="text-white/60 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
-          </DrawerHeader>
-          {chatContent}
-        </DrawerContent>
-      </Drawer>
+            </DrawerHeader>
+            {chatContent}
+          </DrawerContent>
+        </Drawer>
+
+        <PostModal
+          isOpen={postModalOpen}
+          onClose={() => setPostModalOpen(false)}
+          initialFiles={postModalFiles}
+          onFilesProcessed={() => setPostModalFiles(null)}
+        />
+      </>
     );
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-lg h-[600px] p-0 bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl flex flex-col">
-        <DialogHeader className="p-4 border-b border-white/10 shrink-0">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-white" />
-            <DialogTitle className="text-white">AI Assistant</DialogTitle>
+    <>
+      <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+        <DialogContent className="max-w-lg h-[600px] p-0 bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl flex flex-col">
+          <DialogHeader className="p-4 border-b border-white/10 shrink-0">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-white" />
+              <DialogTitle className="text-white">AI Assistant</DialogTitle>
+            </div>
+          </DialogHeader>
+          <div className="flex-1 overflow-hidden">
+            {chatContent}
           </div>
-        </DialogHeader>
-        <div className="flex-1 overflow-hidden">
-          {chatContent}
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      <PostModal
+        isOpen={postModalOpen}
+        onClose={() => setPostModalOpen(false)}
+        initialFiles={postModalFiles}
+        onFilesProcessed={() => setPostModalFiles(null)}
+      />
+    </>
   );
 }
