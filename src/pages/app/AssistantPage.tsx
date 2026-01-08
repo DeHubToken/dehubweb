@@ -15,28 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
-
-const STYLE_OPTIONS = [
-  { id: 'normal', label: 'Normal', emoji: '🤖' },
-  { id: 'old-english', label: 'Old English', emoji: '🏰' },
-  { id: 'cockney', label: 'Cockney', emoji: '🎩' },
-  { id: 'celtic', label: 'Celtic', emoji: '☘️' },
-  { id: 'scouse', label: 'Scouse', emoji: '⚽' },
-  { id: 'wild-west', label: 'Wild West', emoji: '🤠' },
-  { id: 'asian-uncle', label: 'Asian Uncle', emoji: '👴' },
-  { id: 'russian-mafia', label: 'Russian Mafia', emoji: '🎰' },
-  { id: 'pirate', label: 'Pirate', emoji: '🏴‍☠️' },
-  { id: 'alien', label: 'Alien', emoji: '👽' },
-  { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
-  { id: 'chad', label: 'Chad', emoji: '💪' },
-  { id: 'hopeless-romantic', label: 'Hopeless Romantic', emoji: '💕' },
-  { id: 'daddy', label: 'Daddy', emoji: '👨' },
-  { id: 'mommy', label: 'Mommy', emoji: '👩' },
-  { id: 'big-brother', label: 'Big Brother', emoji: '🧑' },
-  { id: 'lil-bro', label: 'Lil Bro', emoji: '👦' },
-  { id: 'big-sister', label: 'Big Sister', emoji: '👧' },
-  { id: 'little-sister', label: 'Little Sister', emoji: '👶' },
-] as const;
+import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 
 interface Message {
   id: string;
@@ -54,7 +33,7 @@ export default function AssistantPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentStyle = STYLE_OPTIONS.find(s => s.id === selectedStyle) || STYLE_OPTIONS[0];
+  const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
 
   // Generate initial welcome message
   useEffect(() => {
@@ -143,7 +122,7 @@ export default function AssistantPage() {
   const styleMenuContent = (
     <div className="h-[50vh] overflow-y-auto">
       <div className="flex flex-col pb-4">
-        {STYLE_OPTIONS.map((style) => (
+        {AI_ASSISTANT_STYLE_OPTIONS.map((style) => (
           <button
             key={style.id}
             type="button"

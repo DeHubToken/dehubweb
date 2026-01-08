@@ -6,22 +6,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
+import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import type { LiveMode } from '../types';
-
-const STYLE_OPTIONS = [
-  { id: 'old-english', label: 'Old English', emoji: '🏰' },
-  { id: 'cockney', label: 'Cockney', emoji: '🎩' },
-  { id: 'celtic', label: 'Celtic', emoji: '☘️' },
-  { id: 'scouse', label: 'Scouse', emoji: '⚽' },
-  { id: 'wild-west', label: 'Wild West', emoji: '🤠' },
-  { id: 'asian-uncle', label: 'Asian Uncle', emoji: '👴' },
-  { id: 'russian-mafia', label: 'Russian Mafia', emoji: '🎰' },
-  { id: 'pirate', label: 'Pirate', emoji: '🏴‍☠️' },
-  { id: 'alien', label: 'Alien', emoji: '👽' },
-  { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
-  { id: 'chad', label: 'Chad', emoji: '💪' },
-  { id: 'hopeless-romantic', label: 'Hopeless Romantic', emoji: '💕' },
-] as const;
 
 interface PostActionBarProps {
   imageInputRef: React.RefObject<HTMLInputElement>;
@@ -96,7 +82,7 @@ export function PostActionBar({
     <div className="flex flex-col">
       {styleView ? (
         <>
-          {STYLE_OPTIONS.map((style) => (
+          {AI_STYLE_OPTIONS.map((style) => (
             <button
               key={style.id}
               type="button"

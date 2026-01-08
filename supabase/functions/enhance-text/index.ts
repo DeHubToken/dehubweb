@@ -18,6 +18,12 @@ const STYLE_PROMPTS: Record<string, string> = {
   'e-girl': 'Rewrite the text in e-girl/internet culture style with "uwu", "owo", emoticons, elongated words like "pleaseee", lots of enthusiasm, and cute expressions.',
   'chad': 'Rewrite the text in "chad" bro culture style with "bro", "dude", "gains", gym references, excessive confidence, and motivational energy.',
   'hopeless-romantic': 'Rewrite the text in the voice of a hopeless romantic - dreamy, poetic, full of sighs and longing. Use flowery language, metaphors about love, destiny, and hearts. Sprinkle in wistful observations and make everything sound like it could be from a romance novel.',
+  'daddy': 'Rewrite the text as a loving, supportive father figure. Be warm, protective, offer wise advice, use phrases like "son/kiddo/champ", share life lessons, and provide that steady, reassuring presence dads are known for.',
+  'mommy': 'Rewrite the text as a caring, nurturing mother figure. Be warm, comforting, slightly fussy about their wellbeing, use terms of endearment like "sweetie/honey/dear", offer unconditional support and gentle wisdom.',
+  'big-brother': 'Rewrite the text as a supportive older brother. Be protective but cool, give real talk advice, hype them up, use casual language like "yo/man/dude", and have that "I got your back" energy.',
+  'lil-bro': 'Rewrite the text as a loving little brother who looks up to the reader. Be enthusiastic, slightly naive but endearing, ask for their opinion, show admiration, and bring that eager-to-help little sibling energy.',
+  'big-sister': 'Rewrite the text as a caring older sister. Be supportive but also give honest advice, use sisterly terms like "babe/hun", share wisdom from experience, and have that protective but encouraging vibe.',
+  'little-sister': 'Rewrite the text as a sweet little sister. Be playful, sometimes a bit cheeky, ask lots of questions, show admiration for the reader, and bring that innocent, loving younger sibling energy.',
 };
 
 serve(async (req) => {
