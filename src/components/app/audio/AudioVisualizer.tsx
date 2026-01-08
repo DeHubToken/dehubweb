@@ -1,12 +1,20 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Palette } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 import {
   VisualizerStyle,
   drawBars,
   drawWaveform,
   drawCircular,
   drawParticles,
+  drawMirror,
+  drawRings,
+  drawStarfield,
+  drawTerrain,
   resetParticles,
+  resetRings,
+  resetStarfield,
+  resetTerrain,
 } from './visualizer-styles';
 
 interface AudioVisualizerProps {
@@ -22,6 +30,10 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
   { value: 'waveform', label: 'Wave' },
   { value: 'circular', label: 'Radial' },
   { value: 'particles', label: 'Burst' },
+  { value: 'mirror', label: 'Mirror' },
+  { value: 'rings', label: 'Rings' },
+  { value: 'starfield', label: 'Stars' },
+  { value: 'terrain', label: 'Terrain' },
 ];
 
 export function AudioVisualizer({
@@ -40,6 +52,7 @@ export function AudioVisualizer({
   const isConnectedRef = useRef(false);
   
   const [style, setStyle] = useState<VisualizerStyle>('bars');
+  const [hue, setHue] = useState(260); // Default purple
   const [isInitialized, setIsInitialized] = useState(false);
 
   const setupAudio = useCallback(() => {
@@ -91,21 +104,33 @@ export function AudioVisualizer({
 
     switch (style) {
       case 'bars':
-        drawBars(ctx, frequencyData, canvas.width, canvas.height);
+        drawBars(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
       case 'waveform':
-        drawWaveform(ctx, timeData, canvas.width, canvas.height);
+        drawWaveform(ctx, timeData, canvas.width, canvas.height, hue);
         break;
       case 'circular':
-        drawCircular(ctx, frequencyData, canvas.width, canvas.height);
+        drawCircular(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
       case 'particles':
-        drawParticles(ctx, frequencyData, canvas.width, canvas.height);
+        drawParticles(ctx, frequencyData, canvas.width, canvas.height, hue);
+        break;
+      case 'mirror':
+        drawMirror(ctx, frequencyData, canvas.width, canvas.height, hue);
+        break;
+      case 'rings':
+        drawRings(ctx, frequencyData, canvas.width, canvas.height, hue);
+        break;
+      case 'starfield':
+        drawStarfield(ctx, frequencyData, canvas.width, canvas.height, hue);
+        break;
+      case 'terrain':
+        drawTerrain(ctx, frequencyData, canvas.width, canvas.height, hue);
         break;
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style]);
+  }, [style, hue]);
 
   useEffect(() => {
     if (isPlaying && !isInitialized) {
@@ -128,9 +153,11 @@ export function AudioVisualizer({
   }, [isPlaying, draw]);
 
   useEffect(() => {
-    if (style !== 'particles') {
-      resetParticles();
-    }
+    // Reset visualizer state when switching styles
+    resetParticles();
+    resetRings();
+    resetStarfield();
+    resetTerrain();
   }, [style]);
 
   useEffect(() => {
@@ -145,6 +172,9 @@ export function AudioVisualizer({
       // Don't close AudioContext as it may be reused
       isConnectedRef.current = false;
       resetParticles();
+      resetRings();
+      resetStarfield();
+      resetTerrain();
     };
   }, []);
 
@@ -171,26 +201,52 @@ export function AudioVisualizer({
         onClick={onPlayPause}
       />
 
-      {/* Style picker */}
+      {/* Controls overlay */}
       {showStylePicker && (
-        <div className="absolute bottom-2 right-2 flex gap-1">
-          {STYLES.map((s) => (
-            <button
-              key={s.value}
-              onClick={(e) => {
-                e.stopPropagation();
-                setStyle(s.value);
+        <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between gap-2">
+          {/* Color slider */}
+          <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
+            <Palette className="w-3.5 h-3.5 text-white/60" />
+            <div 
+              className="w-16 h-2 rounded-full relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))'
               }}
-              className={`px-2 py-1 text-[10px] font-medium rounded-full transition-all
-                ${
-                  style === s.value
-                    ? 'bg-white/30 text-white border border-white/40'
-                    : 'bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80 border border-white/10'
-                }`}
             >
-              {s.label}
-            </button>
-          ))}
+              <Slider
+                value={[hue]}
+                min={0}
+                max={360}
+                step={1}
+                onValueChange={(value) => setHue(value[0])}
+                className="absolute inset-0 w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:-top-0.5 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-md [&_.relative]:bg-transparent [&_[data-orientation=horizontal]]:h-2 [&_[class*=Range]]:bg-transparent"
+                style={{ 
+                  ['--thumb-color' as any]: `hsl(${hue}, 80%, 60%)` 
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Style picker */}
+          <div className="flex gap-1 overflow-x-auto scrollbar-none">
+            {STYLES.map((s) => (
+              <button
+                key={s.value}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setStyle(s.value);
+                }}
+                className={`px-2 py-1 text-[10px] font-medium rounded-full transition-all whitespace-nowrap
+                  ${
+                    style === s.value
+                      ? 'bg-white/30 text-white border border-white/40'
+                      : 'bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80 border border-white/10'
+                  }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
