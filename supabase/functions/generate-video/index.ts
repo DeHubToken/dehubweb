@@ -9,18 +9,11 @@ const corsHeaders = {
 
 // Premium video generation models via Replicate
 const VIDEO_MODELS = {
-  // Kling - Best for cinematic quality
-  'kling-1.6-pro': {
-    id: 'kwaivgi/kling-video:3dab041a-35b2-4929-8576-1e1ba0ddad5c',
-    name: 'Kling 1.6 Pro',
-    description: 'Best cinematic quality, professional-grade videos',
-    supports: ['text-to-video', 'image-to-video'],
-    duration: '5s or 10s',
-  },
-  'kling-1.5-pro': {
-    id: 'kwaivgi/kling-video:52a80dc5-f413-46b0-8189-e1bb7d797497',
-    name: 'Kling 1.5 Pro',
-    description: 'High quality, reliable cinematic output',
+  // Kling 2.6 - Best for cinematic quality with native audio
+  'kling-2.6-pro': {
+    id: 'kwaivgi/kling-v2.6',
+    name: 'Kling 2.6 Pro',
+    description: 'Top-tier cinematic visuals with native audio generation',
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s or 10s',
   },
@@ -39,14 +32,6 @@ const VIDEO_MODELS = {
     description: 'Fast generation, good quality',
     supports: ['text-to-video', 'image-to-video'],
     duration: '6s',
-  },
-  // Wan 2.1 - Open source, great value
-  'wan-2.1': {
-    id: 'wavymulder/wan-2.1:d4a69a9ff4e4c1a2b8cbb8772e8d6c7f7e234a7c',
-    name: 'Wan 2.1',
-    description: 'Open source, excellent value and quality',
-    supports: ['text-to-video', 'image-to-video'],
-    duration: '5s',
   },
   // Runway Gen-3 Alpha
   'runway-gen3': {
@@ -154,11 +139,10 @@ serve(async (req) => {
 
     // Model-specific configurations
     switch (model) {
-      case 'kling-1.6-pro':
-      case 'kling-1.5-pro':
+      case 'kling-2.6-pro':
         input = {
           prompt,
-          duration: duration === '10s' ? '10' : '5',
+          duration: duration === '10s' ? 10 : 5,
           aspect_ratio: aspectRatio,
           ...(sourceImage && { image: sourceImage }),
         };
@@ -176,14 +160,6 @@ serve(async (req) => {
         input = {
           prompt,
           ...(sourceImage && { first_frame_image: sourceImage }),
-        };
-        break;
-
-      case 'wan-2.1':
-        input = {
-          prompt,
-          aspect_ratio: aspectRatio,
-          ...(sourceImage && { image: sourceImage }),
         };
         break;
 
