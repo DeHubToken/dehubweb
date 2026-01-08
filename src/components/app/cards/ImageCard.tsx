@@ -79,13 +79,8 @@ export function ImageCard({ post }: ImageCardProps) {
       </div>
 
       {/* Image */}
-      <div className="aspect-square bg-zinc-800 relative">
+      <div className="aspect-square bg-zinc-800">
         <img src={post.image} alt="" className="w-full h-full object-cover" />
-        {/* View count overlay */}
-        <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
-          <Eye className="w-3 h-3 text-white" />
-          <span className="text-white text-xs font-medium">{getViewCount(post.id)}</span>
-        </div>
       </div>
 
       {/* Info & Actions */}
@@ -95,7 +90,13 @@ export function ImageCard({ post }: ImageCardProps) {
         <p className="text-white text-sm mt-1">
           <span className="font-semibold">{post.username}</span> <TranslatableText text={post.caption} className="inline" as="span" />
         </p>
-        <p className="text-zinc-500 text-xs mt-1">{post.timeAgo}</p>
+        <div className="flex items-center gap-3 mt-1">
+          <span className="text-zinc-500 text-xs">{post.timeAgo}</span>
+          <span className="flex items-center gap-1 text-zinc-500 text-xs">
+            <Eye className="w-3 h-3" />
+            {getViewCount(post.id)} views
+          </span>
+        </div>
 
         {/* Comments Section */}
         <AnimatePresence>
