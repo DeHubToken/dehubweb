@@ -148,7 +148,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const chatContent = (
     <div className="flex flex-col h-full">
       {/* Messages */}
-      <ScrollArea className="flex-1 px-4" ref={scrollRef}>
+      <ScrollArea className="flex-1 px-4 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={scrollRef}>
         <div className="py-4 space-y-4">
           <AnimatePresence mode="popLayout">
             {messages.map((message) => (
