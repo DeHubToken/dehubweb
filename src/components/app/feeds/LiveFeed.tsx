@@ -1,4 +1,13 @@
-import { Users, Eye, MoreVertical, Loader2 } from 'lucide-react';
+/**
+ * Live Feed Component
+ * ===================
+ * Displays live streams using the universal LiveCard component.
+ * Uses centralized mock data and shared utilities.
+ * 
+ * @module components/app/feeds/LiveFeed
+ */
+
+import { Loader2 } from 'lucide-react';
 import minecraftCategory from '@/assets/minecraft-category.png';
 import codCategory from '@/assets/cod-category.png';
 import gtaCategory from '@/assets/gta-category.png';
@@ -7,23 +16,13 @@ import valorantCategory from '@/assets/valorant-category.png';
 import leagueCategory from '@/assets/league-category.png';
 import apexCategory from '@/assets/apex-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LiveCard } from '@/components/app/cards';
+import type { LiveStream } from '@/types/feed.types';
 
-interface TwitchStream {
-  id: string;
-  streamer: string;
-  avatar: string;
-  title: string;
-  game: string;
-  viewers: string;
-  thumbnail: string;
-  tags: string[];
-  isLive: boolean;
-}
-
-const MOCK_STREAMS: TwitchStream[] = [
+const MOCK_STREAMS: LiveStream[] = [
   {
-    id: '1',
+    id: 'live-1',
+    type: 'live',
     streamer: 'Ninja',
     avatar: 'ninja',
     title: '🔴 LIVE - Grinding Ranked! Road to Champion',
@@ -34,7 +33,8 @@ const MOCK_STREAMS: TwitchStream[] = [
     isLive: true,
   },
   {
-    id: '2',
+    id: 'live-2',
+    type: 'live',
     streamer: 'Pokimane',
     avatar: 'poki',
     title: 'Chill stream with chat 💜 !socials',
@@ -45,7 +45,8 @@ const MOCK_STREAMS: TwitchStream[] = [
     isLive: true,
   },
   {
-    id: '3',
+    id: 'live-3',
+    type: 'live',
     streamer: 'xQc',
     avatar: 'xqc',
     title: 'REACT ANDY TODAY | !youtube',
@@ -56,7 +57,8 @@ const MOCK_STREAMS: TwitchStream[] = [
     isLive: true,
   },
   {
-    id: '4',
+    id: 'live-4',
+    type: 'live',
     streamer: 'Shroud',
     avatar: 'shroud',
     title: 'Late night gaming session',
@@ -67,7 +69,8 @@ const MOCK_STREAMS: TwitchStream[] = [
     isLive: true,
   },
   {
-    id: '5',
+    id: 'live-5',
+    type: 'live',
     streamer: 'HasanAbi',
     avatar: 'hasan',
     title: 'News & Politics | Reacting to everything',
@@ -78,7 +81,8 @@ const MOCK_STREAMS: TwitchStream[] = [
     isLive: true,
   },
   {
-    id: '6',
+    id: 'live-6',
+    type: 'live',
     streamer: 'Summit1g',
     avatar: 'summit',
     title: 'GTA RP - New storyline today!',
@@ -121,8 +125,8 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
   return (
     <div className="p-2 sm:p-3 space-y-4">
       {/* Live Channels */}
-      <div className="bg-zinc-900 rounded-2xl p-4">
-        <div className="flex items-center justify-between mb-3">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1">
           <h2 className="font-bold text-white flex items-center gap-2">
             <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
             Live Channels
@@ -130,48 +134,9 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
           <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
-          {MOCK_STREAMS.map((stream) => (
-            <div
-              key={stream.id}
-              className="cursor-pointer group"
-            >
-              {/* Thumbnail */}
-              <div className="relative aspect-video rounded-xl overflow-hidden mb-2">
-                <img src={stream.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                
-                {/* Live badge */}
-                <div className="absolute top-2 left-2 flex items-center gap-2">
-                  <span className="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded">LIVE</span>
-                </div>
-
-                {/* Viewer count */}
-                <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
-                  <Eye className="w-3 h-3 text-red-500" />
-                  <span className="text-white text-xs font-medium">{stream.viewers}</span>
-                </div>
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-              </div>
-
-              {/* Info */}
-              <div className="flex gap-2">
-                <Avatar className="w-9 h-9 flex-shrink-0 ring-2 ring-red-500">
-                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${stream.avatar}`} />
-                  <AvatarFallback className="bg-zinc-700">{stream.streamer[0]}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-white text-sm truncate group-hover:text-red-400 transition-colors">
-                    {stream.title}
-                  </h3>
-                  <p className="text-zinc-400 text-xs">{stream.streamer}</p>
-                  <p className="text-zinc-500 text-xs">{stream.game}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {MOCK_STREAMS.map((stream) => (
+          <LiveCard key={stream.id} stream={stream} />
+        ))}
       </div>
 
       {/* Categories */}
