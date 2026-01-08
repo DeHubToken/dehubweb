@@ -149,12 +149,12 @@ export function VideoPaywallModal({
           {/* Cost Breakdown */}
           <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-400">Base Cost</span>
-              <span className="text-zinc-300">${model.baseCostUsd.toFixed(2)}</span>
+              <span className="text-zinc-400">Video Cost</span>
+              <span className="text-zinc-300">${costUsd.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-400">Platform Fee (100%)</span>
-              <span className="text-zinc-300">${model.baseCostUsd.toFixed(2)}</span>
+              <span className="text-zinc-400">Staker Discount</span>
+              <span className="text-green-400">0%</span>
             </div>
             <div className="border-t border-zinc-700 pt-3">
               <div className="flex items-center justify-between">
