@@ -92,9 +92,9 @@ export function ImageCard({ post }: ImageCardProps) {
         </p>
         <div className="flex items-center gap-3 mt-1">
           <span className="text-zinc-500 text-xs">{post.timeAgo}</span>
-          <span className="inline-flex items-center gap-1 text-zinc-500 text-xs">
-            <Eye className="w-3 h-3 shrink-0" />
-            <span>{getViewCount(post.id)} views</span>
+          <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
+            <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
+            <span className="leading-none">{getViewCount(post.id)} views</span>
           </span>
         </div>
 
