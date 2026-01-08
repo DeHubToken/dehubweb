@@ -18,12 +18,6 @@ import { MarkdownText } from '@/lib/markdown';
 
 const STYLE_OPTIONS = [
   { id: 'normal', label: 'Normal', emoji: '🤖' },
-  { id: 'daddy', label: 'Daddy', emoji: '👨' },
-  { id: 'mommy', label: 'Mommy', emoji: '👩' },
-  { id: 'big-brother', label: 'Big Brother', emoji: '🧑' },
-  { id: 'lil-bro', label: 'Lil Bro', emoji: '👦' },
-  { id: 'big-sister', label: 'Big Sister', emoji: '👧' },
-  { id: 'little-sister', label: 'Little Sister', emoji: '👶' },
   { id: 'old-english', label: 'Old English', emoji: '🏰' },
   { id: 'cockney', label: 'Cockney', emoji: '🎩' },
   { id: 'celtic', label: 'Celtic', emoji: '☘️' },
@@ -36,6 +30,12 @@ const STYLE_OPTIONS = [
   { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
   { id: 'chad', label: 'Chad', emoji: '💪' },
   { id: 'hopeless-romantic', label: 'Hopeless Romantic', emoji: '💕' },
+  { id: 'daddy', label: 'Daddy', emoji: '👨' },
+  { id: 'mommy', label: 'Mommy', emoji: '👩' },
+  { id: 'big-brother', label: 'Big Brother', emoji: '🧑' },
+  { id: 'lil-bro', label: 'Lil Bro', emoji: '👦' },
+  { id: 'big-sister', label: 'Big Sister', emoji: '👧' },
+  { id: 'little-sister', label: 'Little Sister', emoji: '👶' },
 ] as const;
 
 interface Message {
