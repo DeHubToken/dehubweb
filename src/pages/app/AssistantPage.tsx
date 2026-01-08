@@ -41,6 +41,7 @@ export default function AssistantPage() {
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [stylePopoverOpen, setStylePopoverOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const currentStyle = STYLE_OPTIONS.find(s => s.id === selectedStyle) || STYLE_OPTIONS[0];
@@ -56,12 +57,15 @@ export default function AssistantPage() {
     }
   }, []);
 
-  // Auto-scroll to bottom
+  // Scroll to bottom helper
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Auto-scroll to bottom on messages change or loading state
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
+    scrollToBottom();
+  }, [messages, isLoading]);
 
   // Focus input on mount
   useEffect(() => {
@@ -209,6 +213,8 @@ export default function AssistantPage() {
               </div>
             </motion.div>
           )}
+          {/* Scroll anchor */}
+          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
