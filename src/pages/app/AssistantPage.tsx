@@ -106,39 +106,30 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
       animate={{ opacity: 1 }}
       className="flex justify-start"
     >
-      <div className="bg-white/10 rounded-2xl p-3 flex flex-col gap-2">
-        <div className="flex items-center gap-2 mb-1">
-          <Sparkles className="w-3 h-3 text-primary animate-pulse" />
-          <span className="text-xs text-white/60">Building your image...</span>
-        </div>
+      {/* Growing skeleton with shimmer - minimal design */}
+      <motion.div
+        animate={{ width: size, height: size }}
+        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+        className="relative overflow-hidden rounded-2xl bg-white/10"
+      >
+        {/* Shimmer effect */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          style={{
+            animation: 'shimmer 1.5s infinite',
+            backgroundSize: '200% 100%',
+          }}
+        />
         
-        {/* Growing skeleton with shimmer */}
-        <motion.div
-          animate={{ width: size, height: size }}
-          transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-          className="relative overflow-hidden rounded-lg bg-white/5"
-        >
-          {/* Shimmer effect */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-            style={{
-              animation: 'shimmer 1.5s infinite',
-              backgroundSize: '200% 100%',
-            }}
+        {/* Subtle progress indicator at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
+          <motion.div 
+            className="h-full bg-primary/40"
+            animate={{ width: `${progress}%` }}
+            transition={{ ease: 'linear' }}
           />
-          
-          {/* Progress indicator inside skeleton */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
-            <motion.div 
-              className="h-full bg-primary/60"
-              animate={{ width: `${progress}%` }}
-              transition={{ ease: 'linear' }}
-            />
-          </div>
-        </motion.div>
-        
-        <span className="text-xs text-white/40 text-center">{Math.round(progress)}%</span>
-      </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
