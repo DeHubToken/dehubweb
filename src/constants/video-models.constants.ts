@@ -13,6 +13,8 @@ export interface VideoModel {
   emoji: string;
   /** Base cost in USD (before markup) */
   baseCostUsd: number;
+  /** Whether the model supports native audio generation */
+  hasAudio?: boolean;
 }
 
 /**
@@ -46,6 +48,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     tier: 'premium',
     emoji: '🎬',
     baseCostUsd: 1.10, // Average of 5s ($0.80) and 10s ($1.40)
+    hasAudio: true,
   },
   'luma-ray2': {
     id: 'luma-ray2',
