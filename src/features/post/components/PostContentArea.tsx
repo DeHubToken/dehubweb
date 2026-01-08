@@ -373,7 +373,7 @@ export function PostContentArea({
             onInput={handleInput}
             onPaste={handlePaste}
             data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[80px] pb-5 empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] pb-5 empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
           <span className={cn("absolute bottom-0 right-0 text-xs", charCount > 280 ? "text-amber-400" : "text-white")}>
