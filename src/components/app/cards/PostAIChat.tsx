@@ -101,7 +101,8 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('post-ai-chat', {
+      // Use the unified general-ai-chat endpoint with post context
+      const { data, error } = await supabase.functions.invoke('general-ai-chat', {
         body: {
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
