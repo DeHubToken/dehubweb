@@ -626,12 +626,12 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
         <div className="mt-3 pt-3 border-t border-zinc-800">
           {/* Voice note preview with visualizer */}
           {voiceNote && (
-            <div className="mb-3 max-w-[280px] rounded-xl overflow-hidden bg-zinc-800/50">
+            <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800/50">
               <AudioVisualizer
                 audioUrl={voiceNote.url}
                 isPlaying={isPlayingPreview}
                 onPlayPause={togglePreviewPlayback}
-                className="w-full h-28"
+                className="w-full h-32"
                 showStylePicker={true}
               />
               <div className="flex items-center justify-between px-3 py-2 bg-zinc-800/80">
