@@ -34,8 +34,10 @@ import {
   PieChart,
   UserPlus,
   X,
-  Check
+  Check,
+  Copy
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
@@ -669,6 +671,9 @@ const MOCK_NFT_FRACTIONS = [
   { name: 'Azuki #9021', fraction: 5.0, totalValue: 42000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=azuki1' },
 ];
 
+const MOCK_WALLET_ADDRESS = '0x7a3B...F92d8E4c1Ab7';
+const MOCK_WALLET_ADDRESS_FULL = '0x7a3B4c5D6e8F92d8E4c1Ab7C3d2E1f0A9B8C7D6E';
+
 const MOCK_USERS_TO_ASSIGN = [
   { id: '1', handle: '@alice', name: 'Alice Smith', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice' },
   { id: '2', handle: '@bob', name: 'Bob Johnson', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob' },
@@ -703,11 +708,70 @@ function AssetsSettings() {
     }
   };
 
+  const handleCopyWallet = () => {
+    navigator.clipboard.writeText(MOCK_WALLET_ADDRESS_FULL);
+    toast.success('Wallet address copied!');
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Wallet className="w-5 h-5 text-zinc-400" />
         <h2 className="text-lg font-semibold text-white">Assets</h2>
+      </div>
+
+      {/* Wallet Address */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
+          <Wallet className="w-4 h-4" />
+          Wallet Address
+        </h3>
+        <button
+          onClick={handleCopyWallet}
+          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
+              <Wallet className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-white font-mono">{MOCK_WALLET_ADDRESS}</span>
+          </div>
+          <Copy className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
+        </button>
+      </div>
+
+      {/* NFT Fractions */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
+          <PieChart className="w-4 h-4" />
+          NFT Fractions You Own
+        </h3>
+        <div className="space-y-3">
+          {MOCK_NFT_FRACTIONS.map((nft, idx) => (
+            <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+              <div className="flex items-center gap-3">
+                <img 
+                  src={nft.image} 
+                  alt={nft.name} 
+                  className="w-12 h-12 rounded-lg bg-zinc-700"
+                />
+                <div>
+                  <p className="text-white font-medium">{nft.name}</p>
+                  <p className="text-zinc-500 text-sm">{nft.fraction}% ownership</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-white font-medium">${((nft.totalValue * nft.fraction) / 100).toLocaleString()}</p>
+                <p className="text-zinc-500 text-sm">of ${nft.totalValue.toLocaleString()}</p>
+              </div>
+            </div>
+          ))}
+          {MOCK_NFT_FRACTIONS.length === 0 && (
+            <div className="text-center py-8 text-zinc-500">
+              You don't own any NFT fractions yet
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Owned Usernames */}
@@ -785,40 +849,6 @@ function AssetsSettings() {
           {MOCK_OFFERS_MADE.length === 0 && (
             <div className="text-center py-8 text-zinc-500">
               You haven't made any offers yet
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* NFT Fractions */}
-      <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
-          <PieChart className="w-4 h-4" />
-          NFT Fractions You Own
-        </h3>
-        <div className="space-y-3">
-          {MOCK_NFT_FRACTIONS.map((nft, idx) => (
-            <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-              <div className="flex items-center gap-3">
-                <img 
-                  src={nft.image} 
-                  alt={nft.name} 
-                  className="w-12 h-12 rounded-lg bg-zinc-700"
-                />
-                <div>
-                  <p className="text-white font-medium">{nft.name}</p>
-                  <p className="text-zinc-500 text-sm">{nft.fraction}% ownership</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-white font-medium">${((nft.totalValue * nft.fraction) / 100).toLocaleString()}</p>
-                <p className="text-zinc-500 text-sm">of ${nft.totalValue.toLocaleString()}</p>
-              </div>
-            </div>
-          ))}
-          {MOCK_NFT_FRACTIONS.length === 0 && (
-            <div className="text-center py-8 text-zinc-500">
-              You don't own any NFT fractions yet
             </div>
           )}
         </div>
