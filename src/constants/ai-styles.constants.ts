@@ -1,0 +1,40 @@
+/**
+ * AI Style Options
+ * =================
+ * Shared style options used by:
+ * - AI Assistant page (personality selector)
+ * - Post enhance feature (style transformation)
+ * 
+ * IMPORTANT: Keep this as the single source of truth.
+ * Both features should import from here to stay in sync.
+ */
+
+export const AI_STYLE_OPTIONS = [
+  { id: 'old-english', label: 'Old English', emoji: '🏰' },
+  { id: 'cockney', label: 'Cockney', emoji: '🎩' },
+  { id: 'celtic', label: 'Celtic', emoji: '☘️' },
+  { id: 'scouse', label: 'Scouse', emoji: '⚽' },
+  { id: 'wild-west', label: 'Wild West', emoji: '🤠' },
+  { id: 'asian-uncle', label: 'Asian Uncle', emoji: '👴' },
+  { id: 'russian-mafia', label: 'Russian Mafia', emoji: '🎰' },
+  { id: 'pirate', label: 'Pirate', emoji: '🏴‍☠️' },
+  { id: 'alien', label: 'Alien', emoji: '👽' },
+  { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
+  { id: 'chad', label: 'Chad', emoji: '💪' },
+  { id: 'hopeless-romantic', label: 'Hopeless Romantic', emoji: '💕' },
+  { id: 'daddy', label: 'Daddy', emoji: '👨' },
+  { id: 'mommy', label: 'Mommy', emoji: '👩' },
+  { id: 'big-brother', label: 'Big Brother', emoji: '🧑' },
+  { id: 'lil-bro', label: 'Lil Bro', emoji: '👦' },
+  { id: 'big-sister', label: 'Big Sister', emoji: '👧' },
+  { id: 'little-sister', label: 'Little Sister', emoji: '👶' },
+] as const;
+
+// For AI Assistant - includes "Normal" as first option
+export const AI_ASSISTANT_STYLE_OPTIONS = [
+  { id: 'normal', label: 'Normal', emoji: '🤖' },
+  ...AI_STYLE_OPTIONS,
+] as const;
+
+export type AIStyleId = typeof AI_STYLE_OPTIONS[number]['id'];
+export type AIAssistantStyleId = typeof AI_ASSISTANT_STYLE_OPTIONS[number]['id'];
