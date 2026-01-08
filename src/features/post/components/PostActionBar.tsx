@@ -114,7 +114,7 @@ export function PostActionBar({
             onClick={handleSpellCheck}
             className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
-            <SpellCheck className="w-5 h-5 text-blue-400" />
+            <SpellCheck className="w-5 h-5 text-white" />
             Spell Check
           </button>
           
@@ -123,7 +123,7 @@ export function PostActionBar({
             onClick={handleGrammar}
             className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
-            <Type className="w-5 h-5 text-emerald-400" />
+            <Type className="w-5 h-5 text-white" />
             Fix Grammar
           </button>
           
@@ -133,7 +133,7 @@ export function PostActionBar({
             className="flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Palette className="w-5 h-5 text-purple-400" />
+              <Palette className="w-5 h-5 text-white" />
               Change Style
             </div>
             <ChevronRight className="w-4 h-4 text-zinc-500" />
@@ -158,7 +158,7 @@ export function PostActionBar({
                 onClick={() => imageInputRef.current?.click()} 
                 className="p-2 hover:bg-white/10 rounded-full transition-colors"
               >
-                <Image className="w-5 h-5 text-blue-400" />
+                <Image className="w-5 h-5 text-white" />
               </button>
             </TooltipTrigger>
             <TooltipContent>Add image</TooltipContent>
@@ -173,7 +173,7 @@ export function PostActionBar({
                 onClick={() => videoInputRef.current?.click()} 
                 className="p-2 hover:bg-white/10 rounded-full transition-colors"
               >
-                <Film className="w-5 h-5 text-purple-400" />
+                <Film className="w-5 h-5 text-white" />
               </button>
             </TooltipTrigger>
             <TooltipContent>Add video</TooltipContent>
@@ -190,7 +190,7 @@ export function PostActionBar({
                     type="button" 
                     className="p-2 hover:bg-white/10 rounded-full transition-colors"
                   >
-                    <Music className="w-5 h-5 text-emerald-400" />
+                    <Music className="w-5 h-5 text-white" />
                   </button>
                 </PopoverTrigger>
               </TooltipTrigger>
@@ -210,7 +210,7 @@ export function PostActionBar({
                       onClick={() => audioInputRef.current?.click()}
                       className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
-                      <Upload className="w-5 h-5 text-emerald-400" />
+                      <Upload className="w-5 h-5 text-white" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="left">Upload Audio</TooltipContent>
@@ -221,7 +221,7 @@ export function PostActionBar({
                       type="button"
                       className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
-                      <Mic className="w-5 h-5 text-red-400" />
+                      <Mic className="w-5 h-5 text-white" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="left">Record Audio</TooltipContent>
@@ -245,9 +245,9 @@ export function PostActionBar({
                         setLivePopoverOpen(true);
                       }
                     }}
-                    className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-red-500/20")}
+                    className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-white/20")}
                   >
-                    <Radio className={cn("w-5 h-5", isLive ? "text-red-500" : "text-red-400")} />
+                    <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
                   </button>
                 </PopoverTrigger>
               </TooltipTrigger>
@@ -267,7 +267,7 @@ export function PostActionBar({
                       onClick={() => handleSelectLiveMode('video')}
                       className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
-                      <Video className="w-5 h-5 text-red-400" />
+                      <Video className="w-5 h-5 text-white" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="left">Live Video</TooltipContent>
@@ -279,7 +279,7 @@ export function PostActionBar({
                       onClick={() => handleSelectLiveMode('townhall')}
                       className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
-                      <Mic className="w-5 h-5 text-purple-400" />
+                      <Mic className="w-5 h-5 text-white" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="left">Town Hall</TooltipContent>
@@ -297,7 +297,7 @@ export function PostActionBar({
                   type="button" 
                   className="p-2 hover:bg-white/10 rounded-full transition-colors"
                 >
-                  <Mic className="w-5 h-5 text-emerald-400" />
+                  <Mic className="w-5 h-5 text-white" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>Record audio</TooltipContent>
@@ -309,7 +309,7 @@ export function PostActionBar({
                   onClick={() => audioInputRef.current?.click()}
                   className="p-2 hover:bg-white/10 rounded-full transition-colors"
                 >
-                  <Music className="w-5 h-5 text-emerald-400" />
+                  <Music className="w-5 h-5 text-white" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>Upload audio</TooltipContent>
@@ -385,7 +385,7 @@ export function PostActionBar({
                 </button>
               )}
               <DrawerTitle className="text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-400" />
+                <Sparkles className="w-5 h-5 text-white" />
                 {styleView ? 'Choose Style' : 'Enhance'}
               </DrawerTitle>
             </DrawerHeader>
