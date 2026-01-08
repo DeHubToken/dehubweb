@@ -125,6 +125,16 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         });
 
         if (error) throw error;
+        
+        // Check for error in response (like safety blocks)
+        if (data.error) {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.error
+          }]);
+          return;
+        }
 
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
