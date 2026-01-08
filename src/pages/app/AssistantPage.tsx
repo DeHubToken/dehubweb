@@ -64,13 +64,18 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
   
   useEffect(() => {
     if (phase === 'skeleton') {
-      // Animate progress from 0 to 100 over ~10 seconds (typical image gen time)
+      // Continuously animate - never stops until component unmounts
       const interval = setInterval(() => {
         setProgress(prev => {
-          // Slow down as we approach 100%
-          if (prev >= 100) return 100;
-          const increment = Math.max(0.3, (100 - prev) / 40);
-          return Math.min(100, prev + increment);
+          // Keep cycling - when it reaches 100, slow down dramatically but never fully stop
+          // This creates an infinite growing effect
+          if (prev >= 95) {
+            // Very slow increment after 95% - gives illusion of "almost there"
+            return Math.min(99.5, prev + 0.05);
+          }
+          // Normal pace growth
+          const increment = Math.max(0.5, (100 - prev) / 30);
+          return prev + increment;
         });
       }, 100);
       
@@ -93,13 +98,13 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
     );
   }
   
-  // Calculate skeleton size - starts small, grows 2x+ by 100%
-  const finalSize = 320;
-  const minSize = 80; // Start at ~25% of final size so it grows ~4x total
+  // Calculate skeleton size - starts small, grows to near full-width
+  const maxSize = 400; // Large max size
+  const minSize = 60; // Start small
   const currentScale = progress / 100;
-  // Use easeOutQuad for more dramatic growth feel
-  const easedScale = 1 - (1 - currentScale) * (1 - currentScale);
-  const size = Math.round(minSize + (finalSize - minSize) * easedScale);
+  // Use easeOutCubic for smooth continuous growth
+  const easedScale = 1 - Math.pow(1 - currentScale, 3);
+  const size = Math.round(minSize + (maxSize - minSize) * easedScale);
   
   return (
     <motion.div
