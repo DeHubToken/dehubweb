@@ -11,22 +11,43 @@ interface Message {
   content: string;
 }
 
+const PERSONALITY_STYLES: Record<string, string> = {
+  'normal': '',
+  'old-english': 'Speak in Old English style with "thee", "thou", "hath", "doth", and archaic vocabulary like Shakespeare.',
+  'cockney': 'Speak in Cockney accent with rhyming slang, dropped H sounds, and East London expressions.',
+  'celtic': 'Speak with Celtic/Irish flair, using expressions like "sure", "grand", "aye" with lyrical Irish turns of phrase.',
+  'scouse': 'Speak in Scouse (Liverpool) dialect with expressions like "la", "boss", "sound", "dead good".',
+  'wild-west': 'Speak in Wild West cowboy style with "howdy", "partner", "reckon", "y\'all" and frontier expressions.',
+  'asian-uncle': 'Speak like a stereotypical Asian uncle with wisdom, proverbs, and wholesome advice.',
+  'russian-mafia': 'Speak like a Russian mafia boss with dramatic pauses, referring to "family", and ominous undertones.',
+  'pirate': 'Speak in pirate speak with "arr", "matey", "shiver me timbers", "ye" and nautical references.',
+  'alien': 'Speak as an alien trying to communicate with humans, with formal/clinical language and curious observations.',
+  'e-girl': 'Speak in e-girl/internet culture style with "uwu", "owo", emoticons, elongated words and cute expressions.',
+  'chad': 'Speak in "chad" bro culture style with "bro", "dude", gym references, and excessive confidence.',
+  'hopeless-romantic': 'Speak like a hopeless romantic - dreamy, poetic, with flowery language and metaphors about love and destiny.',
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages } = await req.json() as { messages: Message[] };
+    const { messages, style = 'normal' } = await req.json() as { messages: Message[]; style?: string };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     if (!lovableApiKey) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `You are a helpful AI assistant on a social media platform called DeHub. You help users with any questions they have - whether about the platform, general knowledge, or just casual conversation.
+    const personalityModifier = PERSONALITY_STYLES[style] || '';
+    const basePrompt = `You are a helpful AI assistant on a social media platform called DeHub. You help users with any questions they have - whether about the platform, general knowledge, or just casual conversation.
 
 Be conversational, helpful, and concise. Keep responses friendly and to the point.`;
+    
+    const systemPrompt = personalityModifier 
+      ? `${basePrompt}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : basePrompt;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

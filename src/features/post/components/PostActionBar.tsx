@@ -20,6 +20,7 @@ const STYLE_OPTIONS = [
   { id: 'alien', label: 'Alien', emoji: '👽' },
   { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
   { id: 'chad', label: 'Chad', emoji: '💪' },
+  { id: 'hopeless-romantic', label: 'Hopeless Romantic', emoji: '💕' },
 ] as const;
 
 interface PostActionBarProps {
@@ -372,7 +373,7 @@ export function PostActionBar({
         </Button>
         
         <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
-          <DrawerContent className={GLASS_STYLES.drawer}>
+          <DrawerContent glass className="border-t border-white/10">
             <DrawerHeader className="border-b border-white/10">
               {styleView && (
                 <button
