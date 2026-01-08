@@ -107,7 +107,7 @@ function parseInlineMarkdown(text: string): React.ReactNode {
           href={linkMatch[3]} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-primary hover:underline"
+          className="text-white underline hover:opacity-80"
         >
           {linkMatch[2]}
         </a>
@@ -190,7 +190,7 @@ function parseLinksAndUrls(text: string): React.ReactNode {
           href={url} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-primary hover:underline break-all"
+          className="text-white underline hover:opacity-80 break-all"
         >
           {url}
         </a>
