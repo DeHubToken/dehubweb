@@ -251,11 +251,28 @@ export default function AssistantPage() {
             ? "This content can't be generated on DeHub - we're a family-friendly platform! Try something else 🎨"
             : data.error;
           
-          setMessages(prev => [...prev, {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: errorMessage
-          }]);
+          // If clearHistory flag is set, reset to just the welcome message
+          // This prevents previous inappropriate requests from affecting future normal requests
+          if (data.clearHistory) {
+            setMessages([
+              {
+                id: 'initial',
+                role: 'assistant',
+                content: `Hi! Ask me anything, whether it's DeHub related or not, I can help.`
+              },
+              {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: errorMessage
+              }
+            ]);
+          } else {
+            setMessages(prev => [...prev, {
+              id: (Date.now() + 1).toString(),
+              role: 'assistant',
+              content: errorMessage
+            }]);
+          }
           return;
         }
 
