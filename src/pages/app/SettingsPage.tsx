@@ -27,7 +27,14 @@ import {
   Sparkles,
   Save,
   FileText,
-  MapPin
+  MapPin,
+  Wallet,
+  AtSign,
+  Handshake,
+  PieChart,
+  UserPlus,
+  X,
+  Check
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -49,6 +56,7 @@ const tabs = [
   { icon: Palette, value: 'appearance', label: 'Appearance' },
   { icon: Eye, value: 'content', label: 'Content' },
   { icon: MessageSquare, value: 'messages', label: 'Messages' },
+  { icon: Wallet, value: 'assets', label: 'Assets' },
 ];
 
 export default function SettingsPage() {
@@ -99,6 +107,7 @@ export default function SettingsPage() {
         {activeTab === 'appearance' && <AppearanceSettings theme={theme} setTheme={setTheme} />}
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
+        {activeTab === 'assets' && <AssetsSettings />}
       </div>
     </div>
   );
@@ -637,6 +646,252 @@ function SocialLinkInput({
           className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
         />
       </div>
+    </div>
+  );
+}
+
+// Mock data for assets
+const MOCK_OWNED_USERNAMES = [
+  { handle: '@legend', acquiredDate: '2024-12-15', value: 5000 },
+  { handle: '@crypto_king', acquiredDate: '2024-11-20', value: 12500 },
+  { handle: '@pixel', acquiredDate: '2025-01-02', value: 3200 },
+];
+
+const MOCK_OFFERS_MADE = [
+  { handle: '@diamond', amount: 8000, status: 'pending', date: '2025-01-05' },
+  { handle: '@elite', amount: 15000, status: 'rejected', date: '2024-12-28' },
+  { handle: '@vip', amount: 4500, status: 'pending', date: '2025-01-07' },
+];
+
+const MOCK_NFT_FRACTIONS = [
+  { name: 'CryptoPunk #7804', fraction: 2.5, totalValue: 125000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=punk1' },
+  { name: 'Bored Ape #3429', fraction: 0.8, totalValue: 85000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=ape1' },
+  { name: 'Azuki #9021', fraction: 5.0, totalValue: 42000, image: 'https://api.dicebear.com/7.x/shapes/svg?seed=azuki1' },
+];
+
+const MOCK_USERS_TO_ASSIGN = [
+  { id: '1', handle: '@alice', name: 'Alice Smith', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice' },
+  { id: '2', handle: '@bob', name: 'Bob Johnson', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob' },
+  { id: '3', handle: '@charlie', name: 'Charlie Brown', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=charlie' },
+  { id: '4', handle: '@diana', name: 'Diana Prince', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=diana' },
+];
+
+function AssetsSettings() {
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [userSearch, setUserSearch] = useState('');
+
+  const filteredUsers = MOCK_USERS_TO_ASSIGN.filter(u => 
+    u.handle.toLowerCase().includes(userSearch.toLowerCase()) ||
+    u.name.toLowerCase().includes(userSearch.toLowerCase())
+  );
+
+  const handleAssign = (handle: string) => {
+    setSelectedUsername(handle);
+    setAssignModalOpen(true);
+  };
+
+  const handleConfirmAssign = () => {
+    if (selectedUser && selectedUsername) {
+      const user = MOCK_USERS_TO_ASSIGN.find(u => u.id === selectedUser);
+      alert(`Assignment request sent to ${user?.handle}. They will need to approve the transfer of ${selectedUsername}.`);
+      setAssignModalOpen(false);
+      setSelectedUsername(null);
+      setSelectedUser(null);
+      setUserSearch('');
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <Wallet className="w-5 h-5 text-zinc-400" />
+        <h2 className="text-lg font-semibold text-white">Assets</h2>
+      </div>
+
+      {/* Owned Usernames */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
+          <AtSign className="w-4 h-4" />
+          Usernames You Own
+        </h3>
+        <div className="space-y-3">
+          {MOCK_OWNED_USERNAMES.map((username) => (
+            <div key={username.handle} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
+                  <AtSign className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{username.handle}</p>
+                  <p className="text-zinc-500 text-sm">Acquired {username.acquiredDate}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-zinc-400 text-sm">{username.value.toLocaleString()} DHB</span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600"
+                  onClick={() => handleAssign(username.handle)}
+                >
+                  <UserPlus className="w-4 h-4 mr-1" />
+                  Assign
+                </Button>
+              </div>
+            </div>
+          ))}
+          {MOCK_OWNED_USERNAMES.length === 0 && (
+            <div className="text-center py-8 text-zinc-500">
+              You don't own any usernames yet
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Offers Made */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
+          <Handshake className="w-4 h-4" />
+          Offers You've Made
+        </h3>
+        <div className="space-y-3">
+          {MOCK_OFFERS_MADE.map((offer, idx) => (
+            <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
+                  <Handshake className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{offer.handle}</p>
+                  <p className="text-zinc-500 text-sm">{offer.date}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-zinc-400 text-sm">{offer.amount.toLocaleString()} DHB</span>
+                <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                  offer.status === 'pending' 
+                    ? 'bg-yellow-500/20 text-yellow-400' 
+                    : offer.status === 'rejected' 
+                    ? 'bg-red-500/20 text-red-400'
+                    : 'bg-green-500/20 text-green-400'
+                }`}>
+                  {offer.status.charAt(0).toUpperCase() + offer.status.slice(1)}
+                </span>
+              </div>
+            </div>
+          ))}
+          {MOCK_OFFERS_MADE.length === 0 && (
+            <div className="text-center py-8 text-zinc-500">
+              You haven't made any offers yet
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* NFT Fractions */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
+          <PieChart className="w-4 h-4" />
+          NFT Fractions You Own
+        </h3>
+        <div className="space-y-3">
+          {MOCK_NFT_FRACTIONS.map((nft, idx) => (
+            <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+              <div className="flex items-center gap-3">
+                <img 
+                  src={nft.image} 
+                  alt={nft.name} 
+                  className="w-12 h-12 rounded-lg bg-zinc-700"
+                />
+                <div>
+                  <p className="text-white font-medium">{nft.name}</p>
+                  <p className="text-zinc-500 text-sm">{nft.fraction}% ownership</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-white font-medium">${((nft.totalValue * nft.fraction) / 100).toLocaleString()}</p>
+                <p className="text-zinc-500 text-sm">of ${nft.totalValue.toLocaleString()}</p>
+              </div>
+            </div>
+          ))}
+          {MOCK_NFT_FRACTIONS.length === 0 && (
+            <div className="text-center py-8 text-zinc-500">
+              You don't own any NFT fractions yet
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Assign Username Modal */}
+      {assignModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-zinc-900 rounded-2xl p-6 w-full max-w-md mx-4 border border-zinc-800">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Assign {selectedUsername}</h3>
+              <button 
+                onClick={() => {
+                  setAssignModalOpen(false);
+                  setSelectedUsername(null);
+                  setSelectedUser(null);
+                  setUserSearch('');
+                }}
+                className="text-zinc-500 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <p className="text-zinc-400 text-sm mb-4">
+              Select a user to assign this username to. They will need to approve the transfer.
+            </p>
+
+            <Input
+              placeholder="Search users..."
+              value={userSearch}
+              onChange={(e) => setUserSearch(e.target.value)}
+              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 mb-4"
+            />
+
+            <div className="max-h-64 overflow-y-auto space-y-2 mb-4">
+              {filteredUsers.map((user) => (
+                <button
+                  key={user.id}
+                  onClick={() => setSelectedUser(user.id)}
+                  className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                    selectedUser === user.id 
+                      ? 'bg-zinc-700 border border-zinc-600' 
+                      : 'bg-zinc-800 hover:bg-zinc-750'
+                  }`}
+                >
+                  <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
+                  <div className="text-left">
+                    <p className="text-white font-medium">{user.name}</p>
+                    <p className="text-zinc-500 text-sm">{user.handle}</p>
+                  </div>
+                  {selectedUser === user.id && (
+                    <Check className="w-5 h-5 text-green-400 ml-auto" />
+                  )}
+                </button>
+              ))}
+              {filteredUsers.length === 0 && (
+                <div className="text-center py-4 text-zinc-500 text-sm">
+                  No users found
+                </div>
+              )}
+            </div>
+
+            <Button 
+              onClick={handleConfirmAssign}
+              disabled={!selectedUser}
+              className="w-full bg-white text-black hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Send Assignment Request
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
