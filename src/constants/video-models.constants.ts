@@ -1,0 +1,92 @@
+/**
+ * Video Generation Models Configuration
+ * Premium models available via Replicate API
+ */
+
+export interface VideoModel {
+  id: string;
+  name: string;
+  description: string;
+  supports: ('text-to-video' | 'image-to-video')[];
+  duration: string;
+  tier: 'premium' | 'standard' | 'fast';
+  emoji: string;
+}
+
+export const VIDEO_MODELS: Record<string, VideoModel> = {
+  'kling-1.6-pro': {
+    id: 'kling-1.6-pro',
+    name: 'Kling 1.6 Pro',
+    description: 'Best cinematic quality, professional-grade',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-10s',
+    tier: 'premium',
+    emoji: '🎬',
+  },
+  'kling-1.5-pro': {
+    id: 'kling-1.5-pro',
+    name: 'Kling 1.5 Pro',
+    description: 'High quality, reliable cinematic output',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-10s',
+    tier: 'premium',
+    emoji: '🎥',
+  },
+  'luma-ray2': {
+    id: 'luma-ray2',
+    name: 'Luma Ray 2',
+    description: 'Photorealistic, dreamy aesthetic',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s',
+    tier: 'premium',
+    emoji: '✨',
+  },
+  'runway-gen3': {
+    id: 'runway-gen3',
+    name: 'Runway Gen-3 Turbo',
+    description: 'Industry leader, stunning quality',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '10s',
+    tier: 'premium',
+    emoji: '🚀',
+  },
+  'minimax-video': {
+    id: 'minimax-video',
+    name: 'Minimax Video-01',
+    description: 'Fast generation, great quality',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '6s',
+    tier: 'standard',
+    emoji: '⚡',
+  },
+  'wan-2.1': {
+    id: 'wan-2.1',
+    name: 'Wan 2.1',
+    description: 'Open source, excellent value',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s',
+    tier: 'standard',
+    emoji: '🌊',
+  },
+  'ltx-video': {
+    id: 'ltx-video',
+    name: 'LTX Video',
+    description: 'Fast and efficient',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s',
+    tier: 'fast',
+    emoji: '💨',
+  },
+  'hunyuan-video': {
+    id: 'hunyuan-video',
+    name: 'Hunyuan Video',
+    description: 'Creative artistic style',
+    supports: ['text-to-video'],
+    duration: '5s',
+    tier: 'standard',
+    emoji: '🎨',
+  },
+};
+
+export const VIDEO_MODEL_OPTIONS = Object.values(VIDEO_MODELS);
+export type VideoModelKey = keyof typeof VIDEO_MODELS;

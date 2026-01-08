@@ -3,13 +3,14 @@
  * =================
  * Dedicated page for the AI assistant with side panels.
  * Auto-detects when to search the web for live content.
+ * Supports image generation and video generation with model selection.
  * 
  * RULE: All AI responses MUST be rendered through MarkdownText
  * to ensure proper formatting (bold, italic, lists, etc.)
  */
 
-import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,6 +20,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
+import { VIDEO_MODEL_OPTIONS, type VideoModelKey } from '@/constants/video-models.constants';
 import { PostModal } from '@/features/post';
 
 interface Message {
@@ -26,7 +28,10 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   imageUrl?: string;       // For generated/edited images in responses
+  videoUrl?: string;       // For generated videos
   attachedImage?: string;  // For user-attached images to edit
+  isVideoGenerating?: boolean;
+  videoPredictionId?: string;
 }
 
 // Keywords that indicate image generation/editing request
@@ -42,11 +47,26 @@ const IMAGE_KEYWORDS = [
   'what does', 'look like', 'visualize', 'render', 'depict'
 ];
 
+// Keywords that indicate video generation request
+const VIDEO_KEYWORDS = [
+  'generate video', 'create video', 'make video', 'make a video',
+  'generate a video', 'create a video', 'animate', 'animation',
+  'video of', 'clip of', 'footage of', 'motion', 'moving',
+  'bring to life', 'make it move', 'animate this'
+];
+
 function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
   const lower = message.toLowerCase();
+  // Don't trigger image gen if it's a video request
+  if (VIDEO_KEYWORDS.some(keyword => lower.includes(keyword))) return false;
   // If user attached an image, any instruction likely means they want to edit it
   if (hasAttachedImage) return true;
   return IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function requiresVideoGeneration(message: string): boolean {
+  const lower = message.toLowerCase();
+  return VIDEO_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
 // Image generation loading animation component
@@ -217,9 +237,12 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
+  const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-1.6-pro');
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
+  const [videoModelSheetOpen, setVideoModelSheetOpen] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [postModalOpen, setPostModalOpen] = useState(false);
   const [postModalFiles, setPostModalFiles] = useState<FileList | null>(null);
@@ -227,8 +250,10 @@ export default function AssistantPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
+  const currentVideoModel = VIDEO_MODEL_OPTIONS.find(m => m.id === selectedVideoModel) || VIDEO_MODEL_OPTIONS[0];
 
   // Generate initial welcome message
   useEffect(() => {
@@ -270,6 +295,59 @@ export default function AssistantPage() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  // Poll for video generation status
+  const pollVideoStatus = useCallback(async (predictionId: string, messageId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-video', {
+        body: { predictionId }
+      });
+
+      if (error) throw error;
+
+      if (data.status === 'succeeded' && data.videoUrl) {
+        // Clear polling
+        if (pollingRef.current[predictionId]) {
+          clearInterval(pollingRef.current[predictionId]);
+          delete pollingRef.current[predictionId];
+        }
+
+        // Update message with video URL
+        setMessages(prev => prev.map(m => 
+          m.id === messageId 
+            ? { ...m, videoUrl: data.videoUrl, isVideoGenerating: false }
+            : m
+        ));
+        setIsVideoLoading(false);
+        toast.success('Video generated!');
+      } else if (data.status === 'failed') {
+        // Clear polling
+        if (pollingRef.current[predictionId]) {
+          clearInterval(pollingRef.current[predictionId]);
+          delete pollingRef.current[predictionId];
+        }
+
+        // Update message with error
+        setMessages(prev => prev.map(m => 
+          m.id === messageId 
+            ? { ...m, content: `Video generation failed: ${data.error || 'Unknown error'}`, isVideoGenerating: false }
+            : m
+        ));
+        setIsVideoLoading(false);
+        toast.error('Video generation failed');
+      }
+      // If still processing, keep polling
+    } catch (err) {
+      console.error('Polling error:', err);
+    }
+  }, []);
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(pollingRef.current).forEach(clearInterval);
+    };
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -288,10 +366,57 @@ export default function AssistantPage() {
     setIsLoading(true);
 
     try {
-      // Check if this is an image generation/editing request
+      // Check request type
+      const isVideoRequest = requiresVideoGeneration(currentInput);
       const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
       
-      if (isImageRequest) {
+      if (isVideoRequest) {
+        // Video generation
+        setIsVideoLoading(true);
+        
+        const { data, error } = await supabase.functions.invoke('generate-video', {
+          body: {
+            prompt: currentInput,
+            model: selectedVideoModel,
+            sourceImage: currentAttachedImage || undefined,
+            duration: '5s',
+            aspectRatio: '16:9'
+          }
+        });
+
+        if (error) throw error;
+
+        if (data.error) {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: `Video generation failed: ${data.error}`
+          }]);
+          setIsVideoLoading(false);
+          return;
+        }
+
+        // Create placeholder message for video
+        const messageId = (Date.now() + 1).toString();
+        const assistantMessage: Message = {
+          id: messageId,
+          role: 'assistant',
+          content: `🎬 Generating video with **${currentVideoModel.name}**...\n\n_This may take 1-3 minutes_`,
+          isVideoGenerating: true,
+          videoPredictionId: data.predictionId
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
+
+        // Start polling for video status
+        pollingRef.current[data.predictionId] = setInterval(() => {
+          pollVideoStatus(data.predictionId, messageId);
+        }, 5000);
+
+        // Don't set isLoading to false yet - video is still generating
+        setIsLoading(false);
+        
+      } else if (isImageRequest) {
         // Set image-specific loading state
         setIsImageLoading(true);
         setImageLoadStartTime(Date.now());
@@ -401,6 +526,11 @@ export default function AssistantPage() {
     setStyleSheetOpen(false);
   };
 
+  const handleVideoModelSelect = (modelId: VideoModelKey) => {
+    setSelectedVideoModel(modelId);
+    setVideoModelSheetOpen(false);
+  };
+
   // Convert base64 image to FileList for PostModal
   const handlePostImage = async (imageUrl: string) => {
     try {
@@ -420,7 +550,7 @@ export default function AssistantPage() {
     }
   };
 
-  // Style options content - same pattern as PostActionBar enhance menu
+  // Style options content
   const styleMenuContent = (
     <div className="h-[50vh] overflow-y-auto">
       <div className="flex flex-col pb-4">
@@ -441,6 +571,70 @@ export default function AssistantPage() {
     </div>
   );
 
+  // Video model options content
+  const videoModelMenuContent = (
+    <div className="h-[60vh] overflow-y-auto">
+      <div className="flex flex-col pb-4">
+        {/* Premium tier */}
+        <div className="px-4 py-2 text-xs text-white/40 uppercase tracking-wider">Premium</div>
+        {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'premium').map((model) => (
+          <button
+            key={model.id}
+            type="button"
+            onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
+            className={`flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+              selectedVideoModel === model.id ? 'bg-white/10' : ''
+            }`}
+          >
+            <span className="text-lg">{model.emoji}</span>
+            <div className="flex flex-col items-start">
+              <span className="font-medium">{model.name}</span>
+              <span className="text-xs text-white/50">{model.description}</span>
+            </div>
+          </button>
+        ))}
+        
+        {/* Standard tier */}
+        <div className="px-4 py-2 text-xs text-white/40 uppercase tracking-wider mt-2">Standard</div>
+        {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'standard').map((model) => (
+          <button
+            key={model.id}
+            type="button"
+            onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
+            className={`flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+              selectedVideoModel === model.id ? 'bg-white/10' : ''
+            }`}
+          >
+            <span className="text-lg">{model.emoji}</span>
+            <div className="flex flex-col items-start">
+              <span className="font-medium">{model.name}</span>
+              <span className="text-xs text-white/50">{model.description}</span>
+            </div>
+          </button>
+        ))}
+        
+        {/* Fast tier */}
+        <div className="px-4 py-2 text-xs text-white/40 uppercase tracking-wider mt-2">Fast</div>
+        {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'fast').map((model) => (
+          <button
+            key={model.id}
+            type="button"
+            onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
+            className={`flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+              selectedVideoModel === model.id ? 'bg-white/10' : ''
+            }`}
+          >
+            <span className="text-lg">{model.emoji}</span>
+            <div className="flex flex-col items-start">
+              <span className="font-medium">{model.name}</span>
+              <span className="text-xs text-white/50">{model.description}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)] lg:h-screen lg:max-h-screen">
       {/* Header */}
@@ -455,17 +649,31 @@ export default function AssistantPage() {
           </div>
         </div>
 
-        {/* Style Selector Button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setStyleSheetOpen(true)}
-          className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
-        >
-          <span>{currentStyle.emoji}</span>
-          <span className="hidden sm:inline">{currentStyle.label}</span>
-          <ChevronDown className="w-3 h-3 text-white/50" />
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Video Model Selector Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setVideoModelSheetOpen(true)}
+            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+          >
+            <Video className="w-3.5 h-3.5 text-white/70" />
+            <span className="hidden sm:inline text-xs">{currentVideoModel.name}</span>
+            <ChevronDown className="w-3 h-3 text-white/50" />
+          </Button>
+
+          {/* Style Selector Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setStyleSheetOpen(true)}
+            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+          >
+            <span>{currentStyle.emoji}</span>
+            <span className="hidden sm:inline">{currentStyle.label}</span>
+            <ChevronDown className="w-3 h-3 text-white/50" />
+          </Button>
+        </div>
 
         {/* Style Drawer */}
         <Drawer open={styleSheetOpen} onOpenChange={setStyleSheetOpen}>
@@ -477,6 +685,19 @@ export default function AssistantPage() {
               </DrawerTitle>
             </DrawerHeader>
             {styleMenuContent}
+          </DrawerContent>
+        </Drawer>
+
+        {/* Video Model Drawer */}
+        <Drawer open={videoModelSheetOpen} onOpenChange={setVideoModelSheetOpen}>
+          <DrawerContent glass className="border-t border-white/10">
+            <DrawerHeader className="border-b border-white/10">
+              <DrawerTitle className="text-white flex items-center gap-2">
+                <Video className="w-5 h-5 text-white" />
+                Video Model
+              </DrawerTitle>
+            </DrawerHeader>
+            {videoModelMenuContent}
           </DrawerContent>
         </Drawer>
       </div>
@@ -493,7 +714,85 @@ export default function AssistantPage() {
                 exit={{ opacity: 0 }}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {message.role === 'assistant' && message.imageUrl ? (
+                {message.role === 'assistant' && message.videoUrl ? (
+                  /* Video messages */
+                  <div className="max-w-[85%] flex flex-col gap-2">
+                    {/* Video container with controls */}
+                    <div className="relative rounded-lg overflow-hidden">
+                      <video 
+                        src={message.videoUrl}
+                        controls
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="max-w-full rounded-lg"
+                      />
+                      {/* DeHub watermark */}
+                      <img 
+                        src={dehubLogo} 
+                        alt="" 
+                        className="absolute bottom-12 left-3 h-5 opacity-60 pointer-events-none"
+                      />
+                      {/* Download button */}
+                      <div className="absolute bottom-12 right-3 flex items-center gap-2">
+                        <a
+                          href={message.videoUrl}
+                          download="dehub-video.mp4"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                            backdrop-blur-xl border border-white/30
+                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                            hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                            hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                        >
+                          <Download className="w-5 h-5" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ) : message.role === 'assistant' && message.isVideoGenerating ? (
+                  /* Video generating placeholder */
+                  <div className="max-w-[85%] flex flex-col gap-2">
+                    <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                      <MarkdownText content={message.content} className="text-sm" />
+                    </div>
+                    {/* Video generation loader */}
+                    <div className="relative w-full aspect-video max-w-md rounded-lg overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/60">
+                      {/* Animated gradient background */}
+                      <motion.div 
+                        className="absolute inset-0"
+                        animate={{ 
+                          background: [
+                            'linear-gradient(45deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(236,72,153,0.3) 100%)',
+                            'linear-gradient(45deg, rgba(236,72,153,0.3) 0%, rgba(139,92,246,0.3) 50%, rgba(59,130,246,0.3) 100%)',
+                            'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(236,72,153,0.3) 50%, rgba(139,92,246,0.3) 100%)',
+                          ]
+                        }}
+                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                      />
+                      {/* Pulsing video icon */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <motion.div
+                          animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                        >
+                          <Video className="w-16 h-16 text-white/40" />
+                        </motion.div>
+                      </div>
+                      {/* Progress bar at bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+                        <motion.div 
+                          className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-500"
+                          animate={{ width: ['0%', '100%'] }}
+                          transition={{ duration: 60, ease: 'linear' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : message.role === 'assistant' && message.imageUrl ? (
                   /* Image-only messages - no bubble wrapper */
                   <div className="max-w-[85%] flex flex-col gap-2">
                     {message.content && (
