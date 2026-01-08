@@ -75,8 +75,11 @@ async function searchWithPerplexity(query: string, perplexityKey: string): Promi
   }
 
   const data = await response.json();
-  const content = data.choices?.[0]?.message?.content || '';
+  let content = data.choices?.[0]?.message?.content || '';
   const citations = data.citations || [];
+  
+  // Remove inline citation brackets like [1], [2][3], etc.
+  content = content.replace(/\[\d+\]/g, '');
   
   // Format response with citations if available
   let formattedResponse = content;
