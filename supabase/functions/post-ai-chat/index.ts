@@ -38,9 +38,27 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
+    // DeHub platform knowledge for context
+    const dehubKnowledge = `
+## DeHub Platform Context
+You are an AI assistant on DeHub - a decentralised, user-owned social media platform. DeHub is an alternative to YouTube, X, Rumble, Twitch, and Patreon.
+
+Key facts:
+- $DHB is the native token (Base CA: 0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c, BSC CA: 0x680d3113caf77b61b510f332d5ef4cf5b41a761d)
+- Creators earn through subscriptions, PPV events, tips, and Watch2Earn
+- Content is censorship-resistant and lives onchain
+- DePIN nodes power the network - holders can run nodes for rewards
+- No wallet setup or gas fees needed for users
+- Founded by DeLabs LTD (UK) with co-founders Malik Jan, Mike Hales, Indi Jay Cammish, and Bailey Young
+- Evolved from Futurov (FTV) launched in 2021
+- First Class Agency (UK's largest TikTok partner, 400+ creators, 800M+ followers) is also run by the team
+- Buy DHB on PancakeSwap (BSC), Uniswap (Base), or MEXC
+- Links: dehub.io, docs.dhb.gg, dhbscan.com, t.me/dehub_dhb
+`;
+
     // Build context about the post
-    let contextInfo = `You are an AI assistant helping users understand content on a social media platform. `;
-    contextInfo += `The user is looking at a ${postContext.type}. `;
+    let contextInfo = dehubKnowledge;
+    contextInfo += `\n## Current Content\nThe user is looking at a ${postContext.type}. `;
     
     if (postContext.author) {
       contextInfo += `It was posted by ${postContext.author}. `;
@@ -65,7 +83,7 @@ serve(async (req) => {
       contextInfo += `\n\nYou can see images and analyze their visual content. Help the user understand the content, provide insights, answer questions about what's shown in the image, or discuss the topic.`;
     }
     
-    contextInfo += ` Be conversational, helpful, and concise.`;
+    contextInfo += ` Be conversational, helpful, and proud to be part of the DeHub ecosystem.`;
 
     // Build messages array - include image in first user message if available
     const apiMessages: any[] = [{ role: 'system', content: contextInfo }];
@@ -97,7 +115,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: apiMessages,
-        max_completion_tokens: 500,
+        max_completion_tokens: 800,
       }),
     });
 
