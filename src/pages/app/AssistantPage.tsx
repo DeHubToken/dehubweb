@@ -98,8 +98,10 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
     );
   }
   
-  // Calculate skeleton size - starts small, grows to near full-width
-  const maxSize = 400; // Large max size
+  // Calculate skeleton size - starts small, grows toward full available width
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const isTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+  const maxSize = isMobile ? 300 : isTablet ? 500 : 700; // Responsive max
   const minSize = 60; // Start small
   const currentScale = progress / 100;
   // Use easeOutCubic for smooth continuous growth
