@@ -41,10 +41,11 @@ const VIDEO_MODELS = {
     supports: ['image-to-video'],
     duration: '10s',
   },
-  // Lightricks LTX Video
+  // Lightricks LTX Video - uses version hash instead of model path
   'ltx-video': {
-    id: 'lightricks/ltx-video-0.9.7',
-    name: 'LTX Video 0.9.7',
+    id: 'lightricks/ltx-video',
+    version: '8c47da666861d081eeb4d1261853087de23923a268a69b63febdf5dc1dee08e4',
+    name: 'LTX Video',
     description: 'Fast, efficient, good for quick generations',
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s',
@@ -202,11 +203,16 @@ serve(async (req) => {
 
     console.log('Model input:', JSON.stringify(input).substring(0, 200));
 
-    // Start async prediction
-    const prediction = await replicate.predictions.create({
-      model: modelConfig.id,
-      input,
-    });
+    // Start async prediction - use version hash if available, otherwise model path
+    const predictionParams: { model?: string; version?: string; input: Record<string, unknown> } = { input };
+    
+    if ('version' in modelConfig && modelConfig.version) {
+      predictionParams.version = modelConfig.version as string;
+    } else {
+      predictionParams.model = modelConfig.id;
+    }
+    
+    const prediction = await replicate.predictions.create(predictionParams);
 
     console.log('Prediction started:', prediction.id);
 
