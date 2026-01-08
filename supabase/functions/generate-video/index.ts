@@ -17,12 +17,12 @@ const VIDEO_MODELS = {
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s or 10s',
   },
-  // Luma Dream Machine - Surreal/creative
+  // Luma Ray 2 - Official Luma model
   'luma-ray2': {
-    id: 'luma/ray2',
+    id: 'luma/ray-2-720p',
     name: 'Luma Ray 2',
-    description: 'Latest Luma model, photorealistic results',
-    supports: ['text-to-video', 'image-to-video'],
+    description: 'Latest Luma model, photorealistic results (720p)',
+    supports: ['text-to-video'],
     duration: '5s',
   },
   // Minimax - Fast and good quality
@@ -33,11 +33,11 @@ const VIDEO_MODELS = {
     supports: ['text-to-video', 'image-to-video'],
     duration: '6s',
   },
-  // Runway Gen-3 Alpha
-  'runway-gen3': {
-    id: 'fofr/runway-gen3-turbo',
-    name: 'Runway Gen-3 Turbo',
-    description: 'Industry leader, stunning visual quality',
+  // Runway Gen-4 Turbo - Latest official Runway model
+  'runway-gen4': {
+    id: 'runwayml/gen4-turbo',
+    name: 'Runway Gen-4 Turbo',
+    description: 'Latest Runway model, stunning visual quality',
     supports: ['text-to-video', 'image-to-video'],
     duration: '10s',
   },
@@ -152,7 +152,7 @@ serve(async (req) => {
         input = {
           prompt,
           aspect_ratio: aspectRatio,
-          ...(sourceImage && { start_image_url: sourceImage }),
+          loop: false,
         };
         break;
 
@@ -163,12 +163,12 @@ serve(async (req) => {
         };
         break;
 
-      case 'runway-gen3':
+      case 'runway-gen4':
         input = {
           prompt,
           duration: parseInt(duration),
-          aspect_ratio: aspectRatio,
-          ...(sourceImage && { image: sourceImage }),
+          ratio: aspectRatio,
+          ...(sourceImage && { image_url: sourceImage }),
         };
         break;
 

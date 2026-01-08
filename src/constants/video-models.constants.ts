@@ -26,16 +26,16 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'luma-ray2': {
     id: 'luma-ray2',
     name: 'Luma Ray 2',
-    description: 'Photorealistic, dreamy aesthetic',
-    supports: ['text-to-video', 'image-to-video'],
+    description: 'Photorealistic, dreamy aesthetic (720p)',
+    supports: ['text-to-video'],
     duration: '5s',
     tier: 'premium',
     emoji: '✨',
   },
-  'runway-gen3': {
-    id: 'runway-gen3',
-    name: 'Runway Gen-3 Turbo',
-    description: 'Industry leader, stunning quality',
+  'runway-gen4': {
+    id: 'runway-gen4',
+    name: 'Runway Gen-4 Turbo',
+    description: 'Latest Runway, stunning quality',
     supports: ['text-to-video', 'image-to-video'],
     duration: '10s',
     tier: 'premium',
