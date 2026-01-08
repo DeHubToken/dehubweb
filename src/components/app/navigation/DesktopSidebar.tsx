@@ -26,8 +26,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     navigate('/app');
   };
 
-  // Filter out AI item - we'll render it specially as a NavLink
-  const navItemsWithoutAI = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'AI');
+  // Filter out Assistant item - we'll render it specially as a NavLink
+  const navItemsWithoutAI = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
   const isAIActive = location.pathname === '/app/assistant';
 
   return (
