@@ -5,11 +5,28 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2 } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { supabase } from '@/integrations/supabase/client';
+
+const STYLE_OPTIONS = [
+  { id: 'normal', label: 'Normal', emoji: '🤖' },
+  { id: 'old-english', label: 'Old English', emoji: '🏰' },
+  { id: 'cockney', label: 'Cockney', emoji: '🎩' },
+  { id: 'celtic', label: 'Celtic', emoji: '☘️' },
+  { id: 'scouse', label: 'Scouse', emoji: '⚽' },
+  { id: 'wild-west', label: 'Wild West', emoji: '🤠' },
+  { id: 'asian-uncle', label: 'Asian Uncle', emoji: '👴' },
+  { id: 'russian-mafia', label: 'Russian Mafia', emoji: '🎰' },
+  { id: 'pirate', label: 'Pirate', emoji: '🏴‍☠️' },
+  { id: 'alien', label: 'Alien', emoji: '👽' },
+  { id: 'e-girl', label: 'E-Girl', emoji: '💖' },
+  { id: 'chad', label: 'Chad', emoji: '💪' },
+  { id: 'hopeless-romantic', label: 'Hopeless Romantic', emoji: '💕' },
+] as const;
 
 interface Message {
   id: string;
@@ -21,8 +38,12 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState<string>('normal');
+  const [stylePopoverOpen, setStylePopoverOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const currentStyle = STYLE_OPTIONS.find(s => s.id === selectedStyle) || STYLE_OPTIONS[0];
 
   // Generate initial welcome message
   useEffect(() => {
@@ -66,7 +87,8 @@ export default function AssistantPage() {
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
             content: m.content
-          }))
+          })),
+          style: selectedStyle
         }
       });
 
@@ -98,17 +120,58 @@ export default function AssistantPage() {
     }
   };
 
+  const handleStyleSelect = (styleId: string) => {
+    setSelectedStyle(styleId);
+    setStylePopoverOpen(false);
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)]">
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 border-b border-white/10">
-        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-white" />
+      <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
+            <p className="text-sm text-white/50">Ask me anything</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
-          <p className="text-sm text-white/50">Ask me anything</p>
-        </div>
+
+        {/* Style Selector */}
+        <Popover open={stylePopoverOpen} onOpenChange={setStylePopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+            >
+              <span>{currentStyle.emoji}</span>
+              <span className="hidden sm:inline">{currentStyle.label}</span>
+              <ChevronDown className="w-3 h-3 text-white/50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent 
+            align="end" 
+            className="w-48 p-1"
+          >
+            <div className="flex flex-col">
+              {STYLE_OPTIONS.map((style) => (
+                <button
+                  key={style.id}
+                  onClick={() => handleStyleSelect(style.id)}
+                  className={`flex items-center gap-3 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors ${
+                    selectedStyle === style.id ? 'bg-white/10' : ''
+                  }`}
+                >
+                  <span>{style.emoji}</span>
+                  <span>{style.label}</span>
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Messages */}

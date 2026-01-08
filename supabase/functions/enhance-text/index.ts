@@ -17,6 +17,7 @@ const STYLE_PROMPTS: Record<string, string> = {
   'alien': 'Rewrite the text as if an alien is trying to communicate with humans, using slightly formal/clinical language, curious observations about "human customs", and occasional misunderstandings.',
   'e-girl': 'Rewrite the text in e-girl/internet culture style with "uwu", "owo", emoticons, elongated words like "pleaseee", lots of enthusiasm, and cute expressions.',
   'chad': 'Rewrite the text in "chad" bro culture style with "bro", "dude", "gains", gym references, excessive confidence, and motivational energy.',
+  'hopeless-romantic': 'Rewrite the text in the voice of a hopeless romantic - dreamy, poetic, full of sighs and longing. Use flowery language, metaphors about love, destiny, and hearts. Sprinkle in wistful observations and make everything sound like it could be from a romance novel.',
 };
 
 serve(async (req) => {
