@@ -141,21 +141,23 @@ export default function AssistantPage() {
 
   // Style options content - same pattern as PostActionBar enhance menu
   const styleMenuContent = (
-    <div className="flex flex-col">
-      {STYLE_OPTIONS.map((style) => (
-        <button
-          key={style.id}
-          type="button"
-          onClick={() => handleStyleSelect(style.id)}
-          className={`flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-            selectedStyle === style.id ? 'bg-white/10' : ''
-          }`}
-        >
-          <span className="text-lg">{style.emoji}</span>
-          {style.label}
-        </button>
-      ))}
-    </div>
+    <ScrollArea className="max-h-[60vh]">
+      <div className="flex flex-col">
+        {STYLE_OPTIONS.map((style) => (
+          <button
+            key={style.id}
+            type="button"
+            onClick={() => handleStyleSelect(style.id)}
+            className={`flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+              selectedStyle === style.id ? 'bg-white/10' : ''
+            }`}
+          >
+            <span className="text-lg">{style.emoji}</span>
+            {style.label}
+          </button>
+        ))}
+      </div>
+    </ScrollArea>
   );
 
   return (
