@@ -67,7 +67,7 @@ export default function AssistantPage() {
       setMessages([{
         id: 'initial',
         role: 'assistant',
-        content: `Hi! I'm your AI assistant. Ask me anything about DeHub, crypto, or general questions. I can also search the web for **live news and current events**! 🌐`
+        content: `Hi! Ask me anything, whether it's DeHub related or not, I can help.`
       }]);
     }
   }, []);
