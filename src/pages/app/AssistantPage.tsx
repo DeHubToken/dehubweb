@@ -135,19 +135,10 @@ export default function AssistantPage() {
         
         // Check for error in response (like safety blocks)
         if (data.error) {
-          const errorType = data.errorType || 'unknown';
-          let errorIcon = '⚠️';
-          
-          if (errorType === 'adult_content') {
-            errorIcon = '🔞';
-          } else if (errorType === 'real_person') {
-            errorIcon = '🚫';
-          }
-          
           setMessages(prev => [...prev, {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: `${errorIcon} **Content Blocked**\n\n${data.error}`
+            content: data.error
           }]);
           return;
         }
