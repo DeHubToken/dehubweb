@@ -19,6 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
+import { addWatermarkClient } from '@/lib/watermark';
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { PostModal } from '@/features/post';
@@ -521,11 +522,14 @@ export default function AssistantPage() {
           return;
         }
 
+        // Apply client-side watermark
+        const watermarkedImageUrl = await addWatermarkClient(data.imageUrl);
+        
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
           content: '', // No text for image responses
-          imageUrl: data.imageUrl
+          imageUrl: watermarkedImageUrl
         };
 
         setMessages(prev => [...prev, assistantMessage]);
