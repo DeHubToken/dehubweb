@@ -115,25 +115,94 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
       animate={{ opacity: 1 }}
       className="flex justify-start"
     >
-      {/* Growing skeleton with shimmer - minimal design */}
+      {/* Growing skeleton with colorful smoky shimmer */}
       <motion.div
         animate={{ width: size, height: size }}
         transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-        className="relative overflow-hidden rounded-2xl bg-white/10"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/60"
       >
-        {/* Shimmer effect */}
+        {/* Base ambient glow */}
         <div 
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          className="absolute inset-0"
           style={{
-            animation: 'shimmer 1.5s infinite',
-            backgroundSize: '200% 100%',
+            background: 'radial-gradient(ellipse at 30% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)',
+          }}
+        />
+        
+        {/* Primary color wave - purple/violet */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ 
+            opacity: [0.1, 0.3, 0.1],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            background: 'radial-gradient(ellipse at 20% 30%, rgba(168, 85, 247, 0.4) 0%, transparent 60%)',
+            filter: 'blur(20px)',
+          }}
+        />
+        
+        {/* Secondary color wave - cyan/blue */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ 
+            opacity: [0.15, 0.35, 0.15],
+            scale: [1.1, 1, 1.1],
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+          style={{
+            background: 'radial-gradient(ellipse at 80% 70%, rgba(34, 211, 238, 0.4) 0%, transparent 60%)',
+            filter: 'blur(25px)',
+          }}
+        />
+        
+        {/* Tertiary color wave - pink/magenta */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ 
+            opacity: [0.2, 0.1, 0.25, 0.1],
+            x: [0, 10, -5, 0],
+            y: [0, -10, 5, 0],
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          style={{
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.35) 0%, transparent 55%)',
+            filter: 'blur(30px)',
+          }}
+        />
+        
+        {/* Warm accent - orange/amber */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ 
+            opacity: [0.1, 0.25, 0.1],
+            rotate: [0, 5, -5, 0],
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+          style={{
+            background: 'radial-gradient(ellipse at 60% 20%, rgba(251, 146, 60, 0.3) 0%, transparent 50%)',
+            filter: 'blur(20px)',
+          }}
+        />
+        
+        {/* Traveling shimmer highlight */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{ 
+            x: ['-100%', '200%'],
+          }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)',
+            width: '50%',
           }}
         />
         
         {/* Subtle progress indicator at bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
           <motion.div 
-            className="h-full bg-primary/40"
+            className="h-full bg-gradient-to-r from-violet-500/60 via-cyan-400/60 to-pink-500/60"
             animate={{ width: `${progress}%` }}
             transition={{ ease: 'linear' }}
           />
