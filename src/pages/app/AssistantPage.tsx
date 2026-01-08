@@ -20,8 +20,9 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
-import { VIDEO_MODEL_OPTIONS, type VideoModelKey } from '@/constants/video-models.constants';
+import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { PostModal } from '@/features/post';
+import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 
 interface Message {
   id: string;
@@ -246,6 +247,12 @@ export default function AssistantPage() {
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [postModalOpen, setPostModalOpen] = useState(false);
   const [postModalFiles, setPostModalFiles] = useState<FileList | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [pendingVideoRequest, setPendingVideoRequest] = useState<{
+    prompt: string;
+    model: VideoModelKey;
+    sourceImage?: string;
+  } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -341,6 +348,76 @@ export default function AssistantPage() {
     }
   }, []);
 
+  // Handle video generation after payment confirmation
+  const handleVideoGenerationConfirm = async () => {
+    if (!pendingVideoRequest) return;
+
+    const { prompt, model, sourceImage } = pendingVideoRequest;
+    const videoModel = VIDEO_MODELS[model];
+
+    // Add user message if not already added
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: prompt,
+      attachedImage: sourceImage
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    setPaywallOpen(false);
+    setIsVideoLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-video', {
+        body: {
+          prompt,
+          model,
+          sourceImage,
+          duration: '5s',
+          aspectRatio: '16:9'
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `Video generation failed: ${data.error}`
+        }]);
+        setIsVideoLoading(false);
+        setPendingVideoRequest(null);
+        return;
+      }
+
+      // Create placeholder message for video
+      const messageId = (Date.now() + 1).toString();
+      const assistantMessage: Message = {
+        id: messageId,
+        role: 'assistant',
+        content: `🎬 Generating video with **${videoModel.name}**...\n\n_This may take 1-3 minutes_`,
+        isVideoGenerating: true,
+        videoPredictionId: data.predictionId
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+      // Start polling for video status
+      pollingRef.current[data.predictionId] = setInterval(() => {
+        pollVideoStatus(data.predictionId, messageId);
+      }, 5000);
+
+      toast.success('Payment successful! Generating your video...');
+    } catch (err) {
+      console.error('Video generation error:', err);
+      toast.error('Failed to start video generation');
+      setIsVideoLoading(false);
+    }
+
+    setPendingVideoRequest(null);
+  };
+
   // Cleanup polling on unmount
   useEffect(() => {
     return () => {
@@ -378,49 +455,15 @@ export default function AssistantPage() {
           return;
         }
         
-        // Video generation
-        setIsVideoLoading(true);
-        
-        const { data, error } = await supabase.functions.invoke('generate-video', {
-          body: {
-            prompt: currentInput,
-            model: selectedVideoModel,
-            sourceImage: currentAttachedImage || undefined,
-            duration: '5s',
-            aspectRatio: '16:9'
-          }
+        // Show paywall instead of generating directly
+        setPendingVideoRequest({
+          prompt: currentInput,
+          model: selectedVideoModel,
+          sourceImage: currentAttachedImage || undefined,
         });
-
-        if (error) throw error;
-
-        if (data.error) {
-          setMessages(prev => [...prev, {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: `Video generation failed: ${data.error}`
-          }]);
-          setIsVideoLoading(false);
-          return;
-        }
-
-        // Create placeholder message for video
-        const messageId = (Date.now() + 1).toString();
-        const assistantMessage: Message = {
-          id: messageId,
-          role: 'assistant',
-          content: `🎬 Generating video with **${currentVideoModel.name}**...\n\n_This may take 1-3 minutes_`,
-          isVideoGenerating: true,
-          videoPredictionId: data.predictionId
-        };
-
-        setMessages(prev => [...prev, assistantMessage]);
-
-        // Start polling for video status
-        pollingRef.current[data.predictionId] = setInterval(() => {
-          pollVideoStatus(data.predictionId, messageId);
-        }, 5000);
-
-        // Don't set isLoading to false yet - video is still generating
+        setPaywallOpen(true);
+        setIsLoading(false);
+        return;
         setIsLoading(false);
         
       } else if (isImageRequest) {
@@ -993,6 +1036,20 @@ export default function AssistantPage() {
         initialFiles={postModalFiles}
         onFilesProcessed={() => setPostModalFiles(null)}
       />
+
+      {/* Video Paywall Modal */}
+      {pendingVideoRequest && (
+        <VideoPaywallModal
+          open={paywallOpen}
+          onOpenChange={(open) => {
+            setPaywallOpen(open);
+            if (!open) setPendingVideoRequest(null);
+          }}
+          model={VIDEO_MODELS[pendingVideoRequest.model]}
+          onConfirm={handleVideoGenerationConfirm}
+          isGenerating={isVideoLoading}
+        />
+      )}
     </div>
   );
 }
