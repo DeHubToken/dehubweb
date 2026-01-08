@@ -6,9 +6,15 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 interface GenerateImageRequest {
   prompt: string;
   sourceImage?: string; // Base64 data URL for editing
+  conversationHistory?: ConversationMessage[];
 }
 
 serve(async (req) => {
@@ -17,7 +23,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, sourceImage } = await req.json() as GenerateImageRequest;
+    const { prompt, sourceImage, conversationHistory = [] } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -28,7 +34,19 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    console.log('Generating image with prompt:', prompt.substring(0, 100), '| Has source image:', !!sourceImage);
+    console.log('Generating image with prompt:', prompt.substring(0, 100), '| Has source image:', !!sourceImage, '| Conversation history length:', conversationHistory.length);
+
+    // Build context from conversation history
+    let contextualPrompt = prompt;
+    if (conversationHistory.length > 0) {
+      // Build a summary of recent conversation for context
+      const recentHistory = conversationHistory.slice(-6); // Last 6 messages for context
+      const contextSummary = recentHistory
+        .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`)
+        .join('\n');
+      
+      contextualPrompt = `CONVERSATION CONTEXT (use this to understand references like "him", "it", "that", etc.):\n${contextSummary}\n\nCURRENT REQUEST: ${prompt}`;
+    }
 
     // Build messages based on whether we're editing or generating
     const messages = sourceImage ? [
@@ -36,11 +54,11 @@ serve(async (req) => {
         role: 'user',
         content: [
           { type: 'image_url', image_url: { url: sourceImage } },
-          { type: 'text', text: prompt }
+          { type: 'text', text: contextualPrompt }
         ]
       }
     ] : [
-      { role: 'user', content: prompt }
+      { role: 'user', content: contextualPrompt }
     ];
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

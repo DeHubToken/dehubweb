@@ -123,11 +123,20 @@ export default function AssistantPage() {
       const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
-        // Use generate-image endpoint
+        // Build conversation history for context
+        const conversationHistory = messages
+          .filter(m => m.id !== 'initial') // Exclude welcome message
+          .map(m => ({
+            role: m.role,
+            content: m.content
+          }));
+        
+        // Use generate-image endpoint with conversation context
         const { data, error } = await supabase.functions.invoke('generate-image', {
           body: {
             prompt: currentInput,
-            sourceImage: currentAttachedImage || undefined
+            sourceImage: currentAttachedImage || undefined,
+            conversationHistory
           }
         });
 
