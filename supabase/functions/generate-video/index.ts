@@ -179,7 +179,7 @@ serve(async (req) => {
           prompt,
           duration: parseInt(duration),
           ratio: aspectRatio,
-          ...(sourceImage && { image_url: sourceImage }),
+          ...(sourceImage && { image: sourceImage }),
         };
         break;
 
