@@ -358,7 +358,7 @@ export function PostMediaPreview({
                   />
                   
                   {/* Track info overlay */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center gap-3">
+                  <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
                       <Music className="w-5 h-5 text-white" />
                     </div>
@@ -369,24 +369,6 @@ export function PostMediaPreview({
                       </p>
                     </div>
                   </div>
-                  
-                  {/* Play/Pause button overlay */}
-                  <button
-                    onClick={() => {
-                      if (playingIndex === index) {
-                        setPlayingIndex(null);
-                      } else {
-                        setPlayingIndex(index);
-                      }
-                    }}
-                    className="absolute bottom-3 left-3 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30"
-                  >
-                    {playingIndex === index ? (
-                      <Pause className="w-5 h-5 text-white" />
-                    ) : (
-                      <Play className="w-5 h-5 text-white fill-white" />
-                    )}
-                  </button>
                 </div>
               ) : (
                 <div className="relative">

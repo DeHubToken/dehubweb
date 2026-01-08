@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Play, Palette } from 'lucide-react';
+import { Play, Pause, Palette } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import {
   VisualizerStyle,
@@ -252,14 +252,24 @@ export function AudioVisualizer({
         </div>
       )}
 
-      {/* Play indicator overlay when not playing */}
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-xl cursor-pointer">
-          <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+      {/* Play/Pause button overlay - always visible in center */}
+      <div 
+        className="absolute inset-0 flex items-center justify-center cursor-pointer pointer-events-none"
+        style={{ pointerEvents: 'none' }}
+      >
+        <div 
+          className={`w-12 h-12 rounded-full backdrop-blur-sm flex items-center justify-center border border-white/30 transition-all pointer-events-auto ${
+            isPlaying ? 'bg-white/10 opacity-0 hover:opacity-100' : 'bg-white/20'
+          }`}
+          onClick={onPlayPause}
+        >
+          {isPlaying ? (
+            <Pause className="w-5 h-5 text-white" />
+          ) : (
             <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
