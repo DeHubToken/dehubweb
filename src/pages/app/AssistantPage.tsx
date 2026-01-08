@@ -45,10 +45,106 @@ function requiresImageGeneration(message: string, hasAttachedImage: boolean): bo
   return IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
+// Image generation loading animation component
+function ImageGenerationLoader({ startTime }: { startTime: number }) {
+  const [phase, setPhase] = useState<'spinner' | 'skeleton'>('spinner');
+  const [progress, setProgress] = useState(0);
+  
+  useEffect(() => {
+    // Switch to skeleton phase after 2 seconds
+    const phaseTimer = setTimeout(() => {
+      setPhase('skeleton');
+    }, 2000);
+    
+    return () => clearTimeout(phaseTimer);
+  }, []);
+  
+  useEffect(() => {
+    if (phase === 'skeleton') {
+      // Animate progress from 0 to 100 over ~8 seconds (typical image gen time)
+      const interval = setInterval(() => {
+        setProgress(prev => {
+          // Slow down as we approach 95% (never reach 100 until actual completion)
+          if (prev >= 95) return prev;
+          const increment = Math.max(0.5, (95 - prev) / 50);
+          return Math.min(95, prev + increment);
+        });
+      }, 100);
+      
+      return () => clearInterval(interval);
+    }
+  }, [phase]);
+  
+  if (phase === 'spinner') {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex justify-start"
+      >
+        <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin text-white/60" />
+          <span className="text-sm text-white/60">Generating image...</span>
+        </div>
+      </motion.div>
+    );
+  }
+  
+  // Calculate skeleton size based on progress (starts at 30% of final size)
+  const minScale = 0.3;
+  const currentScale = minScale + (1 - minScale) * (progress / 100);
+  const width = Math.round(280 * currentScale);
+  const height = Math.round(280 * currentScale);
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex justify-start"
+    >
+      <div className="bg-white/10 rounded-2xl p-3 flex flex-col gap-2">
+        <div className="flex items-center gap-2 mb-1">
+          <Sparkles className="w-3 h-3 text-primary animate-pulse" />
+          <span className="text-xs text-white/60">Building your image...</span>
+        </div>
+        
+        {/* Growing skeleton with shimmer */}
+        <motion.div
+          animate={{ width, height }}
+          transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+          className="relative overflow-hidden rounded-lg bg-white/5"
+        >
+          {/* Shimmer effect */}
+          <div 
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+            style={{
+              animation: 'shimmer 1.5s infinite',
+              backgroundSize: '200% 100%',
+            }}
+          />
+          
+          {/* Progress indicator inside skeleton */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+            <motion.div 
+              className="h-full bg-primary/60"
+              animate={{ width: `${progress}%` }}
+              transition={{ ease: 'linear' }}
+            />
+          </div>
+        </motion.div>
+        
+        <span className="text-xs text-white/40 text-center">{Math.round(progress)}%</span>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
@@ -123,6 +219,10 @@ export default function AssistantPage() {
       const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
+        // Set image-specific loading state
+        setIsImageLoading(true);
+        setImageLoadStartTime(Date.now());
+        
         // Build conversation history for context
         const conversationHistory = messages
           .filter(m => m.id !== 'initial') // Exclude welcome message
@@ -191,6 +291,7 @@ export default function AssistantPage() {
       }]);
     } finally {
       setIsLoading(false);
+      setIsImageLoading(false);
     }
   };
 
@@ -344,7 +445,10 @@ export default function AssistantPage() {
               </motion.div>
             ))}
           </AnimatePresence>
-          {isLoading && (
+          {isImageLoading && (
+            <ImageGenerationLoader startTime={imageLoadStartTime} />
+          )}
+          {isLoading && !isImageLoading && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
