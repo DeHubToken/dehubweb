@@ -43,8 +43,8 @@ const VIDEO_MODELS = {
   },
   // Lightricks LTX Video
   'ltx-video': {
-    id: 'lightricks/ltx-video',
-    name: 'LTX Video',
+    id: 'lightricks/ltx-video-0.9.7',
+    name: 'LTX Video 0.9.7',
     description: 'Fast, efficient, good for quick generations',
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s',
