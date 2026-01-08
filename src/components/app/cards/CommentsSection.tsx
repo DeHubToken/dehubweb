@@ -341,6 +341,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
   const recordingTimeRef = useRef(0);
   const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const MAX_VOICE_DURATION = 30;
 
@@ -485,6 +486,11 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
     const comment = (activeTab === 'replies' ? replies : quotes).find(c => c.id === commentId);
     if (comment) {
       setNewComment(`@${comment.username} `);
+      // Scroll to and focus the input
+      setTimeout(() => {
+        inputRef.current?.focus();
+        inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     }
   };
 
@@ -669,6 +675,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
               ) : (
                 <>
                   <Input
+                    ref={inputRef}
                     placeholder={activeTab === 'replies' ? 'Add a reply...' : 'Add a quote...'}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
