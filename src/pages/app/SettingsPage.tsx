@@ -596,7 +596,7 @@ function ContentSettings() {
       </div>
 
       <div className="flex justify-end">
-        <Button className="bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:opacity-90">
+        <Button className="bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700">
           Save Preferences
         </Button>
       </div>
