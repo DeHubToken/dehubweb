@@ -90,11 +90,12 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
     );
   }
   
-  // Calculate skeleton size based on progress (starts at 30% of final size)
-  const minScale = 0.3;
-  const currentScale = minScale + (1 - minScale) * (progress / 100);
-  const width = Math.round(280 * currentScale);
-  const height = Math.round(280 * currentScale);
+  // Calculate skeleton size based on progress - direct 1:1 mapping
+  // Final size matches typical generated image size
+  const finalSize = 320;
+  const minSize = 40; // Start small but visible
+  const currentScale = progress / 100;
+  const size = Math.round(minSize + (finalSize - minSize) * currentScale);
   
   return (
     <motion.div
@@ -110,7 +111,7 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
         
         {/* Growing skeleton with shimmer */}
         <motion.div
-          animate={{ width, height }}
+          animate={{ width: size, height: size }}
           transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           className="relative overflow-hidden rounded-lg bg-white/5"
         >
