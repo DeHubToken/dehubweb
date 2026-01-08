@@ -421,21 +421,21 @@ export default function AssistantPage() {
                       <MarkdownText content={message.content} className="text-sm" />
                       {/* Show generated image for assistant messages */}
                       {message.imageUrl && (
-                        <div className="mt-2 space-y-2">
+                        <>
                           <img 
                             src={message.imageUrl} 
                             alt="Generated" 
-                            className="max-w-full rounded-lg"
+                            className="max-w-full rounded-lg mt-2"
                           />
                           <Button
                             size="sm"
                             onClick={() => handlePostImage(message.imageUrl!)}
-                            className="w-full gap-2 rounded-full"
+                            className="w-full gap-2 rounded-full mt-2"
                           >
                             <Share className="w-4 h-4" />
                             Post
                           </Button>
-                        </div>
+                        </>
                       )}
                     </>
                   ) : (
