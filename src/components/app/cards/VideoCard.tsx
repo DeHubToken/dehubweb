@@ -57,7 +57,7 @@ export function VideoCard({ video }: VideoCardProps) {
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+            <DropdownMenuContent align="end">
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <ListPlus className="w-4 h-4" /> Queue
               </DropdownMenuItem>

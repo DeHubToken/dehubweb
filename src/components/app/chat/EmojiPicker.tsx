@@ -36,19 +36,19 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-80 p-0 bg-zinc-800 border-zinc-700" 
+        className="w-80 p-0" 
         align="start"
         side="top"
       >
         {/* Category tabs */}
-        <div className="flex border-b border-zinc-700 overflow-x-auto">
+        <div className="flex border-b border-white/10 overflow-x-auto">
           {Object.keys(EMOJI_CATEGORIES).map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
               className={`px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors ${
                 activeCategory === category 
-                  ? 'text-white border-b-2 border-green-500' 
+                  ? 'text-white border-b-2 border-white' 
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
@@ -63,7 +63,7 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
               <button
                 key={index}
                 onClick={() => handleEmojiClick(emoji)}
-                className="w-8 h-8 flex items-center justify-center text-lg hover:bg-zinc-700 rounded transition-colors"
+                className="w-8 h-8 flex items-center justify-center text-lg hover:bg-white/10 rounded transition-colors"
               >
                 {emoji}
               </button>

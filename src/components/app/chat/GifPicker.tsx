@@ -52,19 +52,19 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-80 p-0 bg-zinc-800 border-zinc-700" 
+        className="w-80 p-0" 
         align="start"
         side="top"
       >
         {/* Search */}
-        <div className="p-2 border-b border-zinc-700">
+        <div className="p-2 border-b border-white/10">
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
               placeholder="Search GIFs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 h-8 bg-zinc-700 border-zinc-600 text-white text-sm placeholder:text-zinc-500"
+              className="pl-8 h-8 bg-white/5 border-white/10 text-white text-sm placeholder:text-zinc-500"
             />
           </div>
         </div>
@@ -80,7 +80,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
               <button
                 key={index}
                 onClick={() => handleGifClick(gif)}
-                className="aspect-video rounded-lg overflow-hidden hover:ring-2 hover:ring-green-500 transition-all"
+                className="aspect-video rounded-lg overflow-hidden hover:ring-2 hover:ring-white transition-all"
               >
                 <img 
                   src={gif} 
@@ -93,7 +93,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
           </div>
         </div>
         
-        <div className="p-2 border-t border-zinc-700 text-center">
+        <div className="p-2 border-t border-white/10 text-center">
           <span className="text-[10px] text-zinc-500">Powered by GIPHY</span>
         </div>
       </PopoverContent>
