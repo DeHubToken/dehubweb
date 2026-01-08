@@ -33,12 +33,12 @@ const VIDEO_MODELS = {
     supports: ['text-to-video', 'image-to-video'],
     duration: '6s',
   },
-  // Runway Gen-4 Turbo - Latest official Runway model
+  // Runway Gen-4 Turbo - Image-to-video only
   'runway-gen4': {
     id: 'runwayml/gen4-turbo',
     name: 'Runway Gen-4 Turbo',
-    description: 'Latest Runway model, stunning visual quality',
-    supports: ['text-to-video', 'image-to-video'],
+    description: 'Latest Runway model, stunning visual quality (image-to-video only)',
+    supports: ['image-to-video'],
     duration: '10s',
   },
   // Lightricks LTX Video
@@ -133,6 +133,17 @@ serve(async (req) => {
 
     const modelConfig = VIDEO_MODELS[model];
     console.log(`Generating video with ${modelConfig.name}: "${prompt.substring(0, 100)}..."`);
+
+    // Validate image-to-video only models
+    if (model === 'runway-gen4' && !sourceImage) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Runway Gen-4 requires an image. Please attach an image to animate, or select a different model like Kling or Luma.', 
+          status: 'failed' 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Build input based on model type
     let input: Record<string, unknown> = { prompt };
