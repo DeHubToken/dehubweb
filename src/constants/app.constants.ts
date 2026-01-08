@@ -26,7 +26,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
-  { icon: Sparkles, label: 'AI', path: '/app/ai' },
+  { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
