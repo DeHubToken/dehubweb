@@ -101,11 +101,12 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
   // Calculate skeleton size - starts small, grows toward full available width
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
   const isTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
-  const maxSize = isMobile ? 300 : isTablet ? 500 : 700; // Responsive max
-  const minSize = 60; // Start small
+  // Much larger max sizes - tablet should nearly fill the chat area
+  const maxSize = isMobile ? 320 : isTablet ? 650 : 800;
+  const minSize = 60;
   const currentScale = progress / 100;
-  // Use easeOutCubic for smooth continuous growth
-  const easedScale = 1 - Math.pow(1 - currentScale, 3);
+  // Use easeOutQuart for even slower deceleration - keeps growing longer
+  const easedScale = 1 - Math.pow(1 - currentScale, 4);
   const size = Math.round(minSize + (maxSize - minSize) * easedScale);
   
   return (
