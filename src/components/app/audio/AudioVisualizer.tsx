@@ -219,10 +219,7 @@ export function AudioVisualizer({
                 max={360}
                 step={1}
                 onValueChange={(value) => setHue(value[0])}
-                className="absolute inset-0 w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:-top-0.5 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-md [&_.relative]:bg-transparent [&_[data-orientation=horizontal]]:h-2 [&_[class*=Range]]:bg-transparent"
-                style={{ 
-                  ['--thumb-color' as any]: `hsl(${hue}, 80%, 60%)` 
-                }}
+                className="absolute inset-0 w-full [&_[role=slider]]:h-3 [&_[role=slider]]:w-3 [&_[role=slider]]:-top-0.5 [&_[role=slider]]:border-2 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-md [&_.relative]:bg-transparent [&_[data-orientation=horizontal]]:h-2 [&_[class*=Range]]:bg-transparent [&_[class*=Track]]:bg-transparent"
               />
             </div>
           </div>
