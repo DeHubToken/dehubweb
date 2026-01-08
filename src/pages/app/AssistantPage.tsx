@@ -256,7 +256,7 @@ export default function AssistantPage() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.text || (currentAttachedImage ? 'Here\'s your edited image!' : 'Here\'s your generated image!'),
+          content: '', // No text for image responses
           imageUrl: data.imageUrl
         };
 
