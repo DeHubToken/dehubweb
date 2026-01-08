@@ -155,7 +155,7 @@ serve(async (req) => {
           prompt,
           duration: duration === '10s' ? 10 : 5,
           aspect_ratio: aspectRatio,
-          ...(sourceImage && { image: sourceImage }),
+          ...(sourceImage && { start_image: sourceImage }),
         };
         break;
 
