@@ -141,8 +141,8 @@ export default function AssistantPage() {
 
   // Style options content - same pattern as PostActionBar enhance menu
   const styleMenuContent = (
-    <ScrollArea className="max-h-[60vh]">
-      <div className="flex flex-col">
+    <div className="h-[50vh] overflow-y-auto">
+      <div className="flex flex-col pb-4">
         {STYLE_OPTIONS.map((style) => (
           <button
             key={style.id}
@@ -157,7 +157,7 @@ export default function AssistantPage() {
           </button>
         ))}
       </div>
-    </ScrollArea>
+    </div>
   );
 
   return (
