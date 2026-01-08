@@ -366,19 +366,16 @@ export function PostContentArea({
           <AvatarFallback>U</AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 min-w-0 relative">
+        <div className="flex-1 min-w-0">
           <div
             ref={editorRef}
             contentEditable
             onInput={handleInput}
             onPaste={handlePaste}
             data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] pb-5 empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
-          <span className={cn("absolute bottom-0 right-0 text-xs", charCount > 280 ? "text-amber-400" : "text-white")}>
-            {charCount}/280
-          </span>
 
           <PostMediaPreview 
             media={media} 
@@ -409,32 +406,38 @@ export function PostContentArea({
             )}
           </AnimatePresence>
 
-          <AnimatePresence>
-            {canPost && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mt-2 flex items-center gap-1.5 flex-wrap"
-              >
-                <span className="text-xs text-zinc-500">In:</span>
-                {destinations.map(dest => (
-                  <span
-                    key={dest}
-                    className={cn(
-                      "text-xs px-1.5 py-0.5 rounded-full",
-                      dest === 'Shorts' ? 'bg-emerald-500/20 text-emerald-400' :
-                      dest === 'Live' ? 'bg-red-500/20 text-red-400' :
-                      dest === 'Music' ? 'bg-purple-500/20 text-purple-400' :
-                      'bg-zinc-800 text-zinc-400'
-                    )}
-                  >
-                    {dest}
-                  </span>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Bottom row: destinations + character count */}
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <AnimatePresence>
+              {canPost && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-1.5 flex-wrap"
+                >
+                  <span className="text-xs text-zinc-500">In:</span>
+                  {destinations.map(dest => (
+                    <span
+                      key={dest}
+                      className={cn(
+                        "text-xs px-1.5 py-0.5 rounded-full",
+                        dest === 'Shorts' ? 'bg-emerald-500/20 text-emerald-400' :
+                        dest === 'Live' ? 'bg-red-500/20 text-red-400' :
+                        dest === 'Music' ? 'bg-purple-500/20 text-purple-400' :
+                        'bg-zinc-800 text-zinc-400'
+                      )}
+                    >
+                      {dest}
+                    </span>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <span className={cn("text-xs ml-auto", charCount > 280 ? "text-amber-400" : "text-white/60")}>
+              {charCount}/280
+            </span>
+          </div>
         </div>
       </div>
     </div>
