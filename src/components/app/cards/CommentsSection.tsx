@@ -680,7 +680,15 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
-                    onKeyDown={(e) => e.key === 'Enter' && handlePostComment()}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                        e.preventDefault();
+                        handlePostComment();
+                      } else if (e.key === 'Escape') {
+                        setNewComment('');
+                        inputRef.current?.blur();
+                      }
+                    }}
                     onFocus={(e) => {
                       // Scroll input into view on focus to prevent being hidden behind nav
                       setTimeout(() => {
