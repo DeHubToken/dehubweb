@@ -1,4 +1,4 @@
-export type VisualizerStyle = 'bars' | 'waveform' | 'circular' | 'particles' | 'mirror' | 'rings' | 'starfield' | 'terrain';
+export type VisualizerStyle = 'bars' | 'waveform' | 'circular' | 'spectrum' | 'mirror' | 'rings' | 'pulse' | 'terrain';
 
 // Helper to get colors from hue
 function getColors(hue: number) {
@@ -140,150 +140,92 @@ export function drawCircular(
   ctx.stroke();
 }
 
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  life: number;
-  size: number;
-  hue: number;
-  type: 'bass' | 'treble';
-}
+// Scrolling Spectrogram - shows frequency history over time
+let spectrumImageData: ImageData | null = null;
 
-let particles: Particle[] = [];
-let lastBassLevel = 0;
-
-// Particle burst visualizer - Enhanced for audio sync
-export function drawParticles(
+export function drawSpectrum(
   ctx: CanvasRenderingContext2D,
   frequencyData: Uint8Array,
   width: number,
   height: number,
   hue: number = 260
 ) {
-  ctx.clearRect(0, 0, width, height);
-
-  const centerX = width / 2;
-  const centerY = height / 2;
-
-  // Calculate bass level (first 8 frequency bands)
-  let bassLevel = 0;
-  for (let i = 0; i < 8; i++) {
-    bassLevel += frequencyData[i];
-  }
-  bassLevel = bassLevel / 8 / 255;
-
-  // Calculate treble level (higher frequencies for sparkles)
-  let trebleLevel = 0;
-  for (let i = 32; i < 64; i++) {
-    trebleLevel += frequencyData[i];
-  }
-  trebleLevel = trebleLevel / 32 / 255;
-
-  // Beat detection - sudden increase in bass
-  const isBeat = bassLevel > lastBassLevel * 1.3 && bassLevel > 0.35;
-  lastBassLevel = bassLevel * 0.3 + lastBassLevel * 0.7; // Smooth decay
-
-  // Spawn bass particles on beats (lowered threshold from 0.6 to 0.35)
-  if (bassLevel > 0.35 && particles.length < 150) {
-    const count = isBeat ? Math.floor(bassLevel * 20) : Math.floor(bassLevel * 5);
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 3 + Math.random() * 6 * bassLevel;
-      particles.push({
-        x: centerX,
-        y: centerY,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        life: 1,
-        size: 3 + Math.random() * 5 * bassLevel,
-        hue: hue + Math.random() * 40 - 20,
-        type: 'bass',
-      });
+  // Initialize or resize image buffer
+  if (!spectrumImageData || spectrumImageData.width !== width || spectrumImageData.height !== height) {
+    spectrumImageData = ctx.createImageData(width, height);
+    // Fill with transparent black
+    for (let i = 0; i < spectrumImageData.data.length; i += 4) {
+      spectrumImageData.data[i] = 0;
+      spectrumImageData.data[i + 1] = 0;
+      spectrumImageData.data[i + 2] = 0;
+      spectrumImageData.data[i + 3] = 255;
     }
   }
 
-  // Spawn treble sparkles (small fast particles for high frequencies)
-  if (trebleLevel > 0.3 && particles.length < 200) {
-    const count = Math.floor(trebleLevel * 4);
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 30 + Math.random() * 50;
-      particles.push({
-        x: centerX + Math.cos(angle) * dist,
-        y: centerY + Math.sin(angle) * dist,
-        vx: (Math.random() - 0.5) * 3,
-        vy: (Math.random() - 0.5) * 3 - 1,
-        life: 0.6,
-        size: 1 + Math.random() * 2,
-        hue: hue + 60 + Math.random() * 30,
-        type: 'treble',
-      });
+  const data = spectrumImageData.data;
+
+  // Shift all pixels left by 2 pixels for faster scrolling
+  const shiftPixels = 2;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width - shiftPixels; x++) {
+      const srcIndex = (y * width + x + shiftPixels) * 4;
+      const dstIndex = (y * width + x) * 4;
+      data[dstIndex] = data[srcIndex];
+      data[dstIndex + 1] = data[srcIndex + 1];
+      data[dstIndex + 2] = data[srcIndex + 2];
+      data[dstIndex + 3] = data[srcIndex + 3];
     }
   }
 
-  // Update and draw particles with audio-reactive pulsing
-  particles = particles.filter((p) => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.life -= p.type === 'bass' ? 0.015 : 0.025;
-    p.vy += p.type === 'bass' ? 0.03 : 0.01; // Less gravity for treble
+  // Draw new column(s) on right edge
+  for (let px = 0; px < shiftPixels; px++) {
+    const xPos = width - shiftPixels + px;
+    for (let y = 0; y < height; y++) {
+      // Map y position to frequency bin (invert so low freq at bottom)
+      const freqIndex = Math.floor(((height - 1 - y) / height) * frequencyData.length);
+      const value = frequencyData[freqIndex] / 255;
 
-    if (p.life <= 0) return false;
+      // Calculate color based on intensity and hue
+      // Use hue shifting for different intensity levels
+      const intensity = Math.pow(value, 0.7); // Gamma correction for better visibility
+      const colorHue = (hue + intensity * 60) % 360; // Shift hue with intensity
+      const saturation = 70 + intensity * 25;
+      const lightness = intensity * 60;
 
-    // Pulse size with current bass (particles react even after spawning)
-    const pulseFactor = p.type === 'bass' ? 1 + bassLevel * 0.5 : 1;
-    const currentSize = p.size * p.life * pulseFactor;
+      // Convert HSL to RGB
+      const c = (1 - Math.abs(2 * lightness / 100 - 1)) * saturation / 100;
+      const x = c * (1 - Math.abs((colorHue / 60) % 2 - 1));
+      const m = lightness / 100 - c / 2;
 
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
-    const brightness = p.type === 'bass' ? 70 + bassLevel * 20 : 85;
-    ctx.fillStyle = `hsla(${p.hue}, 80%, ${brightness}%, ${p.life})`;
-    ctx.fill();
+      let r = 0, g = 0, b = 0;
+      if (colorHue < 60) { r = c; g = x; b = 0; }
+      else if (colorHue < 120) { r = x; g = c; b = 0; }
+      else if (colorHue < 180) { r = 0; g = c; b = x; }
+      else if (colorHue < 240) { r = 0; g = x; b = c; }
+      else if (colorHue < 300) { r = x; g = 0; b = c; }
+      else { r = c; g = 0; b = x; }
 
-    // Enhanced glow on beats
-    if (isBeat || bassLevel > 0.5) {
-      ctx.shadowColor = `hsla(${p.hue}, 90%, 70%, ${p.life})`;
-      ctx.shadowBlur = 15 + bassLevel * 10;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      const index = (y * width + xPos) * 4;
+      data[index] = Math.round((r + m) * 255);
+      data[index + 1] = Math.round((g + m) * 255);
+      data[index + 2] = Math.round((b + m) * 255);
+      data[index + 3] = 255;
     }
-
-    return true;
-  });
-
-  // Draw larger, more reactive center orb
-  const orbBaseSize = 30 + bassLevel * 50;
-  const orbGlow = isBeat ? 40 : 20;
-  
-  // Outer glow ring that expands on beats
-  if (isBeat) {
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, orbBaseSize + 20, 0, Math.PI * 2);
-    ctx.strokeStyle = `hsla(${hue}, 80%, 60%, 0.4)`;
-    ctx.lineWidth = 3;
-    ctx.stroke();
   }
 
-  // Main orb gradient
-  const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, orbBaseSize);
-  gradient.addColorStop(0, `hsla(${hue}, 90%, 80%, ${0.5 + bassLevel * 0.5})`);
-  gradient.addColorStop(0.5, `hsla(${hue}, 80%, 60%, ${0.3 + bassLevel * 0.4})`);
-  gradient.addColorStop(1, `hsla(${hue}, 80%, 50%, 0)`);
-  
-  ctx.shadowColor = `hsla(${hue}, 80%, 60%, 0.8)`;
-  ctx.shadowBlur = orbGlow + bassLevel * 20;
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, orbBaseSize, 0, Math.PI * 2);
+  // Put the image data back
+  ctx.putImageData(spectrumImageData, 0, 0);
+
+  // Add frequency labels glow line on right
+  const gradient = ctx.createLinearGradient(width - 3, 0, width, 0);
+  gradient.addColorStop(0, 'transparent');
+  gradient.addColorStop(1, `hsla(${hue}, 80%, 60%, 0.5)`);
   ctx.fillStyle = gradient;
-  ctx.fill();
-  ctx.shadowBlur = 0;
+  ctx.fillRect(width - 3, 0, 3, height);
 }
 
-export function resetParticles() {
-  particles = [];
-  lastBassLevel = 0;
+export function resetSpectrum() {
+  spectrumImageData = null;
 }
 
 // Mirror bars - symmetrical bars from center
@@ -409,150 +351,138 @@ export function resetRings() {
   rings = [];
 }
 
-// Starfield - 3D flying stars - Enhanced for audio sync
-interface Star {
-  x: number;
-  y: number;
-  z: number;
-  size: number;
-  baseHue: number;
-}
-
-let stars: Star[] = [];
-let starsInitialized = false;
-let lastStarEnergy = 0;
-let speedBoost = 0;
-
-function initStars(width: number, height: number, hue: number) {
-  stars = [];
-  for (let i = 0; i < 200; i++) {
-    stars.push({
-      x: Math.random() * width - width / 2,
-      y: Math.random() * height - height / 2,
-      z: Math.random() * 1000,
-      size: Math.random() * 2 + 1,
-      baseHue: hue + Math.random() * 60 - 30,
-    });
-  }
-  starsInitialized = true;
-}
-
-export function drawStarfield(
+// Pulse - Morphing frequency blob that reacts to music
+export function drawPulse(
   ctx: CanvasRenderingContext2D,
   frequencyData: Uint8Array,
   width: number,
   height: number,
   hue: number = 260
 ) {
-  if (!starsInitialized) initStars(width, height, hue);
-
   ctx.clearRect(0, 0, width, height);
 
   const centerX = width / 2;
   const centerY = height / 2;
+  const baseRadius = Math.min(width, height) * 0.25;
 
-  // Calculate bass energy (more reactive)
+  // Calculate energy levels for different frequency ranges
   let bassEnergy = 0;
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 8; i++) {
     bassEnergy += frequencyData[i];
   }
-  bassEnergy = bassEnergy / 12 / 255;
+  bassEnergy = bassEnergy / 8 / 255;
 
-  // Calculate mid energy
   let midEnergy = 0;
-  for (let i = 12; i < 48; i++) {
+  for (let i = 8; i < 32; i++) {
     midEnergy += frequencyData[i];
   }
-  midEnergy = midEnergy / 36 / 255;
+  midEnergy = midEnergy / 24 / 255;
 
-  // Combined energy weighted toward bass
-  const energy = bassEnergy * 0.7 + midEnergy * 0.3;
-
-  // Beat detection for speed bursts
-  const isBeat = energy > lastStarEnergy * 1.4 && energy > 0.4;
-  if (isBeat) {
-    speedBoost = 30; // Instant speed boost on beat
+  let highEnergy = 0;
+  for (let i = 32; i < 64; i++) {
+    highEnergy += frequencyData[i];
   }
-  speedBoost *= 0.92; // Decay the boost
-  lastStarEnergy = energy * 0.2 + lastStarEnergy * 0.8;
+  highEnergy = highEnergy / 32 / 255;
 
-  // Speed starts at 0 during silence, scales up with energy
-  const baseSpeed = energy * 40;
-  const speed = baseSpeed + speedBoost;
+  const totalEnergy = (bassEnergy * 0.5 + midEnergy * 0.3 + highEnergy * 0.2);
 
-  stars.forEach((star) => {
-    // Move star toward viewer
-    star.z -= speed;
+  // Draw multiple layers - outer (high), middle (mid), inner (bass)
+  const layers = [
+    { energy: highEnergy, radiusMult: 1.3, hueOffset: 60, opacity: 0.3, points: 64 },
+    { energy: midEnergy, radiusMult: 1.0, hueOffset: 30, opacity: 0.5, points: 48 },
+    { energy: bassEnergy, radiusMult: 0.7, hueOffset: 0, opacity: 0.8, points: 32 },
+  ];
 
-    // Reset star if too close
-    if (star.z <= 0) {
-      star.x = Math.random() * width - width / 2;
-      star.y = Math.random() * height - height / 2;
-      star.z = 1000;
-      star.baseHue = hue + Math.random() * 60 - 30;
+  // Background glow based on total energy
+  const bgGlow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, baseRadius * 2);
+  bgGlow.addColorStop(0, `hsla(${hue}, 80%, 50%, ${totalEnergy * 0.3})`);
+  bgGlow.addColorStop(0.5, `hsla(${hue}, 70%, 40%, ${totalEnergy * 0.1})`);
+  bgGlow.addColorStop(1, 'transparent');
+  ctx.fillStyle = bgGlow;
+  ctx.fillRect(0, 0, width, height);
+
+  layers.forEach((layer, layerIndex) => {
+    const layerHue = (hue + layer.hueOffset) % 360;
+    const layerRadius = baseRadius * layer.radiusMult;
+
+    ctx.beginPath();
+
+    for (let i = 0; i <= layer.points; i++) {
+      const angle = (i / layer.points) * Math.PI * 2;
+      
+      // Map angle to frequency bin
+      const freqIndex = Math.floor((i / layer.points) * (frequencyData.length * 0.5));
+      const freqValue = frequencyData[freqIndex] / 255;
+
+      // Calculate radius at this angle - blob shape with frequency modulation
+      const morphAmount = freqValue * layerRadius * 0.5;
+      const wobble = Math.sin(angle * 3) * layer.energy * 10;
+      const radius = layerRadius + morphAmount + wobble;
+
+      const x = centerX + Math.cos(angle) * radius;
+      const y = centerY + Math.sin(angle) * radius;
+
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        // Use bezier curves for smooth blob shape
+        const prevAngle = ((i - 1) / layer.points) * Math.PI * 2;
+        const prevFreqIndex = Math.floor(((i - 1) / layer.points) * (frequencyData.length * 0.5));
+        const prevFreqValue = frequencyData[prevFreqIndex] / 255;
+        const prevMorph = prevFreqValue * layerRadius * 0.5;
+        const prevWobble = Math.sin(prevAngle * 3) * layer.energy * 10;
+        const prevRadius = layerRadius + prevMorph + prevWobble;
+
+        const prevX = centerX + Math.cos(prevAngle) * prevRadius;
+        const prevY = centerY + Math.sin(prevAngle) * prevRadius;
+
+        const cpRadius = (radius + prevRadius) / 2;
+        const cpAngle = (angle + prevAngle) / 2;
+        const cpX = centerX + Math.cos(cpAngle) * cpRadius * 1.05;
+        const cpY = centerY + Math.sin(cpAngle) * cpRadius * 1.05;
+
+        ctx.quadraticCurveTo(cpX, cpY, x, y);
+      }
     }
 
-    // Project 3D to 2D
-    const scale = 200 / star.z;
-    const x = centerX + star.x * scale;
-    const y = centerY + star.y * scale;
-    const size = star.size * scale;
+    ctx.closePath();
 
-    // Skip if out of bounds
-    if (x < 0 || x > width || y < 0 || y > height) return;
+    // Fill with gradient
+    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, layerRadius * 1.5);
+    gradient.addColorStop(0, `hsla(${layerHue}, 90%, 70%, ${layer.opacity * layer.energy})`);
+    gradient.addColorStop(0.5, `hsla(${layerHue}, 80%, 55%, ${layer.opacity * 0.7 * (0.3 + layer.energy * 0.7)})`);
+    gradient.addColorStop(1, `hsla(${layerHue}, 70%, 40%, 0)`);
 
-    // Brightness increases as star approaches and pulses on beats
-    let brightness = Math.min(1, (1000 - star.z) / 400);
-    if (isBeat) brightness = Math.min(1, brightness * 1.5); // Flash on beats
-
-    // Trail length scales dramatically with energy
-    const trailLength = Math.min(60, speed * 1.2);
-    
-    // Trail
-    const prevScale = 200 / (star.z + trailLength);
-    const prevX = centerX + star.x * prevScale;
-    const prevY = centerY + star.y * prevScale;
-
-    // Draw trail with energy-based width
-    const trailWidth = size * (0.3 + energy * 0.7);
-    ctx.beginPath();
-    ctx.moveTo(prevX, prevY);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = `hsla(${star.baseHue}, 80%, ${50 + brightness * 40}%, ${brightness * 0.7})`;
-    ctx.lineWidth = trailWidth;
-    ctx.stroke();
-
-    // Star point - bigger and brighter on beats
-    const starSize = isBeat ? size * 1.5 : size;
-    ctx.beginPath();
-    ctx.arc(x, y, starSize, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${star.baseHue}, 85%, ${65 + brightness * 30}%, ${brightness})`;
+    ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Glow on high energy
-    if (energy > 0.5 || isBeat) {
-      ctx.shadowColor = `hsla(${star.baseHue}, 90%, 70%, ${brightness})`;
-      ctx.shadowBlur = 8 + energy * 12;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    }
+    // Add glow stroke
+    ctx.strokeStyle = `hsla(${layerHue}, 85%, 65%, ${layer.opacity * (0.5 + layer.energy * 0.5)})`;
+    ctx.lineWidth = 2 + layer.energy * 2;
+    ctx.shadowColor = `hsla(${layerHue}, 90%, 60%, ${layer.energy})`;
+    ctx.shadowBlur = 10 + layer.energy * 15;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
   });
 
-  // Center vignette glow on beats
-  if (isBeat) {
-    const vignetteGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.max(width, height) * 0.5);
-    vignetteGradient.addColorStop(0, `hsla(${hue}, 80%, 60%, 0.15)`);
-    vignetteGradient.addColorStop(1, `hsla(${hue}, 80%, 60%, 0)`);
-    ctx.fillStyle = vignetteGradient;
-    ctx.fillRect(0, 0, width, height);
-  }
+  // Inner core - bright center
+  const coreRadius = baseRadius * 0.15 + bassEnergy * 20;
+  const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, coreRadius);
+  coreGradient.addColorStop(0, `hsla(${hue}, 100%, 95%, ${0.8 + bassEnergy * 0.2})`);
+  coreGradient.addColorStop(0.5, `hsla(${hue}, 90%, 75%, ${0.5 + bassEnergy * 0.3})`);
+  coreGradient.addColorStop(1, `hsla(${hue}, 80%, 60%, 0)`);
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, coreRadius, 0, Math.PI * 2);
+  ctx.fillStyle = coreGradient;
+  ctx.shadowColor = `hsla(${hue}, 100%, 80%, 0.8)`;
+  ctx.shadowBlur = 20 + bassEnergy * 20;
+  ctx.fill();
+  ctx.shadowBlur = 0;
 }
 
-export function resetStarfield() {
-  stars = [];
-  starsInitialized = false;
-  lastStarEnergy = 0;
-  speedBoost = 0;
+export function resetPulse() {
+  // No persistent state to reset
 }
 
 // Terrain - retro synthwave wireframe
