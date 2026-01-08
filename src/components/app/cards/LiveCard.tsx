@@ -10,7 +10,6 @@
  */
 
 import { useState } from 'react';
-import { Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -34,12 +33,8 @@ export function LiveCard({ stream }: LiveCardProps) {
       />
 
       {/* Thumbnail */}
-      <div className="relative aspect-video bg-zinc-800">
+      <div className="aspect-video bg-zinc-800">
         <img src={stream.thumbnail} alt="" className="w-full h-full object-cover" />
-        <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
-          <Eye className="w-3 h-3 text-red-500" />
-          <span className="text-white text-xs font-medium">{stream.viewers}</span>
-        </div>
       </div>
 
       {/* Info & Actions */}
