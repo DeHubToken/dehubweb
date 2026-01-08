@@ -79,27 +79,62 @@ serve(async (req) => {
     const data = await response.json();
     console.log('Image generation response received');
 
-    // Check for safety filter - return family-friendly message
+    // Check for various safety/blocking reasons
     const finishReason = data.choices?.[0]?.native_finish_reason || data.choices?.[0]?.finish_reason;
-    if (finishReason === 'IMAGE_SAFETY') {
-      console.log('Content blocked by safety filter');
+    const textContent = data.choices?.[0]?.message?.content || '';
+    
+    // Detect different block types for better messaging
+    if (finishReason === 'IMAGE_SAFETY' || finishReason === 'SAFETY') {
+      console.log('Content blocked by safety filter:', finishReason);
       return new Response(
         JSON.stringify({ 
-          error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
+          error: 'This request was blocked by content filters. DeHub is a family-friendly platform. For adult content, visit our partner fan.site',
+          errorType: 'adult_content',
           safetyBlocked: true 
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    // Check for real person/celebrity restrictions
+    const lowerPrompt = prompt.toLowerCase();
+    const celebrityKeywords = ['trump', 'biden', 'obama', 'musk', 'celebrity', 'president', 'politician'];
+    const hasCelebrityRequest = celebrityKeywords.some(kw => lowerPrompt.includes(kw));
+    
     // Extract the generated image
     const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-    const textResponse = data.choices?.[0]?.message?.content || '';
+
+    if (!imageUrl && hasCelebrityRequest) {
+      console.log('Likely blocked due to real person request');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Cannot generate images of real public figures (politicians, celebrities, etc.) due to AI safety policies. Try describing a fictional character instead!',
+          errorType: 'real_person',
+          safetyBlocked: true 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!imageUrl) {
       console.error('No image in response:', JSON.stringify(data).substring(0, 500));
+      
+      // Check if there's a text explanation
+      if (textContent && textContent.length > 10) {
+        return new Response(
+          JSON.stringify({ 
+            error: textContent,
+            errorType: 'generation_failed'
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       return new Response(
-        JSON.stringify({ error: 'No image was generated. Try rephrasing your request.' }),
+        JSON.stringify({ 
+          error: 'Image generation failed. Try rephrasing your request or being more specific.',
+          errorType: 'unknown'
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -107,7 +142,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         imageUrl, 
-        text: textResponse,
+        text: textContent,
         success: true 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
