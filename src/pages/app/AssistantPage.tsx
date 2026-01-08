@@ -371,6 +371,13 @@ export default function AssistantPage() {
       const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isVideoRequest) {
+        // Validate Runway requires an image
+        if (selectedVideoModel === 'runway-gen4' && !currentAttachedImage) {
+          toast.error('Runway Gen-4 requires an image to animate. Please attach an image or select a different model.');
+          setIsLoading(false);
+          return;
+        }
+        
         // Video generation
         setIsVideoLoading(true);
         

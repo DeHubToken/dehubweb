@@ -35,8 +35,8 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'runway-gen4': {
     id: 'runway-gen4',
     name: 'Runway Gen-4 Turbo',
-    description: 'Latest Runway, stunning quality',
-    supports: ['text-to-video', 'image-to-video'],
+    description: 'Animate images (requires image)',
+    supports: ['image-to-video'],
     duration: '10s',
     tier: 'premium',
     emoji: '🚀',
