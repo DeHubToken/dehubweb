@@ -63,18 +63,18 @@ export function PostAccessToggles({
       {/* Subscribers Only */}
       <div className="flex items-center justify-between py-0.5">
         <div className="flex items-center gap-2">
-          <Lock className={cn("w-4 h-4", isSubscribersOnly ? "text-amber-400" : "text-white")} />
-          <span className={cn("text-sm", isSubscribersOnly ? "text-amber-400" : "text-white")}>Subscribers only</span>
+          <Lock className="w-4 h-4 text-white" />
+          <span className="text-sm text-white">Subscribers only</span>
         </div>
-        <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-amber-500 scale-75" />
+        <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-white scale-75" />
       </div>
 
       {/* PPV */}
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <CreditCard className={cn("w-4 h-4", isPPV ? "text-emerald-400" : "text-white")} />
-            <span className={cn("text-sm", isPPV ? "text-emerald-400" : "text-white")}>PPV</span>
+            <CreditCard className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">PPV</span>
           </div>
           <div className="flex items-center gap-2">
             <AnimatePresence>
@@ -85,16 +85,16 @@ export function PostAccessToggles({
                     value={ppvAmount}
                     onChange={(e) => setPpvAmount(e.target.value)}
                     placeholder="0.00"
-                    className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-emerald-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-emerald-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <div className="flex h-6 rounded overflow-hidden border border-emerald-500/30">
-                    <button type="button" onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                    <button type="button" onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-emerald-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                  <div className="flex h-6 rounded overflow-hidden border border-white/20">
+                    <button type="button" onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
+                    <button type="button" onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-            <Switch checked={isPPV} onCheckedChange={setIsPPV} className="data-[state=checked]:bg-emerald-500 scale-75" />
+            <Switch checked={isPPV} onCheckedChange={setIsPPV} className="data-[state=checked]:bg-white scale-75" />
           </div>
         </div>
       </div>
@@ -103,10 +103,10 @@ export function PostAccessToggles({
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Gift className={cn("w-4 h-4", isWatch2Earn ? "text-blue-400" : "text-white")} />
-            <span className={cn("text-sm", isWatch2Earn ? "text-blue-400" : "text-white")}>Bounty</span>
+            <Gift className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">Bounty</span>
           </div>
-          <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-blue-500 scale-75" />
+          <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-white scale-75" />
         </div>
         <AnimatePresence>
           {isWatch2Earn && (
@@ -115,9 +115,9 @@ export function PostAccessToggles({
                 <TooltipProvider delayDuration={300}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex items-center h-6 bg-zinc-800/50 border border-blue-500/30 rounded overflow-hidden cursor-help">
-                        <div className="flex items-center justify-center w-6 h-full bg-blue-500/20 border-r border-blue-500/30">
-                          <Eye className="w-3 h-3 text-blue-400" />
+                      <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
+                        <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
+                          <Eye className="w-3 h-3 text-white/70" />
                         </div>
                         <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       </div>
@@ -130,9 +130,9 @@ export function PostAccessToggles({
                 <TooltipProvider delayDuration={300}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex items-center h-6 bg-zinc-800/50 border border-blue-500/30 rounded overflow-hidden cursor-help">
-                        <div className="flex items-center justify-center w-6 h-full bg-blue-500/20 border-r border-blue-500/30">
-                          <MessageCircle className="w-3 h-3 text-blue-400" />
+                      <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
+                        <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
+                          <MessageCircle className="w-3 h-3 text-white/70" />
                         </div>
                         <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       </div>
@@ -142,13 +142,13 @@ export function PostAccessToggles({
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-blue-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                 <TooltipProvider delayDuration={300}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex h-6 rounded overflow-hidden border border-blue-500/30 cursor-help">
-                        <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                        <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-blue-500 text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                      <div className="flex h-6 rounded overflow-hidden border border-white/20 cursor-help">
+                        <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
+                        <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="bg-zinc-900 border-zinc-700 text-white text-xs">
@@ -166,10 +166,10 @@ export function PostAccessToggles({
       <div className="space-y-1">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <Shield className={cn("w-4 h-4", isTokenGated ? "text-purple-400" : "text-white")} />
-            <span className={cn("text-sm", isTokenGated ? "text-purple-400" : "text-white")}>Token Gated</span>
+            <Shield className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">Token Gated</span>
           </div>
-          <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-purple-500 scale-75" />
+          <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-white scale-75" />
         </div>
         <AnimatePresence>
           {isTokenGated && (
@@ -180,14 +180,14 @@ export function PostAccessToggles({
                   value={tokenContract}
                   onChange={(e) => setTokenContract(e.target.value)}
                   placeholder="Contract address"
-                  className="flex-[0.85] h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 font-mono"
+                  className="flex-[0.85] h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
                 />
                 <input
                   type="number"
                   value={tokenAmount}
                   onChange={(e) => setTokenAmount(e.target.value)}
                   placeholder="Min"
-                  className="flex-[0.15] min-w-[60px] h-6 px-2 text-xs bg-zinc-800/50 border border-purple-500/30 rounded text-white placeholder:text-zinc-500 outline-none focus:border-purple-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="flex-[0.15] min-w-[60px] h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
             </motion.div>
