@@ -2,6 +2,9 @@
  * AI Assistant Page
  * =================
  * Dedicated page for the AI assistant with side panels.
+ * 
+ * RULE: All AI responses MUST be rendered through MarkdownText
+ * to ensure proper formatting (bold, italic, lists, etc.)
  */
 
 import { useState, useRef, useEffect } from 'react';
@@ -11,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { supabase } from '@/integrations/supabase/client';
+import { MarkdownText } from '@/lib/markdown';
 
 const STYLE_OPTIONS = [
   { id: 'normal', label: 'Normal', emoji: '🤖' },
@@ -197,7 +201,11 @@ export default function AssistantPage() {
                       : 'bg-white/10 text-white'
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  {message.role === 'assistant' ? (
+                    <MarkdownText content={message.content} className="text-sm" />
+                  ) : (
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  )}
                 </div>
               </motion.div>
             ))}
