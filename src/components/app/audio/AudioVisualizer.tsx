@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Sparkles, Palette } from 'lucide-react';
+import { Play, Palette } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import {
   VisualizerStyle,
@@ -52,7 +52,7 @@ export function AudioVisualizer({
   const isConnectedRef = useRef(false);
   
   const [style, setStyle] = useState<VisualizerStyle>('bars');
-  const [hue, setHue] = useState(260); // Default purple
+  const [hue, setHue] = useState(0); // Default to left side (red)
   const [isInitialized, setIsInitialized] = useState(false);
 
   const setupAudio = useCallback(() => {
@@ -203,9 +203,9 @@ export function AudioVisualizer({
 
       {/* Controls overlay */}
       {showStylePicker && (
-        <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between gap-2">
+        <div className="absolute bottom-2 left-2 right-2 flex items-end gap-2">
           {/* Color slider */}
-          <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
+          <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10 shrink-0">
             <Palette className="w-3.5 h-3.5 text-white/60" />
             <div 
               className="w-16 h-2 rounded-full relative overflow-hidden"
@@ -227,25 +227,27 @@ export function AudioVisualizer({
             </div>
           </div>
 
-          {/* Style picker */}
-          <div className="flex gap-1 overflow-x-auto scrollbar-none">
-            {STYLES.map((s) => (
-              <button
-                key={s.value}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setStyle(s.value);
-                }}
-                className={`px-2 py-1 text-[10px] font-medium rounded-full transition-all whitespace-nowrap
-                  ${
-                    style === s.value
-                      ? 'bg-white/30 text-white border border-white/40'
-                      : 'bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80 border border-white/10'
-                  }`}
-              >
-                {s.label}
-              </button>
-            ))}
+          {/* Style picker - scrollable */}
+          <div className="flex-1 overflow-x-auto scrollbar-none">
+            <div className="flex gap-1 w-max">
+              {STYLES.map((s) => (
+                <button
+                  key={s.value}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setStyle(s.value);
+                  }}
+                  className={`px-2 py-1 text-[10px] font-medium rounded-full transition-all whitespace-nowrap
+                    ${
+                      style === s.value
+                        ? 'bg-white/30 text-white border border-white/40'
+                        : 'bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80 border border-white/10'
+                    }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -254,7 +256,7 @@ export function AudioVisualizer({
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-xl cursor-pointer">
           <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-            <Sparkles className="w-5 h-5 text-white" />
+            <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
           </div>
         </div>
       )}
