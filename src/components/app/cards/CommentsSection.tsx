@@ -10,7 +10,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { X, Search, ThumbsUp, ThumbsDown, MessageCircle, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2 } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageCircle, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -165,6 +165,8 @@ interface CommentItemProps {
   onLike: (id: string) => void;
   onDislike: (id: string) => void;
   onReply: (id: string) => void;
+  onShare: (id: string) => void;
+  onBookmark: (id: string) => void;
 }
 
 interface VoiceNotePlayerProps {
@@ -211,7 +213,14 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) {
+function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark }: CommentItemProps) {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+    onBookmark(comment.id);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -235,33 +244,73 @@ function CommentItem({ comment, onLike, onDislike, onReply }: CommentItemProps) 
             <VoiceNotePlayer voiceNote={comment.voiceNote} />
           </div>
         )}
-        <div className="flex items-center gap-4 mt-2">
+        <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => onLike(comment.id)}
+              className={cn(
+                "transition-colors",
+                comment.isLiked ? "text-zinc-400" : "text-white hover:text-zinc-400"
+              )}
+              aria-label="Like"
+            >
+              <ThumbsUp className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onDislike(comment.id)}
+              className={cn(
+                "transition-colors",
+                comment.isDisliked ? "text-zinc-400" : "text-white hover:text-zinc-400"
+              )}
+              aria-label="Dislike"
+            >
+              <ThumbsDown className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onReply(comment.id)}
+              className="text-white hover:text-zinc-400 transition-colors"
+              aria-label="Reply"
+            >
+              <MessageCircle className="w-4 h-4" />
+            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="text-white hover:text-zinc-400 transition-colors"
+                  aria-label="Share"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[160px]">
+                <DropdownMenuItem
+                  onClick={() => onShare(comment.id)}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Repeat2 className="w-4 h-4" />
+                  Repost
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    navigator.clipboard.writeText(comment.text);
+                  }}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Link className="w-4 h-4" />
+                  Copy Text
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
           <button
-            onClick={() => onLike(comment.id)}
+            onClick={handleBookmark}
             className={cn(
               "transition-colors",
-              comment.isLiked ? "text-zinc-400" : "text-white hover:text-zinc-400"
+              isBookmarked ? "text-yellow-500" : "text-white hover:text-zinc-400"
             )}
-            aria-label="Like"
+            aria-label="Bookmark"
           >
-            <ThumbsUp className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => onDislike(comment.id)}
-            className={cn(
-              "transition-colors",
-              comment.isDisliked ? "text-zinc-400" : "text-white hover:text-zinc-400"
-            )}
-            aria-label="Dislike"
-          >
-            <ThumbsDown className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => onReply(comment.id)}
-            className="text-white hover:text-zinc-400 transition-colors"
-            aria-label="Reply"
-          >
-            <MessageCircle className="w-4 h-4" />
+            <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
           </button>
         </div>
       </div>
@@ -537,7 +586,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             <AnimatePresence mode="popLayout">
               {filteredComments.length > 0 ? (
                 filteredComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} />
+                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} onShare={() => {}} onBookmark={() => {}} />
                 ))
               ) : (
                 <motion.p
@@ -557,7 +606,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
             <AnimatePresence mode="popLayout">
               {filteredComments.length > 0 ? (
                 filteredComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} />
+                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} onShare={() => {}} onBookmark={() => {}} />
                 ))
               ) : (
                 <motion.p
