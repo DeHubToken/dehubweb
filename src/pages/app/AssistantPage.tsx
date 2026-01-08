@@ -8,13 +8,15 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const STYLE_OPTIONS = [
   { id: 'normal', label: 'Normal', emoji: '🤖' },
@@ -50,9 +52,11 @@ export default function AssistantPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [stylePopoverOpen, setStylePopoverOpen] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const currentStyle = STYLE_OPTIONS.find(s => s.id === selectedStyle) || STYLE_OPTIONS[0];
 
@@ -137,6 +141,7 @@ export default function AssistantPage() {
   const handleStyleSelect = (styleId: string) => {
     setSelectedStyle(styleId);
     setStylePopoverOpen(false);
+    setMobileSheetOpen(false);
   };
 
   return (
@@ -245,38 +250,60 @@ export default function AssistantPage() {
             className="flex-1 bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           
-          {/* Style toggle next to send - mobile only */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 sm:hidden"
-              >
-                <span className="text-base">{currentStyle.emoji}</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent 
-              align="end" 
-              side="top"
-              className="w-48 p-1 mb-2"
-            >
-              <div className="flex flex-col max-h-64 overflow-y-auto">
-                {STYLE_OPTIONS.map((style) => (
-                  <button
-                    key={style.id}
-                    onClick={() => setSelectedStyle(style.id)}
-                    className={`flex items-center gap-3 px-3 py-2 text-sm text-white hover:bg-white/10 rounded-md transition-colors ${
-                      selectedStyle === style.id ? 'bg-white/10' : ''
-                    }`}
-                  >
-                    <span>{style.emoji}</span>
-                    <span>{style.label}</span>
-                  </button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+          {/* Style toggle - Mobile: Drawer Sheet, Desktop: hidden here (in header) */}
+          {isMobile && (
+            <Drawer open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
+              <DrawerTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10"
+                >
+                  <span className="text-base">{currentStyle.emoji}</span>
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent className="bg-black/40 backdrop-blur-2xl border-t border-white/20 rounded-t-3xl">
+                {/* Liquid glass header */}
+                <div className="relative px-6 pt-4 pb-3">
+                  {/* Drag handle */}
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/30" />
+                  
+                  <div className="flex items-center justify-between mt-3">
+                    <h3 className="text-lg font-semibold text-white">AI Personality</h3>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setMobileSheetOpen(false)}
+                      className="rounded-full h-8 w-8 bg-white/10 hover:bg-white/20"
+                    >
+                      <X className="w-4 h-4 text-white" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-white/50 mt-1">Choose how I respond to you</p>
+                </div>
+                
+                {/* Style options grid */}
+                <div className="px-4 pb-8 max-h-[60vh] overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-2">
+                    {STYLE_OPTIONS.map((style) => (
+                      <button
+                        key={style.id}
+                        onClick={() => handleStyleSelect(style.id)}
+                        className={`flex items-center gap-3 px-4 py-3 text-sm text-white rounded-2xl transition-all duration-200 ${
+                          selectedStyle === style.id 
+                            ? 'bg-white/20 border border-white/30 shadow-lg shadow-white/5' 
+                            : 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <span className="text-xl">{style.emoji}</span>
+                        <span className="font-medium">{style.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </DrawerContent>
+            </Drawer>
+          )}
 
           <Button
             size="icon"
