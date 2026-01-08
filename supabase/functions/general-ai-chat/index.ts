@@ -8,7 +8,18 @@ const corsHeaders = {
 
 interface Message {
   role: 'user' | 'assistant';
-  content: string;
+  content: string | Array<{ type: string; text?: string; image_url?: { url: string } }>;
+}
+
+interface PostContext {
+  type: 'image' | 'video' | 'live' | 'post';
+  author?: string;
+  caption?: string;
+  title?: string;
+  game?: string;
+  viewers?: string;
+  thumbnail?: string;
+  imageUrl?: string;
 }
 
 const PERSONALITY_STYLES: Record<string, string> = {
@@ -99,7 +110,11 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal' } = await req.json() as { messages: Message[]; style?: string };
+    const { messages, style = 'normal', postContext } = await req.json() as { 
+      messages: Message[]; 
+      style?: string;
+      postContext?: PostContext;
+    };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
@@ -110,11 +125,13 @@ serve(async (req) => {
 
     // Get the latest user message
     const latestUserMessage = messages.filter(m => m.role === 'user').pop();
-    const userQuery = latestUserMessage?.content || '';
+    const userQuery = typeof latestUserMessage?.content === 'string' 
+      ? latestUserMessage.content 
+      : latestUserMessage?.content?.find(c => c.type === 'text')?.text || '';
     
     // Check if this query needs web search
     const needsSearch = requiresWebSearch(userQuery);
-    console.log('Query:', userQuery, '| Needs search:', needsSearch, '| Has Perplexity key:', !!perplexityKey);
+    console.log('Query:', userQuery, '| Needs search:', needsSearch, '| Has Perplexity key:', !!perplexityKey, '| Has post context:', !!postContext);
 
     // If web search is needed and Perplexity is configured, use it
     if (needsSearch && perplexityKey) {
@@ -244,10 +261,46 @@ IMPORTANT FORMATTING RULES:
 - Format links as [text](url) - the URL should be the full https:// link
 - NEVER use asterisks or underscores for any other purpose than markdown formatting
 - Keep formatting clean and consistent`;
+
+    // Build post context info if provided
+    let postContextInfo = '';
+    if (postContext) {
+      postContextInfo = `\n\n## Current Content Being Discussed\nThe user is looking at a ${postContext.type}. `;
+      if (postContext.author) postContextInfo += `It was posted by ${postContext.author}. `;
+      if (postContext.caption) postContextInfo += `The caption/content is: "${postContext.caption}". `;
+      if (postContext.title) postContextInfo += `The title is: "${postContext.title}". `;
+      if (postContext.game) postContextInfo += `They are playing/streaming: ${postContext.game}. `;
+      if (postContext.viewers) postContextInfo += `Current viewers: ${postContext.viewers}. `;
+      
+      if (postContext.type === 'video' || postContext.type === 'live') {
+        postContextInfo += `\n\nIMPORTANT: You cannot watch or analyze video content. If the user asks about what's happening in the video, respond with: "I don't watch videos, but I can help analyze comments and reactions for you!" You can still discuss the title, caption, game being played, streamer info, and other metadata provided.`;
+      } else if (postContext.type === 'image' && postContext.imageUrl) {
+        postContextInfo += `\n\nYou can see the image and analyze its visual content. Help the user understand the content, provide insights, answer questions about what's shown in the image, or discuss the topic.`;
+      }
+    }
     
     const systemPrompt = personalityModifier
-      ? `${basePrompt}\n\nIMPORTANT STYLE: ${personalityModifier}`
-      : basePrompt;
+      ? `${basePrompt}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
+      : `${basePrompt}${postContextInfo}`;
+
+    // Build messages array - include image in user message if available
+    const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
+    const hasImage = postContext?.imageUrl && postContext?.type === 'image';
+    
+    messages.forEach((msg, index) => {
+      if (hasImage && msg.role === 'user' && index === messages.length - 1) {
+        // Include image with the latest user message for vision analysis
+        apiMessages.push({
+          role: 'user',
+          content: [
+            { type: 'image_url', image_url: { url: postContext.imageUrl } },
+            { type: 'text', text: typeof msg.content === 'string' ? msg.content : msg.content?.find(c => c.type === 'text')?.text || '' }
+          ]
+        });
+      } else {
+        apiMessages.push({ role: msg.role, content: msg.content });
+      }
+    });
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -257,10 +310,7 @@ IMPORTANT FORMATTING RULES:
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages
-        ],
+        messages: apiMessages,
         max_completion_tokens: 1500,
       }),
     });
