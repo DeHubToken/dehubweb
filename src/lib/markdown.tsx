@@ -4,7 +4,7 @@
  * Converts markdown syntax to React elements for proper formatting.
  * 
  * RULE: All AI-generated text MUST be rendered through this utility
- * to ensure proper formatting (bold, italic, lists, etc.)
+ * to ensure proper formatting (bold, italic, lists, links, etc.)
  */
 
 import React from 'react';
@@ -16,7 +16,7 @@ interface MarkdownTextProps {
 
 /**
  * Parses and renders markdown text with proper formatting.
- * Supports: **bold**, *italic*, `code`, - lists, numbered lists
+ * Supports: **bold**, *italic*, `code`, - lists, numbered lists, [links](url), plain URLs
  */
 export function MarkdownText({ content, className = '' }: MarkdownTextProps) {
   const renderContent = () => {
@@ -87,7 +87,7 @@ export function MarkdownText({ content, className = '' }: MarkdownTextProps) {
 }
 
 /**
- * Parses inline markdown (bold, italic, code) within a line.
+ * Parses inline markdown (bold, italic, code, links) within a line.
  */
 function parseInlineMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
@@ -95,11 +95,32 @@ function parseInlineMarkdown(text: string): React.ReactNode {
   let keyIndex = 0;
 
   while (remaining.length > 0) {
+    // Markdown links: [text](url)
+    const linkMatch = remaining.match(/^(.*?)\[([^\]]+)\]\(([^)]+)\)(.*)$/s);
+    if (linkMatch) {
+      if (linkMatch[1]) {
+        parts.push(<span key={keyIndex++}>{parseFormattingAndUrls(linkMatch[1])}</span>);
+      }
+      parts.push(
+        <a 
+          key={keyIndex++} 
+          href={linkMatch[3]} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          {linkMatch[2]}
+        </a>
+      );
+      remaining = linkMatch[4];
+      continue;
+    }
+
     // Bold: **text** or __text__
     const boldMatch = remaining.match(/^(.*?)(\*\*|__)(.+?)\2(.*)$/s);
     if (boldMatch) {
       if (boldMatch[1]) {
-        parts.push(<span key={keyIndex++}>{parseItalicAndCode(boldMatch[1])}</span>);
+        parts.push(<span key={keyIndex++}>{parseLinksAndUrls(boldMatch[1])}</span>);
       }
       parts.push(<strong key={keyIndex++} className="font-semibold">{parseItalicAndCode(boldMatch[3])}</strong>);
       remaining = boldMatch[4];
@@ -110,7 +131,7 @@ function parseInlineMarkdown(text: string): React.ReactNode {
     const italicMatch = remaining.match(/^(.*?)(\*|_)(.+?)\2(.*)$/s);
     if (italicMatch) {
       if (italicMatch[1]) {
-        parts.push(<span key={keyIndex++}>{parseCode(italicMatch[1])}</span>);
+        parts.push(<span key={keyIndex++}>{parseLinksAndUrls(italicMatch[1])}</span>);
       }
       parts.push(<em key={keyIndex++} className="italic">{parseCode(italicMatch[3])}</em>);
       remaining = italicMatch[4];
@@ -121,7 +142,7 @@ function parseInlineMarkdown(text: string): React.ReactNode {
     const codeMatch = remaining.match(/^(.*?)`(.+?)`(.*)$/s);
     if (codeMatch) {
       if (codeMatch[1]) {
-        parts.push(<span key={keyIndex++}>{codeMatch[1]}</span>);
+        parts.push(<span key={keyIndex++}>{parseLinksAndUrls(codeMatch[1])}</span>);
       }
       parts.push(
         <code key={keyIndex++} className="bg-white/20 px-1.5 py-0.5 rounded text-xs font-mono">
@@ -132,12 +153,64 @@ function parseInlineMarkdown(text: string): React.ReactNode {
       continue;
     }
 
-    // No more matches, add remaining text
+    // No more matches, parse remaining for plain URLs
+    parts.push(<span key={keyIndex++}>{parseLinksAndUrls(remaining)}</span>);
+    break;
+  }
+
+  return parts.length === 1 ? parts[0] : <>{parts}</>;
+}
+
+/**
+ * Parses markdown links and plain URLs in text
+ */
+function parseLinksAndUrls(text: string): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  let remaining = text;
+  let keyIndex = 0;
+
+  while (remaining.length > 0) {
+    // Plain URL regex - matches http(s) URLs
+    const urlMatch = remaining.match(/^(.*?)(https?:\/\/[^\s<>\[\]()]+)(.*)$/s);
+    if (urlMatch) {
+      if (urlMatch[1]) {
+        parts.push(<span key={keyIndex++}>{urlMatch[1]}</span>);
+      }
+      // Clean up URL (remove trailing punctuation that's likely not part of the URL)
+      let url = urlMatch[2];
+      let trailing = '';
+      const trailingMatch = url.match(/([.,;:!?)]+)$/);
+      if (trailingMatch) {
+        trailing = trailingMatch[1];
+        url = url.slice(0, -trailing.length);
+      }
+      parts.push(
+        <a 
+          key={keyIndex++} 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-primary hover:underline break-all"
+        >
+          {url}
+        </a>
+      );
+      remaining = trailing + urlMatch[3];
+      continue;
+    }
+
     parts.push(<span key={keyIndex++}>{remaining}</span>);
     break;
   }
 
   return parts.length === 1 ? parts[0] : <>{parts}</>;
+}
+
+/**
+ * Parses formatting and URLs together
+ */
+function parseFormattingAndUrls(text: string): React.ReactNode {
+  return parseLinksAndUrls(text);
 }
 
 function parseItalicAndCode(text: string): React.ReactNode {
