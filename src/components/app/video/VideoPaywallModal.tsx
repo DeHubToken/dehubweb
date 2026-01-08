@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Video, AlertCircle, ChevronDown } from 'lucide-react';
+import { Loader2, Video, AlertCircle, ChevronDown, Volume2 } from 'lucide-react';
 import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
@@ -100,7 +100,15 @@ export function VideoPaywallModal({
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{model.emoji}</span>
                   <div>
-                    <p className="font-medium text-white">{model.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-white">{model.name}</p>
+                      {model.hasAudio && (
+                        <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-xs rounded-md">
+                          <Volume2 className="w-3 h-3" />
+                          Audio
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-zinc-500">{model.description}</p>
                   </div>
                 </div>
@@ -131,7 +139,15 @@ export function VideoPaywallModal({
                       <div className="flex items-center gap-3">
                         <span className="text-xl">{option.emoji}</span>
                         <div>
-                          <p className="font-medium text-white text-sm">{option.name}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-white text-sm">{option.name}</p>
+                            {option.hasAudio && (
+                              <span className="flex items-center gap-0.5 px-1 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] rounded">
+                                <Volume2 className="w-2.5 h-2.5" />
+                                Audio
+                              </span>
+                            )}
+                          </div>
                           <p className="text-xs text-zinc-500">{option.description}</p>
                         </div>
                       </div>

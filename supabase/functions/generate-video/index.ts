@@ -147,6 +147,7 @@ serve(async (req) => {
           prompt,
           duration: duration === '10s' ? 10 : 5,
           aspect_ratio: aspectRatio,
+          generate_audio: true, // Enable native audio generation
           ...(sourceImage && { start_image: sourceImage }),
         };
         break;
