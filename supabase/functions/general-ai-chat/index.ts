@@ -134,7 +134,9 @@ You help users with questions about DeHub, the $DHB token, DePIN, node operation
 
 When users ask about buying DHB, direct them to PancakeSwap (BSC) or Uniswap (Base), or MEXC exchange.
 When users ask about the team, share the founder backgrounds - it builds trust.
-When users ask about legitimacy, mention the 2021 origins, UK company registration, and First Class agency credentials.`;
+When users ask about legitimacy, mention the 2021 origins, UK company registration, and First Class agency credentials.
+
+IMPORTANT: Always keep your responses under 1400 words to ensure they never get cut off.`;
     
     const systemPrompt = personalityModifier 
       ? `${basePrompt}\n\nIMPORTANT STYLE: ${personalityModifier}`
@@ -152,7 +154,7 @@ When users ask about legitimacy, mention the 2021 origins, UK company registrati
           { role: 'system', content: systemPrompt },
           ...messages
         ],
-        max_completion_tokens: 800,
+        max_completion_tokens: 1500,
       }),
     });
 
