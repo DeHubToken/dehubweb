@@ -1124,6 +1124,10 @@ export default function AssistantPage() {
             if (!open) setPendingVideoRequest(null);
           }}
           model={VIDEO_MODELS[pendingVideoRequest.model]}
+          selectedModelKey={pendingVideoRequest.model}
+          onModelChange={(modelKey) => {
+            setPendingVideoRequest(prev => prev ? { ...prev, model: modelKey } : null);
+          }}
           onConfirm={handleVideoGenerationConfirm}
           isGenerating={isVideoLoading}
         />

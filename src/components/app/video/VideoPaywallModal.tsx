@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Coins, Video, AlertCircle } from 'lucide-react';
-import { VideoModel, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
+import { Loader2, Video, AlertCircle, ChevronDown } from 'lucide-react';
+import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 
@@ -10,6 +10,8 @@ interface VideoPaywallModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   model: VideoModel;
+  selectedModelKey: VideoModelKey;
+  onModelChange: (modelKey: VideoModelKey) => void;
   onConfirm: () => void;
   isGenerating?: boolean;
 }
@@ -18,12 +20,15 @@ export function VideoPaywallModal({
   open, 
   onOpenChange, 
   model, 
+  selectedModelKey,
+  onModelChange,
   onConfirm,
   isGenerating = false 
 }: VideoPaywallModalProps) {
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
 
   // Mock user balance (in a real app, this would come from the database)
   const [userBalance] = useState(50000); // 50,000 DHB mock balance
@@ -79,20 +84,66 @@ export function VideoPaywallModal({
             Generate Video
           </DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Confirm payment to generate your video
+            Select a model and confirm payment
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          {/* Model Info */}
-          <div className="bg-zinc-800/50 rounded-xl p-4">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{model.emoji}</span>
-              <div>
-                <p className="font-medium text-white">{model.name}</p>
-                <p className="text-sm text-zinc-500">{model.description}</p>
+          {/* Model Selector */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setModelSelectorOpen(!modelSelectorOpen)}
+              className="w-full bg-zinc-800/50 hover:bg-zinc-800 transition-colors rounded-xl p-4 text-left"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{model.emoji}</span>
+                  <div>
+                    <p className="font-medium text-white">{model.name}</p>
+                    <p className="text-sm text-zinc-500">{model.description}</p>
+                  </div>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform ${modelSelectorOpen ? 'rotate-180' : ''}`} />
               </div>
-            </div>
+            </button>
+            
+            {/* Model Dropdown */}
+            {modelSelectorOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-64 overflow-y-auto">
+                {VIDEO_MODEL_OPTIONS.map((option) => {
+                  const optionModel = VIDEO_MODELS[option.id as VideoModelKey];
+                  const optionCostUsd = getVideoCostUsd(optionModel);
+                  const optionCostDhb = dhbPrice ? getVideoCostDhb(optionModel, dhbPrice) : 0;
+                  
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => {
+                        onModelChange(option.id as VideoModelKey);
+                        setModelSelectorOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-zinc-700 transition-colors ${
+                        selectedModelKey === option.id ? 'bg-zinc-700/50' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{option.emoji}</span>
+                        <div>
+                          <p className="font-medium text-white text-sm">{option.name}</p>
+                          <p className="text-xs text-zinc-500">{option.description}</p>
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-sm font-medium text-white">${optionCostUsd.toFixed(2)}</p>
+                        <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} DHB</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Cost Breakdown */}
@@ -176,7 +227,7 @@ export function VideoPaywallModal({
             Cancel
           </Button>
           <Button
-            className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90"
+            className="flex-1 bg-white text-black hover:bg-white/90 font-medium"
             onClick={onConfirm}
             disabled={loading || !hasEnoughBalance || isGenerating}
           >
@@ -186,10 +237,7 @@ export function VideoPaywallModal({
                 Generating...
               </>
             ) : (
-              <>
-                <Coins className="w-4 h-4 mr-2" />
-                Pay & Generate
-              </>
+              'Pay & Generate'
             )}
           </Button>
         </div>
