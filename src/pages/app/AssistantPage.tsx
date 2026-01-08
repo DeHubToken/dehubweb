@@ -10,6 +10,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus } from 'lucide-react';
+import dehubLogo from '@/assets/dehub-logo-white.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -423,12 +424,18 @@ export default function AssistantPage() {
                         <MarkdownText content={message.content} className="text-sm" />
                       </div>
                     )}
-                    {/* Image container with + button overlay */}
+                    {/* Image container with watermark + button overlay */}
                     <div className="relative">
                       <img 
                         src={message.imageUrl} 
                         alt="Generated" 
                         className="max-w-full rounded-lg"
+                      />
+                      {/* DeHub watermark */}
+                      <img 
+                        src={dehubLogo} 
+                        alt="" 
+                        className="absolute bottom-3 left-3 h-5 opacity-60 pointer-events-none"
                       />
                       {/* Liquid glass + button */}
                       <button
