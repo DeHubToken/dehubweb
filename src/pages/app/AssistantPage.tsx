@@ -742,7 +742,7 @@ export default function AssistantPage() {
 
   return (
     <div 
-      className="flex flex-col h-[calc(100vh-3.5rem-4.5rem)] max-h-[calc(100vh-3.5rem-4.5rem)] lg:h-screen lg:max-h-screen relative"
+      className="flex flex-col h-full lg:h-screen relative overflow-hidden"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -1036,7 +1036,7 @@ export default function AssistantPage() {
       </ScrollArea>
 
       {/* Input */}
-      <div className="px-2 pb-1 sm:p-4">
+      <div className="px-2 pb-2 sm:p-4">
         <div className="mx-auto max-w-[95%] md:max-w-md">
           {/* Attached image preview */}
           {attachedImage && (
