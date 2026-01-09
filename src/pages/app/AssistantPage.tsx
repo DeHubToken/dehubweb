@@ -1036,76 +1036,78 @@ export default function AssistantPage() {
       </ScrollArea>
 
       {/* Input */}
-      <div className="px-3 pb-3 pt-2 sm:p-4">
-        {/* Attached image preview */}
-        {attachedImage && (
-          <div className="mb-2 relative inline-block">
-            <img 
-              src={attachedImage} 
-              alt="Attached" 
-              className="max-h-20 rounded-lg object-contain"
+      <div className="px-2 pb-1 sm:p-4">
+        <div className="mx-auto max-w-[95%] md:max-w-md">
+          {/* Attached image preview */}
+          {attachedImage && (
+            <div className="mb-2 relative inline-block">
+              <img 
+                src={attachedImage} 
+                alt="Attached" 
+                className="max-h-20 rounded-lg object-contain"
+              />
+              <button
+                onClick={() => setAttachedImage(null)}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
+              >
+                <X className="w-3 h-3 text-white" />
+              </button>
+            </div>
+          )}
+          
+          {/* Clean input row */}
+          <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-2 border border-white/10">
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageSelect}
+              className="hidden"
             />
+            
+            {/* Image upload button - minimal */}
             <button
-              onClick={() => setAttachedImage(null)}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="text-white/50 hover:text-white/80 transition-colors p-1"
+              title="Attach image"
             >
-              <X className="w-3 h-3 text-white" />
+              <ImageIcon className="w-5 h-5" />
+            </button>
+            
+            {/* Style toggle - minimal, mobile only */}
+            <button
+              type="button"
+              onClick={() => setStyleSheetOpen(true)}
+              className="text-white/50 hover:text-white/80 transition-colors p-1 sm:hidden"
+              title="Change style"
+            >
+              <span className="text-base">{currentStyle.emoji}</span>
+            </button>
+            
+            {/* Text input */}
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onPaste={handlePaste}
+              placeholder={attachedImage ? "Describe edits..." : "Ask anything..."}
+              className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0"
+            />
+            
+            {/* Send button - minimal */}
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!input.trim() || isLoading}
+              className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <Send className="w-5 h-5" />
             </button>
           </div>
-        )}
-        
-        {/* Clean input row */}
-        <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-2 border border-white/10">
-          {/* Hidden file input */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageSelect}
-            className="hidden"
-          />
-          
-          {/* Image upload button - minimal */}
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="text-white/50 hover:text-white/80 transition-colors p-1"
-            title="Attach image"
-          >
-            <ImageIcon className="w-5 h-5" />
-          </button>
-          
-          {/* Style toggle - minimal, mobile only */}
-          <button
-            type="button"
-            onClick={() => setStyleSheetOpen(true)}
-            className="text-white/50 hover:text-white/80 transition-colors p-1 sm:hidden"
-            title="Change style"
-          >
-            <span className="text-base">{currentStyle.emoji}</span>
-          </button>
-          
-          {/* Text input */}
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onPaste={handlePaste}
-            placeholder={attachedImage ? "Describe edits..." : "Ask anything..."}
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0"
-          />
-          
-          {/* Send button - minimal */}
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={!input.trim() || isLoading}
-            className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            <Send className="w-5 h-5" />
-          </button>
         </div>
       </div>
 
