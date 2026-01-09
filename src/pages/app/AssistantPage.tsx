@@ -830,7 +830,7 @@ export default function AssistantPage() {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 px-4 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={scrollRef}>
+      <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={scrollRef}>
         <div className="py-4 space-y-4">
           <AnimatePresence mode="popLayout">
             {messages.map((message) => (
@@ -1035,8 +1035,8 @@ export default function AssistantPage() {
         </div>
       </ScrollArea>
 
-      {/* Input */}
-      <div className="px-2 pb-2 sm:p-4">
+      {/* Input - Fixed above bottom nav on mobile */}
+      <div className="fixed bottom-[69px] left-0 right-0 px-2 z-40 sm:static sm:bottom-auto sm:z-auto sm:p-4 lg:relative">
         <div className="mx-auto max-w-[95%] md:max-w-md">
           {/* Attached image preview */}
           {attachedImage && (
