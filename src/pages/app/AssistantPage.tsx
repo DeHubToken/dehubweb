@@ -1036,25 +1036,26 @@ export default function AssistantPage() {
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-4 border-t border-white/10">
+      <div className="px-3 pb-3 pt-2 sm:p-4">
         {/* Attached image preview */}
         {attachedImage && (
           <div className="mb-2 relative inline-block">
             <img 
               src={attachedImage} 
               alt="Attached" 
-              className="max-h-24 rounded-lg object-contain"
+              className="max-h-20 rounded-lg object-contain"
             />
             <button
               onClick={() => setAttachedImage(null)}
-              className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
             >
               <X className="w-3 h-3 text-white" />
             </button>
           </div>
         )}
         
-        <div className="flex gap-1.5 sm:gap-2">
+        {/* Clean input row */}
+        <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-2 border border-white/10">
           {/* Hidden file input */}
           <input
             ref={fileInputRef}
@@ -1064,17 +1065,27 @@ export default function AssistantPage() {
             className="hidden"
           />
           
-          {/* Image upload button */}
-          <Button
-            variant="outline"
-            size="icon"
+          {/* Image upload button - minimal */}
+          <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 w-9 h-9 sm:w-10 sm:h-10"
-            title="Attach image to edit"
+            className="text-white/50 hover:text-white/80 transition-colors p-1"
+            title="Attach image"
           >
-            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70" />
-          </Button>
+            <ImageIcon className="w-5 h-5" />
+          </button>
           
+          {/* Style toggle - minimal, mobile only */}
+          <button
+            type="button"
+            onClick={() => setStyleSheetOpen(true)}
+            className="text-white/50 hover:text-white/80 transition-colors p-1 sm:hidden"
+            title="Change style"
+          >
+            <span className="text-base">{currentStyle.emoji}</span>
+          </button>
+          
+          {/* Text input */}
           <input
             ref={inputRef}
             type="text"
@@ -1082,28 +1093,19 @@ export default function AssistantPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
-            placeholder={attachedImage ? "Describe how to edit this image..." : "Ask me anything or generate an image..."}
-            className="flex-1 bg-white/10 border border-white/10 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder={attachedImage ? "Describe edits..." : "Ask anything..."}
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0"
           />
           
-          {/* Style toggle button - visible on mobile */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setStyleSheetOpen(true)}
-            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 sm:hidden w-9 h-9 sm:w-10 sm:h-10"
-          >
-            <span className="text-sm sm:text-base">{currentStyle.emoji}</span>
-          </Button>
-
-          <Button
-            size="icon"
+          {/* Send button - minimal */}
+          <button
+            type="button"
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="rounded-full shrink-0 w-9 h-9 sm:w-10 sm:h-10"
+            className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </Button>
+            <Send className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
