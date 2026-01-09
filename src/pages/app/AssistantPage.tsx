@@ -742,7 +742,7 @@ export default function AssistantPage() {
 
   return (
     <div 
-      className="flex flex-col h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)] lg:h-screen lg:max-h-screen relative"
+      className="flex flex-col h-[calc(100vh-3.5rem-4.5rem)] max-h-[calc(100vh-3.5rem-4.5rem)] lg:h-screen lg:max-h-screen relative"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -1054,7 +1054,7 @@ export default function AssistantPage() {
           </div>
         )}
         
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
           {/* Hidden file input */}
           <input
             ref={fileInputRef}
@@ -1069,10 +1069,10 @@ export default function AssistantPage() {
             variant="outline"
             size="icon"
             onClick={() => fileInputRef.current?.click()}
-            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10"
+            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 w-9 h-9 sm:w-10 sm:h-10"
             title="Attach image to edit"
           >
-            <ImageIcon className="w-4 h-4 text-white/70" />
+            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70" />
           </Button>
           
           <input
@@ -1083,7 +1083,7 @@ export default function AssistantPage() {
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             placeholder={attachedImage ? "Describe how to edit this image..." : "Ask me anything or generate an image..."}
-            className="flex-1 bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="flex-1 bg-white/10 border border-white/10 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           
           {/* Style toggle button - visible on mobile */}
@@ -1091,18 +1091,18 @@ export default function AssistantPage() {
             variant="outline"
             size="icon"
             onClick={() => setStyleSheetOpen(true)}
-            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 sm:hidden"
+            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 sm:hidden w-9 h-9 sm:w-10 sm:h-10"
           >
-            <span className="text-base">{currentStyle.emoji}</span>
+            <span className="text-sm sm:text-base">{currentStyle.emoji}</span>
           </Button>
 
           <Button
             size="icon"
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="rounded-full shrink-0"
+            className="rounded-full shrink-0 w-9 h-9 sm:w-10 sm:h-10"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
         </div>
       </div>
