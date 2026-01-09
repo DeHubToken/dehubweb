@@ -199,6 +199,9 @@ DeHub started as **Futurov (FTV)** - a live-streaming app launched in 2021 with 
 - Revenue sharing for stakers
 - Token-gated content access
 
+### Why Tokens Mint (Bridging):
+When users ask "why are tokens minting?" or about token minting - DHB uses a burn-and-mint bridge mechanism. When tokens are bridged from one chain to another (e.g., BSC to Base), they are **burned** on the source chain and **minted** on the destination chain. This maintains the total supply across all chains while enabling cross-chain transfers. It's a standard and secure bridging pattern.
+
 ## Key Features
 - **DePIN Infrastructure**: Decentralised nodes run by token holders globally. Node operators earn rewards for powering the network.
 - **Watch2Earn (W2E)**: Users earn DHB rewards for watching and engaging with content
