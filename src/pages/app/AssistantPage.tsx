@@ -409,16 +409,7 @@ export default function AssistantPage() {
     }
   };
 
-  // Generate initial welcome message
-  useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([{
-        id: 'initial',
-        role: 'assistant',
-        content: `Hi! I'm your handy AI assistant.`
-      }]);
-    }
-  }, []);
+  // No initial welcome message - start with empty chat
 
   // Scroll to top on initial mount - ensures header is visible on mobile
   useEffect(() => {
