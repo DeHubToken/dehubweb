@@ -6,6 +6,7 @@ import { EmojiPicker } from './EmojiPicker';
 import { GifPicker } from './GifPicker';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChatInputProps {
   onSendMessage: (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => void;
@@ -160,21 +161,25 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             className="hidden"
           />
           
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
-            onClick={handleEnhanceText}
-            disabled={isEnhancing}
-            title="AI Enhance - Fix spelling & grammar"
-          >
-            {isEnhancing ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Sparkles className="w-5 h-5" />
-            )}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                onClick={handleEnhanceText}
+                disabled={isEnhancing}
+              >
+                {isEnhancing ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-5 h-5" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>AI Enhance - Fix spelling & grammar</TooltipContent>
+          </Tooltip>
           
           <Button
             type="button"
