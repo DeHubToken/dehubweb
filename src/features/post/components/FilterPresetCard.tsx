@@ -23,7 +23,7 @@ export function FilterPresetCard({
       className={cn(
         'flex flex-col items-center gap-1.5 p-1.5 rounded-xl transition-all duration-200 shrink-0',
         isSelected
-          ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 ring-2 ring-cyan-400/60'
+          ? 'bg-white/10 ring-2 ring-white/60'
           : 'hover:bg-white/5'
       )}
     >
@@ -31,7 +31,7 @@ export function FilterPresetCard({
       <div
         className={cn(
           'rounded-lg overflow-hidden border-2 transition-all',
-          isSelected ? 'border-cyan-400/60 shadow-[0_0_12px_rgba(34,211,238,0.3)]' : 'border-transparent'
+          isSelected ? 'border-white/60 shadow-[0_0_12px_rgba(255,255,255,0.2)]' : 'border-transparent'
         )}
         style={{ maxWidth: '80px', maxHeight: '60px' }}
       >
@@ -45,11 +45,11 @@ export function FilterPresetCard({
       
       {/* Label */}
       <div className="flex flex-col items-center">
-        <span className="text-lg leading-none">{preset.emoji}</span>
+        {preset.emoji && <span className="text-lg leading-none">{preset.emoji}</span>}
         <span
           className={cn(
             'text-[10px] font-medium mt-0.5 transition-colors',
-            isSelected ? 'text-cyan-300' : 'text-zinc-400'
+            isSelected ? 'text-white' : 'text-zinc-400'
           )}
         >
           {preset.name}
