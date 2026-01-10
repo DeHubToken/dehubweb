@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { X, ChevronDown, ChevronUp, RotateCcw, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { FilterPresetCard } from './FilterPresetCard';
 import { FilterSlider } from './FilterSlider';
@@ -124,16 +125,20 @@ export function FilterEditor({
               Manual Adjustments
             </span>
             <div className="flex items-center gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleReset();
-                }}
-                className="p-1.5 hover:bg-white/10 rounded transition-colors"
-                title="Reset all"
-              >
-                <RotateCcw className="w-4 h-4 text-zinc-400" />
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleReset();
+                    }}
+                    className="p-1.5 hover:bg-white/10 rounded transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4 text-zinc-400" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Reset all</TooltipContent>
+              </Tooltip>
               {showAdvanced ? (
                 <ChevronUp className="w-4 h-4 text-zinc-400" />
               ) : (

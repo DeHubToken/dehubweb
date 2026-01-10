@@ -9,6 +9,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { X, Send, Sparkles, Loader2, ImageIcon, Share } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -377,15 +378,19 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           />
           
           {/* Image upload button */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => fileInputRef.current?.click()}
-            className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 w-9 h-9 sm:w-10 sm:h-10"
-            title="Attach image to edit"
-          >
-            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => fileInputRef.current?.click()}
+                className="rounded-full shrink-0 border-white/20 bg-white/5 hover:bg-white/10 w-9 h-9 sm:w-10 sm:h-10"
+              >
+                <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Attach image to edit</TooltipContent>
+          </Tooltip>
           
           <input
             ref={inputRef}

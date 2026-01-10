@@ -1,5 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface FilterSliderProps {
   label: string;
@@ -31,13 +32,17 @@ export function FilterSlider({
             {value}{unit}
           </span>
           {isModified && (
-            <button
-              onClick={() => onChange(defaultValue)}
-              className="p-1 hover:bg-white/10 rounded transition-colors"
-              title="Reset to default"
-            >
-              <RotateCcw className="w-3 h-3 text-zinc-400" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => onChange(defaultValue)}
+                  className="p-1 hover:bg-white/10 rounded transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3 text-zinc-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Reset to default</TooltipContent>
+            </Tooltip>
           )}
         </div>
       </div>

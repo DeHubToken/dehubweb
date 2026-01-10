@@ -11,6 +11,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -1395,36 +1396,44 @@ export default function AssistantPage() {
             />
             
             {/* Attach button - minimal */}
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
-              title="Attach file"
-            >
-              <Paperclip className="w-5 h-5" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
+                >
+                  <Paperclip className="w-5 h-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Attach file</TooltipContent>
+            </Tooltip>
             
             {/* Voice recording button - all devices */}
             {isVoiceSupported && (
-              <button
-                type="button"
-                onClick={isRecording ? stopRecording : startRecording}
-                disabled={isLoading}
-                className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
-                  isRecording 
-                    ? 'text-red-500' 
-                    : 'text-white hover:text-white/80'
-                }`}
-                title={isRecording ? "Stop recording" : "Voice input"}
-              >
-                {isRecording ? (
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
-                  </div>
-                ) : (
-                  <Mic className="w-5 h-5" />
-                )}
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={isRecording ? stopRecording : startRecording}
+                    disabled={isLoading}
+                    className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                      isRecording 
+                        ? 'text-red-500' 
+                        : 'text-white hover:text-white/80'
+                    }`}
+                  >
+                    {isRecording ? (
+                      <div className="w-5 h-5 flex items-center justify-center">
+                        <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
+                      </div>
+                    ) : (
+                      <Mic className="w-5 h-5" />
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
+              </Tooltip>
             )}
             
             {/* Auto-expanding textarea - supports multiline and formatting */}
@@ -1463,14 +1472,18 @@ export default function AssistantPage() {
             
             {/* Stop speaking button - shown when AI is speaking */}
             {isSpeaking && (
-              <button
-                type="button"
-                onClick={stopSpeaking}
-                className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
-                title="Stop speaking"
-              >
-                <VolumeX className="w-5 h-5" />
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={stopSpeaking}
+                    className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
+                  >
+                    <VolumeX className="w-5 h-5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Stop speaking</TooltipContent>
+              </Tooltip>
             )}
             
             {/* Send button - minimal */}
