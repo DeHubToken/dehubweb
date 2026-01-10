@@ -88,6 +88,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -102,6 +103,28 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     onTranscriptRef.current = onTranscript;
     onErrorRef.current = onError;
   }, [onTranscript, onError]);
+
+  // Load voices on mount and listen for changes (voices load asynchronously)
+  useEffect(() => {
+    if (!isSpeechSynthesisSupported()) return;
+    
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      if (availableVoices.length > 0) {
+        setVoices(availableVoices);
+      }
+    };
+    
+    // Initial load
+    loadVoices();
+    
+    // Listen for voices to be loaded (required for Chrome)
+    window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+    
+    return () => {
+      window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
+    };
+  }, []);
 
   // Create recognition instance on demand (must be triggered by user gesture on mobile)
   const createRecognition = useCallback(() => {
@@ -233,14 +256,18 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
     
-    // Try to use a nice voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => 
-      v.name.includes('Google') || 
-      v.name.includes('Samantha') ||
-      v.name.includes('Alex') ||
-      v.lang.startsWith('en')
-    );
+    // Use cached voices for consistent selection - prioritize female voices
+    const voicesToUse = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+    
+    // Priority order: specific female voices first, then any English voice
+    const preferredVoice = 
+      voicesToUse.find(v => v.name === 'Samantha') || // macOS female
+      voicesToUse.find(v => v.name === 'Google UK English Female') ||
+      voicesToUse.find(v => v.name === 'Google US English') ||
+      voicesToUse.find(v => v.name.includes('Female') && v.lang.startsWith('en')) ||
+      voicesToUse.find(v => v.name === 'Microsoft Zira - English (United States)') || // Windows female
+      voicesToUse.find(v => v.lang.startsWith('en-'));
+    
     if (preferredVoice) {
       utterance.voice = preferredVoice;
     }
@@ -251,7 +278,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [onError]);
+  }, [onError, voices]);
 
   const stopSpeaking = useCallback(() => {
     if (isSpeechSynthesisSupported()) {
