@@ -1266,9 +1266,9 @@ export default function AssistantPage() {
                     </div>
                   </div>
                 ) : (
-                  /* Text messages - with bubble wrapper */
-                  <div className="max-w-[85%] flex flex-col gap-2 items-end">
-                    {/* Show attached image for user messages - outside bubble, full width */}
+                  /* Text messages - no bubble wrapper */
+                  <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    {/* Show attached image for user messages */}
                     {message.attachedImage && (
                       <img 
                         src={message.attachedImage} 
@@ -1276,13 +1276,7 @@ export default function AssistantPage() {
                         className="max-w-full rounded-lg"
                       />
                     )}
-                    <div
-                      className={`rounded-2xl px-4 py-2.5 ${
-                        message.role === 'user'
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-white/10 text-white'
-                      }`}
-                    >
+                    <div className={`${message.role === 'user' ? 'text-white/80 text-right' : 'text-white'}`}>
                       {message.role === 'assistant' ? (
                         <MarkdownText content={message.content} className="text-sm" />
                       ) : (
