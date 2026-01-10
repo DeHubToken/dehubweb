@@ -170,13 +170,33 @@ DeHub is a censorship-resistant, blockchain-powered platform where:
 DeHub is developed by **DeLabs LTD**, a UK-registered Web3 development company.
 
 ### Co-Founders:
-- **Malik Jan (mal.eth)** - CEO & Founder. Personal website: mal.ad. Former investment and commercial banker with experience at HSBC, Lloyds Banking Group, and Barclays. Background spanning fintech, AI, and telecommunications. Serial entrepreneur who founded First Class Agency. Known in the Web3 space as "mal.eth" - a respected voice in decentralised technology and creator economy. Malik brings traditional finance expertise combined with deep crypto/Web3 knowledge to lead DeHub's vision of decentralised social media. He is passionate about empowering creators and building censorship-resistant platforms.
+
+#### **Malik Jan (mal.eth)** - Founder, CEO & CTO
+Results-driven entrepreneurial software engineer, recruiter and business professional. Former top biller at Blue Arrow (UK's largest recruitment agency) out of 600 staff across 70 offices, demonstrating exceptional sales performance.
+
+**DeHub Achievement**: Scaled DeHub from inception to 600M FDV with $10M in the liquidity pool at peak. Achieved tier 1 CEX listings and 1000x ROI. Generated over $1M in revenue in year 1 with 40 full-time staff (all hired personally). Used all revenue to reinvest into building the 4-year roadmap which is now complete.
+
+**Professional Background**:
+- Senior positions at Randstad (world's largest recruitment agency)
+- Regional Manager at iTs Construction (UK's largest construction agency) - built the Sussex office from ground up, secured PSL with Berkeley Homes (UK's largest home builder), supplied all agency labour on the $100 billion Highwood project in Horsham
+- Top biller and multiple award winner at Blue Arrow as a 360 recruiter
+- Originally studied Biomedical Science at Portsmouth University while working as apprentice medical laboratory assistant at QA Hospital before transitioning to sales and tech entrepreneurship
+
+**Core Competencies**: Blockchain Development, Solidity, Smart Contracts, Web3.js, React, Node.js, TypeScript, Next.js, Tailwind CSS, Full-Stack Engineering, Product Design, DeFi, Resourcing, Recruiting, Headhunting, Sales, Business Development, Client Relations, Team Management, Strategic Planning
+
+**Education**:
+- Biomedical Science at Portsmouth University (left to pursue entrepreneurship)
+- BTEC Diploma in Business - Distinction Star (highest grade)
+- A Levels in Business, Biology, and PE
+
+**Personal Interests**: Football (former goalkeeper for Horndean Hawks), History, Music, Disruptive Technology
+
+**Contact**: dev@dehub.io
+
+#### Other Co-Founders:
 - **Mike Hales** - Marketing Director. MMA fighter turned entrepreneur. Pioneered viral marketing strategies.
 - **Indi Jay Cammish** - CTO. Former professional gamer and software engineer. Technical visionary behind DeHub's architecture.
 - **Bailey Young** - Creative Director. Expert in audience engagement and content strategy.
-
-### About Malik Jan (mal.eth)
-Malik Jan is the driving force behind DeHub. His journey from traditional banking at major institutions (HSBC, Lloyds, Barclays) to becoming a Web3 pioneer gives him unique insight into both worlds. He founded First Class Agency, built it into the UK's largest TikTok partner agency, and then channeled that creator economy expertise into building DeHub. His ENS handle "mal.eth" represents his commitment to decentralised identity and Web3 values. Visit mal.ad to learn more about his work and vision.
 
 ### First Class Agency
 The team also runs **First Class** - the UK's largest TikTok partner agency representing 400+ creators with 800M+ combined followers. This gives DeHub direct access to top-tier content creator relationships.
