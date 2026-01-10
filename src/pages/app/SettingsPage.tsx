@@ -127,7 +127,7 @@ function ProfileSettings() {
       <div className="flex items-center gap-4">
         <div className="relative">
           <Avatar className="w-20 h-20">
-            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
+            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=felix" />
             <AvatarFallback className="bg-zinc-700 text-white text-xl">U</AvatarFallback>
           </Avatar>
           <button className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center hover:bg-zinc-600 transition-colors">
