@@ -1265,28 +1265,28 @@ export default function AssistantPage() {
                   </div>
                 ) : (
                   /* Text messages - with bubble wrapper */
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-white/10 text-white'
-                    }`}
-                  >
-                    {/* Show attached image for user messages */}
+                  <div className="max-w-[85%] flex flex-col gap-2 items-end">
+                    {/* Show attached image for user messages - outside bubble, full width */}
                     {message.attachedImage && (
-                      <div className="mb-2">
-                        <img 
-                          src={message.attachedImage} 
-                          alt="Attached" 
-                          className="max-w-full max-h-48 rounded-lg object-contain"
-                        />
-                      </div>
+                      <img 
+                        src={message.attachedImage} 
+                        alt="Attached" 
+                        className="max-w-full rounded-lg"
+                      />
                     )}
-                    {message.role === 'assistant' ? (
-                      <MarkdownText content={message.content} className="text-sm" />
-                    ) : (
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    )}
+                    <div
+                      className={`rounded-2xl px-4 py-2.5 ${
+                        message.role === 'user'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-white/10 text-white'
+                      }`}
+                    >
+                      {message.role === 'assistant' ? (
+                        <MarkdownText content={message.content} className="text-sm" />
+                      ) : (
+                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      )}
+                    </div>
                   </div>
                 )}
               </motion.div>
