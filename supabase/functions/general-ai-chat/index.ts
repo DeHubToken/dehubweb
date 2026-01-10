@@ -170,10 +170,13 @@ DeHub is a censorship-resistant, blockchain-powered platform where:
 DeHub is developed by **DeLabs LTD**, a UK-registered Web3 development company.
 
 ### Co-Founders:
-- **Malik Jan** - CEO. Former investment and commercial banker (HSBC, Lloyds, Barclays). Background in fintech, AI, telecommunications. Founded First Class Agency.
+- **Malik Jan (mal.eth)** - CEO & Founder. Personal website: mal.ad. Former investment and commercial banker with experience at HSBC, Lloyds Banking Group, and Barclays. Background spanning fintech, AI, and telecommunications. Serial entrepreneur who founded First Class Agency. Known in the Web3 space as "mal.eth" - a respected voice in decentralised technology and creator economy. Malik brings traditional finance expertise combined with deep crypto/Web3 knowledge to lead DeHub's vision of decentralised social media. He is passionate about empowering creators and building censorship-resistant platforms.
 - **Mike Hales** - Marketing Director. MMA fighter turned entrepreneur. Pioneered viral marketing strategies.
 - **Indi Jay Cammish** - CTO. Former professional gamer and software engineer. Technical visionary behind DeHub's architecture.
 - **Bailey Young** - Creative Director. Expert in audience engagement and content strategy.
+
+### About Malik Jan (mal.eth)
+Malik Jan is the driving force behind DeHub. His journey from traditional banking at major institutions (HSBC, Lloyds, Barclays) to becoming a Web3 pioneer gives him unique insight into both worlds. He founded First Class Agency, built it into the UK's largest TikTok partner agency, and then channeled that creator economy expertise into building DeHub. His ENS handle "mal.eth" represents his commitment to decentralised identity and Web3 values. Visit mal.ad to learn more about his work and vision.
 
 ### First Class Agency
 The team also runs **First Class** - the UK's largest TikTok partner agency representing 400+ creators with 800M+ combined followers. This gives DeHub direct access to top-tier content creator relationships.
