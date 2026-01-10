@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { X, RotateCw, FlipHorizontal, FlipVertical, Check, Crop, ZoomIn, ZoomOut } from 'lucide-react';
+import { X, RotateCw, FlipHorizontal, FlipVertical, Check, Crop, ZoomIn, ZoomOut, ArrowUpDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import type { CropSettings, CropBox } from '../types/filters';
 
@@ -664,44 +665,6 @@ export function CropRotateEditor({
               </>
             )}
           </div>
-          
-          {/* Zoom Controls */}
-          <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-sm rounded-full px-3 py-1.5 border border-zinc-700">
-            <button
-              onClick={handleZoomOut}
-              disabled={zoom <= MIN_ZOOM}
-              className={cn(
-                "p-1 rounded-full transition-colors",
-                zoom <= MIN_ZOOM 
-                  ? "text-zinc-600 cursor-not-allowed" 
-                  : "text-zinc-300 hover:text-white hover:bg-white/10"
-              )}
-            >
-              <ZoomOut className="w-4 h-4" />
-            </button>
-            <span className="text-xs font-medium text-zinc-300 min-w-[3rem] text-center">
-              {Math.round(zoom * 100)}%
-            </span>
-            <button
-              onClick={handleZoomIn}
-              disabled={zoom >= MAX_ZOOM}
-              className={cn(
-                "p-1 rounded-full transition-colors",
-                zoom >= MAX_ZOOM 
-                  ? "text-zinc-600 cursor-not-allowed" 
-                  : "text-zinc-300 hover:text-white hover:bg-white/10"
-              )}
-            >
-              <ZoomIn className="w-4 h-4" />
-            </button>
-          </div>
-          
-          {/* Zoom hint */}
-          {zoom > 1 && (
-            <p className="text-xs text-zinc-500 text-center">
-              Drag to pan the image
-            </p>
-          )}
         </div>
 
         {/* Aspect Ratio Options */}
@@ -725,6 +688,58 @@ export function CropRotateEditor({
                 {ratio.label}
               </button>
             ))}
+          </div>
+          
+          {/* Zoom & Pan Sliders */}
+          <div className="mt-4 space-y-4">
+            {/* Zoom Slider */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 text-zinc-400 min-w-[60px]">
+                <ZoomIn className="w-4 h-4" />
+                <span className="text-xs font-medium">Zoom</span>
+              </div>
+              <Slider
+                value={[zoom]}
+                onValueChange={([value]) => {
+                  setZoom(value);
+                  if (value <= 1) {
+                    setPan({ x: 0, y: 0 });
+                  }
+                }}
+                min={MIN_ZOOM}
+                max={MAX_ZOOM}
+                step={0.1}
+                className="flex-1"
+              />
+              <span className="text-xs text-zinc-400 min-w-[3rem] text-right">
+                {Math.round(zoom * 100)}%
+              </span>
+            </div>
+            
+            {/* Vertical Pan Slider */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 text-zinc-400 min-w-[60px]">
+                <ArrowUpDown className="w-4 h-4" />
+                <span className="text-xs font-medium">Pan</span>
+              </div>
+              <Slider
+                value={[pan.y]}
+                onValueChange={([value]) => {
+                  if (zoom > 1) {
+                    const maxPan = ((zoom - 1) / zoom) * 50;
+                    setPan(prev => ({ ...prev, y: Math.max(-maxPan, Math.min(maxPan, value)) }));
+                  }
+                }}
+                min={-50}
+                max={50}
+                step={1}
+                disabled={zoom <= 1}
+                className="flex-1"
+              />
+              <span className="text-xs text-zinc-400 min-w-[3rem] text-right">
+                {pan.y > 0 ? '+' : ''}{Math.round(pan.y)}%
+              </span>
+            </div>
           </div>
         </div>
 
