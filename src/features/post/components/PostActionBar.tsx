@@ -276,33 +276,7 @@ export function PostActionBar({
           </Popover>
         )}
 
-        {hasImage && (
-          <>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button 
-                  type="button" 
-                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
-                >
-                  <Mic className="w-5 h-5 text-white" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Record audio</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button 
-                  type="button" 
-                  onClick={() => audioInputRef.current?.click()}
-                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
-                >
-                  <Music className="w-5 h-5 text-white" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Upload audio</TooltipContent>
-            </Tooltip>
-          </>
-        )}
+        {/* Removed audio buttons when hasImage - functionality is on the image thumbnail */}
 
         <div className="w-px h-4 bg-white/10 mx-1" />
 

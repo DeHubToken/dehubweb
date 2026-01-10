@@ -297,7 +297,7 @@ export function AudioTrimmer({
             <X className="w-5 h-5 text-zinc-400" />
           </button>
           <div className="flex items-center gap-2">
-            <Scissors className="w-4 h-4 text-purple-400" />
+            <Scissors className="w-4 h-4 text-white" />
             <span className="text-white font-semibold">Trim Audio</span>
           </div>
           <button
@@ -332,8 +332,8 @@ export function AudioTrimmer({
             <div className="flex items-center gap-2 mb-4 p-3 rounded-xl
               bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent
               border border-white/10">
-              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0">
-                <Music className="w-4 h-4 text-purple-400" />
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <Music className="w-4 h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-white text-sm font-medium truncate">{displayFileName}</p>
@@ -351,7 +351,7 @@ export function AudioTrimmer({
               "font-medium px-2 py-0.5 rounded-full text-xs",
               selectionDuration > maxDuration 
                 ? "bg-red-500/20 text-red-400 border border-red-500/30" 
-                : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                : "bg-white/10 text-white border border-white/20"
             )}>
               {formatTime(selectionDuration)} selected
             </span>
@@ -367,7 +367,7 @@ export function AudioTrimmer({
           >
             {isLoading ? (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
               </div>
             ) : (
               <>
@@ -385,8 +385,8 @@ export function AudioTrimmer({
                           "w-0.5 sm:w-1 rounded-full transition-colors duration-150",
                           isInSelection
                             ? isPlayed
-                              ? 'bg-purple-400'
-                              : 'bg-purple-400/60'
+                              ? 'bg-white'
+                              : 'bg-white/60'
                             : 'bg-zinc-700'
                         )}
                         style={{ height: `${Math.max(8, peak * 100)}%` }}
@@ -409,7 +409,7 @@ export function AudioTrimmer({
 
                 {/* Selection window */}
                 <div
-                  className="absolute inset-y-0 border-2 border-purple-400 cursor-move"
+                  className="absolute inset-y-0 border-2 border-white cursor-move"
                   style={{
                     left: `${getPositionFromTime(trimStart)}%`,
                     right: `${100 - getPositionFromTime(trimEnd)}%`,
@@ -423,7 +423,7 @@ export function AudioTrimmer({
                     onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, 'start'); }}
                     onTouchStart={e => { e.stopPropagation(); handleMouseDown(e, 'start'); }}
                   >
-                    <div className="w-1 h-10 sm:h-8 bg-purple-400 rounded-full group-hover:bg-purple-300 group-active:bg-purple-200 transition-colors shadow-lg" />
+                    <div className="w-1 h-10 sm:h-8 bg-white rounded-full group-hover:bg-zinc-200 group-active:bg-zinc-300 transition-colors shadow-lg" />
                   </div>
 
                   {/* End handle */}
@@ -432,7 +432,7 @@ export function AudioTrimmer({
                     onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, 'end'); }}
                     onTouchStart={e => { e.stopPropagation(); handleMouseDown(e, 'end'); }}
                   >
-                    <div className="w-1 h-10 sm:h-8 bg-purple-400 rounded-full group-hover:bg-purple-300 group-active:bg-purple-200 transition-colors shadow-lg" />
+                    <div className="w-1 h-10 sm:h-8 bg-white rounded-full group-hover:bg-zinc-200 group-active:bg-zinc-300 transition-colors shadow-lg" />
                   </div>
                 </div>
 
@@ -460,10 +460,10 @@ export function AudioTrimmer({
               onClick={togglePlayPause}
               disabled={isLoading}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105
-                bg-gradient-to-br from-purple-500/80 via-purple-600/60 to-purple-700/40
-                backdrop-blur-xl border border-purple-400/40
-                shadow-[0_8px_32px_rgba(168,85,247,0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
-                hover:shadow-[0_12px_40px_rgba(168,85,247,0.5),inset_0_1px_0_rgba(255,255,255,0.3)]
+                bg-gradient-to-br from-white/30 via-white/20 to-white/10
+                backdrop-blur-xl border border-white/40
+                shadow-[0_8px_32px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]
+                hover:shadow-[0_12px_40px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isPlaying ? (
