@@ -39,13 +39,11 @@ const IMAGE_KEYWORDS = [
   'photo of', 'picture of', 'image of', 'illustration of'
 ];
 
-// Keywords that indicate user wants the official logo (not a generated image)
+// Keywords that indicate user wants to use the official logo in their image
 const LOGO_KEYWORDS = [
-  'dehub logo', 'the dehub logo', 'show me the dehub logo',
-  'ftv logo', 'the ftv logo', 'show me the ftv logo',
-  'your logo', 'the logo', 'official logo',
-  'dehub brand', 'ftv brand', 'brand logo',
-  'company logo', 'show logo', 'display logo'
+  'dehub logo', 'the dehub logo', 'ftv logo', 'the ftv logo',
+  'your logo', 'the logo', 'official logo', 'dehub brand', 
+  'ftv brand', 'brand logo', 'company logo'
 ];
 
 function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
@@ -57,6 +55,22 @@ function requiresImageGeneration(message: string, hasAttachedImage: boolean): bo
 function requiresLogoAsset(message: string): boolean {
   const lower = message.toLowerCase();
   return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+// Check if logo request also wants something creative (not just "show me the logo")
+function isCreativeLogoRequest(message: string): boolean {
+  const lower = message.toLowerCase();
+  const simpleShowPatterns = [
+    /^show\s*(me\s*)?(the\s*)?(dehub|ftv|your|official|brand|company)?\s*logo\.?$/,
+    /^(dehub|ftv)\s*logo\.?$/,
+    /^(the\s*)?(dehub|ftv|official)\s*logo\.?$/,
+    /^display\s*(the\s*)?(dehub|ftv)?\s*logo\.?$/
+  ];
+  
+  if (simpleShowPatterns.some(pattern => pattern.test(lower.trim()))) {
+    return false;
+  }
+  return true;
 }
 
 interface GeneralAIChatProps {
@@ -132,8 +146,12 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
     setIsLoading(true);
 
     try {
-      // Check if user is asking for the official logo first
-      if (requiresLogoAsset(currentInput)) {
+      // Check if user wants to use the official logo in their image
+      const wantsLogo = requiresLogoAsset(currentInput);
+      const isCreativeLogo = wantsLogo && isCreativeLogoRequest(currentInput);
+      
+      // If just asking "show me the logo" without creative context, display it directly
+      if (wantsLogo && !isCreativeLogo) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
@@ -144,14 +162,16 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         setIsLoading(false);
         return;
       }
-
-      const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
+      
+      // If creative logo request, inject the logo as source image for generation
+      const effectiveSourceImage = isCreativeLogo ? ftvLogoSymbol : currentAttachedImage;
+      const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
         const { data, error } = await supabase.functions.invoke('generate-image', {
           body: {
             prompt: currentInput,
-            sourceImage: currentAttachedImage || undefined
+            sourceImage: effectiveSourceImage || undefined
           }
         });
 
