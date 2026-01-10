@@ -1084,14 +1084,14 @@ export default function AssistantPage() {
               className="hidden"
             />
             
-            {/* Image upload button - minimal */}
+            {/* Attach button - minimal */}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="text-white/50 hover:text-white/80 transition-colors p-1"
-              title="Attach image"
+              title="Attach file"
             >
-              <ImageIcon className="w-5 h-5" />
+              <Paperclip className="w-5 h-5" />
             </button>
             
             {/* Style toggle - minimal, mobile only */}
