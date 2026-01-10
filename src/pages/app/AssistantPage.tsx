@@ -280,8 +280,11 @@ export default function AssistantPage() {
   };
 
   // Auto-scroll to bottom on messages change or loading state
+  // Skip scrolling on initial welcome message so header stays visible
   useEffect(() => {
-    scrollToBottom();
+    if (messages.length > 1 || isLoading) {
+      scrollToBottom();
+    }
   }, [messages, isLoading]);
 
   // Focus input on mount
