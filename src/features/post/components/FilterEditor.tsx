@@ -30,7 +30,7 @@ export function FilterEditor({
     initialSettings || getDefaultSettings()
   );
   const [selectedPresetId, setSelectedPresetId] = useState<string | undefined>(
-    initialPresetId || 'none'
+    initialPresetId || 'normal'
   );
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -52,7 +52,7 @@ export function FilterEditor({
 
   const handleReset = () => {
     setSettings(getDefaultSettings());
-    setSelectedPresetId('none');
+    setSelectedPresetId('normal');
   };
 
   const handleApply = () => {
@@ -83,14 +83,16 @@ export function FilterEditor({
           </button>
         </div>
 
-        {/* Preview - larger on desktop/tablet */}
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-black/50 min-h-[200px] sm:min-h-[300px] max-h-[50vh] sm:max-h-[60vh] overflow-hidden">
-          <img
-            src={imageUrl}
-            alt="Preview"
-            className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg shadow-2xl"
-            style={{ filter: filterCSS }}
-          />
+        {/* Preview - constrained to fit any image fully */}
+        <div className="flex items-center justify-center p-4 sm:p-8 bg-black/50">
+          <div className="w-full max-w-[min(90vw,500px)] max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] flex items-center justify-center">
+            <img
+              src={imageUrl}
+              alt="Preview"
+              className="max-w-full max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] w-auto h-auto object-contain rounded-lg shadow-2xl"
+              style={{ filter: filterCSS }}
+            />
+          </div>
         </div>
 
         {/* Preset Carousel */}
