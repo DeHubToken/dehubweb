@@ -1234,7 +1234,7 @@ export default function AssistantPage() {
           )}
           
           {/* Clean input row with auto-expanding textarea */}
-          <div className="flex items-end gap-2 bg-white/5 rounded-2xl px-3 py-2 border border-white/10">
+          <div className="flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border border-white/10 shadow-xl">
             {/* Hidden file input */}
             <input
               ref={fileInputRef}
@@ -1248,7 +1248,7 @@ export default function AssistantPage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="text-white/50 hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
+              className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
               title="Attach file"
             >
               <Paperclip className="w-5 h-5" />
@@ -1263,7 +1263,7 @@ export default function AssistantPage() {
                 className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                   isRecording 
                     ? 'text-red-500' 
-                    : 'text-white/50 hover:text-white/80'
+                    : 'text-white hover:text-white/80'
                 }`}
                 title={isRecording ? "Stop recording" : "Voice input"}
               >
@@ -1300,7 +1300,7 @@ export default function AssistantPage() {
               }}
               onPaste={handlePaste}
               placeholder={isRecording ? "Listening..." : attachedImage ? "Describe edits..." : "Ask anything..."}
-              className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
+              className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
                 isRecording ? 'text-white/60 italic' : ''
               }`}
               style={{ 
@@ -1328,7 +1328,7 @@ export default function AssistantPage() {
               type="button"
               onClick={handleSend}
               disabled={(!input.trim() && !isRecording) || isLoading}
-              className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
+              className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
             >
               <Send className="w-5 h-5" />
             </button>
