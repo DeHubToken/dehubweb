@@ -912,7 +912,6 @@ export default function AssistantPage() {
           </div>
           <div>
             <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
-            <p className="text-sm text-white/50">Ask me anything</p>
           </div>
         </div>
 
