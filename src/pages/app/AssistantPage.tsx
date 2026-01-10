@@ -10,8 +10,10 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Download } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Download, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { toast } from 'sonner';
+import { useVoiceChat } from '@/hooks/use-voice-chat';
+import { useIsMobile } from '@/hooks/use-mobile';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -254,14 +256,104 @@ export default function AssistantPage() {
     model: VideoModelKey;
     sourceImage?: string;
   } | null>(null);
+  const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
+  const pendingVoiceRef = useRef(false); // Track if last input was voice
 
+  const isMobile = useIsMobile();
   const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
   const currentVideoModel = VIDEO_MODEL_OPTIONS.find(m => m.id === selectedVideoModel) || VIDEO_MODEL_OPTIONS[0];
+
+  // Voice chat hook - handles speech recognition and text-to-speech
+  const {
+    isRecording,
+    isSpeaking,
+    transcript,
+    startRecording,
+    stopRecording,
+    speak,
+    stopSpeaking,
+    isSupported: isVoiceSupported,
+  } = useVoiceChat({
+    onTranscript: (text) => {
+      // When user finishes speaking, set the input and auto-send
+      if (text.trim()) {
+        setInput(text);
+        pendingVoiceRef.current = true;
+        // Auto-send after a small delay to allow UI to update
+        setTimeout(() => {
+          handleVoiceSend(text);
+        }, 100);
+      }
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
+  // Voice send handler - separate from regular send to track voice input
+  const handleVoiceSend = async (voiceText: string) => {
+    if (!voiceText.trim() || isLoading) return;
+    pendingVoiceRef.current = true;
+    
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: voiceText.trim(),
+      attachedImage: attachedImage || undefined
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setAttachedImage(null);
+    setIsLoading(true);
+
+    try {
+      // Regular chat for voice - use general-ai-chat endpoint
+      const { data, error } = await supabase.functions.invoke('general-ai-chat', {
+        body: {
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          style: selectedStyle
+        }
+      });
+
+      if (error) throw error;
+
+      const responseText = data.response || 'I apologize, I couldn\'t generate a response.';
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: responseText
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+      // Auto-speak the response if voice auto-reply is enabled
+      if (voiceAutoReply && isMobile) {
+        // Small delay to let the message render first
+        setTimeout(() => {
+          speak(responseText);
+        }, 300);
+      }
+    } catch (error) {
+      console.error('AI chat error:', error);
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.'
+      }]);
+    } finally {
+      setIsLoading(false);
+      pendingVoiceRef.current = false;
+    }
+  };
 
   // Generate initial welcome message
   useEffect(() => {
@@ -1094,33 +1186,65 @@ export default function AssistantPage() {
               <Paperclip className="w-5 h-5" />
             </button>
             
-            {/* Style toggle - minimal, mobile only */}
+            {/* Voice recording button - mobile only, replaces style toggle */}
+            {isMobile && isVoiceSupported && (
+              <button
+                type="button"
+                onClick={isRecording ? stopRecording : startRecording}
+                disabled={isLoading}
+                className={`transition-colors p-1 disabled:opacity-30 ${
+                  isRecording 
+                    ? 'text-red-500 animate-pulse' 
+                    : 'text-white/50 hover:text-white/80'
+                }`}
+                title={isRecording ? "Stop recording" : "Voice input"}
+              >
+                {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+            )}
+            
+            {/* Style toggle - minimal, desktop only now (mobile uses voice) */}
             <button
               type="button"
               onClick={() => setStyleSheetOpen(true)}
-              className="text-white/50 hover:text-white/80 transition-colors p-1 sm:hidden"
+              className="text-white/50 hover:text-white/80 transition-colors p-1 hidden sm:block"
               title="Change style"
             >
               <span className="text-base">{currentStyle.emoji}</span>
             </button>
             
-            {/* Text input */}
+            {/* Text input - show transcript when recording */}
             <input
               ref={inputRef}
               type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+              value={isRecording ? transcript : input}
+              onChange={(e) => !isRecording && setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               onPaste={handlePaste}
-              placeholder={attachedImage ? "Describe edits..." : "Ask anything..."}
-              className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0"
+              placeholder={isRecording ? "Listening..." : attachedImage ? "Describe edits..." : "Ask anything..."}
+              className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0 ${
+                isRecording ? 'text-white/60 italic' : ''
+              }`}
+              readOnly={isRecording}
             />
+            
+            {/* Stop speaking button - shown when AI is speaking */}
+            {isSpeaking && (
+              <button
+                type="button"
+                onClick={stopSpeaking}
+                className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse"
+                title="Stop speaking"
+              >
+                <VolumeX className="w-5 h-5" />
+              </button>
+            )}
             
             {/* Send button - minimal */}
             <button
               type="button"
               onClick={handleSend}
-              disabled={!input.trim() || isLoading}
+              disabled={(!input.trim() && !isRecording) || isLoading}
               className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <Send className="w-5 h-5" />
