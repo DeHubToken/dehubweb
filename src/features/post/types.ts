@@ -1,4 +1,4 @@
-import type { FilterSettings } from './types/filters';
+import type { FilterSettings, CropSettings } from './types/filters';
 
 export interface AudioFile {
   blob: Blob;
@@ -24,6 +24,7 @@ export interface MediaFile {
   thumbnail?: string;
   filterSettings?: FilterSettings;
   filterPresetId?: string;
+  cropSettings?: CropSettings;
 }
 
 export type Currency = 'USD' | 'DHB';
@@ -77,6 +78,8 @@ export interface PostFormActions {
   removeThumbnailFromMedia: (index: number) => void;
   applyFilterToMedia: (index: number, settings: FilterSettings, presetId?: string) => void;
   clearFilterFromMedia: (index: number) => void;
+  applyCropToMedia: (index: number, settings: CropSettings) => void;
+  clearCropFromMedia: (index: number) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;

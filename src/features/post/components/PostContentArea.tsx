@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
 import { LinkPreviews } from './LinkPreviews';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
-import type { FilterSettings } from '../types/filters';
+import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { Upload } from 'lucide-react';
 
@@ -21,6 +21,8 @@ interface PostContentAreaProps {
   onRemoveThumbnail: (index: number) => void;
   onApplyFilter: (index: number, settings: FilterSettings, presetId?: string) => void;
   onClearFilter: (index: number) => void;
+  onApplyCrop: (index: number, settings: CropSettings) => void;
+  onClearCrop: (index: number) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -62,6 +64,8 @@ export function PostContentArea({
   onRemoveThumbnail,
   onApplyFilter,
   onClearFilter,
+  onApplyCrop,
+  onClearCrop,
   liveMode,
   canPost,
   destinations,
@@ -392,6 +396,8 @@ export function PostContentArea({
             onRemoveThumbnail={onRemoveThumbnail}
             onApplyFilter={onApplyFilter}
             onClearFilter={onClearFilter}
+            onApplyCrop={onApplyCrop}
+            onClearCrop={onClearCrop}
           />
 
           {/* Link previews */}

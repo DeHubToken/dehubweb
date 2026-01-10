@@ -15,6 +15,15 @@ export interface FilterPreset {
   settings: FilterSettings;
 }
 
+export type AspectRatioOption = '1:1' | '4:5' | '16:9' | 'free';
+
+export interface CropSettings {
+  rotation: number;      // 0, 90, 180, 270
+  flipX: boolean;
+  flipY: boolean;
+  aspectRatio: AspectRatioOption;
+}
+
 export const DEFAULT_FILTER_SETTINGS: FilterSettings = {
   brightness: 100,
   contrast: 100,
