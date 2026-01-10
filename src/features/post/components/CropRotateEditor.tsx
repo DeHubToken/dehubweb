@@ -1,11 +1,13 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { X, RotateCw, FlipHorizontal, FlipVertical, Check, Crop } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
-import type { CropSettings } from '../types/filters';
+import type { CropSettings, CropBox } from '../types/filters';
 
 export type AspectRatioOption = '1:1' | '4:5' | '16:9' | 'free';
+
+type DragHandle = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'move' | null;
 
 interface CropRotateEditorProps {
   isOpen: boolean;
@@ -21,6 +23,15 @@ const ASPECT_RATIOS: { id: AspectRatioOption; label: string; ratio: number | nul
   { id: '4:5', label: '4:5', ratio: 4 / 5 },
   { id: '16:9', label: '16:9', ratio: 16 / 9 },
 ];
+
+const DEFAULT_CROP_BOX: CropBox = {
+  x: 0,
+  y: 0,
+  width: 100,
+  height: 100,
+};
+
+const MIN_CROP_SIZE = 15; // Minimum 15% width/height
 
 export const DEFAULT_CROP_SETTINGS: CropSettings = {
   rotation: 0,
@@ -40,12 +51,20 @@ export function CropRotateEditor({
     initialSettings || { ...DEFAULT_CROP_SETTINGS }
   );
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [cropBox, setCropBox] = useState<CropBox>(
+    initialSettings?.cropBox || { ...DEFAULT_CROP_BOX }
+  );
+  const [dragging, setDragging] = useState<DragHandle>(null);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0, cropBox: { ...DEFAULT_CROP_BOX } });
+  
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   // Reset settings when opening with new initial settings
   useEffect(() => {
     if (isOpen) {
       setSettings(initialSettings || { ...DEFAULT_CROP_SETTINGS });
+      setCropBox(initialSettings?.cropBox || { ...DEFAULT_CROP_BOX });
     }
   }, [isOpen, initialSettings]);
 
@@ -84,16 +103,132 @@ export function CropRotateEditor({
       ...prev,
       aspectRatio: ratio,
     }));
+    // Reset crop box when switching away from free mode
+    if (ratio !== 'free') {
+      setCropBox({ ...DEFAULT_CROP_BOX });
+    }
   };
 
   const handleReset = () => {
     setSettings({ ...DEFAULT_CROP_SETTINGS });
+    setCropBox({ ...DEFAULT_CROP_BOX });
   };
 
   const handleApply = () => {
-    onApply(settings);
+    const finalSettings: CropSettings = {
+      ...settings,
+      cropBox: settings.aspectRatio === 'free' ? cropBox : undefined,
+    };
+    onApply(finalSettings);
     onClose();
   };
+
+  // Get pointer position relative to image container as percentage
+  const getPointerPosition = useCallback((e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
+    if (!imageContainerRef.current) return { x: 0, y: 0 };
+    
+    const rect = imageContainerRef.current.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0]?.clientX ?? 0 : (e as MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : (e as MouseEvent).clientY;
+    
+    return {
+      x: ((clientX - rect.left) / rect.width) * 100,
+      y: ((clientY - rect.top) / rect.height) * 100,
+    };
+  }, []);
+
+  // Handle drag start
+  const handleDragStart = useCallback((e: React.MouseEvent | React.TouchEvent, handle: DragHandle) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const pos = getPointerPosition(e);
+    setDragging(handle);
+    setDragStart({ x: pos.x, y: pos.y, cropBox: { ...cropBox } });
+  }, [cropBox, getPointerPosition]);
+
+  // Handle drag move
+  const handleDragMove = useCallback((e: MouseEvent | TouchEvent) => {
+    if (!dragging) return;
+    
+    const pos = getPointerPosition(e);
+    const deltaX = pos.x - dragStart.x;
+    const deltaY = pos.y - dragStart.y;
+    const { cropBox: startBox } = dragStart;
+    
+    let newBox = { ...startBox };
+    
+    switch (dragging) {
+      case 'move':
+        newBox.x = Math.max(0, Math.min(100 - startBox.width, startBox.x + deltaX));
+        newBox.y = Math.max(0, Math.min(100 - startBox.height, startBox.y + deltaY));
+        break;
+      case 'left':
+        const newLeft = Math.max(0, Math.min(startBox.x + startBox.width - MIN_CROP_SIZE, startBox.x + deltaX));
+        newBox.width = startBox.width + (startBox.x - newLeft);
+        newBox.x = newLeft;
+        break;
+      case 'right':
+        newBox.width = Math.max(MIN_CROP_SIZE, Math.min(100 - startBox.x, startBox.width + deltaX));
+        break;
+      case 'top':
+        const newTop = Math.max(0, Math.min(startBox.y + startBox.height - MIN_CROP_SIZE, startBox.y + deltaY));
+        newBox.height = startBox.height + (startBox.y - newTop);
+        newBox.y = newTop;
+        break;
+      case 'bottom':
+        newBox.height = Math.max(MIN_CROP_SIZE, Math.min(100 - startBox.y, startBox.height + deltaY));
+        break;
+      case 'top-left':
+        const tlLeft = Math.max(0, Math.min(startBox.x + startBox.width - MIN_CROP_SIZE, startBox.x + deltaX));
+        const tlTop = Math.max(0, Math.min(startBox.y + startBox.height - MIN_CROP_SIZE, startBox.y + deltaY));
+        newBox.width = startBox.width + (startBox.x - tlLeft);
+        newBox.height = startBox.height + (startBox.y - tlTop);
+        newBox.x = tlLeft;
+        newBox.y = tlTop;
+        break;
+      case 'top-right':
+        const trTop = Math.max(0, Math.min(startBox.y + startBox.height - MIN_CROP_SIZE, startBox.y + deltaY));
+        newBox.width = Math.max(MIN_CROP_SIZE, Math.min(100 - startBox.x, startBox.width + deltaX));
+        newBox.height = startBox.height + (startBox.y - trTop);
+        newBox.y = trTop;
+        break;
+      case 'bottom-left':
+        const blLeft = Math.max(0, Math.min(startBox.x + startBox.width - MIN_CROP_SIZE, startBox.x + deltaX));
+        newBox.width = startBox.width + (startBox.x - blLeft);
+        newBox.height = Math.max(MIN_CROP_SIZE, Math.min(100 - startBox.y, startBox.height + deltaY));
+        newBox.x = blLeft;
+        break;
+      case 'bottom-right':
+        newBox.width = Math.max(MIN_CROP_SIZE, Math.min(100 - startBox.x, startBox.width + deltaX));
+        newBox.height = Math.max(MIN_CROP_SIZE, Math.min(100 - startBox.y, startBox.height + deltaY));
+        break;
+    }
+    
+    setCropBox(newBox);
+  }, [dragging, dragStart, getPointerPosition]);
+
+  // Handle drag end
+  const handleDragEnd = useCallback(() => {
+    setDragging(null);
+  }, []);
+
+  // Add/remove global event listeners for dragging
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mousemove', handleDragMove);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('touchmove', handleDragMove);
+      window.addEventListener('touchend', handleDragEnd);
+      
+      return () => {
+        window.removeEventListener('mousemove', handleDragMove);
+        window.removeEventListener('mouseup', handleDragEnd);
+        window.removeEventListener('touchmove', handleDragMove);
+        window.removeEventListener('touchend', handleDragEnd);
+      };
+    }
+  }, [dragging, handleDragMove, handleDragEnd]);
 
   // Calculate transform style for preview
   const transformStyle = useMemo(() => {
@@ -112,12 +247,12 @@ export function CropRotateEditor({
     return transforms.length > 0 ? transforms.join(' ') : undefined;
   }, [settings]);
 
-  // Calculate crop overlay based on image vs selected aspect ratio
+  // Calculate crop overlay based on image vs selected aspect ratio (for non-free modes)
   const cropOverlay = useMemo(() => {
     const selectedRatio = ASPECT_RATIOS.find(r => r.id === settings.aspectRatio);
     
     if (!selectedRatio?.ratio || imageSize.width === 0 || imageSize.height === 0) {
-      return null; // Free mode = no overlay
+      return null; // Free mode = no overlay (uses draggable crop box instead)
     }
     
     const imageRatio = imageSize.width / imageSize.height;
@@ -143,7 +278,31 @@ export function CropRotateEditor({
     }
   }, [settings.aspectRatio, settings.rotation, imageSize]);
 
-  const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free';
+  const isFreeMode = settings.aspectRatio === 'free';
+  const hasCropBoxChanges = cropBox.x !== 0 || cropBox.y !== 0 || cropBox.width !== 100 || cropBox.height !== 100;
+  const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free' || hasCropBoxChanges;
+
+  // Get cursor style based on handle
+  const getCursorStyle = (handle: DragHandle): string => {
+    switch (handle) {
+      case 'top':
+      case 'bottom':
+        return 'cursor-ns-resize';
+      case 'left':
+      case 'right':
+        return 'cursor-ew-resize';
+      case 'top-left':
+      case 'bottom-right':
+        return 'cursor-nwse-resize';
+      case 'top-right':
+      case 'bottom-left':
+        return 'cursor-nesw-resize';
+      case 'move':
+        return 'cursor-move';
+      default:
+        return '';
+    }
+  };
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -175,17 +334,126 @@ export function CropRotateEditor({
           ref={containerRef}
           className="flex items-center justify-center p-4 bg-black/50 shrink-0"
         >
-          <div className="relative w-full max-w-[min(90vw,400px)] h-[35vh] flex items-center justify-center overflow-hidden rounded-lg">
+          <div 
+            ref={imageContainerRef}
+            className={cn(
+              "relative w-full max-w-[min(90vw,400px)] h-[35vh] flex items-center justify-center overflow-hidden rounded-lg",
+              dragging && getCursorStyle(dragging)
+            )}
+          >
             {/* Image - fills container naturally */}
             <img
               src={imageUrl}
               alt="Preview"
-              className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200"
+              className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 select-none"
               style={{ transform: transformStyle }}
+              draggable={false}
             />
             
-            {/* Crop overlay masks - show what will be cropped */}
-            {cropOverlay && (
+            {/* Free mode - draggable crop box */}
+            {isFreeMode && (
+              <>
+                {/* Dark overlay for cropped areas - 4 rectangles around the crop box */}
+                <div 
+                  className="absolute top-0 left-0 right-0 bg-black/60 pointer-events-none"
+                  style={{ height: `${cropBox.y}%` }}
+                />
+                <div 
+                  className="absolute bottom-0 left-0 right-0 bg-black/60 pointer-events-none"
+                  style={{ height: `${100 - cropBox.y - cropBox.height}%` }}
+                />
+                <div 
+                  className="absolute bg-black/60 pointer-events-none"
+                  style={{ 
+                    top: `${cropBox.y}%`,
+                    left: 0,
+                    width: `${cropBox.x}%`,
+                    height: `${cropBox.height}%`
+                  }}
+                />
+                <div 
+                  className="absolute bg-black/60 pointer-events-none"
+                  style={{ 
+                    top: `${cropBox.y}%`,
+                    right: 0,
+                    width: `${100 - cropBox.x - cropBox.width}%`,
+                    height: `${cropBox.height}%`
+                  }}
+                />
+                
+                {/* Crop box border and handles */}
+                <div
+                  className="absolute border-2 border-white"
+                  style={{
+                    left: `${cropBox.x}%`,
+                    top: `${cropBox.y}%`,
+                    width: `${cropBox.width}%`,
+                    height: `${cropBox.height}%`,
+                  }}
+                >
+                  {/* Rule of thirds grid */}
+                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
+                    {[...Array(9)].map((_, i) => (
+                      <div key={i} className="border border-white/30" />
+                    ))}
+                  </div>
+                  
+                  {/* Move handle (center area) */}
+                  <div
+                    className="absolute inset-4 cursor-move"
+                    onMouseDown={(e) => handleDragStart(e, 'move')}
+                    onTouchStart={(e) => handleDragStart(e, 'move')}
+                  />
+                  
+                  {/* Edge handles */}
+                  <div
+                    className="absolute -top-1 left-4 right-4 h-2 cursor-ns-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'top')}
+                    onTouchStart={(e) => handleDragStart(e, 'top')}
+                  />
+                  <div
+                    className="absolute -bottom-1 left-4 right-4 h-2 cursor-ns-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'bottom')}
+                    onTouchStart={(e) => handleDragStart(e, 'bottom')}
+                  />
+                  <div
+                    className="absolute top-4 bottom-4 -left-1 w-2 cursor-ew-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'left')}
+                    onTouchStart={(e) => handleDragStart(e, 'left')}
+                  />
+                  <div
+                    className="absolute top-4 bottom-4 -right-1 w-2 cursor-ew-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'right')}
+                    onTouchStart={(e) => handleDragStart(e, 'right')}
+                  />
+                  
+                  {/* Corner handles */}
+                  <div
+                    className="absolute -top-2 -left-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nwse-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'top-left')}
+                    onTouchStart={(e) => handleDragStart(e, 'top-left')}
+                  />
+                  <div
+                    className="absolute -top-2 -right-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nesw-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'top-right')}
+                    onTouchStart={(e) => handleDragStart(e, 'top-right')}
+                  />
+                  <div
+                    className="absolute -bottom-2 -left-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nesw-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'bottom-left')}
+                    onTouchStart={(e) => handleDragStart(e, 'bottom-left')}
+                  />
+                  <div
+                    className="absolute -bottom-2 -right-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nwse-resize"
+                    onMouseDown={(e) => handleDragStart(e, 'bottom-right')}
+                    onTouchStart={(e) => handleDragStart(e, 'bottom-right')}
+                  />
+                </div>
+              </>
+            )}
+            
+            {/* Non-free mode - static crop overlay masks */}
+            {cropOverlay && !isFreeMode && (
               <>
                 {cropOverlay.type === 'horizontal' ? (
                   <>
@@ -241,13 +509,6 @@ export function CropRotateEditor({
                   </div>
                 </div>
               </>
-            )}
-            
-            {/* Free mode - just show the grid over entire image */}
-            {!cropOverlay && settings.aspectRatio === 'free' && (
-              <div className="absolute inset-0 pointer-events-none">
-                {/* No grid for free mode */}
-              </div>
             )}
           </div>
         </div>
