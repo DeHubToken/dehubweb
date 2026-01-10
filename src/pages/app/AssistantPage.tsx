@@ -612,6 +612,11 @@ export default function AssistantPage() {
     setInput('');
     setAttachedImage(null);
     setIsLoading(true);
+    
+    // Reset textarea height to default
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+    }
 
     try {
       // Check request type
