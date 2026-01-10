@@ -274,6 +274,21 @@ export default function AssistantPage() {
     }
   }, []);
 
+  // Scroll to top on initial mount - ensures header is visible on mobile
+  useEffect(() => {
+    // Use a small delay to ensure the scroll area is rendered
+    const timer = setTimeout(() => {
+      if (scrollRef.current) {
+        // ScrollArea uses a viewport div inside - scroll that to top
+        const viewport = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewport) {
+          viewport.scrollTop = 0;
+        }
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Scroll to bottom helper
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
