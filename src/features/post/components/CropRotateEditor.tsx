@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { X, RotateCw, FlipHorizontal, FlipVertical, Check, Crop } from 'lucide-react';
+import { X, RotateCw, FlipHorizontal, FlipVertical, Check, Crop, ZoomIn, ZoomOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
@@ -8,6 +8,7 @@ import type { CropSettings, CropBox } from '../types/filters';
 export type AspectRatioOption = '1:1' | '4:5' | '16:9' | 'free';
 
 type DragHandle = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'move' | null;
+type InteractionMode = 'crop' | 'pan';
 
 interface CropRotateEditorProps {
   isOpen: boolean;
@@ -32,6 +33,9 @@ const DEFAULT_CROP_BOX: CropBox = {
 };
 
 const MIN_CROP_SIZE = 15; // Minimum 15% width/height
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 5;
+const ZOOM_STEP = 0.25;
 
 export const DEFAULT_CROP_SETTINGS: CropSettings = {
   rotation: 0,
@@ -57,6 +61,14 @@ export function CropRotateEditor({
   const [dragging, setDragging] = useState<DragHandle>(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0, cropBox: { ...DEFAULT_CROP_BOX } });
   
+  // Zoom and pan state
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0, panX: 0, panY: 0 });
+  const [pinchDistance, setPinchDistance] = useState<number | null>(null);
+  const [pinchZoomStart, setPinchZoomStart] = useState(1);
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +77,8 @@ export function CropRotateEditor({
     if (isOpen) {
       setSettings(initialSettings || { ...DEFAULT_CROP_SETTINGS });
       setCropBox(initialSettings?.cropBox || { ...DEFAULT_CROP_BOX });
+      setZoom(1);
+      setPan({ x: 0, y: 0 });
     }
   }, [isOpen, initialSettings]);
 
@@ -76,6 +90,128 @@ export function CropRotateEditor({
     };
     img.src = imageUrl;
   }, [imageUrl]);
+
+  // Calculate distance between two touch points
+  const getTouchDistance = useCallback((touches: React.TouchList | TouchList) => {
+    if (touches.length < 2) return 0;
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }, []);
+
+  // Handle pinch zoom start
+  const handlePinchStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const distance = getTouchDistance(e.touches);
+      setPinchDistance(distance);
+      setPinchZoomStart(zoom);
+    }
+  }, [zoom, getTouchDistance]);
+
+  // Handle pinch zoom move
+  const handlePinchMove = useCallback((e: TouchEvent) => {
+    if (e.touches.length === 2 && pinchDistance !== null) {
+      e.preventDefault();
+      const currentDistance = getTouchDistance(e.touches);
+      const scale = currentDistance / pinchDistance;
+      const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, pinchZoomStart * scale));
+      setZoom(newZoom);
+      
+      // Constrain pan when zooming out
+      if (newZoom <= 1) {
+        setPan({ x: 0, y: 0 });
+      }
+    }
+  }, [pinchDistance, pinchZoomStart, getTouchDistance]);
+
+  // Handle pinch end
+  const handlePinchEnd = useCallback(() => {
+    setPinchDistance(null);
+  }, []);
+
+  // Handle pan start (for panning the zoomed image)
+  const handlePanStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    if (zoom <= 1) return; // Only pan when zoomed in
+    if (dragging) return; // Don't pan while cropping
+    
+    // Check if it's a single touch (not pinch)
+    if ('touches' in e && e.touches.length !== 1) return;
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
+    setIsPanning(true);
+    setPanStart({ x: clientX, y: clientY, panX: pan.x, panY: pan.y });
+  }, [zoom, pan, dragging]);
+
+  // Handle pan move
+  const handlePanMove = useCallback((e: MouseEvent | TouchEvent) => {
+    if (!isPanning) return;
+    
+    const clientX = 'touches' in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+    
+    const deltaX = clientX - panStart.x;
+    const deltaY = clientY - panStart.y;
+    
+    // Calculate max pan based on zoom level
+    const maxPan = ((zoom - 1) / zoom) * 50; // percentage of container
+    
+    setPan({
+      x: Math.max(-maxPan, Math.min(maxPan, panStart.panX + (deltaX / (imageContainerRef.current?.offsetWidth || 1)) * 100)),
+      y: Math.max(-maxPan, Math.min(maxPan, panStart.panY + (deltaY / (imageContainerRef.current?.offsetHeight || 1)) * 100)),
+    });
+  }, [isPanning, panStart, zoom]);
+
+  // Handle pan end
+  const handlePanEnd = useCallback(() => {
+    setIsPanning(false);
+  }, []);
+
+  // Zoom controls
+  const handleZoomIn = useCallback(() => {
+    setZoom(prev => Math.min(MAX_ZOOM, prev + ZOOM_STEP));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    const newZoom = Math.max(MIN_ZOOM, zoom - ZOOM_STEP);
+    setZoom(newZoom);
+    if (newZoom <= 1) {
+      setPan({ x: 0, y: 0 });
+    }
+  }, [zoom]);
+
+  // Add pinch and pan event listeners
+  useEffect(() => {
+    const container = imageContainerRef.current;
+    if (!container) return;
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        handlePinchMove(e);
+      } else if (isPanning) {
+        handlePanMove(e);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      handlePinchEnd();
+      handlePanEnd();
+    };
+
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('mousemove', handlePanMove);
+    window.addEventListener('mouseup', handlePanEnd);
+
+    return () => {
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('mousemove', handlePanMove);
+      window.removeEventListener('mouseup', handlePanEnd);
+    };
+  }, [handlePinchMove, handlePinchEnd, handlePanMove, handlePanEnd, isPanning]);
 
   const handleRotate = () => {
     setSettings(prev => ({
@@ -112,6 +248,8 @@ export function CropRotateEditor({
   const handleReset = () => {
     setSettings({ ...DEFAULT_CROP_SETTINGS });
     setCropBox({ ...DEFAULT_CROP_BOX });
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
   };
 
   const handleApply = () => {
@@ -280,7 +418,8 @@ export function CropRotateEditor({
 
   const isFreeMode = settings.aspectRatio === 'free';
   const hasCropBoxChanges = cropBox.x !== 0 || cropBox.y !== 0 || cropBox.width !== 100 || cropBox.height !== 100;
-  const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free' || hasCropBoxChanges;
+  const hasZoomPanChanges = zoom !== 1 || pan.x !== 0 || pan.y !== 0;
+  const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free' || hasCropBoxChanges || hasZoomPanChanges;
 
   // Get cursor style based on handle
   const getCursorStyle = (handle: DragHandle): string => {
@@ -332,21 +471,36 @@ export function CropRotateEditor({
         {/* Preview - FIXED height container with crop overlay */}
         <div 
           ref={containerRef}
-          className="flex items-center justify-center p-4 bg-black/50 shrink-0"
+          className="flex flex-col items-center justify-center p-4 bg-black/50 shrink-0 gap-3"
         >
           <div 
             ref={imageContainerRef}
             className={cn(
               "relative w-full max-w-[min(90vw,400px)] h-[35vh] flex items-center justify-center overflow-hidden rounded-lg",
-              dragging && getCursorStyle(dragging)
+              dragging && getCursorStyle(dragging),
+              isPanning && "cursor-grabbing",
+              zoom > 1 && !isPanning && !dragging && "cursor-grab"
             )}
+            onTouchStart={handlePinchStart}
+            onMouseDown={(e) => {
+              // Only start panning if clicking on empty area (not on crop handles)
+              if (zoom > 1 && !dragging) {
+                handlePanStart(e);
+              }
+            }}
           >
-            {/* Image - fills container naturally */}
+            {/* Image - fills container naturally with zoom and pan */}
             <img
               src={imageUrl}
               alt="Preview"
               className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 select-none"
-              style={{ transform: transformStyle }}
+              style={{ 
+                transform: [
+                  `scale(${zoom})`,
+                  `translate(${pan.x}%, ${pan.y}%)`,
+                  transformStyle
+                ].filter(Boolean).join(' ')
+              }}
               draggable={false}
             />
             
@@ -511,6 +665,44 @@ export function CropRotateEditor({
               </>
             )}
           </div>
+          
+          {/* Zoom Controls */}
+          <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-sm rounded-full px-3 py-1.5 border border-zinc-700">
+            <button
+              onClick={handleZoomOut}
+              disabled={zoom <= MIN_ZOOM}
+              className={cn(
+                "p-1 rounded-full transition-colors",
+                zoom <= MIN_ZOOM 
+                  ? "text-zinc-600 cursor-not-allowed" 
+                  : "text-zinc-300 hover:text-white hover:bg-white/10"
+              )}
+            >
+              <ZoomOut className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-medium text-zinc-300 min-w-[3rem] text-center">
+              {Math.round(zoom * 100)}%
+            </span>
+            <button
+              onClick={handleZoomIn}
+              disabled={zoom >= MAX_ZOOM}
+              className={cn(
+                "p-1 rounded-full transition-colors",
+                zoom >= MAX_ZOOM 
+                  ? "text-zinc-600 cursor-not-allowed" 
+                  : "text-zinc-300 hover:text-white hover:bg-white/10"
+              )}
+            >
+              <ZoomIn className="w-4 h-4" />
+            </button>
+          </div>
+          
+          {/* Zoom hint */}
+          {zoom > 1 && (
+            <p className="text-xs text-zinc-500 text-center">
+              Drag to pan the image
+            </p>
+          )}
         </div>
 
         {/* Aspect Ratio Options */}
