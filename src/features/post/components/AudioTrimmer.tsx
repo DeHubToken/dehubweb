@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Play, Pause, Scissors, Check } from 'lucide-react';
+import { X, Play, Pause, Scissors, Check, Music } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { generateWaveformFromBlob, sliceAudioBlob, formatTime } from '@/lib/audio-waveform';
 import { toast } from 'sonner';
@@ -12,11 +12,15 @@ interface AudioTrimmerProps {
   audioBlob: Blob;
   duration: number;
   maxDuration: number;
+  fileName?: string;
   onApply: (trimmedBlob: Blob, trimStart: number, trimEnd: number) => void;
 }
 
 const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const;
 type PlaybackSpeed = typeof PLAYBACK_SPEEDS[number];
+
+const ARROW_STEP = 0.5; // seconds to adjust per arrow key press
+const SHIFT_ARROW_STEP = 2; // seconds when holding shift
 
 export function AudioTrimmer({
   isOpen,
@@ -25,6 +29,7 @@ export function AudioTrimmer({
   audioBlob,
   duration,
   maxDuration,
+  fileName,
   onApply,
 }: AudioTrimmerProps) {
   const [waveform, setWaveform] = useState<number[]>([]);
@@ -86,6 +91,71 @@ export function AudioTrimmer({
     }
   }, [playbackSpeed]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      const step = e.shiftKey ? SHIFT_ARROW_STEP : ARROW_STEP;
+      const windowDuration = trimEnd - trimStart;
+
+      switch (e.key) {
+        case ' ':
+          e.preventDefault();
+          togglePlayPause();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          if (e.altKey) {
+            // Alt+Left: Move start handle left
+            const newStart = Math.max(0, trimStart - step);
+            setTrimStart(newStart);
+            if (trimEnd - newStart > maxDuration) {
+              setTrimEnd(newStart + maxDuration);
+            }
+          } else if (e.metaKey || e.ctrlKey) {
+            // Cmd/Ctrl+Left: Move end handle left
+            const newEnd = Math.max(trimStart + 1, trimEnd - step);
+            setTrimEnd(newEnd);
+          } else {
+            // Left: Move entire window left
+            const newStart = Math.max(0, trimStart - step);
+            const shift = trimStart - newStart;
+            setTrimStart(newStart);
+            setTrimEnd(trimEnd - shift);
+          }
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          if (e.altKey) {
+            // Alt+Right: Move start handle right
+            const newStart = Math.min(trimEnd - 1, trimStart + step);
+            setTrimStart(newStart);
+          } else if (e.metaKey || e.ctrlKey) {
+            // Cmd/Ctrl+Right: Move end handle right
+            const newEnd = Math.min(duration, trimEnd + step);
+            setTrimEnd(newEnd);
+            if (newEnd - trimStart > maxDuration) {
+              setTrimStart(newEnd - maxDuration);
+            }
+          } else {
+            // Right: Move entire window right
+            const newEnd = Math.min(duration, trimEnd + step);
+            const shift = newEnd - trimEnd;
+            setTrimEnd(newEnd);
+            setTrimStart(trimStart + shift);
+          }
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, trimStart, trimEnd, duration, maxDuration]);
+
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
     const time = audioRef.current.currentTime;
@@ -102,7 +172,7 @@ export function AudioTrimmer({
     setIsPlaying(false);
   };
 
-  const togglePlayPause = () => {
+  const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
     
     if (isPlaying) {
@@ -116,7 +186,7 @@ export function AudioTrimmer({
       audioRef.current.play();
       setIsPlaying(true);
     }
-  };
+  }, [isPlaying, trimStart, trimEnd]);
 
   const getPositionFromTime = (time: number): number => {
     return (time / duration) * 100;
@@ -206,6 +276,13 @@ export function AudioTrimmer({
 
   const selectionDuration = trimEnd - trimStart;
 
+  // Truncate file name for display
+  const displayFileName = fileName 
+    ? fileName.length > 30 
+      ? fileName.slice(0, 27) + '...' 
+      : fileName
+    : null;
+
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent className="bg-zinc-950/95 backdrop-blur-xl border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
@@ -250,6 +327,21 @@ export function AudioTrimmer({
 
         {/* Content */}
         <div className="p-4 sm:p-6 flex-1 overflow-y-auto">
+          {/* File name display */}
+          {displayFileName && (
+            <div className="flex items-center gap-2 mb-4 p-3 rounded-xl
+              bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent
+              border border-white/10">
+              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0">
+                <Music className="w-4 h-4 text-purple-400" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-white text-sm font-medium truncate">{displayFileName}</p>
+                <p className="text-zinc-500 text-xs">{formatTime(duration)} total</p>
+              </div>
+            </div>
+          )}
+
           {/* Info bar */}
           <div className="flex items-center justify-between mb-4 text-sm">
             <span className="text-zinc-400">
@@ -401,9 +493,11 @@ export function AudioTrimmer({
             ))}
           </div>
 
-          {/* Duration info */}
-          <div className="flex items-center justify-center mt-4 text-xs text-zinc-500">
-            <span>Total duration: {formatTime(duration)}</span>
+          {/* Keyboard shortcuts hint */}
+          <div className="hidden sm:flex items-center justify-center gap-4 mt-4 text-[10px] text-zinc-600">
+            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">Space</kbd> Play/Pause</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">←→</kbd> Move window</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">Shift</kbd> Faster</span>
           </div>
         </div>
       </DrawerContent>

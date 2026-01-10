@@ -78,6 +78,7 @@ export function PostMediaPreview({
     file: File;
     url: string;
     duration: number;
+    fileName: string;
   } | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -214,6 +215,7 @@ export function PostMediaPreview({
           file,
           url: audioEl.src,
           duration,
+          fileName: file.name,
         });
         setShowAudioOptions(null);
         return;
@@ -658,6 +660,7 @@ export function PostMediaPreview({
           audioBlob={audioTrimmerData.file}
           duration={audioTrimmerData.duration}
           maxDuration={MAX_DURATION}
+          fileName={audioTrimmerData.fileName}
           onApply={(trimmedBlob, trimStart, trimEnd) => {
             const trimmedUrl = URL.createObjectURL(trimmedBlob);
             const trimmedDuration = trimEnd - trimStart;
