@@ -73,6 +73,18 @@ function isCreativeLogoRequest(message: string): boolean {
   return true;
 }
 
+// Convert an image URL to base64 data URL
+async function imageUrlToBase64(url: string): Promise<string> {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 interface GeneralAIChatProps {
   isOpen: boolean;
   onClose: () => void;
@@ -163,8 +175,11 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         return;
       }
       
-      // If creative logo request, inject the logo as source image for generation
-      const effectiveSourceImage = isCreativeLogo ? ftvLogoSymbol : currentAttachedImage;
+      // If creative logo request, convert logo to base64 and use as source image
+      let effectiveSourceImage = currentAttachedImage;
+      if (isCreativeLogo) {
+        effectiveSourceImage = await imageUrlToBase64(ftvLogoSymbol);
+      }
       const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
