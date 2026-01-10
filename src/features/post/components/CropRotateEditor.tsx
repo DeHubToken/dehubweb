@@ -154,13 +154,13 @@ export function CropRotateEditor({
           </button>
         </div>
 
-        {/* Preview */}
+        {/* Preview - larger on desktop/tablet */}
         <div 
           ref={containerRef}
-          className="flex-1 flex items-center justify-center p-4 bg-black/50 min-h-[200px] max-h-[40vh] overflow-hidden"
+          className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-black/50 min-h-[200px] sm:min-h-[300px] max-h-[50vh] sm:max-h-[60vh] overflow-hidden"
         >
           <div
-            className="relative max-w-full max-h-full overflow-hidden rounded-lg"
+            className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl"
             style={containerStyle}
           >
             <img
