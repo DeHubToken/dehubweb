@@ -642,18 +642,19 @@ export default function AssistantPage() {
     };
   }, []);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (overrideMessage?: string) => {
+    const messageToSend = overrideMessage || input.trim();
+    if (!messageToSend || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input.trim(),
+      content: messageToSend,
       attachedImage: attachedImage || undefined
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const currentInput = input.trim();
+    const currentInput = messageToSend;
     const currentAttachedImage = attachedImage;
     setInput('');
     setAttachedImage(null);
@@ -1303,8 +1304,7 @@ export default function AssistantPage() {
             >
               <button
                 onClick={() => {
-                  setInput("What's happening in the news today?");
-                  setTimeout(() => handleSend(), 100);
+                  handleSend("What's happening in the news today?");
                 }}
                 className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
               >
@@ -1471,7 +1471,7 @@ export default function AssistantPage() {
             {/* Send button - minimal */}
             <button
               type="button"
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={(!input.trim() && !isRecording) || isLoading}
               className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
             >
