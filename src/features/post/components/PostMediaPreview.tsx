@@ -407,7 +407,7 @@ export function PostMediaPreview({
                         onClick={() => setShowAudioOptions(index)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                           bg-white/10 backdrop-blur-xl border border-white/20
-                          hover:bg-red-500/20 hover:border-red-400/40"
+                          hover:bg-white/20 hover:border-white/40"
                       >
                         <Music className="w-3 h-3" />
                         Audio
