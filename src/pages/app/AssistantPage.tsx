@@ -343,8 +343,8 @@ export default function AssistantPage() {
 
       setMessages(prev => [...prev, assistantMessage]);
 
-      // Auto-speak the response if voice auto-reply is enabled
-      if (voiceAutoReply && isMobile) {
+      // Auto-speak the response if voice auto-reply is enabled OR always speak replies is on
+      if (voiceAutoReply || alwaysSpeakReplies) {
         // Small delay to let the message render first
         setTimeout(() => {
           speak(responseText);
