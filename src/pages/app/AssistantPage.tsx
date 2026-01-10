@@ -869,6 +869,23 @@ export default function AssistantPage() {
     }
   };
 
+  // Convert video URL to FileList for PostModal
+  const handlePostVideo = async (videoUrl: string) => {
+    try {
+      const response = await fetch(videoUrl);
+      const blob = await response.blob();
+      const file = new File([blob], 'ai-generated-video.mp4', { type: 'video/mp4' });
+      
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      
+      setPostModalFiles(dataTransfer.files);
+      setPostModalOpen(true);
+    } catch (error) {
+      console.error('Error preparing video for post:', error);
+    }
+  };
+
   // Style options content
   const styleMenuContent = (
     <div className="h-[50vh] overflow-y-auto">
@@ -1140,8 +1157,9 @@ export default function AssistantPage() {
                         alt="" 
                         className="absolute bottom-12 left-3 h-5 opacity-60 pointer-events-none"
                       />
-                      {/* Download button */}
+                      {/* Action buttons */}
                       <div className="absolute bottom-12 right-3 flex items-center gap-2">
+                        {/* Download button */}
                         <a
                           href={message.videoUrl}
                           download="dehub-video.mp4"
@@ -1156,6 +1174,18 @@ export default function AssistantPage() {
                         >
                           <Download className="w-5 h-5" />
                         </a>
+                        {/* Post button */}
+                        <button
+                          onClick={() => handlePostVideo(message.videoUrl!)}
+                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                            backdrop-blur-xl border border-white/30
+                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                            hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                            hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                        >
+                          <Plus className="w-5 h-5" />
+                        </button>
                       </div>
                     </div>
                   </div>
