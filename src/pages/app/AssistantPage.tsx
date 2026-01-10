@@ -1383,7 +1383,7 @@ export default function AssistantPage() {
           {/* Glow effect wrapper */}
           <div className={`flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
             inputGlow 
-              ? 'border-purple-500/60 shadow-[0_0_20px_rgba(168,85,247,0.4)]' 
+              ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
               : 'border-white/10'
           }`}>
             {/* Hidden file input */}
