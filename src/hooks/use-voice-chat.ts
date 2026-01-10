@@ -10,6 +10,8 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 interface UseVoiceChatOptions {
   onTranscript?: (transcript: string) => void;
   onError?: (error: string) => void;
+  /** Voice preference for text-to-speech */
+  voicePreference?: 'female' | 'male' | 'neutral';
 }
 
 interface UseVoiceChatReturn {
@@ -83,7 +85,7 @@ const isSpeechSynthesisSupported = () => {
 };
 
 export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatReturn {
-  const { onTranscript, onError } = options;
+  const { onTranscript, onError, voicePreference = 'female' } = options;
   
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -256,17 +258,31 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
     
-    // Use cached voices for consistent selection - prioritize female voices
+    // Use cached voices for consistent selection
     const voicesToUse = voices.length > 0 ? voices : window.speechSynthesis.getVoices();
     
-    // Priority order: specific female voices first, then any English voice
-    const preferredVoice = 
-      voicesToUse.find(v => v.name === 'Samantha') || // macOS female
-      voicesToUse.find(v => v.name === 'Google UK English Female') ||
-      voicesToUse.find(v => v.name === 'Google US English') ||
-      voicesToUse.find(v => v.name.includes('Female') && v.lang.startsWith('en')) ||
-      voicesToUse.find(v => v.name === 'Microsoft Zira - English (United States)') || // Windows female
-      voicesToUse.find(v => v.lang.startsWith('en-'));
+    let preferredVoice: SpeechSynthesisVoice | undefined;
+    
+    if (voicePreference === 'female') {
+      preferredVoice = 
+        voicesToUse.find(v => v.name === 'Samantha') ||
+        voicesToUse.find(v => v.name === 'Google UK English Female') ||
+        voicesToUse.find(v => v.name === 'Google US English') ||
+        voicesToUse.find(v => v.name.includes('Female') && v.lang.startsWith('en')) ||
+        voicesToUse.find(v => v.name === 'Microsoft Zira - English (United States)') ||
+        voicesToUse.find(v => v.lang.startsWith('en-'));
+    } else if (voicePreference === 'male') {
+      preferredVoice = 
+        voicesToUse.find(v => v.name === 'Alex') ||
+        voicesToUse.find(v => v.name === 'Daniel') ||
+        voicesToUse.find(v => v.name === 'Google UK English Male') ||
+        voicesToUse.find(v => v.name.includes('Male') && v.lang.startsWith('en')) ||
+        voicesToUse.find(v => v.name === 'Microsoft David - English (United States)') ||
+        voicesToUse.find(v => v.lang.startsWith('en-'));
+    } else {
+      // Neutral - just get first English voice
+      preferredVoice = voicesToUse.find(v => v.lang.startsWith('en-'));
+    }
     
     if (preferredVoice) {
       utterance.voice = preferredVoice;
@@ -278,7 +294,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [onError, voices]);
+  }, [onError, voices, voicePreference]);
 
   const stopSpeaking = useCallback(() => {
     if (isSpeechSynthesisSupported()) {

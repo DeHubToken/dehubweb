@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Download, Mic, Square, Volume2, VolumeX } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX } from 'lucide-react';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -24,6 +24,8 @@ import { MarkdownText } from '@/lib/markdown';
 import { addWatermarkClient } from '@/lib/watermark';
 import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
+import { IMAGE_MODELS, IMAGE_MODEL_OPTIONS, type ImageModelKey } from '@/constants/image-models.constants';
+import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } from '@/constants/voice-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 
@@ -245,8 +247,10 @@ export default function AssistantPage() {
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
+  const [selectedImageModel, setSelectedImageModel] = useState<ImageModelKey>('gemini-2.5-flash');
+  const [selectedVoice, setSelectedVoice] = useState<VoicePreferenceKey>('female');
+  const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
-  const [videoModelSheetOpen, setVideoModelSheetOpen] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [postModalOpen, setPostModalOpen] = useState(false);
   const [postModalFiles, setPostModalFiles] = useState<FileList | null>(null);
@@ -267,6 +271,8 @@ export default function AssistantPage() {
   const isMobile = useIsMobile();
   const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
   const currentVideoModel = VIDEO_MODEL_OPTIONS.find(m => m.id === selectedVideoModel) || VIDEO_MODEL_OPTIONS[0];
+  const currentImageModel = IMAGE_MODEL_OPTIONS.find(m => m.id === selectedImageModel) || IMAGE_MODEL_OPTIONS[0];
+  const currentVoice = VOICE_PREFERENCE_OPTIONS.find(v => v.id === selectedVoice) || VOICE_PREFERENCE_OPTIONS[0];
 
   // Voice chat hook - handles speech recognition and text-to-speech
   const {
@@ -279,6 +285,7 @@ export default function AssistantPage() {
     stopSpeaking,
     isSupported: isVoiceSupported,
   } = useVoiceChat({
+    voicePreference: selectedVoice as 'female' | 'male' | 'neutral',
     onTranscript: (text) => {
       // When user finishes speaking, set the input and auto-send
       if (text.trim()) {
@@ -745,7 +752,14 @@ export default function AssistantPage() {
 
   const handleVideoModelSelect = (modelId: VideoModelKey) => {
     setSelectedVideoModel(modelId);
-    setVideoModelSheetOpen(false);
+  };
+
+  const handleImageModelSelect = (modelId: ImageModelKey) => {
+    setSelectedImageModel(modelId);
+  };
+
+  const handleVoiceSelect = (voiceId: VoicePreferenceKey) => {
+    setSelectedVoice(voiceId);
   };
 
   // Convert base64 image to FileList for PostModal
@@ -782,70 +796,6 @@ export default function AssistantPage() {
           >
             <span className="text-lg">{style.emoji}</span>
             {style.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-
-  // Video model options content
-  const videoModelMenuContent = (
-    <div className="h-[60vh] overflow-y-auto">
-      <div className="flex flex-col pb-4">
-        {/* Premium tier */}
-        <div className="px-4 py-2 text-xs text-white/40 uppercase tracking-wider">Premium</div>
-        {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'premium').map((model) => (
-          <button
-            key={model.id}
-            type="button"
-            onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
-            className={`flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-              selectedVideoModel === model.id ? 'bg-white/10' : ''
-            }`}
-          >
-            <span className="text-lg">{model.emoji}</span>
-            <div className="flex flex-col items-start">
-              <span className="font-medium">{model.name}</span>
-              <span className="text-xs text-white/50">{model.description}</span>
-            </div>
-          </button>
-        ))}
-        
-        {/* Standard tier */}
-        <div className="px-4 py-2 text-xs text-white/40 uppercase tracking-wider mt-2">Standard</div>
-        {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'standard').map((model) => (
-          <button
-            key={model.id}
-            type="button"
-            onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
-            className={`flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-              selectedVideoModel === model.id ? 'bg-white/10' : ''
-            }`}
-          >
-            <span className="text-lg">{model.emoji}</span>
-            <div className="flex flex-col items-start">
-              <span className="font-medium">{model.name}</span>
-              <span className="text-xs text-white/50">{model.description}</span>
-            </div>
-          </button>
-        ))}
-        
-        {/* Fast tier */}
-        <div className="px-4 py-2 text-xs text-white/40 uppercase tracking-wider mt-2">Fast</div>
-        {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'fast').map((model) => (
-          <button
-            key={model.id}
-            type="button"
-            onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
-            className={`flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-              selectedVideoModel === model.id ? 'bg-white/10' : ''
-            }`}
-          >
-            <span className="text-lg">{model.emoji}</span>
-            <div className="flex flex-col items-start">
-              <span className="font-medium">{model.name}</span>
-              <span className="text-xs text-white/50">{model.description}</span>
-            </div>
           </button>
         ))}
       </div>
@@ -889,16 +839,15 @@ export default function AssistantPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Video Model Selector Button */}
+          {/* Settings Button */}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setVideoModelSheetOpen(true)}
+            onClick={() => setSettingsSheetOpen(true)}
             className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
           >
-            <Video className="w-3.5 h-3.5 text-white/70" />
-            <span className="hidden sm:inline text-xs">{currentVideoModel.name}</span>
-            <ChevronDown className="w-3 h-3 text-white/50" />
+            <Settings className="w-3.5 h-3.5 text-white/70" />
+            <span className="hidden sm:inline text-xs">Settings</span>
           </Button>
 
           {/* Style Selector Button */}
@@ -927,16 +876,126 @@ export default function AssistantPage() {
           </DrawerContent>
         </Drawer>
 
-        {/* Video Model Drawer */}
-        <Drawer open={videoModelSheetOpen} onOpenChange={setVideoModelSheetOpen}>
+        {/* Unified Settings Drawer */}
+        <Drawer open={settingsSheetOpen} onOpenChange={setSettingsSheetOpen}>
           <DrawerContent glass className="border-t border-white/10">
             <DrawerHeader className="border-b border-white/10">
               <DrawerTitle className="text-white flex items-center gap-2">
-                <Video className="w-5 h-5 text-white" />
-                Video Model
+                <Settings className="w-5 h-5 text-white" />
+                AI Settings
               </DrawerTitle>
             </DrawerHeader>
-            {videoModelMenuContent}
+            <div className="h-[70vh] overflow-y-auto">
+              {/* Image Model Section */}
+              <div className="border-b border-white/10 pb-4">
+                <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4" />
+                  Image Model
+                </div>
+                {IMAGE_MODEL_OPTIONS.map((model) => (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleImageModelSelect(model.id as ImageModelKey)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedImageModel === model.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{model.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{model.name}</span>
+                      <span className="text-xs text-white/50">{model.description}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Video Model Section */}
+              <div className="border-b border-white/10 pb-4">
+                <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
+                  <Video className="w-4 h-4" />
+                  Video Model
+                </div>
+                {/* Premium tier */}
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider">Premium</div>
+                {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'premium').map((model) => (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedVideoModel === model.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{model.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{model.name}</span>
+                      <span className="text-xs text-white/50">{model.description}</span>
+                    </div>
+                  </button>
+                ))}
+                {/* Standard tier */}
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2">Standard</div>
+                {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'standard').map((model) => (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedVideoModel === model.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{model.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{model.name}</span>
+                      <span className="text-xs text-white/50">{model.description}</span>
+                    </div>
+                  </button>
+                ))}
+                {/* Fast tier */}
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2">Fast</div>
+                {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'fast').map((model) => (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleVideoModelSelect(model.id as VideoModelKey)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedVideoModel === model.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{model.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{model.name}</span>
+                      <span className="text-xs text-white/50">{model.description}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Voice Section */}
+              <div className="pb-4">
+                <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
+                  <Volume2 className="w-4 h-4" />
+                  AI Voice
+                </div>
+                {VOICE_PREFERENCE_OPTIONS.map((voice) => (
+                  <button
+                    key={voice.id}
+                    type="button"
+                    onClick={() => handleVoiceSelect(voice.id as VoicePreferenceKey)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedVoice === voice.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{voice.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{voice.name}</span>
+                      <span className="text-xs text-white/50">{voice.description}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </DrawerContent>
         </Drawer>
       </div>
