@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Play, Pause, Scissors } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { X, Play, Pause, Scissors, Check } from 'lucide-react';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { generateWaveformFromBlob, sliceAudioBlob, formatTime } from '@/lib/audio-waveform';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface AudioTrimmerProps {
   isOpen: boolean;
@@ -13,6 +14,9 @@ interface AudioTrimmerProps {
   maxDuration: number;
   onApply: (trimmedBlob: Blob, trimStart: number, trimEnd: number) => void;
 }
+
+const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const;
+type PlaybackSpeed = typeof PLAYBACK_SPEEDS[number];
 
 export function AudioTrimmer({
   isOpen,
@@ -31,6 +35,7 @@ export function AudioTrimmer({
   const [trimEnd, setTrimEnd] = useState(Math.min(duration, maxDuration));
   const [isDragging, setIsDragging] = useState<'start' | 'end' | 'window' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<PlaybackSpeed>(1);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -60,6 +65,7 @@ export function AudioTrimmer({
     if (!isOpen) return;
     
     audioRef.current = new Audio(audioUrl);
+    audioRef.current.playbackRate = playbackSpeed;
     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
     audioRef.current.addEventListener('ended', handleAudioEnded);
     
@@ -72,6 +78,13 @@ export function AudioTrimmer({
       }
     };
   }, [audioUrl, isOpen]);
+
+  // Update playback speed when changed
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed]);
 
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
@@ -109,26 +122,20 @@ export function AudioTrimmer({
     return (time / duration) * 100;
   };
 
-  const getTimeFromPosition = (clientX: number): number => {
-    if (!waveformRef.current) return 0;
-    const rect = waveformRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const percentage = Math.max(0, Math.min(1, x / rect.width));
-    return percentage * duration;
-  };
-
-  const handleMouseDown = useCallback((e: React.MouseEvent, type: 'start' | 'end' | 'window') => {
+  const handleMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent, type: 'start' | 'end' | 'window') => {
     e.preventDefault();
     setIsDragging(type);
-    dragStartX.current = e.clientX;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    dragStartX.current = clientX;
     dragStartTrim.current = { start: trimStart, end: trimEnd };
   }, [trimStart, trimEnd]);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (!isDragging || !waveformRef.current) return;
     
+    const clientX = 'touches' in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
     const rect = waveformRef.current.getBoundingClientRect();
-    const deltaX = e.clientX - dragStartX.current;
+    const deltaX = clientX - dragStartX.current;
     const deltaTime = (deltaX / rect.width) * duration;
     
     if (isDragging === 'start') {
@@ -173,9 +180,13 @@ export function AudioTrimmer({
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('touchmove', handleMouseMove);
+      window.addEventListener('touchend', handleMouseUp);
       return () => {
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('touchmove', handleMouseMove);
+        window.removeEventListener('touchend', handleMouseUp);
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
@@ -195,183 +206,207 @@ export function AudioTrimmer({
 
   const selectionDuration = trimEnd - trimStart;
 
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          className="w-full max-w-2xl bg-zinc-900/95 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10"
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <Scissors className="w-5 h-5 text-purple-400" />
-              <h3 className="text-white font-semibold">Trim Audio</h3>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
+    <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DrawerContent className="bg-zinc-950/95 backdrop-blur-xl border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
+        <DrawerTitle className="sr-only">Trim Audio</DrawerTitle>
+        
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
+          <button
+            onClick={onClose}
+            className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors"
+          >
+            <X className="w-5 h-5 text-zinc-400" />
+          </button>
+          <div className="flex items-center gap-2">
+            <Scissors className="w-4 h-4 text-purple-400" />
+            <span className="text-white font-semibold">Trim Audio</span>
+          </div>
+          <button
+            onClick={handleApply}
+            disabled={isLoading || isProcessing || selectionDuration > maxDuration}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+              bg-gradient-to-br from-white/20 via-white/10 to-white/5
+              backdrop-blur-xl border border-white/20
+              shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+              hover:shadow-[0_8px_32px_rgba(168,85,247,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
+              hover:border-purple-400/40 hover:from-purple-500/20 hover:via-purple-400/10 hover:to-transparent
+              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            {isProcessing ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span className="hidden sm:inline">Processing</span>
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4" />
+                <span className="hidden sm:inline">Apply</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-6 flex-1 overflow-y-auto">
+          {/* Info bar */}
+          <div className="flex items-center justify-between mb-4 text-sm">
+            <span className="text-zinc-400">
+              Select up to {maxDuration}s
+            </span>
+            <span className={cn(
+              "font-medium px-2 py-0.5 rounded-full text-xs",
+              selectionDuration > maxDuration 
+                ? "bg-red-500/20 text-red-400 border border-red-500/30" 
+                : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+            )}>
+              {formatTime(selectionDuration)} selected
+            </span>
           </div>
 
-          {/* Content */}
-          <div className="p-6">
-            {/* Info */}
-            <div className="flex items-center justify-between mb-4 text-sm">
-              <span className="text-zinc-400">
-                Select up to {maxDuration} seconds of audio
-              </span>
-              <span className={`font-medium ${selectionDuration > maxDuration ? 'text-red-400' : 'text-emerald-400'}`}>
-                {formatTime(selectionDuration)} selected
-              </span>
-            </div>
-
-            {/* Waveform */}
-            <div 
-              ref={waveformRef}
-              className="relative h-32 bg-zinc-800/50 rounded-xl overflow-hidden select-none"
-            >
-              {isLoading ? (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+          {/* Waveform */}
+          <div 
+            ref={waveformRef}
+            className="relative h-28 sm:h-32 rounded-xl overflow-hidden select-none touch-none
+              bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent
+              backdrop-blur-sm border border-white/10
+              shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+          >
+            {isLoading ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : (
+              <>
+                {/* Waveform bars */}
+                <div className="absolute inset-0 flex items-center justify-around px-1">
+                  {waveform.map((peak, i) => {
+                    const time = (i / waveform.length) * duration;
+                    const isInSelection = time >= trimStart && time <= trimEnd;
+                    const isPlayed = time <= currentTime;
+                    
+                    return (
+                      <div
+                        key={i}
+                        className={cn(
+                          "w-0.5 sm:w-1 rounded-full transition-colors duration-150",
+                          isInSelection
+                            ? isPlayed
+                              ? 'bg-purple-400'
+                              : 'bg-purple-400/60'
+                            : 'bg-zinc-700'
+                        )}
+                        style={{ height: `${Math.max(8, peak * 100)}%` }}
+                      />
+                    );
+                  })}
                 </div>
-              ) : (
-                <>
-                  {/* Waveform bars */}
-                  <div className="absolute inset-0 flex items-center justify-around px-1">
-                    {waveform.map((peak, i) => {
-                      const time = (i / waveform.length) * duration;
-                      const isInSelection = time >= trimStart && time <= trimEnd;
-                      const isPlayed = time <= currentTime;
-                      
-                      return (
-                        <div
-                          key={i}
-                          className={`w-0.5 rounded-full transition-colors ${
-                            isInSelection
-                              ? isPlayed
-                                ? 'bg-purple-400'
-                                : 'bg-purple-400/60'
-                              : 'bg-zinc-600'
-                          }`}
-                          style={{ height: `${Math.max(4, peak * 100)}%` }}
-                        />
-                      );
-                    })}
-                  </div>
 
-                  {/* Non-selected overlay - left */}
-                  <div
-                    className="absolute inset-y-0 left-0 bg-black/50"
-                    style={{ width: `${getPositionFromTime(trimStart)}%` }}
-                  />
+                {/* Non-selected overlay - left */}
+                <div
+                  className="absolute inset-y-0 left-0 bg-black/60"
+                  style={{ width: `${getPositionFromTime(trimStart)}%` }}
+                />
 
-                  {/* Non-selected overlay - right */}
-                  <div
-                    className="absolute inset-y-0 right-0 bg-black/50"
-                    style={{ width: `${100 - getPositionFromTime(trimEnd)}%` }}
-                  />
+                {/* Non-selected overlay - right */}
+                <div
+                  className="absolute inset-y-0 right-0 bg-black/60"
+                  style={{ width: `${100 - getPositionFromTime(trimEnd)}%` }}
+                />
 
-                  {/* Selection window */}
+                {/* Selection window */}
+                <div
+                  className="absolute inset-y-0 border-2 border-purple-400 cursor-move"
+                  style={{
+                    left: `${getPositionFromTime(trimStart)}%`,
+                    right: `${100 - getPositionFromTime(trimEnd)}%`,
+                  }}
+                  onMouseDown={e => handleMouseDown(e, 'window')}
+                  onTouchStart={e => handleMouseDown(e, 'window')}
+                >
+                  {/* Start handle */}
                   <div
-                    className="absolute inset-y-0 border-2 border-purple-400 cursor-move"
-                    style={{
-                      left: `${getPositionFromTime(trimStart)}%`,
-                      right: `${100 - getPositionFromTime(trimEnd)}%`,
-                    }}
-                    onMouseDown={e => handleMouseDown(e, 'window')}
+                    className="absolute left-0 inset-y-0 w-4 sm:w-3 -ml-2 sm:-ml-1.5 cursor-ew-resize flex items-center justify-center group touch-none"
+                    onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, 'start'); }}
+                    onTouchStart={e => { e.stopPropagation(); handleMouseDown(e, 'start'); }}
                   >
-                    {/* Start handle */}
-                    <div
-                      className="absolute left-0 inset-y-0 w-3 -ml-1.5 cursor-ew-resize flex items-center justify-center group"
-                      onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, 'start'); }}
-                    >
-                      <div className="w-1 h-8 bg-purple-400 rounded-full group-hover:bg-purple-300 transition-colors" />
-                    </div>
-
-                    {/* End handle */}
-                    <div
-                      className="absolute right-0 inset-y-0 w-3 -mr-1.5 cursor-ew-resize flex items-center justify-center group"
-                      onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, 'end'); }}
-                    >
-                      <div className="w-1 h-8 bg-purple-400 rounded-full group-hover:bg-purple-300 transition-colors" />
-                    </div>
+                    <div className="w-1 h-10 sm:h-8 bg-purple-400 rounded-full group-hover:bg-purple-300 group-active:bg-purple-200 transition-colors shadow-lg" />
                   </div>
 
-                  {/* Playhead */}
-                  {currentTime >= trimStart && currentTime <= trimEnd && (
-                    <div
-                      className="absolute inset-y-0 w-0.5 bg-white pointer-events-none"
-                      style={{ left: `${getPositionFromTime(currentTime)}%` }}
-                    />
-                  )}
-                </>
-              )}
-            </div>
+                  {/* End handle */}
+                  <div
+                    className="absolute right-0 inset-y-0 w-4 sm:w-3 -mr-2 sm:-mr-1.5 cursor-ew-resize flex items-center justify-center group touch-none"
+                    onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, 'end'); }}
+                    onTouchStart={e => { e.stopPropagation(); handleMouseDown(e, 'end'); }}
+                  >
+                    <div className="w-1 h-10 sm:h-8 bg-purple-400 rounded-full group-hover:bg-purple-300 group-active:bg-purple-200 transition-colors shadow-lg" />
+                  </div>
+                </div>
 
-            {/* Time labels */}
-            <div className="flex items-center justify-between mt-2 text-xs text-zinc-400">
-              <span>{formatTime(trimStart)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-
-            {/* Controls */}
-            <div className="flex items-center justify-center gap-4 mt-6">
-              <button
-                onClick={togglePlayPause}
-                disabled={isLoading}
-                className="w-12 h-12 rounded-full bg-purple-500 hover:bg-purple-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
-              >
-                {isPlaying ? (
-                  <Pause className="w-6 h-6 text-white" />
-                ) : (
-                  <Play className="w-6 h-6 text-white ml-0.5" />
+                {/* Playhead */}
+                {currentTime >= trimStart && currentTime <= trimEnd && (
+                  <div
+                    className="absolute inset-y-0 w-0.5 bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)] pointer-events-none"
+                    style={{ left: `${getPositionFromTime(currentTime)}%` }}
+                  />
                 )}
-              </button>
-            </div>
+              </>
+            )}
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-end gap-3 p-4 border-t border-white/10">
+          {/* Time labels */}
+          <div className="flex items-center justify-between mt-2 text-xs text-zinc-500">
+            <span>{formatTime(trimStart)}</span>
+            <span>{formatTime(trimEnd)}</span>
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mt-6">
+            {/* Play/Pause button */}
             <button
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-zinc-300 hover:text-white transition-colors"
+              onClick={togglePlayPause}
+              disabled={isLoading}
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105
+                bg-gradient-to-br from-purple-500/80 via-purple-600/60 to-purple-700/40
+                backdrop-blur-xl border border-purple-400/40
+                shadow-[0_8px_32px_rgba(168,85,247,0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
+                hover:shadow-[0_12px_40px_rgba(168,85,247,0.5),inset_0_1px_0_rgba(255,255,255,0.3)]
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              Cancel
-            </button>
-            <button
-              onClick={handleApply}
-              disabled={isLoading || isProcessing || selectionDuration > maxDuration}
-              className="px-4 py-2 text-sm bg-purple-500 hover:bg-purple-400 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
-            >
-              {isProcessing ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Processing...
-                </>
+              {isPlaying ? (
+                <Pause className="w-6 h-6 text-white" />
               ) : (
-                <>
-                  <Scissors className="w-4 h-4" />
-                  Apply Trim
-                </>
+                <Play className="w-6 h-6 text-white ml-0.5" />
               )}
             </button>
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+
+          {/* Playback Speed Controls */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="text-xs text-zinc-500 mr-1">Speed:</span>
+            {PLAYBACK_SPEEDS.map((speed) => (
+              <button
+                key={speed}
+                onClick={() => setPlaybackSpeed(speed)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300",
+                  playbackSpeed === speed
+                    ? "bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]"
+                    : "bg-white/5 border border-white/10 text-zinc-400 hover:bg-white/10 hover:text-white hover:border-white/20"
+                )}
+              >
+                {speed}x
+              </button>
+            ))}
+          </div>
+
+          {/* Duration info */}
+          <div className="flex items-center justify-center mt-4 text-xs text-zinc-500">
+            <span>Total duration: {formatTime(duration)}</span>
+          </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }
