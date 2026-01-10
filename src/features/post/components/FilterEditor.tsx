@@ -96,9 +96,9 @@ export function FilterEditor({
         </div>
 
         {/* Preset Carousel */}
-        <div className="border-t border-zinc-800 py-3">
-          <ScrollArea className="w-full">
-            <div className="flex gap-1 px-4">
+        <div className="border-t border-zinc-800 py-4">
+          <div className="w-full overflow-x-auto scrollbar-hide">
+            <div className="flex gap-1 px-4 py-1">
               {FILTER_PRESETS.map((preset) => (
                 <FilterPresetCard
                   key={preset.id}
@@ -109,8 +109,7 @@ export function FilterEditor({
                 />
               ))}
             </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+          </div>
         </div>
 
         {/* Advanced Adjustments */}
