@@ -1299,23 +1299,23 @@ export default function AssistantPage() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-wrap gap-2 mt-4"
+              className="flex flex-wrap gap-1.5 mt-4"
             >
               <button
                 onClick={() => {
                   setInput("What's happening in the news today?");
                   setTimeout(() => handleSend(), 100);
                 }}
-                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
               >
-                📰 Ask about today's news
+                📰 What's new?
               </button>
               <button
                 onClick={() => {
                   fileInputRef.current?.click();
                   toast.info('Select an image to edit');
                 }}
-                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
               >
                 🖼️ Edit an image
               </button>
@@ -1326,7 +1326,7 @@ export default function AssistantPage() {
                   setInputGlow(true);
                   setTimeout(() => setInputGlow(false), 2000);
                 }}
-                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
               >
                 🎬 Generate a video
               </button>
