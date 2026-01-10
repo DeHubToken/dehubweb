@@ -112,32 +112,46 @@ export function CropRotateEditor({
     return transforms.length > 0 ? transforms.join(' ') : undefined;
   }, [settings]);
 
-  // Calculate container aspect ratio based on selection
-  const containerStyle = useMemo(() => {
+  // Calculate crop overlay based on image vs selected aspect ratio
+  const cropOverlay = useMemo(() => {
     const selectedRatio = ASPECT_RATIOS.find(r => r.id === settings.aspectRatio);
     
-    if (!selectedRatio?.ratio || imageSize.width === 0) {
-      return {};
+    if (!selectedRatio?.ratio || imageSize.width === 0 || imageSize.height === 0) {
+      return null; // Free mode = no overlay
     }
     
-    // If rotated 90 or 270 degrees, swap the aspect ratio
-    const isRotated90 = settings.rotation === 90 || settings.rotation === 270;
-    const effectiveRatio = isRotated90 ? 1 / selectedRatio.ratio : selectedRatio.ratio;
+    const imageRatio = imageSize.width / imageSize.height;
     
-    return {
-      aspectRatio: effectiveRatio,
-    };
+    // Account for rotation swapping dimensions
+    const isRotated90 = settings.rotation === 90 || settings.rotation === 270;
+    const effectiveTargetRatio = isRotated90 ? 1 / selectedRatio.ratio : selectedRatio.ratio;
+    
+    if (Math.abs(imageRatio - effectiveTargetRatio) < 0.01) {
+      return null; // Ratios match, no crop needed
+    }
+    
+    if (imageRatio > effectiveTargetRatio) {
+      // Image is wider than target - crop sides
+      const visibleWidth = (effectiveTargetRatio / imageRatio) * 100;
+      const sideWidth = (100 - visibleWidth) / 2;
+      return { type: 'horizontal' as const, sideWidth };
+    } else {
+      // Image is taller than target - crop top/bottom
+      const visibleHeight = (imageRatio / effectiveTargetRatio) * 100;
+      const topBottom = (100 - visibleHeight) / 2;
+      return { type: 'vertical' as const, topBottom };
+    }
   }, [settings.aspectRatio, settings.rotation, imageSize]);
 
   const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free';
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-y-auto">
+      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
         <DrawerTitle className="sr-only">Crop & Rotate</DrawerTitle>
         
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
           <button
             onClick={onClose}
             className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors"
@@ -156,33 +170,85 @@ export function CropRotateEditor({
           </button>
         </div>
 
-        {/* Preview - constrained to fit any image fully */}
+        {/* Preview - FIXED height container with crop overlay */}
         <div 
           ref={containerRef}
-          className="flex items-center justify-center p-4 sm:p-6 bg-black/50"
+          className="flex items-center justify-center p-4 bg-black/50 shrink-0"
         >
-          <div className="w-full max-w-[min(90vw,400px)] flex items-center justify-center">
-            <div
-              className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl"
-              style={containerStyle}
-            >
-              <img
-                src={imageUrl}
-                alt="Preview"
-                className="max-w-full max-h-[35vh] w-auto h-auto object-contain transition-transform duration-200"
-                style={{ transform: transformStyle }}
-              />
-              {/* Crop overlay grid */}
-              {settings.aspectRatio !== 'free' && (
-                <div className="absolute inset-0 pointer-events-none border-2 border-white/50 rounded-lg">
+          <div className="relative w-full max-w-[min(90vw,400px)] h-[35vh] flex items-center justify-center overflow-hidden rounded-lg">
+            {/* Image - fills container naturally */}
+            <img
+              src={imageUrl}
+              alt="Preview"
+              className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200"
+              style={{ transform: transformStyle }}
+            />
+            
+            {/* Crop overlay masks - show what will be cropped */}
+            {cropOverlay && (
+              <>
+                {cropOverlay.type === 'horizontal' ? (
+                  <>
+                    {/* Left crop mask */}
+                    <div 
+                      className="absolute top-0 bottom-0 left-0 bg-black/60 pointer-events-none"
+                      style={{ width: `${cropOverlay.sideWidth}%` }}
+                    />
+                    {/* Right crop mask */}
+                    <div 
+                      className="absolute top-0 bottom-0 right-0 bg-black/60 pointer-events-none"
+                      style={{ width: `${cropOverlay.sideWidth}%` }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {/* Top crop mask */}
+                    <div 
+                      className="absolute top-0 left-0 right-0 bg-black/60 pointer-events-none"
+                      style={{ height: `${cropOverlay.topBottom}%` }}
+                    />
+                    {/* Bottom crop mask */}
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 bg-black/60 pointer-events-none"
+                      style={{ height: `${cropOverlay.topBottom}%` }}
+                    />
+                  </>
+                )}
+                
+                {/* Rule of thirds grid - positioned over visible area only */}
+                <div 
+                  className="absolute pointer-events-none border-2 border-white/50"
+                  style={
+                    cropOverlay.type === 'horizontal'
+                      ? { 
+                          left: `${cropOverlay.sideWidth}%`, 
+                          right: `${cropOverlay.sideWidth}%`,
+                          top: 0,
+                          bottom: 0
+                        }
+                      : {
+                          top: `${cropOverlay.topBottom}%`,
+                          bottom: `${cropOverlay.topBottom}%`,
+                          left: 0,
+                          right: 0
+                        }
+                  }
+                >
                   <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
                     {[...Array(9)].map((_, i) => (
                       <div key={i} className="border border-white/20" />
                     ))}
                   </div>
                 </div>
-              )}
-            </div>
+              </>
+            )}
+            
+            {/* Free mode - just show the grid over entire image */}
+            {!cropOverlay && settings.aspectRatio === 'free' && (
+              <div className="absolute inset-0 pointer-events-none">
+                {/* No grid for free mode */}
+              </div>
+            )}
           </div>
         </div>
 
