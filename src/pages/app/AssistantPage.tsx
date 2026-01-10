@@ -261,6 +261,7 @@ export default function AssistantPage() {
     sourceImage?: string;
   } | null>(null);
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
+  const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -729,6 +730,13 @@ export default function AssistantPage() {
         };
 
         setMessages(prev => [...prev, assistantMessage]);
+        
+        // Auto-speak the response if always speak replies is enabled
+        if (alwaysSpeakReplies) {
+          setTimeout(() => {
+            speak(assistantMessage.content);
+          }, 300);
+        }
       }
     } catch (error) {
       console.error('AI chat error:', error);
@@ -999,6 +1007,27 @@ export default function AssistantPage() {
                     </div>
                   </button>
                 ))}
+                
+                {/* Always Speak Toggle */}
+                <div className="px-4 py-3 flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-white">Always speak replies</span>
+                    <span className="text-xs text-white/50">Speak all AI responses, not just voice</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAlwaysSpeakReplies(!alwaysSpeakReplies)}
+                    className={`relative w-11 h-6 rounded-full transition-colors ${
+                      alwaysSpeakReplies ? 'bg-primary' : 'bg-white/20'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
+                        alwaysSpeakReplies ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </DrawerContent>
