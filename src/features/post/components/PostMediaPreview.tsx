@@ -30,7 +30,7 @@ const MAX_DURATION = 30; // 30 seconds max
 // Helper to check if crop is applied
 function hasCropApplied(settings?: CropSettings): boolean {
   if (!settings) return false;
-  return settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free';
+  return settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== '1:1';
 }
 
 // Generate transform CSS from crop settings
