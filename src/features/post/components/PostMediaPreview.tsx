@@ -402,15 +402,12 @@ export function PostMediaPreview({
                         </button>
                       </>
                     ) : (
-                      // No audio - show audio button with liquid glass effect
+                      // No audio - show audio button
                       <button
                         onClick={() => setShowAudioOptions(index)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-                          bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                          backdrop-blur-xl border border-white/20
-                          shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-                          hover:shadow-[0_8px_32px_rgba(168,85,247,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
-                          hover:border-purple-400/40 hover:from-purple-500/20 hover:via-purple-400/10 hover:to-transparent"
+                          bg-white/10 backdrop-blur-xl border border-white/20
+                          hover:bg-red-500/20 hover:border-red-400/40"
                       >
                         <Music className="w-3 h-3" />
                         Audio
