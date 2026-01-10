@@ -60,7 +60,8 @@ const VIDEO_KEYWORDS = [
   'generate video', 'create video', 'make video', 'make a video',
   'generate a video', 'create a video', 'animate', 'animation',
   'video of', 'clip of', 'footage of', 'motion', 'moving',
-  'bring to life', 'make it move', 'animate this'
+  'bring to life', 'make it move', 'make this move', 'animate this',
+  'into a video', 'into video', 'turn into', 'as a video', 'turn this into'
 ];
 
 // Keywords that indicate user wants to use the official logo in their image
