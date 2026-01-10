@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Download, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Download, Mic, Square, Volume2, VolumeX } from 'lucide-react';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -1188,28 +1188,34 @@ export default function AssistantPage() {
               <Paperclip className="w-5 h-5" />
             </button>
             
-            {/* Voice recording button - mobile only, replaces style toggle */}
-            {isMobile && isVoiceSupported && (
+            {/* Voice recording button - all devices */}
+            {isVoiceSupported && (
               <button
                 type="button"
                 onClick={isRecording ? stopRecording : startRecording}
                 disabled={isLoading}
                 className={`transition-colors p-1 disabled:opacity-30 ${
                   isRecording 
-                    ? 'text-red-500 animate-pulse' 
+                    ? 'text-red-500' 
                     : 'text-white/50 hover:text-white/80'
                 }`}
                 title={isRecording ? "Stop recording" : "Voice input"}
               >
-                {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                {isRecording ? (
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
+                  </div>
+                ) : (
+                  <Mic className="w-5 h-5" />
+                )}
               </button>
             )}
             
-            {/* Style toggle - minimal, desktop only now (mobile uses voice) */}
+            {/* Style toggle - minimal */}
             <button
               type="button"
               onClick={() => setStyleSheetOpen(true)}
-              className="text-white/50 hover:text-white/80 transition-colors p-1 hidden sm:block"
+              className="text-white/50 hover:text-white/80 transition-colors p-1"
               title="Change style"
             >
               <span className="text-base">{currentStyle.emoji}</span>
