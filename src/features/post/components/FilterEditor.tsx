@@ -62,7 +62,7 @@ export function FilterEditor({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh]">
+      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-y-auto">
         <DrawerTitle className="sr-only">Filter Editor</DrawerTitle>
         
         {/* Header */}
@@ -77,11 +77,8 @@ export function FilterEditor({
           <button
             onClick={handleApply}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-              bg-gradient-to-br from-white/20 via-white/10 to-white/5
-              backdrop-blur-xl border border-white/20
-              shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-              hover:shadow-[0_8px_32px_rgba(255,255,255,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]
-              hover:border-white/40"
+              bg-white/10 backdrop-blur-xl border border-white/20
+              hover:bg-white/20 hover:border-white/40"
           >
             <Check className="w-4 h-4" />
             Apply
@@ -89,12 +86,12 @@ export function FilterEditor({
         </div>
 
         {/* Preview - constrained to fit any image fully */}
-        <div className="flex items-center justify-center p-4 sm:p-8 bg-black/50">
-          <div className="w-full max-w-[min(90vw,500px)] max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] flex items-center justify-center">
+        <div className="flex items-center justify-center p-4 sm:p-6 bg-black/50">
+          <div className="w-full max-w-[min(90vw,400px)] flex items-center justify-center">
             <img
               src={imageUrl}
               alt="Preview"
-              className="max-w-full max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] w-auto h-auto object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[35vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
               style={{ filter: filterCSS }}
             />
           </div>

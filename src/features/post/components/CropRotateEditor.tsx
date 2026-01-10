@@ -133,7 +133,7 @@ export function CropRotateEditor({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh]">
+      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-y-auto">
         <DrawerTitle className="sr-only">Crop & Rotate</DrawerTitle>
         
         {/* Header */}
@@ -148,11 +148,8 @@ export function CropRotateEditor({
           <button
             onClick={handleApply}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-              bg-gradient-to-br from-white/20 via-white/10 to-white/5
-              backdrop-blur-xl border border-white/20
-              shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-              hover:shadow-[0_8px_32px_rgba(255,255,255,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]
-              hover:border-white/40"
+              bg-white/10 backdrop-blur-xl border border-white/20
+              hover:bg-white/20 hover:border-white/40"
           >
             <Check className="w-4 h-4" />
             Apply
@@ -162,9 +159,9 @@ export function CropRotateEditor({
         {/* Preview - constrained to fit any image fully */}
         <div 
           ref={containerRef}
-          className="flex items-center justify-center p-4 sm:p-8 bg-black/50"
+          className="flex items-center justify-center p-4 sm:p-6 bg-black/50"
         >
-          <div className="w-full max-w-[min(90vw,500px)] max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] flex items-center justify-center">
+          <div className="w-full max-w-[min(90vw,400px)] flex items-center justify-center">
             <div
               className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl"
               style={containerStyle}
@@ -172,12 +169,12 @@ export function CropRotateEditor({
               <img
                 src={imageUrl}
                 alt="Preview"
-                className="max-w-full max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] w-auto h-auto object-contain transition-transform duration-200"
+                className="max-w-full max-h-[35vh] w-auto h-auto object-contain transition-transform duration-200"
                 style={{ transform: transformStyle }}
               />
               {/* Crop overlay grid */}
               {settings.aspectRatio !== 'free' && (
-                <div className="absolute inset-0 pointer-events-none border-2 border-cyan-500/50 rounded-lg">
+                <div className="absolute inset-0 pointer-events-none border-2 border-white/50 rounded-lg">
                   <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
                     {[...Array(9)].map((_, i) => (
                       <div key={i} className="border border-white/20" />
@@ -203,8 +200,8 @@ export function CropRotateEditor({
                 className={cn(
                   "flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all",
                   settings.aspectRatio === ratio.id
-                    ? "bg-gradient-to-r from-cyan-500 to-purple-500 text-white"
-                    : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                    ? "bg-white/20 text-white border border-white/40"
+                    : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
                 )}
               >
                 {ratio.label}
@@ -214,15 +211,15 @@ export function CropRotateEditor({
         </div>
 
         {/* Transform Controls */}
-        <div className="border-t border-zinc-800 px-4 py-3">
+        <div className="border-t border-zinc-800 px-4 py-3 pb-6">
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={handleRotate}
               className={cn(
-                "flex flex-col items-center gap-1 p-3 rounded-xl transition-all",
+                "flex flex-col items-center gap-1 p-3 rounded-xl transition-all border",
                 settings.rotation !== 0
-                  ? "bg-cyan-500/20 text-cyan-400"
-                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                  ? "bg-white/20 text-white border-white/40"
+                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border-transparent"
               )}
             >
               <RotateCw className="w-6 h-6" />
@@ -232,10 +229,10 @@ export function CropRotateEditor({
             <button
               onClick={handleFlipX}
               className={cn(
-                "flex flex-col items-center gap-1 p-3 rounded-xl transition-all",
+                "flex flex-col items-center gap-1 p-3 rounded-xl transition-all border",
                 settings.flipX
-                  ? "bg-cyan-500/20 text-cyan-400"
-                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                  ? "bg-white/20 text-white border-white/40"
+                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border-transparent"
               )}
             >
               <FlipHorizontal className="w-6 h-6" />
@@ -245,10 +242,10 @@ export function CropRotateEditor({
             <button
               onClick={handleFlipY}
               className={cn(
-                "flex flex-col items-center gap-1 p-3 rounded-xl transition-all",
+                "flex flex-col items-center gap-1 p-3 rounded-xl transition-all border",
                 settings.flipY
-                  ? "bg-cyan-500/20 text-cyan-400"
-                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                  ? "bg-white/20 text-white border-white/40"
+                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border-transparent"
               )}
             >
               <FlipVertical className="w-6 h-6" />
