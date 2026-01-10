@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles, Crop } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
@@ -9,7 +9,8 @@ import type { FilterSettings, CropSettings } from '../types/filters';
 import { AudioVisualizer } from '@/components/app/audio';
 import { FilterEditor } from './FilterEditor';
 import { CropRotateEditor } from './CropRotateEditor';
-import { generateFilterCSS, hasFilterApplied } from '@/lib/filters';
+import { AudioTrimmer } from './AudioTrimmer';
+import { generateFilterCSS } from '@/lib/filters';
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -72,6 +73,12 @@ export function PostMediaPreview({
   const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
+  const [audioTrimmerData, setAudioTrimmerData] = useState<{
+    index: number;
+    file: File;
+    url: string;
+    duration: number;
+  } | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -201,8 +208,14 @@ export function PostMediaPreview({
       const duration = Math.round(audioEl.duration);
       
       if (duration > MAX_DURATION) {
-        toast.error(`Audio must be ${MAX_DURATION} seconds or less`);
-        URL.revokeObjectURL(audioEl.src);
+        // Open audio trimmer for long audio files
+        setAudioTrimmerData({
+          index,
+          file,
+          url: audioEl.src,
+          duration,
+        });
+        setShowAudioOptions(null);
         return;
       }
 
@@ -629,6 +642,35 @@ export function PostMediaPreview({
           onApply={(settings) => {
             onApplyCrop?.(cropEditorIndex, settings);
             setCropEditorIndex(null);
+          }}
+        />
+      )}
+
+      {/* Audio Trimmer Modal */}
+      {audioTrimmerData && (
+        <AudioTrimmer
+          isOpen={true}
+          onClose={() => {
+            URL.revokeObjectURL(audioTrimmerData.url);
+            setAudioTrimmerData(null);
+          }}
+          audioUrl={audioTrimmerData.url}
+          audioBlob={audioTrimmerData.file}
+          duration={audioTrimmerData.duration}
+          maxDuration={MAX_DURATION}
+          onApply={(trimmedBlob, trimStart, trimEnd) => {
+            const trimmedUrl = URL.createObjectURL(trimmedBlob);
+            const trimmedDuration = trimEnd - trimStart;
+            onAddAudio(audioTrimmerData.index, {
+              blob: trimmedBlob,
+              url: trimmedUrl,
+              duration: trimmedDuration,
+              trimStart,
+              trimEnd,
+              originalDuration: audioTrimmerData.duration,
+            });
+            URL.revokeObjectURL(audioTrimmerData.url);
+            setAudioTrimmerData(null);
           }}
         />
       )}
