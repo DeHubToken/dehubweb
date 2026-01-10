@@ -122,7 +122,7 @@ export function PostAccessToggles({
                         <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="bg-zinc-900 border-zinc-700 text-white text-xs">
+                    <TooltipContent side="top">
                       Total number of viewers to reward
                     </TooltipContent>
                   </Tooltip>
@@ -137,7 +137,7 @@ export function PostAccessToggles({
                         <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="bg-zinc-900 border-zinc-700 text-white text-xs">
+                    <TooltipContent side="top">
                       Total number of commenters to reward
                     </TooltipContent>
                   </Tooltip>
@@ -151,7 +151,7 @@ export function PostAccessToggles({
                         <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top" className="bg-zinc-900 border-zinc-700 text-white text-xs">
+                    <TooltipContent side="top">
                       Currency for reward
                     </TooltipContent>
                   </Tooltip>
