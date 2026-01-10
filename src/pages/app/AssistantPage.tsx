@@ -1292,6 +1292,51 @@ export default function AssistantPage() {
               </motion.div>
             ))}
           </AnimatePresence>
+          
+          {/* Quick action buttons - show only on initial state */}
+          {messages.length === 1 && messages[0].id === 'initial' && !isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-wrap gap-2 mt-4"
+            >
+              <button
+                onClick={() => {
+                  setInput("What's happening in the news today?");
+                  setTimeout(() => handleSend(), 100);
+                }}
+                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+              >
+                📰 Ask about today's news
+              </button>
+              <button
+                onClick={() => {
+                  fileInputRef.current?.click();
+                  toast.info('Select an image to edit');
+                }}
+                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+              >
+                🖼️ Edit an image
+              </button>
+              <button
+                onClick={() => {
+                  setInput("Generate a video of ");
+                  inputRef.current?.focus();
+                }}
+                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+              >
+                🎬 Generate a video
+              </button>
+              <button
+                onClick={() => {
+                  inputRef.current?.focus();
+                }}
+                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+              >
+                💬 Just Chat
+              </button>
+            </motion.div>
+          )}
           {isImageLoading && (
             <ImageGenerationLoader startTime={imageLoadStartTime} />
           )}
