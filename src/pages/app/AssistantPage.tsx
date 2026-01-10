@@ -1018,7 +1018,7 @@ export default function AssistantPage() {
                     type="button"
                     onClick={() => setAlwaysSpeakReplies(!alwaysSpeakReplies)}
                     className={`relative w-11 h-6 rounded-full transition-colors ${
-                      alwaysSpeakReplies ? 'bg-primary' : 'bg-white/20'
+                      alwaysSpeakReplies ? 'bg-white/50' : 'bg-white/20'
                     }`}
                   >
                     <span
