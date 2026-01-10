@@ -300,39 +300,35 @@ export function PostMediaPreview({
                   
                   {/* Top left: Filter + Crop + Audio buttons */}
                   <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                    {/* Filter button - liquid glass style */}
+                    {/* Filter button - consistent style */}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
                           onClick={() => setFilterEditorIndex(index)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-                            ${hasFilterApplied(m.filterSettings)
-                              ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-[0_8px_32px_rgba(6,182,212,0.3)]' 
-                              : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_32px_rgba(6,182,212,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] hover:border-cyan-400/30'
-                            }`}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                            bg-white/10 backdrop-blur-xl border border-white/20
+                            hover:bg-white/20 hover:border-white/40"
                         >
                           <Sparkles className="w-3 h-3 text-white" />
-                          {hasFilterApplied(m.filterSettings) ? 'Filtered' : 'Filter'}
+                          Filter
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Edit filters</TooltipContent>
                     </Tooltip>
                     
-                    {/* Crop button - liquid glass style */}
+                    {/* Crop button - consistent style */}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
                           onClick={() => setCropEditorIndex(index)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-                            ${hasCropApplied(m.cropSettings)
-                              ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-[0_8px_32px_rgba(6,182,212,0.3)]' 
-                              : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] hover:border-purple-400/30'
-                            }`}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                            bg-white/10 backdrop-blur-xl border border-white/20
+                            hover:bg-white/20 hover:border-white/40"
                         >
                           <Crop className="w-3 h-3 text-white" />
-                          {hasCropApplied(m.cropSettings) ? 'Edited' : 'Crop'}
+                          Crop
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Crop & rotate</TooltipContent>
