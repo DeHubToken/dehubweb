@@ -154,31 +154,33 @@ export function CropRotateEditor({
           </button>
         </div>
 
-        {/* Preview - larger on desktop/tablet */}
+        {/* Preview - constrained to fit any image fully */}
         <div 
           ref={containerRef}
-          className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-black/50 min-h-[200px] sm:min-h-[300px] max-h-[50vh] sm:max-h-[60vh] overflow-hidden"
+          className="flex items-center justify-center p-4 sm:p-8 bg-black/50"
         >
-          <div
-            className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl"
-            style={containerStyle}
-          >
-            <img
-              src={imageUrl}
-              alt="Preview"
-              className="w-full h-full object-contain transition-transform duration-200"
-              style={{ transform: transformStyle }}
-            />
-            {/* Crop overlay grid */}
-            {settings.aspectRatio !== 'free' && (
-              <div className="absolute inset-0 pointer-events-none border-2 border-cyan-500/50 rounded-lg">
-                <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
-                  {[...Array(9)].map((_, i) => (
-                    <div key={i} className="border border-white/20" />
-                  ))}
+          <div className="w-full max-w-[min(90vw,500px)] max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] flex items-center justify-center">
+            <div
+              className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl"
+              style={containerStyle}
+            >
+              <img
+                src={imageUrl}
+                alt="Preview"
+                className="max-w-full max-h-[min(50vh,400px)] sm:max-h-[min(55vh,500px)] w-auto h-auto object-contain transition-transform duration-200"
+                style={{ transform: transformStyle }}
+              />
+              {/* Crop overlay grid */}
+              {settings.aspectRatio !== 'free' && (
+                <div className="absolute inset-0 pointer-events-none border-2 border-cyan-500/50 rounded-lg">
+                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                    {[...Array(9)].map((_, i) => (
+                      <div key={i} className="border border-white/20" />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
