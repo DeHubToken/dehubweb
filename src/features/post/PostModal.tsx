@@ -44,6 +44,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onRemoveThumbnail={actions.removeThumbnailFromMedia}
         onApplyFilter={actions.applyFilterToMedia}
         onClearFilter={actions.clearFilterFromMedia}
+        onApplyCrop={actions.applyCropToMedia}
+        onClearCrop={actions.clearCropFromMedia}
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}

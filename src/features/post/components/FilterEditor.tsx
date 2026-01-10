@@ -148,7 +148,7 @@ export function FilterEditor({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="px-4 pb-4 space-y-4">
+                <div className="px-4 pb-4 space-y-4 max-h-[30vh] overflow-y-auto scrollbar-hide">
                   <FilterSlider
                     label="Brightness"
                     value={settings.brightness}

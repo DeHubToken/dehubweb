@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
-import type { FilterSettings } from '../types/filters';
+import type { FilterSettings, CropSettings } from '../types/filters';
 
 interface UsePostFormReturn {
   state: PostFormState;
@@ -246,6 +246,18 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     ));
   }, []);
 
+  const applyCropToMedia = useCallback((index: number, settings: CropSettings) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, cropSettings: settings } : m
+    ));
+  }, []);
+
+  const clearCropFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, cropSettings: undefined } : m
+    ));
+  }, []);
+
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -388,6 +400,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       removeThumbnailFromMedia,
       applyFilterToMedia,
       clearFilterFromMedia,
+      applyCropToMedia,
+      clearCropFromMedia,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,

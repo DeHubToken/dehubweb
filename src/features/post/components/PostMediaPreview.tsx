@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles } from 'lucide-react';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles, Crop } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
-import type { FilterSettings } from '../types/filters';
+import type { FilterSettings, CropSettings } from '../types/filters';
 import { AudioVisualizer } from '@/components/app/audio';
 import { FilterEditor } from './FilterEditor';
+import { CropRotateEditor } from './CropRotateEditor';
 import { generateFilterCSS, hasFilterApplied } from '@/lib/filters';
 
 interface PostMediaPreviewProps {
@@ -20,9 +21,35 @@ interface PostMediaPreviewProps {
   onRemoveThumbnail?: (index: number) => void;
   onApplyFilter?: (index: number, settings: FilterSettings, presetId?: string) => void;
   onClearFilter?: (index: number) => void;
+  onApplyCrop?: (index: number, settings: CropSettings) => void;
+  onClearCrop?: (index: number) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
+
+// Helper to check if crop is applied
+function hasCropApplied(settings?: CropSettings): boolean {
+  if (!settings) return false;
+  return settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free';
+}
+
+// Generate transform CSS from crop settings
+function generateCropTransform(settings?: CropSettings): string | undefined {
+  if (!settings) return undefined;
+  const transforms: string[] = [];
+  
+  if (settings.rotation !== 0) {
+    transforms.push(`rotate(${settings.rotation}deg)`);
+  }
+  if (settings.flipX) {
+    transforms.push('scaleX(-1)');
+  }
+  if (settings.flipY) {
+    transforms.push('scaleY(-1)');
+  }
+  
+  return transforms.length > 0 ? transforms.join(' ') : undefined;
+}
 
 export function PostMediaPreview({ 
   media, 
@@ -34,6 +61,8 @@ export function PostMediaPreview({
   onRemoveThumbnail,
   onApplyFilter,
   onClearFilter,
+  onApplyCrop,
+  onClearCrop,
 }: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -42,6 +71,7 @@ export function PostMediaPreview({
   const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
   const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
+  const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -253,7 +283,7 @@ export function PostMediaPreview({
             <div 
               key={index} 
               className={`relative rounded-2xl overflow-hidden bg-zinc-900 ${
-                media.length === 1 ? 'w-full max-w-xs' : 'w-[calc(50%-0.25rem)]'
+                media.length === 1 ? 'w-full max-w-[min(100%,320px)] sm:max-w-[min(100%,400px)]' : 'w-[calc(50%-0.25rem)] max-w-[200px]'
               }`}
             >
               {m.type === 'image' ? (
@@ -261,28 +291,53 @@ export function PostMediaPreview({
                   <img 
                     src={m.preview} 
                     alt="" 
-                    className="w-full h-auto max-h-80 object-cover rounded-2xl" 
-                    style={{ filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined }}
+                    className="w-full h-auto max-h-[40vh] sm:max-h-[50vh] object-contain rounded-2xl" 
+                    style={{ 
+                      filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
+                      transform: generateCropTransform(m.cropSettings),
+                    }}
                   />
                   
-                  {/* Filter button */}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={() => setFilterEditorIndex(index)}
-                        className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all
-                          ${hasFilterApplied(m.filterSettings)
-                            ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' 
-                            : 'bg-black/70 text-zinc-300 hover:bg-black/90'
-                          }`}
-                      >
-                        <Sparkles className="w-3 h-3" />
-                        {hasFilterApplied(m.filterSettings) ? 'Filtered' : 'Filter'}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>Edit filters</TooltipContent>
-                  </Tooltip>
+                  {/* Top row: Filter + Crop buttons */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5">
+                    {/* Filter button */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => setFilterEditorIndex(index)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all
+                            ${hasFilterApplied(m.filterSettings)
+                              ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' 
+                              : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                            }`}
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          {hasFilterApplied(m.filterSettings) ? 'Filtered' : 'Filter'}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Edit filters</TooltipContent>
+                    </Tooltip>
+                    
+                    {/* Crop button */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => setCropEditorIndex(index)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all
+                            ${hasCropApplied(m.cropSettings)
+                              ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' 
+                              : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                            }`}
+                        >
+                          <Crop className="w-3 h-3" />
+                          {hasCropApplied(m.cropSettings) ? 'Edited' : 'Crop'}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Crop & rotate</TooltipContent>
+                    </Tooltip>
+                  </div>
                   
                   {/* Audio controls for images */}
                   <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
@@ -571,6 +626,20 @@ export function PostMediaPreview({
           onApply={(settings, presetId) => {
             onApplyFilter?.(filterEditorIndex, settings, presetId);
             setFilterEditorIndex(null);
+          }}
+        />
+      )}
+
+      {/* Crop/Rotate Editor Modal */}
+      {cropEditorIndex !== null && media[cropEditorIndex]?.type === 'image' && (
+        <CropRotateEditor
+          isOpen={true}
+          onClose={() => setCropEditorIndex(null)}
+          imageUrl={media[cropEditorIndex].preview}
+          initialSettings={media[cropEditorIndex].cropSettings}
+          onApply={(settings) => {
+            onApplyCrop?.(cropEditorIndex, settings);
+            setCropEditorIndex(null);
           }}
         />
       )}
