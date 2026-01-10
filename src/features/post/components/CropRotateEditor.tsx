@@ -6,7 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import type { CropSettings, CropBox } from '../types/filters';
 
-export type AspectRatioOption = '1:1' | '4:5' | '16:9' | 'free';
+export type AspectRatioOption = '1:1' | '4:5' | '16:9';
 
 type DragHandle = 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'move' | null;
 type InteractionMode = 'crop' | 'pan';
@@ -19,8 +19,7 @@ interface CropRotateEditorProps {
   onApply: (settings: CropSettings) => void;
 }
 
-const ASPECT_RATIOS: { id: AspectRatioOption; label: string; ratio: number | null }[] = [
-  { id: 'free', label: 'Free', ratio: null },
+const ASPECT_RATIOS: { id: AspectRatioOption; label: string; ratio: number }[] = [
   { id: '1:1', label: '1:1', ratio: 1 },
   { id: '4:5', label: '4:5', ratio: 4 / 5 },
   { id: '16:9', label: '16:9', ratio: 16 / 9 },
@@ -42,7 +41,7 @@ export const DEFAULT_CROP_SETTINGS: CropSettings = {
   rotation: 0,
   flipX: false,
   flipY: false,
-  aspectRatio: 'free',
+  aspectRatio: '1:1',
 };
 
 export function CropRotateEditor({
@@ -240,10 +239,8 @@ export function CropRotateEditor({
       ...prev,
       aspectRatio: ratio,
     }));
-    // Reset crop box when switching away from free mode
-    if (ratio !== 'free') {
-      setCropBox({ ...DEFAULT_CROP_BOX });
-    }
+    // Reset crop box when switching aspect ratios
+    setCropBox({ ...DEFAULT_CROP_BOX });
   };
 
   const handleReset = () => {
@@ -256,7 +253,6 @@ export function CropRotateEditor({
   const handleApply = () => {
     const finalSettings: CropSettings = {
       ...settings,
-      cropBox: settings.aspectRatio === 'free' ? cropBox : undefined,
     };
     onApply(finalSettings);
     onClose();
@@ -386,12 +382,12 @@ export function CropRotateEditor({
     return transforms.length > 0 ? transforms.join(' ') : undefined;
   }, [settings]);
 
-  // Calculate crop overlay based on image vs selected aspect ratio (for non-free modes)
+  // Calculate crop overlay based on image vs selected aspect ratio
   const cropOverlay = useMemo(() => {
     const selectedRatio = ASPECT_RATIOS.find(r => r.id === settings.aspectRatio);
     
-    if (!selectedRatio?.ratio || imageSize.width === 0 || imageSize.height === 0) {
-      return null; // Free mode = no overlay (uses draggable crop box instead)
+    if (!selectedRatio || imageSize.width === 0 || imageSize.height === 0) {
+      return null;
     }
     
     const imageRatio = imageSize.width / imageSize.height;
@@ -417,10 +413,8 @@ export function CropRotateEditor({
     }
   }, [settings.aspectRatio, settings.rotation, imageSize]);
 
-  const isFreeMode = settings.aspectRatio === 'free';
-  const hasCropBoxChanges = cropBox.x !== 0 || cropBox.y !== 0 || cropBox.width !== 100 || cropBox.height !== 100;
   const hasZoomPanChanges = zoom !== 1 || pan.x !== 0 || pan.y !== 0;
-  const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== 'free' || hasCropBoxChanges || hasZoomPanChanges;
+  const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== '1:1' || hasZoomPanChanges;
 
   // Get cursor style based on handle
   const getCursorStyle = (handle: DragHandle): string => {
@@ -505,110 +499,9 @@ export function CropRotateEditor({
               draggable={false}
             />
             
-            {/* Crop overlay - shown for ALL modes */}
-            {isFreeMode ? (
+            {/* Crop overlay for aspect ratio presets */}
+            {cropOverlay && (
               <>
-                {/* Free mode - draggable crop box */}
-                {/* Dark overlay for cropped areas - 4 rectangles around the crop box */}
-                <div 
-                  className="absolute top-0 left-0 right-0 bg-black/60 pointer-events-none"
-                  style={{ height: `${cropBox.y}%` }}
-                />
-                <div 
-                  className="absolute bottom-0 left-0 right-0 bg-black/60 pointer-events-none"
-                  style={{ height: `${100 - cropBox.y - cropBox.height}%` }}
-                />
-                <div 
-                  className="absolute bg-black/60 pointer-events-none"
-                  style={{ 
-                    top: `${cropBox.y}%`,
-                    left: 0,
-                    width: `${cropBox.x}%`,
-                    height: `${cropBox.height}%`
-                  }}
-                />
-                <div 
-                  className="absolute bg-black/60 pointer-events-none"
-                  style={{ 
-                    top: `${cropBox.y}%`,
-                    right: 0,
-                    width: `${100 - cropBox.x - cropBox.width}%`,
-                    height: `${cropBox.height}%`
-                  }}
-                />
-                
-                {/* Crop box border and handles */}
-                <div
-                  className="absolute border-2 border-white"
-                  style={{
-                    left: `${cropBox.x}%`,
-                    top: `${cropBox.y}%`,
-                    width: `${cropBox.width}%`,
-                    height: `${cropBox.height}%`,
-                  }}
-                >
-                  {/* Rule of thirds grid */}
-                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
-                    {[...Array(9)].map((_, i) => (
-                      <div key={i} className="border border-white/30" />
-                    ))}
-                  </div>
-                  
-                  {/* Move handle (center area) */}
-                  <div
-                    className="absolute inset-4 cursor-move"
-                    onMouseDown={(e) => handleDragStart(e, 'move')}
-                    onTouchStart={(e) => handleDragStart(e, 'move')}
-                  />
-                  
-                  {/* Edge handles */}
-                  <div
-                    className="absolute -top-1 left-4 right-4 h-2 cursor-ns-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'top')}
-                    onTouchStart={(e) => handleDragStart(e, 'top')}
-                  />
-                  <div
-                    className="absolute -bottom-1 left-4 right-4 h-2 cursor-ns-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'bottom')}
-                    onTouchStart={(e) => handleDragStart(e, 'bottom')}
-                  />
-                  <div
-                    className="absolute top-4 bottom-4 -left-1 w-2 cursor-ew-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'left')}
-                    onTouchStart={(e) => handleDragStart(e, 'left')}
-                  />
-                  <div
-                    className="absolute top-4 bottom-4 -right-1 w-2 cursor-ew-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'right')}
-                    onTouchStart={(e) => handleDragStart(e, 'right')}
-                  />
-                  
-                  {/* Corner handles */}
-                  <div
-                    className="absolute -top-2 -left-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nwse-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'top-left')}
-                    onTouchStart={(e) => handleDragStart(e, 'top-left')}
-                  />
-                  <div
-                    className="absolute -top-2 -right-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nesw-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'top-right')}
-                    onTouchStart={(e) => handleDragStart(e, 'top-right')}
-                  />
-                  <div
-                    className="absolute -bottom-2 -left-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nesw-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'bottom-left')}
-                    onTouchStart={(e) => handleDragStart(e, 'bottom-left')}
-                  />
-                  <div
-                    className="absolute -bottom-2 -right-2 w-4 h-4 bg-white rounded-sm shadow-lg cursor-nwse-resize"
-                    onMouseDown={(e) => handleDragStart(e, 'bottom-right')}
-                    onTouchStart={(e) => handleDragStart(e, 'bottom-right')}
-                  />
-                </div>
-              </>
-            ) : cropOverlay && (
-              <>
-                {/* Non-free mode - static crop overlay masks */}
                 {cropOverlay.type === 'horizontal' ? (
                   <>
                     {/* Left crop mask */}

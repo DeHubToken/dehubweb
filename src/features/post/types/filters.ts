@@ -15,7 +15,7 @@ export interface FilterPreset {
   settings: FilterSettings;
 }
 
-export type AspectRatioOption = '1:1' | '4:5' | '16:9' | 'free';
+export type AspectRatioOption = '1:1' | '4:5' | '16:9';
 
 export interface CropBox {
   x: number;      // left position as percentage (0-100)
