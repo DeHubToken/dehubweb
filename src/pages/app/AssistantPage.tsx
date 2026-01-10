@@ -368,7 +368,7 @@ export default function AssistantPage() {
       setMessages([{
         id: 'initial',
         role: 'assistant',
-        content: `Hi! Ask me anything, whether it's DeHub related or not, I can help.`
+        content: `Hi! I'm your handy AI assistant.`
       }]);
     }
   }, []);
