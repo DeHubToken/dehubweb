@@ -260,8 +260,8 @@ export default function HomePage() {
                 key={tab.value}
                 onClick={() => handleTabClick(tab.value)}
                 className={cn(
-                  'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl transition-colors text-white',
-                  activeTab === tab.value && 'bg-zinc-800'
+                  'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl transition-colors text-white hover:bg-white/5',
+                  activeTab === tab.value && 'bg-zinc-800 hover:bg-zinc-800'
                 )}
               >
                 <tab.icon className="w-4 h-4" />
@@ -271,7 +271,7 @@ export default function HomePage() {
             {/* Settings Button */}
             <button
               onClick={() => setShowFeedSettings(true)}
-              className="flex items-center justify-center px-3 py-2 rounded-xl transition-colors text-white"
+              className="flex items-center justify-center px-3 py-2 rounded-xl transition-colors text-white hover:bg-white/5"
               aria-label="Feed settings"
             >
               <Settings2 className="w-4 h-4" />
