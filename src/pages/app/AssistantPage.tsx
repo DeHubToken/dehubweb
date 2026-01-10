@@ -306,6 +306,7 @@ export default function AssistantPage() {
   } | null>(null);
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
+  const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -1322,18 +1323,12 @@ export default function AssistantPage() {
                 onClick={() => {
                   setInput("Generate a video of ");
                   inputRef.current?.focus();
+                  setInputGlow(true);
+                  setTimeout(() => setInputGlow(false), 2000);
                 }}
                 className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
               >
                 🎬 Generate a video
-              </button>
-              <button
-                onClick={() => {
-                  inputRef.current?.focus();
-                }}
-                className="px-4 py-2 text-sm rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-              >
-                💬 Just Chat
               </button>
             </motion.div>
           )}
@@ -1379,7 +1374,12 @@ export default function AssistantPage() {
           )}
           
           {/* Clean input row with auto-expanding textarea */}
-          <div className="flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border border-white/10 shadow-xl">
+          {/* Glow effect wrapper */}
+          <div className={`flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
+            inputGlow 
+              ? 'border-purple-500/60 shadow-[0_0_20px_rgba(168,85,247,0.4)]' 
+              : 'border-white/10'
+          }`}>
             {/* Hidden file input */}
             <input
               ref={fileInputRef}
