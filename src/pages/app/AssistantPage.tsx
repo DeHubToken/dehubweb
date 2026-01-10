@@ -1318,7 +1318,6 @@ export default function AssistantPage() {
               <button
                 onClick={() => {
                   fileInputRef.current?.click();
-                  toast.info('Select an image to edit');
                 }}
                 className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
               >
