@@ -19,6 +19,7 @@ interface CropRotateEditorProps {
 }
 
 const ASPECT_RATIOS: { id: AspectRatioOption; label: string; ratio: number | null }[] = [
+  { id: 'free', label: 'Free', ratio: null },
   { id: '1:1', label: '1:1', ratio: 1 },
   { id: '4:5', label: '4:5', ratio: 4 / 5 },
   { id: '16:9', label: '16:9', ratio: 16 / 9 },
@@ -40,7 +41,7 @@ export const DEFAULT_CROP_SETTINGS: CropSettings = {
   rotation: 0,
   flipX: false,
   flipY: false,
-  aspectRatio: '1:1',
+  aspectRatio: 'free',
 };
 
 export function CropRotateEditor({
