@@ -62,11 +62,11 @@ export function FilterEditor({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-y-auto">
+      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
         <DrawerTitle className="sr-only">Filter Editor</DrawerTitle>
         
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
           <button
             onClick={onClose}
             className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors"
@@ -86,19 +86,19 @@ export function FilterEditor({
         </div>
 
         {/* Preview - constrained to fit any image fully */}
-        <div className="flex items-center justify-center p-4 sm:p-6 bg-black/50">
+        <div className="flex items-center justify-center p-4 bg-black/50 shrink-0">
           <div className="w-full max-w-[min(90vw,400px)] flex items-center justify-center">
             <img
               src={imageUrl}
               alt="Preview"
-              className="max-w-full max-h-[35vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
               style={{ filter: filterCSS }}
             />
           </div>
         </div>
 
         {/* Preset Carousel */}
-        <div className="border-t border-zinc-800 py-4">
+        <div className="border-t border-zinc-800 py-3 shrink-0">
           <div className="w-full overflow-x-auto scrollbar-hide">
             <div className="flex gap-1 px-4 py-1">
               {FILTER_PRESETS.map((preset) => (
@@ -115,7 +115,7 @@ export function FilterEditor({
         </div>
 
         {/* Advanced Adjustments */}
-        <div className="border-t border-zinc-800">
+        <div className="border-t border-zinc-800 shrink-0">
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
             className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors"
@@ -151,7 +151,7 @@ export function FilterEditor({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="px-4 pb-4 space-y-4 max-h-[30vh] overflow-y-auto scrollbar-hide">
+                <div className="px-4 pb-4 space-y-3">
                   <FilterSlider
                     label="Brightness"
                     value={settings.brightness}

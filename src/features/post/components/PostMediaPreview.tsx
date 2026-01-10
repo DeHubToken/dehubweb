@@ -298,8 +298,8 @@ export function PostMediaPreview({
                     }}
                   />
                   
-                  {/* Bottom row: Filter + Crop + Audio buttons */}
-                  <div className="absolute bottom-2 left-2 right-2 flex items-center gap-1.5 flex-wrap">
+                  {/* Top left: Filter + Crop + Audio buttons */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
                     {/* Filter button - liquid glass style */}
                     <Tooltip>
                       <TooltipTrigger asChild>

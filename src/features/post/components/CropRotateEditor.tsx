@@ -476,7 +476,7 @@ export function CropRotateEditor({
           <div 
             ref={imageContainerRef}
             className={cn(
-              "relative w-full max-w-[min(90vw,400px)] h-[35vh] flex items-center justify-center overflow-hidden rounded-lg",
+              "relative w-full max-w-[min(90vw,400px)] h-[30vh] flex items-center justify-center overflow-hidden rounded-lg",
               dragging && getCursorStyle(dragging),
               isPanning && "cursor-grabbing",
               zoom > 1 && !isPanning && !dragging && "cursor-grab"
@@ -504,9 +504,10 @@ export function CropRotateEditor({
               draggable={false}
             />
             
-            {/* Free mode - draggable crop box */}
-            {isFreeMode && (
+            {/* Crop overlay - shown for ALL modes */}
+            {isFreeMode ? (
               <>
+                {/* Free mode - draggable crop box */}
                 {/* Dark overlay for cropped areas - 4 rectangles around the crop box */}
                 <div 
                   className="absolute top-0 left-0 right-0 bg-black/60 pointer-events-none"
@@ -604,11 +605,9 @@ export function CropRotateEditor({
                   />
                 </div>
               </>
-            )}
-            
-            {/* Non-free mode - static crop overlay masks */}
-            {cropOverlay && !isFreeMode && (
+            ) : cropOverlay && (
               <>
+                {/* Non-free mode - static crop overlay masks */}
                 {cropOverlay.type === 'horizontal' ? (
                   <>
                     {/* Left crop mask */}
