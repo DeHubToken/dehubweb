@@ -394,10 +394,12 @@ export default function AssistantPage() {
     }
   }, [messages, isLoading]);
 
-  // Focus input on mount
+  // Focus input on mount - only on desktop to prevent mobile keyboard from pushing screen down
   useEffect(() => {
-    setTimeout(() => inputRef.current?.focus(), 100);
-  }, []);
+    if (!isMobile) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+  }, [isMobile]);
 
   // Process image file helper
   const processImageFile = (file: File) => {
