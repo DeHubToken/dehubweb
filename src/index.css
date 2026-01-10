@@ -4,6 +4,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+================================================================================
+DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
+================================================================================
+
+1. BUTTONS: All buttons must match our existing liquid glass style:
+   - Use: bg-white/10 backdrop-blur-xl border border-white/20
+   - Hover: hover:bg-white/20 hover:border-white/40 hover:scale-105
+   - Active state: bg-white/20 border-white/40
+   - NO GRADIENTS on buttons (no bg-gradient-to-*)
+   - NO colored backgrounds (no bg-cyan-500, bg-purple-500, etc.)
+
+2. COLORS: Black and white palette only:
+   - Primary colors: black (#000), white (#fff), and shades of gray
+   - Use zinc scale for grays: zinc-50 through zinc-950
+   - Text: text-white, text-zinc-300, text-zinc-400, text-zinc-500
+   - Backgrounds: bg-black, bg-zinc-900, bg-zinc-950, bg-white/5, bg-white/10
+   - NO colored accents (cyan, purple, blue, etc.) except for specific brand elements
+
+3. LIQUID GLASS STYLE for all interactive elements:
+   - Popups/Modals: bg-zinc-950/90 backdrop-blur-xl border border-white/10
+   - Tooltips: bg-black/90 backdrop-blur-sm border border-white/10
+   - Buttons: bg-white/10 backdrop-blur-xl border border-white/20
+   - Cards: bg-white/5 backdrop-blur-sm border border-white/10
+   - Shadows: shadow-[0_8px_32px_rgba(0,0,0,0.3)]
+   - Inset highlights: inset_0_1px_0_rgba(255,255,255,0.1)
+
+4. SELECTION/ACTIVE STATES:
+   - Use white borders: ring-2 ring-white/60 or border-white/40
+   - Use white text: text-white (not colored text)
+   - Subtle white glow: shadow-[0_0_12px_rgba(255,255,255,0.2)]
+
+================================================================================
+*/
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
