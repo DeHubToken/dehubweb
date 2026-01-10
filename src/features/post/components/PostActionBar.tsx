@@ -79,7 +79,7 @@ export function PostActionBar({
 
   // Menu content - used in Drawer on all devices
   const menuContent = (
-    <div className="flex flex-col">
+    <div className="flex flex-col max-h-[50vh] overflow-y-auto pb-4">
       {styleView ? (
         <>
           {AI_STYLE_OPTIONS.map((style) => (
