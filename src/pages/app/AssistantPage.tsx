@@ -409,7 +409,16 @@ export default function AssistantPage() {
     }
   };
 
-  // No initial welcome message - start with empty chat
+  // Initialize with welcome message on mount
+  useEffect(() => {
+    setMessages([
+      {
+        id: 'initial',
+        role: 'assistant',
+        content: `Hi! I'm your handy assistant. Ask me anything, whether it's DeHub related or not, I can help.`
+      }
+    ]);
+  }, []);
 
   // Scroll to top on initial mount - ensures header is visible on mobile
   useEffect(() => {
