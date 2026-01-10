@@ -1211,16 +1211,6 @@ export default function AssistantPage() {
               </button>
             )}
             
-            {/* Style toggle - minimal */}
-            <button
-              type="button"
-              onClick={() => setStyleSheetOpen(true)}
-              className="text-white/50 hover:text-white/80 transition-colors p-1"
-              title="Change style"
-            >
-              <span className="text-base">{currentStyle.emoji}</span>
-            </button>
-            
             {/* Text input - show transcript when recording */}
             <input
               ref={inputRef}
