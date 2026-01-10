@@ -415,7 +415,7 @@ export default function AssistantPage() {
       {
         id: 'initial',
         role: 'assistant',
-        content: `Hi! I'm your handy assistant. Ask me anything, whether it's DeHub related or not, I can help.`
+        content: `Use the text box below or these action buttons to get started.`
       }
     ]);
   }, []);
