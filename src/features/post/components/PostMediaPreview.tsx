@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2 } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import type { MediaFile, AudioFile } from '../types';
+import type { FilterSettings } from '../types/filters';
 import { AudioVisualizer } from '@/components/app/audio';
+import { FilterEditor } from './FilterEditor';
+import { generateFilterCSS, hasFilterApplied } from '@/lib/filters';
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -15,6 +18,8 @@ interface PostMediaPreviewProps {
   onToggleMusicVideo?: (index: number) => void;
   onAddThumbnail?: (index: number, thumbnailUrl: string) => void;
   onRemoveThumbnail?: (index: number) => void;
+  onApplyFilter?: (index: number, settings: FilterSettings, presetId?: string) => void;
+  onClearFilter?: (index: number) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
@@ -26,7 +31,9 @@ export function PostMediaPreview({
   onRemoveAudio, 
   onToggleMusicVideo,
   onAddThumbnail,
-  onRemoveThumbnail 
+  onRemoveThumbnail,
+  onApplyFilter,
+  onClearFilter,
 }: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -34,6 +41,7 @@ export function PostMediaPreview({
   const [showAudioOptions, setShowAudioOptions] = useState<number | null>(null);
   const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
   const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
+  const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -250,7 +258,31 @@ export function PostMediaPreview({
             >
               {m.type === 'image' ? (
                 <div className="relative">
-                  <img src={m.preview} alt="" className="w-full h-auto max-h-80 object-cover rounded-2xl" />
+                  <img 
+                    src={m.preview} 
+                    alt="" 
+                    className="w-full h-auto max-h-80 object-cover rounded-2xl" 
+                    style={{ filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined }}
+                  />
+                  
+                  {/* Filter button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={() => setFilterEditorIndex(index)}
+                        className={`absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all
+                          ${hasFilterApplied(m.filterSettings)
+                            ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white' 
+                            : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                          }`}
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        {hasFilterApplied(m.filterSettings) ? 'Filtered' : 'Filter'}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit filters</TooltipContent>
+                  </Tooltip>
                   
                   {/* Audio controls for images */}
                   <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
@@ -527,6 +559,21 @@ export function PostMediaPreview({
           ))}
         </motion.div>
       </AnimatePresence>
+
+      {/* Filter Editor Modal */}
+      {filterEditorIndex !== null && media[filterEditorIndex]?.type === 'image' && (
+        <FilterEditor
+          isOpen={true}
+          onClose={() => setFilterEditorIndex(null)}
+          imageUrl={media[filterEditorIndex].preview}
+          initialSettings={media[filterEditorIndex].filterSettings}
+          initialPresetId={media[filterEditorIndex].filterPresetId}
+          onApply={(settings, presetId) => {
+            onApplyFilter?.(filterEditorIndex, settings, presetId);
+            setFilterEditorIndex(null);
+          }}
+        />
+      )}
     </>
   );
 }
