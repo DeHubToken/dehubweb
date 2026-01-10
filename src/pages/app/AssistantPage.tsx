@@ -1212,7 +1212,7 @@ export default function AssistantPage() {
       </ScrollArea>
 
       {/* Input - Fixed above bottom nav on mobile/tablet, near bottom on desktop for first load */}
-      <div className={`fixed bottom-[69px] left-0 right-0 px-2 z-40 lg:static lg:bottom-auto lg:z-auto lg:p-4 lg:relative ${
+      <div className={`fixed bottom-[69px] md:bottom-[70px] left-0 right-0 px-2 z-40 lg:static lg:bottom-auto lg:z-auto lg:p-4 lg:relative ${
         messages.length <= 1 && !isLoading ? 'lg:mt-auto lg:mb-6' : ''
       }`}>
         <div className="mx-auto max-w-[95%] md:max-w-md lg:max-w-4xl">
