@@ -76,7 +76,12 @@ export function FilterEditor({
           <span className="text-white font-semibold">Edit Filter</span>
           <button
             onClick={handleApply}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-full transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+              bg-gradient-to-br from-white/20 via-white/10 to-white/5
+              backdrop-blur-xl border border-white/20
+              shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+              hover:shadow-[0_8px_32px_rgba(255,255,255,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]
+              hover:border-white/40"
           >
             <Check className="w-4 h-4" />
             Apply
