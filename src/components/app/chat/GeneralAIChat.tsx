@@ -18,6 +18,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
+import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 
 interface Message {
   id: string;
@@ -38,10 +39,24 @@ const IMAGE_KEYWORDS = [
   'photo of', 'picture of', 'image of', 'illustration of'
 ];
 
+// Keywords that indicate user wants the official logo (not a generated image)
+const LOGO_KEYWORDS = [
+  'dehub logo', 'the dehub logo', 'show me the dehub logo',
+  'ftv logo', 'the ftv logo', 'show me the ftv logo',
+  'your logo', 'the logo', 'official logo',
+  'dehub brand', 'ftv brand', 'brand logo',
+  'company logo', 'show logo', 'display logo'
+];
+
 function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
   const lower = message.toLowerCase();
   if (hasAttachedImage) return true;
   return IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function requiresLogoAsset(message: string): boolean {
+  const lower = message.toLowerCase();
+  return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
 interface GeneralAIChatProps {
@@ -117,6 +132,19 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
     setIsLoading(true);
 
     try {
+      // Check if user is asking for the official logo first
+      if (requiresLogoAsset(currentInput)) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: "Here's the official DeHub logo! 🎨",
+          imageUrl: ftvLogoSymbol
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+        setIsLoading(false);
+        return;
+      }
+
       const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
