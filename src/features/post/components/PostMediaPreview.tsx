@@ -312,7 +312,7 @@ export function PostMediaPreview({
                               : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_32px_rgba(6,182,212,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] hover:border-cyan-400/30'
                             }`}
                         >
-                          <Sparkles className={`w-3 h-3 ${hasFilterApplied(m.filterSettings) ? '' : 'text-cyan-400'}`} />
+                          <Sparkles className="w-3 h-3 text-white" />
                           {hasFilterApplied(m.filterSettings) ? 'Filtered' : 'Filter'}
                         </button>
                       </TooltipTrigger>
@@ -331,7 +331,7 @@ export function PostMediaPreview({
                               : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_32px_rgba(168,85,247,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] hover:border-purple-400/30'
                             }`}
                         >
-                          <Crop className={`w-3 h-3 ${hasCropApplied(m.cropSettings) ? '' : 'text-purple-400'}`} />
+                          <Crop className="w-3 h-3 text-white" />
                           {hasCropApplied(m.cropSettings) ? 'Edited' : 'Crop'}
                         </button>
                       </TooltipTrigger>
@@ -395,7 +395,7 @@ export function PostMediaPreview({
                             hover:shadow-[0_8px_32px_rgba(239,68,68,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
                             hover:border-red-400/40 hover:from-red-500/20 hover:via-red-400/10 hover:to-transparent"
                         >
-                          <Mic className="w-3 h-3 text-red-400" />
+                          <Mic className="w-3 h-3 text-white" />
                           Record
                         </button>
                         <button
@@ -420,7 +420,7 @@ export function PostMediaPreview({
                           hover:shadow-[0_8px_32px_rgba(239,68,68,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]
                           hover:border-red-400/30"
                       >
-                        <Mic className="w-3 h-3 text-red-400" />
+                        <Mic className="w-3 h-3 text-white" />
                         Add audio
                       </button>
                     )}
@@ -577,7 +577,7 @@ export function PostMediaPreview({
                               : 'bg-black/70 text-zinc-300 hover:bg-black/90'
                             }`}
                         >
-                          <ImageIcon className="w-3 h-3" />
+                          <ImageIcon className="w-3 h-3 text-white" />
                           {m.thumbnail ? 'Thumbnail' : 'Thumbnail'}
                         </button>
                       </TooltipTrigger>
@@ -595,7 +595,7 @@ export function PostMediaPreview({
                               : 'bg-black/70 text-zinc-300 hover:bg-black/90'
                             }`}
                         >
-                          <Music className="w-3 h-3" />
+                          <Music className="w-3 h-3 text-white" />
                           {m.isMusicVideo ? 'Music Video' : 'Music?'}
                         </button>
                       </TooltipTrigger>
