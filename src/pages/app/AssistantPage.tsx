@@ -1206,11 +1206,11 @@ export default function AssistantPage() {
         </div>
       </ScrollArea>
 
-      {/* Input - Fixed above bottom nav on mobile, centered higher on desktop for first load */}
-      <div className={`fixed bottom-[69px] left-0 right-0 px-2 z-40 sm:static sm:bottom-auto sm:z-auto sm:p-4 lg:relative ${
-        messages.length <= 1 && !isLoading ? 'sm:mt-auto sm:mb-[15vh]' : ''
+      {/* Input - Fixed above bottom nav on mobile/tablet, positioned to align with sidebar post button on desktop */}
+      <div className={`fixed bottom-[74px] left-0 right-0 px-2 z-40 lg:static lg:bottom-auto lg:z-auto lg:p-4 lg:pt-[72px] ${
+        messages.length <= 1 && !isLoading ? 'lg:mt-0' : ''
       }`}>
-        <div className="mx-auto max-w-[95%] md:max-w-3xl lg:max-w-4xl">
+        <div className="mx-auto w-[calc(100%-16px)] md:w-[calc(100%-16px)] lg:max-w-4xl">
           {/* Attached image preview */}
           {attachedImage && (
             <div className="mb-2 relative inline-block">
