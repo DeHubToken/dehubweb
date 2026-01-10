@@ -4,6 +4,9 @@ export interface AudioFile {
   blob: Blob;
   url: string;
   duration: number;
+  trimStart?: number;
+  trimEnd?: number;
+  originalDuration?: number;
 }
 
 export interface LinkPreviewData {
