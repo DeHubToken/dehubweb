@@ -17,11 +17,19 @@ export interface FilterPreset {
 
 export type AspectRatioOption = '1:1' | '4:5' | '16:9' | 'free';
 
+export interface CropBox {
+  x: number;      // left position as percentage (0-100)
+  y: number;      // top position as percentage (0-100)
+  width: number;  // width as percentage (0-100)
+  height: number; // height as percentage (0-100)
+}
+
 export interface CropSettings {
   rotation: number;      // 0, 90, 180, 270
   flipX: boolean;
   flipY: boolean;
   aspectRatio: AspectRatioOption;
+  cropBox?: CropBox;
 }
 
 export const DEFAULT_FILTER_SETTINGS: FilterSettings = {
