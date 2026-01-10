@@ -679,17 +679,19 @@ export function CropRotateEditor({
             </button>
           </div>
           
-          {/* Reset button */}
-          {hasChanges && (
-            <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              onClick={handleReset}
-              className="w-full mt-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
-            >
-              Reset All
-            </motion.button>
-          )}
+          {/* Reset button - always visible for consistent layout */}
+          <button
+            onClick={handleReset}
+            disabled={!hasChanges}
+            className={cn(
+              "w-full mt-3 py-2 text-sm transition-colors",
+              hasChanges 
+                ? "text-zinc-400 hover:text-white cursor-pointer" 
+                : "text-zinc-600 cursor-default"
+            )}
+          >
+            Reset All
+          </button>
         </div>
       </DrawerContent>
     </Drawer>
