@@ -263,7 +263,7 @@ export default function AssistantPage() {
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
   const pendingVoiceRef = useRef(false); // Track if last input was voice
@@ -1206,11 +1206,9 @@ export default function AssistantPage() {
         </div>
       </ScrollArea>
 
-      {/* Input - Fixed above bottom nav on mobile, centered higher on desktop for first load */}
-      <div className={`fixed bottom-[69px] left-0 right-0 px-2 z-40 sm:static sm:bottom-auto sm:z-auto sm:p-4 lg:relative ${
-        messages.length <= 1 && !isLoading ? 'sm:mt-auto sm:mb-[15vh]' : ''
-      }`}>
-        <div className="mx-auto max-w-[95%] md:max-w-3xl lg:max-w-4xl">
+      {/* Input - Fixed above bottom nav on mobile */}
+      <div className="fixed bottom-[69px] left-0 right-0 px-2 z-40 sm:static sm:bottom-auto sm:z-auto sm:p-4 lg:relative">
+        <div className="mx-auto max-w-[95%] md:max-w-md">
           {/* Attached image preview */}
           {attachedImage && (
             <div className="mb-2 relative inline-block">
@@ -1228,8 +1226,8 @@ export default function AssistantPage() {
             </div>
           )}
           
-          {/* Clean input row with auto-expanding textarea */}
-          <div className="flex items-end gap-2 bg-white/5 rounded-2xl px-3 py-2 border border-white/10">
+          {/* Clean input row */}
+          <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-2 border border-white/10">
             {/* Hidden file input */}
             <input
               ref={fileInputRef}
@@ -1243,7 +1241,7 @@ export default function AssistantPage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="text-white/50 hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
+              className="text-white/50 hover:text-white/80 transition-colors p-1"
               title="Attach file"
             >
               <Paperclip className="w-5 h-5" />
@@ -1255,7 +1253,7 @@ export default function AssistantPage() {
                 type="button"
                 onClick={isRecording ? stopRecording : startRecording}
                 disabled={isLoading}
-                className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                className={`transition-colors p-1 disabled:opacity-30 ${
                   isRecording 
                     ? 'text-red-500' 
                     : 'text-white/50 hover:text-white/80'
@@ -1272,37 +1270,18 @@ export default function AssistantPage() {
               </button>
             )}
             
-            {/* Auto-expanding textarea - supports multiline and formatting */}
-            <textarea
+            {/* Text input - show transcript when recording */}
+            <input
               ref={inputRef}
+              type="text"
               value={isRecording ? transcript : input}
-              onChange={(e) => {
-                if (!isRecording) {
-                  setInput(e.target.value);
-                  // Auto-resize the textarea
-                  e.target.style.height = 'auto';
-                  const maxHeight = window.innerHeight * 0.45; // Max 45% of viewport (about halfway up)
-                  const newHeight = Math.min(e.target.scrollHeight, maxHeight);
-                  e.target.style.height = `${newHeight}px`;
-                }
-              }}
-              onKeyDown={(e) => {
-                // Submit on Enter without Shift, allow Shift+Enter for new lines
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
+              onChange={(e) => !isRecording && setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
               onPaste={handlePaste}
               placeholder={isRecording ? "Listening..." : attachedImage ? "Describe edits..." : "Ask anything..."}
-              className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
+              className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none min-w-0 ${
                 isRecording ? 'text-white/60 italic' : ''
               }`}
-              style={{ 
-                minHeight: '24px',
-                maxHeight: '45vh'
-              }}
-              rows={1}
               readOnly={isRecording}
             />
             
@@ -1311,7 +1290,7 @@ export default function AssistantPage() {
               <button
                 type="button"
                 onClick={stopSpeaking}
-                className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
+                className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse"
                 title="Stop speaking"
               >
                 <VolumeX className="w-5 h-5" />
@@ -1323,7 +1302,7 @@ export default function AssistantPage() {
               type="button"
               onClick={handleSend}
               disabled={(!input.trim() && !isRecording) || isLoading}
-              className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
+              className="text-white/50 hover:text-white transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <Send className="w-5 h-5" />
             </button>
