@@ -94,12 +94,21 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
   
   const isSupported = isSpeechRecognitionSupported() && isSpeechSynthesisSupported();
 
-  // Initialize speech recognition
+  // Store callbacks in refs to avoid recreating recognition on callback changes
+  const onTranscriptRef = useRef(onTranscript);
+  const onErrorRef = useRef(onError);
+  
   useEffect(() => {
-    if (!isSpeechRecognitionSupported()) return;
+    onTranscriptRef.current = onTranscript;
+    onErrorRef.current = onError;
+  }, [onTranscript, onError]);
+
+  // Create recognition instance on demand (must be triggered by user gesture on mobile)
+  const createRecognition = useCallback(() => {
+    if (!isSpeechRecognitionSupported()) return null;
     
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognitionAPI) return;
+    if (!SpeechRecognitionAPI) return null;
     
     const recognition = new SpeechRecognitionAPI();
     
@@ -117,7 +126,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
       
       // If final result, call callback
       if (results.length > 0 && results[results.length - 1].isFinal) {
-        onTranscript?.(transcriptText);
+        onTranscriptRef.current?.(transcriptText);
       }
     };
     
@@ -126,11 +135,11 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
       setIsRecording(false);
       
       if (event.error === 'not-allowed') {
-        onError?.('Microphone access denied. Please enable microphone permissions.');
+        onErrorRef.current?.('Microphone access denied. Please enable microphone permissions.');
       } else if (event.error === 'no-speech') {
-        onError?.('No speech detected. Try again.');
-      } else {
-        onError?.(`Speech recognition error: ${event.error}`);
+        onErrorRef.current?.('No speech detected. Try again.');
+      } else if (event.error !== 'aborted') {
+        onErrorRef.current?.(`Speech recognition error: ${event.error}`);
       }
     };
     
@@ -138,16 +147,21 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
       setIsRecording(false);
     };
     
-    recognitionRef.current = recognition;
-    
+    return recognition;
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      recognition.abort();
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
     };
-  }, [onTranscript, onError]);
+  }, []);
 
   const startRecording = useCallback(() => {
-    if (!recognitionRef.current) {
-      onError?.('Speech recognition not supported');
+    if (!isSpeechRecognitionSupported()) {
+      onErrorRef.current?.('Speech recognition not supported in this browser');
       return;
     }
     
@@ -157,17 +171,34 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
       setIsSpeaking(false);
     }
     
+    // Abort previous instance if exists
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch {
+        // Ignore abort errors
+      }
+    }
+    
+    // Create fresh instance (required for mobile - must be in user gesture context)
+    const recognition = createRecognition();
+    if (!recognition) {
+      onErrorRef.current?.('Failed to initialize speech recognition');
+      return;
+    }
+    
+    recognitionRef.current = recognition;
     setTranscript('');
     setIsRecording(true);
     
     try {
-      recognitionRef.current.start();
+      recognition.start();
     } catch (err) {
       console.error('Failed to start recording:', err);
       setIsRecording(false);
-      onError?.('Failed to start recording');
+      onErrorRef.current?.('Failed to start recording. Please try again.');
     }
-  }, [isSpeaking, onError]);
+  }, [isSpeaking, createRecognition]);
 
   const stopRecording = useCallback(() => {
     if (recognitionRef.current && isRecording) {
