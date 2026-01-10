@@ -283,7 +283,7 @@ export function PostMediaPreview({
             <div 
               key={index} 
               className={`relative rounded-2xl overflow-hidden bg-zinc-900 ${
-                media.length === 1 ? 'w-full max-w-[min(100%,320px)] sm:max-w-[min(100%,400px)]' : 'w-[calc(50%-0.25rem)] max-w-[200px]'
+                media.length === 1 ? 'w-full' : 'w-[calc(50%-0.25rem)] max-w-[200px]'
               }`}
             >
               {m.type === 'image' ? (
@@ -370,32 +370,40 @@ export function PostMediaPreview({
                         </button>
                       </div>
                     ) : showAudioOptions === index ? (
-                      // Show upload/record options with liquid glass effect
+                      // Show upload/record options - icon only on mobile
                       <>
-                        <button
-                          onClick={() => triggerAudioUpload(index)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-                            bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                            backdrop-blur-xl border border-white/20
-                            shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-                            hover:shadow-[0_8px_32px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
-                            hover:border-blue-400/40 hover:from-blue-500/20 hover:via-blue-400/10 hover:to-transparent"
-                        >
-                          <Upload className="w-3 h-3" />
-                          Upload
-                        </button>
-                        <button
-                          onClick={() => handleStartRecording(index)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-                            bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                            backdrop-blur-xl border border-white/20
-                            shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-                            hover:shadow-[0_8px_32px_rgba(239,68,68,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
-                            hover:border-red-400/40 hover:from-red-500/20 hover:via-red-400/10 hover:to-transparent"
-                        >
-                          <Mic className="w-3 h-3 text-white" />
-                          Record
-                        </button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => triggerAudioUpload(index)}
+                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                                bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                                backdrop-blur-xl border border-white/20
+                                shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                                hover:shadow-[0_8px_32px_rgba(59,130,246,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
+                                hover:border-blue-400/40 hover:from-blue-500/20 hover:via-blue-400/10 hover:to-transparent"
+                            >
+                              <Upload className="w-3 h-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Upload audio</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => handleStartRecording(index)}
+                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                                bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                                backdrop-blur-xl border border-white/20
+                                shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                                hover:shadow-[0_8px_32px_rgba(239,68,68,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
+                                hover:border-red-400/40 hover:from-red-500/20 hover:via-red-400/10 hover:to-transparent"
+                            >
+                              <Mic className="w-3 h-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Record audio</TooltipContent>
+                        </Tooltip>
                         <button
                           onClick={() => setShowAudioOptions(null)}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
