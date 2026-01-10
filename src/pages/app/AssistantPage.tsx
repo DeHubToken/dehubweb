@@ -1126,7 +1126,7 @@ export default function AssistantPage() {
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden" ref={scrollRef}>
+      <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden scrollbar-hide [&_*]:scrollbar-hide" ref={scrollRef}>
         <div className="py-4 space-y-4">
           <AnimatePresence mode="popLayout">
             {messages.map((message) => (
