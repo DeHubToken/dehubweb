@@ -83,12 +83,12 @@ export function FilterEditor({
           </button>
         </div>
 
-        {/* Preview */}
-        <div className="flex-1 flex items-center justify-center p-4 bg-black/50 min-h-[200px] max-h-[40vh] overflow-hidden">
+        {/* Preview - larger on desktop/tablet */}
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-black/50 min-h-[200px] sm:min-h-[300px] max-h-[50vh] sm:max-h-[60vh] overflow-hidden">
           <img
             src={imageUrl}
             alt="Preview"
-            className="max-w-full max-h-full object-contain rounded-lg"
+            className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg shadow-2xl"
             style={{ filter: filterCSS }}
           />
         </div>
