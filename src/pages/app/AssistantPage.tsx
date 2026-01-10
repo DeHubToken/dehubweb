@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -60,6 +61,20 @@ const VIDEO_KEYWORDS = [
   'video of', 'clip of', 'footage of', 'motion', 'moving',
   'bring to life', 'make it move', 'animate this'
 ];
+
+// Keywords that indicate user wants the official logo (not a generated image)
+const LOGO_KEYWORDS = [
+  'dehub logo', 'the dehub logo', 'show me the dehub logo',
+  'ftv logo', 'the ftv logo', 'show me the ftv logo',
+  'your logo', 'the logo', 'official logo',
+  'dehub brand', 'ftv brand', 'brand logo',
+  'company logo', 'show logo', 'display logo'
+];
+
+function requiresLogoAsset(message: string): boolean {
+  const lower = message.toLowerCase();
+  return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
+}
 
 function requiresImageGeneration(message: string, hasAttachedImage: boolean): boolean {
   const lower = message.toLowerCase();
@@ -620,6 +635,24 @@ export default function AssistantPage() {
     }
 
     try {
+      // Check if user is asking for the official logo first
+      if (requiresLogoAsset(currentInput)) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: "Here's the official DeHub logo! 🎨",
+          imageUrl: ftvLogoSymbol
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+        setIsLoading(false);
+        
+        // Speak response if enabled
+        if (alwaysSpeakReplies) {
+          setTimeout(() => speak("Here's the official DeHub logo!"), 300);
+        }
+        return;
+      }
+
       // Check request type
       const isVideoRequest = requiresVideoGeneration(currentInput);
       const isImageRequest = requiresImageGeneration(currentInput, !!currentAttachedImage);
