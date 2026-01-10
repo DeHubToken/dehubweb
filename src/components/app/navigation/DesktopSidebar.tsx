@@ -81,6 +81,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         })}
       </div>
 
+      {/* Spacer to push Post button to bottom */}
+      <div className="flex-1" />
+
       {/* Post Button Bento */}
       <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
         <Button 
