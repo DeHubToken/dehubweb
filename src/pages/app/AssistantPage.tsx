@@ -1207,7 +1207,7 @@ export default function AssistantPage() {
       </ScrollArea>
 
       {/* Input - Fixed above bottom nav on mobile/tablet, positioned to align with sidebar post button on desktop */}
-      <div className={`fixed bottom-[74px] left-0 right-0 px-2 z-40 lg:static lg:bottom-auto lg:z-auto lg:p-4 lg:pt-[72px] ${
+      <div className={`fixed bottom-[74px] left-0 right-0 px-2 z-40 lg:static lg:bottom-auto lg:z-auto lg:p-4 lg:pt-[28px] ${
         messages.length <= 1 && !isLoading ? 'lg:mt-0' : ''
       }`}>
         <div className="mx-auto w-[calc(100%-16px)] md:w-[calc(100%-16px)] lg:max-w-4xl">
