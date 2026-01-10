@@ -1,3 +1,5 @@
+import type { FilterSettings } from './types/filters';
+
 export interface AudioFile {
   blob: Blob;
   url: string;
@@ -20,6 +22,8 @@ export interface MediaFile {
   audio?: AudioFile;
   isMusicVideo?: boolean;
   thumbnail?: string;
+  filterSettings?: FilterSettings;
+  filterPresetId?: string;
 }
 
 export type Currency = 'USD' | 'DHB';
@@ -71,6 +75,8 @@ export interface PostFormActions {
   toggleMusicVideo: (index: number) => void;
   addThumbnailToMedia: (index: number, thumbnailUrl: string) => void;
   removeThumbnailFromMedia: (index: number) => void;
+  applyFilterToMedia: (index: number, settings: FilterSettings, presetId?: string) => void;
+  clearFilterFromMedia: (index: number) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;
