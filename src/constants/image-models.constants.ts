@@ -1,6 +1,5 @@
 /**
  * Image Generation Models Configuration
- * Available through Lovable AI Gateway
  */
 
 export interface ImageModel {
@@ -31,6 +30,13 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     name: 'GPT-5',
     description: 'OpenAI creative aesthetic',
     emoji: '🎨',
+    tier: 'premium',
+  },
+  'grok-2-image': {
+    id: 'grok-2-image',
+    name: 'Grok Aurora',
+    description: 'xAI image generation',
+    emoji: '🔮',
     tier: 'premium',
   },
 };

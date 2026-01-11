@@ -28,7 +28,7 @@ import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { IMAGE_MODELS, IMAGE_MODEL_OPTIONS, type ImageModelKey } from '@/constants/image-models.constants';
 import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } from '@/constants/voice-models.constants';
-import { CHAT_MODEL_OPTIONS, CHAT_AI_PROVIDERS, DEFAULT_CHAT_MODEL, type ChatModelKey, type ChatModelProvider, modelRequiresApiKey } from '@/constants/chat-models.constants';
+import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 
@@ -745,7 +745,8 @@ export default function AssistantPage() {
           body: {
             prompt: currentInput,
             sourceImage: effectiveSourceImage || undefined,
-            conversationHistory
+            conversationHistory,
+            model: selectedImageModel
           }
         });
 
@@ -1015,33 +1016,7 @@ export default function AssistantPage() {
                   <Sparkles className="w-4 h-4" />
                   Chat Model
                 </div>
-                {/* DeHub AI (Lovable) - No key required */}
-                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider flex items-center gap-2">
-                  {CHAT_AI_PROVIDERS.lovable.emoji} {CHAT_AI_PROVIDERS.lovable.name}
-                  <span className="text-emerald-400/60 normal-case">• No key needed</span>
-                </div>
-                {CHAT_MODEL_OPTIONS.filter(m => m.provider === 'lovable').map((model) => (
-                  <button
-                    key={model.id}
-                    type="button"
-                    onClick={() => handleChatModelSelect(model.id)}
-                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-                      selectedChatModel === model.id ? 'bg-white/10' : ''
-                    }`}
-                  >
-                    <span className="text-lg">{model.emoji}</span>
-                    <div className="flex flex-col items-start">
-                      <span className="font-medium">{model.name}</span>
-                      <span className="text-xs text-white/50">{model.description}</span>
-                    </div>
-                  </button>
-                ))}
-                {/* Grok (xAI) - Requires API key */}
-                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2 flex items-center gap-2">
-                  {CHAT_AI_PROVIDERS.grok.emoji} {CHAT_AI_PROVIDERS.grok.name}
-                  <span className="text-amber-400/60 normal-case">• Requires API key</span>
-                </div>
-                {CHAT_MODEL_OPTIONS.filter(m => m.provider === 'grok').map((model) => (
+                {CHAT_MODEL_OPTIONS.map((model) => (
                   <button
                     key={model.id}
                     type="button"
