@@ -1341,7 +1341,7 @@ export default function AssistantPage() {
                     </div>
                   </div>
                 ) : (
-                  /* Text messages - no bubble wrapper */
+                  /* Text messages */
                   <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
                     {/* Show attached image for user messages */}
                     {message.attachedImage && (
@@ -1351,13 +1351,34 @@ export default function AssistantPage() {
                         className="max-w-full rounded-lg"
                       />
                     )}
-                    <div className={`${message.role === 'user' ? 'text-white/80 text-right' : 'text-white'}`}>
-                      {message.role === 'assistant' ? (
+                    {message.role === 'user' ? (
+                      /* User message with liquid glass bubble */
+                      <div className="relative group">
+                        {/* Liquid glass bubble */}
+                        <div className="relative px-4 py-2.5 rounded-2xl rounded-br-md overflow-hidden
+                          bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                          backdrop-blur-xl border border-white/30
+                          shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]
+                          before:absolute before:inset-0 before:rounded-2xl before:rounded-br-md
+                          before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-transparent
+                          before:pointer-events-none
+                          after:absolute after:inset-[1px] after:rounded-2xl after:rounded-br-md
+                          after:bg-gradient-to-b after:from-white/5 after:to-transparent
+                          after:pointer-events-none"
+                        >
+                          {/* Shimmer effect on hover */}
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                            bg-gradient-to-r from-transparent via-white/10 to-transparent
+                            -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                          <p className="text-sm whitespace-pre-wrap text-white relative z-10">{message.content}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Assistant message - no bubble */
+                      <div className="text-white">
                         <MarkdownText content={message.content} className="text-sm" />
-                      ) : (
-                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.div>
