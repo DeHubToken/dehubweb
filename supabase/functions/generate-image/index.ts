@@ -56,8 +56,11 @@ serve(async (req) => {
       { type: 'text', text: contextualPrompt }
     ] : contextualPrompt;
 
-    // Use Grok Aurora for image generation if selected
-    if (isGrokModel && xaiApiKey) {
+    // Use Grok Aurora for image generation if selected (but NOT for image editing)
+    // Grok's grok-2-image API only supports text-to-image, not image editing
+    let usedFallbackForGrok = false;
+    
+    if (isGrokModel && xaiApiKey && !sourceImage) {
       console.log('Using Grok Aurora for image generation');
       
       const response = await fetch('https://api.x.ai/v1/images/generations', {
@@ -93,6 +96,12 @@ serve(async (req) => {
         JSON.stringify({ imageUrl, text: '', success: true }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+    
+    // If Grok was selected but has a source image, fall back to Gemini
+    if (isGrokModel && sourceImage) {
+      console.log('Grok selected with source image - falling back to Gemini (Grok does not support image editing)');
+      usedFallbackForGrok = true;
     }
 
     // Fall back to Lovable AI Gateway
@@ -222,10 +231,15 @@ serve(async (req) => {
     // Return image directly without server-side watermarking (moved to client)
     console.log('Image generated successfully, returning to client');
 
+    // Add note if we fell back from Grok to Gemini for image editing
+    const finalText = usedFallbackForGrok 
+      ? (textResponse ? `${textResponse}\n\n_(Used Gemini for image editing - Grok only supports new image generation)_` : '_(Used Gemini for image editing - Grok only supports new image generation)_')
+      : textResponse;
+
     return new Response(
       JSON.stringify({ 
         imageUrl: imageUrl, 
-        text: textResponse,
+        text: finalText,
         success: true 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
