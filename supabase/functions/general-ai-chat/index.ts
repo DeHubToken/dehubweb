@@ -110,14 +110,22 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'gemini-2.5-flash' } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
+      model?: string;
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
+    const xaiApiKey = Deno.env.get('XAI_API_KEY');
+    
+    // Determine which provider/model to use
+    const isGrokModel = model.startsWith('grok-');
+    const useGrok = isGrokModel && xaiApiKey;
+    
+    console.log('Chat request:', { model, isGrokModel, hasXaiKey: !!xaiApiKey, useGrok });
     
     if (!lovableApiKey) {
       throw new Error('LOVABLE_API_KEY not configured');
@@ -357,14 +365,52 @@ IMPORTANT FORMATTING RULES:
       }
     });
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    // Determine API endpoint and model based on provider
+    let apiEndpoint: string;
+    let apiKey: string;
+    let modelName: string;
+    let fallbackUsed = false;
+
+    if (useGrok) {
+      // Use xAI (Grok) API
+      apiEndpoint = 'https://api.x.ai/v1/chat/completions';
+      apiKey = xaiApiKey!;
+      modelName = model; // 'grok-3' or 'grok-3-mini'
+      console.log('Using Grok API with model:', modelName);
+    } else {
+      // Use Lovable AI Gateway
+      if (!lovableApiKey) {
+        throw new Error('LOVABLE_API_KEY not configured');
+      }
+      apiEndpoint = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+      apiKey = lovableApiKey;
+      
+      // Map model IDs to full model paths
+      if (model === 'gemini-2.5-flash') {
+        modelName = 'google/gemini-2.5-flash';
+      } else if (model === 'gemini-2.5-pro') {
+        modelName = 'google/gemini-2.5-pro';
+      } else if (model === 'gpt-5-mini') {
+        modelName = 'openai/gpt-5-mini';
+      } else if (isGrokModel) {
+        // Grok was requested but no API key - fallback
+        modelName = 'google/gemini-2.5-flash';
+        fallbackUsed = true;
+        console.log('Grok requested but no API key, falling back to Gemini');
+      } else {
+        modelName = 'google/gemini-2.5-flash';
+      }
+      console.log('Using Lovable AI Gateway with model:', modelName);
+    }
+
+    const response = await fetch(apiEndpoint, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: modelName,
         messages: apiMessages,
         max_completion_tokens: 1500,
       }),
@@ -394,7 +440,13 @@ IMPORTANT FORMATTING RULES:
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, I couldn\'t generate a response.';
 
     return new Response(
-      JSON.stringify({ response: aiResponse, searchUsed: false }),
+      JSON.stringify({ 
+        response: aiResponse, 
+        searchUsed: false,
+        fallbackUsed,
+        fallbackReason: fallbackUsed ? 'XAI_API_KEY not configured' : undefined,
+        modelUsed: modelName
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
