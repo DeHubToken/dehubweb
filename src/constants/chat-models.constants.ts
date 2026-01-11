@@ -32,16 +32,22 @@ export const CHAT_MODEL_OPTIONS: ChatModelOption[] = [
     emoji: '🧠'
   },
   {
+    id: 'grok-4',
+    name: 'Grok 4',
+    description: 'xAI flagship model',
+    emoji: '🔮'
+  },
+  {
     id: 'grok-3',
     name: 'Grok 3',
-    description: 'xAI latest model',
-    emoji: '🔮'
+    description: 'xAI powerful model',
+    emoji: '✨'
   },
   {
     id: 'grok-3-mini',
     name: 'Grok 3 Mini',
     description: 'xAI fast & efficient',
-    emoji: '⚡'
+    emoji: '💨'
   }
 ];
 
