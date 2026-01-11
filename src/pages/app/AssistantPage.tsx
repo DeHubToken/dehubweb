@@ -28,6 +28,7 @@ import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { IMAGE_MODELS, IMAGE_MODEL_OPTIONS, type ImageModelKey } from '@/constants/image-models.constants';
 import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } from '@/constants/voice-models.constants';
+import { CHAT_MODEL_OPTIONS, CHAT_AI_PROVIDERS, DEFAULT_CHAT_MODEL, type ChatModelKey, type ChatModelProvider, modelRequiresApiKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 
@@ -295,6 +296,7 @@ export default function AssistantPage() {
   const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   const [selectedImageModel, setSelectedImageModel] = useState<ImageModelKey>('gemini-2.5-flash');
   const [selectedVoice, setSelectedVoice] = useState<VoicePreferenceKey>('female');
+  const [selectedChatModel, setSelectedChatModel] = useState<string>(DEFAULT_CHAT_MODEL);
   const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
@@ -321,6 +323,7 @@ export default function AssistantPage() {
   const currentVideoModel = VIDEO_MODEL_OPTIONS.find(m => m.id === selectedVideoModel) || VIDEO_MODEL_OPTIONS[0];
   const currentImageModel = IMAGE_MODEL_OPTIONS.find(m => m.id === selectedImageModel) || IMAGE_MODEL_OPTIONS[0];
   const currentVoice = VOICE_PREFERENCE_OPTIONS.find(v => v.id === selectedVoice) || VOICE_PREFERENCE_OPTIONS[0];
+  const currentChatModel = CHAT_MODEL_OPTIONS.find(m => m.id === selectedChatModel) || CHAT_MODEL_OPTIONS[0];
 
   // Voice chat hook - handles speech recognition and text-to-speech
   const {
@@ -375,11 +378,17 @@ export default function AssistantPage() {
             role: m.role,
             content: m.content
           })),
-          style: selectedStyle
+          style: selectedStyle,
+          model: selectedChatModel
         }
       });
 
       if (error) throw error;
+
+      // Show fallback toast if Grok was requested but not available
+      if (data.fallbackUsed) {
+        toast.info('Using DeHub AI - Grok API key not configured');
+      }
 
       const responseText = data.response || 'I apologize, I couldn\'t generate a response.';
       const assistantMessage: Message = {
@@ -792,11 +801,17 @@ export default function AssistantPage() {
               role: m.role,
               content: m.content
             })),
-            style: selectedStyle
+            style: selectedStyle,
+            model: selectedChatModel
           }
         });
 
         if (error) throw error;
+
+        // Show fallback toast if Grok was requested but not available
+        if (data.fallbackUsed) {
+          toast.info('Using DeHub AI - Grok API key not configured');
+        }
 
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -848,6 +863,10 @@ export default function AssistantPage() {
 
   const handleVoiceSelect = (voiceId: VoicePreferenceKey) => {
     setSelectedVoice(voiceId);
+  };
+
+  const handleChatModelSelect = (modelId: string) => {
+    setSelectedChatModel(modelId);
   };
 
   // Convert base64 image to FileList for PostModal
@@ -990,6 +1009,56 @@ export default function AssistantPage() {
               </DrawerTitle>
             </DrawerHeader>
             <div className="h-[70vh] overflow-y-auto">
+              {/* Chat Model Section */}
+              <div className="border-b border-white/10 pb-4">
+                <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Chat Model
+                </div>
+                {/* DeHub AI (Lovable) - No key required */}
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider flex items-center gap-2">
+                  {CHAT_AI_PROVIDERS.lovable.emoji} {CHAT_AI_PROVIDERS.lovable.name}
+                  <span className="text-emerald-400/60 normal-case">• No key needed</span>
+                </div>
+                {CHAT_MODEL_OPTIONS.filter(m => m.provider === 'lovable').map((model) => (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleChatModelSelect(model.id)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedChatModel === model.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{model.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{model.name}</span>
+                      <span className="text-xs text-white/50">{model.description}</span>
+                    </div>
+                  </button>
+                ))}
+                {/* Grok (xAI) - Requires API key */}
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2 flex items-center gap-2">
+                  {CHAT_AI_PROVIDERS.grok.emoji} {CHAT_AI_PROVIDERS.grok.name}
+                  <span className="text-amber-400/60 normal-case">• Requires API key</span>
+                </div>
+                {CHAT_MODEL_OPTIONS.filter(m => m.provider === 'grok').map((model) => (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleChatModelSelect(model.id)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                      selectedChatModel === model.id ? 'bg-white/10' : ''
+                    }`}
+                  >
+                    <span className="text-lg">{model.emoji}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{model.name}</span>
+                      <span className="text-xs text-white/50">{model.description}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
               {/* Image Model Section */}
               <div className="border-b border-white/10 pb-4">
                 <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
