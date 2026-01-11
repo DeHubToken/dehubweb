@@ -15,6 +15,7 @@ interface GenerateImageRequest {
   prompt: string;
   sourceImage?: string;
   conversationHistory?: ConversationMessage[];
+  model?: string;
 }
 
 serve(async (req) => {
@@ -23,18 +24,19 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, sourceImage, conversationHistory = [] } = await req.json() as GenerateImageRequest;
+    const { prompt, sourceImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
     }
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
-    if (!lovableApiKey) {
-      throw new Error('LOVABLE_API_KEY not configured');
-    }
-
-    console.log('Generating image with prompt:', prompt.substring(0, 100), '| Has source image:', !!sourceImage, '| Conversation history length:', conversationHistory.length);
+    const xaiApiKey = Deno.env.get('XAI_API_KEY');
+    
+    // Determine which API to use based on model
+    const isGrokModel = model.startsWith('grok-');
+    
+    console.log('Generating image with prompt:', prompt.substring(0, 100), '| Model:', model, '| Has source image:', !!sourceImage, '| Conversation history length:', conversationHistory.length);
 
     // Build context from conversation history
     let contextualPrompt = prompt;
@@ -49,14 +51,65 @@ serve(async (req) => {
     }
 
     // Build messages based on whether we're editing or generating
-    const messages = sourceImage ? [
-      {
-        role: 'user',
-        content: [
-          { type: 'image_url', image_url: { url: sourceImage } },
-          { type: 'text', text: contextualPrompt }
-        ]
+    const userContent = sourceImage ? [
+      { type: 'image_url', image_url: { url: sourceImage } },
+      { type: 'text', text: contextualPrompt }
+    ] : contextualPrompt;
+
+    // Use Grok Aurora for image generation if selected
+    if (isGrokModel && xaiApiKey) {
+      console.log('Using Grok Aurora for image generation');
+      
+      const response = await fetch('https://api.x.ai/v1/images/generations', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${xaiApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'grok-2-image',
+          prompt: contextualPrompt,
+          n: 1,
+          response_format: 'url',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Grok image API error:', response.status, errorText);
+        throw new Error(`Grok image generation failed: ${response.status}`);
       }
+
+      const data = await response.json();
+      const imageUrl = data.data?.[0]?.url;
+
+      if (!imageUrl) {
+        console.error('No image in Grok response:', JSON.stringify(data).substring(0, 500));
+        throw new Error('Grok did not return an image');
+      }
+
+      console.log('Grok image generated successfully');
+      return new Response(
+        JSON.stringify({ imageUrl, text: '', success: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Fall back to Lovable AI Gateway
+    if (!lovableApiKey) {
+      throw new Error('LOVABLE_API_KEY not configured');
+    }
+
+    // Map model to Lovable AI model path
+    let apiModel = 'google/gemini-2.5-flash-image-preview';
+    if (model === 'gemini-3-pro-image') {
+      apiModel = 'google/gemini-3-pro-image-preview';
+    } else if (model === 'gpt-5') {
+      apiModel = 'openai/gpt-5';
+    }
+
+    const messages = sourceImage ? [
+      { role: 'user', content: userContent }
     ] : [
       { role: 'user', content: contextualPrompt }
     ];
@@ -68,7 +121,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-image-preview',
+        model: apiModel,
         messages,
         modalities: ['image', 'text']
       }),
