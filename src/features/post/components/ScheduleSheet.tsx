@@ -86,18 +86,30 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
       className="relative overflow-hidden"
       style={{ height: containerHeight }}
     >
-      {/* Selection highlight bar */}
+      {/* Selection highlight bar - subtle transparent */}
       <div 
-        className="absolute left-0 right-0 pointer-events-none z-10 bg-white/10 rounded-lg"
+        className="absolute left-0 right-0 pointer-events-none z-10 bg-white/[0.08] rounded-xl border border-white/10"
         style={{ 
           top: centerOffset * itemHeight,
           height: itemHeight,
         }}
       />
       
-      {/* Fade gradients */}
-      <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/80 to-transparent pointer-events-none z-20" />
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent pointer-events-none z-20" />
+      {/* Fade gradients - using transparency instead of black */}
+      <div 
+        className="absolute inset-x-0 top-0 pointer-events-none z-20"
+        style={{
+          height: itemHeight * 2,
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)'
+        }}
+      />
+      <div 
+        className="absolute inset-x-0 bottom-0 pointer-events-none z-20"
+        style={{
+          height: itemHeight * 2,
+          background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)'
+        }}
+      />
       
       {/* Scrollable area */}
       <div
@@ -113,13 +125,13 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
       >
         {items.map((item, index) => {
           const distance = Math.abs(index - selectedIndex);
-          const opacity = distance === 0 ? 1 : distance === 1 ? 0.5 : distance === 2 ? 0.3 : 0.15;
-          const scale = distance === 0 ? 1 : distance === 1 ? 0.9 : 0.8;
+          const opacity = distance === 0 ? 1 : distance === 1 ? 0.6 : distance === 2 ? 0.35 : 0.2;
+          const scale = distance === 0 ? 1 : distance === 1 ? 0.95 : 0.85;
           
           return (
             <div
               key={index}
-              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-150"
+              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-200"
               style={{ 
                 height: itemHeight,
                 opacity,
@@ -137,7 +149,7 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
             >
               <span className={cn(
                 "text-xl font-medium transition-colors",
-                distance === 0 ? "text-white" : "text-zinc-400"
+                distance === 0 ? "text-white" : "text-white/50"
               )}>
                 {item}
               </span>
