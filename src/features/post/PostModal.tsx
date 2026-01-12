@@ -5,7 +5,6 @@ import { usePostForm } from './hooks/usePostForm';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
-import { PostHeader } from './components/PostHeader';
 
 interface PostModalProps {
   isOpen: boolean;
@@ -32,15 +31,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
 
   const modalContent = (
     <>
-      <PostHeader
-        scheduledDate={state.scheduledDate}
-        onSchedule={actions.setScheduledDate}
-        drafts={state.drafts}
-        onSaveDraft={actions.saveDraft}
-        onLoadDraft={actions.loadDraft}
-        onDeleteDraft={actions.deleteDraft}
-        canSaveDraft={computed.canPost}
-      />
 
       <PostContentArea
         text={state.text}
@@ -64,6 +54,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         hasVideo={computed.hasVideo}
         hasImage={computed.hasImage}
         onFileDrop={actions.handleFileDrop}
+        scheduledDate={state.scheduledDate}
+        onSchedule={actions.setScheduledDate}
+        drafts={state.drafts}
+        onSaveDraft={actions.saveDraft}
+        onLoadDraft={actions.loadDraft}
+        onDeleteDraft={actions.deleteDraft}
+        canSaveDraft={computed.canPost}
       />
 
       <PostAccessToggles

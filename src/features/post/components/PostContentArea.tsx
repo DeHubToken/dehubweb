@@ -6,7 +6,11 @@ import { LinkPreviews } from './LinkPreviews';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Upload } from 'lucide-react';
+import { Upload, Calendar, Save, Clock } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ScheduleSheet } from './ScheduleSheet';
+import { DraftsSheet, type Draft } from './DraftsSheet';
+import { format } from 'date-fns';
 
 interface PostContentAreaProps {
   text: string;
@@ -30,6 +34,14 @@ interface PostContentAreaProps {
   hasVideo: boolean;
   hasImage: boolean;
   onFileDrop: (files: FileList) => void;
+  // Schedule/Drafts props
+  scheduledDate: Date | null;
+  onSchedule: (date: Date | null) => void;
+  drafts: Draft[];
+  onSaveDraft: () => void;
+  onLoadDraft: (draft: Draft) => void;
+  onDeleteDraft: (id: string) => void;
+  canSaveDraft: boolean;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -74,11 +86,20 @@ export function PostContentArea({
   hasVideo,
   hasImage,
   onFileDrop,
+  scheduledDate,
+  onSchedule,
+  drafts,
+  onSaveDraft,
+  onLoadDraft,
+  onDeleteDraft,
+  canSaveDraft,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
   const dragCounterRef = useRef(0);
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [showDrafts, setShowDrafts] = useState(false);
 
   const charCount = text.length;
 
@@ -347,35 +368,104 @@ export function PostContentArea({
   }, [text, editorRef]);
 
   return (
-    <div 
-      className="p-4 max-h-[60vh] overflow-y-auto relative"
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      {/* Drag overlay */}
-      <AnimatePresence>
-        {isDragging && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-white rounded-xl"
-          >
-            <Upload className="w-10 h-10 text-white mb-2" />
-            <p className="text-white font-medium">Drop files here</p>
-            <p className="text-white/60 text-sm mt-1">
-              {hasVideo ? 'Images not allowed with video' : hasImage ? 'Videos not allowed with images' : 'Images, videos, or audio'}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <div className="flex gap-3">
-        <Avatar className="w-10 h-10 flex-shrink-0">
-          <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
+    <>
+      <div 
+        className="p-4 max-h-[60vh] overflow-y-auto relative"
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        {/* Schedule/Drafts buttons - top right corner */}
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+          {/* Schedule indicator */}
+          {scheduledDate && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-medium"
+            >
+              <Clock className="w-3 h-3" />
+              {format(scheduledDate, 'MMM d, h:mm a')}
+            </motion.div>
+          )}
+
+          {/* Drafts count badge */}
+          {drafts.length > 0 && (
+            <span className="text-xs text-zinc-500">
+              {drafts.length} draft{drafts.length !== 1 ? 's' : ''}
+            </span>
+          )}
+
+          {/* Schedule button */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                onClick={() => setShowSchedule(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={cn(
+                  "w-9 h-9 rounded-full flex items-center justify-center transition-all",
+                  "bg-white/10 backdrop-blur-xl border border-white/20",
+                  "hover:bg-white/20 hover:border-white/40",
+                  scheduledDate && "bg-amber-500/20 border-amber-500/40"
+                )}
+              >
+                <Calendar className="w-4 h-4 text-white" />
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {scheduledDate ? 'Edit schedule' : 'Schedule post'}
+            </TooltipContent>
+          </Tooltip>
+
+          {/* Drafts button */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                onClick={() => setShowDrafts(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={cn(
+                  "w-9 h-9 rounded-full flex items-center justify-center transition-all relative",
+                  "bg-white/10 backdrop-blur-xl border border-white/20",
+                  "hover:bg-white/20 hover:border-white/40"
+                )}
+              >
+                <Save className="w-4 h-4 text-white" />
+                {drafts.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
+                    {drafts.length}
+                  </span>
+                )}
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent>Drafts</TooltipContent>
+          </Tooltip>
+        </div>
+
+        {/* Drag overlay */}
+        <AnimatePresence>
+          {isDragging && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-white rounded-xl"
+            >
+              <Upload className="w-10 h-10 text-white mb-2" />
+              <p className="text-white font-medium">Drop files here</p>
+              <p className="text-white/60 text-sm mt-1">
+                {hasVideo ? 'Images not allowed with video' : hasImage ? 'Videos not allowed with images' : 'Images, videos, or audio'}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="flex gap-3">
+          <Avatar className="w-10 h-10 flex-shrink-0">
+            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
+            <AvatarFallback>U</AvatarFallback>
+          </Avatar>
 
         <div className="flex-1 min-w-0">
           <div
@@ -454,8 +544,28 @@ export function PostContentArea({
               {charCount}/280
             </span>
           </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Schedule Sheet */}
+      <ScheduleSheet
+        isOpen={showSchedule}
+        onClose={() => setShowSchedule(false)}
+        scheduledDate={scheduledDate}
+        onSchedule={onSchedule}
+      />
+
+      {/* Drafts Sheet */}
+      <DraftsSheet
+        isOpen={showDrafts}
+        onClose={() => setShowDrafts(false)}
+        drafts={drafts}
+        onSaveDraft={onSaveDraft}
+        onLoadDraft={onLoadDraft}
+        onDeleteDraft={onDeleteDraft}
+        canSave={canSaveDraft}
+      />
+    </>
   );
 }
