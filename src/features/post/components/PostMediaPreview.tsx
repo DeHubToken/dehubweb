@@ -306,18 +306,14 @@ export function PostMediaPreview({
             {media.map((m, index) => (
               <div 
                 key={index} 
-                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center h-[200px] sm:h-[240px] ${
-                  media.length === 1 
-                    ? 'w-[85%] max-w-[360px]' 
-                    : 'w-[160px] sm:w-[200px]'
-                }`}
+                className="relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center h-[200px] sm:h-[240px]"
               >
                 {m.type === 'image' ? (
-                  <div className="relative w-full h-full">
+                  <div className="relative h-full flex items-center justify-center">
                     <img 
                       src={m.preview} 
                       alt="" 
-                      className="w-full h-full object-cover rounded-2xl" 
+                      className="h-full w-auto max-w-none object-contain rounded-2xl" 
                       style={{ 
                         filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                         transform: generateCropTransform(m.cropSettings),
@@ -518,13 +514,13 @@ export function PostMediaPreview({
                       </Tooltip>
                     </div>
                   ) : (
-                    <div className="relative w-full h-full">
+                    <div className="relative h-full flex items-center justify-center">
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
-                        className="w-full h-full object-cover rounded-2xl"
+                        className="h-full w-auto max-w-none object-contain rounded-2xl"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
