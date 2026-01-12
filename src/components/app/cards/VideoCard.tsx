@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -28,7 +28,7 @@ interface VideoCardProps {
   video: VideoItem;
 }
 
-export function VideoCard({ video }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
 
   return (
@@ -117,4 +117,4 @@ export function VideoCard({ video }: VideoCardProps) {
       />
     </div>
   );
-}
+});

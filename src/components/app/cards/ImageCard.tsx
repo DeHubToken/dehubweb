@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -30,7 +30,7 @@ interface ImageCardProps {
   post: ImagePost;
 }
 
-export function ImageCard({ post }: ImageCardProps) {
+export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
 
@@ -123,4 +123,4 @@ export function ImageCard({ post }: ImageCardProps) {
       />
     </div>
   );
-}
+});

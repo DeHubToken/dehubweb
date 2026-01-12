@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Eye, Sparkles } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -24,7 +24,7 @@ interface PostCardProps {
   post: TextPost;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
 
@@ -87,4 +87,4 @@ export function PostCard({ post }: PostCardProps) {
       />
     </div>
   );
-}
+});
