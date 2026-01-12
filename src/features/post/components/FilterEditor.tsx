@@ -154,61 +154,65 @@ export function FilterEditor({
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="overflow-hidden"
+                className="overflow-hidden max-h-[35vh]"
               >
-                <div className="px-4 pb-4 space-y-3">
-                  <FilterSlider
-                    label="Brightness"
-                    value={settings.brightness}
-                    min={0}
-                    max={200}
-                    defaultValue={DEFAULT_FILTER_SETTINGS.brightness}
-                    onChange={(v) => handleSliderChange('brightness', v)}
-                  />
-                  <FilterSlider
-                    label="Contrast"
-                    value={settings.contrast}
-                    min={0}
-                    max={200}
-                    defaultValue={DEFAULT_FILTER_SETTINGS.contrast}
-                    onChange={(v) => handleSliderChange('contrast', v)}
-                  />
-                  <FilterSlider
-                    label="Saturation"
-                    value={settings.saturation}
-                    min={0}
-                    max={200}
-                    defaultValue={DEFAULT_FILTER_SETTINGS.saturation}
-                    onChange={(v) => handleSliderChange('saturation', v)}
-                  />
-                  <FilterSlider
-                    label="Warmth"
-                    value={settings.hueRotate}
-                    min={-180}
-                    max={180}
-                    defaultValue={DEFAULT_FILTER_SETTINGS.hueRotate}
-                    onChange={(v) => handleSliderChange('hueRotate', v)}
-                    unit="°"
-                  />
-                  <FilterSlider
-                    label="Fade"
-                    value={settings.sepia}
-                    min={0}
-                    max={100}
-                    defaultValue={DEFAULT_FILTER_SETTINGS.sepia}
-                    onChange={(v) => handleSliderChange('sepia', v)}
-                    unit="%"
-                  />
-                  <FilterSlider
-                    label="Grayscale"
-                    value={settings.grayscale}
-                    min={0}
-                    max={100}
-                    defaultValue={DEFAULT_FILTER_SETTINGS.grayscale}
-                    onChange={(v) => handleSliderChange('grayscale', v)}
-                    unit="%"
-                  />
-                </div>
+                <ScrollArea className="h-full max-h-[35vh]">
+                  <div className="px-4 pb-8 space-y-3">
+                    <FilterSlider
+                      label="Brightness"
+                      value={settings.brightness}
+                      min={0}
+                      max={200}
+                      defaultValue={DEFAULT_FILTER_SETTINGS.brightness}
+                      onChange={(v) => handleSliderChange('brightness', v)}
+                    />
+                    <FilterSlider
+                      label="Contrast"
+                      value={settings.contrast}
+                      min={0}
+                      max={200}
+                      defaultValue={DEFAULT_FILTER_SETTINGS.contrast}
+                      onChange={(v) => handleSliderChange('contrast', v)}
+                    />
+                    <FilterSlider
+                      label="Saturation"
+                      value={settings.saturation}
+                      min={0}
+                      max={200}
+                      defaultValue={DEFAULT_FILTER_SETTINGS.saturation}
+                      onChange={(v) => handleSliderChange('saturation', v)}
+                    />
+                    <FilterSlider
+                      label="Warmth"
+                      value={settings.hueRotate}
+                      min={-180}
+                      max={180}
+                      defaultValue={DEFAULT_FILTER_SETTINGS.hueRotate}
+                      onChange={(v) => handleSliderChange('hueRotate', v)}
+                      unit="°"
+                    />
+                    <FilterSlider
+                      label="Fade"
+                      value={settings.sepia}
+                      min={0}
+                      max={100}
+                      defaultValue={DEFAULT_FILTER_SETTINGS.sepia}
+                      onChange={(v) => handleSliderChange('sepia', v)}
+                      unit="%"
+                    />
+                    <FilterSlider
+                      label="Grayscale"
+                      value={settings.grayscale}
+                      min={0}
+                      max={100}
+                      defaultValue={DEFAULT_FILTER_SETTINGS.grayscale}
+                      onChange={(v) => handleSliderChange('grayscale', v)}
+                      unit="%"
+                    />
+                  </div>
+                  {/* Safe area padding for mobile */}
+                  <div className="h-[env(safe-area-inset-bottom,16px)]" />
+                </ScrollArea>
               </motion.div>
             )}
           </AnimatePresence>
