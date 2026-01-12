@@ -97,6 +97,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         isEnhancing={state.isEnhancing}
         hasText={!!state.text.trim()}
         hasImage={computed.hasImage}
+        hasVideo={computed.hasVideo}
       />
     </>
   );
