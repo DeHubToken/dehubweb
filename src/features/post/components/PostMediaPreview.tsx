@@ -586,12 +586,12 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={() => setFilterEditorIndex(index)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                          className="flex items-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
                           <Sparkles className="w-3 h-3 text-white" />
-                          Filter
+                          <span className="hidden sm:inline">Filter</span>
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Edit filters</TooltipContent>
@@ -603,12 +603,12 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={() => setCropEditorIndex(index)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                          className="flex items-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
                           <Crop className="w-3 h-3 text-white" />
-                          Crop
+                          <span className="hidden sm:inline">Crop</span>
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Crop & rotate</TooltipContent>
@@ -620,14 +620,14 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={() => setVideoTrimmerIndex(index)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
+                          className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.trimStart !== undefined || m.trimEnd !== undefined
-                              ? 'bg-purple-500/30 text-white backdrop-blur-xl border border-purple-400/40'
+                              ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40'
                               : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
                             }`}
                         >
                           <Scissors className="w-3 h-3 text-white" />
-                          Trim
+                          <span className="hidden sm:inline">Trim</span>
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Trim video</TooltipContent>
@@ -649,14 +649,14 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={() => triggerThumbnailUpload(index)}
-                          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
+                          className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.thumbnail 
-                              ? 'bg-blue-500/30 text-white backdrop-blur-xl border border-blue-400/40' 
+                              ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40' 
                               : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
                             }`}
                         >
                           <ImageIcon className="w-3 h-3" />
-                          Thumbnail
+                          <span className="hidden sm:inline">Thumbnail</span>
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Add custom thumbnail</TooltipContent>
@@ -668,14 +668,14 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={() => onToggleMusicVideo?.(index)}
-                          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
+                          className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.isMusicVideo 
                               ? 'bg-emerald-500/30 text-white backdrop-blur-xl border border-emerald-400/40' 
                               : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
                             }`}
                         >
                           <Music className="w-3 h-3" />
-                          {m.isMusicVideo ? 'Music Video' : 'Music?'}
+                          <span className="hidden sm:inline">{m.isMusicVideo ? 'Music Video' : 'Music?'}</span>
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Mark as music video</TooltipContent>
