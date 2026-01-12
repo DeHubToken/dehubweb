@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { X, Calendar, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
-import { format, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, startOfToday } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, startOfToday } from 'date-fns';
 
 interface ScheduleSheetProps {
   isOpen: boolean;
@@ -12,16 +13,33 @@ interface ScheduleSheetProps {
   onSchedule: (date: Date | null) => void;
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-const MINUTES = ['00', '15', '30', '45'];
+// Convert 24h to 12h format
+const to12Hour = (hour24: number): { hour12: number; period: 'AM' | 'PM' } => {
+  const period: 'AM' | 'PM' = hour24 >= 12 ? 'PM' : 'AM';
+  const hour12 = hour24 % 12 || 12;
+  return { hour12, period };
+};
+
+// Convert 12h to 24h format
+const to24Hour = (hour12: number, period: 'AM' | 'PM') => {
+  if (period === 'AM') {
+    return hour12 === 12 ? 0 : hour12;
+  }
+  return hour12 === 12 ? 12 : hour12 + 12;
+};
 
 export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: ScheduleSheetProps) {
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(scheduledDate || today);
   const [selectedDate, setSelectedDate] = useState<Date | null>(scheduledDate);
-  const [selectedHour, setSelectedHour] = useState(scheduledDate?.getHours() ?? 12);
+  
+  const initialHour = scheduledDate?.getHours() ?? 12;
+  const { hour12: initHour12, period: initPeriod } = to12Hour(initialHour);
+  
+  const [selectedHour12, setSelectedHour12] = useState(initHour12);
+  const [selectedPeriod, setSelectedPeriod] = useState<'AM' | 'PM'>(initPeriod);
   const [selectedMinute, setSelectedMinute] = useState(
-    scheduledDate ? String(Math.floor(scheduledDate.getMinutes() / 15) * 15).padStart(2, '0') : '00'
+    scheduledDate ? Math.floor(scheduledDate.getMinutes() / 5) * 5 : 0
   );
 
   const monthStart = startOfMonth(currentMonth);
@@ -43,7 +61,8 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
   const handleConfirm = () => {
     if (selectedDate) {
       const date = new Date(selectedDate);
-      date.setHours(selectedHour, parseInt(selectedMinute), 0, 0);
+      const hour24 = to24Hour(selectedHour12, selectedPeriod);
+      date.setHours(hour24, selectedMinute, 0, 0);
       onSchedule(date);
     }
     onClose();
@@ -53,6 +72,13 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
     onSchedule(null);
     setSelectedDate(null);
     onClose();
+  };
+
+  // Format time for display
+  const formatTimeDisplay = () => {
+    const hourStr = String(selectedHour12);
+    const minStr = String(selectedMinute).padStart(2, '0');
+    return `${hourStr}:${minStr} ${selectedPeriod}`;
   };
 
   return (
@@ -143,54 +169,73 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             })}
           </div>
 
-          {/* Time Picker */}
+          {/* Time Picker with Sliders */}
           <div className="border-t border-white/10 pt-6">
-            <div className="flex items-center gap-2 mb-4 px-2">
+            <div className="flex items-center gap-2 mb-6 px-2">
               <Clock className="w-4 h-4 text-zinc-400" />
               <span className="text-sm text-zinc-400">Select time</span>
+              <span className="ml-auto text-lg font-semibold text-white">
+                {formatTimeDisplay()}
+              </span>
             </div>
             
-            <div className="flex gap-4 px-2">
-              {/* Hour */}
-              <div className="flex-1">
-                <label className="text-xs text-zinc-500 mb-2 block">Hour</label>
-                <div className="grid grid-cols-6 gap-1 max-h-32 overflow-y-auto">
-                  {HOURS.map(hour => (
-                    <button
-                      key={hour}
-                      onClick={() => setSelectedHour(hour)}
-                      className={cn(
-                        "py-2 rounded-lg text-sm font-medium transition-all",
-                        selectedHour === hour
-                          ? "bg-white text-black"
-                          : "text-white hover:bg-white/10"
-                      )}
-                    >
-                      {String(hour).padStart(2, '0')}
-                    </button>
-                  ))}
+            <div className="space-y-6 px-2">
+              {/* Hour Slider */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="text-xs text-zinc-500">Hour</label>
+                  <span className="text-sm font-medium text-white">{selectedHour12}</span>
                 </div>
+                <Slider
+                  value={[selectedHour12]}
+                  onValueChange={(value) => setSelectedHour12(value[0])}
+                  min={1}
+                  max={12}
+                  step={1}
+                  className="w-full"
+                />
               </div>
 
-              {/* Minute */}
-              <div className="w-24">
-                <label className="text-xs text-zinc-500 mb-2 block">Minute</label>
-                <div className="grid grid-cols-2 gap-1">
-                  {MINUTES.map(minute => (
-                    <button
-                      key={minute}
-                      onClick={() => setSelectedMinute(minute)}
-                      className={cn(
-                        "py-2 rounded-lg text-sm font-medium transition-all",
-                        selectedMinute === minute
-                          ? "bg-white text-black"
-                          : "text-white hover:bg-white/10"
-                      )}
-                    >
-                      {minute}
-                    </button>
-                  ))}
+              {/* Minute Slider */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="text-xs text-zinc-500">Minute</label>
+                  <span className="text-sm font-medium text-white">{String(selectedMinute).padStart(2, '0')}</span>
                 </div>
+                <Slider
+                  value={[selectedMinute]}
+                  onValueChange={(value) => setSelectedMinute(value[0])}
+                  min={0}
+                  max={55}
+                  step={5}
+                  className="w-full"
+                />
+              </div>
+
+              {/* AM/PM Toggle */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSelectedPeriod('AM')}
+                  className={cn(
+                    "flex-1 py-3 rounded-xl text-sm font-semibold transition-all",
+                    selectedPeriod === 'AM'
+                      ? "bg-white text-black"
+                      : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
+                  )}
+                >
+                  AM
+                </button>
+                <button
+                  onClick={() => setSelectedPeriod('PM')}
+                  className={cn(
+                    "flex-1 py-3 rounded-xl text-sm font-semibold transition-all",
+                    selectedPeriod === 'PM'
+                      ? "bg-white text-black"
+                      : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
+                  )}
+                >
+                  PM
+                </button>
               </div>
             </div>
           </div>
@@ -204,7 +249,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             >
               <p className="text-zinc-400 text-xs mb-1">Scheduled for</p>
               <p className="text-white font-semibold">
-                {format(selectedDate, 'EEEE, MMMM d, yyyy')} at {String(selectedHour).padStart(2, '0')}:{selectedMinute}
+                {format(selectedDate, 'EEEE, MMMM d, yyyy')} at {formatTimeDisplay()}
               </p>
             </motion.div>
           )}
