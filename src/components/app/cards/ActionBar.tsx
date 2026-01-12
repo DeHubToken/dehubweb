@@ -164,8 +164,6 @@ export function ActionBar({
               <div className="flex flex-col gap-1 mt-4 relative">
                 <ShareOptions />
               </div>
-              {/* Drag handle indicator */}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-white/30 rounded-full" />
             </SheetContent>
           </Sheet>
         </div>
