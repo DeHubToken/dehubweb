@@ -63,15 +63,13 @@ export function DraftsSheet({
         className="bg-white/10 backdrop-blur-2xl border-0 border-t border-white/20 rounded-t-3xl shadow-[0_-10px_60px_-15px_rgba(255,255,255,0.1)] max-h-[80vh] overflow-hidden flex flex-col"
       >
         <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-white/30 rounded-full" />
         
         <SheetHeader className="relative pb-4 border-b border-white/10 shrink-0">
           <div className="flex items-center justify-between">
             <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors">
               <X className="w-5 h-5 text-zinc-400" />
             </button>
-            <SheetTitle className="text-white font-semibold flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+            <SheetTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
               Drafts
             </SheetTitle>
             <button

@@ -115,7 +115,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
     <Drawer open={isOpen} onOpenChange={handleClose}>
-      <DrawerContent glass className="max-h-[90vh] max-h-[90dvh]">
+      <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
         <VisuallyHidden>
           <DrawerTitle>Create a post</DrawerTitle>
         </VisuallyHidden>
