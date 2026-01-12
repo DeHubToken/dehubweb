@@ -23,6 +23,7 @@ interface PostContentAreaProps {
   onClearFilter: (index: number) => void;
   onApplyCrop: (index: number, settings: CropSettings) => void;
   onClearCrop: (index: number) => void;
+  onApplyTrim: (index: number, trimStart: number, trimEnd: number) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -66,6 +67,7 @@ export function PostContentArea({
   onClearFilter,
   onApplyCrop,
   onClearCrop,
+  onApplyTrim,
   liveMode,
   canPost,
   destinations,
@@ -398,6 +400,7 @@ export function PostContentArea({
             onClearFilter={onClearFilter}
             onApplyCrop={onApplyCrop}
             onClearCrop={onClearCrop}
+            onApplyTrim={onApplyTrim}
           />
 
           {/* Link previews */}

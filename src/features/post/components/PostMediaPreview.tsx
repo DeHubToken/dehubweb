@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles, Crop } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles, Crop, Scissors } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,6 +10,7 @@ import { AudioVisualizer } from '@/components/app/audio';
 import { FilterEditor } from './FilterEditor';
 import { CropRotateEditor } from './CropRotateEditor';
 import { AudioTrimmer } from './AudioTrimmer';
+import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS } from '@/lib/filters';
 
 interface PostMediaPreviewProps {
@@ -24,6 +25,7 @@ interface PostMediaPreviewProps {
   onClearFilter?: (index: number) => void;
   onApplyCrop?: (index: number, settings: CropSettings) => void;
   onClearCrop?: (index: number) => void;
+  onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
@@ -64,6 +66,7 @@ export function PostMediaPreview({
   onClearFilter,
   onApplyCrop,
   onClearCrop,
+  onApplyTrim,
 }: PostMediaPreviewProps) {
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -73,6 +76,7 @@ export function PostMediaPreview({
   const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
+  const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
     index: number;
     file: File;
@@ -574,7 +578,7 @@ export function PostMediaPreview({
                     </div>
                   )}
                   
-                  {/* Top left: Filter + Crop buttons - liquid glass style */}
+                  {/* Top left: Filter + Crop + Trim buttons - liquid glass style */}
                   <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
                     {/* Filter button */}
                     <Tooltip>
@@ -608,6 +612,25 @@ export function PostMediaPreview({
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Crop & rotate</TooltipContent>
+                    </Tooltip>
+                    
+                    {/* Trim button */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => setVideoTrimmerIndex(index)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
+                            ${m.trimStart !== undefined || m.trimEnd !== undefined
+                              ? 'bg-purple-500/30 text-white backdrop-blur-xl border border-purple-400/40'
+                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
+                            }`}
+                        >
+                          <Scissors className="w-3 h-3 text-white" />
+                          Trim
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Trim video</TooltipContent>
                     </Tooltip>
                   </div>
                   
@@ -730,6 +753,21 @@ export function PostMediaPreview({
             });
             URL.revokeObjectURL(audioTrimmerData.url);
             setAudioTrimmerData(null);
+          }}
+        />
+      )}
+
+      {/* Video Trimmer Modal */}
+      {videoTrimmerIndex !== null && media[videoTrimmerIndex]?.type === 'video' && (
+        <VideoTrimmer
+          isOpen={true}
+          onClose={() => setVideoTrimmerIndex(null)}
+          videoUrl={media[videoTrimmerIndex].preview}
+          duration={media[videoTrimmerIndex].duration || 0}
+          fileName={media[videoTrimmerIndex].file.name}
+          onApply={(trimStart, trimEnd) => {
+            onApplyTrim?.(videoTrimmerIndex, trimStart, trimEnd);
+            setVideoTrimmerIndex(null);
           }}
         />
       )}

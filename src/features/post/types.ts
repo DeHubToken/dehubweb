@@ -28,6 +28,8 @@ export interface MediaFile {
   filterSettings?: FilterSettings;
   filterPresetId?: string;
   cropSettings?: CropSettings;
+  trimStart?: number;
+  trimEnd?: number;
 }
 
 export type Currency = 'USD' | 'DHB';
@@ -83,6 +85,7 @@ export interface PostFormActions {
   clearFilterFromMedia: (index: number) => void;
   applyCropToMedia: (index: number, settings: CropSettings) => void;
   clearCropFromMedia: (index: number) => void;
+  applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: () => void;

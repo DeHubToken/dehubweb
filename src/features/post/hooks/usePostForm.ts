@@ -258,6 +258,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     ));
   }, []);
 
+  const applyTrimToMedia = useCallback((index: number, trimStart: number, trimEnd: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, trimStart, trimEnd } : m
+    ));
+  }, []);
+
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -402,6 +408,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       clearFilterFromMedia,
       applyCropToMedia,
       clearCropFromMedia,
+      applyTrimToMedia,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,
