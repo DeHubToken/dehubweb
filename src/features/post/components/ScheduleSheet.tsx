@@ -95,22 +95,6 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
         }}
       />
       
-      {/* Fade gradients - using transparency instead of black */}
-      <div 
-        className="absolute inset-x-0 top-0 pointer-events-none z-20"
-        style={{
-          height: itemHeight * 2,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)'
-        }}
-      />
-      <div 
-        className="absolute inset-x-0 bottom-0 pointer-events-none z-20"
-        style={{
-          height: itemHeight * 2,
-          background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 40%, transparent 100%)'
-        }}
-      />
-      
       {/* Scrollable area */}
       <div
         ref={containerRef}
@@ -125,8 +109,9 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
       >
         {items.map((item, index) => {
           const distance = Math.abs(index - selectedIndex);
-          const opacity = distance === 0 ? 1 : distance === 1 ? 0.6 : distance === 2 ? 0.35 : 0.2;
-          const scale = distance === 0 ? 1 : distance === 1 ? 0.95 : 0.85;
+          // Smooth opacity falloff based on distance
+          const opacity = distance === 0 ? 1 : distance === 1 ? 0.45 : distance === 2 ? 0.25 : 0.12;
+          const scale = distance === 0 ? 1 : distance === 1 ? 0.92 : 0.85;
           
           return (
             <div
@@ -147,10 +132,7 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
                 }
               }}
             >
-              <span className={cn(
-                "text-xl font-medium transition-colors",
-                distance === 0 ? "text-white" : "text-white/50"
-              )}>
+              <span className="text-xl font-medium text-white">
                 {item}
               </span>
             </div>
