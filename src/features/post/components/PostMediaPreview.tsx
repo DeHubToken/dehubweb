@@ -308,16 +308,16 @@ export function PostMediaPreview({
                 key={index} 
                 className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
                   media.length === 1 
-                    ? 'w-full max-w-full' 
-                    : 'w-[280px] sm:w-[320px]'
+                    ? 'w-full max-w-[400px]' 
+                    : 'w-[200px] sm:w-[240px]'
                 }`}
               >
                 {m.type === 'image' ? (
-                  <div className="relative">
+                  <div className="relative flex items-center justify-center">
                     <img 
                       src={m.preview} 
                       alt="" 
-                      className="w-full h-[280px] sm:h-[320px] object-cover rounded-2xl" 
+                      className="w-full h-auto max-h-[240px] object-contain rounded-2xl" 
                       style={{ 
                         filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                         transform: generateCropTransform(m.cropSettings),
@@ -518,13 +518,13 @@ export function PostMediaPreview({
                       </Tooltip>
                     </div>
                   ) : (
-                    <div className="relative">
+                    <div className="relative flex items-center justify-center">
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
-                        className="w-full h-auto max-h-80 object-cover rounded-2xl"
+                        className="w-full h-auto max-h-[240px] object-contain rounded-2xl"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
