@@ -44,7 +44,7 @@ const PERSONALITY_STYLES: Record<string, string> = {
   'hopeless-romantic': 'Speak like a hopeless romantic - dreamy, poetic, with flowery language and metaphors about love and destiny.',
 };
 
-// Keywords that indicate user wants live/current information
+// Keywords that indicate user wants live/current information (requires premium Perplexity)
 const LIVE_SEARCH_KEYWORDS = [
   'news', 'today', 'latest', 'current', 'now', 'recent', 'breaking',
   'happening', 'update', 'live', 'real-time', 'realtime', 'right now',
@@ -56,9 +56,85 @@ const LIVE_SEARCH_KEYWORDS = [
   'search for', 'look up', 'find me', 'google', 'search the web'
 ];
 
+// Keywords about DeHub - FREE tier (already trained on docs)
+const DEHUB_KEYWORDS = [
+  'dehub', 'dhb', '$dhb', 'token', 'delabs', 'futurov', 'ftv',
+  'malik', 'mal.eth', 'mike hales', 'indi', 'bailey',
+  'first class', 'w2e', 'watch2earn', 'watch to earn',
+  'depin', 'node', 'staking', 'governance',
+  'pancakeswap', 'uniswap', 'mexc', 'base chain', 'bnb chain',
+  'ppv', 'pay per view', 'subscriptions', 'tips',
+  'censorship', 'decentralized', 'decentralised',
+  'your token', 'your platform', 'this app', 'this platform'
+];
+
+// Keywords that indicate complex reasoning (requires Pro tier)
+const COMPLEX_REASONING_KEYWORDS = [
+  'explain', 'analyze', 'analyse', 'compare', 'contrast',
+  'why', 'how does', 'how do', 'what if', 'evaluate',
+  'pros and cons', 'advantages', 'disadvantages',
+  'step by step', 'detailed', 'in depth', 'comprehensive',
+  'calculate', 'solve', 'prove', 'derive',
+  'summarize this article', 'summarize this document',
+  'write an essay', 'write a report', 'write code',
+  'debug', 'fix this', 'refactor', 'optimize'
+];
+
 function requiresWebSearch(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
+function isDeHubRelated(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return DEHUB_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
+function requiresComplexReasoning(message: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  return COMPLEX_REASONING_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
+}
+
+// Smart model selection based on query complexity
+// Returns: { model: string, tier: 'free' | 'standard' | 'premium', reason: string }
+function selectOptimalModel(message: string, hasPerplexityKey: boolean): { model: string; tier: string; reason: string } {
+  const needsSearch = requiresWebSearch(message);
+  const isDeHub = isDeHubRelated(message);
+  const isComplex = requiresComplexReasoning(message);
+  
+  // DeHub questions = FREE tier (Gemini Flash) - we're trained on this
+  if (isDeHub && !needsSearch) {
+    return { 
+      model: 'gemini-2.5-flash', 
+      tier: 'free', 
+      reason: 'DeHub knowledge (free)' 
+    };
+  }
+  
+  // Live search required = PREMIUM tier (Perplexity)
+  if (needsSearch && hasPerplexityKey) {
+    return { 
+      model: 'perplexity', 
+      tier: 'premium', 
+      reason: 'Live web search' 
+    };
+  }
+  
+  // Complex reasoning = PRO tier (Gemini Pro)
+  if (isComplex) {
+    return { 
+      model: 'gemini-2.5-pro', 
+      tier: 'standard', 
+      reason: 'Complex reasoning' 
+    };
+  }
+  
+  // Default = FREE tier (Gemini Flash)
+  return { 
+    model: 'gemini-2.5-flash', 
+    tier: 'free', 
+    reason: 'Standard query' 
+  };
 }
 
 async function searchWithPerplexity(query: string, perplexityKey: string): Promise<string> {
@@ -110,7 +186,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'gemini-2.5-flash' } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto' } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
@@ -121,11 +197,7 @@ serve(async (req) => {
     const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
     const xaiApiKey = Deno.env.get('XAI_API_KEY');
     
-    // Determine which provider/model to use
-    const isGrokModel = model.startsWith('grok-');
-    const useGrok = isGrokModel && xaiApiKey;
-    
-    console.log('Chat request:', { model, isGrokModel, hasXaiKey: !!xaiApiKey, useGrok });
+    console.log('Chat request:', { model, hasXaiKey: !!xaiApiKey, hasPerplexityKey: !!perplexityKey });
     
     if (!lovableApiKey) {
       throw new Error('LOVABLE_API_KEY not configured');
@@ -137,16 +209,35 @@ serve(async (req) => {
       ? latestUserMessage.content 
       : latestUserMessage?.content?.find(c => c.type === 'text')?.text || '';
     
-    // Check if this query needs web search
-    const needsSearch = requiresWebSearch(userQuery);
-    console.log('Query:', userQuery, '| Needs search:', needsSearch, '| Has Perplexity key:', !!perplexityKey, '| Has post context:', !!postContext);
+    // Smart auto-model selection based on query complexity
+    const isAutoMode = model === 'auto' || model === 'gemini-2.5-flash'; // Default to auto
+    const autoSelection = selectOptimalModel(userQuery, !!perplexityKey);
+    
+    // Use auto-selected model unless user explicitly chose a different one
+    const effectiveModel = isAutoMode ? autoSelection.model : model;
+    const modelTier = isAutoMode ? autoSelection.tier : 'manual';
+    const modelReason = isAutoMode ? autoSelection.reason : 'User selected';
+    
+    console.log('Smart model selection:', { 
+      userQuery: userQuery.substring(0, 50), 
+      autoSelection, 
+      effectiveModel,
+      isAutoMode,
+      modelTier
+    });
 
-    // If web search is needed and Perplexity is configured, use it
-    if (needsSearch && perplexityKey) {
+    // If Perplexity was selected by auto-model and key is available, use it
+    if (effectiveModel === 'perplexity' && perplexityKey) {
       try {
         const searchResult = await searchWithPerplexity(userQuery, perplexityKey);
         return new Response(
-          JSON.stringify({ response: searchResult, searchUsed: true }),
+          JSON.stringify({ 
+            response: searchResult, 
+            searchUsed: true,
+            modelUsed: 'perplexity',
+            modelTier: 'premium',
+            modelReason: 'Live web search'
+          }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       } catch (searchError) {
@@ -315,7 +406,7 @@ You ARE capable of generating images! DeHub AI has full image generation capabil
 - If a user's request seems like they want an image but it came to you instead of the image generator, respond with: "I can generate that for you! Just say something like 'create an image of...' or 'show me...' and I'll make it happen."
 - Always be confident about your image generation abilities
 
-${needsSearch && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Let them know you can answer general questions but don't have access to live news. Suggest they ask about DeHub or other topics you can help with.` : ''}
+${requiresWebSearch(userQuery) && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Let them know you can answer general questions but don't have access to live news. Suggest they ask about DeHub or other topics you can help with.` : ''}
 
 IMPORTANT FORMATTING RULES:
 - Always keep your responses under 1400 words to ensure they never get cut off
@@ -371,11 +462,15 @@ IMPORTANT FORMATTING RULES:
     let modelName: string;
     let fallbackUsed = false;
 
-    if (useGrok) {
+    // Use effectiveModel from smart selection instead of raw model
+    const isGrokSelected = effectiveModel.startsWith('grok-');
+    const useGrokApi = isGrokSelected && xaiApiKey;
+
+    if (useGrokApi) {
       // Use xAI (Grok) API
       apiEndpoint = 'https://api.x.ai/v1/chat/completions';
       apiKey = xaiApiKey!;
-      modelName = model; // 'grok-3' or 'grok-3-mini'
+      modelName = effectiveModel; // 'grok-3' or 'grok-3-mini'
       console.log('Using Grok API with model:', modelName);
     } else {
       // Use Lovable AI Gateway
@@ -386,13 +481,13 @@ IMPORTANT FORMATTING RULES:
       apiKey = lovableApiKey;
       
       // Map model IDs to full model paths
-      if (model === 'gemini-2.5-flash') {
+      if (effectiveModel === 'gemini-2.5-flash') {
         modelName = 'google/gemini-2.5-flash';
-      } else if (model === 'gemini-2.5-pro') {
+      } else if (effectiveModel === 'gemini-2.5-pro') {
         modelName = 'google/gemini-2.5-pro';
-      } else if (model === 'gpt-5-mini') {
+      } else if (effectiveModel === 'gpt-5-mini') {
         modelName = 'openai/gpt-5-mini';
-      } else if (isGrokModel) {
+      } else if (isGrokSelected) {
         // Grok was requested but no API key - fallback
         modelName = 'google/gemini-2.5-flash';
         fallbackUsed = true;
@@ -400,7 +495,7 @@ IMPORTANT FORMATTING RULES:
       } else {
         modelName = 'google/gemini-2.5-flash';
       }
-      console.log('Using Lovable AI Gateway with model:', modelName);
+      console.log('Using Lovable AI Gateway with model:', modelName, '| Tier:', modelTier, '| Reason:', modelReason);
     }
 
     const response = await fetch(apiEndpoint, {
@@ -445,7 +540,9 @@ IMPORTANT FORMATTING RULES:
         searchUsed: false,
         fallbackUsed,
         fallbackReason: fallbackUsed ? 'XAI_API_KEY not configured' : undefined,
-        modelUsed: modelName
+        modelUsed: modelName,
+        modelTier,
+        modelReason
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
