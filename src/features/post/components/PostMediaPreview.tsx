@@ -307,7 +307,9 @@ export function PostMediaPreview({
             {media.map((m, index) => (
               <div 
                 key={index} 
-                className="relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center h-[200px] sm:h-[240px]"
+                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
+                  m.type === 'video' ? 'aspect-video w-[356px] sm:w-[426px]' : 'h-[200px] sm:h-[240px]'
+                }`}
               >
                 {m.type === 'image' ? (
                   <div 
@@ -525,7 +527,7 @@ export function PostMediaPreview({
                     </div>
                   ) : (
                     <div 
-                      className="relative h-full flex items-center justify-center cursor-pointer"
+                      className="relative w-full h-full flex items-center justify-center cursor-pointer"
                       onClick={() => setFullscreenPreview({ 
                         index, 
                         src: m.preview, 
@@ -539,7 +541,7 @@ export function PostMediaPreview({
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
-                        className="h-full w-auto max-w-none object-contain rounded-2xl pointer-events-none"
+                        className="w-full h-full object-cover rounded-2xl pointer-events-none"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
