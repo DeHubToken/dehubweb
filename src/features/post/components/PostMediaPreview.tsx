@@ -77,7 +77,8 @@ export function PostMediaPreview({
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
-  const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings } | null>(null);
+  const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
+  const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
     index: number;
     file: File;
@@ -562,12 +563,20 @@ export function PostMediaPreview({
                           }}
                           onDoubleClick={(e) => {
                             e.stopPropagation();
+                            const video = videoRefs.current.get(index);
+                            const currentTime = video?.currentTime || 0;
+                            // Pause the thumbnail video
+                            if (video) {
+                              video.pause();
+                            }
+                            setPlayingVideoIndex(null);
                             setFullscreenPreview({ 
                               index, 
                               src: m.preview, 
                               type: 'video',
                               filterSettings: m.filterSettings,
-                              cropSettings: m.cropSettings
+                              cropSettings: m.cropSettings,
+                              currentTime
                             });
                           }}
                           className="absolute inset-0 flex items-center justify-center group cursor-pointer"
@@ -825,6 +834,7 @@ export function PostMediaPreview({
                 />
               ) : (
                 <video
+                  ref={fullscreenVideoRef}
                   src={fullscreenPreview.src}
                   className="max-w-full max-h-[90vh] object-contain rounded-lg"
                   style={{
@@ -833,6 +843,11 @@ export function PostMediaPreview({
                   }}
                   controls
                   autoPlay
+                  onLoadedMetadata={() => {
+                    if (fullscreenVideoRef.current && fullscreenPreview.currentTime) {
+                      fullscreenVideoRef.current.currentTime = fullscreenPreview.currentTime;
+                    }
+                  }}
                 />
               )}
             </motion.div>
