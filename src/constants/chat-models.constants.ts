@@ -14,27 +14,33 @@ export interface ChatModelOption {
 // Available chat models
 export const CHAT_MODEL_OPTIONS: ChatModelOption[] = [
   {
+    id: 'auto',
+    name: 'Auto',
+    description: 'Smart selection',
+    emoji: '✨'
+  },
+  {
     id: 'gemini-2.5-flash',
     name: 'Gemini Flash',
-    description: 'Fast & balanced',
+    description: 'Fast & free',
     emoji: '⚡'
   },
   {
     id: 'gemini-2.5-pro',
     name: 'Gemini Pro',
-    description: 'Best reasoning',
+    description: 'Best reasoning $$',
     emoji: '💎'
   },
   {
     id: 'gpt-5-mini',
     name: 'GPT-5 Mini',
-    description: 'OpenAI efficiency',
+    description: 'OpenAI $',
     emoji: '🧠'
   },
   {
     id: 'grok-4',
     name: 'Grok 4',
-    description: 'xAI flagship model',
+    description: 'xAI flagship $$$',
     emoji: '🔮'
   }
 ];
@@ -44,7 +50,7 @@ export function getChatModelById(id: string): ChatModelOption | undefined {
   return CHAT_MODEL_OPTIONS.find(m => m.id === id);
 }
 
-// Default model
-export const DEFAULT_CHAT_MODEL = 'gemini-2.5-flash';
+// Default model - AUTO for smart selection
+export const DEFAULT_CHAT_MODEL = 'auto';
 
 export type ChatModelKey = typeof CHAT_MODEL_OPTIONS[number]['id'];
