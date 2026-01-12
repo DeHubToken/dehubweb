@@ -702,6 +702,7 @@ export function PostMediaPreview({
           imageUrl={media[filterEditorIndex].type === 'video' 
             ? media[filterEditorIndex].thumbnail || media[filterEditorIndex].preview 
             : media[filterEditorIndex].preview}
+          isVideo={media[filterEditorIndex].type === 'video' && !media[filterEditorIndex].thumbnail}
           initialSettings={media[filterEditorIndex].filterSettings}
           initialPresetId={media[filterEditorIndex].filterPresetId}
           onApply={(settings, presetId) => {

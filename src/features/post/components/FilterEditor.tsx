@@ -14,6 +14,7 @@ interface FilterEditorProps {
   isOpen: boolean;
   onClose: () => void;
   imageUrl: string;
+  isVideo?: boolean;
   initialSettings?: FilterSettings;
   initialPresetId?: string;
   onApply: (settings: FilterSettings, presetId?: string) => void;
@@ -23,6 +24,7 @@ export function FilterEditor({
   isOpen,
   onClose,
   imageUrl,
+  isVideo = false,
   initialSettings,
   initialPresetId,
   onApply,
@@ -86,15 +88,27 @@ export function FilterEditor({
           </button>
         </div>
 
-        {/* Preview - constrained to fit any image fully */}
+        {/* Preview - constrained to fit any image/video fully */}
         <div className="flex items-center justify-center p-4 bg-black/50 shrink-0">
           <div className="w-full max-w-[min(90vw,400px)] flex items-center justify-center">
-            <img
-              src={imageUrl}
-              alt="Preview"
-              className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
-              style={{ filter: filterCSS }}
-            />
+            {isVideo ? (
+              <video
+                src={imageUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                style={{ filter: filterCSS }}
+              />
+            ) : (
+              <img
+                src={imageUrl}
+                alt="Preview"
+                className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                style={{ filter: filterCSS }}
+              />
+            )}
           </div>
         </div>
 
@@ -107,6 +121,7 @@ export function FilterEditor({
                   key={preset.id}
                   preset={preset}
                   imageUrl={imageUrl}
+                  isVideo={isVideo}
                   isSelected={selectedPresetId === preset.id}
                   onClick={() => handlePresetSelect(preset.id)}
                 />
