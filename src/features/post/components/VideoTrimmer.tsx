@@ -14,7 +14,7 @@ interface VideoTrimmerProps {
   onApply: (trimStart: number, trimEnd: number) => void;
 }
 
-const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const;
+const PLAYBACK_SPEEDS = [0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2] as const;
 type PlaybackSpeed = typeof PLAYBACK_SPEEDS[number];
 
 const ARROW_STEP = 0.5;
