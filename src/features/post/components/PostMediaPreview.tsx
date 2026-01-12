@@ -478,7 +478,15 @@ export function PostMediaPreview({
                   {/* Show thumbnail if set, otherwise show video */}
                   {m.thumbnail ? (
                     <div className="relative">
-                      <img src={m.thumbnail} alt="Video thumbnail" className="w-full h-auto max-h-80 object-cover rounded-2xl" />
+                      <img 
+                        src={m.thumbnail} 
+                        alt="Video thumbnail" 
+                        className="w-full h-auto max-h-80 object-cover rounded-2xl"
+                        style={{ 
+                          filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
+                          transform: generateCropTransform(m.cropSettings),
+                        }}
+                      />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center">
                           <Play className="w-6 h-6 text-white fill-white" />
@@ -506,6 +514,10 @@ export function PostMediaPreview({
                         }}
                         src={m.preview} 
                         className="w-full h-auto max-h-80 object-cover rounded-2xl"
+                        style={{ 
+                          filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
+                          transform: generateCropTransform(m.cropSettings),
+                        }}
                         onClick={() => {
                           const video = videoRefs.current.get(index);
                           if (!video || processingVideos.has(index)) return;
@@ -561,13 +573,52 @@ export function PostMediaPreview({
                       )}
                     </div>
                   )}
+                  
+                  {/* Top left: Filter + Crop buttons - liquid glass style */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                    {/* Filter button */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => setFilterEditorIndex(index)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                            bg-white/10 backdrop-blur-xl border border-white/20
+                            hover:bg-white/20 hover:border-white/40"
+                        >
+                          <Sparkles className="w-3 h-3 text-white" />
+                          Filter
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Edit filters</TooltipContent>
+                    </Tooltip>
+                    
+                    {/* Crop button */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          onClick={() => setCropEditorIndex(index)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+                            bg-white/10 backdrop-blur-xl border border-white/20
+                            hover:bg-white/20 hover:border-white/40"
+                        >
+                          <Crop className="w-3 h-3 text-white" />
+                          Crop
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>Crop & rotate</TooltipContent>
+                    </Tooltip>
+                  </div>
+                  
                   {m.duration && (
                     <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
                       {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
                       {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
                     </div>
                   )}
-                  {/* Video action buttons */}
+                  
+                  {/* Video action buttons - liquid glass style */}
                   <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
                     {/* Thumbnail button */}
                     <Tooltip>
@@ -575,31 +626,32 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={() => triggerThumbnailUpload(index)}
-                          className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.thumbnail 
-                              ? 'bg-blue-500 text-white' 
-                              : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                              ? 'bg-blue-500/30 text-white backdrop-blur-xl border border-blue-400/40' 
+                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
                             }`}
                         >
-                          <ImageIcon className="w-3 h-3 text-white" />
-                          {m.thumbnail ? 'Thumbnail' : 'Thumbnail'}
+                          <ImageIcon className="w-3 h-3" />
+                          Thumbnail
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Add custom thumbnail</TooltipContent>
                     </Tooltip>
+                    
                     {/* Music Video Toggle */}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
                           onClick={() => onToggleMusicVideo?.(index)}
-                          className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium transition-all
+                          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.isMusicVideo 
-                              ? 'bg-emerald-500 text-white' 
-                              : 'bg-black/70 text-zinc-300 hover:bg-black/90'
+                              ? 'bg-emerald-500/30 text-white backdrop-blur-xl border border-emerald-400/40' 
+                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
                             }`}
                         >
-                          <Music className="w-3 h-3 text-white" />
+                          <Music className="w-3 h-3" />
                           {m.isMusicVideo ? 'Music Video' : 'Music?'}
                         </button>
                       </TooltipTrigger>
@@ -619,12 +671,14 @@ export function PostMediaPreview({
         </motion.div>
       </AnimatePresence>
 
-      {/* Filter Editor Modal */}
-      {filterEditorIndex !== null && media[filterEditorIndex]?.type === 'image' && (
+      {/* Filter Editor Modal - works for both images and videos */}
+      {filterEditorIndex !== null && (media[filterEditorIndex]?.type === 'image' || media[filterEditorIndex]?.type === 'video') && (
         <FilterEditor
           isOpen={true}
           onClose={() => setFilterEditorIndex(null)}
-          imageUrl={media[filterEditorIndex].preview}
+          imageUrl={media[filterEditorIndex].type === 'video' 
+            ? media[filterEditorIndex].thumbnail || media[filterEditorIndex].preview 
+            : media[filterEditorIndex].preview}
           initialSettings={media[filterEditorIndex].filterSettings}
           initialPresetId={media[filterEditorIndex].filterPresetId}
           onApply={(settings, presetId) => {
@@ -634,12 +688,14 @@ export function PostMediaPreview({
         />
       )}
 
-      {/* Crop/Rotate Editor Modal */}
-      {cropEditorIndex !== null && media[cropEditorIndex]?.type === 'image' && (
+      {/* Crop/Rotate Editor Modal - works for both images and videos */}
+      {cropEditorIndex !== null && (media[cropEditorIndex]?.type === 'image' || media[cropEditorIndex]?.type === 'video') && (
         <CropRotateEditor
           isOpen={true}
           onClose={() => setCropEditorIndex(null)}
-          imageUrl={media[cropEditorIndex].preview}
+          imageUrl={media[cropEditorIndex].type === 'video' 
+            ? media[cropEditorIndex].thumbnail || media[cropEditorIndex].preview 
+            : media[cropEditorIndex].preview}
           initialSettings={media[cropEditorIndex].cropSettings}
           onApply={(settings) => {
             onApplyCrop?.(cropEditorIndex, settings);
