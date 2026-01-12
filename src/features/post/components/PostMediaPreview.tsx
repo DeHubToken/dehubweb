@@ -312,24 +312,22 @@ export function PostMediaPreview({
                 }`}
               >
                 {m.type === 'image' ? (
-                  <div 
-                    className="relative h-full flex items-center justify-center cursor-pointer"
-                    onClick={() => setFullscreenPreview({ 
-                      index, 
-                      src: m.preview, 
-                      type: 'image',
-                      filterSettings: m.filterSettings,
-                      cropSettings: m.cropSettings
-                    })}
-                  >
+                  <div className="relative h-full flex items-center justify-center">
                     <img 
                       src={m.preview} 
                       alt="" 
-                      className="h-full w-auto max-w-none object-contain rounded-2xl" 
+                      className="h-full w-auto max-w-none object-contain rounded-2xl cursor-pointer" 
                       style={{ 
                         filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                         transform: generateCropTransform(m.cropSettings),
                       }}
+                      onClick={() => setFullscreenPreview({ 
+                        index, 
+                        src: m.preview, 
+                        type: 'image',
+                        filterSettings: m.filterSettings,
+                        cropSettings: m.cropSettings
+                      })}
                     />
                   
                   {/* Top left: Filter + Crop + Audio buttons */}
@@ -339,7 +337,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => setFilterEditorIndex(index)}
+                          onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
@@ -356,7 +354,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => setCropEditorIndex(index)}
+                          onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
@@ -372,7 +370,7 @@ export function PostMediaPreview({
                     {recordingIndex === index ? (
                       // Recording in progress
                       <button
-                        onClick={stopRecording}
+                        onClick={(e) => { e.stopPropagation(); stopRecording(); }}
                         className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-full text-white text-xs font-medium animate-pulse"
                       >
                         <Square className="w-3 h-3 fill-white" />
@@ -380,9 +378,9 @@ export function PostMediaPreview({
                       </button>
                     ) : m.audio ? (
                       // Audio attached - show playback controls
-                      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full">
+                      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full" onClick={(e) => e.stopPropagation()}>
                         <button
-                          onClick={() => playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index)}
+                          onClick={(e) => { e.stopPropagation(); playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index); }}
                           className="w-6 h-6 flex items-center justify-center text-white"
                         >
                           {playingIndex === index ? (
@@ -393,7 +391,7 @@ export function PostMediaPreview({
                         </button>
                         <span className="text-white text-xs">{m.audio.duration}s</span>
                         <button
-                          onClick={() => onRemoveAudio(index)}
+                          onClick={(e) => { e.stopPropagation(); onRemoveAudio(index); }}
                           className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-300"
                         >
                           <Trash2 className="w-3 h-3" />
@@ -403,7 +401,7 @@ export function PostMediaPreview({
                       // Show upload/record options with liquid glass effect - icon only on mobile
                       <>
                         <button
-                          onClick={() => triggerAudioUpload(index)}
+                          onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                             bg-gradient-to-br from-white/20 via-white/10 to-white/5
                             backdrop-blur-xl border border-white/20
@@ -414,7 +412,7 @@ export function PostMediaPreview({
                           <Upload className="w-3 h-3" />
                         </button>
                         <button
-                          onClick={() => handleStartRecording(index)}
+                          onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                             bg-gradient-to-br from-white/20 via-white/10 to-white/5
                             backdrop-blur-xl border border-white/20
@@ -425,7 +423,7 @@ export function PostMediaPreview({
                           <Mic className="w-3 h-3 text-white" />
                         </button>
                         <button
-                          onClick={() => setShowAudioOptions(null)}
+                          onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                             bg-gradient-to-br from-white/20 via-white/10 to-white/5
                             backdrop-blur-xl border border-white/20
@@ -438,7 +436,7 @@ export function PostMediaPreview({
                     ) : (
                       // No audio - show audio button
                       <button
-                        onClick={() => setShowAudioOptions(index)}
+                        onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                           bg-white/10 backdrop-blur-xl border border-white/20
                           hover:bg-white/20 hover:border-white/40"
@@ -526,16 +524,7 @@ export function PostMediaPreview({
                       </Tooltip>
                     </div>
                   ) : (
-                    <div 
-                      className="relative w-full h-full flex items-center justify-center cursor-pointer"
-                      onClick={() => setFullscreenPreview({ 
-                        index, 
-                        src: m.preview, 
-                        type: 'video',
-                        filterSettings: m.filterSettings,
-                        cropSettings: m.cropSettings
-                      })}
-                    >
+                    <div className="relative w-full h-full flex items-center justify-center">
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
@@ -551,11 +540,12 @@ export function PostMediaPreview({
                           if (playingVideoIndex === index) setPlayingVideoIndex(null);
                         }}
                       />
-                      {/* Play/Pause overlay */}
+                      {/* Play/Pause overlay - double click for fullscreen */}
                       {!processingVideos.has(index) && (
                         <button
                           type="button"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             const video = videoRefs.current.get(index);
                             if (!video) return;
                             
@@ -570,7 +560,17 @@ export function PostMediaPreview({
                               setPlayingVideoIndex(index);
                             }
                           }}
-                          className="absolute inset-0 flex items-center justify-center group"
+                          onDoubleClick={(e) => {
+                            e.stopPropagation();
+                            setFullscreenPreview({ 
+                              index, 
+                              src: m.preview, 
+                              type: 'video',
+                              filterSettings: m.filterSettings,
+                              cropSettings: m.cropSettings
+                            });
+                          }}
+                          className="absolute inset-0 flex items-center justify-center group cursor-pointer"
                         >
                           <div className={`w-12 h-12 rounded-full bg-black/60 flex items-center justify-center transition-opacity ${
                             playingVideoIndex === index ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
@@ -593,7 +593,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => setFilterEditorIndex(index)}
+                          onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
                           className="flex items-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
@@ -610,7 +610,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => setCropEditorIndex(index)}
+                          onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
                           className="flex items-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
@@ -627,7 +627,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => setVideoTrimmerIndex(index)}
+                          onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
                           className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.trimStart !== undefined || m.trimEnd !== undefined
                               ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40'
@@ -656,7 +656,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => triggerThumbnailUpload(index)}
+                          onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
                           className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.thumbnail 
                               ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40' 
@@ -675,7 +675,7 @@ export function PostMediaPreview({
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          onClick={() => onToggleMusicVideo?.(index)}
+                          onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
                           className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105
                             ${m.isMusicVideo 
                               ? 'bg-emerald-500/30 text-white backdrop-blur-xl border border-emerald-400/40' 
