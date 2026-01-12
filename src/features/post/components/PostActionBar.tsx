@@ -25,6 +25,7 @@ interface PostActionBarProps {
   isEnhancing: boolean;
   hasText: boolean;
   hasImage?: boolean;
+  hasVideo?: boolean;
 }
 
 export function PostActionBar({
@@ -43,6 +44,7 @@ export function PostActionBar({
   isEnhancing,
   hasText,
   hasImage,
+  hasVideo,
 }: PostActionBarProps) {
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
@@ -137,7 +139,7 @@ export function PostActionBar({
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
         
-        {!isLive && (
+        {!isLive && !hasVideo && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
