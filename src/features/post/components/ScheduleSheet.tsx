@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, startOfToday } from 'date-fns';
 
@@ -27,6 +26,191 @@ const to24Hour = (hour12: number, period: 'AM' | 'PM') => {
   }
   return hour12 === 12 ? 12 : hour12 + 12;
 };
+
+// iOS-style wheel column component
+interface WheelColumnProps {
+  items: (string | number)[];
+  selectedIndex: number;
+  onSelect: (index: number) => void;
+  itemHeight?: number;
+  visibleItems?: number;
+}
+
+function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleItems = 5 }: WheelColumnProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const centerOffset = Math.floor(visibleItems / 2);
+  const containerHeight = itemHeight * visibleItems;
+
+  // Scroll to selected item on mount and when selection changes
+  useEffect(() => {
+    if (containerRef.current && !isScrolling) {
+      containerRef.current.scrollTop = selectedIndex * itemHeight;
+    }
+  }, [selectedIndex, itemHeight, isScrolling]);
+
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current) return;
+    
+    setIsScrolling(true);
+    
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (!containerRef.current) return;
+      
+      const scrollTop = containerRef.current.scrollTop;
+      const newIndex = Math.round(scrollTop / itemHeight);
+      const clampedIndex = Math.max(0, Math.min(newIndex, items.length - 1));
+      
+      // Snap to nearest item
+      containerRef.current.scrollTo({
+        top: clampedIndex * itemHeight,
+        behavior: 'smooth'
+      });
+      
+      if (clampedIndex !== selectedIndex) {
+        onSelect(clampedIndex);
+      }
+      
+      setIsScrolling(false);
+    }, 100);
+  }, [itemHeight, items.length, selectedIndex, onSelect]);
+
+  return (
+    <div 
+      className="relative overflow-hidden"
+      style={{ height: containerHeight }}
+    >
+      {/* Selection highlight bar */}
+      <div 
+        className="absolute left-0 right-0 pointer-events-none z-10 bg-white/10 rounded-lg"
+        style={{ 
+          top: centerOffset * itemHeight,
+          height: itemHeight,
+        }}
+      />
+      
+      {/* Fade gradients */}
+      <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/80 to-transparent pointer-events-none z-20" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent pointer-events-none z-20" />
+      
+      {/* Scrollable area */}
+      <div
+        ref={containerRef}
+        className="h-full overflow-y-auto scrollbar-hide snap-y snap-mandatory"
+        style={{ 
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          paddingTop: centerOffset * itemHeight,
+          paddingBottom: centerOffset * itemHeight,
+        }}
+        onScroll={handleScroll}
+      >
+        {items.map((item, index) => {
+          const distance = Math.abs(index - selectedIndex);
+          const opacity = distance === 0 ? 1 : distance === 1 ? 0.5 : distance === 2 ? 0.3 : 0.15;
+          const scale = distance === 0 ? 1 : distance === 1 ? 0.9 : 0.8;
+          
+          return (
+            <div
+              key={index}
+              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-150"
+              style={{ 
+                height: itemHeight,
+                opacity,
+                transform: `scale(${scale})`,
+              }}
+              onClick={() => {
+                onSelect(index);
+                if (containerRef.current) {
+                  containerRef.current.scrollTo({
+                    top: index * itemHeight,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+            >
+              <span className={cn(
+                "text-xl font-medium transition-colors",
+                distance === 0 ? "text-white" : "text-zinc-400"
+              )}>
+                {item}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Wheel Time Picker component
+interface WheelTimePickerProps {
+  hour: number;
+  minute: number;
+  period: 'AM' | 'PM';
+  onHourChange: (hour: number) => void;
+  onMinuteChange: (minute: number) => void;
+  onPeriodChange: (period: 'AM' | 'PM') => void;
+}
+
+function WheelTimePicker({ 
+  hour, 
+  minute, 
+  period, 
+  onHourChange, 
+  onMinuteChange, 
+  onPeriodChange 
+}: WheelTimePickerProps) {
+  const hours = Array.from({ length: 12 }, (_, i) => i + 1);
+  const minutes = Array.from({ length: 60 }, (_, i) => i);
+  const periods: ('AM' | 'PM')[] = ['AM', 'PM'];
+
+  const hourIndex = hours.indexOf(hour);
+  const minuteIndex = minute;
+  const periodIndex = periods.indexOf(period);
+
+  return (
+    <div className="flex items-center justify-center gap-2 px-4 py-2">
+      {/* Hour wheel */}
+      <div className="flex-1 max-w-[80px]">
+        <WheelColumn
+          items={hours}
+          selectedIndex={hourIndex >= 0 ? hourIndex : 0}
+          onSelect={(index) => onHourChange(hours[index])}
+        />
+      </div>
+      
+      {/* Separator */}
+      <span className="text-2xl font-bold text-white">:</span>
+      
+      {/* Minute wheel */}
+      <div className="flex-1 max-w-[80px]">
+        <WheelColumn
+          items={minutes.map(m => String(m).padStart(2, '0'))}
+          selectedIndex={minuteIndex}
+          onSelect={(index) => onMinuteChange(index)}
+        />
+      </div>
+      
+      {/* AM/PM wheel */}
+      <div className="flex-1 max-w-[80px]">
+        <WheelColumn
+          items={periods}
+          selectedIndex={periodIndex}
+          onSelect={(index) => onPeriodChange(periods[index])}
+          visibleItems={3}
+        />
+      </div>
+    </div>
+  );
+}
+
 
 export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: ScheduleSheetProps) {
   const today = startOfToday();
@@ -169,75 +353,21 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             })}
           </div>
 
-          {/* Time Picker with Sliders */}
+          {/* iOS-style Time Wheel Picker */}
           <div className="border-t border-white/10 pt-6">
-            <div className="flex items-center gap-2 mb-6 px-2">
+            <div className="flex items-center gap-2 mb-4 px-2">
               <Clock className="w-4 h-4 text-zinc-400" />
               <span className="text-sm text-zinc-400">Select time</span>
-              <span className="ml-auto text-lg font-semibold text-white">
-                {formatTimeDisplay()}
-              </span>
             </div>
             
-            <div className="space-y-6 px-2">
-              {/* Hour Slider */}
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <label className="text-xs text-zinc-500">Hour</label>
-                  <span className="text-sm font-medium text-white">{selectedHour12}</span>
-                </div>
-                <Slider
-                  value={[selectedHour12]}
-                  onValueChange={(value) => setSelectedHour12(value[0])}
-                  min={1}
-                  max={12}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Minute Slider */}
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <label className="text-xs text-zinc-500">Minute</label>
-                  <span className="text-sm font-medium text-white">{String(selectedMinute).padStart(2, '0')}</span>
-                </div>
-                <Slider
-                  value={[selectedMinute]}
-                  onValueChange={(value) => setSelectedMinute(value[0])}
-                  min={0}
-                  max={55}
-                  step={5}
-                  className="w-full"
-                />
-              </div>
-
-              {/* AM/PM Toggle */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setSelectedPeriod('AM')}
-                  className={cn(
-                    "flex-1 py-3 rounded-xl text-sm font-semibold transition-all",
-                    selectedPeriod === 'AM'
-                      ? "bg-white text-black"
-                      : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
-                  )}
-                >
-                  AM
-                </button>
-                <button
-                  onClick={() => setSelectedPeriod('PM')}
-                  className={cn(
-                    "flex-1 py-3 rounded-xl text-sm font-semibold transition-all",
-                    selectedPeriod === 'PM'
-                      ? "bg-white text-black"
-                      : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
-                  )}
-                >
-                  PM
-                </button>
-              </div>
-            </div>
+            <WheelTimePicker
+              hour={selectedHour12}
+              minute={selectedMinute}
+              period={selectedPeriod}
+              onHourChange={setSelectedHour12}
+              onMinuteChange={setSelectedMinute}
+              onPeriodChange={setSelectedPeriod}
+            />
           </div>
 
           {/* Preview */}
