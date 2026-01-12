@@ -26,6 +26,7 @@ interface PostActionBarProps {
   hasText: boolean;
   hasImage?: boolean;
   hasVideo?: boolean;
+  isScheduled?: boolean;
 }
 
 export function PostActionBar({
@@ -45,6 +46,7 @@ export function PostActionBar({
   hasText,
   hasImage,
   hasVideo,
+  isScheduled,
 }: PostActionBarProps) {
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
@@ -363,10 +365,14 @@ export function PostActionBar({
             "rounded-full px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
             isLive 
               ? "bg-red-500 text-white hover:bg-red-600" 
-              : "bg-white text-black hover:bg-zinc-200"
+              : isScheduled
+                ? "bg-amber-500 text-black hover:bg-amber-400"
+                : "bg-white text-black hover:bg-zinc-200"
           )}
         >
-          <span className="hidden sm:inline">{isLive ? 'Go Live' : 'Post'}</span>
+          <span className="hidden sm:inline">
+            {isLive ? 'Go Live' : isScheduled ? 'Schedule' : 'Post'}
+          </span>
           {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
         </Button>
       </div>

@@ -3,10 +3,46 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
+import type { Draft } from '../components/DraftsSheet';
+
+// Storage key for drafts
+const DRAFTS_STORAGE_KEY = 'post_drafts';
+
+// Load drafts from localStorage
+const loadDrafts = (): Draft[] => {
+  try {
+    const stored = localStorage.getItem(DRAFTS_STORAGE_KEY);
+    if (stored) {
+      const drafts = JSON.parse(stored);
+      // Convert date strings back to Date objects
+      return drafts.map((d: any) => ({ ...d, createdAt: new Date(d.createdAt) }));
+    }
+  } catch (e) {
+    console.error('Failed to load drafts:', e);
+  }
+  return [];
+};
+
+// Save drafts to localStorage
+const saveDrafts = (drafts: Draft[]) => {
+  try {
+    localStorage.setItem(DRAFTS_STORAGE_KEY, JSON.stringify(drafts));
+  } catch (e) {
+    console.error('Failed to save drafts:', e);
+  }
+};
 
 interface UsePostFormReturn {
-  state: PostFormState;
-  actions: PostFormActions;
+  state: PostFormState & {
+    scheduledDate: Date | null;
+    drafts: Draft[];
+  };
+  actions: PostFormActions & {
+    setScheduledDate: (date: Date | null) => void;
+    saveDraft: () => void;
+    loadDraft: (draft: Draft) => void;
+    deleteDraft: (id: string) => void;
+  };
   computed: PostFormComputed;
   refs: {
     imageInputRef: React.RefObject<HTMLInputElement>;
@@ -34,6 +70,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [tokenAmount, setTokenAmount] = useState('');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
+  const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -349,15 +387,51 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setTokenContract('');
     setTokenAmount('');
     setLiveMode(null);
+    setScheduledDate(null);
   }, []);
+
+  // Drafts actions
+  const saveDraft = useCallback(() => {
+    const newDraft: Draft = {
+      id: Date.now().toString(),
+      text,
+      createdAt: new Date(),
+      hasImage: hasImage,
+      hasVideo: hasVideo,
+      hasAudio: hasAudio,
+    };
+    const updatedDrafts = [newDraft, ...drafts].slice(0, 10); // Keep max 10 drafts
+    setDrafts(updatedDrafts);
+    saveDrafts(updatedDrafts);
+  }, [text, hasImage, hasVideo, hasAudio, drafts]);
+
+  const loadDraft = useCallback((draft: Draft) => {
+    setText(draft.text);
+    // Update editor content
+    if (editorRef.current) {
+      editorRef.current.innerText = draft.text;
+    }
+  }, []);
+
+  const deleteDraft = useCallback((id: string) => {
+    const updatedDrafts = drafts.filter(d => d.id !== id);
+    setDrafts(updatedDrafts);
+    saveDrafts(updatedDrafts);
+  }, [drafts]);
 
   const handlePost = useCallback(() => {
     console.log('Posting to:', destinations);
-    console.log('Content:', { text, media, isSubscribersOnly, liveMode });
+    console.log('Content:', { text, media, isSubscribersOnly, liveMode, scheduledDate });
+    
+    if (scheduledDate) {
+      toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`);
+    } else {
+      toast.success('Post published!');
+    }
     
     resetForm();
     onClose();
-  }, [destinations, text, media, isSubscribersOnly, liveMode, resetForm, onClose]);
+  }, [destinations, text, media, isSubscribersOnly, liveMode, scheduledDate, resetForm, onClose]);
 
   return {
     state: {
@@ -377,6 +451,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       tokenAmount,
       liveMode,
       isEnhancing,
+      scheduledDate,
+      drafts,
     },
     actions: {
       setText,
@@ -413,6 +489,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       insertFormatting,
       handlePost,
       resetForm,
+      setScheduledDate,
+      saveDraft,
+      loadDraft,
+      deleteDraft,
     },
     computed: {
       hasVideo,
