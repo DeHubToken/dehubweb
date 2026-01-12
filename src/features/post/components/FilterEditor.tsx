@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { X, ChevronDown, ChevronUp, RotateCcw, Check } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { X, ChevronDown, ChevronUp, RotateCcw, Check, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,6 +9,31 @@ import { FilterSlider } from './FilterSlider';
 import { generateFilterCSS, getDefaultSettings } from '@/lib/filters';
 import { FILTER_PRESETS, DEFAULT_FILTER_SETTINGS } from '../types/filters';
 import type { FilterSettings } from '../types/filters';
+
+// Extract a single frame from video as thumbnail
+const extractVideoFrame = (videoUrl: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.preload = 'metadata';
+    video.src = videoUrl;
+    video.currentTime = 0.1;
+    video.onloadeddata = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 320;
+        canvas.height = video.videoHeight || 180;
+        canvas.getContext('2d')?.drawImage(video, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      } catch {
+        resolve(videoUrl); // Fallback to original URL
+      }
+    };
+    video.onerror = () => resolve(videoUrl);
+    // Timeout fallback
+    setTimeout(() => resolve(videoUrl), 3000);
+  });
+};
 
 interface FilterEditorProps {
   isOpen: boolean;
@@ -36,8 +61,25 @@ export function FilterEditor({
     initialPresetId || 'normal'
   );
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [videoThumbnail, setVideoThumbnail] = useState<string | null>(null);
+  const [showVideoPreview, setShowVideoPreview] = useState(false);
 
   const filterCSS = useMemo(() => generateFilterCSS(settings), [settings]);
+
+  // Extract video thumbnail on mount for video files
+  useEffect(() => {
+    if (isVideo && imageUrl && isOpen) {
+      setVideoThumbnail(null);
+      setShowVideoPreview(false);
+      extractVideoFrame(imageUrl).then(setVideoThumbnail);
+    }
+  }, [isVideo, imageUrl, isOpen]);
+
+  // Auto-play video when filter is selected
+  const handlePresetSelectWithPreview = (presetId: string) => {
+    handlePresetSelect(presetId);
+    if (isVideo) setShowVideoPreview(true);
+  };
 
   const handlePresetSelect = (presetId: string) => {
     const preset = FILTER_PRESETS.find((p) => p.id === presetId);
@@ -92,15 +134,34 @@ export function FilterEditor({
         <div className="flex items-center justify-center p-4 bg-black/50 shrink-0">
           <div className="w-full max-w-[min(90vw,400px)] flex items-center justify-center">
             {isVideo ? (
-              <video
-                src={imageUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
-                style={{ filter: filterCSS }}
-              />
+              showVideoPreview ? (
+                <video
+                  src={imageUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                  style={{ filter: filterCSS }}
+                />
+              ) : (
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => setShowVideoPreview(true)}
+                >
+                  <img
+                    src={videoThumbnail || imageUrl}
+                    alt="Video preview"
+                    className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+                    style={{ filter: filterCSS }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors rounded-lg">
+                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+                    </div>
+                  </div>
+                </div>
+              )
             ) : (
               <img
                 src={imageUrl}
@@ -121,9 +182,9 @@ export function FilterEditor({
                   key={preset.id}
                   preset={preset}
                   imageUrl={imageUrl}
-                  isVideo={isVideo}
+                  thumbnailUrl={isVideo ? (videoThumbnail || undefined) : undefined}
                   isSelected={selectedPresetId === preset.id}
-                  onClick={() => handlePresetSelect(preset.id)}
+                  onClick={() => handlePresetSelectWithPreview(preset.id)}
                 />
               ))}
             </div>
