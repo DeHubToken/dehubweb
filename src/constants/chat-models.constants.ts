@@ -16,7 +16,7 @@ export const CHAT_MODEL_OPTIONS: ChatModelOption[] = [
   {
     id: 'auto',
     name: 'Auto',
-    description: 'Smart selection',
+    description: 'DeHub trained model',
     emoji: '✨'
   },
   {

@@ -18,12 +18,10 @@ export const VOICE_PREFERENCES: Record<string, VoicePreference> = {
   female: {
     id: 'female',
     name: 'Female',
-    description: 'Samantha, Google UK Female',
+    description: 'Samantha, Zira',
     emoji: '👩',
     preferredVoiceNames: [
       'Samantha',
-      'Google UK English Female',
-      'Google US English',
       'Microsoft Zira - English (United States)',
     ],
     preferFemale: true,
@@ -31,12 +29,11 @@ export const VOICE_PREFERENCES: Record<string, VoicePreference> = {
   male: {
     id: 'male',
     name: 'Male',
-    description: 'Alex, Google UK Male',
+    description: 'Alex, Daniel',
     emoji: '👨',
     preferredVoiceNames: [
       'Alex',
       'Daniel',
-      'Google UK English Male',
       'Microsoft David - English (United States)',
     ],
     preferFemale: false,
