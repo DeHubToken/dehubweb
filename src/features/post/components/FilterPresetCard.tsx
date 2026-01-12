@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 interface FilterPresetCardProps {
   preset: FilterPreset;
   imageUrl: string;
-  isVideo?: boolean;
+  thumbnailUrl?: string; // For videos, use extracted frame instead of video element
   isSelected: boolean;
   onClick: () => void;
 }
@@ -13,7 +13,7 @@ interface FilterPresetCardProps {
 export function FilterPresetCard({
   preset,
   imageUrl,
-  isVideo = false,
+  thumbnailUrl,
   isSelected,
   onClick,
 }: FilterPresetCardProps) {
@@ -37,24 +37,13 @@ export function FilterPresetCard({
         )}
         style={{ maxWidth: '80px', maxHeight: '60px' }}
       >
-        {isVideo ? (
-          <video
-            src={imageUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-auto h-auto max-w-[80px] max-h-[60px] object-contain"
-            style={{ filter: filterCSS }}
-          />
-        ) : (
-          <img
-            src={imageUrl}
-            alt={preset.name}
-            className="w-auto h-auto max-w-[80px] max-h-[60px] object-contain"
-            style={{ filter: filterCSS }}
-          />
-        )}
+        {/* Always use img for preset cards - CSS filters work identically */}
+        <img
+          src={thumbnailUrl || imageUrl}
+          alt={preset.name}
+          className="w-auto h-auto max-w-[80px] max-h-[60px] object-contain"
+          style={{ filter: filterCSS }}
+        />
       </div>
       
       {/* Label */}
