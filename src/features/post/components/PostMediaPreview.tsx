@@ -296,26 +296,33 @@ export function PostMediaPreview({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="mt-2 flex flex-wrap gap-2"
+          className="mt-2"
         >
-          {media.map((m, index) => (
-            <div 
-              key={index} 
-              className={`relative rounded-2xl overflow-hidden bg-zinc-900 ${
-                media.length === 1 ? 'w-full max-w-[min(100%,320px)] sm:max-w-[min(100%,400px)]' : 'w-[calc(50%-0.25rem)] max-w-[200px]'
-              }`}
-            >
-              {m.type === 'image' ? (
-                <div className="relative">
-                  <img 
-                    src={m.preview} 
-                    alt="" 
-                    className="w-full h-auto max-h-[40vh] sm:max-h-[50vh] object-contain rounded-2xl" 
-                    style={{ 
-                      filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
-                      transform: generateCropTransform(m.cropSettings),
-                    }}
-                  />
+          {/* Horizontal scroll container */}
+          <div 
+            className="flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 -mb-2"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {media.map((m, index) => (
+              <div 
+                key={index} 
+                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
+                  media.length === 1 
+                    ? 'w-full max-w-full' 
+                    : 'w-[280px] sm:w-[320px]'
+                }`}
+              >
+                {m.type === 'image' ? (
+                  <div className="relative">
+                    <img 
+                      src={m.preview} 
+                      alt="" 
+                      className="w-full h-[280px] sm:h-[320px] object-cover rounded-2xl" 
+                      style={{ 
+                        filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
+                        transform: generateCropTransform(m.cropSettings),
+                      }}
+                    />
                   
                   {/* Top left: Filter + Crop + Audio buttons */}
                   <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
@@ -691,6 +698,7 @@ export function PostMediaPreview({
               </button>
             </div>
           ))}
+          </div>
         </motion.div>
       </AnimatePresence>
 
