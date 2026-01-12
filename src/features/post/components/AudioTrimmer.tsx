@@ -285,7 +285,7 @@ export function AudioTrimmer({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
+      <DrawerContent hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
         <DrawerTitle className="sr-only">Trim Audio</DrawerTitle>
         
         {/* Header */}
