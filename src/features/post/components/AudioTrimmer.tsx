@@ -285,43 +285,32 @@ export function AudioTrimmer({
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="bg-zinc-950/95 backdrop-blur-xl border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
+      <DrawerContent className="bg-zinc-950 border-zinc-800 max-h-[90vh] overflow-hidden flex flex-col">
         <DrawerTitle className="sr-only">Trim Audio</DrawerTitle>
         
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
           <button
             onClick={onClose}
             className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <div className="flex items-center gap-2">
-            <Scissors className="w-4 h-4 text-white" />
-            <span className="text-white font-semibold">Trim Audio</span>
-          </div>
+          <span className="text-white font-semibold">Trim Audio</span>
           <button
             onClick={handleApply}
             disabled={isLoading || isProcessing || selectionDuration > maxDuration}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
-              bg-gradient-to-br from-white/20 via-white/10 to-white/5
-              backdrop-blur-xl border border-white/20
-              shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
-              hover:shadow-[0_8px_32px_rgba(168,85,247,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]
-              hover:border-purple-400/40 hover:from-purple-500/20 hover:via-purple-400/10 hover:to-transparent
+              bg-white/10 backdrop-blur-xl border border-white/20
+              hover:bg-white/20 hover:border-white/40
               disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {isProcessing ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span className="hidden sm:inline">Processing</span>
-              </>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              <>
-                <Check className="w-4 h-4" />
-                <span className="hidden sm:inline">Apply</span>
-              </>
+              <Check className="w-4 h-4" />
             )}
+            Apply
           </button>
         </div>
 
