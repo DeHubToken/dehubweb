@@ -382,37 +382,6 @@ export function CropRotateEditor({
     return transforms.length > 0 ? transforms.join(' ') : undefined;
   }, [settings]);
 
-  // Calculate crop overlay based on image vs selected aspect ratio
-  const cropOverlay = useMemo(() => {
-    const selectedRatio = ASPECT_RATIOS.find(r => r.id === settings.aspectRatio);
-    
-    if (!selectedRatio || imageSize.width === 0 || imageSize.height === 0) {
-      return null;
-    }
-    
-    const imageRatio = imageSize.width / imageSize.height;
-    
-    // Account for rotation swapping dimensions
-    const isRotated90 = settings.rotation === 90 || settings.rotation === 270;
-    const effectiveTargetRatio = isRotated90 ? 1 / selectedRatio.ratio : selectedRatio.ratio;
-    
-    if (Math.abs(imageRatio - effectiveTargetRatio) < 0.01) {
-      return null; // Ratios match, no crop needed
-    }
-    
-    if (imageRatio > effectiveTargetRatio) {
-      // Image is wider than target - crop sides
-      const visibleWidth = (effectiveTargetRatio / imageRatio) * 100;
-      const sideWidth = (100 - visibleWidth) / 2;
-      return { type: 'horizontal' as const, sideWidth };
-    } else {
-      // Image is taller than target - crop top/bottom
-      const visibleHeight = (imageRatio / effectiveTargetRatio) * 100;
-      const topBottom = (100 - visibleHeight) / 2;
-      return { type: 'vertical' as const, topBottom };
-    }
-  }, [settings.aspectRatio, settings.rotation, imageSize]);
-
   const hasZoomPanChanges = zoom !== 1 || pan.x !== 0 || pan.y !== 0;
   const hasChanges = settings.rotation !== 0 || settings.flipX || settings.flipY || settings.aspectRatio !== '1:1' || hasZoomPanChanges;
 
@@ -463,7 +432,7 @@ export function CropRotateEditor({
           </button>
         </div>
 
-        {/* Preview - FIXED height container with crop overlay */}
+        {/* Preview - Container sized to match selected aspect ratio */}
         <div 
           ref={containerRef}
           className="flex flex-col items-center justify-center p-4 bg-black/50 shrink-0 gap-3"
@@ -471,11 +440,20 @@ export function CropRotateEditor({
           <div 
             ref={imageContainerRef}
             className={cn(
-              "relative w-full max-w-[min(90vw,400px)] h-[30vh] flex items-center justify-center overflow-hidden rounded-lg",
+              "relative flex items-center justify-center overflow-hidden rounded-lg",
               dragging && getCursorStyle(dragging),
               isPanning && "cursor-grabbing",
               zoom > 1 && !isPanning && !dragging && "cursor-grab"
             )}
+            style={{
+              // Size container based on selected aspect ratio
+              ...(settings.aspectRatio === '1:1' 
+                ? { width: 'min(90vw, 280px)', height: 'min(90vw, 280px)' }
+                : settings.aspectRatio === '4:5'
+                  ? { width: 'min(75vw, 240px)', height: 'min(93.75vw, 300px)' }
+                  : { width: 'min(90vw, 320px)', height: 'min(50.625vw, 180px)' } // 16:9
+              ),
+            }}
             onTouchStart={handlePinchStart}
             onMouseDown={(e) => {
               // Only start panning if clicking on empty area (not on crop handles)
@@ -484,11 +462,11 @@ export function CropRotateEditor({
               }
             }}
           >
-            {/* Image - fills container naturally with zoom and pan */}
+            {/* Image - fills container, cropped to aspect ratio */}
             <img
               src={imageUrl}
               alt="Preview"
-              className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 select-none"
+              className="w-full h-full object-cover transition-transform duration-200 select-none"
               style={{ 
                 transform: [
                   `scale(${zoom})`,
@@ -499,64 +477,14 @@ export function CropRotateEditor({
               draggable={false}
             />
             
-            {/* Crop overlay for aspect ratio presets */}
-            {cropOverlay && (
-              <>
-                {cropOverlay.type === 'horizontal' ? (
-                  <>
-                    {/* Left crop mask */}
-                    <div 
-                      className="absolute top-0 bottom-0 left-0 bg-black/60 pointer-events-none"
-                      style={{ width: `${cropOverlay.sideWidth}%` }}
-                    />
-                    {/* Right crop mask */}
-                    <div 
-                      className="absolute top-0 bottom-0 right-0 bg-black/60 pointer-events-none"
-                      style={{ width: `${cropOverlay.sideWidth}%` }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    {/* Top crop mask */}
-                    <div 
-                      className="absolute top-0 left-0 right-0 bg-black/60 pointer-events-none"
-                      style={{ height: `${cropOverlay.topBottom}%` }}
-                    />
-                    {/* Bottom crop mask */}
-                    <div 
-                      className="absolute bottom-0 left-0 right-0 bg-black/60 pointer-events-none"
-                      style={{ height: `${cropOverlay.topBottom}%` }}
-                    />
-                  </>
-                )}
-                
-                {/* Rule of thirds grid - positioned over visible area only */}
-                <div 
-                  className="absolute pointer-events-none border-2 border-white/50"
-                  style={
-                    cropOverlay.type === 'horizontal'
-                      ? { 
-                          left: `${cropOverlay.sideWidth}%`, 
-                          right: `${cropOverlay.sideWidth}%`,
-                          top: 0,
-                          bottom: 0
-                        }
-                      : {
-                          top: `${cropOverlay.topBottom}%`,
-                          bottom: `${cropOverlay.topBottom}%`,
-                          left: 0,
-                          right: 0
-                        }
-                  }
-                >
-                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
-                    {[...Array(9)].map((_, i) => (
-                      <div key={i} className="border border-white/20" />
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
+            {/* Rule of thirds grid overlay */}
+            <div className="absolute inset-0 pointer-events-none border-2 border-white/50">
+              <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                {[...Array(9)].map((_, i) => (
+                  <div key={i} className="border border-white/20" />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
