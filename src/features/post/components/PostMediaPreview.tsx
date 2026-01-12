@@ -77,6 +77,7 @@ export function PostMediaPreview({
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
+  const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings } | null>(null);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
     index: number;
     file: File;
@@ -309,7 +310,16 @@ export function PostMediaPreview({
                 className="relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center h-[200px] sm:h-[240px]"
               >
                 {m.type === 'image' ? (
-                  <div className="relative h-full flex items-center justify-center">
+                  <div 
+                    className="relative h-full flex items-center justify-center cursor-pointer"
+                    onClick={() => setFullscreenPreview({ 
+                      index, 
+                      src: m.preview, 
+                      type: 'image',
+                      filterSettings: m.filterSettings,
+                      cropSettings: m.cropSettings
+                    })}
+                  >
                     <img 
                       src={m.preview} 
                       alt="" 
@@ -514,32 +524,25 @@ export function PostMediaPreview({
                       </Tooltip>
                     </div>
                   ) : (
-                    <div className="relative h-full flex items-center justify-center">
+                    <div 
+                      className="relative h-full flex items-center justify-center cursor-pointer"
+                      onClick={() => setFullscreenPreview({ 
+                        index, 
+                        src: m.preview, 
+                        type: 'video',
+                        filterSettings: m.filterSettings,
+                        cropSettings: m.cropSettings
+                      })}
+                    >
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
-                        className="h-full w-auto max-w-none object-contain rounded-2xl"
+                        className="h-full w-auto max-w-none object-contain rounded-2xl pointer-events-none"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
-                        }}
-                        onClick={() => {
-                          const video = videoRefs.current.get(index);
-                          if (!video || processingVideos.has(index)) return;
-                          
-                          if (playingVideoIndex === index) {
-                            video.pause();
-                            setPlayingVideoIndex(null);
-                          } else {
-                            // Pause any other playing video
-                            videoRefs.current.forEach((v, i) => {
-                              if (i !== index) v.pause();
-                            });
-                            video.play();
-                            setPlayingVideoIndex(index);
-                          }
                         }}
                         onEnded={() => setPlayingVideoIndex(null)}
                         onPause={() => {
@@ -776,6 +779,69 @@ export function PostMediaPreview({
           }}
         />
       )}
+
+      {/* Fullscreen Preview Modal */}
+      <AnimatePresence>
+        {fullscreenPreview && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center"
+            onClick={() => setFullscreenPreview(null)}
+          >
+            {/* Blurred backdrop */}
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
+            
+            {/* Close button */}
+            <button
+              className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-colors"
+              onClick={() => setFullscreenPreview(null)}
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Media content */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative z-10 max-w-[90vw] max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {fullscreenPreview.type === 'image' ? (
+                <img
+                  src={fullscreenPreview.src}
+                  alt=""
+                  className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                  style={{
+                    filter: fullscreenPreview.filterSettings ? generateFilterCSS(fullscreenPreview.filterSettings) : undefined,
+                    transform: generateCropTransform(fullscreenPreview.cropSettings),
+                  }}
+                />
+              ) : (
+                <video
+                  src={fullscreenPreview.src}
+                  className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                  style={{
+                    filter: fullscreenPreview.filterSettings ? generateFilterCSS(fullscreenPreview.filterSettings) : undefined,
+                    transform: generateCropTransform(fullscreenPreview.cropSettings),
+                  }}
+                  controls
+                  autoPlay
+                />
+              )}
+            </motion.div>
+
+            {/* Image counter */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm">
+              {fullscreenPreview.index + 1} / {media.length}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
