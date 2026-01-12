@@ -298,26 +298,26 @@ export function PostMediaPreview({
           exit={{ opacity: 0, height: 0 }}
           className="mt-2"
         >
-          {/* Horizontal scroll container */}
+          {/* Horizontal scroll container with touch swipe */}
           <div 
-            className="flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 -mb-2"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 -mb-2 touch-pan-x"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {media.map((m, index) => (
               <div 
                 key={index} 
-                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
+                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center h-[200px] sm:h-[240px] ${
                   media.length === 1 
-                    ? 'w-full max-w-[400px]' 
-                    : 'w-[200px] sm:w-[240px]'
+                    ? 'w-[85%] max-w-[360px]' 
+                    : 'w-[160px] sm:w-[200px]'
                 }`}
               >
                 {m.type === 'image' ? (
-                  <div className="relative flex items-center justify-center">
+                  <div className="relative w-full h-full">
                     <img 
                       src={m.preview} 
                       alt="" 
-                      className="w-full h-auto max-h-[240px] object-contain rounded-2xl" 
+                      className="w-full h-full object-cover rounded-2xl" 
                       style={{ 
                         filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                         transform: generateCropTransform(m.cropSettings),
@@ -518,13 +518,13 @@ export function PostMediaPreview({
                       </Tooltip>
                     </div>
                   ) : (
-                    <div className="relative flex items-center justify-center">
+                    <div className="relative w-full h-full">
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
                         }}
                         src={m.preview} 
-                        className="w-full h-auto max-h-[240px] object-contain rounded-2xl"
+                        className="w-full h-full object-cover rounded-2xl"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
