@@ -41,7 +41,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       </div>
 
       {/* Navigation Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-3 space-y-[3px]">
+      <div className="bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
         {navItemsWithoutAI.map((item) => {
           const isActive = !item.external && location.pathname.startsWith(item.path);
           
@@ -61,17 +61,17 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <NavLink
                   to="/app/assistant"
                   className={cn(
-                    'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left transition-colors',
+                    'flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-left transition-colors text-sm',
                     isAIActive
                       ? 'bg-zinc-800 font-semibold text-white'
                       : 'text-white hover:bg-zinc-800/50'
                   )}
                 >
                   <div className={cn(
-                    "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                    "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors",
                     isAIActive ? "bg-zinc-700" : "bg-zinc-800"
                   )}>
-                    <Sparkles className="w-5 h-5" />
+                    <Sparkles className="w-4 h-4" />
                   </div>
                   <span className="truncate">Assistant</span>
                 </NavLink>
@@ -85,12 +85,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       <div className="flex-1" />
 
       {/* Post Button Bento */}
-      <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
+      <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
         <Button 
           onClick={onPostClick}
-          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
+          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-sm gap-2"
         >
-          <PenSquare className="w-5 h-5" />
+          <PenSquare className="w-4 h-4" />
           Post
         </Button>
       </div>
