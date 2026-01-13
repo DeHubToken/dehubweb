@@ -41,7 +41,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       </div>
 
       {/* Navigation Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-3 space-y-1">
+      <div className="bg-zinc-900 rounded-2xl p-3 space-y-[3px]">
         {navItemsWithoutAI.map((item) => {
           const isActive = !item.external && location.pathname.startsWith(item.path);
           
@@ -68,10 +68,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   )}
                 >
                   <div className={cn(
-                    "w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                    "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                     isAIActive ? "bg-zinc-700" : "bg-zinc-800"
                   )}>
-                    <Sparkles className="w-[18px] h-[18px]" />
+                    <Sparkles className="w-5 h-5" />
                   </div>
                   <span className="truncate">Assistant</span>
                 </NavLink>
@@ -85,12 +85,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       <div className="flex-1" />
 
       {/* Post Button Bento */}
-      <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
+      <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
         <Button 
           onClick={onPostClick}
-          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-sm gap-2"
+          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
         >
-          <PenSquare className="w-4 h-4" />
+          <PenSquare className="w-5 h-5" />
           Post
         </Button>
       </div>
