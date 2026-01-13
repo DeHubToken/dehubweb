@@ -128,9 +128,13 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
 
   const coinButton = (
     <div 
-      className={`flex items-center justify-center cursor-pointer transition-colors ${variant === 'desktop' ? 'bg-zinc-900 rounded-full p-2 hover:bg-zinc-800' : 'p-2 rounded-full'}`}
+      className={`group flex items-center justify-center cursor-pointer transition-colors ${variant === 'desktop' ? 'bg-zinc-900 rounded-full p-2 hover:bg-zinc-800' : 'p-2 rounded-full'}`}
     >
-      <img src={dehubCoin} alt="coins" className="h-5 w-5" />
+      <img 
+        src={dehubCoin} 
+        alt="coins" 
+        className="h-5 w-5 transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)]" 
+      />
     </div>
   );
 
