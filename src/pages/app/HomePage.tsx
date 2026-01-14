@@ -167,6 +167,11 @@ export default function HomePage() {
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
     pullHandlers.onTouchMove(e);
+    
+    // Prevent native browser pull-to-refresh when custom pull is active
+    if (pullDistance > 0) {
+      e.preventDefault();
+    }
   };
 
   const handleTouchEnd = () => {

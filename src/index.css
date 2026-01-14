@@ -165,6 +165,9 @@ All colors MUST be HSL.
     width: 100%;
     background-color: black;
     overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
@@ -172,6 +175,7 @@ All colors MUST be HSL.
     background-color: black;
     overflow-x: hidden;
     overscroll-behavior-y: none;
+    touch-action: pan-x pan-y;
   }
 
   #root {
