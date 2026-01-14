@@ -230,10 +230,11 @@ export function FilterEditor({
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="overflow-hidden max-h-[35vh]"
+                className="overflow-hidden"
+                style={{ maxHeight: 'calc(35vh + env(safe-area-inset-bottom, 0px))' }}
               >
-                <ScrollArea className="h-full max-h-[35vh]">
-                  <div className="px-4 pb-8 space-y-3">
+                <ScrollArea className="h-[35vh]">
+                  <div className="px-4 pb-4 space-y-3">
                     <FilterSlider
                       label="Brightness"
                       value={settings.brightness}
@@ -287,7 +288,7 @@ export function FilterEditor({
                     />
                   </div>
                   {/* Safe area padding for mobile */}
-                  <div className="h-[env(safe-area-inset-bottom,16px)]" />
+                  <div style={{ height: 'calc(24px + env(safe-area-inset-bottom, 0px))' }} />
                 </ScrollArea>
               </motion.div>
             )}
