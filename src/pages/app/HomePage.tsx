@@ -238,23 +238,6 @@ export default function HomePage() {
       onMouseUp={pullHandlers.onMouseUp}
       onMouseLeave={pullHandlers.onMouseLeave}
     >
-      {/* Pull-to-refresh indicator */}
-      {pullDistance > 0 && !isRefreshing && (
-        <div 
-          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all duration-200"
-          style={{ 
-            height: pullDistance,
-            opacity: Math.min(pullDistance / PULL_THRESHOLD, 1)
-          }}
-        >
-          <Loader2 
-            className="w-6 h-6 text-primary transition-transform"
-            style={{ 
-              transform: `rotate(${pullDistance * 4}deg)` 
-            }}
-          />
-        </div>
-      )}
 
       {/* Tab Navigation */}
       <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
