@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 
@@ -39,7 +39,6 @@ const MOCK_TRANSACTIONS = [
 ];
 
 export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
-  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [menuView, setMenuView] = useState<MenuView>('main');
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,37 +53,25 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
   const handleCopyAddress = () => {
     navigator.clipboard.writeText('0x1234567890abcdef1234567890abcdef12345678');
     setCopied(true);
-    toast({
-      title: 'Address Copied',
-      description: 'Wallet address copied to clipboard',
-    });
+    toast.success('Address Copied', { description: 'Wallet address copied to clipboard' });
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleBuyWithCard = () => {
-    toast({
-      title: 'Coming Soon',
-      description: 'Card payments will be available soon',
-    });
+    toast.info('Coming Soon', { description: 'Card payments will be available soon' });
     setIsOpen(false);
     setMenuView('main');
   };
 
   const handleBuyWithCrypto = () => {
-    toast({
-      title: 'Coming Soon',
-      description: 'Crypto payments will be available soon',
-    });
+    toast.info('Coming Soon', { description: 'Crypto payments will be available soon' });
     setIsOpen(false);
     setMenuView('main');
   };
 
   const handleSendCoins = () => {
     if (!selectedUser || !sendAmount) return;
-    toast({
-      title: 'Coins Sent',
-      description: `Sent ${sendAmount} coins to @${selectedUser.username}`,
-    });
+    toast.success('Coins Sent', { description: `Sent ${sendAmount} coins to @${selectedUser.username}` });
     setIsOpen(false);
     setMenuView('main');
     setSelectedUser(null);
@@ -93,10 +80,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
 
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
-    toast({
-      title: 'Coins Staked',
-      description: `Successfully staked ${stakeAmount} coins`,
-    });
+    toast.success('Coins Staked', { description: `Successfully staked ${stakeAmount} coins` });
     setIsOpen(false);
     setMenuView('main');
     setStakeAmount('');
@@ -104,11 +88,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
 
   const handleStakeAll = () => {
     if (balance <= 0) {
-      toast({
-        title: 'No Coins',
-        description: 'You have no coins to stake',
-        variant: 'destructive',
-      });
+      toast.error('No Coins', { description: 'You have no coins to stake' });
       return;
     }
     setStakeAmount(balance.toString());
@@ -174,10 +154,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
       </button>
       <button
         onClick={() => {
-          toast({
-            title: 'Coming Soon',
-            description: 'Cash out feature will be available soon',
-          });
+          toast.info('Coming Soon', { description: 'Cash out feature will be available soon' });
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
