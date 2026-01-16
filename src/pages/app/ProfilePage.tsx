@@ -443,7 +443,7 @@ export default function ProfilePage() {
                           setIsSubscribed(true);
                           toast.success(`Subscribed to ${MOCK_PROFILE.name}!`);
                         }}
-                        className="rounded-full bg-purple-600 hover:bg-purple-700 text-white gap-2"
+                        className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
                       >
                         <CreditCard className="w-4 h-4" />
                         Subscribe for $4.99/mo
@@ -573,7 +573,7 @@ export default function ProfilePage() {
               ) : !isSubscribed ? (
                 <Button 
                   size="sm" 
-                  className="rounded-full bg-purple-600 hover:bg-purple-700 text-white gap-2"
+                  className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
                   onClick={() => {
                     setIsSubscribed(true);
                     toast.success(`Subscribed to ${MOCK_PROFILE.name}!`);
@@ -710,7 +710,7 @@ export default function ProfilePage() {
             
             <Button 
               onClick={handleSubmitOffer}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+              className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white"
             >
               Submit Offer
             </Button>
