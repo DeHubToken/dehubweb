@@ -306,7 +306,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
           <Button
             onClick={handleSendCoins}
             disabled={!sendAmount || Number(sendAmount) <= 0}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+            className="w-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white disabled:opacity-50"
           >
             Send Coins
           </Button>
