@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import { TRENDING_TOPICS, EXTENDED_TRENDING_TOPICS } from '@/constants/app.constants';
 
 export function WhatsHappening() {
@@ -24,19 +23,9 @@ export function WhatsHappening() {
       </div>
       <button
         onClick={() => setShowMore(!showMore)}
-        className="w-full mt-1 py-2 text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center gap-1 text-sm font-medium"
+        className="w-full mt-1 py-2 text-white hover:text-zinc-300 transition-colors text-sm font-medium"
       >
-        {showMore ? (
-          <>
-            Show less
-            <ChevronUp className="w-4 h-4" />
-          </>
-        ) : (
-          <>
-            Show more
-            <ChevronDown className="w-4 h-4" />
-          </>
-        )}
+        {showMore ? 'Show less' : 'Show more'}
       </button>
     </div>
   );
