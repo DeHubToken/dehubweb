@@ -81,11 +81,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         })}
       </div>
 
-      {/* Spacer to push Post button to bottom */}
-      <div className="flex-1" />
-
       {/* Post Button Bento */}
-      <div className="mt-4 bg-zinc-900 rounded-2xl p-3">
+      <div className="mt-3 bg-zinc-900 rounded-2xl p-3">
         <Button 
           onClick={onPostClick}
           className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
