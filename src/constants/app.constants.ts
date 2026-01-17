@@ -74,6 +74,19 @@ export const EXTENDED_SUGGESTED_USERS: UserType[] = [
   { id: '15', name: 'Supabase', handle: '@supabase', verified: true },
 ];
 
+// Generate 100 more suggested users
+export const GENERATED_SUGGESTED_USERS: UserType[] = Array.from({ length: 100 }, (_, i) => {
+  const names = ['Alex', 'Jordan', 'Sam', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Quinn', 'Avery', 'Blake'];
+  const techs = ['Web3', 'DeFi', 'NFT', 'AI', 'ML', 'Rust', 'Go', 'Swift', 'Kotlin', 'Python'];
+  const name = `${names[i % names.length]} ${techs[Math.floor(i / 10) % techs.length]}`;
+  return {
+    id: `${16 + i}`,
+    name,
+    handle: `@${name.toLowerCase().replace(' ', '_')}`,
+    verified: i % 3 === 0,
+  };
+});
+
 export const TRENDING_TOPICS: TrendingTopic[] = [
   { tag: '#WebDevelopment', postCount: '125K posts' },
   { tag: '#React', postCount: '89K posts' },
@@ -95,6 +108,16 @@ export const EXTENDED_TRENDING_TOPICS: TrendingTopic[] = [
   { tag: '#Startup', postCount: '134K posts' },
   { tag: '#Tech', postCount: '289K posts' },
 ];
+
+// Generate 100 more trending topics
+export const GENERATED_TRENDING_TOPICS: TrendingTopic[] = Array.from({ length: 100 }, (_, i) => {
+  const topics = ['Blockchain', 'Cybersecurity', 'Cloud', 'DevOps', 'Frontend', 'Backend', 'Mobile', 'Data', 'IoT', 'AR'];
+  const subtopics = ['Tips', 'News', 'Trends', 'Updates', 'Guide', 'Tutorial', 'Deep', 'Pro', 'Live', 'Hot'];
+  return {
+    tag: `#${topics[i % topics.length]}${subtopics[Math.floor(i / 10) % subtopics.length]}`,
+    postCount: `${Math.floor(Math.random() * 500) + 10}K posts`,
+  };
+});
 
 export const RECENT_SEARCHES = ['fitness', 'cooking', 'music', 'art'];
 
