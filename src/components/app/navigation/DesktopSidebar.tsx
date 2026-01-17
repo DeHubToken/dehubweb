@@ -31,7 +31,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const isAIActive = location.pathname === '/app/assistant';
 
   return (
-    <aside className="hidden lg:flex sticky top-0 h-screen w-[272px] p-[22px] flex-col">
+    <aside className="hidden lg:flex sticky top-0 h-screen w-[272px] p-[22px] flex-col overflow-y-auto scrollbar-invisible">
       {/* Logo & Coin Balance */}
       <div className="mb-6 flex items-center justify-between">
         <button onClick={handleLogoClick} className="block cursor-pointer">
