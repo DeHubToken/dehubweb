@@ -87,45 +87,52 @@ export function StoriesBar({ users }: StoriesBarProps) {
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
-      <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-        {/* Create Story/Live Button */}
-        {isMobile ? (
-          <Drawer open={isOpen} onOpenChange={setIsOpen}>
-            <div onClick={() => setIsOpen(true)}>
-              {triggerButton}
-            </div>
-            <DrawerContent glass className="px-4 pb-8">
-              <DrawerHeader className="mb-2">
-                <DrawerTitle className="text-white">Create</DrawerTitle>
-              </DrawerHeader>
-              {menuContent}
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger asChild>
-              {triggerButton}
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 p-2 bg-black/40 backdrop-blur-2xl border border-white/10" align="start" sideOffset={8}>
-              {menuContent}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-
-        {/* User Stories */}
-        {users.map((user) => (
-          <div key={user.name} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-              <div className="p-0.5 bg-zinc-900 rounded-full">
-                <Avatar className="w-14 h-14">
-                  <AvatarImage src={user.avatar} className="object-cover" />
-                  <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
-                </Avatar>
+      <div className="relative">
+        {/* Left fade */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
+        {/* Right fade */}
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+        
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
+          {/* Create Story/Live Button */}
+          {isMobile ? (
+            <Drawer open={isOpen} onOpenChange={setIsOpen}>
+              <div onClick={() => setIsOpen(true)}>
+                {triggerButton}
               </div>
+              <DrawerContent glass className="px-4 pb-8">
+                <DrawerHeader className="mb-2">
+                  <DrawerTitle className="text-white">Create</DrawerTitle>
+                </DrawerHeader>
+                {menuContent}
+              </DrawerContent>
+            </Drawer>
+          ) : (
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+              <DropdownMenuTrigger asChild>
+                {triggerButton}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48 p-2 bg-black/40 backdrop-blur-2xl border border-white/10" align="start" sideOffset={8}>
+                {menuContent}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          {/* User Stories */}
+          {users.map((user) => (
+            <div key={user.name} className="flex flex-col items-center gap-1 flex-shrink-0">
+              <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+                <div className="p-0.5 bg-zinc-900 rounded-full">
+                  <Avatar className="w-14 h-14">
+                    <AvatarImage src={user.avatar} className="object-cover" />
+                    <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                </div>
+              </div>
+              <span className="text-xs text-zinc-400 truncate w-16 text-center">{user.name}</span>
             </div>
-            <span className="text-xs text-zinc-400 truncate w-16 text-center">{user.name}</span>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

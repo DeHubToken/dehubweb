@@ -244,18 +244,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          {CATEGORY_PILLS.map((cat, i) => (
-            <button
-              key={cat}
-              className={cn(
-                'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                i === 0 ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="relative">
+          {/* Left fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
+          {/* Right fade */}
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
+            {CATEGORY_PILLS.map((cat, i) => (
+              <button
+                key={cat}
+                className={cn(
+                  'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
+                  i === 0 ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
