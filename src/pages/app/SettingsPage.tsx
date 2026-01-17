@@ -955,6 +955,37 @@ function MessagesSettings() {
         <h2 className="text-lg font-semibold text-white">Message Settings</h2>
       </div>
 
+      {/* DM Access Control */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Direct Message Access</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <MessageCircle className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">Allow Direct Messages</p>
+                <p className="text-zinc-500 text-sm">Control who can send you DMs</p>
+              </div>
+            </div>
+            <Select defaultValue="everyone">
+              <SelectTrigger className="w-40 bg-zinc-800 border-zinc-700 text-white rounded-md">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectItem value="everyone">Everyone</SelectItem>
+                <SelectItem value="following">People I follow</SelectItem>
+                <SelectItem value="none">No one (Closed)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
+            <p className="mb-2"><strong className="text-white">Everyone:</strong> Anyone can send you a DM</p>
+            <p className="mb-2"><strong className="text-white">People I follow:</strong> Only users you follow can message you</p>
+            <p><strong className="text-white">No one (Closed):</strong> DMs are completely disabled</p>
+          </div>
+        </div>
+      </div>
+
       {/* Message Preferences */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">Preferences</h3>
@@ -976,6 +1007,11 @@ function MessagesSettings() {
             title="End-to-End Encryption"
             description="Encrypt all your messages for extra security"
             defaultChecked
+          />
+          <SettingToggle
+            icon={Filter}
+            title="Filter Message Requests"
+            description="Hide message requests from accounts you don't follow"
           />
         </div>
       </div>
