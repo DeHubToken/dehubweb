@@ -1,3 +1,4 @@
+import { useState, useRef, useCallback } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
@@ -30,6 +31,24 @@ const extendedLeaderboardData: LeaderboardUser[] = [
   { rank: 15, name: 'Whale Catcher', handle: '@whale_catch', verified: false, tokens: '220K' },
 ];
 
+// Generate 100 more leaderboard users
+const generatedLeaderboardData: LeaderboardUser[] = Array.from({ length: 100 }, (_, i) => {
+  const prefixes = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Omega', 'Sigma', 'Theta', 'Zeta', 'Nova', 'Pulse'];
+  const suffixes = ['Trader', 'Holder', 'Staker', 'Farmer', 'Hunter', 'Miner', 'Builder', 'Catcher', 'Master', 'King'];
+  const name = `${prefixes[i % prefixes.length]} ${suffixes[Math.floor(i / 10) % suffixes.length]}`;
+  const tokens = Math.floor(200 - (i * 1.5));
+  return {
+    rank: 16 + i,
+    name,
+    handle: `@${name.toLowerCase().replace(' ', '_')}`,
+    verified: i % 4 === 0,
+    tokens: `${tokens > 0 ? tokens : 1}K`,
+  };
+});
+
+const ALL_USERS = [...leaderboardData, ...extendedLeaderboardData, ...generatedLeaderboardData];
+const BATCH_SIZE = 10;
+
 const getRankStyle = (rank: number) => {
   switch (rank) {
     case 1:
@@ -44,15 +63,32 @@ const getRankStyle = (rank: number) => {
 };
 
 export function SidebarLeaderboard() {
-  const allUsers = [...leaderboardData, ...extendedLeaderboardData];
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+      setVisibleCount(prev => Math.min(prev + BATCH_SIZE, ALL_USERS.length));
+    }
+  }, []);
+
+  const visibleUsers = ALL_USERS.slice(0, visibleCount);
 
   return (
     <div className="relative">
       {/* Bottom fade */}
       <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
       
-      <div className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1 pb-2">
-        {allUsers.map((user) => (
+      <div 
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1 pb-2"
+      >
+        {visibleUsers.map((user) => (
           <div key={user.rank} className="flex items-center gap-3">
             <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${getRankStyle(user.rank)}`}>
               {user.rank}

@@ -1,18 +1,39 @@
+import { useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { SUGGESTED_USERS, EXTENDED_SUGGESTED_USERS } from '@/constants/app.constants';
+import { SUGGESTED_USERS, EXTENDED_SUGGESTED_USERS, GENERATED_SUGGESTED_USERS } from '@/constants/app.constants';
 import { UserAvatar } from './UserAvatar';
 import { VerifiedBadge } from './VerifiedBadge';
 
+const ALL_USERS = [...SUGGESTED_USERS, ...EXTENDED_SUGGESTED_USERS, ...GENERATED_SUGGESTED_USERS];
+const BATCH_SIZE = 10;
+
 export function WhoToFollow() {
-  const allUsers = [...SUGGESTED_USERS, ...EXTENDED_SUGGESTED_USERS];
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+      setVisibleCount(prev => Math.min(prev + BATCH_SIZE, ALL_USERS.length));
+    }
+  }, []);
+
+  const visibleUsers = ALL_USERS.slice(0, visibleCount);
 
   return (
     <div className="relative">
       {/* Bottom fade */}
       <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
       
-      <div className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1 pb-2">
-        {allUsers.map((user) => (
+      <div 
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1 pb-2"
+      >
+        {visibleUsers.map((user) => (
           <div key={user.id} className="flex items-center gap-3">
             <UserAvatar name={user.name} handle={user.handle} size="md" />
             <div className="flex-1 min-w-0">
