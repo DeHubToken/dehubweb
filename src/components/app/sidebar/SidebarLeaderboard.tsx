@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
@@ -17,6 +19,19 @@ const leaderboardData: LeaderboardUser[] = [
   { rank: 5, name: 'Token Tiger', handle: '@token_tiger', verified: true, tokens: '650K' },
 ];
 
+const extendedLeaderboardData: LeaderboardUser[] = [
+  { rank: 6, name: 'Ape Legend', handle: '@ape_legend', verified: true, tokens: '520K' },
+  { rank: 7, name: 'Bull Runner', handle: '@bull_run', verified: false, tokens: '480K' },
+  { rank: 8, name: 'Yield Hunter', handle: '@yield_farm', verified: true, tokens: '425K' },
+  { rank: 9, name: 'Block Master', handle: '@block_master', verified: false, tokens: '390K' },
+  { rank: 10, name: 'Hash King', handle: '@hash_king', verified: true, tokens: '350K' },
+  { rank: 11, name: 'Satoshi Jr', handle: '@satoshi_jr', verified: false, tokens: '320K' },
+  { rank: 12, name: 'Degen Pro', handle: '@degen_pro', verified: true, tokens: '295K' },
+  { rank: 13, name: 'Mint Master', handle: '@mint_master', verified: false, tokens: '270K' },
+  { rank: 14, name: 'Gas Saver', handle: '@gas_saver', verified: true, tokens: '245K' },
+  { rank: 15, name: 'Whale Catcher', handle: '@whale_catch', verified: false, tokens: '220K' },
+];
+
 const getRankStyle = (rank: number) => {
   switch (rank) {
     case 1:
@@ -31,9 +46,14 @@ const getRankStyle = (rank: number) => {
 };
 
 export function SidebarLeaderboard() {
+  const [showMore, setShowMore] = useState(false);
+
+  const allUsers = [...leaderboardData, ...extendedLeaderboardData];
+  const displayedUsers = showMore ? allUsers : leaderboardData;
+
   return (
     <div className="space-y-3">
-      {leaderboardData.map((user) => (
+      {displayedUsers.map((user) => (
         <div key={user.rank} className="flex items-center gap-3">
           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${getRankStyle(user.rank)}`}>
             {user.rank}
@@ -53,8 +73,21 @@ export function SidebarLeaderboard() {
           </div>
         </div>
       ))}
-      <button className="text-blue-400 hover:text-blue-300 text-sm transition-colors">
-        View full leaderboard
+      <button
+        onClick={() => setShowMore(!showMore)}
+        className="w-full mt-1 py-2 text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center gap-1 text-sm font-medium"
+      >
+        {showMore ? (
+          <>
+            Show less
+            <ChevronUp className="w-4 h-4" />
+          </>
+        ) : (
+          <>
+            Show more
+            <ChevronDown className="w-4 h-4" />
+          </>
+        )}
       </button>
     </div>
   );
