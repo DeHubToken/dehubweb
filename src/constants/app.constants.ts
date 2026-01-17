@@ -61,6 +61,19 @@ export const SUGGESTED_USERS: UserType[] = [
   { id: '5', name: 'Web3 Builder', handle: '@web3builder', verified: false },
 ];
 
+export const EXTENDED_SUGGESTED_USERS: UserType[] = [
+  { id: '6', name: 'Next.js', handle: '@nextjs', verified: true },
+  { id: '7', name: 'Ethereum', handle: '@ethereum', verified: true },
+  { id: '8', name: 'Solana', handle: '@solana', verified: true },
+  { id: '9', name: 'Figma', handle: '@figma', verified: true },
+  { id: '10', name: 'GitHub', handle: '@github', verified: true },
+  { id: '11', name: 'OpenAI', handle: '@openai', verified: true },
+  { id: '12', name: 'Vercel', handle: '@vercel', verified: true },
+  { id: '13', name: 'Cloudflare', handle: '@cloudflare', verified: true },
+  { id: '14', name: 'Prisma', handle: '@prisma', verified: false },
+  { id: '15', name: 'Supabase', handle: '@supabase', verified: true },
+];
+
 export const TRENDING_TOPICS: TrendingTopic[] = [
   { tag: '#WebDevelopment', postCount: '125K posts' },
   { tag: '#React', postCount: '89K posts' },

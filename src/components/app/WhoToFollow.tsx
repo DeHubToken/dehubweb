@@ -1,12 +1,19 @@
+import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SUGGESTED_USERS } from '@/constants/app.constants';
+import { SUGGESTED_USERS, EXTENDED_SUGGESTED_USERS } from '@/constants/app.constants';
 import { UserAvatar } from './UserAvatar';
 import { VerifiedBadge } from './VerifiedBadge';
 
 export function WhoToFollow() {
+  const [showMore, setShowMore] = useState(false);
+
+  const allUsers = [...SUGGESTED_USERS, ...EXTENDED_SUGGESTED_USERS];
+  const displayedUsers = showMore ? allUsers : SUGGESTED_USERS;
+
   return (
     <div className="space-y-3">
-      {SUGGESTED_USERS.map((user) => (
+      {displayedUsers.map((user) => (
         <div key={user.id} className="flex items-center gap-3">
           <UserAvatar name={user.name} handle={user.handle} size="md" />
           <div className="flex-1 min-w-0">
@@ -25,8 +32,21 @@ export function WhoToFollow() {
           </Button>
         </div>
       ))}
-      <button className="text-blue-400 hover:text-blue-300 text-sm transition-colors">
-        Show more
+      <button
+        onClick={() => setShowMore(!showMore)}
+        className="w-full mt-1 py-2 text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center gap-1 text-sm font-medium"
+      >
+        {showMore ? (
+          <>
+            Show less
+            <ChevronUp className="w-4 h-4" />
+          </>
+        ) : (
+          <>
+            Show more
+            <ChevronDown className="w-4 h-4" />
+          </>
+        )}
       </button>
     </div>
   );
