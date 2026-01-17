@@ -68,6 +68,21 @@ export const TRENDING_TOPICS: TrendingTopic[] = [
   { tag: '#Crypto', postCount: '67K posts' },
 ];
 
+export const EXTENDED_TRENDING_TOPICS: TrendingTopic[] = [
+  { tag: '#Gaming', postCount: '312K posts' },
+  { tag: '#NFT', postCount: '156K posts' },
+  { tag: '#DeFi', postCount: '98K posts' },
+  { tag: '#Solana', postCount: '145K posts' },
+  { tag: '#Ethereum', postCount: '278K posts' },
+  { tag: '#Web3', postCount: '189K posts' },
+  { tag: '#Metaverse', postCount: '76K posts' },
+  { tag: '#TypeScript', postCount: '112K posts' },
+  { tag: '#JavaScript', postCount: '203K posts' },
+  { tag: '#Design', postCount: '167K posts' },
+  { tag: '#Startup', postCount: '134K posts' },
+  { tag: '#Tech', postCount: '289K posts' },
+];
+
 export const RECENT_SEARCHES = ['fitness', 'cooking', 'music', 'art'];
 
 export const EXPLORE_TRENDING: Array<{ tag: string; postCount: string }> = [
