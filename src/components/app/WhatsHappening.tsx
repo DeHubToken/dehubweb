@@ -1,7 +1,19 @@
 import { useState, useRef, useCallback } from 'react';
 import { TRENDING_TOPICS, EXTENDED_TRENDING_TOPICS, GENERATED_TRENDING_TOPICS } from '@/constants/app.constants';
 
-const ALL_TOPICS = [...TRENDING_TOPICS, ...EXTENDED_TRENDING_TOPICS, ...GENERATED_TRENDING_TOPICS];
+// Parse post count and sort by most to least
+const parsePostCount = (postCount: string): number => {
+  const match = postCount.match(/([\d.]+)([KM]?)/i);
+  if (!match) return 0;
+  const num = parseFloat(match[1]);
+  const suffix = match[2].toUpperCase();
+  if (suffix === 'M') return num * 1000000;
+  if (suffix === 'K') return num * 1000;
+  return num;
+};
+
+const ALL_TOPICS = [...TRENDING_TOPICS, ...EXTENDED_TRENDING_TOPICS, ...GENERATED_TRENDING_TOPICS]
+  .sort((a, b) => parsePostCount(b.postCount) - parsePostCount(a.postCount));
 const BATCH_SIZE = 20;
 
 export function WhatsHappening() {
@@ -30,7 +42,7 @@ export function WhatsHappening() {
         <div 
           ref={scrollRef}
           onScroll={handleScroll}
-          className="max-h-[240px] overflow-y-auto scrollbar-invisible space-y-4 pr-1 pb-2"
+          className="max-h-[240px] overflow-y-auto overflow-x-hidden scrollbar-invisible space-y-4 pr-1 pb-2"
         >
           {visibleTopics.map((item, index) => (
             <div
