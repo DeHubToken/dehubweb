@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
@@ -45,14 +44,11 @@ const getRankStyle = (rank: number) => {
 };
 
 export function SidebarLeaderboard() {
-  const [showMore, setShowMore] = useState(false);
-
   const allUsers = [...leaderboardData, ...extendedLeaderboardData];
-  const displayedUsers = showMore ? allUsers : leaderboardData;
 
   return (
-    <div className="space-y-3">
-      {displayedUsers.map((user) => (
+    <div className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1">
+      {allUsers.map((user) => (
         <div key={user.rank} className="flex items-center gap-3">
           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${getRankStyle(user.rank)}`}>
             {user.rank}
@@ -72,12 +68,6 @@ export function SidebarLeaderboard() {
           </div>
         </div>
       ))}
-      <button
-        onClick={() => setShowMore(!showMore)}
-        className="w-full mt-1 py-2 text-white hover:text-zinc-300 transition-colors text-sm font-medium"
-      >
-        {showMore ? 'Show less' : 'Show more'}
-      </button>
     </div>
   );
 }
