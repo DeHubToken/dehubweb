@@ -5,7 +5,7 @@ import { UserAvatar } from './UserAvatar';
 import { VerifiedBadge } from './VerifiedBadge';
 
 const ALL_USERS = [...SUGGESTED_USERS, ...EXTENDED_SUGGESTED_USERS, ...GENERATED_SUGGESTED_USERS];
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 20;
 
 export function WhoToFollow() {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
