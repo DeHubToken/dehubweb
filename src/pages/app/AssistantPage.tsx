@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -31,6 +31,7 @@ import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } 
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
+import { OverviewTab } from '@/components/app/command-centre';
 
 interface Message {
   id: string;
@@ -311,6 +312,7 @@ export default function AssistantPage() {
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
   const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
+  const [showCommandCentre, setShowCommandCentre] = useState(false); // Toggle between chat and command centre
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -963,6 +965,19 @@ export default function AssistantPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Command Centre Toggle */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowCommandCentre(!showCommandCentre)}
+            className={`rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8 transition-colors ${
+              showCommandCentre ? 'bg-white/20' : 'bg-white/5'
+            }`}
+          >
+            <LayoutDashboard className="w-3.5 h-3.5 text-white/70" />
+            <span className="hidden sm:inline text-xs">Command Centre</span>
+          </Button>
+
           {/* Settings Button */}
           <Button
             variant="outline"
@@ -1169,427 +1184,437 @@ export default function AssistantPage() {
         </Drawer>
       </div>
 
-      {/* Messages */}
-      <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden scrollbar-hide [&_*]:scrollbar-hide" ref={scrollRef}>
-        <div className="py-4 space-y-4">
-          <AnimatePresence mode="popLayout">
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {message.role === 'assistant' && message.videoUrl ? (
-                  /* Video messages */
-                  <div className="max-w-[85%] flex flex-col gap-2">
-                    {/* Video container with controls */}
-                    <div className="relative rounded-lg overflow-hidden">
-                      <video 
-                        src={message.videoUrl}
-                        controls
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="max-w-full rounded-lg"
-                      />
-                      {/* DeHub watermark */}
-                      <img 
-                        src={dehubLogo} 
-                        alt="" 
-                        className="absolute bottom-12 left-3 h-5 opacity-60 pointer-events-none"
-                      />
-                      {/* Action buttons */}
-                      <div className="absolute bottom-12 right-3 flex items-center gap-2">
-                        {/* Download button */}
-                        <a
-                          href={message.videoUrl}
-                          download="dehub-video.mp4"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
-                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                            backdrop-blur-xl border border-white/30
-                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                            hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                            hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                        >
-                          <Download className="w-5 h-5" />
-                        </a>
-                        {/* Post button */}
-                        <button
-                          onClick={() => handlePostVideo(message.videoUrl!)}
-                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
-                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                            backdrop-blur-xl border border-white/30
-                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                            hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                            hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                        >
-                          <Plus className="w-5 h-5" />
-                        </button>
+      {/* Conditional content: Command Centre or Chat */}
+      {showCommandCentre ? (
+        /* Command Centre View */
+        <ScrollArea className="flex-1 px-4 pb-24 lg:pb-4">
+          <OverviewTab />
+        </ScrollArea>
+      ) : (
+        <>
+          {/* Messages */}
+          <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden scrollbar-hide [&_*]:scrollbar-hide" ref={scrollRef}>
+            <div className="py-4 space-y-4">
+              <AnimatePresence mode="popLayout">
+                {messages.map((message) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    {message.role === 'assistant' && message.videoUrl ? (
+                      /* Video messages */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        {/* Video container with controls */}
+                        <div className="relative rounded-lg overflow-hidden">
+                          <video 
+                            src={message.videoUrl}
+                            controls
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="max-w-full rounded-lg"
+                          />
+                          {/* DeHub watermark */}
+                          <img 
+                            src={dehubLogo} 
+                            alt="" 
+                            className="absolute bottom-12 left-3 h-5 opacity-60 pointer-events-none"
+                          />
+                          {/* Action buttons */}
+                          <div className="absolute bottom-12 right-3 flex items-center gap-2">
+                            {/* Download button */}
+                            <a
+                              href={message.videoUrl}
+                              download="dehub-video.mp4"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                backdrop-blur-xl border border-white/30
+                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                            >
+                              <Download className="w-5 h-5" />
+                            </a>
+                            {/* Post button */}
+                            <button
+                              onClick={() => handlePostVideo(message.videoUrl!)}
+                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                backdrop-blur-xl border border-white/30
+                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                            >
+                              <Plus className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ) : message.role === 'assistant' && message.isVideoGenerating ? (
-                  /* Video generating placeholder */
-                  <div className="max-w-[85%] flex flex-col gap-2">
-                    <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
-                      <MarkdownText content={message.content} className="text-sm" />
-                    </div>
-                    {/* Video generation loader */}
-                    <div className="relative w-full aspect-video max-w-md rounded-lg overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/60">
-                      {/* Animated gradient background */}
-                      <motion.div 
-                        className="absolute inset-0"
-                        animate={{ 
-                          background: [
-                            'linear-gradient(45deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(236,72,153,0.3) 100%)',
-                            'linear-gradient(45deg, rgba(236,72,153,0.3) 0%, rgba(139,92,246,0.3) 50%, rgba(59,130,246,0.3) 100%)',
-                            'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(236,72,153,0.3) 50%, rgba(139,92,246,0.3) 100%)',
-                          ]
-                        }}
-                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                      />
-                      {/* Progress bar at bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
-                        <motion.div 
-                          className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-500"
-                          animate={{ width: ['0%', '100%'] }}
-                          transition={{ duration: 60, ease: 'linear' }}
-                        />
+                    ) : message.role === 'assistant' && message.isVideoGenerating ? (
+                      /* Video generating placeholder */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                          <MarkdownText content={message.content} className="text-sm" />
+                        </div>
+                        {/* Video generation loader */}
+                        <div className="relative w-full aspect-video max-w-md rounded-lg overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/60">
+                          {/* Animated gradient background */}
+                          <motion.div 
+                            className="absolute inset-0"
+                            animate={{ 
+                              background: [
+                                'linear-gradient(45deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(236,72,153,0.3) 100%)',
+                                'linear-gradient(45deg, rgba(236,72,153,0.3) 0%, rgba(139,92,246,0.3) 50%, rgba(59,130,246,0.3) 100%)',
+                                'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(236,72,153,0.3) 50%, rgba(139,92,246,0.3) 100%)',
+                              ]
+                            }}
+                            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                          />
+                          {/* Progress bar at bottom */}
+                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+                            <motion.div 
+                              className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-500"
+                              animate={{ width: ['0%', '100%'] }}
+                              transition={{ duration: 60, ease: 'linear' }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ) : message.role === 'assistant' && message.imageUrl ? (
-                  /* Image-only messages - no bubble wrapper */
-                  <div className="max-w-[85%] flex flex-col gap-2">
-                    {message.content && (
-                      <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
-                        <MarkdownText content={message.content} className="text-sm" />
-                      </div>
-                    )}
-                    {/* Image container with watermark + button overlay */}
-                    <div className="relative">
-                      <img 
-                        src={message.imageUrl} 
-                        alt="Generated" 
-                        className="max-w-full rounded-lg"
-                      />
-                      {/* DeHub watermark */}
-                      <img 
-                        src={dehubLogo} 
-                        alt="" 
-                        className="absolute bottom-3 left-3 h-5 opacity-60 pointer-events-none"
-                      />
-                      {/* Action buttons row */}
-                      <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                        {/* Attach to edit button */}
-                        <button
-                          onClick={() => {
-                            setAttachedImage(message.imageUrl!);
-                            inputRef.current?.focus();
-                            toast.success('Image attached - describe your edits');
-                          }}
-                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
-                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                            backdrop-blur-xl border border-white/30
-                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                            hover:shadow-[0_12px_40px_rgba(168,85,247,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                            hover:border-purple-400/50 hover:from-purple-500/30 hover:via-purple-400/15 hover:to-transparent"
-                        >
-                          <Paperclip className="w-5 h-5" />
-                        </button>
-                        {/* Copy button */}
-                        <button
-                          onClick={async () => {
-                            try {
-                              const response = await fetch(message.imageUrl!);
-                              const blob = await response.blob();
-                              await navigator.clipboard.write([
-                                new ClipboardItem({ [blob.type]: blob })
-                              ]);
-                              toast.success('Image copied to clipboard');
-                            } catch (err) {
-                              toast.error('Failed to copy image');
-                            }
-                          }}
-                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
-                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                            backdrop-blur-xl border border-white/30
-                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                            hover:shadow-[0_12px_40px_rgba(34,197,94,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                            hover:border-green-400/50 hover:from-green-500/30 hover:via-green-400/15 hover:to-transparent"
-                        >
-                          <Copy className="w-5 h-5" />
-                        </button>
-                        {/* Post button */}
-                        <button
-                          onClick={() => handlePostImage(message.imageUrl!)}
-                          className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
-                            bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                            backdrop-blur-xl border border-white/30
-                            shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                            hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                            hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                        >
-                          <Plus className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  /* Text messages */
-                  <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
-                    {/* Show attached image for user messages */}
-                    {message.attachedImage && (
-                      <img 
-                        src={message.attachedImage} 
-                        alt="Attached" 
-                        className="max-w-full rounded-lg"
-                      />
-                    )}
-                    {message.role === 'user' ? (
-                      /* User message with liquid glass bubble */
-                      <div className="relative group">
-                        {/* Liquid glass bubble */}
-                        <div className="relative px-4 py-2.5 rounded-2xl rounded-br-md overflow-hidden
-                          bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                          backdrop-blur-xl border border-white/30
-                          shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]
-                          before:absolute before:inset-0 before:rounded-2xl before:rounded-br-md
-                          before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-transparent
-                          before:pointer-events-none
-                          after:absolute after:inset-[1px] after:rounded-2xl after:rounded-br-md
-                          after:bg-gradient-to-b after:from-white/5 after:to-transparent
-                          after:pointer-events-none"
-                        >
-                          {/* Shimmer effect on hover */}
-                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
-                            bg-gradient-to-r from-transparent via-white/10 to-transparent
-                            -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                          <p className="text-sm whitespace-pre-wrap text-white relative z-10">{message.content}</p>
+                    ) : message.role === 'assistant' && message.imageUrl ? (
+                      /* Image-only messages - no bubble wrapper */
+                      <div className="max-w-[85%] flex flex-col gap-2">
+                        {message.content && (
+                          <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                            <MarkdownText content={message.content} className="text-sm" />
+                          </div>
+                        )}
+                        {/* Image container with watermark + button overlay */}
+                        <div className="relative">
+                          <img 
+                            src={message.imageUrl} 
+                            alt="Generated" 
+                            className="max-w-full rounded-lg"
+                          />
+                          {/* DeHub watermark */}
+                          <img 
+                            src={dehubLogo} 
+                            alt="" 
+                            className="absolute bottom-3 left-3 h-5 opacity-60 pointer-events-none"
+                          />
+                          {/* Action buttons row */}
+                          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                            {/* Attach to edit button */}
+                            <button
+                              onClick={() => {
+                                setAttachedImage(message.imageUrl!);
+                                inputRef.current?.focus();
+                                toast.success('Image attached - describe your edits');
+                              }}
+                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                backdrop-blur-xl border border-white/30
+                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                hover:shadow-[0_12px_40px_rgba(168,85,247,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                hover:border-purple-400/50 hover:from-purple-500/30 hover:via-purple-400/15 hover:to-transparent"
+                            >
+                              <Paperclip className="w-5 h-5" />
+                            </button>
+                            {/* Copy button */}
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const response = await fetch(message.imageUrl!);
+                                  const blob = await response.blob();
+                                  await navigator.clipboard.write([
+                                    new ClipboardItem({ [blob.type]: blob })
+                                  ]);
+                                  toast.success('Image copied to clipboard');
+                                } catch (err) {
+                                  toast.error('Failed to copy image');
+                                }
+                              }}
+                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                backdrop-blur-xl border border-white/30
+                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                hover:shadow-[0_12px_40px_rgba(34,197,94,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                hover:border-green-400/50 hover:from-green-500/30 hover:via-green-400/15 hover:to-transparent"
+                            >
+                              <Copy className="w-5 h-5" />
+                            </button>
+                            {/* Post button */}
+                            <button
+                              onClick={() => handlePostImage(message.imageUrl!)}
+                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                backdrop-blur-xl border border-white/30
+                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                            >
+                              <Plus className="w-5 h-5" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ) : (
-                      /* Assistant message - no bubble */
-                      <div className="text-white">
-                        <MarkdownText content={message.content} className="text-sm" />
+                      /* Text messages */
+                      <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+                        {/* Show attached image for user messages */}
+                        {message.attachedImage && (
+                          <img 
+                            src={message.attachedImage} 
+                            alt="Attached" 
+                            className="max-w-full rounded-lg"
+                          />
+                        )}
+                        {message.role === 'user' ? (
+                          /* User message with liquid glass bubble */
+                          <div className="relative group">
+                            {/* Liquid glass bubble */}
+                            <div className="relative px-4 py-2.5 rounded-2xl rounded-br-md overflow-hidden
+                              bg-gradient-to-br from-white/20 via-white/10 to-white/5
+                              backdrop-blur-xl border border-white/30
+                              shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]
+                              before:absolute before:inset-0 before:rounded-2xl before:rounded-br-md
+                              before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-transparent
+                              before:pointer-events-none
+                              after:absolute after:inset-[1px] after:rounded-2xl after:rounded-br-md
+                              after:bg-gradient-to-b after:from-white/5 after:to-transparent
+                              after:pointer-events-none"
+                            >
+                              {/* Shimmer effect on hover */}
+                              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                                bg-gradient-to-r from-transparent via-white/10 to-transparent
+                                -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                              <p className="text-sm whitespace-pre-wrap text-white relative z-10">{message.content}</p>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Assistant message - no bubble */
+                          <div className="text-white">
+                            <MarkdownText content={message.content} className="text-sm" />
+                          </div>
+                        )}
                       </div>
                     )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              
+              {/* Quick action buttons - show only on initial state */}
+              {messages.length === 1 && messages[0].id === 'initial' && !isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-wrap gap-1.5 mt-4"
+                >
+                  <button
+                    onClick={() => {
+                      handleSend("What's happening in the news today?");
+                    }}
+                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                  >
+                    📰 What's new?
+                  </button>
+                  <button
+                    onClick={() => {
+                      setInput("Generate an image of ");
+                      inputRef.current?.focus();
+                      setInputGlow(true);
+                      setTimeout(() => setInputGlow(false), 2000);
+                    }}
+                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                  >
+                    🎨 Generate an image
+                  </button>
+                  <button
+                    onClick={() => {
+                      fileInputRef.current?.click();
+                    }}
+                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                  >
+                    🖼️ Edit an image
+                  </button>
+                  <button
+                    onClick={() => {
+                      setInput("Generate a video of ");
+                      inputRef.current?.focus();
+                      setInputGlow(true);
+                      setTimeout(() => setInputGlow(false), 2000);
+                    }}
+                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                  >
+                    🎬 Generate a video
+                  </button>
+                </motion.div>
+              )}
+              {isImageLoading && (
+                <ImageGenerationLoader startTime={imageLoadStartTime} />
+              )}
+              {isLoading && !isImageLoading && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-white/10 rounded-2xl px-4 py-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-white/60" />
                   </div>
-                )}
-              </motion.div>
-            ))}
-          </AnimatePresence>
-          
-          {/* Quick action buttons - show only on initial state */}
-          {messages.length === 1 && messages[0].id === 'initial' && !isLoading && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-wrap gap-1.5 mt-4"
-            >
-              <button
-                onClick={() => {
-                  handleSend("What's happening in the news today?");
-                }}
-                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-              >
-                📰 What's new?
-              </button>
-              <button
-                onClick={() => {
-                  setInput("Generate an image of ");
-                  inputRef.current?.focus();
-                  setInputGlow(true);
-                  setTimeout(() => setInputGlow(false), 2000);
-                }}
-                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-              >
-                🎨 Generate an image
-              </button>
-              <button
-                onClick={() => {
-                  fileInputRef.current?.click();
-                }}
-                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-              >
-                🖼️ Edit an image
-              </button>
-              <button
-                onClick={() => {
-                  setInput("Generate a video of ");
-                  inputRef.current?.focus();
-                  setInputGlow(true);
-                  setTimeout(() => setInputGlow(false), 2000);
-                }}
-                className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
-              >
-                🎬 Generate a video
-              </button>
-            </motion.div>
-          )}
-          {isImageLoading && (
-            <ImageGenerationLoader startTime={imageLoadStartTime} />
-          )}
-          {isLoading && !isImageLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex justify-start"
-            >
-              <div className="bg-white/10 rounded-2xl px-4 py-3">
-                <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-              </div>
-            </motion.div>
-          )}
-          {/* Scroll anchor */}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
-
-      {/* Input - Fixed above bottom nav on mobile/tablet, fixed at bottom on desktop */}
-      <div className="fixed bottom-[69px] md:bottom-[75px] left-0 right-0 px-2 z-40 lg:bottom-4 lg:left-auto lg:right-auto lg:px-4 lg:w-full lg:max-w-4xl lg:mx-auto lg:relative lg:z-auto lg:-translate-y-[5.3px]">
-        <div className="mx-auto max-w-[95%] md:max-w-md lg:max-w-none">
-          {/* Attached image preview */}
-          {attachedImage && (
-            <div className="mb-2 relative inline-block">
-              <img 
-                src={attachedImage} 
-                alt="Attached" 
-                className="max-h-20 rounded-lg object-contain"
-              />
-              <button
-                onClick={() => setAttachedImage(null)}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
-              >
-                <X className="w-3 h-3 text-white" />
-              </button>
+                </motion.div>
+              )}
+              {/* Scroll anchor */}
+              <div ref={messagesEndRef} />
             </div>
-          )}
-          
-          {/* Clean input row with auto-expanding textarea */}
-          {/* Glow effect wrapper */}
-          <div className={`flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
-            inputGlow 
-              ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
-              : 'border-white/10'
-          }`}>
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageSelect}
-              className="hidden"
-            />
-            
-            {/* Attach button - minimal */}
-            <Tooltip>
-              <TooltipTrigger asChild>
+          </ScrollArea>
+
+          {/* Input - Fixed above bottom nav on mobile/tablet, fixed at bottom on desktop */}
+          <div className="fixed bottom-[69px] md:bottom-[75px] left-0 right-0 px-2 z-40 lg:bottom-4 lg:left-auto lg:right-auto lg:px-4 lg:w-full lg:max-w-4xl lg:mx-auto lg:relative lg:z-auto lg:-translate-y-[5.3px]">
+            <div className="mx-auto max-w-[95%] md:max-w-md lg:max-w-none">
+              {/* Attached image preview */}
+              {attachedImage && (
+                <div className="mb-2 relative inline-block">
+                  <img 
+                    src={attachedImage} 
+                    alt="Attached" 
+                    className="max-h-20 rounded-lg object-contain"
+                  />
+                  <button
+                    onClick={() => setAttachedImage(null)}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
+                  >
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                </div>
+              )}
+              
+              {/* Clean input row with auto-expanding textarea */}
+              {/* Glow effect wrapper */}
+              <div className={`flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
+                inputGlow 
+                  ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
+                  : 'border-white/10'
+              }`}>
+                {/* Hidden file input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
+                
+                {/* Attach button - minimal */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
+                    >
+                      <Paperclip className="w-5 h-5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Attach file</TooltipContent>
+                </Tooltip>
+                
+                {/* Voice recording button - all devices */}
+                {isVoiceSupported && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={isRecording ? stopRecording : startRecording}
+                        disabled={isLoading}
+                        className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                          isRecording 
+                            ? 'text-red-500' 
+                            : 'text-white hover:text-white/80'
+                        }`}
+                      >
+                        {isRecording ? (
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
+                          </div>
+                        ) : (
+                          <Mic className="w-5 h-5" />
+                        )}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
+                  </Tooltip>
+                )}
+                
+                {/* Auto-expanding textarea - supports multiline and formatting */}
+                <textarea
+                  ref={inputRef}
+                  value={isRecording ? transcript : input}
+                  onChange={(e) => {
+                    if (!isRecording) {
+                      setInput(e.target.value);
+                      // Auto-resize the textarea
+                      e.target.style.height = 'auto';
+                      const maxHeight = window.innerHeight * 0.45; // Max 45% of viewport (about halfway up)
+                      const newHeight = Math.min(e.target.scrollHeight, maxHeight);
+                      e.target.style.height = `${newHeight}px`;
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    // Submit on Enter without Shift, allow Shift+Enter for new lines
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  onPaste={handlePaste}
+                  placeholder={isRecording ? "Listening..." : attachedImage ? "Describe edits..." : "Ask anything..."}
+                  className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
+                    isRecording ? 'text-white/60 italic' : ''
+                  }`}
+                  style={{ 
+                    minHeight: '24px',
+                    maxHeight: '45vh'
+                  }}
+                  rows={1}
+                  readOnly={isRecording}
+                />
+                
+                {/* Stop speaking button - shown when AI is speaking */}
+                {isSpeaking && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={stopSpeaking}
+                        className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
+                      >
+                        <VolumeX className="w-5 h-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Stop speaking</TooltipContent>
+                  </Tooltip>
+                )}
+                
+                {/* Send button - minimal */}
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
+                  onClick={() => handleSend()}
+                  disabled={(!input.trim() && !isRecording) || isLoading}
+                  className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
                 >
-                  <Paperclip className="w-5 h-5" />
+                  <Send className="w-5 h-5" />
                 </button>
-              </TooltipTrigger>
-              <TooltipContent>Attach file</TooltipContent>
-            </Tooltip>
-            
-            {/* Voice recording button - all devices */}
-            {isVoiceSupported && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={isRecording ? stopRecording : startRecording}
-                    disabled={isLoading}
-                    className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
-                      isRecording 
-                        ? 'text-red-500' 
-                        : 'text-white hover:text-white/80'
-                    }`}
-                  >
-                    {isRecording ? (
-                      <div className="w-5 h-5 flex items-center justify-center">
-                        <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
-                      </div>
-                    ) : (
-                      <Mic className="w-5 h-5" />
-                    )}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
-              </Tooltip>
-            )}
-            
-            {/* Auto-expanding textarea - supports multiline and formatting */}
-            <textarea
-              ref={inputRef}
-              value={isRecording ? transcript : input}
-              onChange={(e) => {
-                if (!isRecording) {
-                  setInput(e.target.value);
-                  // Auto-resize the textarea
-                  e.target.style.height = 'auto';
-                  const maxHeight = window.innerHeight * 0.45; // Max 45% of viewport (about halfway up)
-                  const newHeight = Math.min(e.target.scrollHeight, maxHeight);
-                  e.target.style.height = `${newHeight}px`;
-                }
-              }}
-              onKeyDown={(e) => {
-                // Submit on Enter without Shift, allow Shift+Enter for new lines
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              onPaste={handlePaste}
-              placeholder={isRecording ? "Listening..." : attachedImage ? "Describe edits..." : "Ask anything..."}
-              className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
-                isRecording ? 'text-white/60 italic' : ''
-              }`}
-              style={{ 
-                minHeight: '24px',
-                maxHeight: '45vh'
-              }}
-              rows={1}
-              readOnly={isRecording}
-            />
-            
-            {/* Stop speaking button - shown when AI is speaking */}
-            {isSpeaking && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={stopSpeaking}
-                    className="text-cyan-400 hover:text-cyan-300 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
-                  >
-                    <VolumeX className="w-5 h-5" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Stop speaking</TooltipContent>
-              </Tooltip>
-            )}
-            
-            {/* Send button - minimal */}
-            <button
-              type="button"
-              onClick={() => handleSend()}
-              disabled={(!input.trim() && !isRecording) || isLoading}
-              className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
-            >
-              <Send className="w-5 h-5" />
-            </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Post Modal */}
       <PostModal
