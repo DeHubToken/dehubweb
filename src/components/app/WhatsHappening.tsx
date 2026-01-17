@@ -45,10 +45,7 @@ export function WhatsHappening() {
           className="max-h-[240px] overflow-y-auto overflow-x-hidden scrollbar-invisible space-y-4 pr-1 pb-2"
         >
           {visibleTopics.map((item, index) => (
-            <div
-              key={`${item.tag}-${index}`}
-              className="hover:bg-zinc-800 -mx-2 px-2 py-1 rounded-lg cursor-pointer transition-colors"
-            >
+            <div key={`${item.tag}-${index}`}>
               <p className="font-semibold text-white">{item.tag}</p>
               <p className="text-white/70 text-sm">{item.postCount}</p>
             </div>
