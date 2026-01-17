@@ -145,16 +145,23 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
           <h2 className="font-bold text-white">Categories</h2>
           <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-          {CATEGORIES.map((cat) => (
-            <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-              <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2">
-                <img src={cat.image} alt="" className="w-full h-full object-cover" />
+        <div className="relative">
+          {/* Left fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
+          {/* Right fade */}
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
+            {CATEGORIES.map((cat) => (
+              <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
+                <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2">
+                  <img src={cat.image} alt="" className="w-full h-full object-cover" />
+                </div>
+                <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
+                <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
               </div>
-              <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
-              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

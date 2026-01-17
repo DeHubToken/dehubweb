@@ -47,27 +47,32 @@ export function SidebarLeaderboard() {
   const allUsers = [...leaderboardData, ...extendedLeaderboardData];
 
   return (
-    <div className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1">
-      {allUsers.map((user) => (
-        <div key={user.rank} className="flex items-center gap-3">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${getRankStyle(user.rank)}`}>
-            {user.rank}
-          </div>
-          <Avatar className="w-8 h-8 flex-shrink-0">
-            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} />
-            <AvatarFallback className="bg-zinc-700 text-white text-xs">
-              {user.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1">
-              <span className="font-semibold text-white text-sm truncate">{user.name}</span>
-              {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+    <div className="relative">
+      {/* Bottom fade */}
+      <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
+      
+      <div className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1 pb-2">
+        {allUsers.map((user) => (
+          <div key={user.rank} className="flex items-center gap-3">
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${getRankStyle(user.rank)}`}>
+              {user.rank}
             </div>
-            <span className="text-zinc-500 text-xs">{user.tokens} tokens</span>
+            <Avatar className="w-8 h-8 flex-shrink-0">
+              <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} />
+              <AvatarFallback className="bg-zinc-700 text-white text-xs">
+                {user.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-white text-sm truncate">{user.name}</span>
+                {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+              </div>
+              <span className="text-zinc-500 text-xs">{user.tokens} tokens</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
