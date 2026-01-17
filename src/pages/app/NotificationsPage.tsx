@@ -23,25 +23,9 @@ interface Notification {
 }
 
 const notifications: Notification[] = [
+  // Likes
   {
     id: '1',
-    type: 'repost',
-    users: [{ name: 'oxdanny7', verified: true }],
-    action: 'reposted a post you were mentioned in',
-    preview: "Today's Gems of Base top gainers 💎 🚀",
-    time: '25s',
-  },
-  {
-    id: '2',
-    type: 'subscription',
-    users: [
-      { name: 'StreamerBans', verified: true },
-    ],
-    action: 'and 4 others subscribed to your content',
-    time: '8m',
-  },
-  {
-    id: '3',
     type: 'like',
     users: [{ name: 'griffo', verified: false }],
     action: 'liked your reply',
@@ -49,14 +33,39 @@ const notifications: Notification[] = [
     time: '11m',
   },
   {
+    id: '2',
+    type: 'like',
+    users: [{ name: 'CryptoKing', verified: true }],
+    action: 'liked your post',
+    preview: 'Just deployed my first smart contract on Solana! The speed is incredible 🚀',
+    time: '23m',
+  },
+  {
+    id: '3',
+    type: 'like',
+    users: [{ name: 'Web3Maven', verified: false }],
+    action: 'liked your photo',
+    time: '45m',
+  },
+  {
     id: '4',
-    type: 'tip',
-    users: [{ name: 'CryptoWhale', verified: true }],
-    action: 'sent you a tip of 0.05 ETH',
-    time: '2h',
+    type: 'like',
+    users: [{ name: 'TokenTrader', verified: true }],
+    action: 'liked your reply',
+    preview: 'Absolutely agree with this take on DeFi governance...',
+    time: '1h',
   },
   {
     id: '5',
+    type: 'like',
+    users: [{ name: 'BlockchainBabe', verified: false }],
+    action: 'liked your post',
+    preview: 'The future of social media is decentralized',
+    time: '2h',
+  },
+  // Comments
+  {
+    id: '6',
     type: 'comment',
     users: [{ name: 'BlockchainDev', verified: false }],
     action: 'commented on your post',
@@ -64,12 +73,129 @@ const notifications: Notification[] = [
     time: '3h',
   },
   {
-    id: '6',
+    id: '7',
+    type: 'comment',
+    users: [{ name: 'NFTArtist', verified: true }],
+    action: 'replied to your comment',
+    preview: 'Totally agree! The gas fees on Ethereum have been killing creativity...',
+    time: '4h',
+  },
+  {
+    id: '8',
+    type: 'comment',
+    users: [{ name: 'DeFiDegen', verified: false }],
+    action: 'commented on your post',
+    preview: 'What yield farming strategies are you using?',
+    time: '5h',
+  },
+  {
+    id: '9',
+    type: 'comment',
+    users: [{ name: 'MetaMike', verified: true }],
+    action: 'mentioned you in a comment',
+    preview: '@you should definitely check this out, it aligns with what you said about...',
+    time: '6h',
+  },
+  // Shares
+  {
+    id: '10',
     type: 'share',
     users: [{ name: 'Web3Builder', verified: false }],
-    action: 'and 1 other shared your post',
+    action: 'shared your post',
     preview: 'Building the future of decentralized social media',
     time: '5h',
+  },
+  {
+    id: '11',
+    type: 'share',
+    users: [{ name: 'CryptoInfluencer', verified: true }],
+    action: 'shared your post with 50K followers',
+    preview: 'This thread on tokenomics is a must-read 🧵',
+    time: '7h',
+  },
+  {
+    id: '12',
+    type: 'share',
+    users: [{ name: 'DAOmaster', verified: false }],
+    action: 'shared your post',
+    preview: 'Governance proposal analysis that everyone should see',
+    time: '8h',
+  },
+  // Tips
+  {
+    id: '13',
+    type: 'tip',
+    users: [{ name: 'CryptoWhale', verified: true }],
+    action: 'sent you a tip of 0.05 ETH',
+    time: '2h',
+  },
+  {
+    id: '14',
+    type: 'tip',
+    users: [{ name: 'GenerousGuru', verified: false }],
+    action: 'sent you a tip of 25 USDC',
+    preview: 'Thanks for the amazing content!',
+    time: '1d',
+  },
+  {
+    id: '15',
+    type: 'tip',
+    users: [{ name: 'SolanaSteve', verified: true }],
+    action: 'sent you a tip of 2 SOL',
+    preview: 'Your tutorial saved me hours of debugging!',
+    time: '2d',
+  },
+  {
+    id: '16',
+    type: 'tip',
+    users: [{ name: 'BitcoinBill', verified: true }],
+    action: 'sent you a tip of 0.001 BTC',
+    time: '3d',
+  },
+  // Subscriptions
+  {
+    id: '17',
+    type: 'subscription',
+    users: [{ name: 'StreamerBans', verified: true }],
+    action: 'subscribed to your content',
+    time: '8m',
+  },
+  {
+    id: '18',
+    type: 'subscription',
+    users: [{ name: 'NewFollower42', verified: false }],
+    action: 'subscribed to your premium tier',
+    time: '1h',
+  },
+  {
+    id: '19',
+    type: 'subscription',
+    users: [{ name: 'ContentCreator', verified: true }],
+    action: 'and 12 others subscribed to your content',
+    time: '3h',
+  },
+  {
+    id: '20',
+    type: 'subscription',
+    users: [{ name: 'AlphaHunter', verified: false }],
+    action: 'subscribed to your exclusive channel',
+    time: '6h',
+  },
+  {
+    id: '21',
+    type: 'subscription',
+    users: [{ name: 'DegenTrader', verified: true }],
+    action: 'renewed their annual subscription',
+    time: '1d',
+  },
+  // Reposts (for "All" tab)
+  {
+    id: '22',
+    type: 'repost',
+    users: [{ name: 'oxdanny7', verified: true }],
+    action: 'reposted a post you were mentioned in',
+    preview: "Today's Gems of Base top gainers 💎 🚀",
+    time: '25s',
   },
 ];
 
@@ -132,7 +258,17 @@ export default function NotificationsPage() {
       {/* Notifications List */}
       <div className="px-3 sm:px-4 py-2">
         <div className="bg-zinc-900 rounded-2xl divide-y divide-zinc-800">
-          {notifications.map((notification) => (
+          {notifications
+            .filter((notification) => {
+              if (activeTab === 'all') return true;
+              if (activeTab === 'likes') return notification.type === 'like';
+              if (activeTab === 'comments') return notification.type === 'comment';
+              if (activeTab === 'shares') return notification.type === 'share' || notification.type === 'repost';
+              if (activeTab === 'tips') return notification.type === 'tip';
+              if (activeTab === 'subs') return notification.type === 'subscription';
+              return true;
+            })
+            .map((notification) => (
             <div
               key={notification.id}
               className="flex items-start gap-3 p-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
