@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { TRENDING_TOPICS, EXTENDED_TRENDING_TOPICS, GENERATED_TRENDING_TOPICS } from '@/constants/app.constants';
 
 const ALL_TOPICS = [...TRENDING_TOPICS, ...EXTENDED_TRENDING_TOPICS, ...GENERATED_TRENDING_TOPICS];
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 20;
 
 export function WhatsHappening() {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);

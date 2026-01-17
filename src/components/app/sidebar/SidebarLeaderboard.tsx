@@ -47,7 +47,7 @@ const generatedLeaderboardData: LeaderboardUser[] = Array.from({ length: 100 }, 
 });
 
 const ALL_USERS = [...leaderboardData, ...extendedLeaderboardData, ...generatedLeaderboardData];
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 20;
 
 const getRankStyle = (rank: number) => {
   switch (rank) {
