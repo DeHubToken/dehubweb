@@ -61,17 +61,17 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <NavLink
                   to="/app/assistant"
                   className={cn(
-                    'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left transition-colors',
+                    'flex items-center gap-3.5 w-full px-3 py-3 rounded-xl text-left transition-colors text-[15px]',
                     isAIActive
                       ? 'bg-zinc-800 font-semibold text-white'
                       : 'text-white hover:bg-zinc-800/50'
                   )}
                 >
                   <div className={cn(
-                    "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                    "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                     isAIActive ? "bg-zinc-700" : "bg-zinc-800"
                   )}>
-                    <Sparkles className="w-5 h-5" />
+                    <Sparkles className="w-[22px] h-[22px]" />
                   </div>
                   <span className="truncate">Assistant</span>
                 </NavLink>
