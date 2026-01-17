@@ -38,14 +38,14 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'flex items-center gap-3.5 w-full px-3 py-3 rounded-xl transition-colors text-white text-[15px]',
+          'flex items-center gap-4 w-full px-3 py-3.5 rounded-xl transition-colors text-white text-base',
           variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
             : 'hover:bg-zinc-800/50'
         )}
       >
-        <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
-          <item.icon className="w-[22px] h-[22px]" />
+        <div className="w-11 h-11 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
+          <item.icon className="w-6 h-6" />
         </div>
         <span className="truncate">{item.label}</span>
       </a>
@@ -57,7 +57,7 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'flex items-center gap-3.5 w-full px-3 py-3 rounded-xl transition-colors text-white text-[15px]',
+        'flex items-center gap-4 w-full px-3 py-3.5 rounded-xl transition-colors text-white text-base',
         isActive
           ? variant === 'mobile'
             ? 'bg-zinc-700/50 font-semibold'
@@ -68,10 +68,10 @@ export function SidebarNavItem({
       )}
     >
       <div className={cn(
-        "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+        "w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
         isActive ? "bg-zinc-700" : "bg-zinc-800"
       )}>
-        <item.icon className="w-[22px] h-[22px]" />
+        <item.icon className="w-6 h-6" />
       </div>
       <span className="truncate">{item.label}</span>
     </NavLink>
