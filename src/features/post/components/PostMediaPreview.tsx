@@ -369,6 +369,7 @@ export function PostMediaPreview({
                     {recordingIndex === index ? (
                       // Recording in progress
                       <button
+                        type="button"
                         onClick={(e) => { e.stopPropagation(); stopRecording(); }}
                         className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-full text-white text-xs font-medium animate-pulse"
                       >
@@ -400,6 +401,7 @@ export function PostMediaPreview({
                       // Show upload/record options with liquid glass effect - icon only on mobile
                       <>
                         <button
+                          type="button"
                           onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                             bg-gradient-to-br from-white/20 via-white/10 to-white/5
@@ -411,6 +413,7 @@ export function PostMediaPreview({
                           <Upload className="w-3 h-3" />
                         </button>
                         <button
+                          type="button"
                           onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                             bg-gradient-to-br from-white/20 via-white/10 to-white/5
@@ -422,6 +425,7 @@ export function PostMediaPreview({
                           <Mic className="w-3 h-3 text-white" />
                         </button>
                         <button
+                          type="button"
                           onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
                           className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                             bg-gradient-to-br from-white/20 via-white/10 to-white/5
@@ -433,8 +437,8 @@ export function PostMediaPreview({
                         </button>
                       </>
                     ) : (
-                      // No audio - show audio button
                       <button
+                        type="button"
                         onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
                         className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
                           bg-white/10 backdrop-blur-xl border border-white/20
