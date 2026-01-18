@@ -506,7 +506,7 @@ export function PostContentArea({
           )}
         </AnimatePresence>
         <div className="flex gap-3">
-          <Avatar className="w-10 h-10 flex-shrink-0">
+          <Avatar className="w-10 h-10 flex-shrink-0 hidden sm:flex">
             <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
@@ -518,10 +518,14 @@ export function PostContentArea({
             onInput={handleInput}
             onPaste={handlePaste}
             data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[60px] sm:min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
+        </div>
+        </div>
 
+        {/* Media preview - full width on mobile, breaks out of avatar indent */}
+        <div className="-mx-4 px-4 sm:mx-0 sm:px-0 sm:pl-[52px]">
           <PostMediaPreview 
             media={media} 
             onRemove={onRemoveMedia}
@@ -536,8 +540,10 @@ export function PostContentArea({
             onClearCrop={onClearCrop}
             onApplyTrim={onApplyTrim}
           />
+        </div>
 
-          {/* Link previews */}
+        {/* Link previews - with proper indent on desktop */}
+        <div className="sm:pl-[52px]">
           <LinkPreviews text={text} />
 
           <AnimatePresence>
@@ -587,7 +593,6 @@ export function PostContentArea({
             <span className={cn("text-xs ml-auto", charCount > 280 ? "text-amber-400" : "text-white/60")}>
               {charCount}/280
             </span>
-          </div>
           </div>
         </div>
       </div>
