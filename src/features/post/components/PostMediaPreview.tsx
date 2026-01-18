@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Sparkles, Crop, Scissors } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -343,7 +343,7 @@ export function PostMediaPreview({
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
-                          <Sparkles className="w-3 h-3 text-white" />
+                          <Paintbrush className="w-3 h-3 text-white" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Edit filters</TooltipContent>
@@ -604,7 +604,7 @@ export function PostMediaPreview({
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
-                          <Sparkles className="w-3 h-3 text-white" />
+                          <Paintbrush className="w-3 h-3 text-white" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Edit filters</TooltipContent>
