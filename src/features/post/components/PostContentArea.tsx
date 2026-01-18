@@ -6,7 +6,7 @@ import { LinkPreviews } from './LinkPreviews';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Upload, Calendar, Save, Clock } from 'lucide-react';
+import { Upload, Calendar, Save, Clock, Mic, Square } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScheduleSheet } from './ScheduleSheet';
 import { DraftsSheet, type Draft } from './DraftsSheet';
@@ -42,6 +42,10 @@ interface PostContentAreaProps {
   onLoadDraft: (draft: Draft) => void;
   onDeleteDraft: (id: string) => void;
   canSaveDraft: boolean;
+  // Recording props
+  isRecording?: boolean;
+  recordingTime?: number;
+  onStopRecording?: () => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -93,6 +97,9 @@ export function PostContentArea({
   onLoadDraft,
   onDeleteDraft,
   canSaveDraft,
+  isRecording,
+  recordingTime,
+  onStopRecording,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -458,6 +465,41 @@ export function PostContentArea({
               <p className="text-white/60 text-sm mt-1">
                 {hasVideo ? 'Images not allowed with video' : hasImage ? 'Videos not allowed with images' : 'Images, videos, or audio'}
               </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Recording overlay */}
+        <AnimatePresence>
+          {isRecording && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-red-500/20 backdrop-blur-sm border-2 border-red-500/50 rounded-xl"
+            >
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center mb-4"
+              >
+                <Mic className="w-8 h-8 text-white" />
+              </motion.div>
+              <p className="text-white font-medium text-lg mb-1">Recording...</p>
+              <p className="text-white/80 text-2xl font-mono mb-4">
+                {Math.floor((recordingTime || 0) / 60).toString().padStart(2, '0')}:
+                {((recordingTime || 0) % 60).toString().padStart(2, '0')}
+              </p>
+              <motion.button
+                type="button"
+                onClick={onStopRecording}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
+              >
+                <Square className="w-4 h-4 fill-current" />
+                Stop Recording
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
