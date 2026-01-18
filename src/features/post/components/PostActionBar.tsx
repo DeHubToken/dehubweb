@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -195,32 +195,34 @@ export function PostActionBar({
               side="top"
               sideOffset={4}
             >
-              <div className="flex flex-col items-center gap-1.5">
-                <Tooltip delayDuration={300}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => audioInputRef.current?.click()}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Upload className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Upload Audio</TooltipContent>
-                </Tooltip>
-                <Tooltip delayDuration={300}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={onStartRecording}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Mic className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Record Audio</TooltipContent>
-                </Tooltip>
-              </div>
+              <TooltipProvider delayDuration={400} skipDelayDuration={0}>
+                <div className="flex flex-col items-center gap-1.5">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={() => audioInputRef.current?.click()}
+                        className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                      >
+                        <Upload className="w-5 h-5 text-white" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">Upload Audio</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={onStartRecording}
+                        className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                      >
+                        <Mic className="w-5 h-5 text-white" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">Record Audio</TooltipContent>
+                  </Tooltip>
+                </div>
+              </TooltipProvider>
             </PopoverContent>
           </Popover>
         )}
