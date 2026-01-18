@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -53,6 +53,8 @@ export function PostActionBar({
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
+  const [uploadTooltipOpen, setUploadTooltipOpen] = useState(false);
+  const [recordTooltipOpen, setRecordTooltipOpen] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
@@ -195,34 +197,36 @@ export function PostActionBar({
               side="top"
               sideOffset={4}
             >
-              <TooltipProvider delayDuration={400} skipDelayDuration={0}>
-                <div className="flex flex-col items-center gap-1.5">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={() => audioInputRef.current?.click()}
-                        className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                      >
-                        <Upload className="w-5 h-5 text-white" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="left">Upload Audio</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={onStartRecording}
-                        className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                      >
-                        <Mic className="w-5 h-5 text-white" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="left">Record Audio</TooltipContent>
-                  </Tooltip>
-                </div>
-              </TooltipProvider>
+              <div className="flex flex-col items-center gap-1.5">
+                <Tooltip open={uploadTooltipOpen}>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => audioInputRef.current?.click()}
+                      onMouseEnter={() => setUploadTooltipOpen(true)}
+                      onMouseLeave={() => setUploadTooltipOpen(false)}
+                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                      <Upload className="w-5 h-5 text-white" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Upload Audio</TooltipContent>
+                </Tooltip>
+                <Tooltip open={recordTooltipOpen}>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={onStartRecording}
+                      onMouseEnter={() => setRecordTooltipOpen(true)}
+                      onMouseLeave={() => setRecordTooltipOpen(false)}
+                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                      <Mic className="w-5 h-5 text-white" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Record Audio</TooltipContent>
+                </Tooltip>
+              </div>
             </PopoverContent>
           </Popover>
         )}
