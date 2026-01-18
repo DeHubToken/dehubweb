@@ -196,7 +196,7 @@ export function PostActionBar({
               sideOffset={4}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <Tooltip>
+                <Tooltip delayDuration={300}>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
@@ -208,7 +208,7 @@ export function PostActionBar({
                   </TooltipTrigger>
                   <TooltipContent side="left">Upload Audio</TooltipContent>
                 </Tooltip>
-                <Tooltip>
+                <Tooltip delayDuration={300}>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
