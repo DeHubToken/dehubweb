@@ -476,29 +476,31 @@ export function PostContentArea({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-red-500/20 backdrop-blur-sm border-2 border-red-500/50 rounded-xl"
+              className="absolute inset-0 z-50 flex flex-row items-center justify-center gap-4 bg-red-500/15 backdrop-blur-sm border border-red-500/40 rounded-xl p-4"
             >
               <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
+                animate={{ scale: [1, 1.15, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center mb-4"
+                className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0"
               >
-                <Mic className="w-8 h-8 text-white" />
+                <Mic className="w-5 h-5 text-white" />
               </motion.div>
-              <p className="text-white font-medium text-lg mb-1">Recording...</p>
-              <p className="text-white/80 text-2xl font-mono mb-4">
-                {Math.floor((recordingTime || 0) / 60).toString().padStart(2, '0')}:
-                {((recordingTime || 0) % 60).toString().padStart(2, '0')}
-              </p>
+              <div className="flex flex-col items-start">
+                <p className="text-white font-medium text-sm">Recording</p>
+                <p className="text-white/80 text-lg font-mono">
+                  {Math.floor((recordingTime || 0) / 60).toString().padStart(2, '0')}:
+                  {((recordingTime || 0) % 60).toString().padStart(2, '0')}
+                </p>
+              </div>
               <motion.button
                 type="button"
                 onClick={onStopRecording}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black font-medium hover:bg-white/90 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors ml-auto"
               >
-                <Square className="w-4 h-4 fill-current" />
-                Stop Recording
+                <Square className="w-3 h-3 fill-current" />
+                Stop
               </motion.button>
             </motion.div>
           )}
