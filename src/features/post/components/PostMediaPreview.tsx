@@ -309,8 +309,8 @@ export function PostMediaPreview({
               <div 
                 key={index} 
                 className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
-                  m.type === 'video' ? 'aspect-video w-[280px] sm:w-[356px] md:w-[426px]' : 
-                  m.type === 'audio' ? 'w-[280px] sm:w-[320px] md:w-[360px]' :
+                  m.type === 'video' ? 'aspect-video w-full sm:w-[356px] md:w-[426px]' : 
+                  m.type === 'audio' ? 'w-full sm:w-[320px] md:w-[360px]' :
                   'h-[160px] sm:h-[200px] md:h-[240px]'
                 }`}
               >

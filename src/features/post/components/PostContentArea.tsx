@@ -505,23 +505,39 @@ export function PostContentArea({
             </motion.div>
           )}
         </AnimatePresence>
-        <div className="flex gap-3">
-          <Avatar className="w-10 h-10 flex-shrink-0 hidden sm:flex">
+        {/* Mobile: Avatar in top left, below buttons row */}
+        <div className="flex items-start gap-3 sm:hidden mb-2 mt-8">
+          <Avatar className="w-8 h-8 flex-shrink-0">
             <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
-
-        <div className="flex-1 min-w-0">
           <div
             ref={editorRef}
             contentEditable
             onInput={handleInput}
             onPaste={handlePaste}
-            data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-            className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[60px] sm:min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+            data-placeholder={hasVideo ? "Add a caption..." : "What's happening?"}
+            className="flex-1 bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
         </div>
+
+        {/* Desktop: Avatar + text side by side */}
+        <div className="hidden sm:flex gap-3">
+          <Avatar className="w-10 h-10 flex-shrink-0">
+            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
+            <AvatarFallback>U</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <div
+              contentEditable
+              onInput={handleInput}
+              onPaste={handlePaste}
+              data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
+              className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+            />
+          </div>
         </div>
 
         {/* Media preview - full width on mobile, breaks out of avatar indent */}
