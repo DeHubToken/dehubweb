@@ -244,13 +244,14 @@ export function PostContentArea({
   }, [editorRef, saveCursorPosition, restoreCursorPosition]);
 
   // Handle input changes
-  const handleInput = useCallback(() => {
-    if (!editorRef.current) return;
+  const handleInput = useCallback((e?: React.FormEvent<HTMLDivElement>) => {
+    const editor = e?.currentTarget || editorRef.current;
+    if (!editor) return;
     
     // Get plain text including URLs from chips
     let plainText = '';
     const walker = document.createTreeWalker(
-      editorRef.current,
+      editor,
       NodeFilter.SHOW_ALL,
       null
     );
