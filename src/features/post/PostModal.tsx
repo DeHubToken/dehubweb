@@ -61,6 +61,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onLoadDraft={actions.loadDraft}
         onDeleteDraft={actions.deleteDraft}
         canSaveDraft={computed.canPost}
+        isRecording={state.isRecording}
+        recordingTime={state.recordingTime}
+        onStopRecording={actions.stopRecording}
       />
 
       <PostAccessToggles
@@ -97,6 +100,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onImageSelect={actions.handleImageSelect}
         onVideoSelect={actions.handleVideoSelect}
         onAudioSelect={actions.handleAudioSelect}
+        onStartRecording={actions.startRecording}
         liveMode={state.liveMode}
         setLiveMode={actions.setLiveMode}
         onInsertFormatting={actions.insertFormatting}

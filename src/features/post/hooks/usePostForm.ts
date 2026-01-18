@@ -36,12 +36,16 @@ interface UsePostFormReturn {
   state: PostFormState & {
     scheduledDate: Date | null;
     drafts: Draft[];
+    isRecording: boolean;
+    recordingTime: number;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
     saveDraft: () => void;
     loadDraft: (draft: Draft) => void;
     deleteDraft: (id: string) => void;
+    startRecording: () => void;
+    stopRecording: () => void;
   };
   computed: PostFormComputed;
   refs: {
@@ -72,12 +76,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Computed values
   const hasVideo = media.some(m => m.type === 'video');
@@ -419,6 +428,76 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     saveDrafts(updatedDrafts);
   }, [drafts]);
 
+  // Audio recording functions
+  const startRecording = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Create audio element to get duration
+        const audioEl = new Audio(audioUrl);
+        audioEl.onloadedmetadata = () => {
+          const duration = Math.round(audioEl.duration);
+          
+          if (hasImage) {
+            // Add audio to all images
+            setMedia(prev => prev.map(m => 
+              m.type === 'image' ? { ...m, audio: { blob: audioBlob, url: audioUrl, duration } } : m
+            ));
+            toast.success('Audio added to images');
+          } else {
+            // Standalone audio post - create a File from the blob
+            const audioFile = new File([audioBlob], `recording-${Date.now()}.webm`, { type: 'audio/webm' });
+            setMedia(prev => [...prev, { file: audioFile, preview: audioUrl, type: 'audio', duration }]);
+            toast.success('Audio recorded');
+          }
+        };
+
+        // Stop all tracks
+        stream.getTracks().forEach(track => track.stop());
+
+        // Clear recording interval
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current);
+          recordingIntervalRef.current = null;
+        }
+        setRecordingTime(0);
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+
+      // Start timer
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+
+      toast.success('Recording started');
+    } catch (err) {
+      console.error('Failed to start recording:', err);
+      toast.error('Could not access microphone. Please check permissions.');
+    }
+  }, [hasImage]);
+
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  }, []);
+
   const handlePost = useCallback(() => {
     console.log('Posting to:', destinations);
     console.log('Content:', { text, media, isSubscribersOnly, liveMode, scheduledDate });
@@ -453,6 +532,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       isEnhancing,
       scheduledDate,
       drafts,
+      isRecording,
+      recordingTime,
     },
     actions: {
       setText,
@@ -493,6 +574,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       saveDraft,
       loadDraft,
       deleteDraft,
+      startRecording,
+      stopRecording,
     },
     computed: {
       hasVideo,

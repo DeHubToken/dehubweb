@@ -16,6 +16,7 @@ interface PostActionBarProps {
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onStartRecording: () => void;
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
@@ -36,6 +37,7 @@ export function PostActionBar({
   onImageSelect,
   onVideoSelect,
   onAudioSelect,
+  onStartRecording,
   liveMode,
   setLiveMode,
   onInsertFormatting,
@@ -210,6 +212,7 @@ export function PostActionBar({
                   <TooltipTrigger asChild>
                     <button
                       type="button"
+                      onClick={onStartRecording}
                       className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
                       <Mic className="w-5 h-5 text-white" />
