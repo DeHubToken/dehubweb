@@ -77,6 +77,24 @@ function formatTimeAgo(dateString?: string): string {
 }
 
 /**
+ * Helper function to detect content type from API response
+ */
+export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
+  // Check postType first (primary field from API)
+  if (nft.postType === 'image' || nft.postType === 'video' || nft.postType === 'audio') {
+    return nft.postType;
+  }
+  // Fallback to media_type if present
+  if (nft.media_type === 'image' || nft.media_type === 'video' || nft.media_type === 'audio') {
+    return nft.media_type;
+  }
+  // Detect by URL patterns - if has video URL, it's video
+  if (nft.videoUrl && nft.videoUrl.length > 0) return 'video';
+  if (nft.imageUrl && !nft.videoUrl) return 'image';
+  return 'video'; // Default
+}
+
+/**
  * Map DeHub NFT to VideoItem type
  * Handles both old and new API response field names
  */

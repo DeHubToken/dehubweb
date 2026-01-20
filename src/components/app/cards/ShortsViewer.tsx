@@ -207,17 +207,30 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
           >
-            <video
-              ref={videoRef}
-              src={currentShort.videoUrl}
-              className="w-full h-full object-cover"
-              loop
-              playsInline
-              autoPlay
-              muted={isMuted}
-              poster={currentShort.thumbnail}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+            {currentShort.videoUrl ? (
+              <video
+                ref={videoRef}
+                src={currentShort.videoUrl}
+                className="w-full h-full object-cover"
+                loop
+                playsInline
+                autoPlay
+                muted={isMuted}
+                poster={currentShort.thumbnail}
+                onError={() => console.error('Video load error:', currentShort.videoUrl)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+                <img 
+                  src={currentShort.thumbnail} 
+                  alt={currentShort.description || 'Short video'}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                  <p className="text-white/70">Video unavailable</p>
+                </div>
+              </div>
+            )}
           </motion.div>
 
           {/* Mobile-only overlays */}
