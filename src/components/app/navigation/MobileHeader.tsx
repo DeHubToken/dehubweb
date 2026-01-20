@@ -2,6 +2,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Bell } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 interface MobileHeaderProps {
@@ -13,6 +15,7 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
 
   // TODO: Replace with actual balance from auth/wallet state
   const coinBalance = 0;
@@ -29,9 +32,33 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
 
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-2 flex items-center justify-between">
-      <button onClick={handleLogoClick} className="block cursor-pointer">
-        <img src={dehubLogo} alt="dehub" className="h-6 md:h-7 w-auto" />
-      </button>
+      <div className="flex items-center gap-3">
+        <button onClick={handleLogoClick} className="block cursor-pointer">
+          <img src={dehubLogo} alt="dehub" className="h-6 md:h-7 w-auto" />
+        </button>
+        
+        {/* Authenticated User Avatar & Name */}
+        {isAuthenticated && user && (
+          <button 
+            onClick={() => navigate('/app/profile')}
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <Avatar className="w-7 h-7">
+              <AvatarImage
+                src={user.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username || user.wallet_address}`}
+                alt={`${user.display_name || user.username}'s avatar`}
+                className="object-cover"
+              />
+              <AvatarFallback className="bg-zinc-700 text-white text-xs">
+                {(user.display_name || user.username)?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm text-white font-medium truncate max-w-[80px]">
+              {user.display_name || user.username || 'User'}
+            </span>
+          </button>
+        )}
+      </div>
       
       <div className="flex items-center gap-2">
         {/* Coin Balance */}
