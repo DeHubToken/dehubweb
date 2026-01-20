@@ -8,6 +8,7 @@ interface SidebarNavItemProps {
   isHome: boolean;
   currentPath: string;
   onNavigate?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   variant?: 'mobile' | 'desktop';
 }
 
@@ -17,11 +18,18 @@ export function SidebarNavItem({
   isHome, 
   currentPath, 
   onNavigate,
+  onClick,
   variant = 'desktop' 
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   
   const handleClick = (e: React.MouseEvent) => {
+    // Call custom onClick first if provided
+    onClick?.(e);
+    
+    // If onClick prevented default, stop here
+    if (e.defaultPrevented) return;
+    
     if (isHome) {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('home-refresh'));
