@@ -90,23 +90,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const signer = await provider.getSigner();
       const address = (await signer.getAddress()).toLowerCase();
 
-      // Create sign message for DeHub auth
-      const timestamp = Date.now();
-      const message = `Sign this message to authenticate with DeHub.\n\nWallet: ${address}\nTimestamp: ${timestamp}`;
+      // Ensure user is on Base network (chainId 8453)
+      const network = await provider.getNetwork();
+      const currentChainId = Number(network.chainId);
+      const BASE_CHAIN_ID = 8453;
+
+      if (currentChainId !== BASE_CHAIN_ID) {
+        try {
+          // Request network switch to Base
+          await web3authProvider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x2105' }], // 8453 in hex
+          });
+        } catch (switchError: unknown) {
+          // If the chain hasn't been added, add it
+          if ((switchError as { code?: number })?.code === 4902) {
+            await web3authProvider.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: '0x2105',
+                chainName: 'Base Mainnet',
+                nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://mainnet.base.org'],
+                blockExplorerUrls: ['https://basescan.org'],
+              }],
+            });
+          } else {
+            throw new Error('Please switch to Base network to continue');
+          }
+        }
+      }
+
+      // Create sign message for DeHub auth (timestamp in epoch seconds)
+      const timestamp = Math.floor(Date.now() / 1000);
+      const displayedDate = new Date(timestamp * 1000);
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
 
       // Request signature
       const signature = await signer.signMessage(message);
-
-      // Get chain ID
-      const network = await provider.getNetwork();
-      const chainId = Number(network.chainId);
 
       // Authenticate with DeHub API
       const { user: userData } = await authenticateWallet(
         address,
         signature,
-        message,
-        chainId
+        timestamp,
+        BASE_CHAIN_ID
       );
 
       // Save wallet address
@@ -114,8 +142,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setWalletAddress(address);
       setUser(userData);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Connection failed:', error);
+      // Provide user-friendly error messages
+      const errorMessage = error instanceof Error ? error.message : 'Connection failed';
+      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected')) {
+        throw new Error('Sign-in was cancelled');
+      } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
+        throw new Error('Please switch to Base network and try again');
+      }
       throw error;
     } finally {
       setIsConnecting(false);

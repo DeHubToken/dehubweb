@@ -217,17 +217,17 @@ async function apiCall<T>(
 
 // Auth functions
 export async function authenticateWallet(
-  walletAddress: string,
+  address: string,
   signature: string,
-  message: string,
-  chainId: number = 1
+  timestamp: number,
+  chainId: number = 8453
 ): Promise<{ token: string; user: DeHubUser }> {
   const { data, error } = await supabase.functions.invoke('dehub-auth', {
     body: {
-      wallet_address: walletAddress,
-      signature,
-      message,
-      chain_id: chainId,
+      address: address.toLowerCase(),
+      sig: signature,
+      timestamp,
+      chainId,
     },
   });
 
