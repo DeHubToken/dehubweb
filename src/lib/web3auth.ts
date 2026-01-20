@@ -24,13 +24,20 @@ const chainConfig = {
 let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
+let cachedClientId: string | null = null;
 
 async function getWeb3AuthClientId(): Promise<string> {
+  // Return cached client ID if available
+  if (cachedClientId) {
+    return cachedClientId;
+  }
+
   // Try to get from edge function
   try {
     const { data, error } = await supabase.functions.invoke('get-web3auth-config');
     if (!error && data?.clientId) {
-      return data.clientId;
+      cachedClientId = data.clientId;
+      return cachedClientId;
     }
   } catch (e) {
     console.warn('Failed to fetch Web3Auth config from edge function:', e);
