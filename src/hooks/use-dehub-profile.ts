@@ -28,25 +28,32 @@ export interface ProfileData {
 
 /**
  * Map DeHub user to ProfileData
+ * Handles both camelCase (API) and snake_case field names
  */
 export function mapUserToProfile(user: DeHubUser): ProfileData {
-  const joinDate = user.created_at 
-    ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  // Handle timestamp from either field name
+  const createdAt = user.createdAt || user.created_at;
+  const joinDate = createdAt 
+    ? new Date(createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     : 'Unknown';
 
+  // Calculate follower/following counts from arrays if needed
+  const followerCount = user.follower_count ?? user.followers?.length ?? 0;
+  const followingCount = user.following_count ?? user.followings?.length ?? 0;
+
   return {
-    id: user.id,
-    name: user.display_name || user.username || 'Unknown User',
+    id: user._id || user.id || '',
+    name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
-    verified: user.is_verified || false,
+    verified: user.isVerified || user.is_verified || false,
     bio: user.bio || '',
-    avatarUrl: user.avatar_url,
-    coverUrl: user.cover_url,
+    avatarUrl: user.avatarUrl || user.avatar_url,
+    coverUrl: user.coverUrl || user.cover_url,
     joinedDate: joinDate,
-    following: user.following_count || 0,
-    followers: user.follower_count || 0,
-    postsCount: user.post_count || 0,
-    walletAddress: user.wallet_address,
+    following: followingCount,
+    followers: followerCount,
+    postsCount: user.post_count || user.uploads || 0,
+    walletAddress: user.address || user.wallet_address,
   };
 }
 
