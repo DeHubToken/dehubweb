@@ -8,10 +8,10 @@ const corsHeaders = {
 const DEHUB_API_BASE = 'https://api.dehub.io';
 
 interface AuthRequest {
-  wallet_address: string;
-  signature: string;
-  message: string;
-  chain_id?: number;
+  address: string;
+  sig: string;
+  timestamp: number;
+  chainId?: number;
 }
 
 serve(async (req) => {
@@ -30,18 +30,18 @@ serve(async (req) => {
   try {
     const body: AuthRequest = await req.json();
     
-    const { wallet_address, signature, message, chain_id = 1 } = body;
+    const { address, sig, timestamp, chainId = 8453 } = body;
 
-    if (!wallet_address || !signature || !message) {
+    if (!address || !sig || !timestamp) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: wallet_address, signature, message' }),
+        JSON.stringify({ error: 'Missing required fields: address, sig, timestamp' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`[DeHub Auth] Authenticating wallet: ${wallet_address}`);
+    console.log(`[DeHub Auth] Authenticating wallet: ${address.toLowerCase()}`);
 
-    // Forward auth request to DeHub API
+    // Forward auth request to DeHub API with correct body format
     const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
       method: 'POST',
       headers: {
@@ -49,10 +49,10 @@ serve(async (req) => {
         'Accept': 'application/json',
       },
       body: JSON.stringify({
-        wallet_address,
-        signature,
-        message,
-        chain_id,
+        address: address.toLowerCase(),
+        sig,
+        timestamp,
+        chainId,
       }),
     });
 
@@ -61,8 +61,9 @@ serve(async (req) => {
     console.log(`[DeHub Auth] Response status: ${response.status}`);
 
     if (!response.ok) {
+      console.error('[DeHub Auth] API error:', responseData);
       return new Response(
-        JSON.stringify({ error: responseData.message || 'Authentication failed' }),
+        JSON.stringify({ error: responseData.message || responseData.error || 'Authentication failed' }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
