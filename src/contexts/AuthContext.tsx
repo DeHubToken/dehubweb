@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken();
 
-  // Check for existing session on mount (lazy Web3Auth init)
+  // Check for existing session on mount and pre-initialize Web3Auth
   useEffect(() => {
     const init = async () => {
       try {
@@ -52,14 +52,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             localStorage.removeItem('dehub_wallet');
           }
         }
-        
-        // Only initialize Web3Auth lazily when needed (not on initial load)
-        // This prevents blocking the app if Web3Auth config is missing
       } catch (error) {
         console.error('Auth initialization failed:', error);
       } finally {
         setIsLoading(false);
       }
+
+      // Pre-initialize Web3Auth in background (non-blocking)
+      // This ensures the modal opens instantly when user clicks login
+      getWeb3Auth()
+        .then((instance) => setWeb3auth(instance))
+        .catch((err) => console.warn('Web3Auth pre-init failed:', err));
     };
 
     init();
