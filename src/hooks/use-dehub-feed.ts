@@ -7,10 +7,10 @@
  * @module hooks/use-dehub-feed
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchNFTs, getMediaUrl, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
-import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -172,6 +172,62 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   };
 }
 
+/**
+ * Map DeHub NFT to LiveStream type
+ * Handles live content from the API
+ */
+export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
+  const id = String(nft.tokenId || nft.id || nft.token_id);
+  
+  const thumbnail = getMediaUrl(nft.imageUrl) || 
+                    getMediaUrl(nft.thumbnail_url) || 
+                    getMediaUrl(nft.media_url) || 
+                    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+  
+  const streamer = nft.minterDisplayName || 
+                   nft.mintername || 
+                   nft.creator?.display_name || 
+                   nft.creator?.username || 
+                   'Unknown Streamer';
+  
+  const avatar = getMediaUrl(nft.minterAvatarUrl) || 
+                 getMediaUrl(nft.creator?.avatar_url) || 
+                 'user';
+  
+  const viewCount = nft.views || nft.view_count || 0;
+  const category = Array.isArray(nft.category) ? nft.category[0] : nft.category;
+  
+  return {
+    id,
+    type: 'live',
+    streamer,
+    avatar,
+    title: nft.name || nft.title || 'Live Stream',
+    game: category || 'Just Chatting',
+    viewers: formatViews(viewCount).replace(' views', ''),
+    thumbnail,
+    tags: nft.tags || [],
+    isLive: nft.is_live ?? true,
+  };
+}
+
+/**
+ * Map DeHub NFT creator to story user format
+ */
+export function mapNFTToStoryUser(nft: DeHubNFT): { name: string; avatar: string } {
+  const name = nft.minterDisplayName || 
+               nft.mintername || 
+               nft.creator?.display_name || 
+               nft.creator?.username || 
+               'User';
+  
+  const avatar = getMediaUrl(nft.minterAvatarUrl) || 
+                 getMediaUrl(nft.creator?.avatar_url) || 
+                 '';
+  
+  return { name, avatar };
+}
+
 interface UseDeHubFeedOptions extends SearchNFTsParams {
   enabled?: boolean;
 }
@@ -244,4 +300,35 @@ export function useDeHubLive(options: Omit<UseDeHubFeedOptions, 'media_type'> = 
     ...options,
     media_type: 'live',
   });
+}
+
+/**
+ * Hook to fetch unique story users from recent content
+ */
+export function useDeHubStoryUsers(limit: number = 10) {
+  const { data, isLoading } = useDeHubFeed({ 
+    limit: 30, // Fetch more to get unique creators
+    sort: 'latest',
+  });
+  
+  const storyUsers = useMemo(() => {
+    if (!data?.pages) return [];
+    
+    const allNFTs = data.pages.flatMap(page => page.data || []);
+    const seenCreators = new Set<string>();
+    const users: { name: string; avatar: string }[] = [];
+    
+    for (const nft of allNFTs) {
+      const creatorId = nft.minter || nft.creator?.id || '';
+      if (creatorId && !seenCreators.has(creatorId)) {
+        seenCreators.add(creatorId);
+        users.push(mapNFTToStoryUser(nft));
+        if (users.length >= limit) break;
+      }
+    }
+    
+    return users;
+  }, [data, limit]);
+  
+  return { storyUsers, isLoading };
 }

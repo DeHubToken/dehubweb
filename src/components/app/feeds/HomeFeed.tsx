@@ -21,10 +21,7 @@ import {
 } from '@/components/app/cards';
 
 // DeHub API hook
-import { useDeHubFeed, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
-
-// Story users still needed for stories bar UI
-import { STORY_USERS } from '@/data/mock-feed.data';
+import { useDeHubFeed, useDeHubStoryUsers, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 
 import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
 
@@ -44,6 +41,9 @@ interface HomeFeedProps {
 
 export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
+
+  // Fetch story users from API
+  const { storyUsers } = useDeHubStoryUsers(10);
 
   // Fetch from DeHub API
   const {
@@ -153,7 +153,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
         </div>
       ) : (
         <>
-          <StoriesBar users={STORY_USERS} />
+          <StoriesBar users={storyUsers} />
           
           {items.length === 0 ? (
             <EmptyState />

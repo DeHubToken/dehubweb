@@ -2,12 +2,13 @@
  * Live Feed Component
  * ===================
  * Displays live streams using the universal LiveCard component.
- * Uses centralized mock data and shared utilities.
+ * Fetches content from DeHub API.
  * 
  * @module components/app/feeds/LiveFeed
  */
 
-import { Loader2 } from 'lucide-react';
+import { useEffect, useRef, useMemo } from 'react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import minecraftCategory from '@/assets/minecraft-category.png';
 import codCategory from '@/assets/cod-category.png';
 import gtaCategory from '@/assets/gta-category.png';
@@ -17,82 +18,7 @@ import leagueCategory from '@/assets/league-category.png';
 import apexCategory from '@/assets/apex-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
 import { LiveCard } from '@/components/app/cards';
-import type { LiveStream } from '@/types/feed.types';
-
-const MOCK_STREAMS: LiveStream[] = [
-  {
-    id: 'live-1',
-    type: 'live',
-    streamer: 'Ninja',
-    avatar: 'ninja',
-    title: '🔴 LIVE - Grinding Ranked! Road to Champion',
-    game: 'Fortnite',
-    viewers: '45.2K',
-    thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=480&h=270&fit=crop',
-    tags: ['English', 'Competitive', 'Ranked'],
-    isLive: true,
-  },
-  {
-    id: 'live-2',
-    type: 'live',
-    streamer: 'Pokimane',
-    avatar: 'poki',
-    title: 'Chill stream with chat 💜 !socials',
-    game: 'Just Chatting',
-    viewers: '32.1K',
-    thumbnail: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=480&h=270&fit=crop',
-    tags: ['English', 'Chill', 'Chat'],
-    isLive: true,
-  },
-  {
-    id: 'live-3',
-    type: 'live',
-    streamer: 'xQc',
-    avatar: 'xqc',
-    title: 'REACT ANDY TODAY | !youtube',
-    game: 'Just Chatting',
-    viewers: '89.5K',
-    thumbnail: 'https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=480&h=270&fit=crop',
-    tags: ['English', 'Variety'],
-    isLive: true,
-  },
-  {
-    id: 'live-4',
-    type: 'live',
-    streamer: 'Shroud',
-    avatar: 'shroud',
-    title: 'Late night gaming session',
-    game: 'Valorant',
-    viewers: '28.7K',
-    thumbnail: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=480&h=270&fit=crop',
-    tags: ['English', 'FPS', 'Pro Player'],
-    isLive: true,
-  },
-  {
-    id: 'live-5',
-    type: 'live',
-    streamer: 'HasanAbi',
-    avatar: 'hasan',
-    title: 'News & Politics | Reacting to everything',
-    game: 'Just Chatting',
-    viewers: '41.3K',
-    thumbnail: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=480&h=270&fit=crop',
-    tags: ['English', 'Politics', 'News'],
-    isLive: true,
-  },
-  {
-    id: 'live-6',
-    type: 'live',
-    streamer: 'Summit1g',
-    avatar: 'summit',
-    title: 'GTA RP - New storyline today!',
-    game: 'Grand Theft Auto V',
-    viewers: '22.8K',
-    thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=480&h=270&fit=crop',
-    tags: ['English', 'Roleplay'],
-    isLive: true,
-  },
-];
+import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
 
 const CATEGORIES = [
   { name: 'Just Chatting', viewers: '412K', image: justchattingCategory },
@@ -112,7 +38,72 @@ interface LiveFeedProps {
 }
 
 export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
-  if (isRefreshing) {
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+  // Fetch live content from DeHub API
+  const {
+    data: apiData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+    error,
+  } = useDeHubLive({
+    limit: 15,
+    sort: 'latest',
+  });
+
+  // Map API data to LiveStream items
+  const streams = useMemo(() => {
+    if (!apiData?.pages) return [];
+    
+    const allNFTs = apiData.pages.flatMap(page => page.data || []);
+    return allNFTs.map((nft, index) => mapNFTToLiveStream(nft, index));
+  }, [apiData]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!loaderRef.current || !hasNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const isLoading = isApiLoading || isRefreshing;
+
+  // Empty state component
+  const EmptyState = () => (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+        <RefreshCw className="w-8 h-8 text-zinc-500" />
+      </div>
+      <h3 className="text-white font-semibold text-lg mb-2">No Live Streams</h3>
+      <p className="text-zinc-400 text-sm max-w-xs mb-4">
+        {isError 
+          ? `Unable to load streams. ${error?.message || 'Please try again.'}`
+          : 'No one is streaming right now. Check back later!'}
+      </p>
+      <button 
+        onClick={() => refetch()}
+        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+      >
+        Refresh
+      </button>
+    </div>
+  );
+
+  if (isLoading) {
     return (
       <div className="p-2 sm:p-3">
         <div className="flex items-center justify-center py-32">
@@ -134,9 +125,28 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
           <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
 
-        {MOCK_STREAMS.map((stream) => (
-          <LiveCard key={stream.id} stream={stream} />
-        ))}
+        {streams.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <>
+            {streams.map((stream) => (
+              <LiveCard key={stream.id} stream={stream} />
+            ))}
+            
+            {/* Infinite scroll loader */}
+            <div ref={loaderRef} className="py-4 flex justify-center">
+              {isFetchingNextPage && (
+                <div className="flex items-center gap-2 text-zinc-400">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="text-sm">Loading more...</span>
+                </div>
+              )}
+              {!hasNextPage && streams.length > 0 && (
+                <p className="text-zinc-500 text-sm">No more streams</p>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Categories */}
