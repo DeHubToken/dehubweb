@@ -1,6 +1,23 @@
 import { supabase } from '@/integrations/supabase/client';
 
-// Types based on DeHub API documentation
+// DeHub CDN base URL for media assets
+export const DEHUB_CDN_BASE = 'https://cdn.dehub.io/';
+
+/**
+ * Convert relative media paths to absolute CDN URLs
+ * The DeHub API returns relative paths like "images/xxx.jpg"
+ */
+export function getMediaUrl(relativePath?: string): string | undefined {
+  if (!relativePath) return undefined;
+  // Already an absolute URL
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
+  }
+  // Prepend CDN base URL
+  return `${DEHUB_CDN_BASE}${relativePath}`;
+}
+
+// Types based on DeHub API response (actual field names from API)
 export interface DeHubUser {
   id: string;
   wallet_address: string;
@@ -16,27 +33,60 @@ export interface DeHubUser {
   created_at?: string;
 }
 
+// DeHub NFT interface matching actual API response
 export interface DeHubNFT {
-  id: string;
-  token_id: string;
-  title: string;
+  // Core identifiers
+  tokenId: number;
+  id?: string;
+  token_id?: string;
+  
+  // Content fields
+  name: string;
+  title?: string;
   description?: string;
-  media_url: string;
+  
+  // Media URLs (relative paths from API)
+  imageUrl: string;
+  imageUrls?: string[];
+  videoUrl?: string;
+  media_url?: string;
   thumbnail_url?: string;
-  media_type: 'video' | 'image' | 'audio';
-  creator: DeHubUser;
+  
+  // Content type
+  postType: 'video' | 'image' | 'audio';
+  media_type?: 'video' | 'image' | 'audio';
+  
+  // Creator info (API uses different field names)
+  minter: string;
+  mintername?: string;
+  minterDisplayName?: string;
+  minterAvatarUrl?: string;
+  creator?: DeHubUser;
   owner?: DeHubUser;
+  
+  // Stats
+  views?: number;
   view_count?: number;
+  commentCount?: number;
+  comment_count?: number;
+  totalVotes?: { for?: number; against?: number };
   like_count?: number;
   dislike_count?: number;
-  comment_count?: number;
+  
+  // Video specific
+  videoDuration?: number;
+  duration?: number;
+  
+  // Metadata
+  createdAt: string;
+  created_at?: string;
+  category?: string | string[];
+  tags?: string[];
+  
+  // PPV/Live
   is_live?: boolean;
   is_ppv?: boolean;
   ppv_price?: number;
-  category?: string;
-  tags?: string[];
-  created_at: string;
-  duration?: number;
 }
 
 export interface DeHubComment {

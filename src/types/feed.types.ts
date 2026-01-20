@@ -50,6 +50,7 @@ export interface TextPost extends BaseFeedItem {
 export interface VideoItem extends BaseFeedItem {
   type: 'video';
   thumbnail: string;
+  videoUrl?: string;
   duration: string;
   title: string;
   channel: string;

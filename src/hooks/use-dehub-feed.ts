@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { searchNFTs, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
+import { searchNFTs, getMediaUrl, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
 // Fallback thumbnails for when API doesn't return one
@@ -78,37 +78,97 @@ function formatTimeAgo(dateString?: string): string {
 
 /**
  * Map DeHub NFT to VideoItem type
+ * Handles both old and new API response field names
  */
 export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
+  // Get ID from various possible fields
+  const id = String(nft.tokenId || nft.id || nft.token_id);
+  
+  // Get thumbnail with CDN URL
+  const thumbnail = getMediaUrl(nft.imageUrl) || 
+                    getMediaUrl(nft.thumbnail_url) || 
+                    getMediaUrl(nft.media_url) || 
+                    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+  
+  // Get video URL with CDN
+  const videoUrl = getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url);
+  
+  // Get duration from various fields
+  const duration = nft.videoDuration || nft.duration;
+  
+  // Get creator info from various possible fields
+  const channel = nft.minterDisplayName || 
+                  nft.mintername || 
+                  nft.creator?.display_name || 
+                  nft.creator?.username || 
+                  'Unknown Creator';
+  
+  const channelAvatar = getMediaUrl(nft.minterAvatarUrl) || 
+                        getMediaUrl(nft.creator?.avatar_url) || 
+                        'user';
+  
+  const verified = nft.creator?.is_verified || false;
+  
+  // Get view count from various fields
+  const viewCount = nft.views || nft.view_count;
+  
+  // Get created date from various fields
+  const createdAt = nft.createdAt || nft.created_at;
+  
   return {
-    id: nft.id || nft.token_id,
+    id,
     type: 'video',
-    thumbnail: nft.thumbnail_url || nft.media_url || FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length],
-    duration: formatDuration(nft.duration),
-    title: nft.title || 'Untitled',
-    channel: nft.creator?.display_name || nft.creator?.username || 'Unknown Creator',
-    channelAvatar: nft.creator?.avatar_url || nft.creator?.username || 'user',
-    verified: nft.creator?.is_verified || false,
-    views: formatViews(nft.view_count),
-    uploadedAgo: formatTimeAgo(nft.created_at),
+    thumbnail,
+    videoUrl,
+    duration: formatDuration(duration),
+    title: nft.name || nft.title || 'Untitled',
+    channel,
+    channelAvatar,
+    verified,
+    views: formatViews(viewCount),
+    uploadedAgo: formatTimeAgo(createdAt),
   };
 }
 
 /**
  * Map DeHub NFT to ImagePost type
+ * Handles both old and new API response field names
  */
 export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
+  // Get ID from various possible fields
+  const id = String(nft.tokenId || nft.id || nft.token_id);
+  
+  // Get image URL with CDN
+  const image = getMediaUrl(nft.imageUrl) || 
+                getMediaUrl(nft.media_url) || 
+                getMediaUrl(nft.thumbnail_url) || 
+                FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+  
+  // Get creator info
+  const username = nft.mintername || nft.creator?.username || 'unknown';
+  const avatar = getMediaUrl(nft.minterAvatarUrl) || 
+                 getMediaUrl(nft.creator?.avatar_url) || 
+                 'user';
+  const verified = nft.creator?.is_verified || false;
+  
+  // Get stats
+  const likes = nft.totalVotes?.for || nft.like_count || 0;
+  const comments = nft.commentCount || nft.comment_count || 0;
+  
+  // Get created date
+  const createdAt = nft.createdAt || nft.created_at;
+  
   return {
-    id: nft.id || nft.token_id,
+    id,
     type: 'image',
-    username: nft.creator?.username || 'unknown',
-    verified: nft.creator?.is_verified || false,
-    avatar: nft.creator?.avatar_url || nft.creator?.username || 'user',
-    image: nft.media_url || nft.thumbnail_url || FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length],
-    likes: nft.like_count || 0,
-    caption: nft.description || nft.title || '',
-    comments: nft.comment_count || 0,
-    timeAgo: formatTimeAgo(nft.created_at),
+    username,
+    verified,
+    avatar,
+    image,
+    likes,
+    caption: nft.description || nft.name || nft.title || '',
+    comments,
+    timeAgo: formatTimeAgo(createdAt),
   };
 }
 
@@ -125,12 +185,23 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
   return useInfiniteQuery({
     queryKey: ['dehub-feed', searchParams],
     queryFn: async ({ pageParam = 1 }) => {
-      const result = await searchNFTs({
+      const response = await searchNFTs({
         ...searchParams,
         page: pageParam,
         limit: searchParams.limit || 15,
       });
-      return result;
+      
+      // Handle both response formats: { result: [...] } or { data: [...] }
+      const data = (response as any).result || response.data || [];
+      const limit = searchParams.limit || 15;
+      
+      return {
+        data,
+        page: pageParam,
+        has_more: data.length >= limit,
+        total: response.total || data.length,
+        limit,
+      };
     },
     getNextPageParam: (lastPage) => {
       if (lastPage.has_more) {
