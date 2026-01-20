@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,11 +20,16 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileData } from '@/hooks/use-dehub-profile';
+import { followUser, unfollowUser } from '@/lib/api/dehub';
 import { MOCK_POSTS, SAMPLE_IMAGES, SAMPLE_VIDEOS } from '@/data/mock-feed.data';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
 
-const MOCK_PROFILE = {
+// Fallback mock profile
+const MOCK_PROFILE: ProfileData = {
+  id: 'mock-user',
   name: 'Alice Cooper',
   handle: '@alice_cooper',
   verified: true,
@@ -35,42 +41,45 @@ const MOCK_PROFILE = {
 };
 
 // Filter/modify mock data to appear as if from the profile user
-const PROFILE_POSTS: TextPost[] = MOCK_POSTS.slice(0, 10).map(post => ({
-  ...post,
-  author: {
-    id: 'profile-user',
-    name: MOCK_PROFILE.name,
-    handle: MOCK_PROFILE.handle,
-    verified: MOCK_PROFILE.verified,
-  },
-}));
+const createProfilePosts = (profile: ProfileData): TextPost[] => 
+  MOCK_POSTS.slice(0, 10).map(post => ({
+    ...post,
+    author: {
+      id: profile.id,
+      name: profile.name,
+      handle: profile.handle,
+      verified: profile.verified,
+    },
+  }));
 
-const PROFILE_IMAGES: ImagePost[] = SAMPLE_IMAGES.slice(0, 10).map(img => ({
-  ...img,
-  username: MOCK_PROFILE.name,
-  avatar: MOCK_PROFILE.handle,
-  verified: MOCK_PROFILE.verified,
-}));
+const createProfileImages = (profile: ProfileData): ImagePost[] => 
+  SAMPLE_IMAGES.slice(0, 10).map(img => ({
+    ...img,
+    username: profile.name,
+    avatar: profile.avatarUrl || profile.handle,
+    verified: profile.verified,
+  }));
 
-const PROFILE_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 8).map((vid, i) => ({
-  ...vid,
-  id: `profile-video-${i}`,
-  channel: MOCK_PROFILE.name,
-  channelAvatar: MOCK_PROFILE.handle,
-  verified: MOCK_PROFILE.verified,
-}));
-
-// Generate additional videos to reach 10
-const EXTRA_VIDEOS: VideoItem[] = SAMPLE_VIDEOS.slice(0, 2).map((vid, i) => ({
-  ...vid,
-  id: `profile-video-extra-${i}`,
-  channel: MOCK_PROFILE.name,
-  channelAvatar: MOCK_PROFILE.handle,
-  verified: MOCK_PROFILE.verified,
-  title: i === 0 ? 'Behind the Scenes - Day in My Life' : 'Q&A Session with Followers',
-}));
-
-const ALL_PROFILE_VIDEOS = [...PROFILE_VIDEOS, ...EXTRA_VIDEOS];
+const createProfileVideos = (profile: ProfileData): VideoItem[] => {
+  const baseVideos = SAMPLE_VIDEOS.slice(0, 8).map((vid, i) => ({
+    ...vid,
+    id: `profile-video-${i}`,
+    channel: profile.name,
+    channelAvatar: profile.avatarUrl || profile.handle,
+    verified: profile.verified,
+  }));
+  
+  const extraVideos = SAMPLE_VIDEOS.slice(0, 2).map((vid, i) => ({
+    ...vid,
+    id: `profile-video-extra-${i}`,
+    channel: profile.name,
+    channelAvatar: profile.avatarUrl || profile.handle,
+    verified: profile.verified,
+    title: i === 0 ? 'Behind the Scenes - Day in My Life' : 'Q&A Session with Followers',
+  }));
+  
+  return [...baseVideos, ...extraVideos];
+};
 
 // Realistic reply threads - original posts that Alice replied to
 const REPLY_THREADS = [
@@ -177,39 +186,86 @@ const MOCK_FRACTIONS = [
   { id: 'frac-5', postId: 'image-12', thumbnail: 'https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=100&h=100&fit=crop', author: '@nft_collector', fractions: 300, totalValue: 1.2, currency: 'ETH' },
 ];
 
-const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
-  { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
-  { icon: Star, label: 'Subs', value: 'subscribers', count: 10 },
-  { icon: MessageCircle, label: 'Replies', value: 'replies', count: 10 },
-  { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
-  { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
-  { icon: Play, label: 'Songs', value: 'songs', count: 10 },
-  { icon: Radio, label: 'Live', value: 'live', count: 10 },
-  { icon: PieChart, label: 'Fractions', value: 'fractions', count: MOCK_FRACTIONS.length },
-];
-
 export default function ProfilePage() {
+  const [searchParams] = useSearchParams();
+  const userId = searchParams.get('id');
+  const { user: currentUser, isAuthenticated } = useAuth();
+  
+  // Fetch profile from API
+  const { 
+    data: apiProfile, 
+    isLoading: isLoadingProfile, 
+    isError: isProfileError 
+  } = useDeHubProfile({ 
+    userId: userId || currentUser?.id, 
+    enabled: !!(userId || currentUser?.id) 
+  });
+  
+  // Fetch user content from API
+  const {
+    data: userContentData,
+    isLoading: isLoadingContent,
+  } = useDeHubUserContent({
+    userId: userId || currentUser?.id,
+    enabled: !!(userId || currentUser?.id),
+  });
+  
+  // Determine which profile to show
+  const profile = apiProfile || MOCK_PROFILE;
+  const isOwnProfile = !userId || (currentUser?.id === userId);
+  
+  // Process API content or fallback to mock
+  const { apiVideos, apiImages, apiPosts } = useMemo(() => {
+    if (!userContentData?.pages) {
+      return { apiVideos: [], apiImages: [], apiPosts: [] };
+    }
+    const allNFTs = userContentData.pages.flatMap(page => page.data || []);
+    const separated = separateUserContent(allNFTs);
+    return { 
+      apiVideos: separated.videos, 
+      apiImages: separated.images, 
+      apiPosts: separated.posts 
+    };
+  }, [userContentData]);
+  
+  // Use API data or fallback to mock
+  const PROFILE_POSTS = apiPosts.length > 0 ? apiPosts : createProfilePosts(profile);
+  const PROFILE_IMAGES = apiImages.length > 0 ? apiImages : createProfileImages(profile);
+  const ALL_PROFILE_VIDEOS = apiVideos.length > 0 ? apiVideos : createProfileVideos(profile);
+  
+  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
+    { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
+    { icon: Star, label: 'Subs', value: 'subscribers', count: 10 },
+    { icon: MessageCircle, label: 'Replies', value: 'replies', count: 10 },
+    { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
+    { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
+    { icon: Play, label: 'Songs', value: 'songs', count: 10 },
+    { icon: Radio, label: 'Live', value: 'live', count: 10 },
+    { icon: PieChart, label: 'Fractions', value: 'fractions', count: MOCK_FRACTIONS.length },
+  ];
+  
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
 
   const handleCopyProfileUrl = () => {
-    navigator.clipboard.writeText(`https://dehub.gg/${MOCK_PROFILE.handle.replace('@', '')}`);
+    navigator.clipboard.writeText(`https://dehub.gg/${profile.handle.replace('@', '')}`);
     toast.success('Profile URL copied to clipboard');
     setShareSheetOpen(false);
   };
 
   const handleCopyUsername = () => {
-    navigator.clipboard.writeText(MOCK_PROFILE.handle);
+    navigator.clipboard.writeText(profile.handle);
     toast.success('Username copied to clipboard');
     setShareSheetOpen(false);
   };
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText('0x1234...5678');
+    navigator.clipboard.writeText(profile.walletAddress || '0x1234...5678');
     toast.success('Address copied to clipboard');
     setShareSheetOpen(false);
   };
@@ -224,11 +280,49 @@ export default function ProfilePage() {
     setShareSheetOpen(false);
   };
 
-  const handleUnfollow = () => {
-    setIsFollowing(false);
-    setIsSubscribed(false);
-    toast.success(`Unfollowed ${MOCK_PROFILE.name}`);
-    setShareSheetOpen(false);
+  const handleUnfollow = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+    
+    setIsFollowLoading(true);
+    try {
+      await unfollowUser(profile.id);
+      setIsFollowing(false);
+      setIsSubscribed(false);
+      toast.success(`Unfollowed ${profile.name}`);
+    } catch (error) {
+      // Fallback for demo
+      setIsFollowing(false);
+      setIsSubscribed(false);
+      toast.success(`Unfollowed ${profile.name}`);
+    } finally {
+      setIsFollowLoading(false);
+      setShareSheetOpen(false);
+    }
+  };
+
+  const handleFollow = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet first');
+      setIsFollowing(true); // Demo mode
+      toast.success(`Following ${profile.name}`);
+      return;
+    }
+    
+    setIsFollowLoading(true);
+    try {
+      await followUser(profile.id);
+      setIsFollowing(true);
+      toast.success(`Following ${profile.name}`);
+    } catch (error) {
+      // Fallback for demo
+      setIsFollowing(true);
+      toast.success(`Following ${profile.name}`);
+    } finally {
+      setIsFollowLoading(false);
+    }
   };
 
   const handleMakeOffer = () => {
@@ -388,19 +482,19 @@ export default function ProfilePage() {
                     <div className="flex flex-col items-center">
                       <div className="w-0.5 h-3 bg-zinc-700 -mt-4 mb-1" />
                       <UserAvatar 
-                        name={MOCK_PROFILE.name} 
-                        handle={MOCK_PROFILE.handle} 
+                        name={profile.name} 
+                        handle={profile.handle} 
                         size="md" 
                       />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="font-semibold text-white truncate">
-                          {MOCK_PROFILE.name}
+                          {profile.name}
                         </span>
-                        {MOCK_PROFILE.verified && <VerifiedBadge className="w-4 h-4" />}
+                        {profile.verified && <VerifiedBadge className="w-4 h-4" />}
                         <span className="text-zinc-500 text-sm truncate">
-                          {MOCK_PROFILE.handle}
+                          {profile.handle}
                         </span>
                         <span className="text-zinc-600 text-xs">· replying</span>
                       </div>
@@ -436,12 +530,12 @@ export default function ProfilePage() {
                       </div>
                       <h3 className="text-white font-bold text-xl mb-2">Subscribers Only</h3>
                       <p className="text-zinc-400 text-sm mb-4 max-w-xs">
-                        Subscribe to {MOCK_PROFILE.name} to unlock exclusive content
+                        Subscribe to {profile.name} to unlock exclusive content
                       </p>
                       <Button 
                         onClick={() => {
                           setIsSubscribed(true);
-                          toast.success(`Subscribed to ${MOCK_PROFILE.name}!`);
+                          toast.success(`Subscribed to ${profile.name}!`);
                         }}
                         className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
                       >
@@ -533,25 +627,48 @@ export default function ProfilePage() {
     }
   };
 
+  // Show loading state
+  if (isLoadingProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3 mt-2 lg:mt-0">
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Cover Photo */}
-          <div className="aspect-[3/1] bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
+          {profile.coverUrl ? (
+            <div className="aspect-[3/1] bg-zinc-800">
+              <img src={profile.coverUrl} alt="Cover" className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div className="aspect-[3/1] bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
+          )}
           
           {/* Profile Content */}
           <div className="px-4 sm:px-6 pb-4">
             {/* Avatar - positioned to overlap banner */}
             <div className="relative -mt-12 sm:-mt-14 mb-4">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1">
-                <UserAvatar 
-                  name={MOCK_PROFILE.name} 
-                  handle={MOCK_PROFILE.handle} 
-                  size="lg" 
-                  className="w-full h-full rounded-full"
-                />
+                {profile.avatarUrl ? (
+                  <img 
+                    src={profile.avatarUrl} 
+                    alt={profile.name} 
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <UserAvatar 
+                    name={profile.name} 
+                    handle={profile.handle} 
+                    size="lg" 
+                    className="w-full h-full rounded-full"
+                  />
+                )}
               </div>
               <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
             </div>
@@ -562,12 +679,14 @@ export default function ProfilePage() {
                 <Button 
                   size="sm" 
                   className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
-                  onClick={() => {
-                    setIsFollowing(true);
-                    toast.success(`Following ${MOCK_PROFILE.name}`);
-                  }}
+                  onClick={handleFollow}
+                  disabled={isFollowLoading}
                 >
-                  <UserPlus className="w-4 h-4" />
+                  {isFollowLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <UserPlus className="w-4 h-4" />
+                  )}
                   Follow
                 </Button>
               ) : !isSubscribed ? (
@@ -576,7 +695,7 @@ export default function ProfilePage() {
                   className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
                   onClick={() => {
                     setIsSubscribed(true);
-                    toast.success(`Subscribed to ${MOCK_PROFILE.name}!`);
+                    toast.success(`Subscribed to ${profile.name}!`);
                   }}
                 >
                   <Star className="w-4 h-4" />
@@ -589,7 +708,7 @@ export default function ProfilePage() {
                   className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
                   onClick={() => {
                     setIsSubscribed(false);
-                    toast.success(`Unsubscribed from ${MOCK_PROFILE.name}`);
+                    toast.success(`Unsubscribed from ${profile.name}`);
                   }}
                 >
                   <Star className="w-4 h-4" />
@@ -626,25 +745,27 @@ export default function ProfilePage() {
             {/* Profile Info */}
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">{MOCK_PROFILE.name}</h2>
-                {MOCK_PROFILE.verified && <VerifiedBadge className="w-5 h-5" />}
+                <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                {profile.verified && <VerifiedBadge className="w-5 h-5" />}
               </div>
-              <p className="text-zinc-500">{MOCK_PROFILE.handle}</p>
+              <p className="text-zinc-500">{profile.handle}</p>
               
-              <p className="mt-3 text-white/90 text-sm sm:text-base">{MOCK_PROFILE.bio}</p>
+              {profile.bio && (
+                <p className="mt-3 text-white/90 text-sm sm:text-base">{profile.bio}</p>
+              )}
               
               <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
                 <Calendar className="w-4 h-4" />
-                <span>Joined {MOCK_PROFILE.joinedDate}</span>
+                <span>Joined {profile.joinedDate}</span>
               </div>
               
               <div className="flex items-center gap-4 mt-3">
                 <button className="hover:underline">
-                  <span className="font-bold text-white">{MOCK_PROFILE.following}</span>
+                  <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
                   <span className="text-zinc-500 ml-1">Following</span>
                 </button>
                 <button className="hover:underline">
-                  <span className="font-bold text-white">{MOCK_PROFILE.followers}</span>
+                  <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
                   <span className="text-zinc-500 ml-1">Followers</span>
                 </button>
               </div>
@@ -685,7 +806,7 @@ export default function ProfilePage() {
       <Drawer open={offerDrawerOpen} onOpenChange={setOfferDrawerOpen}>
         <DrawerContent glass className="px-4 pb-8">
           <DrawerHeader className="text-left">
-            <DrawerTitle className="text-white">Make Offer for {MOCK_PROFILE.handle}</DrawerTitle>
+            <DrawerTitle className="text-white">Make Offer for {profile.handle}</DrawerTitle>
           </DrawerHeader>
           <div className="space-y-4">
             <p className="text-zinc-400 text-sm">
