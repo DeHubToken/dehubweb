@@ -33,15 +33,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken();
 
-  // Initialize Web3Auth and check for existing session
+  // Check for existing session on mount (lazy Web3Auth init)
   useEffect(() => {
     const init = async () => {
       try {
-        // Initialize Web3Auth
-        const web3authInstance = await getWeb3Auth();
-        setWeb3auth(web3authInstance);
-
-        // Check for existing session
+        // Check for existing DeHub token first (doesn't require Web3Auth)
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
 
@@ -55,40 +51,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setAuthToken(null);
             localStorage.removeItem('dehub_wallet');
           }
-        } else if (web3authInstance.connected && web3authInstance.provider) {
-          // Web3Auth session exists but no DeHub token - re-authenticate
-          try {
-            const provider = new BrowserProvider(web3authInstance.provider);
-            const signer = await provider.getSigner();
-            const address = (await signer.getAddress()).toLowerCase();
-            
-            // Check if we have a valid DeHub token for this address
-            if (!token) {
-              // Need to authenticate with DeHub
-              const timestamp = Date.now();
-              const message = `Sign this message to authenticate with DeHub.\n\nWallet: ${address}\nTimestamp: ${timestamp}`;
-              const signature = await signer.signMessage(message);
-              
-              const network = await provider.getNetwork();
-              const chainId = Number(network.chainId);
-
-              const { user: userData } = await authenticateWallet(
-                address,
-                signature,
-                message,
-                chainId
-              );
-
-              localStorage.setItem('dehub_wallet', address);
-              setWalletAddress(address);
-              setUser(userData);
-            }
-          } catch (error) {
-            console.error('Auto-authentication failed:', error);
-          }
         }
+        
+        // Only initialize Web3Auth lazily when needed (not on initial load)
+        // This prevents blocking the app if Web3Auth config is missing
       } catch (error) {
-        console.error('Web3Auth initialization failed:', error);
+        console.error('Auth initialization failed:', error);
       } finally {
         setIsLoading(false);
       }
@@ -98,15 +66,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const connect = useCallback(async () => {
-    if (!web3auth) {
-      throw new Error('Web3Auth not initialized');
-    }
-
     setIsConnecting(true);
 
     try {
+      // Lazily initialize Web3Auth on first connect
+      let web3authInstance = web3auth;
+      if (!web3authInstance) {
+        web3authInstance = await getWeb3Auth();
+        setWeb3auth(web3authInstance);
+      }
       // Connect via Web3Auth modal
-      const web3authProvider = await web3auth.connect();
+      const web3authProvider = await web3authInstance.connect();
       
       if (!web3authProvider) {
         throw new Error('Failed to connect wallet');
