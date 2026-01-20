@@ -89,9 +89,9 @@ export function StoriesBar({ users }: StoriesBarProps) {
     <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="relative">
         {/* Left fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-[1]" />
         {/* Right fade */}
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
         
         <div className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
           {/* Create Story/Live Button */}
