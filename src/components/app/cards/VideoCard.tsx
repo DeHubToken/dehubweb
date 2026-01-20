@@ -72,11 +72,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     setIsPlaying(false);
   }, []);
 
-  const handleVideoError = useCallback(() => {
+  const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const videoEl = e.currentTarget;
+    console.error('Video error:', video.videoUrl, videoEl.error?.message || 'Unknown error');
     setIsLoading(false);
     setHasError(true);
     setIsPlaying(false);
-  }, []);
+  }, [video.videoUrl]);
   
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -140,8 +142,11 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
             poster={video.thumbnail}
             muted={isMuted}
             playsInline
+            preload="metadata"
+            crossOrigin="anonymous"
             onEnded={handleVideoEnded}
             onError={handleVideoError}
+            onLoadedData={() => console.log('Video loaded:', video.videoUrl)}
             className="w-full h-full object-cover"
           />
         ) : (
