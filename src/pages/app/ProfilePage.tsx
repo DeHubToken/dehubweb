@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
   Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2
@@ -11,6 +11,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
+import { AppLayout } from '@/components/app/AppLayout';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -188,31 +189,38 @@ const MOCK_FRACTIONS = [
 
 export default function ProfilePage() {
   const [searchParams] = useSearchParams();
+  const { username: routeUsername } = useParams<{ username: string }>();
   const userId = searchParams.get('id');
   const { user: currentUser, isAuthenticated } = useAuth();
   
-  // Fetch profile from API
+  // Determine lookup method: route param username > query param id > current user
+  const lookupUsername = routeUsername;
+  const lookupUserId = userId || (!routeUsername ? currentUser?.id : undefined);
+  
+  // Fetch profile from API - supports both username and userId lookups
   const { 
     data: apiProfile, 
     isLoading: isLoadingProfile, 
     isError: isProfileError 
   } = useDeHubProfile({ 
-    userId: userId || currentUser?.id, 
-    enabled: !!(userId || currentUser?.id) 
+    userId: lookupUserId, 
+    username: lookupUsername,
+    enabled: !!(lookupUserId || lookupUsername)
   });
   
-  // Fetch user content from API
+  // Fetch user content from API - use the profile ID once we have it
   const {
     data: userContentData,
     isLoading: isLoadingContent,
   } = useDeHubUserContent({
-    userId: userId || currentUser?.id,
-    enabled: !!(userId || currentUser?.id),
+    userId: apiProfile?.id || lookupUserId,
+    enabled: !!(apiProfile?.id || lookupUserId),
   });
   
   // Determine which profile to show - no more mock fallback
   const profile = apiProfile;
-  const isOwnProfile = !userId || (currentUser?.id === userId);
+  // Check if viewing own profile: no route username AND (no query ID OR query ID matches current user)
+  const isOwnProfile = !routeUsername && (!userId || (currentUser?.id === userId));
   
   // Process API content - no mock fallback
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS } = useMemo(() => {
@@ -622,16 +630,24 @@ export default function ProfilePage() {
     }
   };
 
+  // Determine if we need to wrap in AppLayout (when accessed via /:username route)
+  const needsLayoutWrapper = !!routeUsername;
+
   // Show loading state
   if (isLoadingProfile) {
-    return (
+    const loadingContent = (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
       </div>
     );
+    
+    if (needsLayoutWrapper) {
+      return <AppLayout>{loadingContent}</AppLayout>;
+    }
+    return loadingContent;
   }
 
-  return (
+  const profileContent = (
     <div className="min-h-screen">
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3 mt-2 lg:mt-0">
         {/* Profile Card Bento */}
@@ -835,4 +851,11 @@ export default function ProfilePage() {
       </Drawer>
     </div>
   );
+
+  // Wrap in AppLayout if accessed via /:username route
+  if (needsLayoutWrapper) {
+    return <AppLayout>{profileContent}</AppLayout>;
+  }
+
+  return profileContent;
 }

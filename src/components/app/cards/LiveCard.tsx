@@ -41,6 +41,8 @@ export function LiveCard({ stream }: LiveCardProps) {
           avatarSeed={stream.avatar}
           contentType="live"
           isLive
+          creatorId={stream.creatorId}
+          creatorUsername={stream.creatorUsername}
         />
         <div className="flex items-center gap-1 pr-3">
           <motion.button

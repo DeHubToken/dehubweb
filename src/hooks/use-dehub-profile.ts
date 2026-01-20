@@ -7,7 +7,7 @@
  */
 
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { getAccountInfo, getUserNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername, getUserNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
 import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
@@ -51,25 +51,46 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
 }
 
 interface UseDeHubProfileOptions {
+  /** User ID for lookup */
   userId?: string;
+  /** Username for lookup (alternative to userId) */
+  username?: string;
   enabled?: boolean;
 }
 
 /**
  * Hook to fetch user profile data
+ * Supports both userId and username lookups
  */
-export function useDeHubProfile({ userId, enabled = true }: UseDeHubProfileOptions = {}) {
+export function useDeHubProfile({ userId, username, enabled = true }: UseDeHubProfileOptions = {}) {
   return useQuery({
-    queryKey: ['dehub-profile', userId],
+    queryKey: ['dehub-profile', userId || username],
     queryFn: async () => {
-      if (!userId) throw new Error('User ID is required');
-      const user = await getAccountInfo(userId);
+      let user: DeHubUser;
+      
+      if (username) {
+        // Use username-based lookup
+        user = await getAccountByUsername(username);
+      } else if (userId) {
+        // Use ID-based lookup
+        user = await getAccountInfo(userId);
+      } else {
+        throw new Error('Either userId or username is required');
+      }
+      
       return mapUserToProfile(user);
     },
-    enabled: enabled && !!userId,
+    enabled: enabled && !!(userId || username),
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
   });
+}
+
+/**
+ * Hook to fetch user profile by username only
+ */
+export function useDeHubProfileByUsername(username?: string, enabled = true) {
+  return useDeHubProfile({ username, enabled: enabled && !!username });
 }
 
 interface UseDeHubUserContentOptions {

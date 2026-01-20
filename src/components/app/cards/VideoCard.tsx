@@ -89,6 +89,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           avatarSeed={video.channelAvatar}
           verified={video.verified}
           contentType="video"
+          creatorId={video.creatorId}
+          creatorUsername={video.creatorUsername}
         />
         <div className="flex items-center gap-1 pr-3">
           <motion.button

@@ -51,6 +51,9 @@ const App = () => (
               <Route path="post/:postId/info" element={<PostInfoPage />} />
             </Route>
             
+            {/* Username-based profile route (e.g., /d, /username) */}
+            <Route path="/:username" element={<ProfilePage />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

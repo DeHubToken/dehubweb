@@ -58,6 +58,10 @@ export interface VideoItem extends BaseFeedItem {
   verified: boolean;
   views: string;
   uploadedAgo: string;
+  /** Creator's user ID for navigation */
+  creatorId?: string;
+  /** Creator's username for URL-based navigation */
+  creatorUsername?: string;
 }
 
 /**
@@ -73,6 +77,10 @@ export interface ImagePost extends BaseFeedItem {
   caption: string;
   comments: number;
   timeAgo: string;
+  /** Creator's user ID for navigation */
+  creatorId?: string;
+  /** Creator's username for URL-based navigation */
+  creatorUsername?: string;
 }
 
 /**
@@ -88,6 +96,10 @@ export interface LiveStream extends BaseFeedItem {
   thumbnail: string;
   tags: string[];
   isLive: boolean;
+  /** Creator's user ID for navigation */
+  creatorId?: string;
+  /** Creator's username for URL-based navigation */
+  creatorUsername?: string;
 }
 
 /**
@@ -104,6 +116,10 @@ export interface ShortVideo extends BaseFeedItem {
   sound?: string;
   comments?: string;
   shares?: string;
+  /** Creator's user ID for navigation */
+  creatorId?: string;
+  /** Creator's username for URL-based navigation */
+  creatorUsername?: string;
 }
 
 /**

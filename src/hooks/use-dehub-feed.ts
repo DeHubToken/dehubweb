@@ -133,6 +133,10 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // Get created date from various fields
   const createdAt = nft.createdAt || nft.created_at;
   
+  // Get creator ID and username for profile navigation
+  const creatorId = nft.minter || nft.creator?.id;
+  const creatorUsername = nft.creator?.username || nft.mintername;
+  
   return {
     id,
     type: 'video',
@@ -145,6 +149,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     verified,
     views: formatViews(viewCount),
     uploadedAgo: formatTimeAgo(createdAt),
+    creatorId,
+    creatorUsername,
   };
 }
 
@@ -176,6 +182,10 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   // Get created date
   const createdAt = nft.createdAt || nft.created_at;
   
+  // Get creator ID and username for profile navigation
+  const creatorId = nft.minter || nft.creator?.id;
+  const creatorUsername = nft.creator?.username || nft.mintername;
+  
   return {
     id,
     type: 'image',
@@ -187,6 +197,8 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     caption: nft.description || nft.name || nft.title || '',
     comments,
     timeAgo: formatTimeAgo(createdAt),
+    creatorId,
+    creatorUsername,
   };
 }
 
@@ -215,6 +227,10 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
   const viewCount = nft.views || nft.view_count || 0;
   const category = Array.isArray(nft.category) ? nft.category[0] : nft.category;
   
+  // Get creator ID and username for profile navigation
+  const creatorId = nft.minter || nft.creator?.id;
+  const creatorUsername = nft.creator?.username || nft.mintername;
+  
   return {
     id,
     type: 'live',
@@ -226,6 +242,8 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     thumbnail,
     tags: nft.tags || [],
     isLive: nft.is_live ?? true,
+    creatorId,
+    creatorUsername,
   };
 }
 
