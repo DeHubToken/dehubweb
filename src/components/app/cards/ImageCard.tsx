@@ -43,6 +43,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           avatarSeed={post.avatar}
           verified={post.verified}
           contentType="image"
+          creatorId={post.creatorId}
+          creatorUsername={post.creatorUsername}
         />
         <div className="flex items-center gap-1 pr-3">
           <motion.button

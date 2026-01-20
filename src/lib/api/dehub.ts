@@ -257,6 +257,12 @@ export async function getAccountInfo(userId: string): Promise<DeHubUser> {
   return apiCall<DeHubUser>(`/api/account_info/${userId}`);
 }
 
+export async function getAccountByUsername(username: string): Promise<DeHubUser> {
+  // Remove @ prefix if present
+  const cleanUsername = username.replace('@', '');
+  return apiCall<DeHubUser>(`/api/account_info/${cleanUsername}`);
+}
+
 export async function updateProfile(
   data: Partial<Pick<DeHubUser, 'username' | 'display_name' | 'bio' | 'avatar_url' | 'cover_url'>>
 ): Promise<DeHubUser> {

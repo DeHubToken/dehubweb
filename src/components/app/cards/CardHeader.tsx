@@ -3,6 +3,7 @@
  * =====================
  * Universal header for all feed card types.
  * Displays avatar with gradient ring, username, verified badge, and content type label.
+ * Clickable to navigate to creator's profile.
  * 
  * @example
  * ```tsx
@@ -11,18 +12,21 @@
  *   avatarSeed="tech"
  *   verified={true}
  *   contentType="video"
+ *   creatorId="123"
+ *   creatorUsername="techguru"
  * />
  * ```
  */
 
 import { CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ContentType } from '@/types/feed.types';
 
 interface CardHeaderProps {
   /** Display name or username */
   username: string;
-  /** Seed for generating avatar image */
+  /** Seed for generating avatar image or actual avatar URL */
   avatarSeed: string;
   /** Whether user is verified */
   verified?: boolean;
@@ -30,6 +34,10 @@ interface CardHeaderProps {
   contentType: ContentType;
   /** Whether this is a live stream (shows pulsing indicator) */
   isLive?: boolean;
+  /** Creator's user ID for navigation */
+  creatorId?: string;
+  /** Creator's username for URL-based navigation */
+  creatorUsername?: string;
 }
 
 /**
@@ -48,25 +56,51 @@ export function CardHeader({
   avatarSeed, 
   verified = false, 
   contentType,
-  isLive = false 
+  isLive = false,
+  creatorId,
+  creatorUsername,
 }: CardHeaderProps) {
+  const navigate = useNavigate();
   const badge = CONTENT_BADGES[contentType];
+
+  // Determine avatar source - if it's a URL use it, otherwise use dicebear
+  const avatarSrc = avatarSeed.startsWith('http') 
+    ? avatarSeed 
+    : `https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarSeed}`;
+
+  const handleProfileClick = () => {
+    // Prefer username-based navigation, fallback to ID
+    if (creatorUsername) {
+      const cleanUsername = creatorUsername.replace('@', '');
+      navigate(`/${cleanUsername}`);
+    } else if (creatorId) {
+      navigate(`/app/profile?id=${creatorId}`);
+    }
+  };
+
+  const isClickable = !!(creatorId || creatorUsername);
 
   return (
     <div className="flex items-center gap-3 p-3">
-      <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-        <div className="p-0.5 bg-zinc-900 rounded-full">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarSeed}`} />
-            <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
-          </Avatar>
+      <button
+        onClick={handleProfileClick}
+        disabled={!isClickable}
+        className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+      >
+        <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+          <div className="p-0.5 bg-zinc-900 rounded-full">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={avatarSrc} />
+              <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
+            </Avatar>
+          </div>
         </div>
-      </div>
-      <div className="flex items-center gap-1">
-        <span className="font-semibold text-white text-sm">{username}</span>
-        {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
-        {isLive && <span className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
-      </div>
+        <div className="flex items-center gap-1">
+          <span className="font-semibold text-white text-sm">{username}</span>
+          {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+          {isLive && <span className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+        </div>
+      </button>
     </div>
   );
 }

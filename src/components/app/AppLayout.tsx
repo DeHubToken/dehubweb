@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
@@ -6,7 +6,11 @@ import { MobileBottomNav } from './MobileBottomNav';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { PostModal } from '@/features/post/PostModal';
 
-function AppLayoutContent() {
+interface AppLayoutContentProps {
+  children?: ReactNode;
+}
+
+function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles } = useGlobalDropZone();
 
@@ -18,7 +22,7 @@ function AppLayoutContent() {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
         <main className="flex-1 min-h-screen pt-14 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
-          <Outlet />
+          {children || <Outlet />}
         </main>
         
         <RightSidebar />
@@ -37,10 +41,14 @@ function AppLayoutContent() {
   );
 }
 
-export function AppLayout() {
+interface AppLayoutProps {
+  children?: ReactNode;
+}
+
+export function AppLayout({ children }: AppLayoutProps) {
   return (
     <GlobalDropZoneProvider>
-      <AppLayoutContent />
+      <AppLayoutContent>{children}</AppLayoutContent>
     </GlobalDropZoneProvider>
   );
 }
