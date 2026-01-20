@@ -17,19 +17,40 @@ export function getMediaUrl(relativePath?: string): string | undefined {
   return `${DEHUB_CDN_BASE}${relativePath}`;
 }
 
-// Types based on DeHub API response (actual field names from API)
+// Types based on DeHub API response (supports both API field naming conventions)
 export interface DeHubUser {
-  id: string;
-  wallet_address: string;
+  // ID fields (API uses _id, normalized to id)
+  _id?: string;
+  id?: string;
+  
+  // Wallet (API uses address)
+  address?: string;
+  wallet_address?: string;
+  
+  // Profile fields (API uses camelCase)
   username?: string;
+  displayName?: string;
   display_name?: string;
   bio?: string;
+  avatarUrl?: string;
   avatar_url?: string;
+  coverUrl?: string;
   cover_url?: string;
+  
+  // Verification
+  isVerified?: boolean;
   is_verified?: boolean;
+  
+  // Stats (API returns arrays, we normalize to counts)
+  followers?: string[];
   follower_count?: number;
+  followings?: string[];
   following_count?: number;
+  uploads?: number;
   post_count?: number;
+  
+  // Timestamps
+  createdAt?: string;
   created_at?: string;
 }
 
@@ -254,13 +275,23 @@ export async function recordView(tokenId: string): Promise<void> {
 
 // User functions
 export async function getAccountInfo(userId: string): Promise<DeHubUser> {
-  return apiCall<DeHubUser>(`/api/account_info/${userId}`);
+  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${userId}`);
+  // Handle wrapped response from API
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as DeHubUser;
 }
 
 export async function getAccountByUsername(username: string): Promise<DeHubUser> {
   // Remove @ prefix if present
   const cleanUsername = username.replace('@', '');
-  return apiCall<DeHubUser>(`/api/account_info/${cleanUsername}`);
+  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${cleanUsername}`);
+  // Handle wrapped response from API
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as DeHubUser;
 }
 
 export async function updateProfile(
