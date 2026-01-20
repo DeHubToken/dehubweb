@@ -134,7 +134,13 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 20 }: UseD
     initialPageParam: 1,
     enabled: enabled && !!userId,
     staleTime: 1000 * 60 * 5,
-    retry: 2,
+    retry: (failureCount, error) => {
+      // Don't retry on 404 - user might not have any content
+      if (error?.message?.includes('404') || error?.message?.includes('Not Found')) {
+        return false;
+      }
+      return failureCount < 2;
+    },
   });
 }
 

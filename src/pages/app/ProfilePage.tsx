@@ -208,13 +208,13 @@ export default function ProfilePage() {
     enabled: !!(lookupUserId || lookupUsername)
   });
   
-  // Fetch user content from API - use the profile ID once we have it
+  // Fetch user content from API - use wallet address once we have profile
   const {
     data: userContentData,
     isLoading: isLoadingContent,
   } = useDeHubUserContent({
-    userId: apiProfile?.id || lookupUserId,
-    enabled: !!(apiProfile?.id || lookupUserId),
+    userId: apiProfile?.walletAddress,
+    enabled: !!apiProfile?.walletAddress,
   });
   
   // Determine which profile to show - no more mock fallback
