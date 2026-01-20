@@ -2,12 +2,12 @@
  * Videos Feed Component
  * =====================
  * Displays a grid/list of video content with filtering options.
- * Uses universal card components and centralized mock data.
+ * Fetches from DeHub API with fallback to mock data.
  * 
  * @module components/app/feeds/VideosFeed
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,10 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from '@/components/app/cards/CommentsSection';
 
+// DeHub API hook
+import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
+
+// Fallback mock data
 import { SAMPLE_VIDEOS } from '@/data/mock-feed.data';
 import { shuffleArray } from '@/lib/feed-utils';
 import type { VideoItem } from '@/types/feed.types';
@@ -44,6 +48,14 @@ const DURATION_OPTIONS = ['0-1m', '1-4m', '4-20m', '20m+'];
 const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented'];
 const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
 const CATEGORY_PILLS = ['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'];
+
+// Map sort options to API params
+const SORT_MAP: Record<string, 'latest' | 'popular' | 'trending'> = {
+  'New to Old': 'latest',
+  'Most Liked': 'popular',
+  'Most Viewed': 'popular',
+  'Most Commented': 'trending',
+};
 
 // ============================================================================
 // SUB-COMPONENTS
@@ -202,18 +214,72 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [expandedComments, setExpandedComments] = useState<string | null>(null);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Shuffle videos on refresh using centralized data and shared utility
-  const shuffledVideos = useMemo(() => {
+  // Fetch from DeHub API
+  const {
+    data: apiData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  } = useDeHubVideos({
+    limit: 15,
+    sort: SORT_MAP[selectedSort] || 'latest',
+    category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+  });
+
+  // Refetch when refreshKey changes
+  useEffect(() => {
+    if (refreshKey > 0) {
+      refetch();
+    }
+  }, [refreshKey, refetch]);
+
+  // Map API data to VideoItem array
+  const apiVideos = useMemo(() => {
+    if (!apiData?.pages) return [];
+    const allNFTs = apiData.pages.flatMap(page => page.data || []);
+    return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
+  }, [apiData]);
+
+  // Fallback to mock data
+  const shuffledMockVideos = useMemo(() => {
     return shuffleArray(SAMPLE_VIDEOS, refreshKey);
   }, [refreshKey]);
+
+  // Determine which data to use
+  const useMockData = isError || (apiVideos.length === 0 && !isApiLoading);
+  const videos = useMockData ? shuffledMockVideos : apiVideos;
+  const hasMore = useMockData ? false : hasNextPage;
+  const isLoadingMore = isFetchingNextPage;
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!loaderRef.current || !hasMore || useMockData) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoadingMore) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, isLoadingMore, useMockData, fetchNextPage]);
 
   const toggleComments = (videoId: string) => {
     setExpandedComments(expandedComments === videoId ? null : videoId);
   };
 
-  if (isRefreshing) {
+  if (isRefreshing || isApiLoading) {
     return (
       <div className="p-2 sm:p-3 flex items-center justify-center py-32">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
@@ -251,12 +317,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
-            {CATEGORY_PILLS.map((cat, i) => (
+            {CATEGORY_PILLS.map((cat) => (
               <button
                 key={cat}
+                onClick={() => setSelectedCategory(cat)}
                 className={cn(
                   'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                  i === 0 ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  selectedCategory === cat ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 )}
               >
                 {cat}
@@ -268,7 +335,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
       {/* Video Grid */}
       <div className="space-y-3">
-        {shuffledVideos.map((video) => (
+        {videos.map((video) => (
           <VideoCardItem
             key={video.id}
             video={video}
@@ -277,6 +344,21 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           />
         ))}
       </div>
+
+      {/* Infinite scroll loader */}
+      {!useMockData && (
+        <div ref={loaderRef} className="py-4 flex justify-center">
+          {isLoadingMore && (
+            <div className="flex items-center gap-2 text-zinc-400">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span className="text-sm">Loading more...</span>
+            </div>
+          )}
+          {!hasMore && videos.length > 0 && (
+            <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

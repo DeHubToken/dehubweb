@@ -2,12 +2,12 @@
  * Home Feed Component
  * ===================
  * Mixed content feed with infinite scroll for the home tab.
- * Displays a curated mix of all content types, paginated.
+ * Fetches content from DeHub API with fallback to mock data.
  * 
  * @module components/app/feeds/HomeFeed
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
 
 // Card components
@@ -20,12 +20,17 @@ import {
   StoriesBar 
 } from '@/components/app/cards';
 
-// Mock data
+// DeHub API hook
+import { useDeHubFeed, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
+
+// Mock data fallback
 import { 
   STORY_USERS,
   getPaginatedFeed,
   type UnifiedFeedItem,
 } from '@/data/mock-feed.data';
+
+import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const PAGE_SIZE = 15;
 
@@ -35,21 +40,71 @@ interface HomeFeedProps {
 }
 
 export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
-  const [items, setItems] = useState<UnifiedFeedItem[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Load initial items
+  // Fetch from DeHub API
+  const {
+    data: apiData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  } = useDeHubFeed({
+    limit: PAGE_SIZE,
+    sort: 'latest',
+  });
+
+  // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
-    setItems([]);
-    setPage(0);
-    setHasMore(true);
-    const { items: initialItems, hasMore: more } = getPaginatedFeed(0, PAGE_SIZE, shuffleKey);
-    setItems(initialItems);
-    setHasMore(more);
-  }, [shuffleKey]);
+    if (shuffleKey > 0) {
+      refetch();
+    }
+  }, [shuffleKey, refetch]);
+
+  // Map API data to feed items
+  const apiItems = useMemo(() => {
+    if (!apiData?.pages) return [];
+    
+    const allNFTs = apiData.pages.flatMap(page => page.data || []);
+    
+    return allNFTs.map((nft, index): UnifiedFeedItem => {
+      if (nft.media_type === 'image') {
+        return {
+          type: 'image',
+          data: mapNFTToImagePost(nft, index),
+        };
+      }
+      // Default to video for video/audio/other types
+      return {
+        type: 'video',
+        data: mapNFTToVideoItem(nft, index),
+      };
+    });
+  }, [apiData]);
+
+  // Fallback to mock data if API fails or returns empty
+  const [mockItems, setMockItems] = useState<UnifiedFeedItem[]>([]);
+  const [mockPage, setMockPage] = useState(0);
+  const [mockHasMore, setMockHasMore] = useState(true);
+
+  useEffect(() => {
+    if (isError || (apiItems.length === 0 && !isApiLoading)) {
+      setMockItems([]);
+      setMockPage(0);
+      setMockHasMore(true);
+      const { items: initialItems, hasMore: more } = getPaginatedFeed(0, PAGE_SIZE, shuffleKey);
+      setMockItems(initialItems);
+      setMockHasMore(more);
+    }
+  }, [isError, shuffleKey, apiItems.length, isApiLoading]);
+
+  // Determine which items to show
+  const useMockData = isError || (apiItems.length === 0 && !isApiLoading);
+  const items = useMockData ? mockItems : apiItems;
+  const hasMore = useMockData ? mockHasMore : hasNextPage;
+  const isLoadingMore = useMockData ? false : isFetchingNextPage;
 
   // Infinite scroll observer
   useEffect(() => {
@@ -57,8 +112,18 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoading && hasMore) {
-          loadMore();
+        if (entries[0].isIntersecting && !isLoadingMore) {
+          if (useMockData) {
+            // Load more mock data
+            const nextPage = mockPage + 1;
+            const { items: newItems, hasMore: more } = getPaginatedFeed(nextPage, PAGE_SIZE, shuffleKey);
+            setMockItems(prev => [...prev, ...newItems]);
+            setMockPage(nextPage);
+            setMockHasMore(more);
+          } else {
+            // Load more from API
+            fetchNextPage();
+          }
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -66,22 +131,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasMore, isLoading, page, shuffleKey]);
-
-  const loadMore = useCallback(() => {
-    if (isLoading || !hasMore) return;
-    
-    setIsLoading(true);
-    // Simulate network delay
-    setTimeout(() => {
-      const nextPage = page + 1;
-      const { items: newItems, hasMore: more } = getPaginatedFeed(nextPage, PAGE_SIZE, shuffleKey);
-      setItems(prev => [...prev, ...newItems]);
-      setPage(nextPage);
-      setHasMore(more);
-      setIsLoading(false);
-    }, 500);
-  }, [page, shuffleKey, isLoading, hasMore]);
+  }, [hasMore, isLoadingMore, useMockData, mockPage, shuffleKey, fetchNextPage]);
 
   const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
     switch (item.type) {
@@ -100,9 +150,11 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     }
   };
 
+  const isLoading = isApiLoading || isRefreshing;
+
   return (
     <div className="p-2 sm:p-3 space-y-3">
-      {isRefreshing ? (
+      {isLoading ? (
         <div className="flex items-center justify-center py-32">
           <Loader2 className="w-10 h-10 text-white animate-spin" />
         </div>
@@ -113,7 +165,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
           
           {/* Infinite scroll loader */}
           <div ref={loaderRef} className="py-4 flex justify-center">
-            {isLoading && (
+            {isLoadingMore && (
               <div className="flex items-center gap-2 text-zinc-400">
                 <Loader2 className="w-5 h-5 animate-spin" />
                 <span className="text-sm">Loading more...</span>
