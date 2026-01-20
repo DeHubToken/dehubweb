@@ -11,6 +11,7 @@
  */
 
 export { useAudioAnalyser } from './use-audio-analyser';
+export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 export { useGlitchEffect } from './use-glitch-effect';
 export { GlobalDropZoneProvider, useGlobalDropZone } from './use-global-drop-zone';
 export { useIsMobile } from './use-mobile';
