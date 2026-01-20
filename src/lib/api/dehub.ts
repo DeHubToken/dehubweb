@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 
 // DeHub CDN base URL for media assets
-export const DEHUB_CDN_BASE = 'https://cdn.dehub.io/';
+export const DEHUB_CDN_BASE = 'https://content.dehub.io/';
 
 /**
  * Convert relative media paths to absolute CDN URLs
