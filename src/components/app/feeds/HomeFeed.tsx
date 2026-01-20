@@ -21,7 +21,7 @@ import {
 } from '@/components/app/cards';
 
 // DeHub API hook
-import { useDeHubFeed, useDeHubStoryUsers, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed, useDeHubStoryUsers, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 
 import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
 
@@ -74,7 +74,10 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     
     return allNFTs.map((nft, index): UnifiedFeedItem => {
-      if (nft.media_type === 'image') {
+      // Determine content type using helper function
+      const contentType = getContentType(nft);
+      
+      if (contentType === 'image') {
         return {
           type: 'image',
           data: mapNFTToImagePost(nft, index),
