@@ -14,8 +14,12 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const endpoint = url.searchParams.get('endpoint');
+    // Parse the body to get our parameters
+    const body = await req.json();
+    const { _method, _endpoint, _params, ...requestBody } = body;
+    
+    const method = _method || 'GET';
+    const endpoint = _endpoint;
     
     if (!endpoint) {
       return new Response(
@@ -24,15 +28,17 @@ serve(async (req) => {
       );
     }
 
-    // Build the DeHub API URL
+    // Build the DeHub API URL with query params
     const dehubUrl = new URL(endpoint, DEHUB_API_BASE);
     
-    // Forward query params (except our internal 'endpoint' param)
-    url.searchParams.forEach((value, key) => {
-      if (key !== 'endpoint') {
-        dehubUrl.searchParams.set(key, value);
-      }
-    });
+    // Add query params from _params
+    if (_params && typeof _params === 'object') {
+      Object.entries(_params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          dehubUrl.searchParams.set(key, String(value));
+        }
+      });
+    }
 
     // Get the DeHub auth token from header
     const dehubToken = req.headers.get('x-dehub-token');
@@ -47,19 +53,19 @@ serve(async (req) => {
       headers['Authorization'] = `Bearer ${dehubToken}`;
     }
 
-    // Get request body for POST/PUT/PATCH
-    let body: string | undefined;
-    if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
-      body = await req.text();
+    // Only include body for POST/PUT/PATCH with actual data
+    let forwardBody: string | undefined;
+    if (['POST', 'PUT', 'PATCH'].includes(method) && Object.keys(requestBody).length > 0) {
+      forwardBody = JSON.stringify(requestBody);
     }
 
-    console.log(`[DeHub API] ${req.method} ${dehubUrl.toString()}`);
+    console.log(`[DeHub API] ${method} ${dehubUrl.toString()}`);
 
     // Forward the request to DeHub API
     const response = await fetch(dehubUrl.toString(), {
-      method: req.method,
+      method,
       headers,
-      body,
+      body: forwardBody,
     });
 
     const responseData = await response.text();
