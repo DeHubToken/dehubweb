@@ -38,6 +38,9 @@ export function SidebarNavItem({
     onNavigate?.();
   };
 
+  // Desktop variant uses smaller sizing (10% reduction)
+  const isDesktop = variant === 'desktop';
+
   if (item.external) {
     return (
       <a
@@ -46,14 +49,20 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'flex items-center gap-3.5 w-full px-3 py-3 rounded-xl transition-colors text-white text-[15px]',
+          'flex items-center w-full rounded-xl transition-colors text-white',
+          isDesktop 
+            ? 'gap-3 px-2.5 py-2.5 text-[13.5px]' 
+            : 'gap-3.5 px-3 py-3 text-[15px]',
           variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
             : 'hover:bg-zinc-800/50'
         )}
       >
-        <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0">
-          <item.icon className="w-[22px] h-[22px]" />
+        <div className={cn(
+          "rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0",
+          isDesktop ? "w-9 h-9" : "w-10 h-10"
+        )}>
+          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
         <span className="truncate">{item.label}</span>
       </a>
@@ -65,7 +74,10 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'flex items-center gap-3.5 w-full px-3 py-3 rounded-xl transition-colors text-white text-[15px]',
+        'flex items-center w-full rounded-xl transition-colors text-white',
+        isDesktop 
+          ? 'gap-3 px-2.5 py-2.5 text-[13.5px]' 
+          : 'gap-3.5 px-3 py-3 text-[15px]',
         isActive
           ? variant === 'mobile'
             ? 'bg-zinc-700/50 font-semibold'
@@ -76,10 +88,11 @@ export function SidebarNavItem({
       )}
     >
       <div className={cn(
-        "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+        "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+        isDesktop ? "w-9 h-9" : "w-10 h-10",
         isActive ? "bg-zinc-700" : "bg-zinc-800"
       )}>
-        <item.icon className="w-[22px] h-[22px]" />
+        <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
       </div>
       <span className="truncate">{item.label}</span>
     </NavLink>
