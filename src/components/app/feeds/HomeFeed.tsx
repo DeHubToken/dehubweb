@@ -2,13 +2,13 @@
  * Home Feed Component
  * ===================
  * Mixed content feed with infinite scroll for the home tab.
- * Fetches content from DeHub API with fallback to mock data.
+ * Fetches content from DeHub API.
  * 
  * @module components/app/feeds/HomeFeed
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Loader2 } from 'lucide-react';
+import { useEffect, useRef, useMemo } from 'react';
+import { Loader2, RefreshCw } from 'lucide-react';
 
 // Card components
 import { 
@@ -23,14 +23,17 @@ import {
 // DeHub API hook
 import { useDeHubFeed, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 
-// Mock data fallback
-import { 
-  STORY_USERS,
-  getPaginatedFeed,
-  type UnifiedFeedItem,
-} from '@/data/mock-feed.data';
+// Story users still needed for stories bar UI
+import { STORY_USERS } from '@/data/mock-feed.data';
 
-import type { VideoItem, ImagePost } from '@/types/feed.types';
+import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
+
+type UnifiedFeedItem = 
+  | { type: 'post'; data: TextPost }
+  | { type: 'video'; data: VideoItem }
+  | { type: 'image'; data: ImagePost }
+  | { type: 'live'; data: LiveStream }
+  | { type: 'shorts'; data: ShortVideo[] };
 
 const PAGE_SIZE = 15;
 
@@ -51,6 +54,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     isLoading: isApiLoading,
     isError,
     refetch,
+    error,
   } = useDeHubFeed({
     limit: PAGE_SIZE,
     sort: 'latest',
@@ -64,7 +68,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   }, [shuffleKey, refetch]);
 
   // Map API data to feed items
-  const apiItems = useMemo(() => {
+  const items = useMemo((): UnifiedFeedItem[] => {
     if (!apiData?.pages) return [];
     
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
@@ -84,46 +88,14 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     });
   }, [apiData]);
 
-  // Fallback to mock data if API fails or returns empty
-  const [mockItems, setMockItems] = useState<UnifiedFeedItem[]>([]);
-  const [mockPage, setMockPage] = useState(0);
-  const [mockHasMore, setMockHasMore] = useState(true);
-
-  useEffect(() => {
-    if (isError || (apiItems.length === 0 && !isApiLoading)) {
-      setMockItems([]);
-      setMockPage(0);
-      setMockHasMore(true);
-      const { items: initialItems, hasMore: more } = getPaginatedFeed(0, PAGE_SIZE, shuffleKey);
-      setMockItems(initialItems);
-      setMockHasMore(more);
-    }
-  }, [isError, shuffleKey, apiItems.length, isApiLoading]);
-
-  // Determine which items to show
-  const useMockData = isError || (apiItems.length === 0 && !isApiLoading);
-  const items = useMockData ? mockItems : apiItems;
-  const hasMore = useMockData ? mockHasMore : hasNextPage;
-  const isLoadingMore = useMockData ? false : isFetchingNextPage;
-
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current || !hasMore) return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoadingMore) {
-          if (useMockData) {
-            // Load more mock data
-            const nextPage = mockPage + 1;
-            const { items: newItems, hasMore: more } = getPaginatedFeed(nextPage, PAGE_SIZE, shuffleKey);
-            setMockItems(prev => [...prev, ...newItems]);
-            setMockPage(nextPage);
-            setMockHasMore(more);
-          } else {
-            // Load more from API
-            fetchNextPage();
-          }
+        if (entries[0].isIntersecting && !isFetchingNextPage) {
+          fetchNextPage();
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -131,7 +103,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, useMockData, mockPage, shuffleKey, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
     switch (item.type) {
@@ -152,6 +124,27 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
 
   const isLoading = isApiLoading || isRefreshing;
 
+  // Empty state component
+  const EmptyState = () => (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+        <RefreshCw className="w-8 h-8 text-zinc-500" />
+      </div>
+      <h3 className="text-white font-semibold text-lg mb-2">No Content Yet</h3>
+      <p className="text-zinc-400 text-sm max-w-xs mb-4">
+        {isError 
+          ? `Unable to load feed. ${error?.message || 'Please try again.'}`
+          : 'Be the first to share something amazing!'}
+      </p>
+      <button 
+        onClick={() => refetch()}
+        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+      >
+        Refresh
+      </button>
+    </div>
+  );
+
   return (
     <div className="p-2 sm:p-3 space-y-3">
       {isLoading ? (
@@ -161,20 +154,27 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
       ) : (
         <>
           <StoriesBar users={STORY_USERS} />
-          {items.map((item, index) => renderFeedItem(item, index))}
           
-          {/* Infinite scroll loader */}
-          <div ref={loaderRef} className="py-4 flex justify-center">
-            {isLoadingMore && (
-              <div className="flex items-center gap-2 text-zinc-400">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span className="text-sm">Loading more...</span>
+          {items.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <>
+              {items.map((item, index) => renderFeedItem(item, index))}
+              
+              {/* Infinite scroll loader */}
+              <div ref={loaderRef} className="py-4 flex justify-center">
+                {isFetchingNextPage && (
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span className="text-sm">Loading more...</span>
+                  </div>
+                )}
+                {!hasNextPage && items.length > 0 && (
+                  <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+                )}
               </div>
-            )}
-            {!hasMore && items.length > 0 && (
-              <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
-            )}
-          </div>
+            </>
+          )}
         </>
       )}
     </div>

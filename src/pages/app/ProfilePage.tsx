@@ -210,28 +210,23 @@ export default function ProfilePage() {
     enabled: !!(userId || currentUser?.id),
   });
   
-  // Determine which profile to show
-  const profile = apiProfile || MOCK_PROFILE;
+  // Determine which profile to show - no more mock fallback
+  const profile = apiProfile;
   const isOwnProfile = !userId || (currentUser?.id === userId);
   
-  // Process API content or fallback to mock
-  const { apiVideos, apiImages, apiPosts } = useMemo(() => {
+  // Process API content - no mock fallback
+  const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS } = useMemo(() => {
     if (!userContentData?.pages) {
-      return { apiVideos: [], apiImages: [], apiPosts: [] };
+      return { PROFILE_POSTS: [], PROFILE_IMAGES: [], ALL_PROFILE_VIDEOS: [] };
     }
     const allNFTs = userContentData.pages.flatMap(page => page.data || []);
     const separated = separateUserContent(allNFTs);
     return { 
-      apiVideos: separated.videos, 
-      apiImages: separated.images, 
-      apiPosts: separated.posts 
+      PROFILE_POSTS: separated.posts,
+      PROFILE_IMAGES: separated.images, 
+      ALL_PROFILE_VIDEOS: separated.videos 
     };
   }, [userContentData]);
-  
-  // Use API data or fallback to mock
-  const PROFILE_POSTS = apiPosts.length > 0 ? apiPosts : createProfilePosts(profile);
-  const PROFILE_IMAGES = apiImages.length > 0 ? apiImages : createProfileImages(profile);
-  const ALL_PROFILE_VIDEOS = apiVideos.length > 0 ? apiVideos : createProfileVideos(profile);
   
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
     { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },

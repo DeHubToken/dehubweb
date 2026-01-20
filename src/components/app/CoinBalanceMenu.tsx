@@ -16,6 +16,7 @@ import usdcLogo from '@/assets/usdc-logo.png';
 interface CoinBalanceMenuProps {
   balance: number;
   variant: 'desktop' | 'mobile';
+  onAuthRequired?: () => boolean;
 }
 
 type MenuView = 'main' | 'buy' | 'send' | 'history' | 'stake';
@@ -38,8 +39,16 @@ const MOCK_TRANSACTIONS = [
   { id: '5', type: 'received', amount: 300, from: 'nft_collector', date: '2024-01-10' },
 ];
 
-export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
+export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenChange = (open: boolean) => {
+    if (open && onAuthRequired && !onAuthRequired()) {
+      return;
+    }
+    setIsOpen(open);
+    if (!open) resetMenu();
+  };
   const [menuView, setMenuView] = useState<MenuView>('main');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<typeof MOCK_USERS[0] | null>(null);
@@ -439,7 +448,7 @@ export function CoinBalanceMenu({ balance, variant }: CoinBalanceMenuProps) {
 
   // Use Drawer (sheet) for both desktop and mobile
   return (
-    <Drawer open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) resetMenu(); }} modal={true}>
+    <Drawer open={isOpen} onOpenChange={handleOpenChange} modal={true}>
       <DrawerTrigger asChild>
         {coinButton}
       </DrawerTrigger>

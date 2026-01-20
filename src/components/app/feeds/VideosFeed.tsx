@@ -2,13 +2,13 @@
  * Videos Feed Component
  * =====================
  * Displays a grid/list of video content with filtering options.
- * Fetches from DeHub API with fallback to mock data.
+ * Fetches from DeHub API.
  * 
  * @module components/app/feeds/VideosFeed
  */
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2, Sparkles } from 'lucide-react';
+import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2, Sparkles, RefreshCw, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
@@ -25,9 +25,6 @@ import { CommentsSection, generateRandomComments, generateRandomQuotes } from '@
 // DeHub API hook
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 
-// Fallback mock data
-import { SAMPLE_VIDEOS } from '@/data/mock-feed.data';
-import { shuffleArray } from '@/lib/feed-utils';
 import type { VideoItem } from '@/types/feed.types';
 
 // ============================================================================
@@ -241,30 +238,19 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [refreshKey, refetch]);
 
   // Map API data to VideoItem array
-  const apiVideos = useMemo(() => {
+  const videos = useMemo(() => {
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
   }, [apiData]);
 
-  // Fallback to mock data
-  const shuffledMockVideos = useMemo(() => {
-    return shuffleArray(SAMPLE_VIDEOS, refreshKey);
-  }, [refreshKey]);
-
-  // Determine which data to use
-  const useMockData = isError || (apiVideos.length === 0 && !isApiLoading);
-  const videos = useMockData ? shuffledMockVideos : apiVideos;
-  const hasMore = useMockData ? false : hasNextPage;
-  const isLoadingMore = isFetchingNextPage;
-
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current || !hasMore || useMockData) return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoadingMore) {
+        if (entries[0].isIntersecting && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
@@ -273,11 +259,33 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, useMockData, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const toggleComments = (videoId: string) => {
     setExpandedComments(expandedComments === videoId ? null : videoId);
   };
+
+  // Empty state component
+  const EmptyState = () => (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+        <Video className="w-8 h-8 text-zinc-500" />
+      </div>
+      <h3 className="text-white font-semibold text-lg mb-2">No Videos Yet</h3>
+      <p className="text-zinc-400 text-sm max-w-xs mb-4">
+        {isError 
+          ? 'Unable to load videos. Please try again.'
+          : 'Be the first to upload a video!'}
+      </p>
+      <button 
+        onClick={() => refetch()}
+        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
+      >
+        <RefreshCw className="w-4 h-4" />
+        Refresh
+      </button>
+    </div>
+  );
 
   if (isRefreshing || isApiLoading) {
     return (
@@ -333,31 +341,35 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         </div>
       </div>
 
-      {/* Video Grid */}
-      <div className="space-y-3">
-        {videos.map((video) => (
-          <VideoCardItem
-            key={video.id}
-            video={video}
-            expandedComments={expandedComments}
-            onToggleComments={toggleComments}
-          />
-        ))}
-      </div>
+      {/* Video Grid or Empty State */}
+      {videos.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <div className="space-y-3">
+            {videos.map((video) => (
+              <VideoCardItem
+                key={video.id}
+                video={video}
+                expandedComments={expandedComments}
+                onToggleComments={toggleComments}
+              />
+            ))}
+          </div>
 
-      {/* Infinite scroll loader */}
-      {!useMockData && (
-        <div ref={loaderRef} className="py-4 flex justify-center">
-          {isLoadingMore && (
-            <div className="flex items-center gap-2 text-zinc-400">
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span className="text-sm">Loading more...</span>
-            </div>
-          )}
-          {!hasMore && videos.length > 0 && (
-            <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
-          )}
-        </div>
+          {/* Infinite scroll loader */}
+          <div ref={loaderRef} className="py-4 flex justify-center">
+            {isFetchingNextPage && (
+              <div className="flex items-center gap-2 text-zinc-400">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span className="text-sm">Loading more...</span>
+              </div>
+            )}
+            {!hasNextPage && videos.length > 0 && (
+              <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
