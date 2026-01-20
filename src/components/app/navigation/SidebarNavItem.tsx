@@ -51,7 +51,7 @@ export function SidebarNavItem({
         className={cn(
           'flex items-center w-full rounded-xl transition-colors text-white',
           isDesktop 
-            ? 'gap-3 px-2.5 py-2.5 text-[13.5px]' 
+            ? 'gap-3 px-2.5 py-2.5 text-[15px]' 
             : 'gap-3.5 px-3 py-3 text-[15px]',
           variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
@@ -76,7 +76,7 @@ export function SidebarNavItem({
       className={cn(
         'flex items-center w-full rounded-xl transition-colors text-white',
         isDesktop 
-          ? 'gap-3 px-2.5 py-2.5 text-[13.5px]' 
+          ? 'gap-3 px-2.5 py-2.5 text-[15px]' 
           : 'gap-3.5 px-3 py-3 text-[15px]',
         isActive
           ? variant === 'mobile'
