@@ -132,8 +132,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       <AuthPrompt 
         isOpen={showAuthPrompt} 
         onClose={() => setShowAuthPrompt(false)}
-        title="Connect to Continue"
-        description="Connect your wallet to post content, view your profile, and manage your coins."
       />
     </>
   );

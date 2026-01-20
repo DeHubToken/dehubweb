@@ -1,82 +1,57 @@
 /**
  * Auth Prompt Component
  * ======================
- * Reusable modal/drawer for prompting users to connect wallet.
+ * Directly triggers Web3Auth modal for authentication.
  * 
  * @module components/app/AuthPrompt
  */
 
-import { Wallet, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer';
+import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 interface AuthPromptProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
-  description?: string;
 }
 
-export function AuthPrompt({ 
-  isOpen, 
-  onClose, 
-  title = "Connect Your Wallet",
-  description = "Sign in with your wallet to access this feature."
-}: AuthPromptProps) {
-  const { connect, isConnecting } = useAuth();
+export function AuthPrompt({ isOpen, onClose }: AuthPromptProps) {
+  const { connect, isConnecting, isAuthenticated } = useAuth();
 
-  const handleConnect = async () => {
-    try {
-      await connect();
-      onClose();
-    } catch (error) {
-      console.error('Connection failed:', error);
+  useEffect(() => {
+    if (isOpen && !isAuthenticated && !isConnecting) {
+      // Directly trigger Web3Auth modal
+      connect()
+        .then(() => {
+          onClose();
+        })
+        .catch((error) => {
+          console.error('Connection failed:', error);
+          onClose();
+        });
     }
-  };
+  }, [isOpen, isAuthenticated, isConnecting, connect, onClose]);
 
-  return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent glass className="px-4 pb-8">
-        <DrawerHeader className="text-center">
-          <DrawerTitle className="text-white">{title}</DrawerTitle>
-        </DrawerHeader>
-        <div className="flex flex-col items-center gap-4 py-6">
-          <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center">
-            <Wallet className="w-10 h-10 text-white" />
-          </div>
-          <p className="text-zinc-400 text-center text-sm max-w-xs">
-            {description}
-          </p>
-          <Button
-            onClick={handleConnect}
-            disabled={isConnecting}
-            className="w-full max-w-xs rounded-full bg-white text-black hover:bg-zinc-200 font-semibold py-6 text-base gap-2"
-          >
-            {isConnecting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Connecting...
-              </>
-            ) : (
-              <>
-                <Wallet className="w-5 h-5" />
-                Connect Wallet
-              </>
-            )}
-          </Button>
-          <p className="text-zinc-500 text-xs text-center">
-            By connecting, you agree to our Terms of Service
-          </p>
+  // Close when authenticated
+  useEffect(() => {
+    if (isAuthenticated && isOpen) {
+      onClose();
+    }
+  }, [isAuthenticated, isOpen, onClose]);
+
+  // Show loading overlay while connecting
+  if (isConnecting) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="flex flex-col items-center gap-4 p-8 rounded-2xl bg-zinc-900/90">
+          <Loader2 className="w-10 h-10 text-white animate-spin" />
+          <p className="text-white font-medium">Connecting...</p>
         </div>
-      </DrawerContent>
-    </Drawer>
-  );
+      </div>
+    );
+  }
+
+  return null;
 }
 
 /**
