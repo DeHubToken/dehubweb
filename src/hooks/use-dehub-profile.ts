@@ -7,7 +7,7 @@
  */
 
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { getAccountInfo, getAccountByUsername, getUserNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername, getUserNFTs, getMediaUrl, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
 import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
@@ -41,14 +41,22 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   const followerCount = user.follower_count ?? user.followers?.length ?? 0;
   const followingCount = user.following_count ?? user.followings?.length ?? 0;
 
+  // Get raw avatar/cover paths (API uses avatarImageUrl/coverImageUrl)
+  const rawAvatarUrl = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
+  const rawCoverUrl = user.coverImageUrl || user.coverUrl || user.cover_url;
+  
+  // Resolve to full CDN URLs if they're relative paths
+  const avatarUrl = rawAvatarUrl ? getMediaUrl(rawAvatarUrl) : undefined;
+  const coverUrl = rawCoverUrl ? getMediaUrl(rawCoverUrl) : undefined;
+
   return {
     id: user._id || user.id || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
     verified: user.isVerified || user.is_verified || false,
     bio: user.bio || '',
-    avatarUrl: user.avatarUrl || user.avatar_url,
-    coverUrl: user.coverUrl || user.cover_url,
+    avatarUrl,
+    coverUrl,
     joinedDate: joinDate,
     following: followingCount,
     followers: followerCount,

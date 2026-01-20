@@ -32,8 +32,12 @@ export interface DeHubUser {
   displayName?: string;
   display_name?: string;
   bio?: string;
+  
+  // Avatar/Cover (API uses *ImageUrl suffix)
+  avatarImageUrl?: string;
   avatarUrl?: string;
   avatar_url?: string;
+  coverImageUrl?: string;
   coverUrl?: string;
   cover_url?: string;
   
