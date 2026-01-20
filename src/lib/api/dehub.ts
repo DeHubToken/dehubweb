@@ -1,0 +1,341 @@
+import { supabase } from '@/integrations/supabase/client';
+
+// Types based on DeHub API documentation
+export interface DeHubUser {
+  id: string;
+  wallet_address: string;
+  username?: string;
+  display_name?: string;
+  bio?: string;
+  avatar_url?: string;
+  cover_url?: string;
+  is_verified?: boolean;
+  follower_count?: number;
+  following_count?: number;
+  post_count?: number;
+  created_at?: string;
+}
+
+export interface DeHubNFT {
+  id: string;
+  token_id: string;
+  title: string;
+  description?: string;
+  media_url: string;
+  thumbnail_url?: string;
+  media_type: 'video' | 'image' | 'audio';
+  creator: DeHubUser;
+  owner?: DeHubUser;
+  view_count?: number;
+  like_count?: number;
+  dislike_count?: number;
+  comment_count?: number;
+  is_live?: boolean;
+  is_ppv?: boolean;
+  ppv_price?: number;
+  category?: string;
+  tags?: string[];
+  created_at: string;
+  duration?: number;
+}
+
+export interface DeHubComment {
+  id: string;
+  content: string;
+  user: DeHubUser;
+  created_at: string;
+  like_count?: number;
+  reply_count?: number;
+  parent_id?: string;
+}
+
+export interface DeHubCategory {
+  id: string;
+  name: string;
+  slug: string;
+  icon_url?: string;
+  nft_count?: number;
+}
+
+export interface SearchNFTsParams {
+  page?: number;
+  limit?: number;
+  category?: string;
+  sort?: 'latest' | 'popular' | 'trending';
+  creator_id?: string;
+  media_type?: 'video' | 'image' | 'audio' | 'live';
+  search?: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  has_more: boolean;
+}
+
+// Store auth token
+let authToken: string | null = null;
+
+export const setAuthToken = (token: string | null) => {
+  authToken = token;
+  if (token) {
+    localStorage.setItem('dehub_token', token);
+  } else {
+    localStorage.removeItem('dehub_token');
+  }
+};
+
+export const getAuthToken = (): string | null => {
+  if (!authToken) {
+    authToken = localStorage.getItem('dehub_token');
+  }
+  return authToken;
+};
+
+// Base API call function
+async function apiCall<T>(
+  endpoint: string,
+  options: {
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+    body?: Record<string, unknown>;
+    params?: Record<string, string | number | undefined>;
+    requiresAuth?: boolean;
+  } = {}
+): Promise<T> {
+  const { method = 'GET', body, params = {}, requiresAuth = false } = options;
+  
+  // Build query string
+  const queryParams = new URLSearchParams();
+  queryParams.set('endpoint', endpoint);
+  
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) {
+      queryParams.set(key, String(value));
+    }
+  });
+
+  const token = getAuthToken();
+  
+  if (requiresAuth && !token) {
+    throw new Error('Authentication required');
+  }
+
+  const { data, error } = await supabase.functions.invoke('dehub-api', {
+    method: 'POST',
+    body: {
+      _method: method,
+      _endpoint: endpoint,
+      _params: params,
+      ...body,
+    },
+    headers: token ? { 'x-dehub-token': token } : undefined,
+  });
+
+  if (error) {
+    throw new Error(error.message || 'API call failed');
+  }
+
+  return data as T;
+}
+
+// Auth functions
+export async function authenticateWallet(
+  walletAddress: string,
+  signature: string,
+  message: string,
+  chainId: number = 1
+): Promise<{ token: string; user: DeHubUser }> {
+  const { data, error } = await supabase.functions.invoke('dehub-auth', {
+    body: {
+      wallet_address: walletAddress,
+      signature,
+      message,
+      chain_id: chainId,
+    },
+  });
+
+  if (error) {
+    throw new Error(error.message || 'Authentication failed');
+  }
+
+  if (data.token) {
+    setAuthToken(data.token);
+  }
+
+  return data;
+}
+
+// NFT/Content functions
+export async function searchNFTs(params: SearchNFTsParams = {}): Promise<PaginatedResponse<DeHubNFT>> {
+  return apiCall<PaginatedResponse<DeHubNFT>>('/api/search_nfts', {
+    params: {
+      page: params.page,
+      limit: params.limit,
+      category: params.category,
+      sort: params.sort,
+      creator_id: params.creator_id,
+      media_type: params.media_type,
+      search: params.search,
+    },
+  });
+}
+
+export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
+  return apiCall<DeHubNFT>(`/api/nft_info/${tokenId}`);
+}
+
+export async function getNFTComments(
+  tokenId: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<PaginatedResponse<DeHubComment>> {
+  return apiCall<PaginatedResponse<DeHubComment>>(`/api/nft/${tokenId}/comments`, {
+    params: { page, limit },
+  });
+}
+
+export async function recordView(tokenId: string): Promise<void> {
+  return apiCall<void>(`/api/record-view/${tokenId}`, {
+    method: 'POST',
+  });
+}
+
+// User functions
+export async function getAccountInfo(userId: string): Promise<DeHubUser> {
+  return apiCall<DeHubUser>(`/api/account_info/${userId}`);
+}
+
+export async function updateProfile(
+  data: Partial<Pick<DeHubUser, 'username' | 'display_name' | 'bio' | 'avatar_url' | 'cover_url'>>
+): Promise<DeHubUser> {
+  return apiCall<DeHubUser>('/api/update_profile', {
+    method: 'POST',
+    body: data,
+    requiresAuth: true,
+  });
+}
+
+export async function getUserNFTs(
+  userId: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<PaginatedResponse<DeHubNFT>> {
+  return apiCall<PaginatedResponse<DeHubNFT>>(`/api/user/${userId}/nfts`, {
+    params: { page, limit },
+  });
+}
+
+// Interaction functions
+export async function voteOnNFT(
+  tokenId: string,
+  voteType: 'like' | 'dislike'
+): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>('/api/request_vote', {
+    method: 'POST',
+    body: { token_id: tokenId, vote_type: voteType },
+    requiresAuth: true,
+  });
+}
+
+export async function followUser(userId: string): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>('/api/request_follow', {
+    method: 'POST',
+    body: { user_id: userId },
+    requiresAuth: true,
+  });
+}
+
+export async function unfollowUser(userId: string): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>('/api/request_unfollow', {
+    method: 'POST',
+    body: { user_id: userId },
+    requiresAuth: true,
+  });
+}
+
+export async function postComment(
+  tokenId: string,
+  content: string,
+  parentId?: string
+): Promise<DeHubComment> {
+  return apiCall<DeHubComment>('/api/request_comment', {
+    method: 'POST',
+    body: { token_id: tokenId, content, parent_id: parentId },
+    requiresAuth: true,
+  });
+}
+
+// Bookmark functions
+export async function savePost(tokenId: string): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>('/api/savePost', {
+    method: 'POST',
+    body: { token_id: tokenId },
+    requiresAuth: true,
+  });
+}
+
+export async function getSavedPosts(
+  page: number = 1,
+  limit: number = 20
+): Promise<PaginatedResponse<DeHubNFT>> {
+  return apiCall<PaginatedResponse<DeHubNFT>>('/api/savedPosts', {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+}
+
+// Category functions
+export async function getCategories(): Promise<DeHubCategory[]> {
+  return apiCall<DeHubCategory[]>('/api/get_categories');
+}
+
+// Content creation
+export async function mintNFT(data: {
+  title: string;
+  description?: string;
+  media_url: string;
+  thumbnail_url?: string;
+  media_type: 'video' | 'image' | 'audio';
+  category?: string;
+  tags?: string[];
+  is_ppv?: boolean;
+  ppv_price?: number;
+}): Promise<DeHubNFT> {
+  return apiCall<DeHubNFT>('/api/user_mint', {
+    method: 'POST',
+    body: data,
+    requiresAuth: true,
+  });
+}
+
+// Livestream functions
+export async function startLivestream(data: {
+  title: string;
+  description?: string;
+  category?: string;
+  thumbnail_url?: string;
+}): Promise<{
+  stream_key: string;
+  ingest_url: string;
+  playback_url: string;
+}> {
+  return apiCall('/api/live/start', {
+    method: 'POST',
+    body: data,
+    requiresAuth: true,
+  });
+}
+
+export async function endLivestream(): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>('/api/live/end', {
+    method: 'POST',
+    requiresAuth: true,
+  });
+}
+
+// DHB Price
+export async function getDHBPrice(): Promise<{ price: number; change_24h: number }> {
+  return apiCall<{ price: number; change_24h: number }>('/api/dpay/price');
+}
