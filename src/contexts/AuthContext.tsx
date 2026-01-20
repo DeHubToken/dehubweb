@@ -1,12 +1,14 @@
+/**
+ * Auth Context
+ * ============
+ * Provides Web3Auth authentication integrated with DeHub API.
+ */
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { BrowserProvider } from 'ethers';
 import { authenticateWallet, getAuthToken, setAuthToken, DeHubUser, getAccountInfo } from '@/lib/api/dehub';
-
-interface EthereumProvider {
-  request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-  on?: (event: string, callback: (...args: unknown[]) => void) => void;
-  removeListener?: (event: string, callback: (...args: unknown[]) => void) => void;
-}
+import { getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
+import type { Web3Auth } from '@web3auth/modal';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -14,112 +16,114 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isConnecting: boolean;
+  web3auth: Web3Auth | null;
   connect: () => Promise<void>;
-  disconnect: () => void;
+  disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Check if MetaMask is available
-const getEthereum = (): EthereumProvider | null => {
-  if (typeof window !== 'undefined' && (window as unknown as { ethereum?: EthereumProvider }).ethereum) {
-    return (window as unknown as { ethereum: EthereumProvider }).ethereum;
-  }
-  return null;
-};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<DeHubUser | null>(null);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken();
 
-  // Check for existing session on mount
+  // Initialize Web3Auth and check for existing session
   useEffect(() => {
-    const checkExistingSession = async () => {
-      const token = getAuthToken();
-      const savedWallet = localStorage.getItem('dehub_wallet');
-      
-      if (token && savedWallet) {
-        try {
-          // Try to get user info with existing token
-          const userData = await getAccountInfo(savedWallet);
-          setUser(userData);
-          setWalletAddress(savedWallet);
-        } catch (error) {
-          console.error('Session restoration failed:', error);
-          // Clear invalid session
-          setAuthToken(null);
-          localStorage.removeItem('dehub_wallet');
+    const init = async () => {
+      try {
+        // Initialize Web3Auth
+        const web3authInstance = await getWeb3Auth();
+        setWeb3auth(web3authInstance);
+
+        // Check for existing session
+        const token = getAuthToken();
+        const savedWallet = localStorage.getItem('dehub_wallet');
+
+        if (token && savedWallet) {
+          try {
+            const userData = await getAccountInfo(savedWallet);
+            setUser(userData);
+            setWalletAddress(savedWallet);
+          } catch (error) {
+            console.error('Session restoration failed:', error);
+            setAuthToken(null);
+            localStorage.removeItem('dehub_wallet');
+          }
+        } else if (web3authInstance.connected && web3authInstance.provider) {
+          // Web3Auth session exists but no DeHub token - re-authenticate
+          try {
+            const provider = new BrowserProvider(web3authInstance.provider);
+            const signer = await provider.getSigner();
+            const address = (await signer.getAddress()).toLowerCase();
+            
+            // Check if we have a valid DeHub token for this address
+            if (!token) {
+              // Need to authenticate with DeHub
+              const timestamp = Date.now();
+              const message = `Sign this message to authenticate with DeHub.\n\nWallet: ${address}\nTimestamp: ${timestamp}`;
+              const signature = await signer.signMessage(message);
+              
+              const network = await provider.getNetwork();
+              const chainId = Number(network.chainId);
+
+              const { user: userData } = await authenticateWallet(
+                address,
+                signature,
+                message,
+                chainId
+              );
+
+              localStorage.setItem('dehub_wallet', address);
+              setWalletAddress(address);
+              setUser(userData);
+            }
+          } catch (error) {
+            console.error('Auto-authentication failed:', error);
+          }
         }
+      } catch (error) {
+        console.error('Web3Auth initialization failed:', error);
+      } finally {
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
     };
 
-    checkExistingSession();
+    init();
   }, []);
 
-  // Listen for account changes
-  useEffect(() => {
-    const ethereum = getEthereum();
-    if (!ethereum) return;
-
-    const handleAccountsChanged = (accounts: string[]) => {
-      if (accounts.length === 0) {
-        // User disconnected wallet
-        disconnect();
-      } else if (accounts[0] !== walletAddress) {
-        // User switched accounts - re-authenticate
-        disconnect();
-      }
-    };
-
-    const handleChainChanged = () => {
-      // Reload the page on chain change as recommended by MetaMask
-      window.location.reload();
-    };
-
-    ethereum.on?.('accountsChanged', handleAccountsChanged);
-    ethereum.on?.('chainChanged', handleChainChanged);
-
-    return () => {
-      ethereum.removeListener?.('accountsChanged', handleAccountsChanged);
-      ethereum.removeListener?.('chainChanged', handleChainChanged);
-    };
-  }, [walletAddress]);
-
   const connect = useCallback(async () => {
-    const ethereum = getEthereum();
-    
-    if (!ethereum) {
-      throw new Error('Please install MetaMask or another Web3 wallet');
+    if (!web3auth) {
+      throw new Error('Web3Auth not initialized');
     }
 
     setIsConnecting(true);
 
     try {
-      // Request accounts
-      const provider = new BrowserProvider(ethereum);
-      const accounts = await provider.send('eth_requestAccounts', []);
+      // Connect via Web3Auth modal
+      const web3authProvider = await web3auth.connect();
       
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts found');
+      if (!web3authProvider) {
+        throw new Error('Failed to connect wallet');
       }
 
-      const address = accounts[0].toLowerCase();
+      // Get wallet address and signer
+      const provider = new BrowserProvider(web3authProvider);
       const signer = await provider.getSigner();
-      
-      // Create sign message
+      const address = (await signer.getAddress()).toLowerCase();
+
+      // Create sign message for DeHub auth
       const timestamp = Date.now();
       const message = `Sign this message to authenticate with DeHub.\n\nWallet: ${address}\nTimestamp: ${timestamp}`;
-      
+
       // Request signature
       const signature = await signer.signMessage(message);
-      
+
       // Get chain ID
       const network = await provider.getNetwork();
       const chainId = Number(network.chainId);
@@ -134,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Save wallet address
       localStorage.setItem('dehub_wallet', address);
-      
+
       setWalletAddress(address);
       setUser(userData);
     } catch (error) {
@@ -143,9 +147,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsConnecting(false);
     }
-  }, []);
+  }, [web3auth]);
 
-  const disconnect = useCallback(() => {
+  const disconnect = useCallback(async () => {
+    try {
+      await disconnectWeb3Auth();
+    } catch (error) {
+      console.error('Web3Auth disconnect error:', error);
+    }
+    
     setAuthToken(null);
     localStorage.removeItem('dehub_wallet');
     setUser(null);
@@ -154,7 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     if (!walletAddress) return;
-    
+
     try {
       const userData = await getAccountInfo(walletAddress);
       setUser(userData);
@@ -171,6 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated,
         isLoading,
         isConnecting,
+        web3auth,
         connect,
         disconnect,
         refreshUser,
