@@ -130,12 +130,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const signature = await signer.signMessage(message);
 
       // Authenticate with DeHub API
-      const { user: userData } = await authenticateWallet(
-        address,
-        signature,
-        timestamp,
-        BASE_CHAIN_ID
-      );
+        const { user: userData } = await authenticateWallet(
+          address,
+          signature,
+          String(timestamp),
+          BASE_CHAIN_ID
+        );
 
       // Save wallet address
       localStorage.setItem('dehub_wallet', address);
