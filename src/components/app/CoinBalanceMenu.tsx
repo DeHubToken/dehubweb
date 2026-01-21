@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CoinBalanceMenuProps {
   balance: number;
@@ -41,6 +42,7 @@ const MOCK_TRANSACTIONS = [
 
 export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { walletAddress, isAuthenticated, disconnect } = useAuth();
 
   const handleOpenChange = (open: boolean) => {
     if (open && onAuthRequired && !onAuthRequired()) {
@@ -56,14 +58,33 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // TODO: Replace with actual wallet address
-  const walletAddress = '0x1234...5678';
+  const formattedWalletAddress = useMemo(() => {
+    if (!walletAddress) return null;
+    return `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+  }, [walletAddress]);
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText('0x1234567890abcdef1234567890abcdef12345678');
+    if (!walletAddress) {
+      toast.error('No wallet connected', { description: 'Connect your wallet to copy your address' });
+      return;
+    }
+
+    navigator.clipboard.writeText(walletAddress);
     setCopied(true);
     toast.success('Address Copied', { description: 'Wallet address copied to clipboard' });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await disconnect();
+      toast.success('Logged out');
+    } catch {
+      toast.error('Logout failed');
+    } finally {
+      setIsOpen(false);
+      resetMenu();
+    }
   };
 
   const handleBuyWithCard = () => {
@@ -181,7 +202,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         </div>
         <div className="flex flex-col">
           <span className="text-white font-medium">Receive Coins</span>
-          <span className="text-xs text-zinc-400">{walletAddress}</span>
+          <span className="text-xs text-zinc-400">{formattedWalletAddress ?? 'Connect wallet'}</span>
         </div>
       </button>
       <button
@@ -211,6 +232,18 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         </div>
         <span className="text-white font-medium">Stake Coins</span>
       </button>
+
+      {isAuthenticated && (
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+        >
+          <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <LogOut className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-white font-medium">Logout</span>
+        </button>
+      )}
     </div>
   );
 

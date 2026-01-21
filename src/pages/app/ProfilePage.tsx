@@ -191,12 +191,12 @@ export default function ProfilePage() {
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
   const userId = searchParams.get('id');
-  const { user: currentUser, isAuthenticated } = useAuth();
+  const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
   // Determine lookup method: route param username > query param id > current user
   const lookupUsername = routeUsername;
-  const lookupUserId = userId || (!routeUsername ? currentUser?.id : undefined);
-  
+  const lookupUserId = userId || (!routeUsername ? (currentUser?.address || currentWalletAddress || undefined) : undefined);
+
   // Fetch profile from API - supports both username and userId lookups
   const { 
     data: apiProfile, 
@@ -220,7 +220,7 @@ export default function ProfilePage() {
   // Determine which profile to show - no more mock fallback
   const profile = apiProfile;
   // Check if viewing own profile: no route username AND (no query ID OR query ID matches current user)
-  const isOwnProfile = !routeUsername && (!userId || (currentUser?.id === userId));
+  const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   
   // Process API content - no mock fallback
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS } = useMemo(() => {
@@ -268,7 +268,11 @@ export default function ProfilePage() {
   };
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText(profile.walletAddress || '0x1234...5678');
+    if (!profile.walletAddress) {
+      toast.error('No wallet address available');
+      return;
+    }
+    navigator.clipboard.writeText(profile.walletAddress);
     toast.success('Address copied to clipboard');
     setShareSheetOpen(false);
   };
@@ -634,7 +638,7 @@ export default function ProfilePage() {
   const needsLayoutWrapper = !!routeUsername;
 
   // Show loading state
-  if (isLoadingProfile) {
+  if (isAuthLoading || isLoadingProfile) {
     const loadingContent = (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
