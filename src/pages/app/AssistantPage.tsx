@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -331,6 +331,10 @@ export default function AssistantPage() {
   const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
   const [showCommandCentre, setShowCommandCentre] = useState(false); // Toggle between chat and command centre
   const [showAuthPrompt, setShowAuthPrompt] = useState(false); // Auth prompt for simulation approval
+  const [transferPin, setTransferPin] = useState<string | null>(null); // PIN for transfer approval
+  const [autoApproveMode, setAutoApproveMode] = useState(false); // Auto-approve transfers without confirmation
+  const [showPinModal, setShowPinModal] = useState(false); // PIN setup modal
+  const [pinInput, setPinInput] = useState(''); // PIN input value
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -1432,7 +1436,7 @@ export default function AssistantPage() {
                       </div>
                     ) : message.isSimulation ? (
                       /* Transaction simulation card */
-                      <div className="max-w-[85%] flex flex-col gap-3">
+                      <div className="max-w-[85%] flex flex-col gap-2">
                         {/* Simulation content with markdown */}
                         <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
                           <MarkdownText content={message.content} className="text-sm text-white" />
@@ -1486,6 +1490,37 @@ export default function AssistantPage() {
                             </div>
                           )}
                         </div>
+                        
+                        {/* Action buttons below the card - only show for pending */}
+                        {message.simulationStatus === 'pending' && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setShowPinModal(true)}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                                ${transferPin 
+                                  ? 'bg-white/10 text-white border border-white/20' 
+                                  : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                                }`}
+                            >
+                              <Lock className="w-3.5 h-3.5" />
+                              {transferPin ? 'PIN Set' : 'Set PIN'}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setAutoApproveMode(!autoApproveMode);
+                                toast.success(autoApproveMode ? 'Auto Mode disabled' : 'Auto Mode enabled - transfers will auto-approve');
+                              }}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                                ${autoApproveMode 
+                                  ? 'bg-white/15 text-white border border-white/30' 
+                                  : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                                }`}
+                            >
+                              <Zap className="w-3.5 h-3.5" />
+                              Auto Mode {autoApproveMode ? 'On' : 'Off'}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       /* Text messages */
@@ -1804,6 +1839,89 @@ export default function AssistantPage() {
         isOpen={showAuthPrompt} 
         onClose={() => setShowAuthPrompt(false)} 
       />
+
+      {/* PIN Setup Modal */}
+      <AnimatePresence>
+        {showPinModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setShowPinModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-2xl p-6"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Set Transfer PIN</h3>
+                  <p className="text-sm text-white/60">Required before approving transfers</p>
+                </div>
+              </div>
+              
+              <input
+                type="password"
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="Enter 4-6 digit PIN"
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-center text-xl tracking-[0.5em] placeholder:text-white/30 placeholder:tracking-normal focus:outline-none focus:border-white/30 mb-4"
+              />
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowPinModal(false);
+                    setPinInput('');
+                  }}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/70 font-medium text-sm hover:bg-white/10 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    if (pinInput.length >= 4) {
+                      setTransferPin(pinInput);
+                      setShowPinModal(false);
+                      setPinInput('');
+                      toast.success('Transfer PIN set successfully');
+                    } else {
+                      toast.error('PIN must be at least 4 digits');
+                    }
+                  }}
+                  disabled={pinInput.length < 4}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-medium text-sm hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Set PIN
+                </button>
+              </div>
+              
+              {transferPin && (
+                <button
+                  onClick={() => {
+                    setTransferPin(null);
+                    setShowPinModal(false);
+                    setPinInput('');
+                    toast.success('Transfer PIN removed');
+                  }}
+                  className="w-full mt-3 px-4 py-2 rounded-xl text-white/50 text-sm hover:text-white/70 transition-colors"
+                >
+                  Remove existing PIN
+                </button>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
