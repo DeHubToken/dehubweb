@@ -80,6 +80,68 @@ const COMPLEX_REASONING_KEYWORDS = [
   'debug', 'fix this', 'refactor', 'optimize'
 ];
 
+// Keywords that indicate token transfer or purchase requests
+const TOKEN_TRANSFER_KEYWORDS = [
+  'send', 'transfer', 'pay', 'tip', 'give',
+  'send tokens', 'transfer tokens', 'send dhb', 'transfer dhb',
+  'send coins', 'transfer coins', 'pay with', 'tip with'
+];
+
+const TOKEN_PURCHASE_KEYWORDS = [
+  'buy', 'purchase', 'swap', 'exchange', 'get tokens',
+  'buy dhb', 'purchase dhb', 'buy tokens', 'purchase tokens',
+  'swap for dhb', 'exchange for dhb', 'get dhb'
+];
+
+// Parse token transaction from message
+function parseTokenTransaction(message: string): { type: 'transfer' | 'purchase' | null; amount?: string; recipient?: string; token?: string } {
+  const lowerMessage = message.toLowerCase();
+  
+  // Check for transfer patterns like "send 100 DHB to @user1"
+  const transferMatch = lowerMessage.match(/(?:send|transfer|pay|tip|give)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?\s*(?:to\s+)?@?(\w+)/i);
+  if (transferMatch) {
+    return {
+      type: 'transfer',
+      amount: transferMatch[1],
+      recipient: transferMatch[2],
+      token: 'DHB'
+    };
+  }
+  
+  // Check for purchase patterns like "buy 100 DHB"
+  const purchaseMatch = lowerMessage.match(/(?:buy|purchase|get|swap\s+(?:for)?)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?/i);
+  if (purchaseMatch) {
+    return {
+      type: 'purchase',
+      amount: purchaseMatch[1],
+      token: 'DHB'
+    };
+  }
+  
+  // Check if it's a general transfer/purchase request without specific amounts
+  const isTransferRequest = TOKEN_TRANSFER_KEYWORDS.some(kw => lowerMessage.includes(kw));
+  const isPurchaseRequest = TOKEN_PURCHASE_KEYWORDS.some(kw => lowerMessage.includes(kw));
+  
+  if (isTransferRequest) {
+    return { type: 'transfer' };
+  }
+  if (isPurchaseRequest) {
+    return { type: 'purchase' };
+  }
+  
+  return { type: null };
+}
+
+// Generate a mock transaction hash
+function generateMockTxHash(): string {
+  const chars = '0123456789abcdef';
+  let hash = '0x';
+  for (let i = 0; i < 64; i++) {
+    hash += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return hash;
+}
+
 function requiresWebSearch(message: string): boolean {
   const lowerMessage = message.toLowerCase();
   return LIVE_SEARCH_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
@@ -186,18 +248,19 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto' } = await req.json() as { 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false } = await req.json() as { 
       messages: Message[]; 
       style?: string;
       postContext?: PostContext;
       model?: string;
+      isAuthenticated?: boolean;
     };
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
     const xaiApiKey = Deno.env.get('XAI_API_KEY');
     
-    console.log('Chat request:', { model, hasXaiKey: !!xaiApiKey, hasPerplexityKey: !!perplexityKey });
+    console.log('Chat request:', { model, hasXaiKey: !!xaiApiKey, hasPerplexityKey: !!perplexityKey, isAuthenticated });
     
     if (!lovableApiKey) {
       throw new Error('LOVABLE_API_KEY not configured');
@@ -208,6 +271,42 @@ serve(async (req) => {
     const userQuery = typeof latestUserMessage?.content === 'string' 
       ? latestUserMessage.content 
       : latestUserMessage?.content?.find(c => c.type === 'text')?.text || '';
+    
+    // Check for token transaction requests (transfer or purchase)
+    const txParsed = parseTokenTransaction(userQuery);
+    
+    // If user is NOT authenticated and requests a token transaction, return simulation
+    if (!isAuthenticated && txParsed.type) {
+      const txHash = generateMockTxHash();
+      const timestamp = new Date().toISOString();
+      
+      let simulationResponse: string;
+      
+      if (txParsed.type === 'transfer') {
+        const amount = txParsed.amount || '0';
+        const recipient = txParsed.recipient || 'unknown';
+        simulationResponse = `## 🔄 Transaction Simulation\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH\n\n---\n\n**Transaction Hash (Simulated):**\n\`${txHash}\`\n\n**Timestamp:** ${timestamp}\n\n---\n\n⚠️ **This is a simulation.** To execute real transactions, please connect your wallet first.\n\nOnce connected, I'll be able to:\n- Send tokens to any user\n- Swap tokens on DEXs\n- Manage your portfolio`;
+      } else {
+        const amount = txParsed.amount || '0';
+        simulationResponse = `## 🛒 Transaction Simulation\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH\n\n---\n\n**Transaction Hash (Simulated):**\n\`${txHash}\`\n\n**Timestamp:** ${timestamp}\n\n---\n\n⚠️ **This is a simulation.** To execute real transactions, please connect your wallet first.\n\nOnce connected, I'll be able to:\n- Buy DHB tokens directly\n- Swap other tokens for DHB\n- Track your purchase history`;
+      }
+      
+      return new Response(
+        JSON.stringify({ 
+          response: simulationResponse,
+          isSimulation: true,
+          simulationType: txParsed.type,
+          simulationData: {
+            txHash,
+            amount: txParsed.amount || '0',
+            recipient: txParsed.recipient,
+            token: 'DHB',
+            timestamp
+          }
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
     
     // Smart auto-model selection based on query complexity
     const isAutoMode = model === 'auto' || model === 'gemini-2.5-flash'; // Default to auto
