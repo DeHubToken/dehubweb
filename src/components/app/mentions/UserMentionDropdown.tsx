@@ -3,9 +3,11 @@
  * =============================
  * Displays a dropdown of matching users when typing @mention.
  * Shows up to 5 most relevant matches after typing 1+ characters.
+ * Uses React Portal to escape parent stacking contexts (e.g., Drawer/Dialog).
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -146,15 +148,17 @@ export function UserMentionDropdown({
 
   if (!isOpen || users.length === 0) return null;
 
-  return (
+  // Use portal to render dropdown at document body level
+  // This escapes any parent stacking contexts (Drawer, Dialog, etc.)
+  return createPortal(
     <AnimatePresence>
       <motion.div
         ref={dropdownRef}
-        initial={{ opacity: 0, y: -8, scale: 0.95 }}
+        initial={{ opacity: 0, y: 8, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -8, scale: 0.95 }}
+        exit={{ opacity: 0, y: 8, scale: 0.95 }}
         transition={{ duration: 0.15 }}
-        className="fixed z-[9999] min-w-[240px] max-w-[320px] bg-zinc-900/95 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl overflow-hidden"
+        className="fixed z-[9999] min-w-[240px] max-w-[320px] bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden"
         style={{ top: position.top, left: position.left }}
       >
         <div className="py-1">
@@ -189,7 +193,8 @@ export function UserMentionDropdown({
           ))}
         </div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 
