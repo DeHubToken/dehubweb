@@ -14,7 +14,7 @@ export function PageHeader({ title, subtitle, showBack = true, className }: Page
 
   return (
     <div className={cn(
-      'sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-3 sm:p-4',
+      'sticky top-0 bg-black z-10 p-3 sm:p-4',
       className
     )}>
       <div className="bg-zinc-900 rounded-2xl px-4 py-3 flex items-center gap-4">
