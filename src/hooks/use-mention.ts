@@ -75,7 +75,6 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     const input = inputRef.current;
     if (!input) return;
     
-    const rect = input.getBoundingClientRect();
     const dropdownWidth = 280;
     const dropdownHeight = 260;
     
@@ -88,16 +87,16 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
         
         // Only use caret position if it has valid dimensions
         if (caretRect.height > 0 && caretRect.top > 0) {
-          // Calculate position, ensuring dropdown stays in viewport
-          let top = caretRect.bottom + 4;
+          // Default: position above the caret (dropdown appears above cursor)
+          let top = caretRect.top - dropdownHeight - 8;
           let left = caretRect.left;
           
-          // Ensure dropdown doesn't go off right edge
+          // Ensure dropdown doesn't go off left/right edge
           left = Math.max(8, Math.min(left, window.innerWidth - dropdownWidth - 8));
           
-          // If dropdown would go below viewport, position above caret
-          if (top + dropdownHeight > window.innerHeight - 8) {
-            top = caretRect.top - dropdownHeight - 4;
+          // If not enough space above, position below
+          if (top < 8) {
+            top = caretRect.bottom + 8;
           }
           
           setPosition({ top, left });
@@ -108,18 +107,20 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     
     // For textareas - position above the input
     if (input instanceof HTMLTextAreaElement) {
-      const top = Math.max(8, rect.top - dropdownHeight - 4);
+      const rect = input.getBoundingClientRect();
+      const top = Math.max(8, rect.top - dropdownHeight - 8);
       const left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownWidth - 8));
       setPosition({ top, left });
       return;
     }
     
-    // Fallback: position below input, ensuring viewport bounds
-    let top = rect.bottom + 4;
+    // Fallback: position above input
+    const rect = input.getBoundingClientRect();
+    let top = rect.top - dropdownHeight - 8;
     let left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownWidth - 8));
     
-    if (top + dropdownHeight > window.innerHeight - 8) {
-      top = rect.top - dropdownHeight - 4;
+    if (top < 8) {
+      top = rect.bottom + 8;
     }
     
     setPosition({ top, left });
