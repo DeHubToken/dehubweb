@@ -15,6 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
@@ -34,6 +35,7 @@ import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
+import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 
 // Simulation data for token transactions
 interface SimulationData {
@@ -338,6 +340,15 @@ export default function AssistantPage() {
 
   const { isAuthenticated } = useAuth();
   const isMobile = useIsMobile();
+  
+  // Mention hook for @mentions in input
+  const mention = useMention({
+    inputRef,
+    onMentionInsert: (user, newText) => {
+      setInput(newText);
+    },
+  });
+  
   const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
   const currentVideoModel = VIDEO_MODEL_OPTIONS.find(m => m.id === selectedVideoModel) || VIDEO_MODEL_OPTIONS[0];
   const currentImageModel = IMAGE_MODEL_OPTIONS.find(m => m.id === selectedImageModel) || IMAGE_MODEL_OPTIONS[0];
@@ -1662,7 +1673,10 @@ export default function AssistantPage() {
                   value={isRecording ? transcript : input}
                   onChange={(e) => {
                     if (!isRecording) {
-                      setInput(e.target.value);
+                      const newValue = e.target.value;
+                      setInput(newValue);
+                      // Trigger mention detection
+                      mention.handleInput(newValue, e.target.selectionStart);
                       // Auto-resize the textarea
                       e.target.style.height = 'auto';
                       const maxHeight = window.innerHeight * 0.45; // Max 45% of viewport (about halfway up)
@@ -1671,6 +1685,25 @@ export default function AssistantPage() {
                     }
                   }}
                   onKeyDown={(e) => {
+                    // First check if mention dropdown wants to handle this
+                    if (mention.isOpen) {
+                      const handled = mention.handleKeyDown(e);
+                      if (handled) {
+                        // If Enter/Tab was pressed in dropdown, select the user
+                        if (e.key === 'Enter' || e.key === 'Tab') {
+                          e.preventDefault();
+                          // The mention hook will handle selection via selectedIndex
+                          // We need to trigger selection manually here
+                          import('@/components/app/mentions').then(({ searchUsers }) => {
+                            const users = searchUsers(mention.query, 5);
+                            if (users[mention.selectedIndex]) {
+                              mention.handleSelect(users[mention.selectedIndex]);
+                            }
+                          });
+                        }
+                        return;
+                      }
+                    }
                     // Submit on Enter without Shift, allow Shift+Enter for new lines
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -1688,6 +1721,17 @@ export default function AssistantPage() {
                   }}
                   rows={1}
                   readOnly={isRecording}
+                />
+                
+                {/* User Mention Dropdown */}
+                <UserMentionDropdown
+                  query={mention.query}
+                  isOpen={mention.isOpen}
+                  position={mention.position}
+                  selectedIndex={mention.selectedIndex}
+                  onSelectedIndexChange={mention.setSelectedIndex}
+                  onSelect={mention.handleSelect}
+                  onClose={mention.handleClose}
                 />
                 
                 {/* Stop speaking button - shown when AI is speaking */}

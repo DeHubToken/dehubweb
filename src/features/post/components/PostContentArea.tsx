@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ScheduleSheet } from './ScheduleSheet';
 import { DraftsSheet, type Draft } from './DraftsSheet';
 import { format } from 'date-fns';
+import { UserMentionDropdown, searchUsers, type MentionUser } from '@/components/app/mentions';
 
 interface PostContentAreaProps {
   text: string;
@@ -107,6 +108,13 @@ export function PostContentArea({
   const dragCounterRef = useRef(0);
   const [showSchedule, setShowSchedule] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
+  
+  // Mention state
+  const [mentionOpen, setMentionOpen] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+  const [mentionSelectedIndex, setMentionSelectedIndex] = useState(0);
+  const mentionStartRef = useRef(-1);
 
   const charCount = text.length;
 
@@ -631,6 +639,29 @@ export function PostContentArea({
         onLoadDraft={onLoadDraft}
         onDeleteDraft={onDeleteDraft}
         canSave={canSaveDraft}
+      />
+
+      {/* User Mention Dropdown */}
+      <UserMentionDropdown
+        query={mentionQuery}
+        isOpen={mentionOpen}
+        position={mentionPosition}
+        selectedIndex={mentionSelectedIndex}
+        onSelectedIndexChange={setMentionSelectedIndex}
+        onSelect={(user) => {
+          if (mentionStartRef.current >= 0) {
+            const before = text.substring(0, mentionStartRef.current);
+            const mention = `@${user.username} `;
+            setText(before + mention);
+          }
+          setMentionOpen(false);
+          setMentionQuery('');
+          mentionStartRef.current = -1;
+        }}
+        onClose={() => {
+          setMentionOpen(false);
+          setMentionQuery('');
+        }}
       />
     </>
   );
