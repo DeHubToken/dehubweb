@@ -60,7 +60,7 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (isPublicChatOpen) {
     return (
-      <div className="min-h-screen p-3 sm:p-4 mt-2 lg:mt-0">
+      <div className="min-h-screen p-3 sm:p-4">
         <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
           <PublicChat 
             onBack={() => setSelectedConversation(null)} 
@@ -72,7 +72,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4 mt-2 lg:mt-0">
+    <div className="min-h-screen p-3 sm:p-4">
       <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">

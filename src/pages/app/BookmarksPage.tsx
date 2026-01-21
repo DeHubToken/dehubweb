@@ -17,7 +17,7 @@ export default function BookmarksPage() {
   const isLoggedIn = false; // Mock auth state
 
   return (
-    <div className="min-h-screen p-3 sm:p-4 mt-2 lg:mt-0">
+    <div className="min-h-screen p-3 sm:p-4">
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center gap-4 mb-4">

@@ -675,7 +675,7 @@ export default function ProfilePage() {
 
   const profileContent = (
     <div className="min-h-screen">
-      <div className="p-2 sm:p-3 space-y-2 sm:space-y-3 mt-2 lg:mt-0">
+      <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden">
           {/* Cover Photo */}
