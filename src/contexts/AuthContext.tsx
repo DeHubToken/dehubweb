@@ -6,7 +6,14 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { BrowserProvider } from 'ethers';
-import { authenticateWallet, getAuthToken, setAuthToken, DeHubUser, getAccountInfo } from '@/lib/api/dehub';
+import { 
+  authenticateWallet, 
+  getAuthToken, 
+  setAuthToken, 
+  clearAuthSession,
+  isTokenExpired,
+  type DeHubUser 
+} from '@/lib/api/dehub';
 import { getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -16,10 +23,12 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isConnecting: boolean;
+  requiresUsername: boolean;
   web3auth: Web3Auth | null;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  setRequiresUsername: (value: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,28 +38,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [requiresUsername, setRequiresUsername] = useState(false);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
 
-  const isAuthenticated = !!user && !!walletAddress && !!getAuthToken();
+  const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
   // Check for existing session on mount and pre-initialize Web3Auth
   useEffect(() => {
     const init = async () => {
       try {
-        // Check for existing DeHub token first (doesn't require Web3Auth)
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
+        const savedUser = localStorage.getItem('dehub_user');
 
-        if (token && savedWallet) {
-          try {
-            const userData = await getAccountInfo(savedWallet);
-            setUser(userData);
-            setWalletAddress(savedWallet);
-          } catch (error) {
-            console.error('Session restoration failed:', error);
-            setAuthToken(null);
-            localStorage.removeItem('dehub_wallet');
+        if (token && savedWallet && !isTokenExpired()) {
+          // Restore user from localStorage
+          if (savedUser) {
+            try {
+              const userData = JSON.parse(savedUser) as DeHubUser;
+              setUser(userData);
+              setWalletAddress(savedWallet);
+              
+              // Check if username is required
+              if (!userData.username) {
+                setRequiresUsername(true);
+              }
+            } catch {
+              // Invalid stored user data, clear session
+              clearAuthSession();
+              localStorage.removeItem('dehub_user');
+            }
           }
+        } else if (token && isTokenExpired()) {
+          // Token expired, clear session - user will need to sign again
+          console.log('Token expired, clearing session');
+          clearAuthSession();
+          localStorage.removeItem('dehub_user');
         }
       } catch (error) {
         console.error('Auth initialization failed:', error);
@@ -59,7 +82,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Pre-initialize Web3Auth in background (non-blocking)
-      // This ensures the modal opens instantly when user clicks login
       getWeb3Auth()
         .then((instance) => setWeb3auth(instance))
         .catch((err) => console.warn('Web3Auth pre-init failed:', err));
@@ -130,18 +152,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const signature = await signer.signMessage(message);
 
       // Authenticate with DeHub API
-      const { user: userData } = await authenticateWallet(
+      const authResponse = await authenticateWallet(
         address,
         signature,
         timestamp,
         BASE_CHAIN_ID
       );
 
-      // Save wallet address
+      const userData = authResponse.user;
+
+      // Save wallet address and user data
       localStorage.setItem('dehub_wallet', address);
+      localStorage.setItem('dehub_user', JSON.stringify(userData));
 
       setWalletAddress(address);
       setUser(userData);
+
+      // Check if username is required
+      if (!userData.username) {
+        setRequiresUsername(true);
+      }
     } catch (error: unknown) {
       console.error('Connection failed:', error);
       // Provide user-friendly error messages
@@ -164,22 +194,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Web3Auth disconnect error:', error);
     }
     
-    setAuthToken(null);
-    localStorage.removeItem('dehub_wallet');
+    clearAuthSession();
+    localStorage.removeItem('dehub_user');
     setUser(null);
     setWalletAddress(null);
+    setRequiresUsername(false);
   }, []);
 
   const refreshUser = useCallback(async () => {
     if (!walletAddress) return;
 
+    // If token is expired, user needs to re-authenticate
+    if (isTokenExpired()) {
+      console.log('Token expired during refresh, clearing session');
+      await disconnect();
+      return;
+    }
+
     try {
-      const userData = await getAccountInfo(walletAddress);
-      setUser(userData);
+      // For now, we use stored user data
+      // Full refresh would require re-calling getAccountInfo
+      const savedUser = localStorage.getItem('dehub_user');
+      if (savedUser) {
+        const userData = JSON.parse(savedUser) as DeHubUser;
+        setUser(userData);
+      }
     } catch (error) {
       console.error('Failed to refresh user:', error);
     }
-  }, [walletAddress]);
+  }, [walletAddress, disconnect]);
 
   return (
     <AuthContext.Provider
@@ -189,10 +232,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated,
         isLoading,
         isConnecting,
+        requiresUsername,
         web3auth,
         connect,
         disconnect,
         refreshUser,
+        setRequiresUsername,
       }}
     >
       {children}

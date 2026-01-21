@@ -29,16 +29,17 @@ export interface DeHubUser {
   wallet_address?: string;
 
   // Profile fields (API uses camelCase)
-  username?: string;
-  displayName?: string;
+  username?: string | null;
+  displayName?: string | null;
   display_name?: string;
   bio?: string;
+  aboutMe?: string | null;
 
   // Avatar/Cover (API uses *ImageUrl suffix)
-  avatarImageUrl?: string;
+  avatarImageUrl?: string | null;
   avatarUrl?: string;
   avatar_url?: string;
-  coverImageUrl?: string;
+  coverImageUrl?: string | null;
   coverUrl?: string;
   cover_url?: string;
 
@@ -46,17 +47,40 @@ export interface DeHubUser {
   isVerified?: boolean;
   is_verified?: boolean;
 
-  // Stats (API returns arrays, we normalize to counts)
-  followers?: string[];
+  // Stats
+  followers?: number | string[];
   follower_count?: number;
   followings?: string[];
   following_count?: number;
+  likes?: number;
   uploads?: number;
   post_count?: number;
+  sentTips?: number;
+  receivedTips?: number;
+
+  // Custom data
+  customs?: Record<string, unknown>;
+  seenModal?: boolean;
+  online?: boolean;
 
   // Timestamps
   createdAt?: string;
   created_at?: string;
+  lastLoginTimestamp?: number;
+}
+
+// Auth response from DeHub API
+export interface AuthResponse {
+  status: boolean;
+  token: string;
+  user: DeHubUser;
+  result: {
+    address: string;
+    isMobile: boolean;
+    lastLoginTimestamp: number;
+    tokenExpiry: string;
+  };
+  message: string;
 }
 
 // DeHub NFT interface matching actual API response
@@ -154,12 +178,17 @@ export interface PaginatedResponse<T> {
 // Store auth token
 let authToken: string | null = null;
 
+// Token expiry duration in milliseconds (24 hours)
+const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
+
 export const setAuthToken = (token: string | null) => {
   authToken = token;
   if (token) {
     localStorage.setItem("dehub_token", token);
+    localStorage.setItem("dehub_token_timestamp", String(Date.now()));
   } else {
     localStorage.removeItem("dehub_token");
+    localStorage.removeItem("dehub_token_timestamp");
   }
 };
 
@@ -168,6 +197,21 @@ export const getAuthToken = (): string | null => {
     authToken = localStorage.getItem("dehub_token");
   }
   return authToken;
+};
+
+export const isTokenExpired = (): boolean => {
+  const timestamp = localStorage.getItem("dehub_token_timestamp");
+  if (!timestamp) return true;
+  
+  const tokenAge = Date.now() - parseInt(timestamp, 10);
+  return tokenAge >= TOKEN_EXPIRY_MS;
+};
+
+export const clearAuthSession = () => {
+  authToken = null;
+  localStorage.removeItem("dehub_token");
+  localStorage.removeItem("dehub_token_timestamp");
+  localStorage.removeItem("dehub_wallet");
 };
 
 // Base API call function - calls DeHub API directly
@@ -225,7 +269,7 @@ export async function authenticateWallet(
   signature: string,
   timestamp: number,
   chainId: number = 8453,
-): Promise<{ token: string; user: DeHubUser }> {
+): Promise<AuthResponse> {
   const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
     method: "POST",
     headers: {
@@ -245,16 +289,13 @@ export async function authenticateWallet(
     throw new Error(errorData.message || errorData.error || "Authentication failed");
   }
 
-  const data = await response.json();
+  const data: AuthResponse = await response.json();
 
   if (data.token) {
     setAuthToken(data.token);
   }
 
-  return {
-    token: data.token,
-    user: data.user,
-  };
+  return data;
 }
 
 // NFT/Content functions
