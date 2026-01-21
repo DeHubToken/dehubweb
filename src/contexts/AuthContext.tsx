@@ -8,6 +8,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { BrowserProvider } from 'ethers';
 import { 
   authenticateWallet, 
+  getAccountInfo,
   getAuthToken, 
   setAuthToken, 
   clearAuthSession,
@@ -49,25 +50,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
-        const savedUser = localStorage.getItem('dehub_user');
 
         if (token && savedWallet && !isTokenExpired()) {
-          // Restore user from localStorage
-          if (savedUser) {
-            try {
-              const userData = JSON.parse(savedUser) as DeHubUser;
-              setUser(userData);
-              setWalletAddress(savedWallet);
-              
-              // Check if username is required
-              if (!userData.username) {
-                setRequiresUsername(true);
-              }
-            } catch {
-              // Invalid stored user data, clear session
-              clearAuthSession();
-              localStorage.removeItem('dehub_user');
+          // Fetch fresh user data from API
+          try {
+            console.log('Restoring session, fetching account info...');
+            const userData = await getAccountInfo(savedWallet);
+            
+            // Normalize the user data
+            const normalizedUser: DeHubUser = {
+              address: userData.address || savedWallet,
+              username: userData.username || null,
+              displayName: userData.displayName || null,
+              avatarImageUrl: userData.avatarImageUrl || null,
+              coverImageUrl: userData.coverImageUrl || null,
+              aboutMe: userData.aboutMe || null,
+              followers: typeof userData.followers === 'number' ? userData.followers : userData.followers?.length ?? 0,
+              likes: typeof userData.likes === 'number' ? userData.likes : 0,
+              uploads: userData.uploads ?? 0,
+              sentTips: userData.sentTips ?? 0,
+              receivedTips: userData.receivedTips ?? 0,
+              customs: userData.customs || {},
+              online: userData.online ?? true,
+              createdAt: userData.createdAt,
+              lastLoginTimestamp: userData.lastLoginTimestamp,
+            };
+            
+            setUser(normalizedUser);
+            setWalletAddress(savedWallet);
+            localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+            
+            // Check if username is required
+            if (!normalizedUser.username) {
+              setRequiresUsername(true);
             }
+          } catch (error) {
+            console.error('Session restoration failed:', error);
+            clearAuthSession();
+            localStorage.removeItem('dehub_user');
           }
         } else if (token && isTokenExpired()) {
           // Token expired, clear session - user will need to sign again
@@ -159,17 +179,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         BASE_CHAIN_ID
       );
 
+      // Normalize the user data from auth response
       const userData = authResponse.user;
+      const normalizedUser: DeHubUser = {
+        address: userData.address || address,
+        username: userData.username || null,
+        displayName: userData.displayName || null,
+        avatarImageUrl: userData.avatarImageUrl || null,
+        coverImageUrl: userData.coverImageUrl || null,
+        aboutMe: userData.aboutMe || null,
+        followers: typeof userData.followers === 'number' ? userData.followers : 0,
+        likes: typeof userData.likes === 'number' ? userData.likes : 0,
+        uploads: userData.uploads ?? 0,
+        sentTips: userData.sentTips ?? 0,
+        receivedTips: userData.receivedTips ?? 0,
+        customs: userData.customs || {},
+        online: userData.online ?? true,
+        createdAt: userData.createdAt,
+        lastLoginTimestamp: userData.lastLoginTimestamp,
+      };
 
       // Save wallet address and user data
       localStorage.setItem('dehub_wallet', address);
-      localStorage.setItem('dehub_user', JSON.stringify(userData));
+      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
       setWalletAddress(address);
-      setUser(userData);
+      setUser(normalizedUser);
 
       // Check if username is required
-      if (!userData.username) {
+      if (!normalizedUser.username) {
         setRequiresUsername(true);
       }
     } catch (error: unknown) {
@@ -212,13 +250,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      // For now, we use stored user data
-      // Full refresh would require re-calling getAccountInfo
-      const savedUser = localStorage.getItem('dehub_user');
-      if (savedUser) {
-        const userData = JSON.parse(savedUser) as DeHubUser;
-        setUser(userData);
-      }
+      // Fetch fresh user data from API
+      const userData = await getAccountInfo(walletAddress);
+      
+      const normalizedUser: DeHubUser = {
+        address: userData.address || walletAddress,
+        username: userData.username || null,
+        displayName: userData.displayName || null,
+        avatarImageUrl: userData.avatarImageUrl || null,
+        coverImageUrl: userData.coverImageUrl || null,
+        aboutMe: userData.aboutMe || null,
+        followers: typeof userData.followers === 'number' ? userData.followers : userData.followers?.length ?? 0,
+        likes: typeof userData.likes === 'number' ? userData.likes : 0,
+        uploads: userData.uploads ?? 0,
+        sentTips: userData.sentTips ?? 0,
+        receivedTips: userData.receivedTips ?? 0,
+        customs: userData.customs || {},
+        online: userData.online ?? true,
+        createdAt: userData.createdAt,
+        lastLoginTimestamp: userData.lastLoginTimestamp,
+      };
+      
+      setUser(normalizedUser);
+      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
     } catch (error) {
       console.error('Failed to refresh user:', error);
     }

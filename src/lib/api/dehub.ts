@@ -47,16 +47,31 @@ export interface DeHubUser {
   isVerified?: boolean;
   is_verified?: boolean;
 
-  // Stats
+  // Stats (API can return arrays or numbers)
   followers?: number | string[];
   follower_count?: number;
   followings?: string[];
   following_count?: number;
-  likes?: number;
+  likes?: number | number[];
   uploads?: number;
   post_count?: number;
   sentTips?: number;
   receivedTips?: number;
+  unlocked?: number[];
+
+  // Balance data
+  balanceData?: Array<{
+    chainId: number;
+    tokenAddress: string;
+    walletBalance: number;
+    staked: number;
+  }>;
+
+  // DM settings
+  dmSettings?: {
+    disables?: string[];
+    minTipDhb?: number;
+  };
 
   // Custom data
   customs?: Record<string, unknown>;
