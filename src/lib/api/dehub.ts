@@ -1,7 +1,8 @@
-import { supabase } from "@/integrations/supabase/client";
-
 // DeHub CDN base URL for media assets
 export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
+
+// DeHub API base URL
+const DEHUB_API_BASE = "https://api.dehub.io";
 
 /**
  * Convert relative media paths to absolute CDN URLs
@@ -169,7 +170,7 @@ export const getAuthToken = (): string | null => {
   return authToken;
 };
 
-// Base API call function
+// Base API call function - calls DeHub API directly
 async function apiCall<T>(
   endpoint: string,
   options: {
@@ -181,13 +182,11 @@ async function apiCall<T>(
 ): Promise<T> {
   const { method = "GET", body, params = {}, requiresAuth = false } = options;
 
-  // Build query string
-  const queryParams = new URLSearchParams();
-  queryParams.set("endpoint", endpoint);
-
+  // Build URL with query params
+  const url = new URL(endpoint, DEHUB_API_BASE);
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined) {
-      queryParams.set(key, String(value));
+      url.searchParams.set(key, String(value));
     }
   });
 
@@ -197,49 +196,65 @@ async function apiCall<T>(
     throw new Error("Authentication required");
   }
 
-  const { data, error } = await supabase.functions.invoke("dehub-api", {
-    method: "POST",
-    body: {
-      _method: method,
-      _endpoint: endpoint,
-      _params: params,
-      ...body,
-    },
-    headers: token ? { "x-dehub-token": token } : undefined,
-  });
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  };
 
-  if (error) {
-    throw new Error(error.message || "API call failed");
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  return data as T;
+  const response = await fetch(url.toString(), {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
+  }
+
+  return response.json();
 }
 
-// Auth functions
+// Auth functions - calls DeHub API directly
 export async function authenticateWallet(
-  walletAddress: string,
+  address: string,
   signature: string,
-  message: string,
-  chainId: number = 1,
+  timestamp: number,
+  chainId: number = 8453,
 ): Promise<{ token: string; user: DeHubUser }> {
-  const { data, error } = await supabase.functions.invoke("dehub-auth", {
-    body: {
-      wallet_address: walletAddress,
-      signature,
-      message,
-      chain_id: chainId,
+  const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
     },
+    body: JSON.stringify({
+      address: address.toLowerCase(),
+      sig: signature,
+      timestamp,
+      chainId,
+    }),
   });
 
-  if (error) {
-    throw new Error(error.message || "Authentication failed");
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.error || "Authentication failed");
   }
+
+  const data = await response.json();
 
   if (data.token) {
     setAuthToken(data.token);
   }
 
-  return data;
+  return {
+    token: data.token,
+    user: data.user,
+  };
 }
 
 // NFT/Content functions

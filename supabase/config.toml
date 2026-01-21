@@ -18,12 +18,6 @@ verify_jwt = false
 [functions.get-dhb-price]
 verify_jwt = false
 
-[functions.dehub-api]
-verify_jwt = false
-
-[functions.dehub-auth]
-verify_jwt = false
-
 [functions.get-web3auth-config]
 verify_jwt = false
 
