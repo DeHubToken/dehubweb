@@ -285,10 +285,10 @@ serve(async (req) => {
       if (txParsed.type === 'transfer') {
         const amount = txParsed.amount || '0';
         const recipient = txParsed.recipient || 'unknown';
-        simulationResponse = `## 🔄 Transaction Simulation\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH\n\n---\n\n**Transaction Hash (Simulated):**\n\`${txHash}\`\n\n**Timestamp:** ${timestamp}\n\n---\n\n⚠️ **This is a simulation.** To execute real transactions, please connect your wallet first.\n\nOnce connected, I'll be able to:\n- Send tokens to any user\n- Swap tokens on DEXs\n- Manage your portfolio`;
+        simulationResponse = `## 🔄 Transaction Simulation\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH`;
       } else {
         const amount = txParsed.amount || '0';
-        simulationResponse = `## 🛒 Transaction Simulation\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH\n\n---\n\n**Transaction Hash (Simulated):**\n\`${txHash}\`\n\n**Timestamp:** ${timestamp}\n\n---\n\n⚠️ **This is a simulation.** To execute real transactions, please connect your wallet first.\n\nOnce connected, I'll be able to:\n- Buy DHB tokens directly\n- Swap other tokens for DHB\n- Track your purchase history`;
+        simulationResponse = `## 🛒 Transaction Simulation\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH`;
       }
       
       return new Response(

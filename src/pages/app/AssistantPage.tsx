@@ -894,16 +894,20 @@ export default function AssistantPage() {
     }
   };
 
-  // Handle simulation approval - triggers auth flow
+  // Helper function to abbreviate transaction hash for mobile display
+  const abbreviateHash = (hash: string) => {
+    if (hash.length <= 20) return hash;
+    return `${hash.slice(0, 10)}...${hash.slice(-8)}`;
+  };
+
+  // Handle simulation approval - simulate successful transaction
   const handleSimulationApprove = (messageId: string) => {
     // Update the simulation status
     setMessages(prev => prev.map(m => 
       m.id === messageId ? { ...m, simulationStatus: 'approved' as const } : m
     ));
     
-    // Show auth prompt to connect wallet
-    setShowAuthPrompt(true);
-    toast.success('Transaction approved! Please connect your wallet to execute.');
+    toast.success('Transaction simulated successfully!');
   };
 
   // Handle simulation rejection
@@ -1460,11 +1464,15 @@ export default function AssistantPage() {
                           )}
                           
                           {/* Status badge for approved/rejected */}
-                          {message.simulationStatus === 'approved' && (
-                            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30">
+                          {message.simulationStatus === 'approved' && message.simulationData && (
+                            <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
+                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30 w-fit">
                                 <Check className="w-4 h-4 text-green-400" />
-                                <span className="text-sm text-green-400">Approved - Connect wallet to execute</span>
+                                <span className="text-sm text-green-400">Transaction Successful</span>
+                              </div>
+                              <div className="text-xs text-white/60">
+                                <span className="text-white/40">Hash: </span>
+                                <code className="font-mono text-white/70">{abbreviateHash(message.simulationData.txHash)}</code>
                               </div>
                             </div>
                           )}
