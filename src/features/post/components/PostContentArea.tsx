@@ -12,6 +12,7 @@ import { ScheduleSheet } from './ScheduleSheet';
 import { DraftsSheet, type Draft } from './DraftsSheet';
 import { format } from 'date-fns';
 import { UserMentionDropdown, searchUsers, type MentionUser } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
 
 interface PostContentAreaProps {
   text: string;
@@ -109,12 +110,17 @@ export function PostContentArea({
   const [showSchedule, setShowSchedule] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
   
-  // Mention state
-  const [mentionOpen, setMentionOpen] = useState(false);
-  const [mentionQuery, setMentionQuery] = useState('');
-  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
-  const [mentionSelectedIndex, setMentionSelectedIndex] = useState(0);
-  const mentionStartRef = useRef(-1);
+  // Mention hook - handles @mention detection and dropdown
+  const mention = useMention({
+    inputRef: editorRef,
+    onMentionInsert: (user, newText) => {
+      setText(newText);
+      // Update contentEditable to match
+      if (editorRef.current) {
+        editorRef.current.textContent = newText;
+      }
+    },
+  });
 
   const charCount = text.length;
 
@@ -280,9 +286,12 @@ export function PostContentArea({
     
     setText(plainText);
     
+    // Trigger mention detection
+    mention.handleInput(plainText);
+    
     // Process links after a short delay (debounce)
     setTimeout(processLinks, 300);
-  }, [editorRef, setText, processLinks]);
+  }, [editorRef, setText, processLinks, mention]);
 
   // Handle paste - process links immediately
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
@@ -525,6 +534,17 @@ export function PostContentArea({
             contentEditable
             onInput={handleInput}
             onPaste={handlePaste}
+            onKeyDown={(e) => {
+              if (mention.handleKeyDown(e)) {
+                if (e.key === 'Enter' || e.key === 'Tab') {
+                  e.preventDefault();
+                  const users = searchUsers(mention.query, 5);
+                  if (users[mention.selectedIndex]) {
+                    mention.handleSelect(users[mention.selectedIndex]);
+                  }
+                }
+              }
+            }}
             data-placeholder={hasVideo ? "Add a caption..." : "What's happening?"}
             className="flex-1 bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
@@ -542,6 +562,17 @@ export function PostContentArea({
               contentEditable
               onInput={handleInput}
               onPaste={handlePaste}
+              onKeyDown={(e) => {
+                if (mention.handleKeyDown(e)) {
+                  if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault();
+                    const users = searchUsers(mention.query, 5);
+                    if (users[mention.selectedIndex]) {
+                      mention.handleSelect(users[mention.selectedIndex]);
+                    }
+                  }
+                }
+              }}
               data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
               className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
@@ -643,25 +674,13 @@ export function PostContentArea({
 
       {/* User Mention Dropdown */}
       <UserMentionDropdown
-        query={mentionQuery}
-        isOpen={mentionOpen}
-        position={mentionPosition}
-        selectedIndex={mentionSelectedIndex}
-        onSelectedIndexChange={setMentionSelectedIndex}
-        onSelect={(user) => {
-          if (mentionStartRef.current >= 0) {
-            const before = text.substring(0, mentionStartRef.current);
-            const mention = `@${user.username} `;
-            setText(before + mention);
-          }
-          setMentionOpen(false);
-          setMentionQuery('');
-          mentionStartRef.current = -1;
-        }}
-        onClose={() => {
-          setMentionOpen(false);
-          setMentionQuery('');
-        }}
+        query={mention.query}
+        isOpen={mention.isOpen}
+        position={mention.position}
+        selectedIndex={mention.selectedIndex}
+        onSelectedIndexChange={mention.setSelectedIndex}
+        onSelect={mention.handleSelect}
+        onClose={mention.handleClose}
       />
     </>
   );
