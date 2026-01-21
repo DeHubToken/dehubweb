@@ -1434,7 +1434,7 @@ export default function AssistantPage() {
                       /* Transaction simulation card */
                       <div className="max-w-[85%] flex flex-col gap-3">
                         {/* Simulation content with markdown */}
-                        <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent border border-amber-500/30 rounded-2xl p-4">
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
                           <MarkdownText content={message.content} className="text-sm text-white" />
                           
                           {/* Approve/Reject buttons - only show if pending */}
@@ -1443,9 +1443,9 @@ export default function AssistantPage() {
                               <button
                                 onClick={() => handleSimulationApprove(message.id)}
                                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
-                                  bg-gradient-to-r from-green-500/80 to-emerald-500/80 hover:from-green-500 hover:to-emerald-500
-                                  text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
-                                  shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
+                                  bg-white/10 hover:bg-white/20
+                                  border border-white/20 hover:border-white/40
+                                  text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                               >
                                 <Check className="w-4 h-4" />
                                 Approve
@@ -1453,9 +1453,9 @@ export default function AssistantPage() {
                               <button
                                 onClick={() => handleSimulationReject(message.id)}
                                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
-                                  bg-gradient-to-r from-red-500/20 to-rose-500/20 hover:from-red-500/40 hover:to-rose-500/40
-                                  border border-red-500/30 hover:border-red-500/50
-                                  text-red-300 hover:text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                  bg-white/5 hover:bg-white/10
+                                  border border-white/10 hover:border-white/20
+                                  text-white/70 hover:text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                               >
                                 <XCircle className="w-4 h-4" />
                                 Reject
@@ -1466,9 +1466,9 @@ export default function AssistantPage() {
                           {/* Status badge for approved/rejected */}
                           {message.simulationStatus === 'approved' && message.simulationData && (
                             <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
-                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30 w-fit">
-                                <Check className="w-4 h-4 text-green-400" />
-                                <span className="text-sm text-green-400">Transaction Successful</span>
+                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 w-fit">
+                                <Check className="w-4 h-4 text-white" />
+                                <span className="text-sm text-white">Transfer Complete</span>
                               </div>
                               <div className="text-xs text-white/60">
                                 <span className="text-white/40">Hash: </span>
@@ -1479,9 +1479,9 @@ export default function AssistantPage() {
                           
                           {message.simulationStatus === 'rejected' && (
                             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/20 border border-red-500/30">
-                                <XCircle className="w-4 h-4 text-red-400" />
-                                <span className="text-sm text-red-400">Transaction rejected</span>
+                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20">
+                                <XCircle className="w-4 h-4 text-white/70" />
+                                <span className="text-sm text-white/70">Transfer Cancelled</span>
                               </div>
                             </div>
                           )}
