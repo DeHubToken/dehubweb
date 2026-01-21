@@ -220,9 +220,9 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('all');
 
   return (
-    <div className="min-h-screen mt-2 lg:mt-0">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-3 sm:p-4">
+      <div className="sticky top-11 lg:top-0 bg-black z-10 p-3 sm:p-4">
         <div className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <h1 className="font-bold text-white text-lg">Notifications</h1>

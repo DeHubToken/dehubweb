@@ -346,7 +346,7 @@ export default function MusicPage() {
   return (
     <div className="min-h-screen">
       {/* Tab Navigation */}
-      <div className="sticky top-0 bg-black/80 backdrop-blur-sm z-10 p-2 sm:p-3 mt-2 lg:mt-0">
+      <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {MUSIC_TABS.map((tab) => (
