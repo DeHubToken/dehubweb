@@ -285,10 +285,10 @@ serve(async (req) => {
       if (txParsed.type === 'transfer') {
         const amount = txParsed.amount || '0';
         const recipient = txParsed.recipient || 'unknown';
-        simulationResponse = `## 🔄 Transaction Simulation\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH`;
+        simulationResponse = `## Transfer Request\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH`;
       } else {
         const amount = txParsed.amount || '0';
-        simulationResponse = `## 🛒 Transaction Simulation\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH`;
+        simulationResponse = `## Purchase Request\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH`;
       }
       
       return new Response(
