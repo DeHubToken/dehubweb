@@ -647,6 +647,28 @@ export default function ProfilePage() {
     return loadingContent;
   }
 
+  // Show error/not found state when profile is undefined
+  if (!profile) {
+    const notFoundContent = (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4 text-center">
+        <div className="w-20 h-20 rounded-full bg-zinc-800 flex items-center justify-center">
+          <AtSign className="w-10 h-10 text-zinc-500" />
+        </div>
+        <h2 className="text-xl font-bold text-white">Profile Not Found</h2>
+        <p className="text-zinc-400 max-w-md">
+          {isProfileError 
+            ? "Unable to load profile. Please try again later."
+            : "This user doesn't exist or you need to sign in to view your profile."}
+        </p>
+      </div>
+    );
+    
+    if (needsLayoutWrapper) {
+      return <AppLayout>{notFoundContent}</AppLayout>;
+    }
+    return notFoundContent;
+  }
+
   const profileContent = (
     <div className="min-h-screen">
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3 mt-2 lg:mt-0">
