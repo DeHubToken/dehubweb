@@ -21,7 +21,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       <div className="flex max-w-7xl mx-auto w-full relative min-h-screen">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className="flex-1 min-h-screen pt-14 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
+        <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
           {children || <Outlet />}
         </main>
         
