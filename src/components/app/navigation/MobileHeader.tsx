@@ -31,7 +31,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const isNotificationsActive = location.pathname === '/app/notifications';
 
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-2 flex items-center justify-between">
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-1.5 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <button onClick={handleLogoClick} className="block cursor-pointer">
           <img src={dehubLogo} alt="dehub" className="h-6 md:h-7 w-auto" />
