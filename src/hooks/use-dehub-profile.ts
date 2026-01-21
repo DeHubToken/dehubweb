@@ -37,8 +37,9 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     ? new Date(createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     : 'Unknown';
 
-  // Calculate follower/following counts from arrays if needed
-  const followerCount = user.follower_count ?? user.followers?.length ?? 0;
+  // Calculate follower/following counts - handle both number and array types
+  const followerCount = user.follower_count ?? 
+    (typeof user.followers === 'number' ? user.followers : user.followers?.length) ?? 0;
   const followingCount = user.following_count ?? user.followings?.length ?? 0;
 
   // Get raw avatar/cover paths (API uses avatarImageUrl/coverImageUrl)
