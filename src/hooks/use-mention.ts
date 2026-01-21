@@ -76,6 +76,8 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     if (!input) return;
     
     const rect = input.getBoundingClientRect();
+    const dropdownWidth = 280;
+    const dropdownHeight = 260;
     
     // For contentEditable, try to get caret position
     if (input instanceof HTMLDivElement) {
@@ -84,21 +86,43 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
         const range = selection.getRangeAt(0);
         const caretRect = range.getBoundingClientRect();
         
-        if (caretRect.width > 0 || caretRect.height > 0) {
-          setPosition({
-            top: caretRect.bottom + 4,
-            left: Math.max(rect.left, Math.min(caretRect.left, rect.right - 260)),
-          });
+        // Only use caret position if it has valid dimensions
+        if (caretRect.height > 0 && caretRect.top > 0) {
+          // Calculate position, ensuring dropdown stays in viewport
+          let top = caretRect.bottom + 4;
+          let left = caretRect.left;
+          
+          // Ensure dropdown doesn't go off right edge
+          left = Math.max(8, Math.min(left, window.innerWidth - dropdownWidth - 8));
+          
+          // If dropdown would go below viewport, position above caret
+          if (top + dropdownHeight > window.innerHeight - 8) {
+            top = caretRect.top - dropdownHeight - 4;
+          }
+          
+          setPosition({ top, left });
           return;
         }
       }
     }
     
-    // Fallback: position below input
-    setPosition({
-      top: rect.bottom + 4,
-      left: rect.left,
-    });
+    // For textareas - position above the input
+    if (input instanceof HTMLTextAreaElement) {
+      const top = Math.max(8, rect.top - dropdownHeight - 4);
+      const left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownWidth - 8));
+      setPosition({ top, left });
+      return;
+    }
+    
+    // Fallback: position below input, ensuring viewport bounds
+    let top = rect.bottom + 4;
+    let left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownWidth - 8));
+    
+    if (top + dropdownHeight > window.innerHeight - 8) {
+      top = rect.top - dropdownHeight - 4;
+    }
+    
+    setPosition({ top, left });
   }, [inputRef]);
 
   // Handle text input changes

@@ -154,7 +154,7 @@ export function UserMentionDropdown({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -8, scale: 0.95 }}
         transition={{ duration: 0.15 }}
-        className="fixed z-[100] min-w-[240px] max-w-[320px] bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+        className="fixed z-[9999] min-w-[240px] max-w-[320px] bg-zinc-900/95 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl overflow-hidden"
         style={{ top: position.top, left: position.left }}
       >
         <div className="py-1">
