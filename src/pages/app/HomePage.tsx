@@ -240,7 +240,7 @@ export default function HomePage() {
     >
 
       {/* Tab Navigation */}
-      <div className="sticky top-0 bg-black z-10 p-2 sm:p-3">
+      <div className="sticky top-14 lg:top-0 bg-black z-10 p-2 sm:p-3">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => (
