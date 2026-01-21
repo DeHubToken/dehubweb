@@ -97,20 +97,42 @@ const TOKEN_PURCHASE_KEYWORDS = [
 function parseTokenTransaction(message: string): { type: 'transfer' | 'purchase' | null; amount?: string; recipient?: string; token?: string } {
   const lowerMessage = message.toLowerCase();
   
-  // Check for transfer patterns like "send 100 DHB to @user1"
-  const transferMatch = lowerMessage.match(/(?:send|transfer|pay|tip|give)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?\s*(?:to\s+)?@?(\w+)/i);
-  if (transferMatch) {
-    return {
-      type: 'transfer',
-      amount: transferMatch[1],
-      recipient: transferMatch[2],
-      token: 'DHB'
-    };
+  // Check for transfer patterns like "send 100 DHB to @user1" or "send 100 to bailey"
+  // More flexible regex to handle various formats
+  const transferPatterns = [
+    // "send 100 DHB to @bailey" or "send 100 to bailey"
+    /(?:send|transfer|pay|tip|give)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?\s*(?:to\s+)?@?(\w+)/i,
+    // "send @bailey 100 DHB"
+    /(?:send|transfer|pay|tip|give)\s+@?(\w+)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?/i,
+  ];
+  
+  for (const pattern of transferPatterns) {
+    const match = lowerMessage.match(pattern);
+    if (match) {
+      // First pattern: amount is match[1], recipient is match[2]
+      // Second pattern: recipient is match[1], amount is match[2]
+      const isSecondPattern = pattern.source.includes('@?(\\w+)\\s+(\\d+');
+      const amount = isSecondPattern ? match[2] : match[1];
+      const recipient = isSecondPattern ? match[1] : match[2];
+      
+      // Filter out keywords that aren't usernames
+      const invalidRecipients = ['dhb', 'tokens', 'token', 'coins', 'coin', 'to'];
+      if (!invalidRecipients.includes(recipient.toLowerCase())) {
+        console.log('Transfer parsed:', { amount, recipient });
+        return {
+          type: 'transfer',
+          amount: amount,
+          recipient: recipient,
+          token: 'DHB'
+        };
+      }
+    }
   }
   
   // Check for purchase patterns like "buy 100 DHB"
-  const purchaseMatch = lowerMessage.match(/(?:buy|purchase|get|swap\s+(?:for)?)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?/i);
+  const purchaseMatch = message.match(/(?:buy|purchase|get|swap\s+(?:for)?)\s+(\d+(?:\.\d+)?)\s*(?:dhb|tokens?|coins?)?/i);
   if (purchaseMatch) {
+    console.log('Purchase parsed:', { amount: purchaseMatch[1] });
     return {
       type: 'purchase',
       amount: purchaseMatch[1],
@@ -285,10 +307,10 @@ serve(async (req) => {
       if (txParsed.type === 'transfer') {
         const amount = txParsed.amount || '0';
         const recipient = txParsed.recipient || 'unknown';
-        simulationResponse = `## Transfer Request\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH`;
+        simulationResponse = `**Transfer Request**\n\n**Type:** Token Transfer\n**Amount:** ${amount} DHB\n**Recipient:** @${recipient}\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0001 ETH`;
       } else {
         const amount = txParsed.amount || '0';
-        simulationResponse = `## Purchase Request\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH`;
+        simulationResponse = `**Purchase Request**\n\n**Type:** Token Purchase\n**Amount:** ${amount} DHB\n**Source:** Your Wallet\n**Network:** Base (L2)\n**Estimated Gas:** ~0.0002 ETH`;
       }
       
       return new Response(
