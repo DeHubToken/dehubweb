@@ -350,7 +350,7 @@ export async function recordView(tokenId: string): Promise<void> {
 
 // User functions
 export async function getAccountInfo(userId: string): Promise<DeHubUser> {
-  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${userId}`);
+  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(userId)}`);
   // Handle wrapped response from API
   if (response && typeof response === "object" && "result" in response) {
     return response.result;
@@ -361,7 +361,7 @@ export async function getAccountInfo(userId: string): Promise<DeHubUser> {
 export async function getAccountByUsername(username: string): Promise<DeHubUser> {
   // Remove @ prefix if present
   const cleanUsername = username.replace("@", "");
-  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${cleanUsername}`);
+  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(cleanUsername)}`);
   // Handle wrapped response from API
   if (response && typeof response === "object" && "result" in response) {
     return response.result;
