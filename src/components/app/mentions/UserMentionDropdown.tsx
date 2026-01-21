@@ -154,27 +154,31 @@ export function UserMentionDropdown({
     <AnimatePresence>
       <motion.div
         ref={dropdownRef}
-        initial={{ opacity: 0, y: 8, scale: 0.95 }}
+        initial={{ opacity: 0, y: 4, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 8, scale: 0.95 }}
-        transition={{ duration: 0.15 }}
-        className="fixed z-[9999] min-w-[240px] max-w-[320px] bg-zinc-900 border border-white/20 rounded-xl shadow-2xl overflow-hidden"
-        style={{ top: position.top, left: position.left }}
+        exit={{ opacity: 0, y: 4, scale: 0.98 }}
+        transition={{ duration: 0.12, ease: 'easeOut' }}
+        className="fixed z-[9999] w-[260px] bg-zinc-900 border border-white/15 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden"
+        style={{ 
+          top: position.top, 
+          left: position.left,
+          backdropFilter: 'blur(20px)',
+        }}
       >
-        <div className="py-1">
+        <div className="py-1.5">
           {users.map((user, index) => (
             <button
               key={user.id}
               onClick={() => onSelect(user)}
               onMouseEnter={() => onSelectedIndexChange(index)}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2 text-left transition-colors",
+                "w-full flex items-center gap-2.5 px-3 py-2 text-left transition-all duration-100",
                 index === selectedIndex
                   ? "bg-white/10"
                   : "hover:bg-white/5"
               )}
             >
-              <Avatar className="w-8 h-8 flex-shrink-0">
+              <Avatar className="w-7 h-7 flex-shrink-0">
                 <AvatarImage src={user.avatarUrl || undefined} />
                 <AvatarFallback className="bg-zinc-700 text-white text-xs">
                   {user.username?.charAt(0).toUpperCase() || 'U'}
@@ -185,9 +189,9 @@ export function UserMentionDropdown({
                   <span className="text-sm font-medium text-white truncate">
                     {user.displayName || user.username}
                   </span>
-                  {user.isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
+                  {user.isVerified && <VerifiedBadge className="w-3 h-3" />}
                 </div>
-                <span className="text-xs text-zinc-400">@{user.username}</span>
+                <span className="text-xs text-zinc-500">@{user.username}</span>
               </div>
             </button>
           ))}
