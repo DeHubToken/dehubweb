@@ -39,7 +39,7 @@ export function WhatsHappening() {
         <h3 className="font-bold text-lg text-white">What's happening</h3>
         <Link 
           to="/app/explore" 
-          className="text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+          className="text-sm text-white/70 hover:text-white transition-colors font-medium"
         >
           All
         </Link>
