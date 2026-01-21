@@ -70,33 +70,32 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
   const mentionStartRef = useRef<number>(-1);
   const textRef = useRef<string>('');
 
-  // Calculate dropdown position based on cursor
+  // Calculate dropdown position based on cursor - appears directly above the caret
   const updatePosition = useCallback(() => {
     const input = inputRef.current;
     if (!input) return;
     
-    const dropdownWidth = 280;
-    const dropdownHeight = 260;
+    const dropdownWidth = 260;
+    const dropdownHeight = 220; // Approximate height for 5 users
     
-    // For contentEditable, try to get caret position
+    // For contentEditable, get precise caret position
     if (input instanceof HTMLDivElement) {
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         const caretRect = range.getBoundingClientRect();
         
-        // Only use caret position if it has valid dimensions
         if (caretRect.height > 0 && caretRect.top > 0) {
-          // Default: position above the caret (dropdown appears above cursor)
-          let top = caretRect.top - dropdownHeight - 8;
-          let left = caretRect.left;
+          // Position directly above the caret with small gap
+          let top = caretRect.top - dropdownHeight - 6;
+          let left = caretRect.left - 20; // Slight offset to align nicely
           
-          // Ensure dropdown doesn't go off left/right edge
-          left = Math.max(8, Math.min(left, window.innerWidth - dropdownWidth - 8));
+          // Ensure dropdown stays within viewport
+          left = Math.max(12, Math.min(left, window.innerWidth - dropdownWidth - 12));
           
-          // If not enough space above, position below
-          if (top < 8) {
-            top = caretRect.bottom + 8;
+          // If not enough space above, flip to below caret
+          if (top < 12) {
+            top = caretRect.bottom + 6;
           }
           
           setPosition({ top, left });
@@ -105,22 +104,28 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
       }
     }
     
-    // For textareas - position above the input
+    // For textareas
     if (input instanceof HTMLTextAreaElement) {
       const rect = input.getBoundingClientRect();
-      const top = Math.max(8, rect.top - dropdownHeight - 8);
-      const left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownWidth - 8));
+      // Position above the textarea
+      let top = rect.top - dropdownHeight - 6;
+      let left = Math.max(12, Math.min(rect.left, window.innerWidth - dropdownWidth - 12));
+      
+      if (top < 12) {
+        top = rect.bottom + 6;
+      }
+      
       setPosition({ top, left });
       return;
     }
     
-    // Fallback: position above input
+    // Fallback
     const rect = input.getBoundingClientRect();
-    let top = rect.top - dropdownHeight - 8;
-    let left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownWidth - 8));
+    let top = rect.top - dropdownHeight - 6;
+    let left = Math.max(12, Math.min(rect.left, window.innerWidth - dropdownWidth - 12));
     
-    if (top < 8) {
-      top = rect.bottom + 8;
+    if (top < 12) {
+      top = rect.bottom + 6;
     }
     
     setPosition({ top, left });
