@@ -107,13 +107,18 @@ const FilterDropdown = ({
   onChange: (value: string) => void;
 }) => {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredOptions = options.filter(option =>
+    option.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all',
+          'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
           value !== options[0]
             ? 'bg-white text-black'
             : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
@@ -130,25 +135,45 @@ const FilterDropdown = ({
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="absolute top-full left-0 mt-2 bg-zinc-900/70 backdrop-blur-xl border border-white/10 rounded-2xl p-1 min-w-[120px] z-50 shadow-2xl"
+              className="absolute top-full right-0 mt-2 bg-zinc-900 backdrop-blur-xl border border-white/10 rounded-lg p-2 min-w-[180px] z-50 shadow-2xl"
             >
-              {options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => {
-                    onChange(option);
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    'w-full text-left px-3 py-2 rounded-xl text-sm transition-colors',
-                    value === option
-                      ? 'bg-white/10 text-white'
-                      : 'text-zinc-400 hover:bg-white/10 hover:text-white'
-                  )}
-                >
-                  {option}
-                </button>
-              ))}
+              {/* Search input */}
+              <div className="relative mb-2">
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-7 pr-3 py-1.5 bg-zinc-800 border border-white/10 rounded-md text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+              {/* Scrollable options list - 8 items visible (~280px) */}
+              <div className="max-h-[280px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        onChange(option);
+                        setOpen(false);
+                        setSearchQuery('');
+                      }}
+                      className={cn(
+                        'w-full text-left px-3 py-2 rounded-md text-sm transition-colors',
+                        value === option
+                          ? 'bg-white/10 text-white'
+                          : 'text-zinc-400 hover:bg-white/10 hover:text-white'
+                      )}
+                    >
+                      {option}
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-2 text-sm text-zinc-500">No results</div>
+                )}
+              </div>
             </motion.div>
           </>
         )}
