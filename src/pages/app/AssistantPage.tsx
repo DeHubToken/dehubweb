@@ -10,11 +10,12 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,6 +33,16 @@ import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/con
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { OverviewTab } from '@/components/app/command-centre';
+import { AuthPrompt } from '@/components/app/AuthPrompt';
+
+// Simulation data for token transactions
+interface SimulationData {
+  txHash: string;
+  amount: string;
+  recipient?: string;
+  token: string;
+  timestamp: string;
+}
 
 interface Message {
   id: string;
@@ -42,6 +53,10 @@ interface Message {
   attachedImage?: string;  // For user-attached images to edit
   isVideoGenerating?: boolean;
   videoPredictionId?: string;
+  isSimulation?: boolean;  // For transaction simulations
+  simulationType?: 'transfer' | 'purchase';
+  simulationData?: SimulationData;
+  simulationStatus?: 'pending' | 'approved' | 'rejected';
 }
 
 // Keywords that indicate image generation/editing request
@@ -313,6 +328,7 @@ export default function AssistantPage() {
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
   const [inputGlow, setInputGlow] = useState(false); // Glow effect for input focus hint
   const [showCommandCentre, setShowCommandCentre] = useState(false); // Toggle between chat and command centre
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false); // Auth prompt for simulation approval
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -320,6 +336,7 @@ export default function AssistantPage() {
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
+  const { isAuthenticated } = useAuth();
   const isMobile = useIsMobile();
   const currentStyle = AI_ASSISTANT_STYLE_OPTIONS.find(s => s.id === selectedStyle) || AI_ASSISTANT_STYLE_OPTIONS[0];
   const currentVideoModel = VIDEO_MODEL_OPTIONS.find(m => m.id === selectedVideoModel) || VIDEO_MODEL_OPTIONS[0];
@@ -805,7 +822,8 @@ export default function AssistantPage() {
               content: m.content
             })),
             style: selectedStyle,
-            model: selectedChatModel
+            model: selectedChatModel,
+            isAuthenticated // Pass auth status for transaction simulation
           }
         });
 
@@ -816,19 +834,33 @@ export default function AssistantPage() {
           toast.info('Using DeHub AI - Grok API key not configured');
         }
 
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.response || 'I apologize, I couldn\'t generate a response.'
-        };
+        // Check if this is a transaction simulation response
+        if (data.isSimulation) {
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.response,
+            isSimulation: true,
+            simulationType: data.simulationType,
+            simulationData: data.simulationData,
+            simulationStatus: 'pending'
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+        } else {
+          const assistantMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: data.response || 'I apologize, I couldn\'t generate a response.'
+          };
 
-        setMessages(prev => [...prev, assistantMessage]);
-        
-        // Auto-speak the response if always speak replies is enabled
-        if (alwaysSpeakReplies) {
-          setTimeout(() => {
-            speak(assistantMessage.content);
-          }, 300);
+          setMessages(prev => [...prev, assistantMessage]);
+          
+          // Auto-speak the response if always speak replies is enabled
+          if (alwaysSpeakReplies) {
+            setTimeout(() => {
+              speak(assistantMessage.content);
+            }, 300);
+          }
         }
       }
     } catch (error) {
@@ -849,6 +881,26 @@ export default function AssistantPage() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // Handle simulation approval - triggers auth flow
+  const handleSimulationApprove = (messageId: string) => {
+    // Update the simulation status
+    setMessages(prev => prev.map(m => 
+      m.id === messageId ? { ...m, simulationStatus: 'approved' as const } : m
+    ));
+    
+    // Show auth prompt to connect wallet
+    setShowAuthPrompt(true);
+    toast.success('Transaction approved! Please connect your wallet to execute.');
+  };
+
+  // Handle simulation rejection
+  const handleSimulationReject = (messageId: string) => {
+    setMessages(prev => prev.map(m => 
+      m.id === messageId ? { ...m, simulationStatus: 'rejected' as const } : m
+    ));
+    toast.info('Transaction rejected');
   };
 
   const handleStyleSelect = (styleId: string) => {
@@ -1363,6 +1415,59 @@ export default function AssistantPage() {
                           </div>
                         </div>
                       </div>
+                    ) : message.isSimulation ? (
+                      /* Transaction simulation card */
+                      <div className="max-w-[85%] flex flex-col gap-3">
+                        {/* Simulation content with markdown */}
+                        <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent border border-amber-500/30 rounded-2xl p-4">
+                          <MarkdownText content={message.content} className="text-sm text-white" />
+                          
+                          {/* Approve/Reject buttons - only show if pending */}
+                          {message.simulationStatus === 'pending' && (
+                            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
+                              <button
+                                onClick={() => handleSimulationApprove(message.id)}
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+                                  bg-gradient-to-r from-green-500/80 to-emerald-500/80 hover:from-green-500 hover:to-emerald-500
+                                  text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
+                                  shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
+                              >
+                                <Check className="w-4 h-4" />
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => handleSimulationReject(message.id)}
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+                                  bg-gradient-to-r from-red-500/20 to-rose-500/20 hover:from-red-500/40 hover:to-rose-500/40
+                                  border border-red-500/30 hover:border-red-500/50
+                                  text-red-300 hover:text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                              >
+                                <XCircle className="w-4 h-4" />
+                                Reject
+                              </button>
+                            </div>
+                          )}
+                          
+                          {/* Status badge for approved/rejected */}
+                          {message.simulationStatus === 'approved' && (
+                            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
+                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30">
+                                <Check className="w-4 h-4 text-green-400" />
+                                <span className="text-sm text-green-400">Approved - Connect wallet to execute</span>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {message.simulationStatus === 'rejected' && (
+                            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
+                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/20 border border-red-500/30">
+                                <XCircle className="w-4 h-4 text-red-400" />
+                                <span className="text-sm text-red-400">Transaction rejected</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     ) : (
                       /* Text messages */
                       <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
@@ -1641,6 +1746,12 @@ export default function AssistantPage() {
           isGenerating={isVideoLoading}
         />
       )}
+
+      {/* Auth Prompt for transaction simulation */}
+      <AuthPrompt 
+        isOpen={showAuthPrompt} 
+        onClose={() => setShowAuthPrompt(false)} 
+      />
     </div>
   );
 }
