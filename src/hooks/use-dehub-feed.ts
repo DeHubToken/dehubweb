@@ -330,41 +330,30 @@ export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'media_type'> 
 
 /**
  * Hook to fetch live content specifically
+ * NOTE: Currently returns empty as there are no live streams available
  */
-export function useDeHubLive(options: Omit<UseDeHubFeedOptions, 'media_type'> = {}) {
-  return useDeHubFeed({
-    ...options,
-    media_type: 'live',
+export function useDeHubLive(_options: Omit<UseDeHubFeedOptions, 'media_type'> = {}) {
+  // Return empty result - no live streams currently available from API
+  return useInfiniteQuery({
+    queryKey: ['dehub-live-empty'],
+    queryFn: async () => ({
+      data: [],
+      page: 1,
+      has_more: false,
+      total: 0,
+      limit: 15,
+    }),
+    getNextPageParam: () => undefined,
+    initialPageParam: 1,
+    staleTime: Infinity,
   });
 }
 
 /**
  * Hook to fetch unique story users from recent content
+ * NOTE: Currently returns empty as there are no stories available
  */
-export function useDeHubStoryUsers(limit: number = 10) {
-  const { data, isLoading } = useDeHubFeed({ 
-    limit: 30, // Fetch more to get unique creators
-    sort: 'latest',
-  });
-  
-  const storyUsers = useMemo(() => {
-    if (!data?.pages) return [];
-    
-    const allNFTs = data.pages.flatMap(page => page.data || []);
-    const seenCreators = new Set<string>();
-    const users: { name: string; avatar: string }[] = [];
-    
-    for (const nft of allNFTs) {
-      const creatorId = nft.minter || nft.creator?.id || '';
-      if (creatorId && !seenCreators.has(creatorId)) {
-        seenCreators.add(creatorId);
-        users.push(mapNFTToStoryUser(nft));
-        if (users.length >= limit) break;
-      }
-    }
-    
-    return users;
-  }, [data, limit]);
-  
-  return { storyUsers, isLoading };
+export function useDeHubStoryUsers(_limit: number = 10) {
+  // Return empty - no stories currently available
+  return { storyUsers: [], isLoading: false };
 }
