@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { TRENDING_TOPICS, EXTENDED_TRENDING_TOPICS, GENERATED_TRENDING_TOPICS } from '@/constants/app.constants';
 
 // Parse post count and sort by most to least
@@ -34,7 +35,15 @@ export function WhatsHappening() {
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
-      <h3 className="font-bold text-lg mb-4 text-white">What's happening</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-lg text-white">What's happening</h3>
+        <Link 
+          to="/app/explore" 
+          className="text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+        >
+          All
+        </Link>
+      </div>
       <div className="relative">
         {/* Bottom fade */}
         <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
