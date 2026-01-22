@@ -219,7 +219,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar postId={video.id} className="p-0 mb-2" />
+        <ActionBar postId={video.id} className="p-0 mb-2" isLiked={video.isLiked} isDisliked={video.isDisliked} />
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
         <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
       </div>

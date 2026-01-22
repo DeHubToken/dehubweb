@@ -152,6 +152,10 @@ export interface DeHubNFT {
   is_live?: boolean;
   is_ppv?: boolean;
   ppv_price?: number;
+
+  // User interaction state (returned when address param is provided)
+  isLiked?: boolean;
+  isDisliked?: boolean;
 }
 
 export interface DeHubComment {
@@ -180,6 +184,8 @@ export interface SearchNFTsParams {
   creator_id?: string;
   media_type?: "video" | "image" | "audio" | "live";
   search?: string;
+  /** Connected wallet address to get isLiked/isDisliked info */
+  address?: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -324,6 +330,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
       creator_id: params.creator_id,
       media_type: params.media_type,
       search: params.search,
+      address: params.address,
     },
   });
 }

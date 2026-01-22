@@ -12,6 +12,7 @@ import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon } from 'lucide-reac
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ImageCard } from '@/components/app/cards';
+import { useAuth } from '@/contexts/AuthContext';
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import type { ImagePost } from '@/types/feed.types';
@@ -109,6 +110,9 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
   
+  // Get wallet address for authenticated requests
+  const { walletAddress } = useAuth();
+  
   // Fetch from DeHub API
   const {
     data: apiData,
@@ -121,6 +125,7 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
   } = useDeHubImages({
     unit: 15,
     sortMode: 'new',
+    address: walletAddress || undefined,
   });
 
   // Refetch when refreshKey changes
