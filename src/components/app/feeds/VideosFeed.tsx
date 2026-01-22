@@ -21,6 +21,7 @@ import {
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { CommentsSection, generateRandomComments, generateRandomQuotes } from '@/components/app/cards/CommentsSection';
+import { useAuth } from '@/contexts/AuthContext';
 
 // DeHub API hook
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
@@ -215,6 +216,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [expandedComments, setExpandedComments] = useState<string | null>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
+  
+  // Get wallet address for authenticated requests
+  const { walletAddress } = useAuth();
 
   // Fetch from DeHub API
   const {
@@ -229,6 +233,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     unit: 15,
     sortMode: SORT_MAP[selectedSort] || 'new',
     category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+    address: walletAddress || undefined,
   });
 
   // Refetch when refreshKey changes

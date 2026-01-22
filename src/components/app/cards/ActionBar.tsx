@@ -46,6 +46,10 @@ interface ActionBarProps {
   className?: string;
   /** Whether to show border on top */
   showBorder?: boolean;
+  /** Whether the current user has liked this item */
+  isLiked?: boolean;
+  /** Whether the current user has disliked this item */
+  isDisliked?: boolean;
 }
 
 export function ActionBar({ 
@@ -58,7 +62,9 @@ export function ActionBar({
   onQuote,
   onBookmark,
   className,
-  showBorder = false 
+  showBorder = false,
+  isLiked = false,
+  isDisliked = false,
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const navigate = useNavigate();
@@ -123,18 +129,34 @@ export function ActionBar({
         {/* Primary actions */}
         <div className="flex items-center gap-4">
           <button 
-            onClick={onLike}
-            className="text-white hover:text-zinc-400 transition-colors"
+            onClick={!isLiked && !isDisliked ? onLike : undefined}
+            className={cn(
+              "transition-colors",
+              isLiked 
+                ? "text-primary cursor-default" 
+                : isDisliked 
+                  ? "text-zinc-600 cursor-not-allowed" 
+                  : "text-white hover:text-zinc-400"
+            )}
             aria-label="Like"
+            disabled={isLiked || isDisliked}
           >
-            <ThumbsUp className="w-5 h-5" />
+            <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           </button>
           <button 
-            onClick={onDislike}
-            className="text-white hover:text-zinc-400 transition-colors"
+            onClick={!isLiked && !isDisliked ? onDislike : undefined}
+            className={cn(
+              "transition-colors",
+              isDisliked 
+                ? "text-destructive cursor-default" 
+                : isLiked 
+                  ? "text-zinc-600 cursor-not-allowed" 
+                  : "text-white hover:text-zinc-400"
+            )}
             aria-label="Dislike"
+            disabled={isLiked || isDisliked}
           >
-            <ThumbsDown className="w-5 h-5" />
+            <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
           </button>
           <button 
             onClick={onComment}

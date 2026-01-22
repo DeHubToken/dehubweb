@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
+import { useAuth } from '@/contexts/AuthContext';
 import type { ShortVideo } from '@/types/feed.types';
 
 const DURATION_OPTIONS = ['All', '< 15s', '15-60s', '> 60s'];
@@ -72,6 +73,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
 
+  // Get wallet address for authenticated requests
+  const { walletAddress } = useAuth();
+
   // Fetch from DeHub API (using video type for shorts)
   const {
     data: apiData,
@@ -85,6 +89,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     unit: 15,
     sortMode: SORT_MAP[selectedSort] || 'new',
     category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+    address: walletAddress || undefined,
   });
 
   // Refetch when refreshKey changes

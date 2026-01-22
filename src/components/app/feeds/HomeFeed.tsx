@@ -22,6 +22,7 @@ import {
 
 // DeHub API hook
 import { useDeHubFeed, useDeHubStoryUsers, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { useAuth } from '@/contexts/AuthContext';
 
 import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
 
@@ -42,6 +43,9 @@ interface HomeFeedProps {
 export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
 
+  // Get wallet address for authenticated requests
+  const { walletAddress } = useAuth();
+
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
@@ -58,6 +62,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   } = useDeHubFeed({
     unit: PAGE_SIZE,
     sortMode: 'new',
+    address: walletAddress || undefined,
   });
 
   // Refetch when shuffleKey changes (pull-to-refresh)
