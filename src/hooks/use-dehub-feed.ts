@@ -100,7 +100,8 @@ export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
  */
 export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // Get ID from various possible fields
-  const id = String(nft.tokenId || nft.id || nft.token_id);
+  const tokenId = nft.tokenId || nft.id || nft.token_id;
+  const id = String(tokenId);
   
   // Get thumbnail with CDN URL
   const thumbnail = getMediaUrl(nft.imageUrl) || 
@@ -108,8 +109,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
                     getMediaUrl(nft.media_url) || 
                     FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
   
-  // Get video URL with CDN
-  const videoUrl = getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url);
+  // Build video URL using cdnurl/videos/{tokenId}.mp4 pattern
+  const videoUrl = tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined;
   
   // Get duration from various fields
   const duration = nft.videoDuration || nft.duration;
