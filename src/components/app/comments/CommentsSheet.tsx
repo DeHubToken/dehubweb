@@ -123,17 +123,10 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
     setIsSubmitting(true);
 
     try {
-      const response = await postComment(tokenId, text, replyTarget?.id);
+      await postComment(tokenId, text, replyTarget?.id);
       
-      // Update optimistic comment with real ID (handle both response formats)
-      const newId = response?.result?.id ?? response?.id;
-      if (newId) {
-        setOptimisticComments(prev => 
-          prev.map(c => c.id === tempId ? { ...c, id: String(newId) } : c)
-        );
-      }
-      
-      // Invalidate query to refetch
+      // On success, invalidate query to refetch real comments
+      // The temp comment will be removed once we have the real data
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
     } catch (err) {
       // Revert optimistic update

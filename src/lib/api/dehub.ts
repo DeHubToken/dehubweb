@@ -350,15 +350,26 @@ export interface ApiCommentResponse {
   replyToId?: string;
 }
 
+// Response wrapper for comments endpoint
+interface CommentsApiResponse {
+  result: {
+    items: ApiCommentResponse[];
+    totalCount: number;
+    skip: number;
+    limit: number;
+    hasMore: boolean;
+  };
+}
+
 export async function getNFTComments(
   tokenId: string,
-  page: number = 1,
+  page: number = 0,
   limit: number = 20,
 ): Promise<ApiCommentResponse[]> {
-  const response = await apiCall<{ status: boolean; result: ApiCommentResponse[] }>(`/api/nft/${tokenId}/comments`, {
+  const response = await apiCall<CommentsApiResponse>(`/api/nft/${tokenId}/comments`, {
     params: { page, limit },
   });
-  return response.result || [];
+  return response.result?.items || [];
 }
 
 export async function recordView(tokenId: string): Promise<void> {
@@ -451,18 +462,21 @@ export async function unfollowUser(userId: string): Promise<{ success: boolean }
 }
 
 export interface PostCommentResponse {
-  id?: string;
-  result?: { id?: string };
+  result?: boolean;
 }
 
 export async function postComment(tokenId: string, content: string, replyToId?: string): Promise<PostCommentResponse> {
+  const params: Record<string, string> = {
+    streamTokenId: tokenId,
+    content,
+  };
+  if (replyToId) {
+    params.commentId = replyToId;
+  }
+  
   return apiCall<PostCommentResponse>("/api/request_comment", {
-    method: "POST",
-    body: { 
-      streamTokenId: tokenId, 
-      content, 
-      commentId: replyToId 
-    },
+    method: "GET",
+    params,
     requiresAuth: true,
   });
 }
