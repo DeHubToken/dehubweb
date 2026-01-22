@@ -56,8 +56,8 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     refetch,
     error,
   } = useDeHubFeed({
-    limit: PAGE_SIZE,
-    sort: 'latest',
+    unit: PAGE_SIZE,
+    sortMode: 'new',
   });
 
   // Refetch when shuffleKey changes (pull-to-refresh)

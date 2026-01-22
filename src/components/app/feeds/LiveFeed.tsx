@@ -51,8 +51,8 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
     refetch,
     error,
   } = useDeHubLive({
-    limit: 15,
-    sort: 'latest',
+    unit: 15,
+    sortMode: 'new',
   });
 
   // Map API data to LiveStream items

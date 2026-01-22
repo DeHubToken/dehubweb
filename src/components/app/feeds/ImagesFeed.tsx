@@ -119,8 +119,8 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
     isError,
     refetch,
   } = useDeHubImages({
-    limit: 15,
-    sort: 'latest',
+    unit: 15,
+    sortMode: 'new',
   });
 
   // Refetch when refreshKey changes
