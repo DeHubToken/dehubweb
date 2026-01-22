@@ -13,11 +13,13 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { voteOnNFT } from '@/lib/api/dehub';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Sheet,
   SheetContent,
@@ -26,12 +28,8 @@ import {
 } from '@/components/ui/sheet';
 
 interface ActionBarProps {
-  /** Post ID for info navigation */
+  /** Post ID for info navigation and voting */
   postId?: string;
-  /** Handler for like action */
-  onLike?: () => void;
-  /** Handler for dislike action */
-  onDislike?: () => void;
   /** Handler for comment action */
   onComment?: () => void;
   /** Handler for share action */
@@ -54,8 +52,6 @@ interface ActionBarProps {
 
 export function ActionBar({ 
   postId,
-  onLike, 
-  onDislike, 
   onComment, 
   onShare,
   onRepost,
@@ -63,11 +59,62 @@ export function ActionBar({
   onBookmark,
   className,
   showBorder = false,
-  isLiked = false,
-  isDisliked = false,
+  isLiked: initialIsLiked = false,
+  isDisliked: initialIsDisliked = false,
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [isDisliked, setIsDisliked] = useState(initialIsDisliked);
+  const [isVoting, setIsVoting] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleVote = useCallback(async (vote: boolean) => {
+    if (!postId || isVoting || isLiked || isDisliked) return;
+    
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to vote');
+      return;
+    }
+
+    setIsVoting(true);
+    
+    // Optimistic update
+    if (vote) {
+      setIsLiked(true);
+    } else {
+      setIsDisliked(true);
+    }
+
+    try {
+      await voteOnNFT(postId, vote);
+      toast.success(vote ? 'Liked!' : 'Disliked!');
+    } catch (error: unknown) {
+      // Revert optimistic update on error
+      if (vote) {
+        setIsLiked(false);
+      } else {
+        setIsDisliked(false);
+      }
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (errorMessage.includes('409') || errorMessage.includes('already')) {
+        toast.error('You have already voted on this content');
+        // Set the vote state since they already voted
+        if (vote) {
+          setIsLiked(true);
+        } else {
+          setIsDisliked(true);
+        }
+      } else {
+        toast.error('Failed to vote. Please try again.');
+      }
+    } finally {
+      setIsVoting(false);
+    }
+  }, [postId, isVoting, isLiked, isDisliked, isAuthenticated]);
+
+  const hasVoted = isLiked || isDisliked;
 
   const handleInfoClick = () => {
     if (postId) {
@@ -129,32 +176,34 @@ export function ActionBar({
         {/* Primary actions */}
         <div className="flex items-center gap-4">
           <button 
-            onClick={!isLiked && !isDisliked ? onLike : undefined}
+            onClick={() => handleVote(true)}
             className={cn(
               "transition-colors",
               isLiked 
                 ? "text-primary cursor-default" 
-                : isDisliked 
+                : hasVoted 
                   ? "text-zinc-600 cursor-not-allowed" 
-                  : "text-white hover:text-zinc-400"
+                  : "text-white hover:text-zinc-400",
+              isVoting && "opacity-50"
             )}
             aria-label="Like"
-            disabled={isLiked || isDisliked}
+            disabled={hasVoted || isVoting}
           >
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           </button>
           <button 
-            onClick={!isLiked && !isDisliked ? onDislike : undefined}
+            onClick={() => handleVote(false)}
             className={cn(
               "transition-colors",
               isDisliked 
                 ? "text-destructive cursor-default" 
-                : isLiked 
+                : hasVoted 
                   ? "text-zinc-600 cursor-not-allowed" 
-                  : "text-white hover:text-zinc-400"
+                  : "text-white hover:text-zinc-400",
+              isVoting && "opacity-50"
             )}
             aria-label="Dislike"
-            disabled={isLiked || isDisliked}
+            disabled={hasVoted || isVoting}
           >
             <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
           </button>
