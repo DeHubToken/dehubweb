@@ -182,7 +182,8 @@ export interface SearchNFTsParams {
   category?: string;
   sortMode?: "new" | "popular" | "trending";
   creator_id?: string;
-  media_type?: "video" | "image" | "audio" | "live";
+  /** Post type filter - use "feed-images" for images feed, undefined for home/videos */
+  postType?: string;
   search?: string;
   /** Connected wallet address to get isLiked/isDisliked info */
   address?: string;
@@ -328,7 +329,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
       category: params.category,
       sortMode: params.sortMode,
       creator_id: params.creator_id,
-      media_type: params.media_type,
+      postType: params.postType,
       search: params.search,
       address: params.address,
     },
