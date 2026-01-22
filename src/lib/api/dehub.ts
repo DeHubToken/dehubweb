@@ -341,13 +341,19 @@ export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
 
 // API comment response from /api/nft/{tokenId}/comments
 export interface ApiCommentResponse {
-  _id: string;
+  id: string;
+  tokenId: number;
   address: string;
-  username: string;
-  comment: string;
+  content: string;
+  imageUrl: string | null;
+  replyIds: string[];
+  parentId: string | null;
   createdAt: string;
-  avatarUrl?: string;
-  replyToId?: string;
+  updatedAt: string;
+  writor: {
+    username: string;
+    avatarUrl?: string;
+  };
 }
 
 // Response wrapper for comments endpoint
