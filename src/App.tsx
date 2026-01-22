@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { UsernameRequiredModal } from "@/components/app/modals";
 import Index from "./pages/Index";
 import DeleteAccount from "./pages/DeleteAccount";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,7 @@ const App = () => (
     <AuthProvider>
       <TooltipProvider>
         <Sonner />
+        <UsernameRequiredModal />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
