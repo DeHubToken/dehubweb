@@ -2,15 +2,18 @@
  * Comments Section Component
  * ==========================
  * Full-featured comments UI with tabs (Replies/Quotes), search, sorting, and voice notes.
+ * Now fetches real comments from the DeHub API.
  * 
  * @example
  * ```tsx
- * <CommentsSection onClose={() => setShowComments(false)} />
+ * <CommentsSection tokenId="123" onClose={() => setShowComments(false)} />
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect } from 'react';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link } from 'lucide-react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -24,6 +27,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
+import { useAuth } from '@/contexts/AuthContext';
+import { getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { toast } from 'sonner';
 
 // ============================================================================
 // TYPES
@@ -45,111 +51,50 @@ export interface Comment {
   isLiked?: boolean;
   isDisliked?: boolean;
   voiceNote?: VoiceNote;
+  replyToId?: string;
+  address?: string;
 }
 
 interface CommentsSectionProps {
+  tokenId: string;
   onClose: () => void;
-  initialReplies?: Comment[];
-  initialQuotes?: Comment[];
 }
 
 // ============================================================================
-// AVATAR POOL
+// HELPERS
 // ============================================================================
 
-const AVATAR_POOL = [
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=100&h=100&fit=crop&crop=face',
-  'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=100&h=100&fit=crop&crop=face',
-];
-
-const USERNAMES = [
-  'crypto_whale', 'nft_hunter', 'web3_dev', 'pixel_artist', 'code_ninja',
-  'design_guru', 'tech_savvy', 'future_builder', 'digital_nomad', 'chain_master',
-  'block_smith', 'token_trader', 'meta_verse', 'ai_enthusiast', 'game_changer',
-  'trend_setter', 'vibe_check', 'moon_shot', 'diamond_hands', 'rocket_fuel'
-];
-
-const REPLY_TEMPLATES = [
-  "This is absolutely incredible! 🔥",
-  "Best content I've seen today",
-  "Can't believe how good this is",
-  "Sharing this with everyone I know",
-  "The quality here is insane",
-  "You never disappoint! 👏",
-  "This deserves way more attention",
-  "Literally made my day",
-  "How do you even do this??",
-  "Take my follow, you earned it",
-  "Underrated content right here",
-  "Been following for months, still amazed",
-  "This is why I'm on this app",
-  "Absolutely legendary stuff",
-  "Saving this for later 💾",
-  "The vibes are immaculate ✨",
-  "You're going places with this",
-  "Next level content creation",
-  "This hit different 💯",
-  "Pure gold, nothing less"
-];
-
-const QUOTE_TEMPLATES = [
-  "\"This content\" - shared with my whole team, they loved it",
-  "Reposting because everyone needs to see this masterpiece",
-  "When they said \"quality over quantity\" they meant this",
-  "This is exactly what I've been looking for. Quoted for visibility.",
-  "Adding this to my collection of goated content",
-  "\"Peak content\" - and I stand by that quote",
-  "Sharing this gem with the timeline",
-  "This deserves a spotlight quote for sure"
-];
-
-const TIME_OPTIONS = ['Just now', '1m ago', '5m ago', '15m ago', '30m ago', '1h ago', '2h ago', '4h ago', '8h ago', '1d ago', '2d ago', '3d ago', '1w ago'];
-
-export function generateRandomComments(count: number, seed: string): Comment[] {
-  const comments: Comment[] = [];
-  for (let i = 0; i < count; i++) {
-    const seedNum = seed.charCodeAt(0) + i;
-    comments.push({
-      id: `${seed}-reply-${i}`,
-      username: USERNAMES[(seedNum * 7) % USERNAMES.length],
-      avatar: AVATAR_POOL[(seedNum * 3) % AVATAR_POOL.length],
-      text: REPLY_TEMPLATES[(seedNum * 11) % REPLY_TEMPLATES.length],
-      likes: Math.floor(Math.pow(Math.random(), 2) * 500) + (seedNum % 50),
-      dislikes: Math.floor(Math.pow(Math.random(), 2) * 50) + (seedNum % 10),
-      timeAgo: TIME_OPTIONS[(seedNum * 2) % TIME_OPTIONS.length],
-    });
-  }
-  return comments.sort((a, b) => b.likes - a.likes);
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) return `${diffDays}d ago`;
+  
+  const diffWeeks = Math.floor(diffDays / 7);
+  return `${diffWeeks}w ago`;
 }
 
-export function generateRandomQuotes(count: number, seed: string): Comment[] {
-  const quotes: Comment[] = [];
-  for (let i = 0; i < count; i++) {
-    const seedNum = seed.charCodeAt(0) + i + 100;
-    quotes.push({
-      id: `${seed}-quote-${i}`,
-      username: USERNAMES[(seedNum * 5) % USERNAMES.length],
-      avatar: AVATAR_POOL[(seedNum * 4) % AVATAR_POOL.length],
-      text: QUOTE_TEMPLATES[(seedNum * 3) % QUOTE_TEMPLATES.length],
-      likes: Math.floor(Math.pow(Math.random(), 2) * 300) + (seedNum % 30),
-      dislikes: Math.floor(Math.pow(Math.random(), 2) * 30) + (seedNum % 5),
-      timeAgo: TIME_OPTIONS[(seedNum * 3) % TIME_OPTIONS.length],
-    });
-  }
-  return quotes.sort((a, b) => b.likes - a.likes);
+function mapApiComment(apiComment: ApiCommentResponse): Comment {
+  return {
+    id: String(apiComment.id),
+    username: apiComment.writor?.username || 'Anonymous',
+    avatar: apiComment.writor?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${apiComment.address}`,
+    text: apiComment.content,
+    likes: 0,
+    dislikes: 0,
+    timeAgo: formatTimeAgo(apiComment.createdAt),
+    replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
+    address: apiComment.address,
+  };
 }
 
 const SORT_OPTIONS = [
@@ -168,6 +113,8 @@ interface CommentItemProps {
   onReply: (id: string) => void;
   onShare: (id: string) => void;
   onBookmark: (id: string) => void;
+  onUserPress: (username: string) => void;
+  isReply?: boolean;
 }
 
 interface VoiceNotePlayerProps {
@@ -214,7 +161,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark }: CommentItemProps) {
+function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const handleBookmark = () => {
@@ -226,7 +173,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark 
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex gap-3 py-3"
+      className={cn("flex gap-3 py-3", isReply && "ml-8")}
     >
       <Avatar className="w-8 h-8 flex-shrink-0">
         <AvatarImage src={comment.avatar} className="object-cover" />
@@ -234,7 +181,12 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark 
       </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="font-semibold text-white text-sm">{comment.username}</span>
+          <button 
+            onClick={() => onUserPress(comment.username)}
+            className="font-semibold text-white text-sm hover:underline"
+          >
+            {comment.username}
+          </button>
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
         {comment.text && (
@@ -267,13 +219,15 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark 
             >
               <ThumbsDown className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => onReply(comment.id)}
-              className="text-white hover:text-zinc-400 transition-colors"
-              aria-label="Reply"
-            >
-              <MessageSquare className="w-4 h-4" />
-            </button>
+            {!isReply && (
+              <button
+                onClick={() => onReply(comment.id)}
+                className="text-white hover:text-zinc-400 transition-colors"
+                aria-label="Reply"
+              >
+                <MessageSquare className="w-4 h-4" />
+              </button>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -323,13 +277,18 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark 
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ onClose, initialReplies = [], initialQuotes = [] }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user, isAuthenticated } = useAuth();
+  
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes'>('replies');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'liked'>('recent');
-  const [replies, setReplies] = useState<Comment[]>(initialReplies);
-  const [quotes, setQuotes] = useState<Comment[]>(initialQuotes);
   const [newComment, setNewComment] = useState('');
+  const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -344,6 +303,37 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const MAX_VOICE_DURATION = 30;
+
+  // Fetch comments from API
+  const { data: apiComments, isLoading, error } = useQuery({
+    queryKey: ['comments', tokenId],
+    queryFn: () => getNFTComments(tokenId),
+    staleTime: 30000,
+  });
+
+  // Combine API comments with optimistic ones
+  const allComments = useMemo(() => {
+    const mapped = apiComments?.map(mapApiComment) || [];
+    const apiIds = new Set(mapped.map(c => c.id));
+    const pending = optimisticComments.filter(c => !apiIds.has(c.id) && c.id.startsWith('temp-'));
+    return [...pending, ...mapped];
+  }, [apiComments, optimisticComments]);
+
+  // Group comments: top-level and replies
+  const groupedComments = useMemo(() => {
+    const topLevel = allComments.filter(c => !c.replyToId);
+    const repliesMap = new Map<string, Comment[]>();
+    
+    allComments.filter(c => c.replyToId).forEach(reply => {
+      const existing = repliesMap.get(reply.replyToId!) || [];
+      repliesMap.set(reply.replyToId!, [...existing, reply]);
+    });
+    
+    return topLevel.map(comment => ({
+      comment,
+      replies: repliesMap.get(comment.id) || [],
+    }));
+  }, [allComments]);
 
   useEffect(() => {
     return () => {
@@ -432,61 +422,45 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
   };
 
   // Filter and sort comments
-  const filteredComments = useMemo(() => {
-    const comments = activeTab === 'replies' ? replies : quotes;
+  const filteredGroupedComments = useMemo(() => {
+    let filtered = groupedComments;
     
-    let filtered = comments;
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = comments.filter(
-        (c) => c.text.toLowerCase().includes(query) || c.username.toLowerCase().includes(query)
+      filtered = groupedComments.filter(
+        ({ comment, replies }) => 
+          comment.text.toLowerCase().includes(query) || 
+          comment.username.toLowerCase().includes(query) ||
+          replies.some(r => r.text.toLowerCase().includes(query) || r.username.toLowerCase().includes(query))
       );
     }
 
     return [...filtered].sort((a, b) => {
       if (sortBy === 'liked') {
-        return b.likes - a.likes;
+        return b.comment.likes - a.comment.likes;
       }
-      // For 'recent', we'll just use the original order (mock data is already time-sorted)
       return 0;
     });
-  }, [activeTab, replies, quotes, searchQuery, sortBy]);
+  }, [groupedComments, searchQuery, sortBy]);
+
+  const handleUserPress = useCallback((username: string) => {
+    onClose();
+    navigate(`/${username}`);
+  }, [navigate, onClose]);
 
   const handleLike = (commentId: string) => {
-    const updateComments = (comments: Comment[]) =>
-      comments.map((c) =>
-        c.id === commentId
-          ? { ...c, likes: c.isLiked ? c.likes - 1 : c.likes + 1, isLiked: !c.isLiked, isDisliked: false }
-          : c
-      );
-
-    if (activeTab === 'replies') {
-      setReplies(updateComments);
-    } else {
-      setQuotes(updateComments);
-    }
+    // Optimistic update for local state
   };
 
   const handleDislike = (commentId: string) => {
-    const updateComments = (comments: Comment[]) =>
-      comments.map((c) =>
-        c.id === commentId
-          ? { ...c, dislikes: c.isDisliked ? c.dislikes - 1 : c.dislikes + 1, isDisliked: !c.isDisliked, isLiked: false }
-          : c
-      );
-
-    if (activeTab === 'replies') {
-      setReplies(updateComments);
-    } else {
-      setQuotes(updateComments);
-    }
+    // Optimistic update for local state
   };
 
   const handleReply = (commentId: string) => {
-    const comment = (activeTab === 'replies' ? replies : quotes).find(c => c.id === commentId);
-    if (comment) {
-      setNewComment(`@${comment.username} `);
-      // Scroll to and focus the input
+    const found = allComments.find(c => c.id === commentId);
+    if (found) {
+      setReplyTo(found);
+      setNewComment(`@${found.username} `);
       setTimeout(() => {
         inputRef.current?.focus();
         inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -494,30 +468,53 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
     }
   };
 
-  const handlePostComment = () => {
-    if (!newComment.trim() && !voiceNote) return;
+  const handleClearReply = () => {
+    setReplyTo(null);
+    setNewComment('');
+  };
 
-    const newItem: Comment = {
-      id: `new-${Date.now()}`,
-      username: 'you',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser',
+  const handlePostComment = useCallback(async () => {
+    if ((!newComment.trim() && !voiceNote) || isSubmitting) return;
+    
+    if (!isAuthenticated || !user) {
+      toast.error('Please connect your wallet to comment');
+      return;
+    }
+
+    const tempId = `temp-${Date.now()}`;
+    const tempComment: Comment = {
+      id: tempId,
+      username: user.username || 'you',
+      avatar: user.avatarImageUrl || user.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser`,
       text: newComment,
       likes: 0,
       dislikes: 0,
       timeAgo: 'Just now',
       voiceNote: voiceNote || undefined,
+      replyToId: replyTo?.id,
+      address: user.address || user.wallet_address || '',
     };
 
-    if (activeTab === 'replies') {
-      setReplies([newItem, ...replies]);
-    } else {
-      setQuotes([newItem, ...quotes]);
-    }
+    setOptimisticComments(prev => [tempComment, ...prev]);
+    const replyTarget = replyTo;
+    setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
-  };
+    setIsSubmitting(true);
 
-  const canPost = newComment.trim() || voiceNote;
+    try {
+      await postComment(tokenId, newComment, replyTarget?.id);
+      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+    } catch (err) {
+      setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
+      toast.error('Failed to post comment');
+      console.error('Comment error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [newComment, voiceNote, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient]);
+
+  const canPost = (newComment.trim() || voiceNote) && !isSubmitting;
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
 
@@ -575,7 +572,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
           >
             <MessageSquare className="w-3.5 h-3.5" />
             Replies
-            <span className="text-xs text-zinc-500 ml-1">({replies.length})</span>
+            <span className="text-xs text-zinc-500 ml-1">({allComments.length})</span>
           </TabsTrigger>
           <TabsTrigger
             value="quotes"
@@ -583,53 +580,90 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
           >
             <Quote className="w-3.5 h-3.5" />
             Quotes
-            <span className="text-xs text-zinc-500 ml-1">({quotes.length})</span>
+            <span className="text-xs text-zinc-500 ml-1">(0)</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Comments List */}
         <TabsContent value="replies" className="mt-0">
           <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-            <AnimatePresence mode="popLayout">
-              {filteredComments.length > 0 ? (
-                filteredComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} onShare={() => {}} onBookmark={() => {}} />
-                ))
-              ) : (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-zinc-500 text-sm py-6 text-center"
-                >
-                  {searchQuery ? 'No replies found' : 'No replies yet. Be the first!'}
-                </motion.p>
-              )}
-            </AnimatePresence>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : error ? (
+              <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {filteredGroupedComments.length > 0 ? (
+                  filteredGroupedComments.map(({ comment, replies }) => (
+                    <div key={comment.id}>
+                      <CommentItem 
+                        comment={comment} 
+                        onLike={handleLike} 
+                        onDislike={handleDislike} 
+                        onReply={handleReply} 
+                        onShare={() => {}} 
+                        onBookmark={() => {}}
+                        onUserPress={handleUserPress}
+                      />
+                      {replies.map(reply => (
+                        <CommentItem 
+                          key={reply.id}
+                          comment={reply} 
+                          onLike={handleLike} 
+                          onDislike={handleDislike} 
+                          onReply={handleReply} 
+                          onShare={() => {}} 
+                          onBookmark={() => {}}
+                          onUserPress={handleUserPress}
+                          isReply
+                        />
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-zinc-500 text-sm py-6 text-center"
+                  >
+                    {searchQuery ? 'No replies found' : 'No replies yet. Be the first!'}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            )}
           </div>
         </TabsContent>
 
         <TabsContent value="quotes" className="mt-0">
           <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-            <AnimatePresence mode="popLayout">
-              {filteredComments.length > 0 ? (
-                filteredComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment} onLike={handleLike} onDislike={handleDislike} onReply={handleReply} onShare={() => {}} onBookmark={() => {}} />
-                ))
-              ) : (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-zinc-500 text-sm py-6 text-center"
-                >
-                  {searchQuery ? 'No quotes found' : 'No quotes yet. Be the first!'}
-                </motion.p>
-              )}
-            </AnimatePresence>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-zinc-500 text-sm py-6 text-center"
+            >
+              No quotes yet. Be the first!
+            </motion.p>
           </div>
         </TabsContent>
 
         {/* New Comment Input - at the bottom */}
         <div className="mt-3 pt-3 border-t border-zinc-800">
+          {/* Reply indicator */}
+          {replyTo && (
+            <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
+              <Reply className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-xs text-zinc-400">Replying to @{replyTo.username}</span>
+              <button 
+                onClick={handleClearReply}
+                className="ml-auto text-zinc-500 hover:text-white transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
           {/* Voice note preview with visualizer */}
           {voiceNote && (
             <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800/50">
@@ -655,8 +689,8 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
 
           <div className="flex gap-2 pb-4">
             <Avatar className="w-8 h-8 flex-shrink-0">
-              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser" />
-              <AvatarFallback className="bg-zinc-700">U</AvatarFallback>
+              <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser"} />
+              <AvatarFallback className="bg-zinc-700">{user?.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
             </Avatar>
             <div className="flex-1 flex gap-2">
               {isRecording ? (
@@ -676,7 +710,7 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                 <>
                   <Input
                     ref={inputRef}
-                    placeholder={activeTab === 'replies' ? 'Add a reply...' : 'Add a quote...'}
+                    placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
@@ -685,12 +719,11 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
                         e.preventDefault();
                         handlePostComment();
                       } else if (e.key === 'Escape') {
-                        setNewComment('');
+                        handleClearReply();
                         inputRef.current?.blur();
                       }
                     }}
                     onFocus={(e) => {
-                      // Scroll input into view on focus to prevent being hidden behind nav
                       setTimeout(() => {
                         e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                       }, 100);
@@ -709,15 +742,15 @@ export function CommentsSection({ onClose, initialReplies = [], initialQuotes = 
               )}
               <button
                 onClick={handlePostComment}
-                disabled={!canPost || isRecording}
+                disabled={!canPost}
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0",
-                  canPost && !isRecording
+                  canPost
                     ? "bg-zinc-700 text-white hover:bg-zinc-600"
                     : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                 )}
               >
-                Post
+                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
               </button>
             </div>
           </div>

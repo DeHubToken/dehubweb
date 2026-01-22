@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
-import { CommentsSection, generateRandomComments, generateRandomQuotes } from '@/components/app/cards/CommentsSection';
+import { CommentsSection } from '@/components/app/cards/CommentsSection';
 import { useAuth } from '@/contexts/AuthContext';
 
 // DeHub API hook
@@ -182,9 +182,8 @@ function VideoCardItem({
         <AnimatePresence>
           {expandedComments === video.id && (
             <CommentsSection 
-              onClose={() => onToggleComments(video.id)} 
-              initialReplies={generateRandomComments(15, video.id)}
-              initialQuotes={generateRandomQuotes(5, video.id)}
+              tokenId={video.id}
+              onClose={() => onToggleComments(video.id)}
             />
           )}
         </AnimatePresence>
