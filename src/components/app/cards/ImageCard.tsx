@@ -248,7 +248,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           className="p-0" 
           onComment={() => setShowComments(true)} 
           isLiked={post.isLiked} 
-          isDisliked={post.isDisliked} 
+          isDisliked={post.isDisliked}
+          hideDislike
         />
         
         <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
