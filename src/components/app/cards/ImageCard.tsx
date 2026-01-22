@@ -1,7 +1,7 @@
 /**
  * Image Card Component
  * ====================
- * Displays image post content with support for multi-image grids (1-4 images).
+ * Displays image post content with Instagram-style swipeable carousel for multi-image posts.
  * 
  * @example
  * ```tsx
@@ -9,9 +9,10 @@
  * ```
  */
 
-import { useState, memo } from 'react';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, memo, useCallback, useEffect } from 'react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import useEmblaCarousel from 'embla-carousel-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
@@ -31,96 +32,103 @@ interface ImageCardProps {
 }
 
 /**
- * Multi-image grid component
- * Displays 1-4 images in an Instagram-style grid layout
+ * Instagram-style image carousel component
+ * Supports swipe navigation with dot indicators
  */
-function ImageGrid({ images, onImageClick }: { images: string[]; onImageClick?: (index: number) => void }) {
-  const count = images.length;
+function ImageCarousel({ images }: { images: string[] }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [currentIndex, setCurrentIndex] = useState(0);
   
-  if (count === 1) {
-    return (
-      <div className="aspect-square bg-zinc-800">
-        <img 
-          src={images[0]} 
-          alt="" 
-          className="w-full h-full object-cover cursor-pointer"
-          onClick={() => onImageClick?.(0)}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-      </div>
-    );
-  }
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCurrentIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
   
-  if (count === 2) {
-    return (
-      <div className="grid grid-cols-2 gap-0.5 aspect-square bg-zinc-800">
-        {images.map((img, idx) => (
-          <img 
-            key={idx}
-            src={img} 
-            alt="" 
-            className="w-full h-full object-cover cursor-pointer"
-            onClick={() => onImageClick?.(idx)}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/placeholder.svg';
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+  // Set up the select callback when emblaApi becomes available
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
   
-  if (count === 3) {
-    return (
-      <div className="grid grid-cols-2 gap-0.5 aspect-square bg-zinc-800">
-        <img 
-          src={images[0]} 
-          alt="" 
-          className="row-span-2 w-full h-full object-cover cursor-pointer"
-          onClick={() => onImageClick?.(0)}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-        <img 
-          src={images[1]} 
-          alt="" 
-          className="w-full h-full object-cover cursor-pointer"
-          onClick={() => onImageClick?.(1)}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-        <img 
-          src={images[2]} 
-          alt="" 
-          className="w-full h-full object-cover cursor-pointer"
-          onClick={() => onImageClick?.(2)}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-      </div>
-    );
-  }
+  const hasMultiple = images.length > 1;
   
-  // 4 images
   return (
-    <div className="grid grid-cols-2 gap-0.5 aspect-square bg-zinc-800">
-      {images.slice(0, 4).map((img, idx) => (
-        <img 
-          key={idx}
-          src={img} 
-          alt="" 
-          className="w-full h-full object-cover cursor-pointer"
-          onClick={() => onImageClick?.(idx)}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-      ))}
+    <div className="relative">
+      {/* Carousel container */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {images.map((img, idx) => (
+            <div key={idx} className="flex-[0_0_100%] min-w-0">
+              <div className="aspect-square bg-zinc-800">
+                <img 
+                  src={img} 
+                  alt="" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/placeholder.svg';
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Navigation arrows - only show if multiple images */}
+      {hasMultiple && (
+        <>
+          {currentIndex > 0 && (
+            <button
+              onClick={scrollPrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          )}
+          {currentIndex < images.length - 1 && (
+            <button
+              onClick={scrollNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          )}
+        </>
+      )}
+      
+      {/* Dot indicators - only show if multiple images */}
+      {hasMultiple && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {images.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => emblaApi?.scrollTo(idx)}
+              className={`w-1.5 h-1.5 rounded-full transition-all ${
+                idx === currentIndex 
+                  ? 'bg-white w-2' 
+                  : 'bg-white/50 hover:bg-white/70'
+              }`}
+              aria-label={`Go to image ${idx + 1}`}
+            />
+          ))}
+        </div>
+      )}
+      
+      {/* Image counter badge - only show if multiple images */}
+      {hasMultiple && (
+        <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-black/60 text-white text-xs font-medium">
+          {currentIndex + 1}/{images.length}
+        </div>
+      )}
     </div>
   );
 }
@@ -230,8 +238,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         </div>
       </div>
 
-      {/* Image Grid */}
-      <ImageGrid images={images} />
+      {/* Image Carousel */}
+      <ImageCarousel images={images} />
 
       {/* Info & Actions */}
       <div className="p-3 space-y-2">
