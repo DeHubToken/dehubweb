@@ -285,6 +285,23 @@ async function apiCall<T>(
   return response.json();
 }
 
+// Username availability check
+export interface UsernameCheckResponse {
+  status: boolean;
+  code: number;
+  available: boolean;
+  username: string;
+  message?: string;
+  error?: boolean;
+}
+
+export async function checkUsernameAvailability(username: string): Promise<UsernameCheckResponse> {
+  return apiCall<UsernameCheckResponse>("/api/username/check", {
+    params: { username },
+    requiresAuth: false,
+  });
+}
+
 // Auth functions - calls DeHub API directly
 export async function authenticateWallet(
   address: string,
