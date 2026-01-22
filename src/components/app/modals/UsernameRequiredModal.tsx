@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateProfile, checkUsernameAvailability } from '@/lib/api/dehub';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -31,7 +32,8 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export function UsernameRequiredModal() {
-  const { requiresUsername, disconnect, refreshUser, setRequiresUsername } = useAuth();
+  const queryClient = useQueryClient();
+  const { requiresUsername, disconnect, refreshUser, setRequiresUsername, walletAddress } = useAuth();
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,7 +151,13 @@ export function UsernameRequiredModal() {
         displayName: trimmedDisplayName,
       });
 
+      // Refresh user data in auth context
       await refreshUser();
+      
+      // Invalidate profile queries to refresh profile page
+      await queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+      await queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
+      
       setRequiresUsername(false);
       
       toast.success('Profile created successfully!');
