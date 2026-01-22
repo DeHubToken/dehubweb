@@ -99,7 +99,7 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
 
   const handleUserPress = useCallback((username: string) => {
     onClose();
-    navigate(`/app/profile/${username}`);
+    navigate(`/${username}`);
   }, [navigate, onClose]);
 
   const handleSubmit = useCallback(async (text: string) => {
