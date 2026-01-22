@@ -49,6 +49,8 @@ interface ActionBarProps {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Hide the dislike button (e.g., for images) */
+  hideDislike?: boolean;
 }
 
 export function ActionBar({ 
@@ -62,6 +64,7 @@ export function ActionBar({
   showBorder = false,
   isLiked: initialIsLiked = false,
   isDisliked: initialIsDisliked = false,
+  hideDislike = false,
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -195,20 +198,22 @@ export function ActionBar({
           >
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
           </motion.button>
-          <motion.button 
-            onClick={() => handleVote(false)}
-            className={cn(
-              "transition-colors text-white",
-              hasVoted && !isDisliked && "text-zinc-600 cursor-not-allowed",
-              isVoting && "opacity-50"
-            )}
-            aria-label="Dislike"
-            disabled={hasVoted || isVoting}
-            animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
-          </motion.button>
+          {!hideDislike && (
+            <motion.button 
+              onClick={() => handleVote(false)}
+              className={cn(
+                "transition-colors text-white",
+                hasVoted && !isDisliked && "text-zinc-600 cursor-not-allowed",
+                isVoting && "opacity-50"
+              )}
+              aria-label="Dislike"
+              disabled={hasVoted || isVoting}
+              animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
+            </motion.button>
+          )}
           <button 
             onClick={onComment}
             className="text-white hover:text-zinc-400 transition-colors"
