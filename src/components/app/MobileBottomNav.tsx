@@ -3,6 +3,8 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
+import { AuthPrompt } from './AuthPrompt';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
@@ -16,7 +18,7 @@ const RIGHT_NAV_ITEMS = [
 ];
 
 const SCROLL_NAV_ITEMS = [
-  { icon: User, label: 'Profile', path: '/app/profile' },
+  { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
@@ -26,7 +28,9 @@ const SCROLL_NAV_ITEMS = [
 export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -37,6 +41,23 @@ export function MobileBottomNav() {
       window.dispatchEvent(new CustomEvent('home-refresh'));
       navigate('/app');
     }
+  };
+
+  const handleProtectedNavClick = (e: React.MouseEvent, path: string, requiresAuth?: boolean) => {
+    if (requiresAuth && !isAuthenticated) {
+      e.preventDefault();
+      setShowAuthPrompt(true);
+      return;
+    }
+    handleNavClick(e, path);
+  };
+
+  const handlePostClick = () => {
+    if (!isAuthenticated) {
+      setShowAuthPrompt(true);
+      return;
+    }
+    setIsPostModalOpen(true);
   };
 
   useEffect(() => {
@@ -100,7 +121,7 @@ export function MobileBottomNav() {
 
             {/* Center Create Button - fades as user scrolls */}
             <button
-              onClick={() => setIsPostModalOpen(true)}
+              onClick={handlePostClick}
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center"
             >
               <div 
@@ -164,6 +185,7 @@ export function MobileBottomNav() {
                 <NavLink
                   key={item.path}
                   to={item.path}
+                  onClick={(e) => handleProtectedNavClick(e, item.path, item.requiresAuth)}
                   className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
@@ -183,6 +205,7 @@ export function MobileBottomNav() {
       </div>
 
       <PostModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
+      <AuthPrompt isOpen={showAuthPrompt} onClose={() => setShowAuthPrompt(false)} />
     </>
   );
 }
