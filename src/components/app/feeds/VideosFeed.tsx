@@ -2,31 +2,18 @@
  * Videos Feed Component
  * =====================
  * Displays a grid/list of video content with filtering options.
- * Fetches from DeHub API.
+ * Fetches from DeHub API. Uses the shared VideoCard component.
  * 
  * @module components/app/feeds/VideosFeed
  */
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { MoreVertical, ListPlus, Clock, Flag, Download, Ban, Loader2, Sparkles, RefreshCw, Video } from 'lucide-react';
+import { Loader2, RefreshCw, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { PostAIChat } from '@/components/app/cards/PostAIChat';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { CardHeader } from '@/components/app/cards/CardHeader';
-import { ActionBar } from '@/components/app/cards/ActionBar';
-import { CommentsSection } from '@/components/app/cards/CommentsSection';
+import { VideoCard } from '@/components/app/cards/VideoCard';
 import { useAuth } from '@/contexts/AuthContext';
-
-// DeHub API hook
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
-
-import type { VideoItem } from '@/types/feed.types';
 
 // ============================================================================
 // TYPES
@@ -47,8 +34,6 @@ const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented
 const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
 const CATEGORY_PILLS = ['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'];
 
-// Map sort options to API params
-// Map sort options to API params
 const SORT_MAP: Record<string, 'new' | 'popular' | 'trending'> = {
   'New to Old': 'new',
   'Most Liked': 'popular',
@@ -91,119 +76,6 @@ function FilterSection({ label, options, selected, onSelect }: FilterSectionProp
   );
 }
 
-interface VideoCardProps {
-  video: VideoItem;
-  expandedComments: string | null;
-  onToggleComments: (id: string) => void;
-}
-
-function VideoCardItem({ 
-  video, 
-  expandedComments, 
-  onToggleComments
-}: VideoCardProps) {
-  const [showAIChat, setShowAIChat] = useState(false);
-
-  return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-      {/* Header with AI and menu */}
-      <div className="flex items-center justify-between">
-        <CardHeader
-          username={video.channel}
-          avatarSeed={video.channelAvatar}
-          verified={video.verified}
-          contentType="video"
-        />
-        <div className="flex items-center gap-1 pr-3">
-          <motion.button
-            onClick={() => setShowAIChat(true)}
-            className="text-zinc-400 hover:text-white transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Ask AI about this video"
-          >
-            <Sparkles className="w-5 h-5" />
-          </motion.button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <ListPlus className="w-4 h-4" /> Queue
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Clock className="w-4 h-4" /> Watch List
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Flag className="w-4 h-4" /> Report
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Download className="w-4 h-4" /> Download
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> Block Creator
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-
-      {/* Thumbnail */}
-      <div className="relative aspect-video bg-zinc-800">
-        <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
-        <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
-          {video.duration}
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors">
-            <div className="w-0 h-0 border-l-[18px] border-l-white border-y-[11px] border-y-transparent ml-1" />
-          </div>
-        </div>
-      </div>
-
-      {/* Actions & Info */}
-      <div className="p-3">
-        <ActionBar 
-          postId={video.id}
-          className="p-0 mb-2" 
-          onComment={() => onToggleComments(video.id)}
-        />
-        <p className="font-semibold text-white text-sm mb-1">{video.views}</p>
-        <h3 className="text-white text-sm mb-1">
-          <span className="font-semibold">{video.channel}</span>{' '}
-          <span className="text-zinc-300">{video.title}</span>
-        </h3>
-        <p className="text-zinc-500 text-xs">{video.uploadedAgo}</p>
-
-        {/* Comments Section */}
-        <AnimatePresence>
-          {expandedComments === video.id && (
-            <CommentsSection 
-              tokenId={video.id}
-              onClose={() => onToggleComments(video.id)}
-            />
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* AI Chat */}
-      <PostAIChat
-        isOpen={showAIChat}
-        onClose={() => setShowAIChat(false)}
-        postContext={{
-          type: 'video',
-          author: video.channel,
-          title: video.title,
-          imageUrl: video.thumbnail
-        }}
-      />
-    </div>
-  );
-}
-
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
@@ -213,13 +85,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [expandedComments, setExpandedComments] = useState<string | null>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
   
-  // Get wallet address for authenticated requests
   const { walletAddress } = useAuth();
 
-  // Fetch from DeHub API
   const {
     data: apiData,
     fetchNextPage,
@@ -235,21 +104,18 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     address: walletAddress || undefined,
   });
 
-  // Refetch when refreshKey changes
   useEffect(() => {
     if (refreshKey > 0) {
       refetch();
     }
   }, [refreshKey, refetch]);
 
-  // Map API data to VideoItem array
   const videos = useMemo(() => {
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
   }, [apiData]);
 
-  // Infinite scroll observer
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
 
@@ -266,11 +132,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const toggleComments = (videoId: string) => {
-    setExpandedComments(expandedComments === videoId ? null : videoId);
-  };
-
-  // Empty state component
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
@@ -324,9 +185,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
         <div className="relative">
-          {/* Left fade */}
           <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
-          {/* Right fade */}
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
@@ -353,12 +212,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <>
           <div className="space-y-3">
             {videos.map((video) => (
-              <VideoCardItem
-                key={video.id}
-                video={video}
-                expandedComments={expandedComments}
-                onToggleComments={toggleComments}
-              />
+              <VideoCard key={video.id} video={video} />
             ))}
           </div>
 
