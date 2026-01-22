@@ -76,8 +76,16 @@ export interface ImagePost extends BaseFeedItem {
   username: string;
   verified: boolean;
   avatar: string;
+  /** Primary image URL (first image or legacy single image) */
   image: string;
+  /** Array of image URLs for multi-image posts (1-4 images) */
+  imageUrls?: string[];
+  /** Post title */
+  title?: string;
+  /** Post description */
+  description?: string;
   likes: number;
+  /** @deprecated Use title/description instead */
   caption: string;
   comments: number;
   timeAgo: string;

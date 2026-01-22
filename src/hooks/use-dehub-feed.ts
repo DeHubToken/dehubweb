@@ -9,7 +9,7 @@
 
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { searchNFTs, getMediaUrl, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
+import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 
 // Fallback thumbnails for when API doesn't return one
@@ -160,16 +160,31 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 /**
  * Map DeHub NFT to ImagePost type
  * Handles both old and new API response field names
+ * Supports multi-image posts (1-4 images)
  */
 export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   // Get ID from various possible fields
-  const id = String(nft.tokenId || nft.id || nft.token_id);
+  const tokenId = nft.tokenId || nft.id || nft.token_id;
+  const id = String(tokenId);
   
-  // Get image URL with CDN
-  const image = getMediaUrl(nft.imageUrl) || 
-                getMediaUrl(nft.media_url) || 
-                getMediaUrl(nft.thumbnail_url) || 
-                FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+  // Build image URLs array from imageUrls field
+  // CDN pattern: feed-images/{filename}
+  const imageUrls: string[] = [];
+  if (nft.imageUrls && nft.imageUrls.length > 0) {
+    nft.imageUrls.forEach((imgUrl) => {
+      const filename = imgUrl.split('/').pop() || '';
+      if (filename) {
+        imageUrls.push(`${DEHUB_CDN_BASE}feed-images/${filename}`);
+      }
+    });
+  }
+  
+  // Get primary image URL (first from array or fallback to single image)
+  const primaryImage = imageUrls[0] || 
+                       getMediaUrl(nft.imageUrl) || 
+                       getMediaUrl(nft.media_url) || 
+                       getMediaUrl(nft.thumbnail_url) || 
+                       FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
   
   // Get creator info
   const username = nft.mintername || nft.creator?.username || 'unknown';
@@ -189,15 +204,22 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   const creatorId = nft.minter || nft.creator?.id;
   const creatorUsername = nft.creator?.username || nft.mintername;
   
+  // Get title and description
+  const title = nft.name || nft.title || '';
+  const description = nft.description || '';
+  
   return {
     id,
     type: 'image',
     username,
     verified,
     avatar,
-    image,
+    image: primaryImage,
+    imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+    title,
+    description,
     likes,
-    caption: nft.description || nft.name || nft.title || '',
+    caption: description || title, // Legacy field for backwards compatibility
     comments,
     timeAgo: formatTimeAgo(createdAt),
     creatorId,
