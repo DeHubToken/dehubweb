@@ -10,11 +10,11 @@
  */
 
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
+import { CommentsSheet } from '../comments';
 import { PostAIChat } from './PostAIChat';
 import {
   DropdownMenu,
@@ -85,22 +85,19 @@ export function LiveCard({ stream }: LiveCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar postId={stream.id} className="p-0 mb-2" onComment={() => setShowComments(!showComments)} />
+        <ActionBar postId={stream.id} className="p-0 mb-2" onComment={() => setShowComments(true)} />
         <p className="font-semibold text-white text-sm">{stream.viewers} watching</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
-
-        {/* Comments Section */}
-        <AnimatePresence>
-          {showComments && (
-            <CommentsSection 
-              onClose={() => setShowComments(false)} 
-              initialReplies={generateRandomComments(15, stream.id)}
-              initialQuotes={generateRandomQuotes(5, stream.id)}
-            />
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Comments Sheet */}
+      {showComments && (
+        <CommentsSheet
+          tokenId={stream.id}
+          onClose={() => setShowComments(false)}
+        />
+      )}
 
       {/* AI Chat */}
       <PostAIChat

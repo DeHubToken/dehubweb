@@ -11,10 +11,10 @@
 
 import { useState, memo } from 'react';
 import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
+import { CommentsSheet } from '../comments';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
@@ -87,7 +87,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar postId={post.id} className="p-0 mb-2" onComment={() => setShowComments(!showComments)} isLiked={post.isLiked} isDisliked={post.isDisliked} />
+        <ActionBar 
+          postId={post.id} 
+          className="p-0 mb-2" 
+          onComment={() => setShowComments(true)} 
+          isLiked={post.isLiked} 
+          isDisliked={post.isDisliked} 
+        />
         <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
         <p className="text-white text-sm mt-1">
           <span className="font-semibold">{post.username}</span> <TranslatableText text={post.caption} className="inline" as="span" />
@@ -99,18 +105,15 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             <span className="leading-none">{getViewCount(post.id)} views</span>
           </span>
         </div>
-
-        {/* Comments Section */}
-        <AnimatePresence>
-          {showComments && (
-            <CommentsSection 
-              onClose={() => setShowComments(false)} 
-              initialReplies={generateRandomComments(15, post.id)}
-              initialQuotes={generateRandomQuotes(5, post.id)}
-            />
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Comments Sheet */}
+      {showComments && (
+        <CommentsSheet
+          tokenId={post.id}
+          onClose={() => setShowComments(false)}
+        />
+      )}
 
       {/* AI Chat */}
       <PostAIChat

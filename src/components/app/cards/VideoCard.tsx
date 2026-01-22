@@ -16,6 +16,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
+import { CommentsSheet } from '../comments';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +31,7 @@ interface VideoCardProps {
 
 export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [showControls, setShowControls] = useState(false);
@@ -219,7 +221,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <ActionBar postId={video.id} className="p-0 mb-2" isLiked={video.isLiked} isDisliked={video.isDisliked} />
+        <ActionBar 
+          postId={video.id} 
+          className="p-0 mb-2" 
+          isLiked={video.isLiked} 
+          isDisliked={video.isDisliked}
+          onComment={() => setShowComments(true)}
+        />
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
         <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
       </div>
@@ -235,6 +243,14 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           imageUrl: video.thumbnail
         }}
       />
+
+      {/* Comments Sheet */}
+      {showComments && (
+        <CommentsSheet
+          tokenId={video.id}
+          onClose={() => setShowComments(false)}
+        />
+      )}
     </div>
   );
 });

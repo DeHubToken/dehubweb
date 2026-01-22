@@ -339,14 +339,26 @@ export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
   return apiCall<DeHubNFT>(`/api/nft_info/${tokenId}`);
 }
 
+// API comment response from /api/nft/{tokenId}/comments
+export interface ApiCommentResponse {
+  _id: string;
+  address: string;
+  username: string;
+  comment: string;
+  createdAt: string;
+  avatarUrl?: string;
+  replyToId?: string;
+}
+
 export async function getNFTComments(
   tokenId: string,
   page: number = 1,
   limit: number = 20,
-): Promise<PaginatedResponse<DeHubComment>> {
-  return apiCall<PaginatedResponse<DeHubComment>>(`/api/nft/${tokenId}/comments`, {
+): Promise<ApiCommentResponse[]> {
+  const response = await apiCall<{ status: boolean; result: ApiCommentResponse[] }>(`/api/nft/${tokenId}/comments`, {
     params: { page, limit },
   });
+  return response.result || [];
 }
 
 export async function recordView(tokenId: string): Promise<void> {
@@ -438,10 +450,19 @@ export async function unfollowUser(userId: string): Promise<{ success: boolean }
   });
 }
 
-export async function postComment(tokenId: string, content: string, parentId?: string): Promise<DeHubComment> {
-  return apiCall<DeHubComment>("/api/request_comment", {
+export interface PostCommentResponse {
+  id?: string;
+  result?: { id?: string };
+}
+
+export async function postComment(tokenId: string, content: string, replyToId?: string): Promise<PostCommentResponse> {
+  return apiCall<PostCommentResponse>("/api/request_comment", {
     method: "POST",
-    body: { token_id: tokenId, content, parent_id: parentId },
+    body: { 
+      streamTokenId: tokenId, 
+      content, 
+      commentId: replyToId 
+    },
     requiresAuth: true,
   });
 }
