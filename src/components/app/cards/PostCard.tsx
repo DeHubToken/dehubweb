@@ -11,10 +11,10 @@
 
 import { useState, memo } from 'react';
 import { Eye, Sparkles } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSection, generateRandomComments, generateRandomQuotes } from './CommentsSection';
+import { CommentsSheet } from '../comments';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
@@ -60,20 +60,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      <ActionBar postId={post.id} onComment={() => setShowComments(!showComments)} />
+      <ActionBar postId={post.id} onComment={() => setShowComments(true)} />
 
-      {/* Comments Section */}
-      <div className="px-3 pb-3">
-        <AnimatePresence>
-          {showComments && (
-            <CommentsSection 
-              onClose={() => setShowComments(false)} 
-              initialReplies={generateRandomComments(15, post.id)}
-              initialQuotes={generateRandomQuotes(5, post.id)}
-            />
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Comments Sheet */}
+      {showComments && (
+        <CommentsSheet
+          tokenId={post.id}
+          onClose={() => setShowComments(false)}
+        />
+      )}
 
       {/* AI Chat */}
       <PostAIChat
