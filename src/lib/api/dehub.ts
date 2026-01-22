@@ -174,9 +174,9 @@ export interface DeHubCategory {
 
 export interface SearchNFTsParams {
   page?: number;
-  limit?: number;
+  unit?: number;
   category?: string;
-  sort?: "latest" | "popular" | "trending";
+  sortMode?: "new" | "popular" | "trending";
   creator_id?: string;
   media_type?: "video" | "image" | "audio" | "live";
   search?: string;
@@ -318,9 +318,9 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
   return apiCall<PaginatedResponse<DeHubNFT>>("/api/search_nfts", {
     params: {
       page: params.page,
-      limit: params.limit,
+      unit: params.unit,
       category: params.category,
-      sort: params.sort,
+      sortMode: params.sortMode,
       creator_id: params.creator_id,
       media_type: params.media_type,
       search: params.search,

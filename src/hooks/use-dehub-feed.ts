@@ -277,23 +277,23 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
   
   return useInfiniteQuery({
     queryKey: ['dehub-feed', searchParams],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam = 0 }) => {
       const response = await searchNFTs({
         ...searchParams,
         page: pageParam,
-        limit: searchParams.limit || 15,
+        unit: searchParams.unit || 15,
       });
       
       // Handle both response formats: { result: [...] } or { data: [...] }
       const data = (response as any).result || response.data || [];
-      const limit = searchParams.limit || 15;
+      const unit = searchParams.unit || 15;
       
       return {
         data,
         page: pageParam,
-        has_more: data.length >= limit,
+        has_more: data.length >= unit,
         total: response.total || data.length,
-        limit,
+        unit,
       };
     },
     getNextPageParam: (lastPage) => {
@@ -302,7 +302,7 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
       }
       return undefined;
     },
-    initialPageParam: 1,
+    initialPageParam: 0,
     enabled,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,

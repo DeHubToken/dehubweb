@@ -47,8 +47,9 @@ const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
 const CATEGORY_PILLS = ['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'];
 
 // Map sort options to API params
-const SORT_MAP: Record<string, 'latest' | 'popular' | 'trending'> = {
-  'New to Old': 'latest',
+// Map sort options to API params
+const SORT_MAP: Record<string, 'new' | 'popular' | 'trending'> = {
+  'New to Old': 'new',
   'Most Liked': 'popular',
   'Most Viewed': 'popular',
   'Most Commented': 'trending',
@@ -225,8 +226,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     isError,
     refetch,
   } = useDeHubVideos({
-    limit: 15,
-    sort: SORT_MAP[selectedSort] || 'latest',
+    unit: 15,
+    sortMode: SORT_MAP[selectedSort] || 'new',
     category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
   });
 
