@@ -63,9 +63,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     return true;
   };
 
-  const handleSignInClick = () => {
-    setShowAuthPrompt(true);
-  };
 
   const handleLogout = async () => {
     try {
@@ -157,9 +154,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         {/* Spacer to push auth section to bottom */}
         <div className="flex-1" />
 
-        {/* Auth/Profile Section at bottom */}
-        <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
-          {isAuthenticated ? (
+        {/* Auth/Profile Section at bottom - only show when authenticated */}
+        {isAuthenticated && (
+          <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
             <Popover open={showUserMenu} onOpenChange={setShowUserMenu}>
               <PopoverTrigger asChild>
                 <button className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-zinc-800/50 transition-colors text-left">
@@ -190,16 +187,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 </button>
               </PopoverContent>
             </Popover>
-          ) : (
-            <Button 
-              onClick={handleSignInClick}
-              variant="outline"
-              className="w-full rounded-xl border-zinc-700 bg-transparent text-white hover:bg-zinc-800 hover:text-white font-semibold py-5 text-[13.5px]"
-            >
-              Sign in
-            </Button>
-          )}
-        </div>
+          </div>
+        )}
       </aside>
 
       {/* Auth Prompt Dialog */}
