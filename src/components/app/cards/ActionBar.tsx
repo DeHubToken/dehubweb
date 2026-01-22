@@ -18,6 +18,7 @@ import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, 
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 import { voteOnNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -66,9 +67,9 @@ export function ActionBar({
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isDisliked, setIsDisliked] = useState(initialIsDisliked);
   const [isVoting, setIsVoting] = useState(false);
+  const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-
   const handleVote = useCallback(async (vote: boolean) => {
     if (!postId || isVoting || isLiked || isDisliked) return;
     
@@ -79,16 +80,21 @@ export function ActionBar({
 
     setIsVoting(true);
     
-    // Optimistic update
+    // Optimistic update with animation trigger
     if (vote) {
       setIsLiked(true);
+      setJustVoted('like');
     } else {
       setIsDisliked(true);
+      setJustVoted('dislike');
     }
+    
+    // Reset animation state after animation completes
+    setTimeout(() => setJustVoted(null), 400);
 
     try {
       await voteOnNFT(postId, vote);
-      toast.success(vote ? 'Liked!' : 'Disliked!');
+      // No toast on success - animation is enough feedback
     } catch (error: unknown) {
       // Revert optimistic update on error
       if (vote) {
@@ -175,38 +181,34 @@ export function ActionBar({
       <div className="flex items-center justify-between">
         {/* Primary actions */}
         <div className="flex items-center gap-4">
-          <button 
+          <motion.button 
             onClick={() => handleVote(true)}
             className={cn(
-              "transition-colors",
-              isLiked 
-                ? "text-primary cursor-default" 
-                : hasVoted 
-                  ? "text-zinc-600 cursor-not-allowed" 
-                  : "text-white hover:text-zinc-400",
+              "transition-colors text-white",
+              hasVoted && !isLiked && "text-zinc-600 cursor-not-allowed",
               isVoting && "opacity-50"
             )}
             aria-label="Like"
             disabled={hasVoted || isVoting}
+            animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
-          </button>
-          <button 
+          </motion.button>
+          <motion.button 
             onClick={() => handleVote(false)}
             className={cn(
-              "transition-colors",
-              isDisliked 
-                ? "text-destructive cursor-default" 
-                : hasVoted 
-                  ? "text-zinc-600 cursor-not-allowed" 
-                  : "text-white hover:text-zinc-400",
+              "transition-colors text-white",
+              hasVoted && !isDisliked && "text-zinc-600 cursor-not-allowed",
               isVoting && "opacity-50"
             )}
             aria-label="Dislike"
             disabled={hasVoted || isVoting}
+            animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
-          </button>
+          </motion.button>
           <button 
             onClick={onComment}
             className="text-white hover:text-zinc-400 transition-colors"
