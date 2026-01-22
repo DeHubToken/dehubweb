@@ -346,8 +346,8 @@ export interface ApiCommentResponse {
   address: string;
   content: string;
   imageUrl: string | null;
-  replyIds: string[];
-  parentId: string | null;
+  replyIds: number[];
+  parentId: number | null;
   createdAt: string;
   updatedAt: string;
   writor: {

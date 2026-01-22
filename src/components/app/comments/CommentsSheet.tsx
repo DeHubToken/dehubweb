@@ -9,6 +9,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
@@ -41,17 +42,19 @@ function formatTimeAgo(dateString: string): string {
 // Map API comment to local Comment type
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
   return {
-    id: apiComment.id,
+    id: String(apiComment.id),
     address: apiComment.address,
     username: apiComment.writor?.username || 'Anonymous',
     avatarUrl: apiComment.writor?.avatarUrl,
     text: apiComment.content,
     timeAgo: formatTimeAgo(apiComment.createdAt),
-    replyToId: apiComment.parentId || undefined,
+    // Convert parentId to string for consistent comparison
+    replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
   };
 }
 
 export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
+  const navigate = useNavigate();
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
@@ -95,9 +98,9 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
   }, []);
 
   const handleUserPress = useCallback((username: string) => {
-    // TODO: Navigate to user profile
-    console.log('Navigate to user:', username);
-  }, []);
+    onClose();
+    navigate(`/app/profile/${username}`);
+  }, [navigate, onClose]);
 
   const handleSubmit = useCallback(async (text: string) => {
     if (!isAuthenticated || !user) {
