@@ -423,14 +423,68 @@ export async function getAccountByUsername(username: string): Promise<DeHubUser>
   return response as DeHubUser;
 }
 
-export async function updateProfile(
-  data: Partial<Pick<DeHubUser, "username" | "display_name" | "bio" | "avatar_url" | "cover_url">>,
-): Promise<DeHubUser> {
-  return apiCall<DeHubUser>("/api/update_profile", {
+// Profile update data interface
+export interface UpdateProfileData {
+  username?: string;
+  displayName?: string;
+  aboutMe?: string;
+  twitterLink?: string;
+  discordLink?: string;
+  instagramLink?: string;
+  tiktokLink?: string;
+  telegramLink?: string;
+  youtubeLink?: string;
+  facebookLink?: string;
+  customs?: Record<string, string>;
+  avatarImg?: File;
+  coverImg?: File;
+}
+
+export async function updateProfile(data: UpdateProfileData): Promise<{ result: boolean }> {
+  const token = getAuthToken();
+  
+  if (!token) {
+    throw new Error("Authentication required");
+  }
+
+  const formData = new FormData();
+
+  // Add text fields
+  if (data.username !== undefined) formData.append("username", data.username);
+  if (data.displayName !== undefined) formData.append("displayName", data.displayName);
+  if (data.aboutMe !== undefined) formData.append("aboutMe", data.aboutMe);
+  if (data.twitterLink !== undefined) formData.append("twitterLink", data.twitterLink);
+  if (data.discordLink !== undefined) formData.append("discordLink", data.discordLink);
+  if (data.instagramLink !== undefined) formData.append("instagramLink", data.instagramLink);
+  if (data.tiktokLink !== undefined) formData.append("tiktokLink", data.tiktokLink);
+  if (data.telegramLink !== undefined) formData.append("telegramLink", data.telegramLink);
+  if (data.youtubeLink !== undefined) formData.append("youtubeLink", data.youtubeLink);
+  if (data.facebookLink !== undefined) formData.append("facebookLink", data.facebookLink);
+  
+  // Add customs as JSON string
+  if (data.customs !== undefined) {
+    formData.append("customs", JSON.stringify(data.customs));
+  }
+
+  // Add image files
+  if (data.avatarImg) formData.append("avatarImg", data.avatarImg);
+  if (data.coverImg) formData.append("coverImg", data.coverImg);
+
+  const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
     method: "POST",
-    body: data,
-    requiresAuth: true,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      // Don't set Content-Type - browser will set it with boundary for FormData
+    },
+    body: formData,
   });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
+  }
+
+  return response.json();
 }
 
 export async function getUserNFTs(

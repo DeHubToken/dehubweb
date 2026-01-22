@@ -146,7 +146,7 @@ export function UsernameRequiredModal() {
     try {
       await updateProfile({
         username: trimmedUsername,
-        display_name: trimmedDisplayName,
+        displayName: trimmedDisplayName,
       });
 
       await refreshUser();
