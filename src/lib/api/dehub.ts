@@ -557,3 +557,32 @@ export async function endLivestream(): Promise<{ success: boolean }> {
 export async function getDHBPrice(): Promise<{ price: number; change_24h: number }> {
   return apiCall<{ price: number; change_24h: number }>("/api/dpay/price");
 }
+
+// Leaderboard types
+export interface LeaderboardEntry {
+  account: string;
+  total: number;
+  username?: string;
+  userDisplayName?: string;
+  avatarUrl?: string;
+  sentTips: number;
+  receivedTips: number;
+}
+
+export interface LeaderboardResponse {
+  result: {
+    byWalletBalance: LeaderboardEntry[];
+  };
+}
+
+export type LeaderboardSortMode = 'holdings' | 'sentTips' | 'receivedTips';
+
+/**
+ * Fetch DHB token leaderboard
+ * @param sort - Sort criteria: holdings (default), sentTips, receivedTips
+ */
+export async function getLeaderboard(sort: LeaderboardSortMode = 'holdings'): Promise<LeaderboardResponse> {
+  return apiCall<LeaderboardResponse>("/api/leaderboard", {
+    params: { sort },
+  });
+}
