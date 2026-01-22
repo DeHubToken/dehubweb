@@ -7,15 +7,28 @@
  * @module components/app/modals/UsernameRequiredModal
  */
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateProfile } from '@/lib/api/dehub';
+import { updateProfile, checkUsernameAvailability } from '@/lib/api/dehub';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, UserCircle, LogOut, AlertCircle } from 'lucide-react';
+import { Loader2, UserCircle, LogOut, AlertCircle, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+
+// Debounce helper
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 export function UsernameRequiredModal() {
   const { requiresUsername, disconnect, refreshUser, setRequiresUsername } = useAuth();
@@ -23,15 +36,75 @@ export function UsernameRequiredModal() {
   const [displayName, setDisplayName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Username availability state
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  
+  const debouncedUsername = useDebounce(username, 500);
+
+  // Check username availability
+  const checkUsername = useCallback(async (usernameToCheck: string) => {
+    if (!usernameToCheck || usernameToCheck.length < 3) {
+      setUsernameAvailable(null);
+      setUsernameError(null);
+      return;
+    }
+
+    if (usernameToCheck.length > 30) {
+      setUsernameAvailable(false);
+      setUsernameError('Username must be 30 characters or less');
+      return;
+    }
+
+    if (!/^[a-z0-9_]+$/.test(usernameToCheck)) {
+      setUsernameAvailable(false);
+      setUsernameError('Only letters, numbers, and underscores allowed');
+      return;
+    }
+
+    setIsCheckingUsername(true);
+    setUsernameError(null);
+
+    try {
+      const response = await checkUsernameAvailability(usernameToCheck);
+      
+      if (response.available) {
+        setUsernameAvailable(true);
+        setUsernameError(null);
+      } else {
+        setUsernameAvailable(false);
+        setUsernameError('Username is already taken');
+      }
+    } catch (err) {
+      console.error('Username check failed:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to check username';
+      setUsernameAvailable(false);
+      setUsernameError(errorMessage);
+    } finally {
+      setIsCheckingUsername(false);
+    }
+  }, []);
+
+  // Check username when debounced value changes
+  useEffect(() => {
+    if (debouncedUsername) {
+      checkUsername(debouncedUsername);
+    } else {
+      setUsernameAvailable(null);
+      setUsernameError(null);
+    }
+  }, [debouncedUsername, checkUsername]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Validate username
     const trimmedUsername = username.trim().toLowerCase();
     const trimmedDisplayName = displayName.trim();
 
+    // Validate username
     if (!trimmedUsername) {
       setError('Username is required');
       return;
@@ -42,14 +115,19 @@ export function UsernameRequiredModal() {
       return;
     }
 
-    if (trimmedUsername.length > 20) {
-      setError('Username must be less than 20 characters');
+    if (trimmedUsername.length > 30) {
+      setError('Username must be 30 characters or less');
       return;
     }
 
-    // Only allow alphanumeric and underscores
     if (!/^[a-z0-9_]+$/.test(trimmedUsername)) {
       setError('Username can only contain letters, numbers, and underscores');
+      return;
+    }
+
+    // Ensure username is available
+    if (!usernameAvailable) {
+      setError('Please choose an available username');
       return;
     }
 
@@ -71,10 +149,7 @@ export function UsernameRequiredModal() {
         display_name: trimmedDisplayName,
       });
 
-      // Refresh user data to get updated profile
       await refreshUser();
-      
-      // Clear the requirement flag
       setRequiresUsername(false);
       
       toast.success('Profile created successfully!');
@@ -82,9 +157,9 @@ export function UsernameRequiredModal() {
       console.error('Failed to update profile:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to save profile';
       
-      // Check for common error cases
       if (errorMessage.toLowerCase().includes('taken') || errorMessage.toLowerCase().includes('exists')) {
         setError('This username is already taken. Please choose another.');
+        setUsernameAvailable(false);
       } else {
         setError(errorMessage);
       }
@@ -102,52 +177,81 @@ export function UsernameRequiredModal() {
     }
   };
 
+  const canSubmit = username.trim().length >= 3 && 
+                    displayName.trim().length > 0 && 
+                    usernameAvailable === true && 
+                    !isCheckingUsername;
+
   return (
     <Dialog open={requiresUsername} onOpenChange={() => {}}>
       <DialogContent 
-        className="sm:max-w-md border-border/50 bg-background/95 backdrop-blur-xl"
+        className="sm:max-w-md border-zinc-700/50 bg-zinc-900/95 backdrop-blur-xl"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         hideCloseButton
       >
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
             <UserCircle className="h-8 w-8 text-primary" />
           </div>
-          <DialogTitle className="text-xl">Complete Your Profile</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogTitle className="text-xl text-white">Complete Your Profile</DialogTitle>
+          <DialogDescription className="text-zinc-400">
             Choose a username and display name to get started on DeHub.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username" className="text-zinc-300">Username</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">@</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">@</span>
               <Input
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                 placeholder="username"
-                className="pl-8"
-                maxLength={20}
+                className={cn(
+                  "pl-8 pr-10 bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500",
+                  "focus:border-primary focus:ring-primary/20",
+                  usernameAvailable === true && "border-green-500/50",
+                  usernameAvailable === false && "border-red-500/50"
+                )}
+                maxLength={30}
                 disabled={isSubmitting}
                 autoComplete="off"
               />
+              {/* Status indicator */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {isCheckingUsername && (
+                  <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
+                )}
+                {!isCheckingUsername && usernameAvailable === true && (
+                  <Check className="h-4 w-4 text-green-500" />
+                )}
+                {!isCheckingUsername && usernameAvailable === false && (
+                  <X className="h-4 w-4 text-red-500" />
+                )}
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Letters, numbers, and underscores only. 3-20 characters.
-            </p>
+            {usernameError ? (
+              <p className="text-xs text-red-400">{usernameError}</p>
+            ) : usernameAvailable === true ? (
+              <p className="text-xs text-green-400">Username is available!</p>
+            ) : (
+              <p className="text-xs text-zinc-500">
+                Letters, numbers, and underscores only. 3-30 characters.
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="displayName">Display Name</Label>
+            <Label htmlFor="displayName" className="text-zinc-300">Display Name</Label>
             <Input
               id="displayName"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="Your Name"
+              className="bg-zinc-800/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-primary focus:ring-primary/20"
               maxLength={50}
               disabled={isSubmitting}
               autoComplete="off"
@@ -155,7 +259,7 @@ export function UsernameRequiredModal() {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
               <AlertCircle className="h-4 w-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -164,8 +268,8 @@ export function UsernameRequiredModal() {
           <div className="flex flex-col gap-2 pt-2">
             <Button 
               type="submit" 
-              className="w-full"
-              disabled={isSubmitting || !username.trim() || !displayName.trim()}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              disabled={isSubmitting || !canSubmit}
             >
               {isSubmitting ? (
                 <>
@@ -180,7 +284,7 @@ export function UsernameRequiredModal() {
             <Button
               type="button"
               variant="ghost"
-              className="w-full text-muted-foreground hover:text-foreground"
+              className="w-full text-zinc-400 hover:text-white hover:bg-zinc-800"
               onClick={handleLogout}
               disabled={isSubmitting}
             >
