@@ -326,10 +326,10 @@ export function useDeHubVideos(options: Omit<UseDeHubFeedOptions, 'media_type'> 
 /**
  * Hook to fetch image content specifically
  */
-export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = {}) {
+export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'media_type'> = {}) {
   return useDeHubFeed({
     ...options,
-    postType: 'feed-images',
+    media_type: 'image',
   });
 }
 
