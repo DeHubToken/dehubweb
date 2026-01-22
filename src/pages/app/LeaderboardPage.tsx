@@ -26,7 +26,8 @@ const getRankStyle = (rank: number) => {
   }
 };
 
-const formatNumber = (num: number): string => {
+const formatNumber = (num: number | undefined): string => {
+  if (num === undefined || num === null) return '0';
   if (num >= 1_000_000) {
     return `${(num / 1_000_000).toFixed(1)}M`;
   }
@@ -88,11 +89,11 @@ export default function LeaderboardPage() {
   const getSortValue = (entry: LeaderboardEntry): number => {
     switch (sortMode) {
       case 'sentTips':
-        return entry.sentTips;
+        return entry.sentTips ?? 0;
       case 'receivedTips':
-        return entry.receivedTips;
+        return entry.receivedTips ?? 0;
       default:
-        return entry.total;
+        return entry.total ?? 0;
     }
   };
 
