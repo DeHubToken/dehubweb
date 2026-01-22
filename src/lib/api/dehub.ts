@@ -186,6 +186,8 @@ export interface SearchNFTsParams {
   search?: string;
   /** Connected wallet address to get isLiked/isDisliked info */
   address?: string;
+  /** Post type filter (e.g., "feed-images") */
+  postType?: string;
 }
 
 export interface PaginatedResponse<T> {
