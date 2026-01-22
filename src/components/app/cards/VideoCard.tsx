@@ -11,12 +11,12 @@
 
 import { useState, useRef, useCallback, memo } from 'react';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
-import { CommentsSheet } from '../comments';
+import { CommentsSection } from './CommentsSection';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -226,10 +226,20 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           className="p-0 mb-2" 
           isLiked={video.isLiked} 
           isDisliked={video.isDisliked}
-          onComment={() => setShowComments(true)}
+          onComment={() => setShowComments(!showComments)}
         />
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
         <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
+
+        {/* Inline Comments Section */}
+        <AnimatePresence>
+          {showComments && (
+            <CommentsSection
+              tokenId={video.id}
+              onClose={() => setShowComments(false)}
+            />
+          )}
+        </AnimatePresence>
       </div>
 
       {/* AI Chat */}
@@ -243,14 +253,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           imageUrl: video.thumbnail
         }}
       />
-
-      {/* Comments Sheet */}
-      {showComments && (
-        <CommentsSheet
-          tokenId={video.id}
-          onClose={() => setShowComments(false)}
-        />
-      )}
     </div>
   );
 });
