@@ -315,21 +315,20 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
 
 /**
  * Hook to fetch video content specifically
+ * Note: postType is undefined for videos (same as home feed)
  */
-export function useDeHubVideos(options: Omit<UseDeHubFeedOptions, 'media_type'> = {}) {
-  return useDeHubFeed({
-    ...options,
-    media_type: 'video',
-  });
+export function useDeHubVideos(options: Omit<UseDeHubFeedOptions, 'postType'> = {}) {
+  return useDeHubFeed(options);
 }
 
 /**
  * Hook to fetch image content specifically
+ * Uses postType: "feed-images" to filter for images
  */
-export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'media_type'> = {}) {
+export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = {}) {
   return useDeHubFeed({
     ...options,
-    media_type: 'image',
+    postType: 'feed-images',
   });
 }
 
