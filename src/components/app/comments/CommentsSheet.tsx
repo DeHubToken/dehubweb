@@ -41,13 +41,13 @@ function formatTimeAgo(dateString: string): string {
 // Map API comment to local Comment type
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
   return {
-    id: apiComment._id,
+    id: apiComment.id,
     address: apiComment.address,
-    username: apiComment.username || 'Anonymous',
-    avatarUrl: apiComment.avatarUrl,
-    text: apiComment.comment,
+    username: apiComment.writor?.username || 'Anonymous',
+    avatarUrl: apiComment.writor?.avatarUrl,
+    text: apiComment.content,
     timeAgo: formatTimeAgo(apiComment.createdAt),
-    replyToId: apiComment.replyToId,
+    replyToId: apiComment.parentId || undefined,
   };
 }
 
