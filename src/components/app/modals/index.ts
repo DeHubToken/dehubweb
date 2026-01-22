@@ -7,3 +7,4 @@
  */
 
 export { FeedSettingsModal, type FeedFilters } from './FeedSettingsModal';
+export { UsernameRequiredModal } from './UsernameRequiredModal';
