@@ -20,7 +20,6 @@ import { HeroTitle } from '@/components/hero/HeroTitle';
 import { AppStoreButtons } from '@/components/hero/AppStoreButtons';
 import { SocialLinks } from '@/components/hero/SocialLinks';
 import { PixelCorruption } from '@/components/hero/PixelCorruption';
-import { SKIP_LANDING_PAGE_KEY } from '@/constants/app.constants';
 
 const cursorStyle = { 
   cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' 
@@ -32,7 +31,6 @@ export const FuturisticAlienHero = () => {
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
 
   const handleEnterApp = () => {
-    localStorage.setItem(SKIP_LANDING_PAGE_KEY, 'true');
     navigate('/app');
   };
 

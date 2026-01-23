@@ -4,15 +4,10 @@
  * Displays a grid/list of video content with filtering options.
  * Fetches from DeHub API. Uses the shared VideoCard component.
  * 
- * Features:
- * - Viewport-based rendering (only renders videos near viewport)
- * - Automatic cleanup of off-screen video resources
- * - Infinite scroll with windowing for memory efficiency
- * 
  * @module components/app/feeds/VideosFeed
  */
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Loader2, RefreshCw, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -29,9 +24,6 @@ interface VideosFeedProps {
   isRefreshing?: boolean;
   refreshKey?: number;
 }
-
-// Maximum number of video cards to render at once for memory efficiency
-const MAX_RENDERED_VIDEOS = 30;
 
 // ============================================================================
 // CONSTANTS
@@ -93,9 +85,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [visibleRange, setVisibleRange] = useState({ start: 0, end: MAX_RENDERED_VIDEOS });
   const loaderRef = useRef<HTMLDivElement>(null);
-  const feedContainerRef = useRef<HTMLDivElement>(null);
   
   const { walletAddress } = useAuth();
 
@@ -117,8 +107,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   useEffect(() => {
     if (refreshKey > 0) {
       refetch();
-      // Reset visible range on refresh
-      setVisibleRange({ start: 0, end: MAX_RENDERED_VIDEOS });
     }
   }, [refreshKey, refetch]);
 
@@ -128,58 +116,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
   }, [apiData]);
 
-  // Windowing: only render videos in the visible range for memory efficiency
-  const visibleVideos = useMemo(() => {
-    return videos.slice(visibleRange.start, visibleRange.end);
-  }, [videos, visibleRange]);
-
-  // Update visible range based on scroll position
-  const updateVisibleRange = useCallback(() => {
-    if (!feedContainerRef.current) return;
-    
-    const container = feedContainerRef.current;
-    const scrollTop = window.scrollY - container.offsetTop;
-    const viewportHeight = window.innerHeight;
-    const cardHeight = 400; // Approximate height of a video card
-    const buffer = 5; // Number of cards to keep rendered above/below viewport
-    
-    const firstVisibleIndex = Math.max(0, Math.floor(scrollTop / cardHeight) - buffer);
-    const lastVisibleIndex = Math.min(
-      videos.length,
-      Math.ceil((scrollTop + viewportHeight) / cardHeight) + buffer
-    );
-    
-    // Ensure we always render at least MAX_RENDERED_VIDEOS or all if less
-    const rangeSize = Math.max(MAX_RENDERED_VIDEOS, lastVisibleIndex - firstVisibleIndex);
-    
-    setVisibleRange(prev => {
-      // Only update if significant change to avoid re-renders
-      if (Math.abs(prev.start - firstVisibleIndex) > 3 || Math.abs(prev.end - (firstVisibleIndex + rangeSize)) > 3) {
-        return { start: firstVisibleIndex, end: firstVisibleIndex + rangeSize };
-      }
-      return prev;
-    });
-  }, [videos.length]);
-
-  // Throttled scroll handler
-  useEffect(() => {
-    let ticking = false;
-    
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateVisibleRange();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [updateVisibleRange]);
-
-  // Infinite scroll observer
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
 
@@ -226,7 +162,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }
 
   return (
-    <div className="p-2 sm:p-3" ref={feedContainerRef}>
+    <div className="p-2 sm:p-3">
       {/* Filters */}
       <AnimatePresence>
         {showFilters && (
@@ -274,21 +210,11 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <EmptyState />
       ) : (
         <>
-          {/* Spacer for items before visible range */}
-          {visibleRange.start > 0 && (
-            <div style={{ height: visibleRange.start * 400 }} aria-hidden="true" />
-          )}
-          
           <div className="space-y-3">
-            {visibleVideos.map((video) => (
+            {videos.map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
-          
-          {/* Spacer for items after visible range */}
-          {visibleRange.end < videos.length && (
-            <div style={{ height: (videos.length - visibleRange.end) * 400 }} aria-hidden="true" />
-          )}
 
           {/* Infinite scroll loader */}
           <div ref={loaderRef} className="py-4 flex justify-center">

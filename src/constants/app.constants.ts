@@ -135,9 +135,6 @@ export const EXPLORE_TRENDING: Array<{ tag: string; postCount: string }> = [
 // MUST use these styles for consistency. NO EXCEPTIONS.
 // ============================================
 
-// Local Storage Keys
-export const SKIP_LANDING_PAGE_KEY = 'dehub_skip_landing';
-
 export const GLASS_STYLES = {
   // For Popovers, Dropdowns, Menus - floating elements
   popover: "bg-black/40 backdrop-blur-2xl border border-white/10",
