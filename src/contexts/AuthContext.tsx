@@ -15,6 +15,7 @@ import {
   type DeHubUser 
 } from '@/lib/api/dehub';
 import { getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
+import { deploySmartAccount } from '@/lib/smart-account';
 import type { Web3Auth } from '@web3auth/modal';
 import { createWalletClient, custom } from 'viem';
 import { base } from 'viem/chains';
@@ -139,6 +140,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const normalizedAddress = address.toLowerCase();
       
       console.log('[Auth] Wallet address:', normalizedAddress);
+
+      // For embedded wallets (social/email login), ensure the smart account is deployed
+      // We detect embedded wallets by checking if userInfo is available (external wallets don't have it)
+      let isEmbedded = false;
+      try {
+        const userInfo = await web3authInstance.getUserInfo();
+        isEmbedded = !!userInfo?.email || !!userInfo?.name;
+      } catch {
+        // getUserInfo throws for external wallets
+        isEmbedded = false;
+      }
+
+      if (isEmbedded) {
+        console.log('[Auth] Embedded wallet detected, ensuring smart account is deployed...');
+        try {
+          await deploySmartAccount(address);
+          console.log('[Auth] Smart account ready');
+        } catch (deployError) {
+          console.error('[Auth] Smart account deployment failed:', deployError);
+          // Continue with auth - the account might deploy on first real transaction
+        }
+      }
 
       // Create sign message for DeHub auth
       const timestamp = Math.floor(Date.now() / 1000);
