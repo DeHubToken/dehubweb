@@ -106,6 +106,7 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
           primaryButton: "socialLogin",
           modalZIndex: "99999",
           uxMode: "popup",
+          loginGridCol: 3,
         },
       };
 
