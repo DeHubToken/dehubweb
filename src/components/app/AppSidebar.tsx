@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { PenSquare } from 'lucide-react';
+import { PenSquare, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
 import { DesktopSidebar } from './navigation/DesktopSidebar';
 import { SidebarNavItem } from './navigation/SidebarNavItem';
 import { PostModal } from '@/features/post';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   const mobileNavContent = (
@@ -47,8 +49,17 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           onClick={() => setIsPostModalOpen(true)}
           className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
         >
-          <PenSquare className="w-5 h-5" />
-          Post
+          {isAuthenticated ? (
+            <>
+              <PenSquare className="w-5 h-5" />
+              Post
+            </>
+          ) : (
+            <>
+              <LogIn className="w-5 h-5" />
+              Log in
+            </>
+          )}
         </Button>
       </div>
     </>

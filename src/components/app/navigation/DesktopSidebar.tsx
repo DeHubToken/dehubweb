@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
-import { PenSquare, Sparkles, LogOut, ChevronUp } from 'lucide-react';
+import { PenSquare, Sparkles, LogOut, ChevronUp, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
@@ -146,8 +146,17 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             onClick={handlePostClick}
             className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2"
           >
-            <PenSquare className="w-[18px] h-[18px]" />
-            Post
+            {isAuthenticated ? (
+              <>
+                <PenSquare className="w-[18px] h-[18px]" />
+                Post
+              </>
+            ) : (
+              <>
+                <LogIn className="w-[18px] h-[18px]" />
+                Log in
+              </>
+            )}
           </Button>
         </div>
 
