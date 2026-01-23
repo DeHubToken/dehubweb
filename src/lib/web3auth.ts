@@ -86,9 +86,9 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         config: { chainConfig },
       });
 
-      // Web3Auth v10 modal options with AA provider
-      // Using type assertion to handle version mismatch between packages
-      const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
+       // Web3Auth v10 modal options with AA provider (matches MetaMask tutorial)
+       // Type assertion keeps us compatible with minor type mismatches across SDK packages.
+       const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         privateKeyProvider: privateKeyProvider as never,
@@ -106,8 +106,8 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         },
       };
 
-      // Add the AA provider (property exists in v10 runtime but not in v9 types)
-      web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
+       // Add the AA provider (property exists in runtime but may not exist in TS types)
+       web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
 
        web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
 
@@ -121,8 +121,13 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
        }
        console.log('[Web3Auth] Initialized successfully, status:', web3authInstance.status);
 
+       // If the SDK remains not_ready, attempting connect() typically throws with
+       // "Cannot read properties of null (reading 'loginWithSessionId')".
        if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
-         console.warn('[Web3Auth] Unexpected status after initModal:', web3authInstance.status);
+         throw new Error(
+           `[Web3Auth] Initialization failed (status: ${web3authInstance.status}). ` +
+             `This usually means the configured Client ID/origin is not allowed or the SDK versions are mismatched.`
+         );
        }
       return web3authInstance;
     } finally {
