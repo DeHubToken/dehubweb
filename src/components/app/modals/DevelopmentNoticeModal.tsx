@@ -1,19 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import googlePlayBadge from "@/assets/google-play-badge.png";
 
 export function DevelopmentNoticeModal() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // Check if user has already seen the notice this session
     const hasSeenNotice = sessionStorage.getItem("dev-notice-seen");
     if (!hasSeenNotice) {
       setOpen(true);
@@ -25,21 +17,39 @@ export function DevelopmentNoticeModal() {
     setOpen(false);
   };
 
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-center">Under Development</DialogTitle>
-          <DialogDescription className="text-center pt-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+        onClick={handleClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mx-4 max-w-sm w-full shadow-2xl">
+        {/* Close button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Content */}
+        <div className="text-center pt-2">
+          <h2 className="text-xl font-bold text-white mb-3">Under Development</h2>
+          <p className="text-zinc-400 text-sm leading-relaxed mb-6">
             This webapp is currently under development. Download DeHub on Google Play today for the full experience. Apple listings coming soon!
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex flex-col items-center gap-4 pt-4">
+          </p>
+          
+          {/* Google Play button */}
           <a
             href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-transform hover:scale-105"
+            className="inline-block transition-transform hover:scale-105 mb-4"
           >
             <img
               src={googlePlayBadge}
@@ -47,15 +57,16 @@ export function DevelopmentNoticeModal() {
               className="h-12"
             />
           </a>
-          <Button
-            variant="ghost"
+          
+          {/* Continue button */}
+          <button
             onClick={handleClose}
-            className="text-muted-foreground"
+            className="block w-full py-3 text-sm text-zinc-500 hover:text-white transition-colors"
           >
             Continue to webapp
-          </Button>
+          </button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
