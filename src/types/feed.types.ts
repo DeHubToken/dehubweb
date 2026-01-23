@@ -66,6 +66,12 @@ export interface VideoItem extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Number of likes */
+  likeCount?: number;
+  /** Number of dislikes */
+  dislikeCount?: number;
+  /** Number of comments */
+  commentCount?: number;
 }
 
 /**
@@ -116,6 +122,10 @@ export interface LiveStream extends BaseFeedItem {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Number of likes */
+  likeCount?: number;
+  /** Number of comments */
+  commentCount?: number;
 }
 
 /**

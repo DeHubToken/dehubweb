@@ -60,7 +60,12 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         </div>
       </div>
 
-      <ActionBar postId={post.id} onComment={() => setShowComments(true)} />
+      <ActionBar 
+        postId={post.id} 
+        onComment={() => setShowComments(true)}
+        likeCount={post.stats.likes}
+        commentCount={post.stats.comments}
+      />
 
       {/* Comments Sheet */}
       {showComments && (

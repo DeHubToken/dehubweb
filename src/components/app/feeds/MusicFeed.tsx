@@ -29,6 +29,9 @@ const MUSIC_VIDEOS: VideoItem[] = [
     verified: true,
     views: '2.4M',
     uploadedAgo: '3 days ago',
+    likeCount: 45200,
+    dislikeCount: 320,
+    commentCount: 1240,
   },
   {
     id: 'mv-2',
@@ -41,6 +44,9 @@ const MUSIC_VIDEOS: VideoItem[] = [
     verified: true,
     views: '892K',
     uploadedAgo: '1 week ago',
+    likeCount: 12300,
+    dislikeCount: 89,
+    commentCount: 456,
   },
   {
     id: 'mv-3',
@@ -53,6 +59,9 @@ const MUSIC_VIDEOS: VideoItem[] = [
     verified: false,
     views: '456K',
     uploadedAgo: '2 weeks ago',
+    likeCount: 8900,
+    dislikeCount: 45,
+    commentCount: 234,
   },
   {
     id: 'mv-4',
@@ -65,6 +74,9 @@ const MUSIC_VIDEOS: VideoItem[] = [
     verified: true,
     views: '1.2M',
     uploadedAgo: '5 days ago',
+    likeCount: 28700,
+    dislikeCount: 156,
+    commentCount: 892,
   },
   {
     id: 'mv-5',
@@ -77,6 +89,9 @@ const MUSIC_VIDEOS: VideoItem[] = [
     verified: true,
     views: '678K',
     uploadedAgo: '1 day ago',
+    likeCount: 15600,
+    dislikeCount: 78,
+    commentCount: 567,
   },
 ];
 

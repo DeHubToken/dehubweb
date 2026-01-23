@@ -533,6 +533,9 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           isLiked={video.isLiked} 
           isDisliked={video.isDisliked}
           onComment={() => setShowComments(!showComments)}
+          likeCount={video.likeCount}
+          dislikeCount={video.dislikeCount}
+          commentCount={video.commentCount}
         />
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
         <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>

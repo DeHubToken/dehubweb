@@ -138,6 +138,11 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const creatorId = nft.minter || nft.creator?.id;
   const creatorUsername = nft.creator?.username || nft.mintername;
   
+  // Get stats
+  const likeCount = nft.totalVotes?.for || nft.like_count || 0;
+  const dislikeCount = nft.totalVotes?.against || nft.dislike_count || 0;
+  const commentCount = nft.commentCount || nft.comment_count || 0;
+  
   return {
     id,
     type: 'video',
@@ -154,6 +159,9 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     creatorUsername,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
+    likeCount,
+    dislikeCount,
+    commentCount,
   };
 }
 
