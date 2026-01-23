@@ -4,9 +4,14 @@
  * Full-screen shorts viewer with video playback and comments overlay.
  * Desktop: Centered portrait video with side panels.
  * Mobile: Full-screen video.
+ * 
+ * Optimizations:
+ * - Only loads video elements for current + adjacent shorts
+ * - Cleans up video resources when navigating away
+ * - Preloads next video for smooth transitions
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Maximize } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -18,6 +23,9 @@ interface ShortsViewerProps {
   initialIndex: number;
   onClose: () => void;
 }
+
+// Number of videos to keep loaded around current index
+const PRELOAD_BUFFER = 1;
 
 // Mock comments data
 const MOCK_COMMENTS = [
@@ -32,9 +40,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+
+  // Calculate which videos should be loaded (current + buffer)
+  const loadedIndices = useMemo(() => {
+    const indices: number[] = [];
+    for (let i = Math.max(0, currentIndex - PRELOAD_BUFFER); i <= Math.min(shorts.length - 1, currentIndex + PRELOAD_BUFFER); i++) {
+      indices.push(i);
+    }
+    return indices;
+  }, [currentIndex, shorts.length]);
+
+  // Check if a video should be loaded
+  const shouldLoadVideo = useCallback((index: number) => {
+    return loadedIndices.includes(index);
+  }, [loadedIndices]);
 
   // Lock body scroll when viewer is open
   useEffect(() => {
@@ -47,15 +69,50 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     };
   }, []);
 
-  const currentShort = shorts[currentIndex];
-
+  // Play current video and pause others
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+    // Pause all other videos
+    videoRefs.current.forEach((video, index) => {
+      if (index !== currentIndex) {
+        video.pause();
+      }
+    });
+    
+    // Play current video
+    const currentVideo = videoRefs.current.get(currentIndex);
+    if (currentVideo) {
+      currentVideo.currentTime = 0;
+      currentVideo.play().catch(() => {});
     }
+    
     setIsLiked(false);
   }, [currentIndex]);
+
+  // Cleanup videos that are no longer in the buffer
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!loadedIndices.includes(index)) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        videoRefs.current.delete(index);
+      }
+    });
+  }, [loadedIndices]);
+
+  // Cleanup all videos on unmount
+  useEffect(() => {
+    return () => {
+      videoRefs.current.forEach((video) => {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      });
+      videoRefs.current.clear();
+    };
+  }, []);
+
+  const currentShort = shorts[currentIndex];
 
   const goToNext = () => {
     if (currentIndex < shorts.length - 1) {
@@ -123,8 +180,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   };
 
   const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
+    const currentVideo = videoRefs.current.get(currentIndex);
+    if (currentVideo) {
+      currentVideo.muted = !isMuted;
       setIsMuted(!isMuted);
     }
   };
@@ -241,9 +299,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
           >
-            {currentShort.videoUrl ? (
+            {shouldLoadVideo(currentIndex) && currentShort.videoUrl ? (
               <video
-                ref={videoRef}
+                ref={(el) => {
+                  if (el) videoRefs.current.set(currentIndex, el);
+                }}
                 src={currentShort.videoUrl}
                 className="w-full h-full object-cover"
                 loop

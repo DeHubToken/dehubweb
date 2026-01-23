@@ -2,6 +2,7 @@
  * Video Card Component
  * ====================
  * Displays video content with thumbnail, duration, and universal styling.
+ * Includes viewport-aware playback management for scalability.
  * 
  * @example
  * ```tsx
@@ -18,6 +19,7 @@ import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { useVideoPlaybackCoordinator } from '@/hooks/use-video-viewport';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,11 +45,18 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [volume, setVolume] = useState(1);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [isInViewport, setIsInViewport] = useState(false);
+  const [shouldRenderVideo, setShouldRenderVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const wasPlayingRef = useRef(false);
   const isTouchDevice = useIsTouchDevice();
+  
+  // Coordinate with global video playback manager
+  useVideoPlaybackCoordinator(videoRef);
 
   const handlePlayClick = useCallback(() => {
     if (!video.videoUrl) return;
@@ -269,6 +278,60 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFocused, isPlaying, handlePlayClick, seekBy, adjustVolume]);
+
+  // Viewport-based video management for scalability
+  useEffect(() => {
+    const container = videoContainerRef.current;
+    if (!container) return;
+
+    // Preload observer - load video element when close to viewport
+    const preloadObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setShouldRenderVideo(true);
+        }
+      },
+      { rootMargin: '200px', threshold: 0 }
+    );
+
+    // Visibility observer - pause when out of viewport
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        const nowInViewport = entry.isIntersecting;
+        
+        setIsInViewport(nowInViewport);
+        
+        if (!nowInViewport && videoRef.current && !videoRef.current.paused) {
+          // Video left viewport - remember it was playing and pause
+          wasPlayingRef.current = true;
+          videoRef.current.pause();
+          setIsPlaying(false);
+        }
+      },
+      { threshold: 0.3, rootMargin: '-10%' }
+    );
+
+    preloadObserver.observe(container);
+    visibilityObserver.observe(container);
+
+    return () => {
+      preloadObserver.disconnect();
+      visibilityObserver.disconnect();
+    };
+  }, []);
+
+  // Cleanup video resources on unmount
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.removeAttribute('src');
+        videoRef.current.load();
+      }
+    };
+  }, []);
   
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -321,7 +384,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Video Player / Thumbnail */}
       <div 
-        ref={containerRef}
+        ref={videoContainerRef}
         tabIndex={0}
         className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
         onClick={isTouchDevice ? undefined : handleVideoAreaClick}
@@ -331,8 +394,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        {/* Show video element when we have a video URL */}
-        {video.videoUrl && !hasError ? (
+        {/* Only render video element when close to viewport for scalability */}
+        {shouldRenderVideo && video.videoUrl && !hasError ? (
           <video
             ref={videoRef}
             src={video.videoUrl}
