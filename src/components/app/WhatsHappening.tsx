@@ -35,7 +35,7 @@ export function WhatsHappening() {
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 -mr-0.5">
         <h3 className="font-bold text-lg text-white">What's happening</h3>
         <Link 
           to="/app/explore" 
