@@ -267,17 +267,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
         {/* Error state */}
         {hasError && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 gap-3">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
             <p className="text-white/70 text-sm">Video format not supported</p>
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(video.videoUrl, '_blank');
-              }}
-              className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition-colors text-white"
-            >
-              Open in new tab
-            </button>
           </div>
         )}
         
