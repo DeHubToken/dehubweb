@@ -94,7 +94,7 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
       clientId,
       web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
       privateKeyProvider,
-      accountAbstractionProvider,
+      // accountAbstractionProvider,
       // Use EOA for external wallets, Smart Account for embedded wallets
       useAAWithExternalWallet: false,
       loginConfig: {},
