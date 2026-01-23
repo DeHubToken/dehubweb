@@ -60,10 +60,7 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
   isInitializing = true;
   initPromise = (async () => {
     try {
-      const [clientId, pimlicoApiKey] = await Promise.all([
-        getWeb3AuthClientId(),
-        getPimlicoApiKey(),
-      ]);
+      const [clientId, pimlicoApiKey] = await Promise.all([getWeb3AuthClientId(), getPimlicoApiKey()]);
 
       const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
@@ -86,9 +83,9 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         config: { chainConfig },
       });
 
-       // Web3Auth v10 modal options with AA provider (matches MetaMask tutorial)
-       // Type assertion keeps us compatible with minor type mismatches across SDK packages.
-       const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
+      // Web3Auth v10 modal options with AA provider (matches MetaMask tutorial)
+      // Type assertion keeps us compatible with minor type mismatches across SDK packages.
+      const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         privateKeyProvider: privateKeyProvider as never,
@@ -106,26 +103,26 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         },
       };
 
-       // Add the AA provider (property exists in runtime but may not exist in TS types)
-       web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
+      // Add the AA provider (property exists in runtime but may not exist in TS types)
+      web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
 
-       web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
+      web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
 
-       // Web3Auth v10 modal SDK requires initModal() (not init()).
-       // initModal() only mounts the UI - it does NOT mean auth is ready.
-       // The user must interact with the modal for authentication to complete.
-       const w3aAny = web3authInstance as unknown as { initModal?: () => Promise<void>; init?: () => Promise<void> };
-       if (typeof w3aAny.initModal === "function") {
-         await w3aAny.initModal();
-       } else if (typeof w3aAny.init === "function") {
-         await w3aAny.init();
-       }
-       console.log('[Web3Auth] Modal initialized, status:', web3authInstance.status);
+      // Web3Auth v10 modal SDK requires initModal() (not init()).
+      // initModal() only mounts the UI - it does NOT mean auth is ready.
+      // The user must interact with the modal for authentication to complete.
+      const w3aAny = web3authInstance as unknown as { initModal?: () => Promise<void>; init?: () => Promise<void> };
+      // if (typeof w3aAny.initModal === "function") {
+      //   await w3aAny.initModal();
+      // } else if (typeof w3aAny.init === "function") {
+      await w3aAny.init();
+      // }
+      console.log("[Web3Auth] Modal initialized, status:", web3authInstance.status);
 
-       // Only check for explicit error state - "not_ready" is expected after initModal()
-       if (web3authInstance.status === "errored") {
-         throw new Error("[Web3Auth] Failed to initialize - check Client ID and allowed origins");
-       }
+      // Only check for explicit error state - "not_ready" is expected after initModal()
+      if (web3authInstance.status === "errored") {
+        throw new Error("[Web3Auth] Failed to initialize - check Client ID and allowed origins");
+      }
       return web3authInstance;
     } finally {
       isInitializing = false;
