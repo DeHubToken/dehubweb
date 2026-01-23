@@ -96,8 +96,8 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
           appName: "DeHub",
           mode: "dark",
           theme: {
-            primary: "#ffffff",
-            onPrimary: "#000000",
+            primary: "#000000",
+            onPrimary: "#ffffff",
           },
           loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
           logoLight: "https://dehub.io/default-icon.png",
