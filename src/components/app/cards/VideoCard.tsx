@@ -186,18 +186,33 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   }, [handleDoubleTapSeek, handlePlayClick]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent click event from also firing
+    
     const now = Date.now();
     const touch = e.changedTouches[0];
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = touch.clientX - rect.left;
     
+    // Clear any pending single-tap timeout
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
+    
+    // Check for double-tap (within 300ms and similar x position)
     if (now - lastTapRef.current.time < 300 && Math.abs(x - lastTapRef.current.x) < 50) {
+      // Double-tap detected - seek without pausing
       handleDoubleTapSeek(e);
-      lastTapRef.current = { time: 0, x: 0 };
+      lastTapRef.current = { time: 0, x: 0 }; // Reset to prevent triple-tap
     } else {
       lastTapRef.current = { time: now, x };
+      // Delay single tap action to distinguish from double-tap
+      clickTimeoutRef.current = setTimeout(() => {
+        handlePlayClick();
+        clickTimeoutRef.current = null;
+      }, 300);
     }
-  }, [handleDoubleTapSeek]);
+  }, [handleDoubleTapSeek, handlePlayClick]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -309,7 +324,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         ref={containerRef}
         tabIndex={0}
         className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
-        onClick={isTouchDevice ? handlePlayClick : handleVideoAreaClick}
+        onClick={isTouchDevice ? undefined : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
