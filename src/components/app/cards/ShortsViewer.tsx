@@ -38,8 +38,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [comment, setComment] = useState('');
   const [isLiked, setIsLiked] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  // Start muted to allow autoplay (browser policy requires muted for autoplay)
+  const [isMuted, setIsMuted] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -78,15 +80,28 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       }
     });
     
-    // Play current video
+    // Reset video ready state when changing index
+    setVideoReady(false);
+    setIsLiked(false);
+  }, [currentIndex]);
+
+  // Attempt to play video when it becomes ready
+  useEffect(() => {
+    if (!videoReady) return;
+    
     const currentVideo = videoRefs.current.get(currentIndex);
     if (currentVideo) {
       currentVideo.currentTime = 0;
-      currentVideo.play().catch(() => {});
+      currentVideo.muted = isMuted; // Ensure muted state is synced
+      currentVideo.play().catch((err) => {
+        console.warn('Autoplay blocked, trying muted:', err);
+        // If autoplay fails, try with muted
+        currentVideo.muted = true;
+        setIsMuted(true);
+        currentVideo.play().catch(() => {});
+      });
     }
-    
-    setIsLiked(false);
-  }, [currentIndex]);
+  }, [videoReady, currentIndex]);
 
   // Cleanup videos that are no longer in the buffer
   useEffect(() => {
@@ -302,7 +317,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             {shouldLoadVideo(currentIndex) && currentShort.videoUrl ? (
               <video
                 ref={(el) => {
-                  if (el) videoRefs.current.set(currentIndex, el);
+                  if (el) {
+                    videoRefs.current.set(currentIndex, el);
+                  }
                 }}
                 src={currentShort.videoUrl}
                 className="w-full h-full object-cover"
@@ -311,6 +328,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 autoPlay
                 muted={isMuted}
                 poster={currentShort.thumbnail}
+                onLoadedData={() => setVideoReady(true)}
+                onCanPlay={() => setVideoReady(true)}
                 onError={() => console.error('Video load error:', currentShort.videoUrl)}
               />
             ) : (
