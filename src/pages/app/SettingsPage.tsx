@@ -437,28 +437,38 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       {/* Theme */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">Theme</h3>
-        <div className="grid grid-cols-3 gap-3">
-          {[
-            { value: 'light', icon: Sun, label: 'Light' },
-            { value: 'dark', icon: Moon, label: 'Dark' },
-            { value: 'system', icon: Monitor, label: 'System' },
-          ].map((option) => {
-            const Icon = option.icon;
-            return (
-              <button
-                key={option.value}
-                onClick={() => setTheme(option.value)}
-                className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors ${
-                  theme === option.value
-                    ? 'bg-zinc-800 border-2 border-white'
-                    : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
-                }`}
-              >
-                <Icon className="w-6 h-6 text-zinc-400" />
-                <span className="text-white text-sm">{option.label}</span>
-              </button>
-            );
-          })}
+        <div className="relative">
+          {/* Right fade only */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+            {[
+              { value: 'light', icon: Sun, label: 'Light' },
+              { value: 'dark', icon: Moon, label: 'Dark' },
+              { value: 'system', icon: Monitor, label: 'System' },
+              { value: 'cosmic', icon: Sparkles, label: 'Cosmic' },
+              { value: 'christmas', icon: Sparkles, label: 'Christmas' },
+              { value: 'island', icon: Sparkles, label: 'Island' },
+              { value: 'hacker', icon: Sparkles, label: 'Hacker' },
+              { value: 'horror', icon: Sparkles, label: 'Horror' },
+            ].map((option) => {
+              const Icon = option.icon;
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => setTheme(option.value)}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
+                    theme === option.value
+                      ? 'bg-zinc-800 border-2 border-white'
+                      : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
+                  }`}
+                >
+                  <Icon className="w-6 h-6 text-zinc-400" />
+                  <span className="text-white text-sm">{option.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
