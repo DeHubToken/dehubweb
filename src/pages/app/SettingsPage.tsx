@@ -68,8 +68,19 @@ export default function SettingsPage() {
   const [theme, setTheme] = useState('system');
   const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
 
+  // Show loading state while checking auth
+  if (isAuthLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+        <div className="w-20 h-20 mb-6 rounded-full bg-zinc-800 animate-pulse" />
+        <div className="h-6 w-40 bg-zinc-800 rounded animate-pulse mb-2" />
+        <div className="h-4 w-64 bg-zinc-800 rounded animate-pulse" />
+      </div>
+    );
+  }
+
   // Block access for unauthenticated users
-  if (!isAuthLoading && !isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
         <img 
@@ -77,7 +88,6 @@ export default function SettingsPage() {
           alt="Sign in" 
           className="w-20 h-20 object-contain mb-6"
         />
-        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
         <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
         <p className="text-white/60 text-center mb-6 max-w-sm">
           Log in to access and manage your account settings.
