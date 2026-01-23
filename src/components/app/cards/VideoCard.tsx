@@ -417,24 +417,24 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </div>
         )}
 
-        {/* Top-aligned video controls (volume, PiP & fullscreen) */}
+        {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {isPlaying && (showControls || isTouchDevice) && (
           <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
             <button 
-              className="h-8 w-8 bg-black/60 backdrop-blur-sm text-white rounded-full flex items-center justify-center"
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-full flex items-center justify-center border border-white/10"
               onClick={toggleMute}
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
             <button 
-              className="h-8 w-8 bg-black/60 backdrop-blur-sm text-white rounded-full flex items-center justify-center"
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-full flex items-center justify-center border border-white/10"
               onClick={handlePictureInPicture}
               title="Picture in Picture (P)"
             >
               <PictureInPicture2 className="h-4 w-4" />
             </button>
             <button 
-              className="h-8 w-8 bg-black/60 backdrop-blur-sm text-white rounded-full flex items-center justify-center"
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-full flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
             >
               <Maximize className="h-4 w-4" />
@@ -446,7 +446,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         {isPlaying && duration > 0 && (showControls || isTouchDevice) && (
           <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
             <div className="flex items-center gap-2">
-              <span className="text-white/70 text-xs min-w-[32px]">{formatTime(currentTime)}</span>
+              <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
                 min={0}
@@ -470,7 +470,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                   background: `linear-gradient(to right, white ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.3) ${(currentTime / (duration || 1)) * 100}%)`
                 }}
               />
-              <span className="text-white/70 text-xs min-w-[32px] text-right">{formatTime(duration)}</span>
+              <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
             </div>
           </div>
         )}
@@ -503,16 +503,16 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </div>
         )}
         
-        {/* Duration badge - hide when progress bar visible */}
+        {/* Duration badge - liquid glass - hide when progress bar visible */}
         {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
-          <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white font-medium">
+          <div className="absolute bottom-2 right-2 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium">
             {video.duration}
           </div>
         )}
         
-        {/* View count - hide when progress bar visible */}
+        {/* View count - liquid glass - hide when progress bar visible */}
         {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 px-2 py-0.5 rounded">
+          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-0.5 rounded border border-white/10">
             <Eye className="w-3 h-3 text-white" />
             <span className="text-white text-xs font-medium">{video.views}</span>
           </div>
