@@ -1,31 +1,35 @@
 /**
  * Auth Context
  * ============
- * Provides Web3Auth authentication integrated with DeHub API.
+ * Provides Web3Auth authentication with Smart Accounts integrated with DeHub API.
+ * Uses Pimlico paymaster for gasless transactions.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { BrowserProvider } from 'ethers';
 import { 
   authenticateWallet, 
   getAccountInfo,
   getAuthToken, 
-  setAuthToken, 
   clearAuthSession,
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
-import { getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
+import { getWeb3Auth, disconnectWeb3Auth, createSmartAccount, type SmartAccountResult } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
+import { createWalletClient, custom } from 'viem';
+import { base } from 'viem/chains';
 
 interface AuthContextType {
   user: DeHubUser | null;
   walletAddress: string | null;
+  smartAccountAddress: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   isConnecting: boolean;
   requiresUsername: boolean;
   web3auth: Web3Auth | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  smartAccountClient: any;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -37,6 +41,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<DeHubUser | null>(null);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [smartAccountAddress, setSmartAccountAddress] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [smartAccountClient, setSmartAccountClient] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
   const [requiresUsername, setRequiresUsername] = useState(false);
@@ -50,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
+        const savedSmartAccount = localStorage.getItem('dehub_smart_account');
 
         if (token && savedWallet && !isTokenExpired()) {
           // Fetch fresh user data from API
@@ -78,6 +86,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             
             setUser(normalizedUser);
             setWalletAddress(savedWallet);
+            if (savedSmartAccount) {
+              setSmartAccountAddress(savedSmartAccount);
+            }
             localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
             
             // Check if username is required
@@ -88,12 +99,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error('Session restoration failed:', error);
             clearAuthSession();
             localStorage.removeItem('dehub_user');
+            localStorage.removeItem('dehub_smart_account');
           }
         } else if (token && isTokenExpired()) {
           // Token expired, clear session - user will need to sign again
           console.log('Token expired, clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
+          localStorage.removeItem('dehub_smart_account');
         }
       } catch (error) {
         console.error('Auth initialization failed:', error);
@@ -127,49 +140,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Failed to connect wallet');
       }
 
-      // Get wallet address and signer
-      const provider = new BrowserProvider(web3authProvider);
-      const signer = await provider.getSigner();
-      const address = (await signer.getAddress()).toLowerCase();
+      console.log('[Auth] Web3Auth connected, creating smart account...');
 
-      // Ensure user is on Base network (chainId 8453)
-      const network = await provider.getNetwork();
-      const currentChainId = Number(network.chainId);
-      const BASE_CHAIN_ID = 8453;
-
-      if (currentChainId !== BASE_CHAIN_ID) {
-        try {
-          // Request network switch to Base
-          await web3authProvider.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x2105' }], // 8453 in hex
-          });
-        } catch (switchError: unknown) {
-          // If the chain hasn't been added, add it
-          if ((switchError as { code?: number })?.code === 4902) {
-            await web3authProvider.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0x2105',
-                chainName: 'Base Mainnet',
-                nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-                rpcUrls: ['https://mainnet.base.org'],
-                blockExplorerUrls: ['https://basescan.org'],
-              }],
-            });
-          } else {
-            throw new Error('Please switch to Base network to continue');
-          }
-        }
+      // Create smart account with Pimlico paymaster
+      let smartAccountResult: SmartAccountResult;
+      try {
+        smartAccountResult = await createSmartAccount(web3authProvider);
+        console.log('[Auth] Smart account created:', smartAccountResult.smartAccountAddress);
+        setSmartAccountClient(smartAccountResult.smartAccountClient);
+        setSmartAccountAddress(smartAccountResult.smartAccountAddress);
+        localStorage.setItem('dehub_smart_account', smartAccountResult.smartAccountAddress);
+      } catch (smartAccountError) {
+        console.error('[Auth] Smart account creation failed, falling back to EOA:', smartAccountError);
+        // Fall back to EOA if smart account creation fails
+        const walletClient = createWalletClient({
+          chain: base,
+          transport: custom(web3authProvider),
+        });
+        const [eoaAddress] = await walletClient.getAddresses();
+        smartAccountResult = {
+          smartAccountClient: null,
+          smartAccountAddress: eoaAddress.toLowerCase(),
+          eoaAddress: eoaAddress.toLowerCase(),
+        };
       }
 
-      // Create sign message for DeHub auth (timestamp in epoch seconds)
+      const address = smartAccountResult.eoaAddress;
+
+      // Create sign message for DeHub auth using EOA (timestamp in epoch seconds)
+      // Note: We sign with EOA but can use smart account for transactions
+      const walletClient = createWalletClient({
+        chain: base,
+        transport: custom(web3authProvider),
+      });
+      
       const timestamp = Math.floor(Date.now() / 1000);
       const displayedDate = new Date(timestamp * 1000);
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
 
-      // Request signature
-      const signature = await signer.signMessage(message);
+      // Request signature using viem
+      const signature = await walletClient.signMessage({
+        account: address as `0x${string}`,
+        message,
+      });
+
+      const BASE_CHAIN_ID = 8453;
 
       // Authenticate with DeHub API
       const authResponse = await authenticateWallet(
@@ -234,8 +249,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     clearAuthSession();
     localStorage.removeItem('dehub_user');
+    localStorage.removeItem('dehub_smart_account');
     setUser(null);
     setWalletAddress(null);
+    setSmartAccountAddress(null);
+    setSmartAccountClient(null);
     setRequiresUsername(false);
   }, []);
 
@@ -283,11 +301,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user,
         walletAddress,
+        smartAccountAddress,
         isAuthenticated,
         isLoading,
         isConnecting,
         requiresUsername,
         web3auth,
+        smartAccountClient,
         connect,
         disconnect,
         refreshUser,
