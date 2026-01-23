@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -40,7 +40,9 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [hasError, setHasError] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
   const isTouchDevice = useIsTouchDevice();
 
   const handlePlayClick = useCallback(() => {
@@ -106,6 +108,58 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     }
   }, []);
 
+  const handleDoubleTapSeek = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const x = clientX - rect.left;
+    const isRightSide = x > rect.width / 2;
+    
+    if (videoRef.current && isPlaying) {
+      if (isRightSide) {
+        videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
+        setSeekIndicator('right');
+      } else {
+        videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
+        setSeekIndicator('left');
+      }
+      setTimeout(() => setSeekIndicator(null), 500);
+    }
+  }, [isPlaying]);
+
+  const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
+    const now = Date.now();
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    
+    // Check for double-click (within 300ms and similar x position)
+    if (now - lastTapRef.current.time < 300 && Math.abs(x - lastTapRef.current.x) < 50) {
+      handleDoubleTapSeek(e);
+      lastTapRef.current = { time: 0, x: 0 }; // Reset to prevent triple-tap
+    } else {
+      lastTapRef.current = { time: now, x };
+      // Delay single click action to distinguish from double-click
+      setTimeout(() => {
+        if (Date.now() - lastTapRef.current.time >= 280) {
+          handlePlayClick();
+        }
+      }, 300);
+    }
+  }, [handleDoubleTapSeek, handlePlayClick]);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const now = Date.now();
+    const touch = e.changedTouches[0];
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    
+    if (now - lastTapRef.current.time < 300 && Math.abs(x - lastTapRef.current.x) < 50) {
+      handleDoubleTapSeek(e);
+      lastTapRef.current = { time: 0, x: 0 };
+    } else {
+      lastTapRef.current = { time: now, x };
+    }
+  }, [handleDoubleTapSeek]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -164,7 +218,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
       {/* Video Player / Thumbnail */}
       <div 
         className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb"
-        onClick={handlePlayClick}
+        onClick={isTouchDevice ? handlePlayClick : handleVideoAreaClick}
+        onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
       >
@@ -264,6 +319,27 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
             </div>
           </div>
         )}
+
+        {/* Seek indicator */}
+        <AnimatePresence>
+          {seekIndicator && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className={`absolute top-1/2 -translate-y-1/2 ${seekIndicator === 'right' ? 'right-8' : 'left-8'}`}
+            >
+              <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                {seekIndicator === 'right' ? (
+                  <FastForward className="h-6 w-6 text-white" />
+                ) : (
+                  <Rewind className="h-6 w-6 text-white" />
+                )}
+              </div>
+              <p className="text-white text-xs text-center mt-1">10s</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Error state */}
         {hasError && (
