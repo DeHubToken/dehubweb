@@ -20,4 +20,5 @@ export { usePullToRefresh } from './use-pull-to-refresh';
 
 export { useIsTouchDevice } from './use-touch-device';
 export { useUserLanguage } from './use-user-language';
+export { useVideoViewport, useVideoPlaybackCoordinator, videoManager } from './use-video-viewport';
 export { useVoiceChat } from './use-voice-chat';
