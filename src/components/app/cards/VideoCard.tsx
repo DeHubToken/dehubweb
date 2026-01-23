@@ -186,23 +186,33 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   }, [handleDoubleTapSeek, handlePlayClick]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent the onClick from also firing
+    
     const touch = e.changedTouches[0];
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = touch.clientX - rect.left;
-    const isRightSide = x > rect.width / 2;
+    const relativeX = x / rect.width; // 0 to 1
     
-    // Single tap on mobile - seek immediately based on tap position
+    // Center zone (30-70%) for play/pause
+    if (relativeX > 0.3 && relativeX < 0.7) {
+      handlePlayClick();
+      return;
+    }
+    
+    // Left/right zones for seeking (only when playing)
     if (videoRef.current && isPlaying) {
-      if (isRightSide) {
+      if (relativeX >= 0.7) {
+        // Right side - fast forward
         videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
         setSeekIndicator('right');
       } else {
+        // Left side - rewind
         videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
         setSeekIndicator('left');
       }
       setTimeout(() => setSeekIndicator(null), 500);
     }
-  }, [isPlaying]);
+  }, [isPlaying, handlePlayClick]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -314,7 +324,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         ref={containerRef}
         tabIndex={0}
         className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
-        onClick={isTouchDevice ? handlePlayClick : handleVideoAreaClick}
+        onClick={isTouchDevice ? undefined : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
