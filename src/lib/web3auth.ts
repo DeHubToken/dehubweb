@@ -8,10 +8,7 @@
 import { Web3Auth } from "@web3auth/modal";
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import {
-  AccountAbstractionProvider,
-  SafeSmartAccount,
-} from "@web3auth/account-abstraction-provider";
+import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
 import { supabase } from "@/integrations/supabase/client";
 
 // Base Mainnet chain configuration
@@ -66,10 +63,7 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
 
 async function initializeWeb3Auth(): Promise<Web3Auth> {
   try {
-    const [clientId, pimlicoApiKey] = await Promise.all([
-      getWeb3AuthClientId(),
-      getPimlicoApiKey(),
-    ]);
+    const [clientId, pimlicoApiKey] = await Promise.all([getWeb3AuthClientId(), getPimlicoApiKey()]);
 
     const chainId = 8453; // Base Mainnet
     const pimlicoUrl = `https://api.pimlico.io/v2/${chainId}/rpc?apikey=${pimlicoApiKey}`;
@@ -95,6 +89,7 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
 
     // Step 3: Configure Web3Auth (exactly as in docs)
     // Using type assertion to handle minor SDK type mismatches
+    // Use dashboard configuration for login methods and UI
     const web3AuthOptions = {
       clientId,
       web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
@@ -102,15 +97,10 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
       accountAbstractionProvider,
       // Use EOA for external wallets, Smart Account for embedded wallets
       useAAWithExternalWallet: false,
-      uiConfig: {
-        appName: "DeHub",
-        mode: "dark" as const,
-        loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
-        logoLight: "https://dehub.io/default-icon.png",
-        logoDark: "https://dehub.io/default-icon-dark.png",
-        defaultLanguage: "en",
-        primaryButton: "socialLogin" as const,
-      },
+      loginConfig: {},
+      // Extended session time (30 days) to reduce re-auth frequency
+      // but this helps with local session management
+      sessionTime: 86400 * 30, // 30 days in seconds
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,7 +120,7 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
     if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
       throw new Error(
         `Web3Auth initialization failed (status: ${web3authInstance.status}). ` +
-        `Check that your origin is allowed in the Web3Auth dashboard.`
+          `Check that your origin is allowed in the Web3Auth dashboard.`,
       );
     }
 
