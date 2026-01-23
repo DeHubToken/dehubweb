@@ -95,7 +95,6 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
 
     // Step 3: Configure Web3Auth (exactly as in docs)
     // Using type assertion to handle minor SDK type mismatches
-    // Use dashboard configuration for login methods and UI
     const web3AuthOptions = {
       clientId,
       web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
@@ -103,6 +102,15 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
       accountAbstractionProvider,
       // Use EOA for external wallets, Smart Account for embedded wallets
       useAAWithExternalWallet: false,
+      uiConfig: {
+        appName: "DeHub",
+        mode: "dark" as const,
+        loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
+        logoLight: "https://dehub.io/default-icon.png",
+        logoDark: "https://dehub.io/default-icon-dark.png",
+        defaultLanguage: "en",
+        primaryButton: "socialLogin" as const,
+      },
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
