@@ -314,3 +314,91 @@ html {
     background-position: 200% 0;
   }
 }
+
+/* ================================================================================
+   WEB3AUTH MODAL - Black Liquid Glass Effect
+   ================================================================================ */
+
+/* Modal backdrop */
+#w3a-modal {
+  --w3a-background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Main modal card - liquid glass effect */
+.w3a-modal__card {
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Inner content styling */
+.w3a-modal__content {
+  background: transparent !important;
+}
+
+.w3a-modal__header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Buttons within modal */
+.w3a-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.w3a-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Mobile: Slide up from bottom like a sheet */
+@media (max-width: 768px) {
+  .w3a-modal__card {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    transform: none !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    max-height: 90vh !important;
+    animation: w3aSlideUp 0.3s ease-out !important;
+  }
+}
+
+@keyframes w3aSlideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Hide powered by / footer text */
+.w3a-modal__footer,
+.w3a-footer,
+[class*="footer"],
+[class*="powered"],
+[class*="Powered"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
