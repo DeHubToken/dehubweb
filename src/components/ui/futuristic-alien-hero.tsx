@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
+import { X } from 'lucide-react';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 
 // Shared modules
@@ -25,7 +27,12 @@ const cursorStyle = {
 
 export const FuturisticAlienHero = () => {
   const mountRef = useRef<HTMLCanvasElement>(null);
+  const navigate = useNavigate();
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
+
+  const handleEnterApp = () => {
+    navigate('/app');
+  };
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -123,6 +130,15 @@ export const FuturisticAlienHero = () => {
     <div className="relative h-screen w-full overflow-hidden bg-black scanline-overlay" style={cursorStyle}>
       <PixelCorruption visible={showPixelCorruption} />
       <canvas ref={mountRef} className="absolute top-0 left-0 w-full h-full z-0" />
+      
+      {/* Close/Enter App Button */}
+      <button
+        onClick={handleEnterApp}
+        className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors group"
+        aria-label="Enter App"
+      >
+        <X className="w-6 h-6 text-white/70 group-hover:text-white transition-colors" />
+      </button>
       
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
         <div className="text-center p-4 -translate-y-[40px] md:translate-y-0">
