@@ -51,6 +51,20 @@ interface ActionBarProps {
   isDisliked?: boolean;
   /** Hide the dislike button (e.g., for images) */
   hideDislike?: boolean;
+  /** Like count to display */
+  likeCount?: number;
+  /** Dislike count to display */
+  dislikeCount?: number;
+  /** Comment count to display */
+  commentCount?: number;
+}
+
+/** Format count for display (e.g., 1500 -> 1.5K) */
+function formatCount(count?: number): string {
+  if (!count || count === 0) return '';
+  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return count.toString();
 }
 
 export function ActionBar({ 
@@ -65,6 +79,9 @@ export function ActionBar({
   isLiked: initialIsLiked = false,
   isDisliked: initialIsDisliked = false,
   hideDislike = false,
+  likeCount,
+  dislikeCount,
+  commentCount,
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -187,7 +204,7 @@ export function ActionBar({
           <motion.button 
             onClick={() => handleVote(true)}
             className={cn(
-              "transition-colors text-white",
+              "flex items-center gap-1 transition-colors text-white",
               hasVoted && !isLiked && "text-zinc-600 cursor-not-allowed",
               isVoting && "opacity-50"
             )}
@@ -197,12 +214,15 @@ export function ActionBar({
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
+            {formatCount(likeCount) && (
+              <span className="text-xs text-zinc-400">{formatCount(likeCount)}</span>
+            )}
           </motion.button>
           {!hideDislike && (
             <motion.button 
               onClick={() => handleVote(false)}
               className={cn(
-                "transition-colors text-white",
+                "flex items-center gap-1 transition-colors text-white",
                 hasVoted && !isDisliked && "text-zinc-600 cursor-not-allowed",
                 isVoting && "opacity-50"
               )}
@@ -212,14 +232,20 @@ export function ActionBar({
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
+              {formatCount(dislikeCount) && (
+                <span className="text-xs text-zinc-400">{formatCount(dislikeCount)}</span>
+              )}
             </motion.button>
           )}
           <button 
             onClick={onComment}
-            className="text-white hover:text-zinc-400 transition-colors"
+            className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
             aria-label="Comment"
           >
             <MessageSquare className="w-5 h-5" />
+            {formatCount(commentCount) && (
+              <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
+            )}
           </button>
           
           {/* Share - Bottom sheet for all devices with liquid glass effect */}
