@@ -112,6 +112,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   }, [currentIndex]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
+    // Swipe right to close (like Instagram stories)
+    if (info.offset.x > 100) {
+      onClose();
+      return;
+    }
+    // Vertical swipe for navigation
     if (info.offset.y < -100) goToNext();
     else if (info.offset.y > 100) goToPrev();
   };
