@@ -66,7 +66,6 @@ export default function MessagesPage() {
           className="w-20 h-20 object-contain mb-6"
         />
         <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
-        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
         <p className="text-white/60 text-center mb-6 max-w-sm">
           Log in to access your messages and chat with others.
         </p>
