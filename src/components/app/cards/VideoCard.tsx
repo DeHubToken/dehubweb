@@ -186,18 +186,23 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   }, [handleDoubleTapSeek, handlePlayClick]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const now = Date.now();
     const touch = e.changedTouches[0];
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = touch.clientX - rect.left;
+    const isRightSide = x > rect.width / 2;
     
-    if (now - lastTapRef.current.time < 300 && Math.abs(x - lastTapRef.current.x) < 50) {
-      handleDoubleTapSeek(e);
-      lastTapRef.current = { time: 0, x: 0 };
-    } else {
-      lastTapRef.current = { time: now, x };
+    // Single tap on mobile - seek immediately based on tap position
+    if (videoRef.current && isPlaying) {
+      if (isRightSide) {
+        videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
+        setSeekIndicator('right');
+      } else {
+        videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
+        setSeekIndicator('left');
+      }
+      setTimeout(() => setSeekIndicator(null), 500);
     }
-  }, [handleDoubleTapSeek]);
+  }, [isPlaying]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
