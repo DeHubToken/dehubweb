@@ -9,8 +9,8 @@
  * ```
  */
 
-import { useState, useRef, useCallback, memo } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind } from 'lucide-react';
+import { useState, useRef, useCallback, memo, useEffect } from 'react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -40,9 +40,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [hasError, setHasError] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTouchDevice = useIsTouchDevice();
 
   const handlePlayClick = useCallback(() => {
@@ -74,6 +78,35 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     videoRef.current?.requestFullscreen();
+  }, []);
+
+  const handlePictureInPicture = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture();
+    } else if (videoRef.current) {
+      videoRef.current.requestPictureInPicture();
+    }
+  }, []);
+
+  const adjustVolume = useCallback((delta: number) => {
+    if (videoRef.current) {
+      const newVolume = Math.max(0, Math.min(1, volume + delta));
+      setVolume(newVolume);
+      videoRef.current.volume = newVolume;
+      if (newVolume > 0 && isMuted) {
+        setIsMuted(false);
+        videoRef.current.muted = false;
+      }
+    }
+  }, [volume, isMuted]);
+
+  const seekBy = useCallback((seconds: number) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = Math.max(0, Math.min(videoRef.current.currentTime + seconds, videoRef.current.duration || 0));
+      setSeekIndicator(seconds > 0 ? 'right' : 'left');
+      setTimeout(() => setSeekIndicator(null), 500);
+    }
   }, []);
 
   const handleVideoEnded = useCallback(() => {
@@ -131,17 +164,23 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = e.clientX - rect.left;
     
+    // Clear any pending single-click timeout
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
+    }
+    
     // Check for double-click (within 300ms and similar x position)
     if (now - lastTapRef.current.time < 300 && Math.abs(x - lastTapRef.current.x) < 50) {
+      // Double-click detected - seek without pausing
       handleDoubleTapSeek(e);
       lastTapRef.current = { time: 0, x: 0 }; // Reset to prevent triple-tap
     } else {
       lastTapRef.current = { time: now, x };
       // Delay single click action to distinguish from double-click
-      setTimeout(() => {
-        if (Date.now() - lastTapRef.current.time >= 280) {
-          handlePlayClick();
-        }
+      clickTimeoutRef.current = setTimeout(() => {
+        handlePlayClick();
+        clickTimeoutRef.current = null;
       }, 300);
     }
   }, [handleDoubleTapSeek, handlePlayClick]);
@@ -165,6 +204,56 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    if (!isFocused || !isPlaying) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case ' ':
+          e.preventDefault();
+          handlePlayClick();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          seekBy(-5);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          seekBy(5);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          adjustVolume(0.1);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          adjustVolume(-0.1);
+          break;
+        case 'm':
+          e.preventDefault();
+          setIsMuted(prev => {
+            if (videoRef.current) videoRef.current.muted = !prev;
+            return !prev;
+          });
+          break;
+        case 'p':
+          e.preventDefault();
+          if (videoRef.current) {
+            if (document.pictureInPictureElement) {
+              document.exitPictureInPicture();
+            } else {
+              videoRef.current.requestPictureInPicture();
+            }
+          }
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFocused, isPlaying, handlePlayClick, seekBy, adjustVolume]);
   
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -217,11 +306,15 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Video Player / Thumbnail */}
       <div 
-        className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb"
+        ref={containerRef}
+        tabIndex={0}
+        className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
         onClick={isTouchDevice ? handlePlayClick : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       >
         {/* Show video element when we have a video URL */}
         {video.videoUrl && !hasError ? (
@@ -269,7 +362,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </div>
         )}
 
-        {/* Top-aligned video controls (volume & fullscreen) */}
+        {/* Top-aligned video controls (volume, PiP & fullscreen) */}
         {isPlaying && (showControls || isTouchDevice) && (
           <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
             <button 
@@ -277,6 +370,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
               onClick={toggleMute}
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            </button>
+            <button 
+              className="h-8 w-8 bg-black/60 backdrop-blur-sm text-white rounded-full flex items-center justify-center"
+              onClick={handlePictureInPicture}
+              title="Picture in Picture (P)"
+            >
+              <PictureInPicture2 className="h-4 w-4" />
             </button>
             <button 
               className="h-8 w-8 bg-black/60 backdrop-blur-sm text-white rounded-full flex items-center justify-center"
