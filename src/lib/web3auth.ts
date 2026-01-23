@@ -83,39 +83,35 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         config: { chainConfig },
       });
 
-      // Web3Auth v10 modal options with AA provider (matches MetaMask tutorial)
-      // Type assertion keeps us compatible with minor type mismatches across SDK packages.
-      const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
+      // Web3Auth v10 modal options with AA provider
+      const web3AuthOptions = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        privateKeyProvider: privateKeyProvider as never,
-        accountAbstractionProvider: accountAbstractionProvider as never,
+        privateKeyProvider,
+        accountAbstractionProvider,
         // External wallets keep their EOA, only embedded wallets get smart accounts
         useAAWithExternalWallet: false,
         uiConfig: {
           appName: "DeHub",
-          mode: "dark",
+          mode: "dark" as const,
+          theme: {
+            primary: "#ffffff",
+            onPrimary: "#000000",
+          },
+          logoLight: "https://dehub.io/default-icon.png",
+          logoDark: "https://dehub.io/default-icon-dark.png",
           loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
-          primaryButton: "socialLogin",
+          primaryButton: "socialLogin" as const,
           modalZIndex: "99999",
           loginGridCol: 3,
+          defaultLanguage: "en",
         },
       };
 
-      // Add the AA provider (property exists in runtime but may not exist in TS types)
-      web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
+      web3authInstance = new Web3Auth(web3AuthOptions as unknown as Web3AuthOptions);
 
-      web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
-
-      // Web3Auth v10 modal SDK requires initModal() (not init()).
-      // initModal() only mounts the UI - it does NOT mean auth is ready.
-      // The user must interact with the modal for authentication to complete.
-      const w3aAny = web3authInstance as unknown as { initModal?: () => Promise<void>; init?: () => Promise<void> };
-      // if (typeof w3aAny.initModal === "function") {
-      //   await w3aAny.initModal();
-      // } else if (typeof w3aAny.init === "function") {
-      await w3aAny.init();
-      // }
+      // Initialize modal - use init() as initModal() may not exist in all versions
+      await web3authInstance.init();
       console.log("[Web3Auth] Modal initialized, status:", web3authInstance.status);
 
       // Only check for explicit error state - "not_ready" is expected after initModal()
