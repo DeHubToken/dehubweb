@@ -156,9 +156,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
           <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
         <div className="relative">
-          {/* Left fade */}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
-          {/* Right fade */}
+          {/* Right fade only */}
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <div className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
