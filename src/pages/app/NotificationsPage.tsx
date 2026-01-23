@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, Repeat2, DollarSign, Users, Share, Bell } from 'lucide-react';
+import { Settings, Heart, MessageCircle, Repeat2, DollarSign, Users, Share, Bell, Lock } from 'lucide-react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 const tabs = [
   { label: 'All', value: 'all', icon: Bell },
@@ -218,6 +220,28 @@ const getNotificationIcon = (type: Notification['type']) => {
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('all');
+  const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
+
+  // Block access for unauthenticated users
+  if (!isAuthLoading && !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+        <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+          <Lock className="w-8 h-8 text-zinc-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+        <p className="text-white/60 text-center mb-6 max-w-sm">
+          Log in to view your notifications and stay updated.
+        </p>
+        <Button 
+          onClick={() => connect()}
+          className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+        >
+          Log in
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

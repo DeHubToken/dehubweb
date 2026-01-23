@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Lock } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PublicChat } from '@/components/app/chat';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Conversation {
   id: string;
@@ -52,6 +53,28 @@ const conversations: Conversation[] = [
 export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
+
+  // Block access for unauthenticated users
+  if (!isAuthLoading && !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+        <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+          <Lock className="w-8 h-8 text-zinc-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+        <p className="text-white/60 text-center mb-6 max-w-sm">
+          Log in to access your messages and chat with others.
+        </p>
+        <Button 
+          onClick={() => connect()}
+          className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+        >
+          Log in
+        </Button>
+      </div>
+    );
+  }
 
   // Check if Public Chat is selected
   const isPublicChatOpen = selectedConversation === '1';
