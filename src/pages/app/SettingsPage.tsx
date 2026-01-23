@@ -521,8 +521,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         </div>
       </div>
 
-      <div className="flex justify-end">
-        <Button className="bg-white text-black hover:bg-zinc-200">
+      <div>
+        <Button className="w-full bg-white text-black hover:bg-zinc-200">
           Apply Changes
         </Button>
       </div>
