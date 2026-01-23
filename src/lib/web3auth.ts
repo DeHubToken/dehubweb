@@ -95,18 +95,11 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         uiConfig: {
           appName: "DeHub",
           mode: "dark",
-          theme: {
-            primary: "#ffffff",
-            onPrimary: "#000000",
-          } as Record<string, string>,
           loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
-          logoLight: "https://dehub.io/default-icon.png",
-          logoDark: "https://dehub.io/default-icon-dark.png",
-          defaultLanguage: "en",
           primaryButton: "socialLogin",
           modalZIndex: "99999",
           loginGridCol: 3,
-        } as Web3AuthOptions["uiConfig"] & { showWalletDiscovery?: boolean },
+        },
       };
 
       // Add the AA provider (property exists in runtime but may not exist in TS types)
