@@ -112,22 +112,19 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
        web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
 
        // Web3Auth v10 modal SDK requires initModal() (not init()).
-       // Some type versions don't expose initModal(), so call it via runtime check.
+       // initModal() only mounts the UI - it does NOT mean auth is ready.
+       // The user must interact with the modal for authentication to complete.
        const w3aAny = web3authInstance as unknown as { initModal?: () => Promise<void>; init?: () => Promise<void> };
        if (typeof w3aAny.initModal === "function") {
          await w3aAny.initModal();
        } else if (typeof w3aAny.init === "function") {
          await w3aAny.init();
        }
-       console.log('[Web3Auth] Initialized successfully, status:', web3authInstance.status);
+       console.log('[Web3Auth] Modal initialized, status:', web3authInstance.status);
 
-       // If the SDK remains not_ready, attempting connect() typically throws with
-       // "Cannot read properties of null (reading 'loginWithSessionId')".
-       if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
-         throw new Error(
-           `[Web3Auth] Initialization failed (status: ${web3authInstance.status}). ` +
-             `This usually means the configured Client ID/origin is not allowed or the SDK versions are mismatched.`
-         );
+       // Only check for explicit error state - "not_ready" is expected after initModal()
+       if (web3authInstance.status === "errored") {
+         throw new Error("[Web3Auth] Failed to initialize - check Client ID and allowed origins");
        }
       return web3authInstance;
     } finally {
