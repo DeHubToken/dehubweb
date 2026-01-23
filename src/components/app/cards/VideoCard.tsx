@@ -404,9 +404,15 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </div>
         )}
         
-        {/* Play/Pause button overlay */}
+        {/* Play/Pause button overlay - double click/tap for fullscreen */}
         {(!isPlaying || (showControls && !isTouchDevice)) && !isLoading && (
-          <div className={`absolute inset-0 flex items-center justify-center bg-black/20 ${isTouchDevice ? 'opacity-100' : 'opacity-0 group-hover/thumb:opacity-100'} transition-opacity`}>
+          <div 
+            className={`absolute inset-0 flex items-center justify-center bg-black/20 ${isTouchDevice ? 'opacity-100' : 'opacity-0 group-hover/thumb:opacity-100'} transition-opacity`}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              videoRef.current?.requestFullscreen();
+            }}
+          >
             <div className="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center">
               {isPlaying ? (
                 <Pause className="h-6 w-6 text-primary-foreground fill-current" />
