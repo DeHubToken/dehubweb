@@ -109,10 +109,21 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
       // Add the AA provider (property exists in v10 runtime but not in v9 types)
       web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
 
-      web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
+       web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
 
-      await web3authInstance.init();
-      console.log('[Web3Auth] Initialized successfully, status:', web3authInstance.status);
+       // Web3Auth v10 modal SDK requires initModal() (not init()).
+       // Some type versions don't expose initModal(), so call it via runtime check.
+       const w3aAny = web3authInstance as unknown as { initModal?: () => Promise<void>; init?: () => Promise<void> };
+       if (typeof w3aAny.initModal === "function") {
+         await w3aAny.initModal();
+       } else if (typeof w3aAny.init === "function") {
+         await w3aAny.init();
+       }
+       console.log('[Web3Auth] Initialized successfully, status:', web3authInstance.status);
+
+       if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
+         console.warn('[Web3Auth] Unexpected status after initModal:', web3authInstance.status);
+       }
       return web3authInstance;
     } finally {
       isInitializing = false;
