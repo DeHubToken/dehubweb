@@ -36,6 +36,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
+  // Lock body scroll when viewer is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, []);
+
   const currentShort = shorts[currentIndex];
 
   useEffect(() => {
@@ -112,6 +123,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     }
   };
 
+  // Prevent touch events from bubbling to parent page
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <motion.div
       ref={containerRef}
@@ -119,6 +143,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+      style={{ touchAction: 'none' }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Desktop Layout with Side Panels */}
       <div className={`relative flex items-center justify-center h-full ${isMobile ? 'w-full' : 'gap-4 px-4'}`}>
