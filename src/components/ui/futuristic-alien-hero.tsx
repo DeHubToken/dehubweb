@@ -25,12 +25,16 @@ const cursorStyle = {
   cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' 
 };
 
+const SKIP_LANDING_KEY = "dehub_skip_landing";
+
 export const FuturisticAlienHero = () => {
   const mountRef = useRef<HTMLCanvasElement>(null);
   const navigate = useNavigate();
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
 
   const handleEnterApp = () => {
+    // Save preference to skip landing next time
+    localStorage.setItem(SKIP_LANDING_KEY, "true");
     navigate('/app');
   };
 

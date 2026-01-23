@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, useRef, useCallback, memo, useEffect } from 'react';
+import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -18,6 +18,7 @@ import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +32,7 @@ interface VideoCardProps {
 }
 
 export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
+  const instanceId = useId();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -49,13 +51,49 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTouchDevice = useIsTouchDevice();
 
+  // Pause callback for the playback manager
+  const pauseVideo = useCallback(() => {
+    videoRef.current?.pause();
+    setIsPlaying(false);
+  }, []);
+
+  // Register with playback manager and setup IntersectionObserver
+  useEffect(() => {
+    videoPlaybackManager.register(instanceId, pauseVideo);
+
+    // Auto-pause when scrolled out of view
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && isPlaying) {
+            pauseVideo();
+            videoPlaybackManager.stop(instanceId);
+          }
+        });
+      },
+      { threshold: 0.3 } // Pause when less than 30% visible
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      videoPlaybackManager.unregister(instanceId);
+      observer.disconnect();
+    };
+  }, [instanceId, pauseVideo, isPlaying]);
+
   const handlePlayClick = useCallback(() => {
     if (!video.videoUrl) return;
     
     if (isPlaying) {
       videoRef.current?.pause();
       setIsPlaying(false);
+      videoPlaybackManager.stop(instanceId);
     } else {
+      // Notify manager - this will pause any other playing video
+      videoPlaybackManager.play(instanceId);
       setIsLoading(true);
       videoRef.current?.play().then(() => {
         setIsPlaying(true);
@@ -63,9 +101,10 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
       }).catch(() => {
         setIsLoading(false);
         setHasError(true);
+        videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl]);
+  }, [isPlaying, video.videoUrl, instanceId]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -111,7 +150,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
   const handleVideoEnded = useCallback(() => {
     setIsPlaying(false);
-  }, []);
+    videoPlaybackManager.stop(instanceId);
+  }, [instanceId]);
 
   const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
     const videoEl = e.currentTarget;
