@@ -5,7 +5,7 @@ import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { PostModal } from '@/features/post/PostModal';
-
+import { DevelopmentNoticeModal } from './modals';
 interface AppLayoutContentProps {
   children?: ReactNode;
 }
@@ -29,6 +29,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       </div>
       
       <MobileBottomNav />
+      
+      {/* Development Notice Modal */}
+      <DevelopmentNoticeModal />
       
       {/* Global Post Modal for drag & drop */}
       <PostModal 
