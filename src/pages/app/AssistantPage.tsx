@@ -19,6 +19,7 @@ import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
+import assistantAvatar from '@/assets/assistant-avatar.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -349,9 +350,11 @@ export default function AssistantPage() {
   if (!isAuthLoading && !isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
-        <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
-          <Lock className="w-8 h-8 text-white/60" />
-        </div>
+        <img 
+          src={assistantAvatar} 
+          alt="AI Assistant" 
+          className="w-20 h-20 object-contain mb-6"
+        />
         <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
         <p className="text-white/60 text-center mb-6 max-w-sm">
           Log in to access the AI Assistant and unlock powerful features like image and video generation.
