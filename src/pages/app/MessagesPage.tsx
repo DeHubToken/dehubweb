@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Search, Plus, Lock } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PublicChat } from '@/components/app/chat';
 import { useAuth } from '@/contexts/AuthContext';
+import assistantAvatar from '@/assets/assistant-avatar.png';
 
 interface Conversation {
   id: string;
@@ -59,9 +60,12 @@ export default function MessagesPage() {
   if (!isAuthLoading && !isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
-        <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
-          <Lock className="w-8 h-8 text-zinc-400" />
-        </div>
+        <img 
+          src={assistantAvatar} 
+          alt="Sign in" 
+          className="w-20 h-20 object-contain mb-6"
+        />
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
         <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
         <p className="text-white/60 text-center mb-6 max-w-sm">
           Log in to access your messages and chat with others.
