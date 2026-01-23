@@ -7,7 +7,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown } from 'lucide-react';
+import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Maximize } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -363,16 +363,24 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
 
       {/* Mobile header controls */}
       {isMobile && (
-        <button
-          onClick={toggleMute}
-          className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
-        >
-          {isMuted ? (
-            <VolumeX className="w-4 h-4 text-white" />
-          ) : (
-            <Volume2 className="w-4 h-4 text-white" />
-          )}
-        </button>
+        <>
+          <button
+            onClick={() => containerRef.current?.requestFullscreen?.()}
+            className="absolute top-4 right-28 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
+          >
+            <Maximize className="w-4 h-4 text-white" />
+          </button>
+          <button
+            onClick={toggleMute}
+            className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
+          >
+            {isMuted ? (
+              <VolumeX className="w-4 h-4 text-white" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-white" />
+            )}
+          </button>
+        </>
       )}
 
       {/* Mobile swipe hint */}
