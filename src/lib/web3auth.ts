@@ -105,7 +105,7 @@ async function initializeWeb3Auth(): Promise<Web3Auth> {
       uiConfig: {
         appName: "DeHub",
         mode: "dark" as const,
-        loginMethodsOrder: ["google", "twitter", "discord", "apple", "email_passwordless"],
+        loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
         logoLight: "https://dehub.io/default-icon.png",
         logoDark: "https://dehub.io/default-icon-dark.png",
         defaultLanguage: "en",
