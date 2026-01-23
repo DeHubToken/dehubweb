@@ -1,13 +1,14 @@
 /**
  * Web3Auth Configuration with Smart Accounts
  * ============================================
- * Uses Web3Auth's built-in accountAbstractionConfig with Pimlico paymaster.
+ * Uses Web3Auth with AccountAbstractionProvider for embedded wallets.
  * External wallets use EOA directly, embedded wallets get smart accounts.
  */
 
-import { Web3Auth } from "@web3auth/modal";
+import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
 import { supabase } from "@/integrations/supabase/client";
 
 const chainConfig = {
@@ -25,6 +26,7 @@ let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let cachedClientId: string | null = null;
+let cachedPimlicoKey: string | null = null;
 
 async function getWeb3AuthClientId(): Promise<string> {
   if (cachedClientId) return cachedClientId;
@@ -37,11 +39,14 @@ async function getWeb3AuthClientId(): Promise<string> {
 }
 
 async function getPimlicoApiKey(): Promise<string> {
+  if (cachedPimlicoKey) return cachedPimlicoKey;
   const { data, error } = await supabase.functions.invoke("get-pimlico-config");
   if (!error && data?.bundlerUrl) {
-    // Extract API key from the URL
     const match = data.bundlerUrl.match(/apikey=([^&]+)/);
-    if (match) return match[1];
+    if (match) {
+      cachedPimlicoKey = match[1];
+      return cachedPimlicoKey;
+    }
   }
   throw new Error("Pimlico API key not configured");
 }
@@ -54,60 +59,83 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
 
   isInitializing = true;
   initPromise = (async () => {
-    const [clientId, pimlicoApiKey] = await Promise.all([
-      getWeb3AuthClientId(),
-      getPimlicoApiKey(),
-    ]);
+    try {
+      const [clientId, pimlicoApiKey] = await Promise.all([
+        getWeb3AuthClientId(),
+        getPimlicoApiKey(),
+      ]);
 
-    const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
+      const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
-    const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
-
-    web3authInstance = new Web3Auth({
-      clientId,
-      web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-      privateKeyProvider: privateKeyProvider as never,
-      // Configure smart accounts via Web3Auth's built-in AA support
-      accountAbstractionConfig: {
-        smartAccountType: "safe",
-        chains: [
-          {
-            chainId: "0x2105", // Base Mainnet
-            bundlerConfig: {
-              url: pimlicoUrl,
-            },
-            paymasterConfig: {
-              url: pimlicoUrl,
-            },
+      // Create the Account Abstraction Provider for embedded wallets
+      const accountAbstractionProvider = new AccountAbstractionProvider({
+        config: {
+          chainConfig,
+          smartAccountInit: new SafeSmartAccount(),
+          bundlerConfig: {
+            url: pimlicoUrl,
           },
-        ],
-      },
-      // External wallets keep their EOA, only embedded wallets get smart accounts
-      useAAWithExternalWallet: false,
-      uiConfig: {
-        appName: "DeHub",
-        mode: "dark",
-        loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
-        logoLight: "https://dehub.io/default-icon.png",
-        logoDark: "https://dehub.io/default-icon-dark.png",
-        defaultLanguage: "en",
-        primaryButton: "socialLogin",
-      },
-    });
+          paymasterConfig: {
+            url: pimlicoUrl,
+          },
+        },
+      });
 
-    await web3authInstance.init();
-    isInitializing = false;
-    return web3authInstance;
+      // Create the private key provider for the underlying key management
+      const privateKeyProvider = new EthereumPrivateKeyProvider({
+        config: { chainConfig },
+      });
+
+      // Web3Auth v10 modal options with AA provider
+      // Using type assertion to handle version mismatch between packages
+      const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
+        clientId,
+        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        privateKeyProvider: privateKeyProvider as never,
+        accountAbstractionProvider: accountAbstractionProvider as never,
+        // External wallets keep their EOA, only embedded wallets get smart accounts
+        useAAWithExternalWallet: false,
+        uiConfig: {
+          appName: "DeHub",
+          mode: "dark",
+          loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
+          logoLight: "https://dehub.io/default-icon.png",
+          logoDark: "https://dehub.io/default-icon-dark.png",
+          defaultLanguage: "en",
+          primaryButton: "socialLogin",
+        },
+      };
+
+      // Add the AA provider (property exists in v10 runtime but not in v9 types)
+      web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
+
+      web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
+
+      await web3authInstance.init();
+      console.log('[Web3Auth] Initialized successfully, status:', web3authInstance.status);
+      return web3authInstance;
+    } finally {
+      isInitializing = false;
+    }
   })();
 
   return initPromise;
 }
 
-export function getWeb3AuthInstance(): Web3Auth | null { return web3authInstance; }
-export function getWeb3AuthProvider() { return web3authInstance?.provider || null; }
-
-export async function disconnectWeb3Auth(): Promise<void> {
-  if (web3authInstance?.connected) await web3authInstance.logout();
+export function getWeb3AuthInstance(): Web3Auth | null {
+  return web3authInstance;
 }
 
-export function isWeb3AuthConnected(): boolean { return web3authInstance?.connected ?? false; }
+export function getWeb3AuthProvider() {
+  return web3authInstance?.provider || null;
+}
+
+export async function disconnectWeb3Auth(): Promise<void> {
+  if (web3authInstance?.connected) {
+    await web3authInstance.logout();
+  }
+}
+
+export function isWeb3AuthConnected(): boolean {
+  return web3authInstance?.connected ?? false;
+}
