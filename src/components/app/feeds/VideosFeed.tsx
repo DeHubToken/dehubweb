@@ -185,7 +185,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-10" />
+          {/* Right fade only */}
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">

@@ -88,9 +88,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
   return (
     <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="relative">
-        {/* Left fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-zinc-900 to-transparent pointer-events-none z-[1]" />
-        {/* Right fade */}
+        {/* Right fade only */}
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
         
         <div className="flex gap-4 overflow-x-auto scrollbar-hide px-2">

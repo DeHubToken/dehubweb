@@ -342,8 +342,29 @@ export default function AssistantPage() {
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
   const isMobile = useIsMobile();
+
+  // Block access for unauthenticated users
+  if (!isAuthLoading && !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+        <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
+          <Lock className="w-8 h-8 text-white/60" />
+        </div>
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+        <p className="text-white/60 text-center mb-6 max-w-sm">
+          Log in to access the AI Assistant and unlock powerful features like image and video generation.
+        </p>
+        <Button 
+          onClick={() => connect()}
+          className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+        >
+          Log in
+        </Button>
+      </div>
+    );
+  }
   
   // Mention hook for @mentions in input
   const mention = useMention({
