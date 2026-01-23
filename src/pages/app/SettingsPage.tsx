@@ -50,6 +50,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useAuth } from '@/contexts/AuthContext';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -64,6 +65,28 @@ const tabs = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [theme, setTheme] = useState('system');
+  const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
+
+  // Block access for unauthenticated users
+  if (!isAuthLoading && !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+        <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+          <Lock className="w-8 h-8 text-zinc-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+        <p className="text-white/60 text-center mb-6 max-w-sm">
+          Log in to access and manage your account settings.
+        </p>
+        <Button 
+          onClick={() => connect()}
+          className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+        >
+          Log in
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-3 sm:p-4">

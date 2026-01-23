@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, LogIn } from 'lucide-react';
+import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, Lock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 const tabs = [
   { label: 'All', value: 'all', icon: LayoutGrid },
@@ -14,7 +15,28 @@ const tabs = [
 export default function BookmarksPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const isLoggedIn = false; // Mock auth state
+  const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
+
+  // Block access for unauthenticated users
+  if (!isAuthLoading && !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+        <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
+          <Lock className="w-8 h-8 text-zinc-400" />
+        </div>
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+        <p className="text-white/60 text-center mb-6 max-w-sm">
+          Log in to view and manage your saved bookmarks.
+        </p>
+        <Button 
+          onClick={() => connect()}
+          className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+        >
+          Log in
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
@@ -63,34 +85,17 @@ export default function BookmarksPage() {
         </div>
       </div>
 
-      {/* Content Area */}
+      {/* Content Area - Empty State for logged-in users */}
       <div className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
-        {!isLoggedIn ? (
-          /* Login Prompt */
-          <div className="text-center">
-            <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
-              <LogIn className="w-8 h-8 text-zinc-400" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-3">Log in to view bookmarks</h2>
-            <p className="text-zinc-500 mb-6 max-w-sm">
-              Save your favorite posts and access them anytime by logging in to your account.
-            </p>
-            <Button className="bg-white text-black hover:bg-zinc-200 rounded-xl px-8">
-              Log In
-            </Button>
+        <div className="text-center">
+          <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Bookmark className="w-8 h-8 text-zinc-400" />
           </div>
-        ) : (
-          /* Empty State for logged-in users */
-          <div className="text-center">
-            <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Bookmark className="w-8 h-8 text-zinc-400" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-3">No bookmarks yet</h2>
-            <p className="text-zinc-500 max-w-sm">
-              Start saving posts by tapping the bookmark icon on any post you want to save.
-            </p>
-          </div>
-        )}
+          <h2 className="text-xl font-bold text-white mb-3">No bookmarks yet</h2>
+          <p className="text-zinc-500 max-w-sm">
+            Start saving posts by tapping the bookmark icon on any post you want to save.
+          </p>
+        </div>
       </div>
     </div>
   );
