@@ -1,136 +1,141 @@
 /**
  * Web3Auth Configuration with Smart Accounts
  * ============================================
- * Simplified setup following the official MetaMask/Web3Auth documentation:
- * https://docs.metamask.io/tutorials/sending-gasless-transaction
+ * Uses Web3Auth with AccountAbstractionProvider for embedded wallets.
+ * External wallets use EOA directly, embedded wallets get smart accounts.
  */
 
-import { Web3Auth } from "@web3auth/modal";
+import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
 import { supabase } from "@/integrations/supabase/client";
 
-// Base Mainnet chain configuration
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x2105", // 8453 in hex
+  chainId: "0x2105",
   rpcTarget: "https://mainnet.base.org",
   displayName: "Base Mainnet",
   blockExplorerUrl: "https://basescan.org",
   ticker: "ETH",
   tickerName: "Ethereum",
-  logo: "https://basescan.org/assets/base/images/svg/logos/chain-light.svg",
+  logo: "https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0",
 };
 
 let web3authInstance: Web3Auth | null = null;
+let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
+let cachedClientId: string | null = null;
+let cachedPimlicoKey: string | null = null;
 
 async function getWeb3AuthClientId(): Promise<string> {
+  if (cachedClientId) return cachedClientId;
   const { data, error } = await supabase.functions.invoke("get-web3auth-config");
-  if (error || !data?.clientId) {
-    throw new Error("Web3Auth client ID not configured");
+  if (!error && data?.clientId) {
+    cachedClientId = data.clientId;
+    return cachedClientId;
   }
-  return data.clientId;
+  throw new Error("Web3Auth client ID not configured");
 }
 
 async function getPimlicoApiKey(): Promise<string> {
+  if (cachedPimlicoKey) return cachedPimlicoKey;
   const { data, error } = await supabase.functions.invoke("get-pimlico-config");
-  if (error || !data?.bundlerUrl) {
-    throw new Error("Pimlico API key not configured");
+  if (!error && data?.bundlerUrl) {
+    const match = data.bundlerUrl.match(/apikey=([^&]+)/);
+    if (match) {
+      cachedPimlicoKey = match[1];
+      return cachedPimlicoKey;
+    }
   }
-  const match = data.bundlerUrl.match(/apikey=([^&]+)/);
-  if (!match) {
-    throw new Error("Invalid Pimlico bundler URL");
-  }
-  return match[1];
+  throw new Error("Pimlico API key not configured");
 }
 
 export async function getWeb3Auth(): Promise<Web3Auth> {
-  // Return existing instance if ready
   if (web3authInstance?.status === "connected" || web3authInstance?.status === "ready") {
     return web3authInstance;
   }
+  if (isInitializing && initPromise) return initPromise;
 
-  // Return pending initialization
-  if (initPromise) {
-    return initPromise;
-  }
+  isInitializing = true;
+  initPromise = (async () => {
+    try {
+      const [clientId, pimlicoApiKey] = await Promise.all([
+        getWeb3AuthClientId(),
+        getPimlicoApiKey(),
+      ]);
 
-  initPromise = initializeWeb3Auth();
+      const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
+
+      // Create the Account Abstraction Provider for embedded wallets
+      const accountAbstractionProvider = new AccountAbstractionProvider({
+        config: {
+          chainConfig,
+          smartAccountInit: new SafeSmartAccount(),
+          bundlerConfig: {
+            url: pimlicoUrl,
+          },
+          paymasterConfig: {
+            url: pimlicoUrl,
+          },
+        },
+      });
+
+      // Create the private key provider for the underlying key management
+      const privateKeyProvider = new EthereumPrivateKeyProvider({
+        config: { chainConfig },
+      });
+
+       // Web3Auth v10 modal options with AA provider (matches MetaMask tutorial)
+       // Type assertion keeps us compatible with minor type mismatches across SDK packages.
+       const web3AuthOptions: Web3AuthOptions & { accountAbstractionProvider?: unknown } = {
+        clientId,
+        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        privateKeyProvider: privateKeyProvider as never,
+        accountAbstractionProvider: accountAbstractionProvider as never,
+        // External wallets keep their EOA, only embedded wallets get smart accounts
+        useAAWithExternalWallet: false,
+        uiConfig: {
+          appName: "DeHub",
+          mode: "dark",
+          loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
+          logoLight: "https://dehub.io/default-icon.png",
+          logoDark: "https://dehub.io/default-icon-dark.png",
+          defaultLanguage: "en",
+          primaryButton: "socialLogin",
+        },
+      };
+
+       // Add the AA provider (property exists in runtime but may not exist in TS types)
+       web3AuthOptions.accountAbstractionProvider = accountAbstractionProvider;
+
+       web3authInstance = new Web3Auth(web3AuthOptions as Web3AuthOptions);
+
+       // Web3Auth v10 modal SDK requires initModal() (not init()).
+       // Some type versions don't expose initModal(), so call it via runtime check.
+       const w3aAny = web3authInstance as unknown as { initModal?: () => Promise<void>; init?: () => Promise<void> };
+       if (typeof w3aAny.initModal === "function") {
+         await w3aAny.initModal();
+       } else if (typeof w3aAny.init === "function") {
+         await w3aAny.init();
+       }
+       console.log('[Web3Auth] Initialized successfully, status:', web3authInstance.status);
+
+       // If the SDK remains not_ready, attempting connect() typically throws with
+       // "Cannot read properties of null (reading 'loginWithSessionId')".
+       if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
+         throw new Error(
+           `[Web3Auth] Initialization failed (status: ${web3authInstance.status}). ` +
+             `This usually means the configured Client ID/origin is not allowed or the SDK versions are mismatched.`
+         );
+       }
+      return web3authInstance;
+    } finally {
+      isInitializing = false;
+    }
+  })();
+
   return initPromise;
-}
-
-async function initializeWeb3Auth(): Promise<Web3Auth> {
-  try {
-    const [clientId, pimlicoApiKey] = await Promise.all([getWeb3AuthClientId(), getPimlicoApiKey()]);
-
-    const chainId = 8453; // Base Mainnet
-    const pimlicoUrl = `https://api.pimlico.io/v2/${chainId}/rpc?apikey=${pimlicoApiKey}`;
-
-    // Step 1: Configure AccountAbstractionProvider (exactly as in docs)
-    const accountAbstractionProvider = new AccountAbstractionProvider({
-      config: {
-        chainConfig,
-        bundlerConfig: {
-          url: pimlicoUrl,
-        },
-        smartAccountInit: new SafeSmartAccount(),
-        paymasterConfig: {
-          url: pimlicoUrl,
-        },
-      },
-    });
-
-    // Step 2: Configure EthereumPrivateKeyProvider
-    const privateKeyProvider = new EthereumPrivateKeyProvider({
-      config: { chainConfig },
-    });
-
-    // Step 3: Configure Web3Auth (exactly as in docs)
-    // Using type assertion to handle minor SDK type mismatches
-    // Use dashboard configuration for login methods and UI
-    const web3AuthOptions = {
-      clientId,
-      web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-      privateKeyProvider,
-      // accountAbstractionProvider,
-      // Use EOA for external wallets, Smart Account for embedded wallets
-      useAAWithExternalWallet: false,
-      loginConfig: {},
-      // Extended session time (30 days) to reduce re-auth frequency
-      // but this helps with local session management
-      sessionTime: 86400 * 30, // 30 days in seconds
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    web3authInstance = new Web3Auth(web3AuthOptions as any);
-
-    // Step 4: Initialize - v9 uses init(), v10 uses initModal()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const instance = web3authInstance as any;
-    if (typeof instance.initModal === "function") {
-      await instance.initModal();
-    } else {
-      await instance.init();
-    }
-
-    console.log("[Web3Auth] Initialized, status:", web3authInstance.status);
-
-    if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
-      throw new Error(
-        `Web3Auth initialization failed (status: ${web3authInstance.status}). ` +
-          `Check that your origin is allowed in the Web3Auth dashboard.`,
-      );
-    }
-
-    return web3authInstance;
-  } catch (error) {
-    // Reset so next call can retry
-    initPromise = null;
-    web3authInstance = null;
-    throw error;
-  }
 }
 
 export function getWeb3AuthInstance(): Web3Auth | null {
