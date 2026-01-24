@@ -14,6 +14,7 @@ import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 
 const DURATION_OPTIONS = ['All', '< 15s', '15-60s', '> 60s'];
@@ -167,7 +168,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         {showFilters && (
           <div className="mb-4 space-y-3">
             {/* Duration Filter */}
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            <SwipeableCarousel className="flex items-center gap-2 pb-1" showFade={false}>
               <span className="text-zinc-400 text-sm whitespace-nowrap">Duration:</span>
               {DURATION_OPTIONS.map((duration) => (
                 <button
@@ -183,10 +184,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   {duration}
                 </button>
               ))}
-            </div>
+            </SwipeableCarousel>
 
             {/* Category Filter */}
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            <SwipeableCarousel className="flex items-center gap-2 pb-1" showFade={false}>
               <span className="text-zinc-400 text-sm whitespace-nowrap">Category:</span>
               {CATEGORY_OPTIONS.map((category) => (
                 <button
@@ -202,10 +203,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   {category}
                 </button>
               ))}
-            </div>
+            </SwipeableCarousel>
 
             {/* Sort Filter */}
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            <SwipeableCarousel className="flex items-center gap-2 pb-1" showFade={false}>
               <span className="text-zinc-400 text-sm whitespace-nowrap">Sort:</span>
               {SORT_OPTIONS.map((sort) => (
                 <button
@@ -221,10 +222,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   {sort}
                 </button>
               ))}
-            </div>
+            </SwipeableCarousel>
 
             {/* Upload Date Filter */}
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            <SwipeableCarousel className="flex items-center gap-2 pb-1" showFade={false}>
               <span className="text-zinc-400 text-sm whitespace-nowrap">Upload Date:</span>
               {UPLOAD_DATE_OPTIONS.map((date) => (
                 <button
@@ -240,7 +241,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   {date}
                 </button>
               ))}
-            </div>
+            </SwipeableCarousel>
           </div>
         )}
 
