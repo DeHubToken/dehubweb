@@ -28,6 +28,17 @@ export const AI_STYLE_OPTIONS = [
   { id: 'lil-bro', label: 'Lil Bro', emoji: '👦' },
   { id: 'big-sister', label: 'Big Sister', emoji: '👧' },
   { id: 'little-sister', label: 'Little Sister', emoji: '👶' },
+  // Political & Ideological personalities
+  { id: 'conservative', label: 'Conservative', emoji: '🐘' },
+  { id: 'liberal', label: 'Liberal', emoji: '🗽' },
+  { id: 'antifa', label: 'ANTIFA', emoji: '✊' },
+  { id: 'capitalist', label: 'Capitalist', emoji: '💰' },
+  { id: 'socialist', label: 'Socialist', emoji: '🌹' },
+  { id: 'neocon', label: 'Neocon', emoji: '🦅' },
+  { id: 'feminist', label: 'Feminist', emoji: '♀️' },
+  { id: 'progressive', label: 'Progressive', emoji: '🌈' },
+  { id: 'nationalist', label: 'Nationalist', emoji: '🏳️' },
+  { id: 'communist', label: 'Communist', emoji: '☭' },
 ] as const;
 
 // For AI Assistant - includes "Normal" as first option
