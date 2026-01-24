@@ -248,11 +248,15 @@ export default function LeaderboardPage() {
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2">
                     {rank <= 3 ? (
-                      <div className="medal-shine-container">
+                      <div className="medal-shine-container w-8 h-8">
                         <img 
                           src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
                           alt={`Rank ${rank}`} 
                           className="w-8 h-8 object-contain"
+                        />
+                        <div 
+                          className="medal-shine-overlay"
+                          style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
                         />
                       </div>
                     ) : (
