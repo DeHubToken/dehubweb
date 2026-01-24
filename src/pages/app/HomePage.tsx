@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Settings2, Loader2 } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -64,6 +64,9 @@ export default function HomePage() {
   // Swipe gesture refs
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
+  
+  // Feed container ref for pull-to-refresh constraint
+  const feedContainerRef = useRef<HTMLDivElement>(null);
 
   // --------------------------------------------------------------------------
   // REFRESH HANDLER
@@ -96,6 +99,7 @@ export default function HomePage() {
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
+    containerRef: feedContainerRef,
   });
 
   // --------------------------------------------------------------------------
@@ -244,16 +248,7 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   return (
-    <div 
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onMouseDown={pullHandlers.onMouseDown}
-      onMouseMove={pullHandlers.onMouseMove}
-      onMouseUp={pullHandlers.onMouseUp}
-      onMouseLeave={pullHandlers.onMouseLeave}
-    >
-
+    <div>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">
@@ -283,8 +278,19 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Feed Content */}
-      {renderFeed()}
+      {/* Feed Content - Pull-to-refresh only works within this container */}
+      <div 
+        ref={feedContainerRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={pullHandlers.onMouseDown}
+        onMouseMove={pullHandlers.onMouseMove}
+        onMouseUp={pullHandlers.onMouseUp}
+        onMouseLeave={pullHandlers.onMouseLeave}
+      >
+        {renderFeed()}
+      </div>
 
       {/* Settings Modal */}
       <FeedSettingsModal
