@@ -39,7 +39,7 @@ const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
 const TRACKPAD_THRESHOLD = 50;
 /** Delay to detect gesture end (ms) */
-const GESTURE_END_DELAY = 120;
+const GESTURE_END_DELAY = 50;
 
 // ============================================================================
 // MAIN COMPONENT
