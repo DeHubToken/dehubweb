@@ -87,14 +87,21 @@ export function CardHeader({
         disabled={!isClickable}
         className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
       >
-        <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-          <div className="p-0.5 bg-zinc-900 rounded-full">
-            <Avatar className="w-8 h-8">
-              <AvatarImage src={avatarSrc} />
-              <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
-            </Avatar>
+        {isLive ? (
+          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-full">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={avatarSrc} />
+                <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
+              </Avatar>
+            </div>
           </div>
-        </div>
+        ) : (
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={avatarSrc} />
+            <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
+          </Avatar>
+        )}
         <div className="flex items-center gap-1">
           <span className="font-semibold text-white text-sm">{username}</span>
           {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}

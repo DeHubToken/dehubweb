@@ -28,6 +28,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 interface StoryUser {
   name: string;
   avatar: string;
+  /** Whether this user has an active story or is live */
+  hasStory?: boolean;
 }
 
 interface StoriesBarProps {
@@ -119,14 +121,21 @@ export function StoriesBar({ users }: StoriesBarProps) {
           {/* User Stories */}
           {users.map((user) => (
             <div key={user.name} className="flex flex-col items-center gap-1 flex-shrink-0">
-              <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                <div className="p-0.5 bg-zinc-900 rounded-full">
-                  <Avatar className="w-14 h-14">
-                    <AvatarImage src={user.avatar} className="object-cover" />
-                    <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
+              {user.hasStory !== false ? (
+                <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+                  <div className="p-0.5 bg-zinc-900 rounded-full">
+                    <Avatar className="w-14 h-14">
+                      <AvatarImage src={user.avatar} className="object-cover" />
+                      <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <Avatar className="w-14 h-14">
+                  <AvatarImage src={user.avatar} className="object-cover" />
+                  <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
+                </Avatar>
+              )}
               <span className="text-xs text-zinc-400 truncate w-16 text-center">{user.name}</span>
             </div>
           ))}
