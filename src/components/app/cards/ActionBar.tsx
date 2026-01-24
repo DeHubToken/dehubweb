@@ -57,6 +57,8 @@ interface ActionBarProps {
   dislikeCount?: number;
   /** Comment count to display */
   commentCount?: number;
+  /** Share count to display */
+  shareCount?: number;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -82,6 +84,7 @@ export function ActionBar({
   likeCount,
   dislikeCount,
   commentCount,
+  shareCount,
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -245,15 +248,20 @@ export function ActionBar({
           {/* Share - Bottom sheet for all devices with liquid glass effect */}
           <button 
             onClick={() => setSheetOpen(true)}
-            className="text-white hover:text-zinc-400 transition-colors"
+            className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
             aria-label="Share"
           >
             <Share2 className="w-5 h-5" />
+            <span className="text-xs text-zinc-400">{formatCount(shareCount)}</span>
           </button>
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetContent 
               side="bottom" 
-              className="bg-white/10 backdrop-blur-2xl border-0 border-t border-white/20 rounded-t-3xl shadow-[0_-10px_60px_-15px_rgba(255,255,255,0.1)]"
+              className="bg-black/40 border-0 border-t border-white/10 rounded-t-3xl shadow-[0_-10px_60px_-15px_rgba(255,255,255,0.1)]"
+              style={{ 
+                backdropFilter: 'blur(24px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(24px) saturate(180%)'
+              }}
             >
               <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
               <SheetHeader className="relative">
