@@ -19,6 +19,7 @@ import apexCategory from '@/assets/apex-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 const CATEGORIES = [
   { name: 'Just Chatting', viewers: '412K', image: justchattingCategory },
@@ -159,7 +160,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
           {/* Right fade only */}
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
+          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
             {CATEGORIES.map((cat) => (
               <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
                 <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2">
@@ -169,7 +170,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
                 <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
               </div>
             ))}
-          </div>
+          </SwipeableCarousel>
         </div>
       </div>
     </div>

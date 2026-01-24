@@ -16,6 +16,7 @@ import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 
 // Category images
@@ -113,7 +114,7 @@ function LiveCategoriesCarousel() {
       </div>
       <div className="relative">
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
+        <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
           {LIVE_CATEGORIES.map((cat) => (
             <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
               <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2 relative">
@@ -124,7 +125,7 @@ function LiveCategoriesCarousel() {
               <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
             </div>
           ))}
-        </div>
+        </SwipeableCarousel>
       </div>
     </div>
   );
@@ -287,7 +288,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           {/* Right fade only */}
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
+          <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
             {CATEGORY_PILLS.map((cat) => (
               <button
                 key={cat}
@@ -300,7 +301,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 {cat}
               </button>
             ))}
-          </div>
+          </SwipeableCarousel>
         </div>
       </div>
 
@@ -349,7 +350,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           {/* Mobile: Horizontally swipeable */}
           <div className="sm:hidden relative">
             <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
               {videos.slice(0, 3).map((video) => (
                 <div 
                   key={`featured-mobile-${video.id}`}
@@ -385,7 +386,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   </div>
                 </div>
               ))}
-            </div>
+            </SwipeableCarousel>
           </div>
         </div>
       )}
