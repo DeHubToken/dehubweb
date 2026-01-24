@@ -186,72 +186,80 @@ export function TranslatableText({
     return <Component className={className}>{text}</Component>;
   }
 
+  // Render text inline, with translate controls appearing after
+  const renderTranslateControl = () => {
+    if (isTranslated) {
+      return (
+        <button
+          onClick={handleShowOriginal}
+          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-400 transition-colors mt-1"
+        >
+          <RotateCcw className="w-3 h-3" />
+          <span>
+            Translated from {LANGUAGE_NAMES[sourceLang || ''] || sourceLang}
+            {' • Show original'}
+          </span>
+        </button>
+      );
+    }
+
+    if (isDetecting) {
+      return (
+        <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
+          <Loader2 className="w-3 h-3 animate-spin" />
+          <span>Detecting language...</span>
+        </span>
+      );
+    }
+
+    if (shouldOfferTranslation) {
+      return (
+        <button
+          onClick={handleTranslate}
+          disabled={isLoading}
+          className={cn(
+            "flex items-center gap-1.5 text-xs transition-colors mt-1",
+            error 
+              ? "text-red-400" 
+              : "text-blue-400 hover:text-blue-300"
+          )}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="w-3 h-3 animate-spin" />
+              <span>Translating...</span>
+            </>
+          ) : error ? (
+            <span>{error}</span>
+          ) : (
+            <>
+              <Globe className="w-3 h-3" />
+              <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
+            </>
+          )}
+        </button>
+      );
+    }
+
+    return null;
+  };
+
   return (
-    <div className="space-y-1">
+    <>
       <AnimatePresence mode="wait">
-        {isTranslated ? (
-          <motion.div
-            key="translated"
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Component className={className}>{translatedText}</Component>
-            <button
-              onClick={handleShowOriginal}
-              className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-400 transition-colors mt-1"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span>
-                Translated from {LANGUAGE_NAMES[sourceLang || ''] || sourceLang}
-                {' • Show original'}
-              </span>
-            </button>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="original"
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Component className={className}>{text}</Component>
-            {isDetecting ? (
-              <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
-                <Loader2 className="w-3 h-3 animate-spin" />
-                <span>Detecting language...</span>
-              </span>
-            ) : shouldOfferTranslation ? (
-              <button
-                onClick={handleTranslate}
-                disabled={isLoading}
-                className={cn(
-                  "flex items-center gap-1.5 text-xs transition-colors mt-1",
-                  error 
-                    ? "text-red-400" 
-                    : "text-blue-400 hover:text-blue-300"
-                )}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    <span>Translating...</span>
-                  </>
-                ) : error ? (
-                  <span>{error}</span>
-                ) : (
-                  <>
-                    <Globe className="w-3 h-3" />
-                    <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
-                  </>
-                )}
-              </button>
-            ) : null}
-          </motion.div>
-        )}
+        <motion.div
+          key={isTranslated ? 'translated' : 'original'}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+        >
+          <Component className={className}>
+            {isTranslated ? translatedText : text}
+          </Component>
+        </motion.div>
       </AnimatePresence>
-    </div>
+      {renderTranslateControl()}
+    </>
   );
 }
