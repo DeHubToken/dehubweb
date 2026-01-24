@@ -8,6 +8,9 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck } from 'lucide-react';
 import trophyIcon from '@/assets/trophy-icon.png';
+import medal1 from '@/assets/medal-1.png';
+import medal2 from '@/assets/medal-2.png';
+import medal3 from '@/assets/medal-3.png';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -244,9 +247,17 @@ export default function LeaderboardPage() {
                 >
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2">
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${getRankStyle(rank)}`}>
-                      {rank}
-                    </div>
+                    {rank <= 3 ? (
+                      <img 
+                        src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
+                        alt={`Rank ${rank}`} 
+                        className="w-8 h-8 object-contain"
+                      />
+                    ) : (
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${getRankStyle(rank)}`}>
+                        {rank}
+                      </div>
+                    )}
                   </div>
 
                   {/* User */}
