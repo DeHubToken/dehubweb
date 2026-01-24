@@ -8,12 +8,25 @@
  */
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Loader2, RefreshCw, Video } from 'lucide-react';
+import { Loader2, RefreshCw, Video, Play, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
+import { getMediaUrl } from '@/lib/api/dehub';
+import type { ShortVideo } from '@/types/feed.types';
+
+// Category images
+import minecraftCategory from '@/assets/minecraft-category.png';
+import codCategory from '@/assets/cod-category.png';
+import gtaCategory from '@/assets/gta-category.png';
+import fortniteCategory from '@/assets/fortnite-category.png';
+import valorantCategory from '@/assets/valorant-category.png';
+import leagueCategory from '@/assets/league-category.png';
+import apexCategory from '@/assets/apex-category.png';
+import justchattingCategory from '@/assets/justchatting-category.png';
 
 // ============================================================================
 // TYPES
@@ -41,9 +54,81 @@ const SORT_MAP: Record<string, 'new' | 'popular' | 'trending'> = {
   'Most Commented': 'trending',
 };
 
+const LIVE_CATEGORIES_INSERT_AFTER = 5;
+const SHORTS_INSERT_AFTER = 9;
+
+const LIVE_CATEGORIES = [
+  { name: 'Just Chatting', viewers: '412K', image: justchattingCategory },
+  { name: 'Fortnite', viewers: '189K', image: fortniteCategory },
+  { name: 'Valorant', viewers: '156K', image: valorantCategory },
+  { name: 'Minecraft', viewers: '134K', image: minecraftCategory },
+  { name: 'League of Legends', viewers: '298K', image: leagueCategory },
+  { name: 'Call of Duty', viewers: '167K', image: codCategory },
+  { name: 'GTA V', viewers: '145K', image: gtaCategory },
+  { name: 'Apex Legends', viewers: '112K', image: apexCategory },
+];
+
+// Helper to format counts
+function formatCount(count: number): string {
+  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return count.toString();
+}
+
+// Map NFT to ShortVideo format
+function mapNFTToShortVideo(nft: any): ShortVideo {
+  const id = String(nft.tokenId || nft.id || nft.token_id);
+  
+  return {
+    id,
+    type: 'short',
+    username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
+    verified: nft.creator?.is_verified || false,
+    likes: formatCount(nft.totalVotes?.for || nft.like_count || 0),
+    thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
+    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
+    description: nft.description || nft.name || nft.title || '',
+    sound: 'Original Sound',
+    comments: formatCount(nft.commentCount || nft.comment_count || 0),
+    shares: formatCount(Math.floor(Math.random() * 1000)),
+  };
+}
+
 // ============================================================================
 // SUB-COMPONENTS
 // ============================================================================
+
+// Live Categories Carousel
+function LiveCategoriesCarousel() {
+  return (
+    <div className="bg-zinc-900 rounded-2xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-bold text-white flex items-center gap-2">
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          Live Categories
+        </h3>
+        <button className="text-red-400 text-sm hover:underline flex items-center gap-1">
+          See all <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+      <div className="relative">
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
+          {LIVE_CATEGORIES.map((cat) => (
+            <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
+              <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2 relative">
+                <img src={cat.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              </div>
+              <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
+              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface FilterSectionProps {
   label: string;
@@ -98,9 +183,16 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     isError,
     refetch,
   } = useDeHubVideos({
-    unit: 15,
+    unit: 20,
     sortMode: SORT_MAP[selectedSort] || 'new',
     category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+    address: walletAddress || undefined,
+  });
+
+  // Fetch shorts for the carousel
+  const { data: shortsData } = useDeHubVideos({
+    unit: 10,
+    sortMode: 'popular',
     address: walletAddress || undefined,
   });
 
@@ -115,6 +207,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
   }, [apiData]);
+
+  // Map shorts data
+  const shorts = useMemo((): ShortVideo[] => {
+    if (!shortsData?.pages) return [];
+    const allNFTs = shortsData.pages.flatMap(page => page.data || []);
+    return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
+  }, [shortsData]);
 
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
@@ -297,10 +396,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       ) : (
         <>
           <div className="space-y-3">
-            {/* Skip first 3 videos if featured row is shown */}
-            {(videos.length >= 3 ? videos.slice(3) : videos).map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
+            {/* Skip first 3 videos if featured row is shown, then insert carousels at intervals */}
+            {(videos.length >= 3 ? videos.slice(3) : videos).map((video, index) => {
+              const elements: React.ReactNode[] = [];
+              
+              // Add video card
+              elements.push(<VideoCard key={video.id} video={video} />);
+              
+              // Insert live categories carousel after 5 posts (index 4, since 0-indexed)
+              if (index === LIVE_CATEGORIES_INSERT_AFTER - 1) {
+                elements.push(<LiveCategoriesCarousel key="live-categories-carousel" />);
+              }
+              
+              // Insert shorts carousel after 9 posts (index 8)
+              if (index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0) {
+                elements.push(<ShortsReel key="shorts-carousel" shorts={shorts} />);
+              }
+              
+              return elements;
+            })}
           </div>
 
           {/* Infinite scroll loader */}
