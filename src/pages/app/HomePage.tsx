@@ -64,6 +64,8 @@ export default function HomePage() {
   // Swipe gesture refs
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchEndY = useRef<number | null>(null);
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
@@ -179,12 +181,15 @@ export default function HomePage() {
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
     touchEndX.current = null;
+    touchEndY.current = null;
     pullHandlers.onTouchStart(e);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
+    touchEndY.current = e.touches[0].clientY;
     pullHandlers.onTouchMove(e);
     
     // Prevent native browser pull-to-refresh when custom pull is active
@@ -197,25 +202,44 @@ export default function HomePage() {
     pullHandlers.onTouchEnd();
     
     // Handle horizontal swipe for tab switching
-    if (!touchStartX.current || !touchEndX.current) return;
+    if (!touchStartX.current || !touchEndX.current || 
+        !touchStartY.current || !touchEndY.current) {
+      // Reset refs if incomplete
+      touchStartX.current = null;
+      touchEndX.current = null;
+      touchStartY.current = null;
+      touchEndY.current = null;
+      return;
+    }
     
-    const distance = touchStartX.current - touchEndX.current;
-    const isLeftSwipe = distance > SWIPE_THRESHOLD;
-    const isRightSwipe = distance < -SWIPE_THRESHOLD;
+    const deltaX = touchStartX.current - touchEndX.current;
+    const deltaY = Math.abs(touchStartY.current - touchEndY.current);
+    const absDeltaX = Math.abs(deltaX);
     
-    const tabValues = FEED_TABS.map(tab => tab.value);
-    const currentIndex = tabValues.indexOf(activeTab);
+    // Only switch tabs if horizontal movement clearly dominates vertical
+    // This prevents vertical scrolling from accidentally triggering tab changes
+    const isHorizontalSwipe = absDeltaX > SWIPE_THRESHOLD && absDeltaX > deltaY * 1.5;
     
-    if (isLeftSwipe && currentIndex < tabValues.length - 1) {
-      setActiveTab(tabValues[currentIndex + 1]);
-      resetFilters();
-    } else if (isRightSwipe && currentIndex > 0) {
-      setActiveTab(tabValues[currentIndex - 1]);
-      resetFilters();
+    if (isHorizontalSwipe) {
+      const isLeftSwipe = deltaX > 0;
+      const isRightSwipe = deltaX < 0;
+      
+      const tabValues = FEED_TABS.map(tab => tab.value);
+      const currentIndex = tabValues.indexOf(activeTab);
+      
+      if (isLeftSwipe && currentIndex < tabValues.length - 1) {
+        setActiveTab(tabValues[currentIndex + 1]);
+        resetFilters();
+      } else if (isRightSwipe && currentIndex > 0) {
+        setActiveTab(tabValues[currentIndex - 1]);
+        resetFilters();
+      }
     }
     
     touchStartX.current = null;
     touchEndX.current = null;
+    touchStartY.current = null;
+    touchEndY.current = null;
   };
 
   // --------------------------------------------------------------------------
