@@ -41,11 +41,20 @@ function ImageCarousel({ images }: { images: string[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   // Gesture lock refs for trackpad navigation
-  const gestureTriggered = useRef(false);
+  const gestureTriggered = useRef(true); // Start locked to ignore bleed-through from tab switches
   const gestureLockTimeout = useRef<NodeJS.Timeout | null>(null);
   
   const TRACKPAD_THRESHOLD = 50;
   const GESTURE_LOCK_DURATION = 400;
+  const MOUNT_COOLDOWN = 300; // Ignore gestures for 300ms after mount
+  
+  // Unlock after mount cooldown
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      gestureTriggered.current = false;
+    }, MOUNT_COOLDOWN);
+    return () => clearTimeout(timer);
+  }, []);
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
