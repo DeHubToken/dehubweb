@@ -260,7 +260,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           commentCount={post.comments}
         />
         
-        <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
+        
         
         {/* Title & Description */}
         <FeedDescription 
