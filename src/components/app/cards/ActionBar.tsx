@@ -61,10 +61,10 @@ interface ActionBarProps {
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
 function formatCount(count?: number): string {
-  if (!count || count === 0) return '';
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  return count.toString();
+  const value = count ?? 0;
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return value.toString();
 }
 
 export function ActionBar({ 
@@ -214,9 +214,7 @@ export function ActionBar({
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
-            {formatCount(likeCount) && (
-              <span className="text-xs text-zinc-400">{formatCount(likeCount)}</span>
-            )}
+            <span className="text-xs text-zinc-400">{formatCount(likeCount)}</span>
           </motion.button>
           {!hideDislike && (
             <motion.button 
@@ -232,9 +230,7 @@ export function ActionBar({
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
-              {formatCount(dislikeCount) && (
-                <span className="text-xs text-zinc-400">{formatCount(dislikeCount)}</span>
-              )}
+              <span className="text-xs text-zinc-400">{formatCount(dislikeCount)}</span>
             </motion.button>
           )}
           <button 
@@ -243,9 +239,7 @@ export function ActionBar({
             aria-label="Comment"
           >
             <MessageSquare className="w-5 h-5" />
-            {formatCount(commentCount) && (
-              <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
-            )}
+            <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
           </button>
           
           {/* Share - Bottom sheet for all devices with liquid glass effect */}
