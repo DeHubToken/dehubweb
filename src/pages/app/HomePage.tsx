@@ -37,9 +37,11 @@ import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 const SWIPE_THRESHOLD = 50;
 const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
-const TRACKPAD_THRESHOLD = 50;
-/** Delay to detect gesture end (ms) */
-const GESTURE_END_DELAY = 50;
+const TRACKPAD_THRESHOLD = 100;
+/** Debounce time for trackpad swipes (ms) */
+const TRACKPAD_DEBOUNCE = 150;
+/** Cooldown after tab switch to prevent double-jumps (ms) */
+const TAB_SWITCH_COOLDOWN = 500;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -75,8 +77,9 @@ export default function HomePage() {
   // Trackpad swipe refs
   const wheelDeltaX = useRef(0);
   const wheelDeltaY = useRef(0);
-  const isGestureLocked = useRef(false);
-  const gestureEndTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastWheelTime = useRef(0);
+  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastTabSwitchTime = useRef(0);
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
@@ -263,55 +266,61 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    // Clear any pending gesture end timeout
-    if (gestureEndTimeout.current) {
-      clearTimeout(gestureEndTimeout.current);
-    }
+    const now = Date.now();
     
-    // If locked, just wait for gesture to end
-    if (isGestureLocked.current) {
-      gestureEndTimeout.current = setTimeout(() => {
-        isGestureLocked.current = false;
-        wheelDeltaX.current = 0;
-        wheelDeltaY.current = 0;
-      }, GESTURE_END_DELAY);
+    // Cooldown after tab switch to prevent double-jumps
+    if (now - lastTabSwitchTime.current < TAB_SWITCH_COOLDOWN) {
       return;
     }
     
-    // Accumulate
+    // Reset accumulator if too much time has passed
+    if (now - lastWheelTime.current > TRACKPAD_DEBOUNCE) {
+      wheelDeltaX.current = 0;
+      wheelDeltaY.current = 0;
+    }
+    lastWheelTime.current = now;
+    
+    // Accumulate deltas
     wheelDeltaX.current += e.deltaX;
     wheelDeltaY.current += Math.abs(e.deltaY);
     
-    // Only trigger if horizontal dominates
+    // Clear any pending timeout
+    if (wheelTimeout.current) {
+      clearTimeout(wheelTimeout.current);
+    }
+    
+    // Only trigger if horizontal movement dominates vertical
     const absDeltaX = Math.abs(wheelDeltaX.current);
     if (absDeltaX > TRACKPAD_THRESHOLD && absDeltaX > wheelDeltaY.current * 1.5) {
       const tabValues = FEED_TABS.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
-      let switched = false;
       if (wheelDeltaX.current > 0 && currentIndex < tabValues.length - 1) {
-        flushSync(() => setActiveTab(tabValues[currentIndex + 1]));
+        // Swipe left (next tab)
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex + 1]);
+        });
         resetFilters();
-        switched = true;
+        lastTabSwitchTime.current = now;
       } else if (wheelDeltaX.current < 0 && currentIndex > 0) {
-        flushSync(() => setActiveTab(tabValues[currentIndex - 1]));
+        // Swipe right (previous tab)
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex - 1]);
+        });
         resetFilters();
-        switched = true;
+        lastTabSwitchTime.current = now;
       }
       
-      if (switched) {
-        isGestureLocked.current = true;
-        wheelDeltaX.current = 0;
-        wheelDeltaY.current = 0;
-      }
-    }
-    
-    // Unlock when gesture ends (no events for GESTURE_END_DELAY)
-    gestureEndTimeout.current = setTimeout(() => {
-      isGestureLocked.current = false;
+      // Reset after triggering
       wheelDeltaX.current = 0;
       wheelDeltaY.current = 0;
-    }, GESTURE_END_DELAY);
+    }
+    
+    // Reset accumulators after gesture ends
+    wheelTimeout.current = setTimeout(() => {
+      wheelDeltaX.current = 0;
+      wheelDeltaY.current = 0;
+    }, TRACKPAD_DEBOUNCE);
   }, [activeTab, resetFilters]);
 
   // --------------------------------------------------------------------------
