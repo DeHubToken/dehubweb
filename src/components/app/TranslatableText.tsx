@@ -2,14 +2,15 @@
  * Translatable Text Component
  * ===========================
  * Wraps text content and offers translation when foreign language detected.
- * Uses client-side heuristics to detect non-native content.
+ * Uses hybrid detection: instant regex for non-Latin + AI for Latin scripts.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Globe, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
+import { getCachedLanguage, cacheLanguage } from '@/lib/language-detection-cache';
 import { cn } from '@/lib/utils';
 
 interface TranslatableTextProps {
@@ -21,8 +22,11 @@ interface TranslatableTextProps {
 // Translation cache to avoid repeat API calls
 const translationCache = new Map<string, { translated: string; sourceLang: string }>();
 
-// Detect if text contains non-Latin scripts
-function detectForeignScript(text: string): string | null {
+// Minimum text length for AI detection (avoid detecting single words)
+const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
+
+// Detect if text contains non-Latin scripts (instant, no API needed)
+function detectNonLatinScript(text: string): string | null {
   const patterns: [RegExp, string][] = [
     [/[\u3040-\u309F]/, 'ja'], // Hiragana
     [/[\u30A0-\u30FF]/, 'ja'], // Katakana
@@ -46,6 +50,13 @@ function detectForeignScript(text: string): string | null {
   return null;
 }
 
+// Check if text is predominantly ASCII/Latin
+function isLatinText(text: string): boolean {
+  const latinChars = text.match(/[a-zA-Z]/g)?.length || 0;
+  const totalChars = text.replace(/\s/g, '').length;
+  return totalChars > 0 && latinChars / totalChars > 0.7;
+}
+
 export function TranslatableText({ 
   text, 
   className,
@@ -57,10 +68,75 @@ export function TranslatableText({
   const [sourceLang, setSourceLang] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Language detection state
+  const [detectedLang, setDetectedLang] = useState<string | null>(null);
+  const [isDetecting, setIsDetecting] = useState(false);
 
-  // Detect if translation should be offered
-  const detectedLang = useMemo(() => detectForeignScript(text), [text]);
-  const shouldOfferTranslation = detectedLang && detectedLang !== userLang;
+  // Instant detection for non-Latin scripts
+  const nonLatinLang = useMemo(() => detectNonLatinScript(text), [text]);
+  
+  // Check if text is Latin-based and long enough for detection
+  const needsAIDetection = useMemo(() => {
+    if (nonLatinLang) return false; // Already detected via regex
+    if (text.length < MIN_TEXT_LENGTH_FOR_DETECTION) return false;
+    if (!isLatinText(text)) return false;
+    return true;
+  }, [text, nonLatinLang]);
+
+  // AI-powered language detection for Latin scripts
+  useEffect(() => {
+    if (!needsAIDetection) {
+      setDetectedLang(nonLatinLang);
+      return;
+    }
+
+    // Check cache first
+    const cached = getCachedLanguage(text);
+    if (cached) {
+      setDetectedLang(cached);
+      return;
+    }
+
+    // Call AI detection
+    const detectLanguage = async () => {
+      setIsDetecting(true);
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke('detect-language', {
+          body: { text: text.slice(0, 100) },
+        });
+
+        if (fnError) {
+          console.error('Language detection error:', fnError);
+          setDetectedLang(null);
+          return;
+        }
+
+        const lang = data?.language || null;
+        if (lang) {
+          cacheLanguage(text, lang);
+          setDetectedLang(lang);
+        }
+      } catch (err) {
+        console.error('Language detection failed:', err);
+        setDetectedLang(null);
+      } finally {
+        setIsDetecting(false);
+      }
+    };
+
+    detectLanguage();
+  }, [text, needsAIDetection, nonLatinLang]);
+
+  // Determine if translation should be offered
+  const shouldOfferTranslation = useMemo(() => {
+    const langToCheck = detectedLang || nonLatinLang;
+    if (!langToCheck) return false;
+    if (langToCheck === userLang) return false;
+    // If user's language is English and detected is English, don't offer
+    if (userLang === 'en' && langToCheck === 'en') return false;
+    return true;
+  }, [detectedLang, nonLatinLang, userLang]);
 
   const handleTranslate = async () => {
     const cacheKey = `${text}-${userLang}`;
@@ -85,7 +161,7 @@ export function TranslatableText({
       if (fnError) throw fnError;
 
       const translated = data.translatedText;
-      const detected = data.detectedLanguage?.language || detectedLang || 'unknown';
+      const detected = data.detectedLanguage?.language || detectedLang || nonLatinLang || 'unknown';
 
       // Cache the result
       translationCache.set(cacheKey, { translated, sourceLang: detected });
@@ -105,8 +181,8 @@ export function TranslatableText({
     setIsTranslated(false);
   };
 
-  // If no translation needed, just render the text
-  if (!shouldOfferTranslation) {
+  // If no translation needed and not detecting, just render the text
+  if (!shouldOfferTranslation && !isDetecting) {
     return <Component className={className}>{text}</Component>;
   }
 
@@ -142,30 +218,37 @@ export function TranslatableText({
             transition={{ duration: 0.2 }}
           >
             <Component className={className}>{text}</Component>
-            <button
-              onClick={handleTranslate}
-              disabled={isLoading}
-              className={cn(
-                "flex items-center gap-1.5 text-xs transition-colors mt-1",
-                error 
-                  ? "text-red-400" 
-                  : "text-blue-400 hover:text-blue-300"
-              )}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                  <span>Translating...</span>
-                </>
-              ) : error ? (
-                <span>{error}</span>
-              ) : (
-                <>
-                  <Globe className="w-3 h-3" />
-                  <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
-                </>
-              )}
-            </button>
+            {isDetecting ? (
+              <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span>Detecting language...</span>
+              </span>
+            ) : shouldOfferTranslation ? (
+              <button
+                onClick={handleTranslate}
+                disabled={isLoading}
+                className={cn(
+                  "flex items-center gap-1.5 text-xs transition-colors mt-1",
+                  error 
+                    ? "text-red-400" 
+                    : "text-blue-400 hover:text-blue-300"
+                )}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <span>Translating...</span>
+                  </>
+                ) : error ? (
+                  <span>{error}</span>
+                ) : (
+                  <>
+                    <Globe className="w-3 h-3" />
+                    <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
+                  </>
+                )}
+              </button>
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>
