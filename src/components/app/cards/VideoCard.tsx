@@ -21,12 +21,12 @@ import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
 
 interface VideoCardProps {
@@ -358,20 +358,17 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           >
             <Sparkles className="w-5 h-5" />
           </motion.button>
-          <Sheet>
-            <SheetTrigger asChild>
+          <Drawer>
+            <DrawerTrigger asChild>
               <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                 <MoreVertical className="w-5 h-5" />
               </button>
-            </SheetTrigger>
-            <SheetContent 
-              side="bottom" 
-              className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-2xl"
-            >
-              <SheetHeader className="pb-2">
-                <SheetTitle className="text-white text-lg">Options</SheetTitle>
-              </SheetHeader>
-              <div className="flex flex-col gap-1 pb-4">
+            </DrawerTrigger>
+            <DrawerContent glass className="px-4 pb-6">
+              <DrawerHeader className="pb-2">
+                <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex flex-col gap-1">
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
                 </button>
@@ -391,8 +388,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                   <Ban className="w-5 h-5" /> Block Creator
                 </button>
               </div>
-            </SheetContent>
-          </Sheet>
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
 
