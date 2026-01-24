@@ -21,6 +21,7 @@ import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
+import { FullscreenImageViewer } from './FullscreenImageViewer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,7 +38,13 @@ interface ImageCardProps {
  * Instagram-style image carousel component
  * Supports swipe navigation with dot indicators
  */
-function ImageCarousel({ images }: { images: string[] }) {
+function ImageCarousel({ 
+  images, 
+  onImageClick 
+}: { 
+  images: string[];
+  onImageClick: (index: number) => void;
+}) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
   
@@ -111,7 +118,10 @@ function ImageCarousel({ images }: { images: string[] }) {
         <div className="flex">
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
-              <div className="aspect-square bg-zinc-800">
+              <div 
+                className="aspect-square bg-zinc-800 cursor-pointer"
+                onClick={() => onImageClick(idx)}
+              >
                 <img 
                   src={img} 
                   alt="" 
@@ -237,11 +247,18 @@ function FeedDescription({
 export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [fullscreenOpen, setFullscreenOpen] = useState(false);
+  const [fullscreenIndex, setFullscreenIndex] = useState(0);
 
   // Get images array - use imageUrls if available, otherwise fall back to single image
   const images = post.imageUrls && post.imageUrls.length > 0 
     ? post.imageUrls 
     : [post.image];
+
+  const handleImageClick = (index: number) => {
+    setFullscreenIndex(index);
+    setFullscreenOpen(true);
+  };
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -291,7 +308,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <SwipeableCarousel>
-        <ImageCarousel images={images} />
+        <ImageCarousel images={images} onImageClick={handleImageClick} />
       </SwipeableCarousel>
 
       {/* Info & Actions */}
@@ -344,6 +361,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           caption: post.description || post.title || post.caption,
           imageUrl: post.image
         }}
+      />
+
+      {/* Fullscreen Image Viewer */}
+      <FullscreenImageViewer
+        images={images}
+        initialIndex={fullscreenIndex}
+        isOpen={fullscreenOpen}
+        onClose={() => setFullscreenOpen(false)}
       />
     </div>
   );
