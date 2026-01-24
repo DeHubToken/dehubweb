@@ -6,7 +6,8 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Trophy, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck } from 'lucide-react';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck } from 'lucide-react';
+import trophyIcon from '@/assets/trophy-icon.png';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -132,8 +133,8 @@ export default function LeaderboardPage() {
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center">
-            <Trophy className="w-6 h-6 text-yellow-500" />
+          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+            <img src={trophyIcon} alt="Trophy" className="w-10 h-10 object-contain" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">DHB Leaderboard</h1>
