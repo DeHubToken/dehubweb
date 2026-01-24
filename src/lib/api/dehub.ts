@@ -156,6 +156,11 @@ export interface DeHubNFT {
   // User interaction state (returned when address param is provided)
   isLiked?: boolean;
   isDisliked?: boolean;
+
+  // Blockchain data
+  chainId?: number; // 8453 for Base, 56 for BSC/BNB
+  mintTxHash?: string; // Transaction hash of the mint
+  status?: string; // "minted", "pending", etc.
 }
 
 export interface DeHubComment {
