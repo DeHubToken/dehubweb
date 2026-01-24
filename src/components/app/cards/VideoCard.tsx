@@ -453,7 +453,21 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
             className={`absolute inset-0 flex items-center justify-center bg-black/20 ${isTouchDevice ? 'opacity-100' : 'opacity-0 group-hover/thumb:opacity-100'} transition-opacity`}
             onDoubleClick={(e) => {
               e.stopPropagation();
-              videoRef.current?.requestFullscreen();
+              const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const relativeX = x / rect.width;
+              
+              // Only toggle fullscreen in center 25% zone
+              if (relativeX >= 0.375 && relativeX <= 0.625) {
+                if (document.fullscreenElement) {
+                  document.exitFullscreen();
+                } else {
+                  videoRef.current?.requestFullscreen();
+                }
+              } else {
+                // Left/right zones trigger seek via the main handler
+                handleDoubleTapSeek(e);
+              }
             }}
           >
             <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
