@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuthPrompt } from '@/components/app/AuthPrompt';
 
 interface StoryUser {
   name: string;
@@ -40,15 +41,20 @@ interface StoriesBarProps {
 export function StoriesBar({ users }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { requireAuth, AuthPromptComponent } = useAuthPrompt();
 
   const handleGoLive = () => {
     setIsOpen(false);
-    // TODO: Implement live streaming
+    requireAuth(() => {
+      // TODO: Implement live streaming
+    });
   };
 
   const handleAddStory = () => {
     setIsOpen(false);
-    // TODO: Implement story creation
+    requireAuth(() => {
+      // TODO: Implement story creation
+    });
   };
 
   const menuContent = (
@@ -88,7 +94,9 @@ export function StoriesBar({ users }: StoriesBarProps) {
   );
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
+    <>
+      <AuthPromptComponent />
+      <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="relative">
         {/* Right fade only */}
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
@@ -142,5 +150,6 @@ export function StoriesBar({ users }: StoriesBarProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
