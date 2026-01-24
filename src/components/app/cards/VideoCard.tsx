@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Coins } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -20,11 +20,12 @@ import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import type { VideoItem } from '@/types/feed.types';
 
 interface VideoCardProps {
@@ -356,30 +357,41 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           >
             <Sparkles className="w-5 h-5" />
           </motion.button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Sheet>
+            <SheetTrigger asChild>
               <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                 <MoreVertical className="w-5 h-5" />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <ListPlus className="w-4 h-4" /> Queue
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Clock className="w-4 h-4" /> Watch List
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Flag className="w-4 h-4" /> Report
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Download className="w-4 h-4" /> Download
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> Block Creator
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SheetTrigger>
+            <SheetContent 
+              side="bottom" 
+              className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-2xl"
+            >
+              <SheetHeader className="pb-2">
+                <SheetTitle className="text-white text-lg">Options</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-1 pb-4">
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Coins className="w-5 h-5" /> Send Tip
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <ListPlus className="w-5 h-5" /> Queue
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Clock className="w-5 h-5" /> Watch List
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Flag className="w-5 h-5" /> Report
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Download className="w-5 h-5" /> Download
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Ban className="w-5 h-5" /> Block Creator
+                </button>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
 
