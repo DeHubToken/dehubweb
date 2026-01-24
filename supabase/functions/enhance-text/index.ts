@@ -24,6 +24,11 @@ const STYLE_PROMPTS: Record<string, string> = {
   'lil-bro': 'Rewrite the text as a loving little brother who looks up to the reader. Be enthusiastic, slightly naive but endearing, ask for their opinion, show admiration, and bring that eager-to-help little sibling energy.',
   'big-sister': 'Rewrite the text as a caring older sister. Be supportive but also give honest advice, use sisterly terms like "babe/hun", share wisdom from experience, and have that protective but encouraging vibe.',
   'little-sister': 'Rewrite the text as a sweet little sister. Be playful, sometimes a bit cheeky, ask lots of questions, show admiration for the reader, and bring that innocent, loving younger sibling energy.',
+  'conservative': 'Rewrite the text from a conservative political perspective. Emphasize traditional values, personal responsibility, limited government, free market principles, and patriotic sentiments. Use language common in right-wing discourse.',
+  'liberal': 'Rewrite the text from a liberal/progressive political perspective. Emphasize social justice, equality, environmental concerns, and collective responsibility. Use language common in left-leaning discourse.',
+  'antifa': 'Rewrite the text from an anti-fascist activist perspective. Be passionate about fighting oppression, use direct action language, emphasize solidarity with marginalized groups, and take a confrontational stance against authoritarianism.',
+  'capitalist': 'Rewrite the text from a capitalist/free market perspective. Emphasize entrepreneurship, wealth creation, market solutions, innovation, profit motive, and economic freedom. Sound like a business mogul or investor.',
+  'communist': 'Rewrite the text from a communist/socialist perspective. Emphasize workers\' rights, collective ownership, class struggle, redistribution of wealth, and critique of capitalism. Use revolutionary and solidarity language.',
 };
 
 serve(async (req) => {
