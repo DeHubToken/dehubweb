@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, memo, useCallback, useEffect } from 'react';
+import { useState, memo, useCallback, useEffect, useRef } from 'react';
 import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -40,6 +40,16 @@ function ImageCarousel({ images }: { images: string[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
   
+  // Trackpad swipe refs for image navigation
+  const wheelDeltaX = useRef(0);
+  const lastWheelTime = useRef(0);
+  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastSwipeTime = useRef(0);
+  
+  const TRACKPAD_THRESHOLD = 50;
+  const TRACKPAD_DEBOUNCE = 150;
+  const SWIPE_COOLDOWN = 400;
+  
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrentIndex(emblaApi.selectedScrollSnap());
@@ -58,10 +68,61 @@ function ImageCarousel({ images }: { images: string[] }) {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
   
+  // Handle trackpad swipe for image navigation
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (!emblaApi || images.length <= 1) return;
+    
+    const now = Date.now();
+    
+    // Cooldown after switching to prevent double-swipes
+    if (now - lastSwipeTime.current < SWIPE_COOLDOWN) {
+      e.stopPropagation();
+      return;
+    }
+    
+    // Reset accumulator if too much time has passed
+    if (now - lastWheelTime.current > TRACKPAD_DEBOUNCE) {
+      wheelDeltaX.current = 0;
+    }
+    lastWheelTime.current = now;
+    
+    // Only respond to horizontal swipes
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    
+    // Stop propagation to prevent tab switching
+    e.stopPropagation();
+    
+    // Accumulate deltas
+    wheelDeltaX.current += e.deltaX;
+    
+    // Clear any pending timeout
+    if (wheelTimeout.current) {
+      clearTimeout(wheelTimeout.current);
+    }
+    
+    const absDeltaX = Math.abs(wheelDeltaX.current);
+    if (absDeltaX > TRACKPAD_THRESHOLD) {
+      if (wheelDeltaX.current > 0) {
+        emblaApi.scrollNext();
+      } else {
+        emblaApi.scrollPrev();
+      }
+      
+      // Reset and set cooldown
+      wheelDeltaX.current = 0;
+      lastSwipeTime.current = now;
+    }
+    
+    // Reset accumulators after gesture ends
+    wheelTimeout.current = setTimeout(() => {
+      wheelDeltaX.current = 0;
+    }, TRACKPAD_DEBOUNCE);
+  }, [emblaApi, images.length]);
+  
   const hasMultiple = images.length > 1;
   
   return (
-    <div className="relative">
+    <div className="relative" onWheel={handleWheel}>
       {/* Carousel container */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">

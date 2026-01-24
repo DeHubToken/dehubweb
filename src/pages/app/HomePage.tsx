@@ -39,7 +39,9 @@ const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
 const TRACKPAD_THRESHOLD = 100;
 /** Debounce time for trackpad swipes (ms) */
-const TRACKPAD_DEBOUNCE = 300;
+const TRACKPAD_DEBOUNCE = 150;
+/** Cooldown after tab switch to prevent double-jumps (ms) */
+const TAB_SWITCH_COOLDOWN = 500;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -77,6 +79,7 @@ export default function HomePage() {
   const wheelDeltaY = useRef(0);
   const lastWheelTime = useRef(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
+  const lastTabSwitchTime = useRef(0);
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
@@ -265,6 +268,11 @@ export default function HomePage() {
   const handleWheel = useCallback((e: React.WheelEvent) => {
     const now = Date.now();
     
+    // Cooldown after tab switch to prevent double-jumps
+    if (now - lastTabSwitchTime.current < TAB_SWITCH_COOLDOWN) {
+      return;
+    }
+    
     // Reset accumulator if too much time has passed
     if (now - lastWheelTime.current > TRACKPAD_DEBOUNCE) {
       wheelDeltaX.current = 0;
@@ -293,12 +301,14 @@ export default function HomePage() {
           setActiveTab(tabValues[currentIndex + 1]);
         });
         resetFilters();
+        lastTabSwitchTime.current = now;
       } else if (wheelDeltaX.current < 0 && currentIndex > 0) {
         // Swipe right (previous tab)
         flushSync(() => {
           setActiveTab(tabValues[currentIndex - 1]);
         });
         resetFilters();
+        lastTabSwitchTime.current = now;
       }
       
       // Reset after triggering
