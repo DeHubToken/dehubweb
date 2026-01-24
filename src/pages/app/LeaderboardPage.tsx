@@ -10,9 +10,8 @@ import { Search, Trophy, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getLeaderboard, getMediaUrl, type LeaderboardSortMode, type LeaderboardEntry } from '@/lib/api/dehub';
+import { getLeaderboard, getMediaUrl, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 
-type TimePeriod = 'day' | 'week' | 'month' | 'year' | 'all';
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
 const categories: { id: CategoryType; label: string; icon: typeof Wallet; apiSort: LeaderboardSortMode }[] = [
@@ -24,7 +23,7 @@ const categories: { id: CategoryType; label: string; icon: typeof Wallet; apiSor
   { id: 'subscribers', label: 'Subscribers', icon: UserCheck, apiSort: 'holdings' },
 ];
 
-const timePeriods: { id: TimePeriod; label: string }[] = [
+const timePeriods: { id: LeaderboardPeriod; label: string }[] = [
   { id: 'day', label: 'Day' },
   { id: 'week', label: 'Week' },
   { id: 'month', label: 'Month' },
@@ -63,7 +62,7 @@ const formatDHB = (num: number): string => {
 export default function LeaderboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState<CategoryType>('holdings');
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>('all');
+  const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
   const navigate = useNavigate();
 
   // Map category to API sort mode
@@ -71,7 +70,7 @@ export default function LeaderboardPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard', apiSortMode, timePeriod],
-    queryFn: () => getLeaderboard(apiSortMode),
+    queryFn: () => getLeaderboard(apiSortMode, timePeriod),
     staleTime: 60_000, // 1 minute
   });
 
