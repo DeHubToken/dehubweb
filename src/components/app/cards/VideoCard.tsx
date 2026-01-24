@@ -92,6 +92,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
       setIsPlaying(false);
       videoPlaybackManager.stop(instanceId);
     } else {
+      // Sync mute state from global manager before playing
+      const currentGlobalMuted = videoPlaybackManager.globalMuted;
+      setIsMuted(currentGlobalMuted);
+      if (videoRef.current) {
+        videoRef.current.muted = currentGlobalMuted;
+      }
+      
       // Notify manager - this will pause any other playing video
       videoPlaybackManager.play(instanceId);
       setIsLoading(true);
@@ -304,8 +311,10 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         case 'm':
           e.preventDefault();
           setIsMuted(prev => {
-            if (videoRef.current) videoRef.current.muted = !prev;
-            return !prev;
+            const newMuted = !prev;
+            videoPlaybackManager.globalMuted = newMuted;
+            if (videoRef.current) videoRef.current.muted = newMuted;
+            return newMuted;
           });
           break;
         case 'p':
