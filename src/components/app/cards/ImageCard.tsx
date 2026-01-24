@@ -20,6 +20,7 @@ import { TranslatableGroup } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
 import { SwipeableCarousel } from '../SwipeableCarousel';
+import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,20 +42,12 @@ function ImageCarousel({ images }: { images: string[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   // Gesture lock refs for trackpad navigation
-  const gestureTriggered = useRef(true); // Start locked to ignore bleed-through from tab switches
+  const gestureTriggered = useRef(false);
   const gestureLockTimeout = useRef<NodeJS.Timeout | null>(null);
   
   const TRACKPAD_THRESHOLD = 50;
   const GESTURE_LOCK_DURATION = 400;
-  const MOUNT_COOLDOWN = 300; // Ignore gestures for 300ms after mount
-  
-  // Unlock after mount cooldown
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      gestureTriggered.current = false;
-    }, MOUNT_COOLDOWN);
-    return () => clearTimeout(timer);
-  }, []);
+  const TAB_SWITCH_COOLDOWN = 500; // Ignore gestures for 500ms after any tab switch
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -77,6 +70,9 @@ function ImageCarousel({ images }: { images: string[] }) {
   // Handle trackpad swipe for image navigation - one gesture = one image
   const handleWheel = useCallback((e: React.WheelEvent) => {
     if (!emblaApi || images.length <= 1) return;
+    
+    // Ignore gestures during global tab switch cooldown (prevents bleed-through)
+    if (isWithinTabSwitchCooldown(TAB_SWITCH_COOLDOWN)) return;
     
     // LOCKED? Ignore all events until lock expires
     if (gestureTriggered.current) return;

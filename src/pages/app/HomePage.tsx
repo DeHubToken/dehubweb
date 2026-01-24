@@ -13,6 +13,7 @@ import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { setTabSwitchTime } from '@/lib/gesture-state';
 
 // Feed components
 import {
@@ -252,11 +253,13 @@ export default function HomePage() {
         flushSync(() => {
           setActiveTab(tabValues[currentIndex + 1]);
         });
+        setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
       } else if (isRightSwipe && currentIndex > 0) {
         flushSync(() => {
           setActiveTab(tabValues[currentIndex - 1]);
         });
+        setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
       }
     }
@@ -288,10 +291,12 @@ export default function HomePage() {
       
       if (e.deltaX > 0 && currentIndex < tabValues.length - 1) {
         flushSync(() => setActiveTab(tabValues[currentIndex + 1]));
+        setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
         gestureTriggered.current = true;
       } else if (e.deltaX < 0 && currentIndex > 0) {
         flushSync(() => setActiveTab(tabValues[currentIndex - 1]));
+        setTabSwitchTime(); // Mark tab switch for carousel cooldown
         resetFilters();
         gestureTriggered.current = true;
       }
