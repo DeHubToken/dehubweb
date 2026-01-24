@@ -205,6 +205,54 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         </div>
       </div>
 
+      {/* Featured/Ad Row - First 3 videos as thumbnails */}
+      {videos.length >= 3 && (
+        <div className="mb-3">
+          {/* Desktop/Tablet: 3 thumbnails in a row */}
+          <div className="hidden sm:grid grid-cols-3 gap-2">
+            {videos.slice(0, 3).map((video) => (
+              <div 
+                key={`featured-${video.id}`}
+                className="relative aspect-video rounded-xl overflow-hidden cursor-pointer group"
+              >
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-2 left-2 right-2">
+                  <p className="text-white text-xs font-medium line-clamp-1">{video.title}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Mobile: Horizontally swipeable */}
+          <div className="sm:hidden relative">
+            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+              {videos.slice(0, 3).map((video) => (
+                <div 
+                  key={`featured-mobile-${video.id}`}
+                  className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden cursor-pointer group"
+                >
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <p className="text-white text-xs font-medium line-clamp-1">{video.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Video Grid or Empty State */}
       {videos.length === 0 ? (
         <EmptyState />
