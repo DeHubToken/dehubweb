@@ -3,9 +3,10 @@
  * ==================================
  * Displays images in fullscreen with original dimensions.
  * Supports swipe navigation for multi-image posts.
+ * Swipe/drag down to close.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -16,6 +17,8 @@ interface FullscreenImageViewerProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const SWIPE_DOWN_THRESHOLD = 100;
 
 export function FullscreenImageViewer({ 
   images, 
@@ -28,12 +31,19 @@ export function FullscreenImageViewer({
     startIndex: initialIndex 
   });
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  
+  // Drag state for swipe-down-to-close
+  const [dragOffset, setDragOffset] = useState(0);
+  const isDragging = useRef(false);
+  const dragStartY = useRef(0);
+  const dragStartX = useRef(0);
 
   // Sync carousel to initial index when opening
   useEffect(() => {
     if (isOpen && emblaApi) {
       emblaApi.scrollTo(initialIndex, true);
       setCurrentIndex(initialIndex);
+      setDragOffset(0);
     }
   }, [isOpen, initialIndex, emblaApi]);
 
@@ -72,7 +82,71 @@ export function FullscreenImageViewer({
     };
   }, [isOpen, onClose, scrollPrev, scrollNext]);
 
+  // Touch handlers for swipe-down-to-close
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    isDragging.current = true;
+    dragStartY.current = e.touches[0].clientY;
+    dragStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    
+    const deltaY = e.touches[0].clientY - dragStartY.current;
+    const deltaX = Math.abs(e.touches[0].clientX - dragStartX.current);
+    
+    // Only allow downward drag, and only if vertical > horizontal
+    if (deltaY > 0 && deltaY > deltaX) {
+      setDragOffset(deltaY);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (dragOffset > SWIPE_DOWN_THRESHOLD) {
+      onClose();
+    }
+    setDragOffset(0);
+    isDragging.current = false;
+  }, [dragOffset, onClose]);
+
+  // Mouse handlers for click-and-drag down
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    isDragging.current = true;
+    dragStartY.current = e.clientY;
+    dragStartX.current = e.clientX;
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    
+    const deltaY = e.clientY - dragStartY.current;
+    const deltaX = Math.abs(e.clientX - dragStartX.current);
+    
+    if (deltaY > 0 && deltaY > deltaX) {
+      setDragOffset(deltaY);
+    }
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    if (dragOffset > SWIPE_DOWN_THRESHOLD) {
+      onClose();
+    }
+    setDragOffset(0);
+    isDragging.current = false;
+  }, [dragOffset, onClose]);
+
+  // Wheel handler for two-finger scroll down (trackpad)
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    // Positive deltaY = scrolling down
+    if (e.deltaY > SWIPE_DOWN_THRESHOLD && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      onClose();
+    }
+  }, [onClose]);
+
   const hasMultiple = images.length > 1;
+  
+  // Calculate opacity based on drag offset
+  const bgOpacity = Math.max(0.3, 1 - dragOffset / 300);
 
   return (
     <AnimatePresence>
@@ -82,8 +156,10 @@ export function FullscreenImageViewer({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ backgroundColor: `rgba(0, 0, 0, ${bgOpacity * 0.95})` }}
           onClick={onClose}
+          onWheel={handleWheel}
         >
           {/* Close button */}
           <button
@@ -101,11 +177,22 @@ export function FullscreenImageViewer({
             </div>
           )}
 
-          {/* Carousel */}
-          <div 
+          {/* Carousel with drag offset */}
+          <motion.div 
             className="w-full h-full overflow-hidden" 
             ref={emblaRef}
+            style={{ 
+              transform: `translateY(${dragOffset}px)`,
+              opacity: Math.max(0.5, 1 - dragOffset / 200)
+            }}
             onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
           >
             <div className="flex h-full">
               {images.map((img, idx) => (
@@ -116,7 +203,8 @@ export function FullscreenImageViewer({
                   <img
                     src={img}
                     alt=""
-                    className="max-w-full max-h-full object-contain"
+                    className="max-w-full max-h-full object-contain select-none pointer-events-none"
+                    draggable={false}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}
@@ -124,7 +212,7 @@ export function FullscreenImageViewer({
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Navigation arrows */}
           {hasMultiple && (
