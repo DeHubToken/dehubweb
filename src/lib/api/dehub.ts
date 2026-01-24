@@ -638,6 +638,9 @@ export interface LeaderboardEntry {
   avatarUrl?: string;
   sentTips: number;
   receivedTips: number;
+  followers?: number;
+  likes?: number;
+  subscribers?: number;
 }
 
 export interface LeaderboardResponse {

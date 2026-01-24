@@ -6,12 +6,31 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Trophy, Loader2, ArrowUpRight, ArrowDownLeft, Wallet } from 'lucide-react';
+import { Search, Trophy, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getLeaderboard, getMediaUrl, type LeaderboardSortMode, type LeaderboardEntry } from '@/lib/api/dehub';
+
+type TimePeriod = 'day' | 'week' | 'month' | 'year' | 'all';
+type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
+
+const categories: { id: CategoryType; label: string; icon: typeof Wallet; apiSort: LeaderboardSortMode }[] = [
+  { id: 'holdings', label: 'Holdings', icon: Wallet, apiSort: 'holdings' },
+  { id: 'sentTips', label: 'Sent Tips', icon: ArrowUpRight, apiSort: 'sentTips' },
+  { id: 'receivedTips', label: 'Paid Tips', icon: CreditCard, apiSort: 'receivedTips' },
+  { id: 'followers', label: 'Followers', icon: Users, apiSort: 'holdings' },
+  { id: 'likes', label: 'Likes', icon: Heart, apiSort: 'holdings' },
+  { id: 'subscribers', label: 'Subscribers', icon: UserCheck, apiSort: 'holdings' },
+];
+
+const timePeriods: { id: TimePeriod; label: string }[] = [
+  { id: 'day', label: 'Day' },
+  { id: 'week', label: 'Week' },
+  { id: 'month', label: 'Month' },
+  { id: 'year', label: 'Year' },
+  { id: 'all', label: 'All Time' },
+];
 
 const getRankStyle = (rank: number) => {
   switch (rank) {
@@ -43,12 +62,16 @@ const formatDHB = (num: number): string => {
 
 export default function LeaderboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortMode, setSortMode] = useState<LeaderboardSortMode>('holdings');
+  const [category, setCategory] = useState<CategoryType>('holdings');
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>('all');
   const navigate = useNavigate();
 
+  // Map category to API sort mode
+  const apiSortMode = categories.find(c => c.id === category)?.apiSort || 'holdings';
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['leaderboard', sortMode],
-    queryFn: () => getLeaderboard(sortMode),
+    queryKey: ['leaderboard', apiSortMode, timePeriod],
+    queryFn: () => getLeaderboard(apiSortMode),
     staleTime: 60_000, // 1 minute
   });
 
@@ -87,26 +110,23 @@ export default function LeaderboardPage() {
   };
 
   const getSortValue = (entry: LeaderboardEntry): number => {
-    switch (sortMode) {
+    switch (category) {
       case 'sentTips':
         return entry.sentTips ?? 0;
       case 'receivedTips':
         return entry.receivedTips ?? 0;
+      case 'followers':
+        return entry.followers ?? 0;
+      case 'likes':
+        return entry.likes ?? 0;
+      case 'subscribers':
+        return entry.subscribers ?? 0;
       default:
         return entry.total ?? 0;
     }
   };
 
-  const getSortLabel = (): string => {
-    switch (sortMode) {
-      case 'sentTips':
-        return 'Tips Sent';
-      case 'receivedTips':
-        return 'Tips Received';
-      default:
-        return 'Holdings';
-    }
-  };
+  const currentCategory = categories.find(c => c.id === category);
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
@@ -122,23 +142,52 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Sort Tabs */}
-        <Tabs value={sortMode} onValueChange={(v) => setSortMode(v as LeaderboardSortMode)} className="mb-4">
-          <TabsList className="bg-zinc-800 w-full grid grid-cols-3">
-            <TabsTrigger value="holdings" className="data-[state=active]:bg-zinc-700 gap-1.5">
-              <Wallet className="w-4 h-4" />
-              <span className="hidden sm:inline">Holdings</span>
-            </TabsTrigger>
-            <TabsTrigger value="sentTips" className="data-[state=active]:bg-zinc-700 gap-1.5">
-              <ArrowUpRight className="w-4 h-4" />
-              <span className="hidden sm:inline">Sent Tips</span>
-            </TabsTrigger>
-            <TabsTrigger value="receivedTips" className="data-[state=active]:bg-zinc-700 gap-1.5">
-              <ArrowDownLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Received</span>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {/* Category Tabs - Horizontally scrollable */}
+        <div className="relative mb-3">
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="flex gap-2 overflow-x-auto scrollbar-invisible pb-1">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              const isActive = category === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategory(cat.id)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive
+                      ? 'bg-white text-black'
+                      : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Time Period Tabs */}
+        <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
+          {timePeriods.map((period) => {
+            const isActive = timePeriod === period.id;
+            return (
+              <button
+                key={period.id}
+                type="button"
+                onClick={() => setTimePeriod(period.id)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                  isActive
+                    ? 'bg-zinc-700 text-white'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                }`}
+              >
+                {period.label}
+              </button>
+            );
+          })}
+        </div>
 
         {/* Search */}
         <div className="relative">
@@ -157,10 +206,8 @@ export default function LeaderboardPage() {
         {/* Table Header */}
         <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">
           <div className="col-span-1">Rank</div>
-          <div className="col-span-4">User</div>
-          <div className="col-span-3 text-right">{getSortLabel()}</div>
-          <div className="col-span-2 text-right">Sent</div>
-          <div className="col-span-2 text-right">Received</div>
+          <div className="col-span-5">User</div>
+          <div className="col-span-6 text-right">{currentCategory?.label || 'Value'}</div>
         </div>
 
         {/* Loading State */}
@@ -203,7 +250,7 @@ export default function LeaderboardPage() {
                   </div>
 
                   {/* User */}
-                  <div className="col-span-10 sm:col-span-4 flex items-center gap-3">
+                  <div className="col-span-7 sm:col-span-5 flex items-center gap-3">
                     <Avatar className="w-10 h-10">
                       <AvatarImage src={getAvatarUrl(entry)} />
                       <AvatarFallback className="bg-zinc-700 text-white">
@@ -218,31 +265,12 @@ export default function LeaderboardPage() {
                     </div>
                   </div>
 
-                  {/* Stats - Mobile */}
-                  <div className="col-span-12 sm:hidden grid grid-cols-3 gap-2 text-sm mt-2 pl-9">
-                    <div>
-                      <span className="text-zinc-500 text-xs">{getSortLabel()}</span>
-                      <p className="text-white font-medium">{formatDHB(getSortValue(entry))}</p>
-                    </div>
-                    <div>
-                      <span className="text-zinc-500 text-xs">Sent</span>
-                      <p className="text-orange-400 font-medium">{formatNumber(entry.sentTips)}</p>
-                    </div>
-                    <div>
-                      <span className="text-zinc-500 text-xs">Received</span>
-                      <p className="text-green-400 font-medium">{formatNumber(entry.receivedTips)}</p>
-                    </div>
-                  </div>
-
-                  {/* Stats - Desktop */}
-                  <div className="hidden sm:block col-span-3 text-right text-white font-medium">
-                    {formatDHB(getSortValue(entry))}
-                  </div>
-                  <div className="hidden sm:block col-span-2 text-right text-orange-400 font-medium">
-                    {formatNumber(entry.sentTips)}
-                  </div>
-                  <div className="hidden sm:block col-span-2 text-right text-green-400 font-medium">
-                    {formatNumber(entry.receivedTips)}
+                  {/* Value */}
+                  <div className="col-span-3 sm:col-span-6 text-right text-white font-medium">
+                    {category === 'holdings' || category === 'sentTips' || category === 'receivedTips'
+                      ? formatDHB(getSortValue(entry))
+                      : formatNumber(getSortValue(entry))
+                    }
                   </div>
                 </div>
               );
