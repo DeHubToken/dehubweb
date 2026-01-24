@@ -3,11 +3,12 @@
  * ====================
  * Reusable hook for implementing pull-to-refresh functionality.
  * Supports touch, mouse, and wheel gestures.
+ * Only triggers when interacting within the specified container.
  * 
  * @module hooks/use-pull-to-refresh
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, RefObject } from 'react';
 
 const DEFAULT_PULL_THRESHOLD = 80;
 
@@ -18,6 +19,8 @@ interface UsePullToRefreshOptions {
   onRefresh: () => void;
   /** Whether refresh is currently in progress */
   isRefreshing: boolean;
+  /** Ref to the container element that pull-to-refresh should work within */
+  containerRef?: RefObject<HTMLElement>;
 }
 
 interface UsePullToRefreshReturn {
@@ -38,6 +41,7 @@ export function usePullToRefresh({
   pullThreshold = DEFAULT_PULL_THRESHOLD,
   onRefresh,
   isRefreshing,
+  containerRef,
 }: UsePullToRefreshOptions): UsePullToRefreshReturn {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
@@ -45,7 +49,7 @@ export function usePullToRefresh({
   const wasAtTopOnStart = useRef<boolean>(false);
   const wheelAccumulator = useRef<number>(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
-  const lastScrollTop = useRef<number>(0);
+  const isHoveringContainer = useRef<boolean>(false);
 
   // Helper to check if we're truly at the top
   const isAtTop = useCallback(() => {
@@ -160,10 +164,37 @@ export function usePullToRefresh({
     }
   }, [isPulling]);
 
-  // Wheel handler for desktop pull-to-refresh
+  // Track hover state over container for wheel events
+  useEffect(() => {
+    const container = containerRef?.current;
+    if (!container) return;
+
+    const handleMouseEnter = () => {
+      isHoveringContainer.current = true;
+    };
+
+    const handleMouseLeaveContainer = () => {
+      isHoveringContainer.current = false;
+    };
+
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeaveContainer);
+
+    return () => {
+      container.removeEventListener('mouseenter', handleMouseEnter);
+      container.removeEventListener('mouseleave', handleMouseLeaveContainer);
+    };
+  }, [containerRef]);
+
+  // Wheel handler for desktop pull-to-refresh - only when hovering over container
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (isRefreshing) return;
+      
+      // Only trigger if hovering over the feed container (or no container specified)
+      if (containerRef && !isHoveringContainer.current) {
+        return;
+      }
       
       const atTop = isAtTop();
       
@@ -209,7 +240,7 @@ export function usePullToRefresh({
         clearTimeout(wheelTimeout.current);
       }
     };
-  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop]);
+  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop, containerRef]);
 
   return {
     pullDistance,
