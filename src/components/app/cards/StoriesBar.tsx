@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 interface StoryUser {
   name: string;
@@ -97,11 +98,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
     <>
       <AuthPromptComponent />
       <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
-      <div className="relative">
-        {/* Right fade only */}
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
-        
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
+        <SwipeableCarousel className="flex gap-4 px-2" fadeColor="from-zinc-900">
           {/* Create Story/Live Button */}
           {isMobile ? (
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -147,9 +144,8 @@ export function StoriesBar({ users }: StoriesBarProps) {
               <span className="text-xs text-zinc-400 truncate w-16 text-center">{user.name}</span>
             </div>
           ))}
-        </div>
+        </SwipeableCarousel>
       </div>
-    </div>
     </>
   );
 }

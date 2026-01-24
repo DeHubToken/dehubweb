@@ -11,6 +11,7 @@ import { Play, Music, Mic2, Radio, Disc3, Loader2 } from 'lucide-react';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { cn } from '@/lib/utils';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { VideoItem } from '@/types/feed.types';
 
 // ============================================================================
@@ -396,7 +397,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, refreshKe
       {/* Sub-tab Navigation (only shown when filters toggled) */}
       {showFilters && (
         <div className="bg-zinc-900 rounded-2xl p-2 mb-3">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+          <SwipeableCarousel className="flex gap-1 sm:gap-2" fadeColor="from-zinc-900">
             {MUSIC_SUB_TABS.map((tab) => (
               <button
                 key={tab.value}
@@ -410,7 +411,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, refreshKe
                 <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
-          </div>
+          </SwipeableCarousel>
         </div>
       )}
 
