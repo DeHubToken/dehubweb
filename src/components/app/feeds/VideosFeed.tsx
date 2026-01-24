@@ -312,12 +312,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             {videos.slice(0, 3).map((video) => (
               <div 
                 key={`featured-${video.id}`}
-                className="relative aspect-video rounded-xl overflow-hidden cursor-pointer group"
+                className="relative aspect-video rounded-xl overflow-hidden"
               >
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
                 
@@ -353,12 +353,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               {videos.slice(0, 3).map((video) => (
                 <div 
                   key={`featured-mobile-${video.id}`}
-                  className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden cursor-pointer group"
+                  className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden"
                 >
                   <img
                     src={video.thumbnail}
                     alt={video.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
                   
