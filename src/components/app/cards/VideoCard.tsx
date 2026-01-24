@@ -437,11 +437,11 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
               videoRef.current?.requestFullscreen();
             }}
           >
-            <div className="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
               {isPlaying ? (
-                <Pause className="h-6 w-6 text-primary-foreground fill-current" />
+                <Pause className="h-6 w-6 text-white fill-current" />
               ) : (
-                <Play className="h-6 w-6 text-primary-foreground fill-current ml-1" />
+                <Play className="h-6 w-6 text-white fill-current ml-1" />
               )}
             </div>
           </div>
