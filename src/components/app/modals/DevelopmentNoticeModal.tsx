@@ -6,14 +6,14 @@ export function DevelopmentNoticeModal() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const hasSeenNotice = sessionStorage.getItem("dev-notice-seen");
+    const hasSeenNotice = localStorage.getItem("dev-notice-seen");
     if (!hasSeenNotice) {
       setOpen(true);
     }
   }, []);
 
   const handleClose = () => {
-    sessionStorage.setItem("dev-notice-seen", "true");
+    localStorage.setItem("dev-notice-seen", "true");
     setOpen(false);
   };
 
