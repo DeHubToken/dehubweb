@@ -154,6 +154,21 @@ export default function HomePage() {
     }
   };
 
+  /**
+   * Reset scroll position when tab changes.
+   */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // Also reset any scrollable containers
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+      mainContent.scrollTop = 0;
+    }
+  }, [activeTab]);
+
   // --------------------------------------------------------------------------
   // SWIPE GESTURE HANDLERS
   // --------------------------------------------------------------------------
