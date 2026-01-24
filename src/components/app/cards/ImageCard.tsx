@@ -46,9 +46,9 @@ function ImageCarousel({ images }: { images: string[] }) {
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   const lastSwipeTime = useRef(0);
   
-  const TRACKPAD_THRESHOLD = 50;
-  const TRACKPAD_DEBOUNCE = 150;
-  const SWIPE_COOLDOWN = 400;
+  const TRACKPAD_THRESHOLD = 80;
+  const TRACKPAD_DEBOUNCE = 100;
+  const SWIPE_COOLDOWN = 600;
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
