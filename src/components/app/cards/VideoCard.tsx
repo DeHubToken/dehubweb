@@ -573,13 +573,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </div>
         )}
         
-        {/* View count - liquid glass - hide when progress bar visible */}
-        {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
-          <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-0.5 rounded border border-white/10">
-            <Eye className="w-3 h-3 text-white" />
-            <span className="text-white text-xs font-medium">{video.views}</span>
-          </div>
-        )}
       </div>
 
       {/* Info & Actions */}
@@ -595,7 +588,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           commentCount={video.commentCount}
         />
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
-        <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
+        <div className="flex items-center gap-3 mt-1">
+          <span className="text-zinc-500 text-xs">{video.uploadedAgo}</span>
+          <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
+            <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
+            <span className="leading-none">{video.views} views</span>
+          </span>
+        </div>
 
         {/* Inline Comments Section */}
         <AnimatePresence>
