@@ -231,7 +231,19 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     const touch = e.changedTouches[0];
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
     const relativeX = x / rect.width; // 0 to 1
+    const relativeY = y / rect.height; // 0 to 1
+    
+    // Ignore touches in top-right corner (where controls are) - top 15% and right 35%
+    if (relativeY < 0.15 && relativeX > 0.65) {
+      return; // Let the button handle the touch
+    }
+    
+    // Also ignore bottom area where progress bar is - bottom 15%
+    if (relativeY > 0.85) {
+      return; // Let the progress bar handle the touch
+    }
     
     // Center zone (30-70%) for play/pause
     if (relativeX > 0.3 && relativeX < 0.7) {
