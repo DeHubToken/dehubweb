@@ -11,9 +11,15 @@ export interface ShootingStar {
   end: THREE.Vector3;
 }
 
-export const createShootingStars = (scene: THREE.Scene): ShootingStar[] => {
+export interface ShootingStarsSystem {
+  stars: ShootingStar[];
+  timers: NodeJS.Timeout[];
+  isDisposed: boolean;
+}
+
+export const createShootingStars = (scene: THREE.Scene): ShootingStarsSystem => {
   const { COUNT, TAIL_POINT_COUNT } = SHOOTING_STAR_CONFIG;
-  const shootingStars: ShootingStar[] = [];
+  const stars: ShootingStar[] = [];
 
   for (let i = 0; i < COUNT; i++) {
     const geometry = new THREE.BufferGeometry();
@@ -32,7 +38,7 @@ export const createShootingStars = (scene: THREE.Scene): ShootingStar[] => {
     const line = new THREE.Line(geometry, lineMaterial);
     scene.add(line);
 
-    shootingStars.push({
+    stars.push({
       line,
       lineMaterial,
       geometry,
@@ -43,14 +49,16 @@ export const createShootingStars = (scene: THREE.Scene): ShootingStar[] => {
     });
   }
 
-  return shootingStars;
+  return { stars, timers: [], isDisposed: false };
 };
 
 export const spawnShootingStars = (
-  shootingStars: ShootingStar[],
+  system: ShootingStarsSystem,
   elapsedTime: number,
   lastSpawnTime: { value: number }
 ) => {
+  if (system.isDisposed) return;
+  
   if (elapsedTime - lastSpawnTime.value > TIMING.SHOOTING_STAR_INTERVAL) {
     lastSpawnTime.value = elapsedTime;
 
@@ -58,12 +66,14 @@ export const spawnShootingStars = (
       Math.floor(Math.random() * (SHOOTING_STAR_CONFIG.MAX_STARS_PER_EVENT - SHOOTING_STAR_CONFIG.MIN_STARS_PER_EVENT + 1));
 
     let spawned = 0;
-    for (let i = 0; i < shootingStars.length && spawned < numStars; i++) {
-      if (!shootingStars[i].active) {
-        const star = shootingStars[i];
+    for (let i = 0; i < system.stars.length && spawned < numStars; i++) {
+      if (!system.stars[i].active) {
+        const star = system.stars[i];
         const delay = spawned * 0.1;
 
-        setTimeout(() => {
+        const timer = setTimeout(() => {
+          if (system.isDisposed) return;
+          
           star.active = true;
           star.progress = 0;
 
@@ -82,6 +92,7 @@ export const spawnShootingStars = (
             star.start.z + Math.sin(startAngle + Math.PI / 4) * distance
           );
         }, delay * 1000);
+        system.timers.push(timer);
 
         spawned++;
       }
@@ -89,10 +100,12 @@ export const spawnShootingStars = (
   }
 };
 
-export const animateShootingStars = (shootingStars: ShootingStar[], delta: number) => {
+export const animateShootingStars = (system: ShootingStarsSystem, delta: number) => {
+  if (system.isDisposed) return;
+  
   const { TAIL_POINT_COUNT } = SHOOTING_STAR_CONFIG;
 
-  shootingStars.forEach((star) => {
+  system.stars.forEach((star) => {
     if (star.active) {
       star.progress += delta / TIMING.SHOOTING_STAR_DURATION;
 
@@ -133,8 +146,14 @@ export const animateShootingStars = (shootingStars: ShootingStar[], delta: numbe
   });
 };
 
-export const disposeShootingStars = (shootingStars: ShootingStar[]) => {
-  shootingStars.forEach(star => {
+export const disposeShootingStars = (system: ShootingStarsSystem) => {
+  system.isDisposed = true;
+  
+  // Clear all timers
+  system.timers.forEach(timer => clearTimeout(timer));
+  system.timers = [];
+  
+  system.stars.forEach(star => {
     star.geometry.dispose();
     star.lineMaterial.dispose();
   });

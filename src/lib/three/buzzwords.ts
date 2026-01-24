@@ -38,6 +38,9 @@ export interface BuzzwordSystem {
   sprites: THREE.Sprite[];
   types: SpriteType[];
   loaded: boolean;
+  timers: NodeJS.Timeout[];
+  intervals: NodeJS.Timeout[];
+  isDisposed: boolean;
 }
 
 const createTextSprite = (text: string, size: number): THREE.Sprite | null => {
@@ -101,7 +104,7 @@ export const loadBuzzwords = (
   scene: THREE.Scene,
   buzzwordSystem: BuzzwordSystem
 ) => {
-  if (buzzwordSystem.loaded) return;
+  if (buzzwordSystem.loaded || buzzwordSystem.isDisposed) return;
   buzzwordSystem.loaded = true;
 
   const allBuzzwords = [...BUZZWORDS];
@@ -109,7 +112,9 @@ export const loadBuzzwords = (
 
   // Load text buzzwords
   shuffled.forEach((word, index) => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      if (buzzwordSystem.isDisposed) return;
+      
       const isFeatured = FEATURED_BUZZWORDS.includes(word);
       let size = Math.random() * 0.5 + 0.5;
       if (size > 0.65) {
@@ -170,14 +175,19 @@ export const loadBuzzwords = (
         }
       }
     }, index * TIMING.BUZZWORD_STAGGER);
+    buzzwordSystem.timers.push(timer);
   });
 
   // Load image buzzwords after text buzzwords
   const imageStartDelay = shuffled.length * TIMING.BUZZWORD_STAGGER;
   IMAGE_BUZZWORDS.forEach((imgBuzzword, index) => {
-    setTimeout(async () => {
+    const timer = setTimeout(async () => {
+      if (buzzwordSystem.isDisposed) return;
+      
       const size = Math.random() * 0.3 + 0.5;
       const sprite = await createImageSprite(imgBuzzword.src, size);
+      
+      if (buzzwordSystem.isDisposed) return;
       
       // Position in foreground like featured buzzwords
       sprite.position.set(
@@ -190,6 +200,7 @@ export const loadBuzzwords = (
       buzzwordSystem.sprites.push(sprite);
       buzzwordSystem.types.push('foreground');
     }, imageStartDelay + index * TIMING.BUZZWORD_STAGGER);
+    buzzwordSystem.timers.push(timer);
   });
 };
 
@@ -212,8 +223,15 @@ export const animateBuzzwords = (
 };
 
 export const triggerBuzzwordGlitch = (buzzwordSystem: BuzzwordSystem) => {
+  if (buzzwordSystem.isDisposed) return;
+  
   let flickerCount = 0;
   const flickerInterval = setInterval(() => {
+    if (buzzwordSystem.isDisposed) {
+      clearInterval(flickerInterval);
+      return;
+    }
+    
     buzzwordSystem.sprites.forEach((sprite) => {
       sprite.material.opacity = Math.random() > 0.5 ? 0.9 : 0.3;
       sprite.position.x += (Math.random() - 0.5) * 0.2;
@@ -242,9 +260,18 @@ export const triggerBuzzwordGlitch = (buzzwordSystem: BuzzwordSystem) => {
       });
     }
   }, 30);
+  buzzwordSystem.intervals.push(flickerInterval);
 };
 
 export const disposeBuzzwords = (buzzwordSystem: BuzzwordSystem) => {
+  buzzwordSystem.isDisposed = true;
+  
+  // Clear all timers and intervals
+  buzzwordSystem.timers.forEach(timer => clearTimeout(timer));
+  buzzwordSystem.intervals.forEach(interval => clearInterval(interval));
+  buzzwordSystem.timers = [];
+  buzzwordSystem.intervals = [];
+  
   buzzwordSystem.sprites.forEach(sprite => {
     if (sprite.material.map) {
       sprite.material.map.dispose();

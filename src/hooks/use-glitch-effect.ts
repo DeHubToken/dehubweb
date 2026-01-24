@@ -14,6 +14,8 @@ export const useGlitchEffect = (title: string = 'A New World', subtitle: string 
   const [corruptedSubtitle, setCorruptedSubtitle] = useState(subtitle);
   const [showPixelCorruption, setShowPixelCorruption] = useState(false);
   const glitchTimerRef = useRef<NodeJS.Timeout>();
+  const cycleIntervalRef = useRef<NodeJS.Timeout>();
+  const endGlitchTimerRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const corruptText = (text: string) => {
@@ -38,18 +40,20 @@ export const useGlitchEffect = (title: string = 'A New World', subtitle: string 
 
         // Rapid cycling of values
         let cycleCount = 0;
-        const cycleInterval = setInterval(() => {
+        cycleIntervalRef.current = setInterval(() => {
           cycleCount++;
           setCorruptedTitle(corruptText(title));
           setCorruptedSubtitle(corruptText(subtitle));
 
           if (cycleCount >= 6) {
-            clearInterval(cycleInterval);
+            if (cycleIntervalRef.current) {
+              clearInterval(cycleIntervalRef.current);
+            }
           }
         }, 50);
 
         // End glitch
-        setTimeout(() => {
+        endGlitchTimerRef.current = setTimeout(() => {
           setMasterGlitch(false);
           setShowPixelCorruption(false);
           setCorruptedTitle(title);
@@ -66,6 +70,12 @@ export const useGlitchEffect = (title: string = 'A New World', subtitle: string 
     return () => {
       if (glitchTimerRef.current) {
         clearTimeout(glitchTimerRef.current);
+      }
+      if (cycleIntervalRef.current) {
+        clearInterval(cycleIntervalRef.current);
+      }
+      if (endGlitchTimerRef.current) {
+        clearTimeout(endGlitchTimerRef.current);
       }
     };
   }, [title, subtitle]);

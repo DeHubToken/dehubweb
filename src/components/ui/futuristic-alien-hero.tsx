@@ -46,13 +46,16 @@ export const FuturisticAlienHero = () => {
     createLighting(scene);
 
     // Create systems
-    const shootingStars = createShootingStars(scene);
+    const shootingStarsSystem = createShootingStars(scene);
     const lastShootingStarTime = { value: 0 };
 
     const artifactSystem = createArtifact(scene, dehubLogoCenter);
     const nebulaSystem = createNebula(scene);
 
-    const buzzwordSystem: BuzzwordSystem = { sprites: [], types: [], loaded: false };
+    const buzzwordSystem: BuzzwordSystem = { 
+      sprites: [], types: [], loaded: false,
+      timers: [], intervals: [], isDisposed: false 
+    };
 
     // Mouse interaction
     const mouseInteraction = setupMouseInteraction();
@@ -62,8 +65,8 @@ export const FuturisticAlienHero = () => {
     const handleResize = createResizeHandler(camera, renderer);
     window.addEventListener('resize', handleResize);
 
-    // Load buzzwords and easter eggs after delay
-    setTimeout(() => {
+    // Track the load delay timeout
+    const loadDelayTimer = setTimeout(() => {
       loadBuzzwords(scene, buzzwordSystem);
       loadEasterEggs(nebulaSystem);
     }, TIMING.BUZZWORD_LOAD_DELAY);
@@ -76,9 +79,13 @@ export const FuturisticAlienHero = () => {
     let buzzwordGlitchTime = 0;
     let isArtifactGlitching = false;
     let isBuzzwordGlitching = false;
+    let isDisposed = false;
     const artifactOriginalPosition = { x: 0, y: 0, z: 0 };
+    const glitchTimers: NodeJS.Timeout[] = [];
 
     const animate = () => {
+      if (isDisposed) return;
+      
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
       const delta = elapsedTime - previousTime;
@@ -93,8 +100,8 @@ export const FuturisticAlienHero = () => {
       // Animate systems
       animateArtifact(artifactSystem, elapsedTime);
       animateNebula(nebulaSystem);
-      spawnShootingStars(shootingStars, elapsedTime, lastShootingStarTime);
-      animateShootingStars(shootingStars, delta);
+      spawnShootingStars(shootingStarsSystem, elapsedTime, lastShootingStarTime);
+      animateShootingStars(shootingStarsSystem, delta);
       animateBuzzwords(buzzwordSystem, elapsedTime);
 
       // Buzzword glitch (every 5-10 seconds)
@@ -102,15 +109,17 @@ export const FuturisticAlienHero = () => {
         buzzwordGlitchTime = elapsedTime;
         isBuzzwordGlitching = true;
         triggerBuzzwordGlitch(buzzwordSystem);
-        setTimeout(() => { isBuzzwordGlitching = false; }, 300);
+        const timer = setTimeout(() => { isBuzzwordGlitching = false; }, 300);
+        glitchTimers.push(timer);
       }
 
       // Artifact glitch (every 10-20 seconds)
       if (!isArtifactGlitching && elapsedTime - artifactGlitchTime > 10 + Math.random() * 10) {
         artifactGlitchTime = elapsedTime;
         isArtifactGlitching = true;
-        triggerArtifactGlitch(artifactSystem.artifact, artifactOriginalPosition);
-        setTimeout(() => { isArtifactGlitching = false; }, 300);
+        triggerArtifactGlitch(artifactSystem, artifactOriginalPosition);
+        const timer = setTimeout(() => { isArtifactGlitching = false; }, 300);
+        glitchTimers.push(timer);
       }
 
       renderer.render(scene, camera);
@@ -119,14 +128,23 @@ export const FuturisticAlienHero = () => {
 
     // Cleanup
     return () => {
+      isDisposed = true;
+      
+      // Clear all local timers
+      clearTimeout(loadDelayTimer);
+      glitchTimers.forEach(timer => clearTimeout(timer));
+      
       window.removeEventListener('resize', handleResize);
       mouseInteraction.removeListeners();
       cancelAnimationFrame(animationFrameId);
-      renderer.dispose();
+      
+      // Dispose systems (each handles its own timer cleanup)
       disposeArtifact(artifactSystem);
       disposeNebula(nebulaSystem);
-      disposeShootingStars(shootingStars);
+      disposeShootingStars(shootingStarsSystem);
       disposeBuzzwords(buzzwordSystem);
+      
+      renderer.dispose();
     };
   }, []);
 
