@@ -316,27 +316,43 @@ html {
 }
 
 /* Medal shine animation for leaderboard */
-@keyframes medal-shine {
-  0%, 90%, 100% {
-    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+.medal-shine-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.medal-shine-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: medal-sweep 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes medal-sweep {
+  0%, 85%, 100% {
+    left: -100%;
+    opacity: 0;
+  }
+  90% {
+    opacity: 1;
   }
   95% {
-    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+    left: 150%;
+    opacity: 1;
   }
-}
-
-.medal-shine {
-  animation: medal-shine 4s ease-in-out infinite;
-}
-
-.medal-shine-delay-1 {
-  animation: medal-shine 4s ease-in-out infinite;
-  animation-delay: 1.3s;
-}
-
-.medal-shine-delay-2 {
-  animation: medal-shine 4s ease-in-out infinite;
-  animation-delay: 2.6s;
+  96% {
+    opacity: 0;
+  }
 }
 
 /* ================================================================================

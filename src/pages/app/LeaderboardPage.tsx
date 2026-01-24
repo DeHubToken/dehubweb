@@ -248,13 +248,13 @@ export default function LeaderboardPage() {
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2">
                     {rank <= 3 ? (
-                      <img 
-                        src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
-                        alt={`Rank ${rank}`} 
-                        className={`w-8 h-8 object-contain ${
-                          rank === 1 ? 'medal-shine' : rank === 2 ? 'medal-shine-delay-1' : 'medal-shine-delay-2'
-                        }`}
-                      />
+                      <div className="medal-shine-container w-8 h-8 rounded-full">
+                        <img 
+                          src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
+                          alt={`Rank ${rank}`} 
+                          className="w-8 h-8 object-contain"
+                        />
+                      </div>
                     ) : (
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${getRankStyle(rank)}`}>
                         {rank}
