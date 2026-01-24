@@ -7,7 +7,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Maximize } from 'lucide-react';
+import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -32,6 +32,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -55,6 +57,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       videoRef.current.play().catch(() => {});
     }
     setIsLiked(false);
+    setIsPlaying(true);
   }, [currentIndex]);
 
   const goToNext = () => {
@@ -105,11 +108,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       else if (e.key === 'ArrowUp' || e.key === 'k') goToPrev();
       else if (e.key === 'Escape') onClose();
       else if (e.key === 'm') toggleMute();
+      else if (e.key === ' ') {
+        e.preventDefault();
+        togglePlayPause();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex]);
+  }, [currentIndex, isPlaying]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
     // Swipe right to close (like Instagram stories)
@@ -127,6 +134,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
     }
+  };
+
+  const togglePlayPause = () => {
+    if (!videoRef.current) return;
+    
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+      setShowPlayIndicator('pause');
+    } else {
+      videoRef.current.play().catch(() => {});
+      setIsPlaying(true);
+      setShowPlayIndicator('play');
+    }
+    
+    setTimeout(() => setShowPlayIndicator(null), 500);
   };
 
   // Prevent touch events from bubbling to parent page
@@ -240,6 +263,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
+            onTap={togglePlayPause}
           >
             {currentShort.videoUrl ? (
               <video
@@ -263,6 +287,24 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                   <p className="text-white/70">Video unavailable</p>
                 </div>
+              </div>
+            )}
+            
+            {/* Play/Pause indicator */}
+            {showPlayIndicator && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center"
+                >
+                  {showPlayIndicator === 'play' ? (
+                    <Play className="w-8 h-8 text-white fill-white" />
+                  ) : (
+                    <Pause className="w-8 h-8 text-white" />
+                  )}
+                </motion.div>
               </div>
             )}
           </motion.div>
@@ -397,24 +439,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
 
       {/* Mobile header controls */}
       {isMobile && (
-        <>
-          <button
-            onClick={() => containerRef.current?.requestFullscreen?.()}
-            className="absolute top-4 right-28 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
-          >
-            <Maximize className="w-4 h-4 text-white" />
-          </button>
-          <button
-            onClick={toggleMute}
-            className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
-          >
-            {isMuted ? (
-              <VolumeX className="w-4 h-4 text-white" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-white" />
-            )}
-          </button>
-        </>
+        <button
+          onClick={toggleMute}
+          className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
+        >
+          {isMuted ? (
+            <VolumeX className="w-4 h-4 text-white" />
+          ) : (
+            <Volume2 className="w-4 h-4 text-white" />
+          )}
+        </button>
       )}
 
       {/* Mobile swipe hint */}
