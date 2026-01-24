@@ -1,11 +1,11 @@
 /**
  * Swipeable Carousel Wrapper
  * ==========================
- * Isolates horizontal touch events to prevent them from bubbling up
+ * Isolates horizontal touch and wheel events to prevent them from bubbling up
  * to parent containers (like HomePage tab switcher).
  * 
  * Wrap any horizontally scrollable carousel with this component
- * to prevent swipe conflicts on mobile.
+ * to prevent swipe conflicts on mobile and trackpad swipes on desktop.
  * 
  * @module components/app/SwipeableCarousel
  */
@@ -53,12 +53,21 @@ export function SwipeableCarousel({ children, className }: SwipeableCarouselProp
     isHorizontalSwipe.current = false;
   }, []);
 
+  // Block horizontal wheel events (trackpad swipes) from bubbling up
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    // If horizontal movement dominates, stop propagation
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 5) {
+      e.stopPropagation();
+    }
+  }, []);
+
   return (
     <div
       className={className}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onWheel={handleWheel}
     >
       {children}
     </div>

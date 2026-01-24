@@ -36,6 +36,10 @@ import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 /** Minimum swipe distance to trigger tab change */
 const SWIPE_THRESHOLD = 50;
 const PULL_THRESHOLD = 80;
+/** Minimum trackpad delta to trigger tab change */
+const TRACKPAD_THRESHOLD = 100;
+/** Debounce time for trackpad swipes (ms) */
+const TRACKPAD_DEBOUNCE = 300;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -67,6 +71,12 @@ export default function HomePage() {
   const touchEndX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchEndY = useRef<number | null>(null);
+  
+  // Trackpad swipe refs
+  const wheelDeltaX = useRef(0);
+  const wheelDeltaY = useRef(0);
+  const lastWheelTime = useRef(0);
+  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
@@ -249,6 +259,61 @@ export default function HomePage() {
   };
 
   // --------------------------------------------------------------------------
+  // TRACKPAD SWIPE HANDLER (Two-finger horizontal swipe on laptop)
+  // --------------------------------------------------------------------------
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    const now = Date.now();
+    
+    // Reset accumulator if too much time has passed
+    if (now - lastWheelTime.current > TRACKPAD_DEBOUNCE) {
+      wheelDeltaX.current = 0;
+      wheelDeltaY.current = 0;
+    }
+    lastWheelTime.current = now;
+    
+    // Accumulate deltas
+    wheelDeltaX.current += e.deltaX;
+    wheelDeltaY.current += Math.abs(e.deltaY);
+    
+    // Clear any pending timeout
+    if (wheelTimeout.current) {
+      clearTimeout(wheelTimeout.current);
+    }
+    
+    // Only trigger if horizontal movement dominates vertical
+    const absDeltaX = Math.abs(wheelDeltaX.current);
+    if (absDeltaX > TRACKPAD_THRESHOLD && absDeltaX > wheelDeltaY.current * 1.5) {
+      const tabValues = FEED_TABS.map(tab => tab.value);
+      const currentIndex = tabValues.indexOf(activeTab);
+      
+      if (wheelDeltaX.current > 0 && currentIndex < tabValues.length - 1) {
+        // Swipe left (next tab)
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex + 1]);
+        });
+        resetFilters();
+      } else if (wheelDeltaX.current < 0 && currentIndex > 0) {
+        // Swipe right (previous tab)
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex - 1]);
+        });
+        resetFilters();
+      }
+      
+      // Reset after triggering
+      wheelDeltaX.current = 0;
+      wheelDeltaY.current = 0;
+    }
+    
+    // Reset accumulators after gesture ends
+    wheelTimeout.current = setTimeout(() => {
+      wheelDeltaX.current = 0;
+      wheelDeltaY.current = 0;
+    }, TRACKPAD_DEBOUNCE);
+  }, [activeTab, resetFilters]);
+
+  // --------------------------------------------------------------------------
   // RENDER FEED BASED ON ACTIVE TAB
   // --------------------------------------------------------------------------
 
@@ -319,6 +384,7 @@ export default function HomePage() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onWheel={handleWheel}
         onMouseDown={pullHandlers.onMouseDown}
         onMouseMove={pullHandlers.onMouseMove}
         onMouseUp={pullHandlers.onMouseUp}
