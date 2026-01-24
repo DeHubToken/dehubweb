@@ -8,6 +8,7 @@ import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 
 // Shared modules
 import { useGlitchEffect } from '@/hooks/use-glitch-effect';
+import { useFeedPrefetch } from '@/hooks/use-feed-prefetch';
 import { TIMING } from '@/config/hero-config';
 import { createScene, createLighting, createResizeHandler, setupMouseInteraction } from '@/lib/three/scene-helpers';
 import { createNebula, animateNebula, disposeNebula, loadEasterEggs } from '@/lib/three/nebula';
@@ -31,6 +32,9 @@ export const FuturisticAlienHero = () => {
   const mountRef = useRef<HTMLCanvasElement>(null);
   const navigate = useNavigate();
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
+  
+  // Prefetch feed data immediately so it's ready when user enters app
+  useFeedPrefetch();
 
   const handleEnterApp = () => {
     // Save preference to skip landing next time
