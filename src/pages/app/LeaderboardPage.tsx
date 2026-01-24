@@ -251,7 +251,9 @@ export default function LeaderboardPage() {
                       <img 
                         src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
                         alt={`Rank ${rank}`} 
-                        className="w-8 h-8 object-contain"
+                        className={`w-8 h-8 object-contain ${
+                          rank === 1 ? 'medal-shine' : rank === 2 ? 'medal-shine-delay-1' : 'medal-shine-delay-2'
+                        }`}
                       />
                     ) : (
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${getRankStyle(rank)}`}>

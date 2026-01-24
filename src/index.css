@@ -315,6 +315,30 @@ html {
   }
 }
 
+/* Medal shine animation for leaderboard */
+@keyframes medal-shine {
+  0%, 90%, 100% {
+    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+  95% {
+    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+  }
+}
+
+.medal-shine {
+  animation: medal-shine 4s ease-in-out infinite;
+}
+
+.medal-shine-delay-1 {
+  animation: medal-shine 4s ease-in-out infinite;
+  animation-delay: 1.3s;
+}
+
+.medal-shine-delay-2 {
+  animation: medal-shine 4s ease-in-out infinite;
+  animation-delay: 2.6s;
+}
+
 /* ================================================================================
    WEB3AUTH MODAL - Black Liquid Glass Effect
    ================================================================================ */
