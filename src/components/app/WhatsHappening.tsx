@@ -54,7 +54,7 @@ export function WhatsHappening() {
           className="max-h-[240px] overflow-y-auto overflow-x-hidden scrollbar-invisible space-y-4 pr-1 pb-2"
         >
           {visibleTopics.map((item, index) => (
-            <div key={`${item.tag}-${index}`}>
+            <div key={`${item.tag}-${index}`} className="pl-0.5">
               <p className="font-semibold text-white">{item.tag}</p>
               <p className="text-white/70 text-sm">{item.postCount}</p>
             </div>
