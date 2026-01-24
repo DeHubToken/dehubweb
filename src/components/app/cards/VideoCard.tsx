@@ -226,8 +226,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   }, [handleDoubleTapSeek, handlePlayClick]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    e.preventDefault(); // Prevent the onClick from also firing
-    
     const touch = e.changedTouches[0];
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = touch.clientX - rect.left;
@@ -235,15 +233,18 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     const relativeX = x / rect.width; // 0 to 1
     const relativeY = y / rect.height; // 0 to 1
     
-    // Ignore touches in top-right corner (where controls are) - top 15% and right 35%
-    if (relativeY < 0.15 && relativeX > 0.65) {
-      return; // Let the button handle the touch
+    // Ignore touches in top-right corner (where controls are) - top 20% and right 40%
+    if (relativeY < 0.20 && relativeX > 0.60) {
+      return; // Let the button handle the touch natively
     }
     
-    // Also ignore bottom area where progress bar is - bottom 15%
-    if (relativeY > 0.85) {
-      return; // Let the progress bar handle the touch
+    // Also ignore bottom area where progress bar is - bottom 20%
+    if (relativeY > 0.80) {
+      return; // Let the progress bar handle the touch natively
     }
+    
+    // Only prevent default after we've confirmed this isn't a button/control touch
+    e.preventDefault();
     
     // Center zone (30-70%) for play/pause
     if (relativeX > 0.3 && relativeX < 0.7) {
