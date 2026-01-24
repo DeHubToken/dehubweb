@@ -393,6 +393,11 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         </div>
       </div>
 
+      {/* Title - below header */}
+      <div className="px-3 pb-2">
+        <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
+      </div>
+
       {/* Video Player / Thumbnail */}
       <div 
         ref={containerRef}
@@ -571,8 +576,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           dislikeCount={video.dislikeCount}
           commentCount={video.commentCount}
         />
-        <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
-        <p className="text-zinc-500 text-xs mt-1">{video.uploadedAgo}</p>
+        <p className="text-zinc-500 text-xs">{video.uploadedAgo}</p>
 
         {/* Inline Comments Section */}
         <AnimatePresence>
