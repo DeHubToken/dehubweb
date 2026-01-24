@@ -28,6 +28,11 @@ export const AI_STYLE_OPTIONS = [
   { id: 'lil-bro', label: 'Lil Bro', emoji: '👦' },
   { id: 'big-sister', label: 'Big Sister', emoji: '👧' },
   { id: 'little-sister', label: 'Little Sister', emoji: '👶' },
+  { id: 'conservative', label: 'Conservative', emoji: '🐘' },
+  { id: 'liberal', label: 'Liberal', emoji: '🗽' },
+  { id: 'antifa', label: 'ANTIFA', emoji: '✊' },
+  { id: 'capitalist', label: 'Capitalist', emoji: '💰' },
+  { id: 'communist', label: 'Communist', emoji: '☭' },
 ] as const;
 
 // For AI Assistant - includes "Normal" as first option
