@@ -3,9 +3,13 @@
  * ===========================
  * Wraps text content and offers translation when foreign language detected.
  * Uses hybrid detection: instant regex for non-Latin + AI for Latin scripts.
+ * 
+ * Two usage patterns:
+ * 1. TranslatableText - single text with inline translate control
+ * 2. TranslatableGroup - wraps multiple elements, shows single control at end
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Globe, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
@@ -57,48 +61,38 @@ function isLatinText(text: string): boolean {
   return totalChars > 0 && latinChars / totalChars > 0.7;
 }
 
-export function TranslatableText({ 
-  text, 
-  className,
-  as: Component = 'span' 
-}: TranslatableTextProps) {
+// Custom hook for translation logic (shared between components)
+function useTranslation(text: string) {
   const { language: userLang } = useUserLanguage();
   const [isTranslated, setIsTranslated] = useState(false);
   const [translatedText, setTranslatedText] = useState('');
   const [sourceLang, setSourceLang] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Language detection state
   const [detectedLang, setDetectedLang] = useState<string | null>(null);
   const [isDetecting, setIsDetecting] = useState(false);
 
-  // Instant detection for non-Latin scripts
   const nonLatinLang = useMemo(() => detectNonLatinScript(text), [text]);
   
-  // Check if text is Latin-based and long enough for detection
   const needsAIDetection = useMemo(() => {
-    if (nonLatinLang) return false; // Already detected via regex
+    if (nonLatinLang) return false;
     if (text.length < MIN_TEXT_LENGTH_FOR_DETECTION) return false;
     if (!isLatinText(text)) return false;
     return true;
   }, [text, nonLatinLang]);
 
-  // AI-powered language detection for Latin scripts
   useEffect(() => {
     if (!needsAIDetection) {
       setDetectedLang(nonLatinLang);
       return;
     }
 
-    // Check cache first
     const cached = getCachedLanguage(text);
     if (cached) {
       setDetectedLang(cached);
       return;
     }
 
-    // Call AI detection
     const detectLanguage = async () => {
       setIsDetecting(true);
       try {
@@ -128,12 +122,10 @@ export function TranslatableText({
     detectLanguage();
   }, [text, needsAIDetection, nonLatinLang]);
 
-  // Determine if translation should be offered
   const shouldOfferTranslation = useMemo(() => {
     const langToCheck = detectedLang || nonLatinLang;
     if (!langToCheck) return false;
     if (langToCheck === userLang) return false;
-    // If user's language is English and detected is English, don't offer
     if (userLang === 'en' && langToCheck === 'en') return false;
     return true;
   }, [detectedLang, nonLatinLang, userLang]);
@@ -141,7 +133,6 @@ export function TranslatableText({
   const handleTranslate = async () => {
     const cacheKey = `${text}-${userLang}`;
     
-    // Check cache first
     if (translationCache.has(cacheKey)) {
       const cached = translationCache.get(cacheKey)!;
       setTranslatedText(cached.translated);
@@ -163,7 +154,6 @@ export function TranslatableText({
       const translated = data.translatedText;
       const detected = data.detectedLanguage?.language || detectedLang || nonLatinLang || 'unknown';
 
-      // Cache the result
       translationCache.set(cacheKey, { translated, sourceLang: detected });
 
       setTranslatedText(translated);
@@ -181,12 +171,46 @@ export function TranslatableText({
     setIsTranslated(false);
   };
 
+  return {
+    userLang,
+    isTranslated,
+    translatedText,
+    sourceLang,
+    isLoading,
+    error,
+    isDetecting,
+    shouldOfferTranslation,
+    handleTranslate,
+    handleShowOriginal,
+  };
+}
+
+/**
+ * TranslatableText - single text element with translation
+ */
+export function TranslatableText({ 
+  text, 
+  className,
+  as: Component = 'span',
+}: TranslatableTextProps) {
+  const {
+    userLang,
+    isTranslated,
+    translatedText,
+    sourceLang,
+    isLoading,
+    error,
+    isDetecting,
+    shouldOfferTranslation,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTranslation(text);
+
   // If no translation needed and not detecting, just render the text
   if (!shouldOfferTranslation && !isDetecting) {
     return <Component className={className}>{text}</Component>;
   }
 
-  // Render text inline, with translate controls appearing after
   const renderTranslateControl = () => {
     if (isTranslated) {
       return (
@@ -260,6 +284,69 @@ export function TranslatableText({
         </motion.div>
       </AnimatePresence>
       {renderTranslateControl()}
+    </>
+  );
+}
+
+/**
+ * TranslatableGroup - wraps multiple text elements with a single translate control at the end
+ * Use when you have title + description that should share one translate button
+ */
+interface TranslatableGroupProps {
+  /** Combined text for language detection (e.g., title + " " + description) */
+  text: string;
+  children: ReactNode;
+}
+
+export function TranslatableGroup({ text, children }: TranslatableGroupProps) {
+  const {
+    userLang,
+    isLoading,
+    error,
+    isDetecting,
+    shouldOfferTranslation,
+    handleTranslate,
+  } = useTranslation(text);
+
+  // If no translation needed, just render children
+  if (!shouldOfferTranslation && !isDetecting) {
+    return <>{children}</>;
+  }
+
+  return (
+    <>
+      {children}
+      {isDetecting ? (
+        <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
+          <Loader2 className="w-3 h-3 animate-spin" />
+          <span>Detecting language...</span>
+        </span>
+      ) : shouldOfferTranslation ? (
+        <button
+          onClick={handleTranslate}
+          disabled={isLoading}
+          className={cn(
+            "flex items-center gap-1.5 text-xs transition-colors mt-1",
+            error 
+              ? "text-red-400" 
+              : "text-blue-400 hover:text-blue-300"
+          )}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="w-3 h-3 animate-spin" />
+              <span>Translating...</span>
+            </>
+          ) : error ? (
+            <span>{error}</span>
+          ) : (
+            <>
+              <Globe className="w-3 h-3" />
+              <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
+            </>
+          )}
+        </button>
+      ) : null}
     </>
   );
 }

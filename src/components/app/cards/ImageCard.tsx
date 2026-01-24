@@ -16,7 +16,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
-import { TranslatableText } from '../TranslatableText';
+import { TranslatableGroup } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
 import {
@@ -135,6 +135,7 @@ function ImageCarousel({ images }: { images: string[] }) {
 
 /**
  * Feed description component with expandable text
+ * Uses TranslatableGroup to show a single translate control below all text
  */
 function FeedDescription({ 
   title, 
@@ -153,33 +154,38 @@ function FeedDescription({
   
   if (!title && !description) return null;
   
+  // Combine texts for language detection
+  const fullText = [title, description].filter(Boolean).join(' ');
+  
   return (
-    <div className="space-y-1">
-      {title && (
-        <h3 className="text-white text-sm font-semibold leading-tight">
-          <TranslatableText text={title} as="span" />
-        </h3>
-      )}
-      {description && (
-        <div>
-          <p className="text-zinc-300 text-sm leading-relaxed">
-            <TranslatableText text={displayDescription} as="span" />
-          </p>
-          {hasLongDescription && (
-            <button 
-              onClick={() => setExpanded(!expanded)}
-              className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
-            >
-              {expanded ? (
-                <>Show less <ChevronUp className="w-3 h-3" /></>
-              ) : (
-                <>Show more <ChevronDown className="w-3 h-3" /></>
-              )}
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+    <TranslatableGroup text={fullText}>
+      <div className="space-y-1">
+        {title && (
+          <h3 className="text-white text-sm font-semibold leading-tight">
+            {title}
+          </h3>
+        )}
+        {description && (
+          <div>
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              {displayDescription}
+            </p>
+            {hasLongDescription && (
+              <button 
+                onClick={() => setExpanded(!expanded)}
+                className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
+              >
+                {expanded ? (
+                  <>Show less <ChevronUp className="w-3 h-3" /></>
+                ) : (
+                  <>Show more <ChevronDown className="w-3 h-3" /></>
+                )}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </TranslatableGroup>
   );
 }
 
