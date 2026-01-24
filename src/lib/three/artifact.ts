@@ -9,6 +9,9 @@ export interface ArtifactSystem {
   logoMesh: THREE.Mesh;
   logoMaterial: THREE.MeshBasicMaterial;
   simplex: SimplexNoise;
+  timers: NodeJS.Timeout[];
+  intervals: NodeJS.Timeout[];
+  isDisposed: boolean;
 }
 
 export const createArtifact = (
@@ -55,7 +58,10 @@ export const createArtifact = (
   logoMesh.renderOrder = 999;
   scene.add(logoMesh);
 
-  return { artifact, geometry, material, logoMesh, logoMaterial, simplex };
+  return { 
+    artifact, geometry, material, logoMesh, logoMaterial, simplex,
+    timers: [], intervals: [], isDisposed: false 
+  };
 };
 
 export const animateArtifact = (
@@ -98,9 +104,13 @@ export const animateArtifact = (
 };
 
 export const triggerArtifactGlitch = (
-  artifact: THREE.Mesh,
+  artifactSystem: ArtifactSystem,
   originalPosition: { x: number; y: number; z: number }
 ) => {
+  if (artifactSystem.isDisposed) return;
+  
+  const { artifact } = artifactSystem;
+  
   // Store original position
   const startPos = {
     x: artifact.position.x,
@@ -114,11 +124,18 @@ export const triggerArtifactGlitch = (
   artifact.position.z += (Math.random() - 0.5) * 0.2;
 
   // Return with elastic easing
-  setTimeout(() => {
+  const timer = setTimeout(() => {
+    if (artifactSystem.isDisposed) return;
+    
     const returnDuration = 100;
     const returnStartTime = Date.now();
 
     const returnInterval = setInterval(() => {
+      if (artifactSystem.isDisposed) {
+        clearInterval(returnInterval);
+        return;
+      }
+      
       const elapsed = Date.now() - returnStartTime;
       const progress = Math.min(elapsed / returnDuration, 1);
 
@@ -135,10 +152,20 @@ export const triggerArtifactGlitch = (
         clearInterval(returnInterval);
       }
     }, 16);
+    artifactSystem.intervals.push(returnInterval);
   }, 100);
+  artifactSystem.timers.push(timer);
 };
 
 export const disposeArtifact = (artifactSystem: ArtifactSystem) => {
+  artifactSystem.isDisposed = true;
+  
+  // Clear all timers and intervals
+  artifactSystem.timers.forEach(timer => clearTimeout(timer));
+  artifactSystem.intervals.forEach(interval => clearInterval(interval));
+  artifactSystem.timers = [];
+  artifactSystem.intervals = [];
+  
   artifactSystem.geometry.dispose();
   artifactSystem.material.dispose();
   if (artifactSystem.logoMaterial.map) {

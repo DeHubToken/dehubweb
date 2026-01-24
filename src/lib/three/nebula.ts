@@ -20,6 +20,9 @@ export interface NebulaSystem {
   material: THREE.PointsMaterial;
   easterEggs: THREE.Sprite[];
   specialEasterEggs: THREE.Sprite[];
+  timers: NodeJS.Timeout[];
+  intervals: NodeJS.Timeout[];
+  isDisposed: boolean;
 }
 
 export const createNebula = (scene: THREE.Scene): NebulaSystem => {
@@ -154,16 +157,26 @@ export const createNebula = (scene: THREE.Scene): NebulaSystem => {
 
   scene.add(nebulaGroup);
 
-  return { nebula, nebulaGroup, geometry, material, easterEggs, specialEasterEggs };
+  return { 
+    nebula, nebulaGroup, geometry, material, easterEggs, specialEasterEggs,
+    timers: [], intervals: [], isDisposed: false 
+  };
 };
 
 // Load easter eggs with fade-in effect (call after delay)
 export const loadEasterEggs = (nebulaSystem: NebulaSystem) => {
+  if (nebulaSystem.isDisposed) return;
+  
   // Portrait easter eggs
   nebulaSystem.easterEggs.forEach((sprite, index) => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      if (nebulaSystem.isDisposed) return;
       let opacity = 0;
       const fadeIn = setInterval(() => {
+        if (nebulaSystem.isDisposed) {
+          clearInterval(fadeIn);
+          return;
+        }
         opacity += 0.025;
         if (opacity >= 0.25) {
           opacity = 0.25;
@@ -171,22 +184,31 @@ export const loadEasterEggs = (nebulaSystem: NebulaSystem) => {
         }
         (sprite.material as THREE.SpriteMaterial).opacity = opacity;
       }, 50);
+      nebulaSystem.intervals.push(fadeIn);
     }, index * 200);
+    nebulaSystem.timers.push(timer);
   });
 
   // Special nebula easter eggs (third eye) - staggered fade in
   nebulaSystem.specialEasterEggs.forEach((sprite, index) => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      if (nebulaSystem.isDisposed) return;
       let opacity = 0;
       const fadeIn = setInterval(() => {
+        if (nebulaSystem.isDisposed) {
+          clearInterval(fadeIn);
+          return;
+        }
         opacity += 0.02;
-        if (opacity >= 0.15) { // Lower opacity for subtle effect
+        if (opacity >= 0.15) {
           opacity = 0.15;
           clearInterval(fadeIn);
         }
         (sprite.material as THREE.SpriteMaterial).opacity = opacity;
       }, 40);
-    }, 500 + index * 100); // Start after portraits, stagger each
+      nebulaSystem.intervals.push(fadeIn);
+    }, 500 + index * 100);
+    nebulaSystem.timers.push(timer);
   });
 };
 
@@ -195,6 +217,14 @@ export const animateNebula = (nebulaSystem: NebulaSystem) => {
 };
 
 export const disposeNebula = (nebulaSystem: NebulaSystem) => {
+  nebulaSystem.isDisposed = true;
+  
+  // Clear all timers and intervals
+  nebulaSystem.timers.forEach(timer => clearTimeout(timer));
+  nebulaSystem.intervals.forEach(interval => clearInterval(interval));
+  nebulaSystem.timers = [];
+  nebulaSystem.intervals = [];
+  
   nebulaSystem.geometry.dispose();
   nebulaSystem.material.dispose();
   nebulaSystem.easterEggs.forEach((sprite) => {
