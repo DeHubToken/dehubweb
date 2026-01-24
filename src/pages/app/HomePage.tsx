@@ -37,11 +37,9 @@ import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 const SWIPE_THRESHOLD = 50;
 const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
-const TRACKPAD_THRESHOLD = 100;
-/** Debounce time for trackpad swipes (ms) */
-const TRACKPAD_DEBOUNCE = 150;
-/** Cooldown after tab switch to prevent double-jumps (ms) */
-const TAB_SWITCH_COOLDOWN = 500;
+const TRACKPAD_THRESHOLD = 80;
+/** Time of no input to consider gesture ended (ms) */
+const GESTURE_END_DELAY = 100;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -68,18 +66,18 @@ export default function HomePage() {
     latest: false,
   });
   
-  // Swipe gesture refs
+  // Mobile touch gesture refs
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchEndY = useRef<number | null>(null);
+  const touchGestureTriggered = useRef(false);
   
-  // Trackpad swipe refs
+  // Trackpad gesture state machine refs
   const wheelDeltaX = useRef(0);
   const wheelDeltaY = useRef(0);
-  const lastWheelTime = useRef(0);
-  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
-  const lastTabSwitchTime = useRef(0);
+  const gestureTriggered = useRef(false);
+  const gestureTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
@@ -198,6 +196,7 @@ export default function HomePage() {
     touchStartY.current = e.touches[0].clientY;
     touchEndX.current = null;
     touchEndY.current = null;
+    touchGestureTriggered.current = false; // New gesture starting
     pullHandlers.onTouchStart(e);
   };
 
@@ -215,10 +214,18 @@ export default function HomePage() {
   const handleTouchEnd = () => {
     pullHandlers.onTouchEnd();
     
+    // Already triggered this gesture? Reset and exit
+    if (touchGestureTriggered.current) {
+      touchStartX.current = null;
+      touchEndX.current = null;
+      touchStartY.current = null;
+      touchEndY.current = null;
+      return;
+    }
+    
     // Handle horizontal swipe for tab switching
     if (!touchStartX.current || !touchEndX.current || 
         !touchStartY.current || !touchEndY.current) {
-      // Reset refs if incomplete
       touchStartX.current = null;
       touchEndX.current = null;
       touchStartY.current = null;
@@ -231,7 +238,6 @@ export default function HomePage() {
     const absDeltaX = Math.abs(deltaX);
     
     // Only switch tabs if horizontal movement clearly dominates vertical
-    // This prevents vertical scrolling from accidentally triggering tab changes
     const isHorizontalSwipe = absDeltaX > SWIPE_THRESHOLD && absDeltaX > deltaY * 1.5;
     
     if (isHorizontalSwipe) {
@@ -241,7 +247,9 @@ export default function HomePage() {
       const tabValues = FEED_TABS.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
-      // Use flushSync to force immediate state update and prevent visual lag
+      // Mark gesture as triggered - one swipe = one action
+      touchGestureTriggered.current = true;
+      
       if (isLeftSwipe && currentIndex < tabValues.length - 1) {
         flushSync(() => {
           setActiveTab(tabValues[currentIndex + 1]);
@@ -266,61 +274,49 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    const now = Date.now();
+    // Already triggered this gesture? Ignore rest of wheel events
+    if (gestureTriggered.current) return;
     
-    // Cooldown after tab switch to prevent double-jumps
-    if (now - lastTabSwitchTime.current < TAB_SWITCH_COOLDOWN) {
-      return;
-    }
+    // Ignore if vertical scroll dominates
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
     
-    // Reset accumulator if too much time has passed
-    if (now - lastWheelTime.current > TRACKPAD_DEBOUNCE) {
-      wheelDeltaX.current = 0;
-      wheelDeltaY.current = 0;
-    }
-    lastWheelTime.current = now;
-    
-    // Accumulate deltas
+    // Accumulate horizontal delta
     wheelDeltaX.current += e.deltaX;
     wheelDeltaY.current += Math.abs(e.deltaY);
     
-    // Clear any pending timeout
-    if (wheelTimeout.current) {
-      clearTimeout(wheelTimeout.current);
+    // Clear previous gesture-end detection timeout
+    if (gestureTimeout.current) {
+      clearTimeout(gestureTimeout.current);
     }
     
-    // Only trigger if horizontal movement dominates vertical
+    // Check if threshold is reached for triggering
     const absDeltaX = Math.abs(wheelDeltaX.current);
     if (absDeltaX > TRACKPAD_THRESHOLD && absDeltaX > wheelDeltaY.current * 1.5) {
       const tabValues = FEED_TABS.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
+      // TRIGGER ONCE - lock gesture
+      gestureTriggered.current = true;
+      
       if (wheelDeltaX.current > 0 && currentIndex < tabValues.length - 1) {
-        // Swipe left (next tab)
         flushSync(() => {
           setActiveTab(tabValues[currentIndex + 1]);
         });
         resetFilters();
-        lastTabSwitchTime.current = now;
       } else if (wheelDeltaX.current < 0 && currentIndex > 0) {
-        // Swipe right (previous tab)
         flushSync(() => {
           setActiveTab(tabValues[currentIndex - 1]);
         });
         resetFilters();
-        lastTabSwitchTime.current = now;
       }
-      
-      // Reset after triggering
-      wheelDeltaX.current = 0;
-      wheelDeltaY.current = 0;
     }
     
-    // Reset accumulators after gesture ends
-    wheelTimeout.current = setTimeout(() => {
+    // Detect gesture end (no wheel events for GESTURE_END_DELAY ms)
+    gestureTimeout.current = setTimeout(() => {
+      gestureTriggered.current = false;
       wheelDeltaX.current = 0;
       wheelDeltaY.current = 0;
-    }, TRACKPAD_DEBOUNCE);
+    }, GESTURE_END_DELAY);
   }, [activeTab, resetFilters]);
 
   // --------------------------------------------------------------------------
