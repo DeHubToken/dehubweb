@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import assistantAvatar from '@/assets/assistant-avatar.png';
+import { AuthGate } from '@/components/app/AuthGate';
 
 const tabs = [
   { label: 'All', value: 'all', icon: LayoutGrid },
@@ -16,39 +15,12 @@ const tabs = [
 export default function BookmarksPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated, isLoading: isAuthLoading, connect } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  // Show loading state while checking auth
-  if (isAuthLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
-        <div className="w-20 h-20 mb-6 rounded-full bg-zinc-800 animate-pulse" />
-        <div className="h-6 w-40 bg-zinc-800 rounded animate-pulse mb-2" />
-        <div className="h-4 w-64 bg-zinc-800 rounded animate-pulse" />
-      </div>
-    );
-  }
-
-  // Block access for unauthenticated users
+  // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
-        <img 
-          src={assistantAvatar} 
-          alt="Sign in" 
-          className="w-20 h-20 object-contain mb-6"
-        />
-        <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
-        <p className="text-white/60 text-center mb-6 max-w-sm">
-          Log in to view and manage your saved bookmarks.
-        </p>
-        <Button 
-          onClick={() => connect()}
-          className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
-        >
-          Log in
-        </Button>
-      </div>
+      <AuthGate description="Log in to view and manage your saved bookmarks." />
     );
   }
 

@@ -1,0 +1,67 @@
+/**
+ * Auth Gate Component
+ * ===================
+ * A unified auth gate UI that shows skeleton while loading auth state
+ * or while the avatar image is loading, ensuring all content appears together.
+ * 
+ * @module components/app/AuthGate
+ */
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import assistantAvatar from '@/assets/assistant-avatar.png';
+
+interface AuthGateProps {
+  /** Description shown below "Sign in required" */
+  description: string;
+}
+
+export function AuthGate({ description }: AuthGateProps) {
+  const { connect, isLoading } = useAuth();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Show skeleton while auth is loading OR while image hasn't loaded yet
+  const showSkeleton = isLoading || !imageLoaded;
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
+      {/* Hidden image to preload */}
+      <img 
+        src={assistantAvatar} 
+        alt="" 
+        className="hidden"
+        onLoad={() => setImageLoaded(true)}
+      />
+      
+      {showSkeleton ? (
+        <>
+          <div className="w-20 h-20 mb-6 rounded-full bg-zinc-800 animate-pulse" />
+          <div className="h-6 w-40 bg-zinc-800 rounded animate-pulse mb-2" />
+          <div className="h-4 w-64 bg-zinc-800 rounded animate-pulse mb-6" />
+          <div className="h-10 w-24 bg-zinc-800 rounded-xl animate-pulse" />
+        </>
+      ) : (
+        <>
+          <img 
+            src={assistantAvatar} 
+            alt="Sign in" 
+            className="w-20 h-20 object-contain mb-6"
+          />
+          <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+          <p className="text-white/60 text-center mb-6 max-w-sm">
+            {description}
+          </p>
+          <Button 
+            onClick={() => connect()}
+            className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+          >
+            Log in
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default AuthGate;
