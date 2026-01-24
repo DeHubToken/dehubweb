@@ -40,13 +40,12 @@ function ImageCarousel({ images }: { images: string[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
   
-  // Gesture state machine refs for trackpad navigation
-  const wheelDeltaX = useRef(0);
+  // Gesture lock refs for trackpad navigation
   const gestureTriggered = useRef(false);
-  const gestureTimeout = useRef<NodeJS.Timeout | null>(null);
+  const gestureLockTimeout = useRef<NodeJS.Timeout | null>(null);
   
   const TRACKPAD_THRESHOLD = 50;
-  const GESTURE_END_DELAY = 100;
+  const GESTURE_LOCK_DURATION = 400;
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -70,40 +69,32 @@ function ImageCarousel({ images }: { images: string[] }) {
   const handleWheel = useCallback((e: React.WheelEvent) => {
     if (!emblaApi || images.length <= 1) return;
     
+    // LOCKED? Ignore all events until lock expires
+    if (gestureTriggered.current) return;
+    
+    const absDeltaX = Math.abs(e.deltaX);
+    const absDeltaY = Math.abs(e.deltaY);
+    
     // Only respond to horizontal swipes
-    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    if (absDeltaY > absDeltaX) return;
     
     // Stop propagation to prevent tab switching
     e.stopPropagation();
     
-    // Already triggered this gesture? Ignore rest
-    if (gestureTriggered.current) return;
-    
-    // Accumulate horizontal delta
-    wheelDeltaX.current += e.deltaX;
-    
-    // Clear previous gesture-end detection timeout
-    if (gestureTimeout.current) {
-      clearTimeout(gestureTimeout.current);
-    }
-    
-    const absDeltaX = Math.abs(wheelDeltaX.current);
+    // Single event threshold check
     if (absDeltaX > TRACKPAD_THRESHOLD) {
-      // TRIGGER ONCE - lock gesture
-      gestureTriggered.current = true;
-      
-      if (wheelDeltaX.current > 0) {
+      if (e.deltaX > 0) {
         emblaApi.scrollNext();
       } else {
         emblaApi.scrollPrev();
       }
+      
+      gestureTriggered.current = true;
+      if (gestureLockTimeout.current) clearTimeout(gestureLockTimeout.current);
+      gestureLockTimeout.current = setTimeout(() => {
+        gestureTriggered.current = false;
+      }, GESTURE_LOCK_DURATION);
     }
-    
-    // Detect gesture end (no wheel events for GESTURE_END_DELAY ms)
-    gestureTimeout.current = setTimeout(() => {
-      gestureTriggered.current = false;
-      wheelDeltaX.current = 0;
-    }, GESTURE_END_DELAY);
   }, [emblaApi, images.length]);
   
   const hasMultiple = images.length > 1;

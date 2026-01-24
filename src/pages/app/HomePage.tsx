@@ -37,9 +37,9 @@ import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 const SWIPE_THRESHOLD = 50;
 const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
-const TRACKPAD_THRESHOLD = 80;
-/** Time of no input to consider gesture ended (ms) */
-const GESTURE_END_DELAY = 100;
+const TRACKPAD_THRESHOLD = 60;
+/** Lock duration after gesture trigger - covers trackpad inertia */
+const GESTURE_LOCK_DURATION = 400;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -73,11 +73,9 @@ export default function HomePage() {
   const touchEndY = useRef<number | null>(null);
   const touchGestureTriggered = useRef(false);
   
-  // Trackpad gesture state machine refs
-  const wheelDeltaX = useRef(0);
-  const wheelDeltaY = useRef(0);
+  // Trackpad gesture - simple lock approach
   const gestureTriggered = useRef(false);
-  const gestureTimeout = useRef<NodeJS.Timeout | null>(null);
+  const gestureLockTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
@@ -274,49 +272,38 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    // Already triggered this gesture? Ignore rest of wheel events
+    // LOCKED? Ignore all wheel events until lock expires (covers inertia)
     if (gestureTriggered.current) return;
     
-    // Ignore if vertical scroll dominates
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+    const absDeltaX = Math.abs(e.deltaX);
+    const absDeltaY = Math.abs(e.deltaY);
     
-    // Accumulate horizontal delta
-    wheelDeltaX.current += e.deltaX;
-    wheelDeltaY.current += Math.abs(e.deltaY);
+    // Ignore vertical scrolling
+    if (absDeltaY > absDeltaX) return;
     
-    // Clear previous gesture-end detection timeout
-    if (gestureTimeout.current) {
-      clearTimeout(gestureTimeout.current);
-    }
-    
-    // Check if threshold is reached for triggering
-    const absDeltaX = Math.abs(wheelDeltaX.current);
-    if (absDeltaX > TRACKPAD_THRESHOLD && absDeltaX > wheelDeltaY.current * 1.5) {
+    // Single event threshold check - no accumulation
+    if (absDeltaX > TRACKPAD_THRESHOLD) {
       const tabValues = FEED_TABS.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
-      // TRIGGER ONCE - lock gesture
-      gestureTriggered.current = true;
+      if (e.deltaX > 0 && currentIndex < tabValues.length - 1) {
+        flushSync(() => setActiveTab(tabValues[currentIndex + 1]));
+        resetFilters();
+        gestureTriggered.current = true;
+      } else if (e.deltaX < 0 && currentIndex > 0) {
+        flushSync(() => setActiveTab(tabValues[currentIndex - 1]));
+        resetFilters();
+        gestureTriggered.current = true;
+      }
       
-      if (wheelDeltaX.current > 0 && currentIndex < tabValues.length - 1) {
-        flushSync(() => {
-          setActiveTab(tabValues[currentIndex + 1]);
-        });
-        resetFilters();
-      } else if (wheelDeltaX.current < 0 && currentIndex > 0) {
-        flushSync(() => {
-          setActiveTab(tabValues[currentIndex - 1]);
-        });
-        resetFilters();
+      // Keep locked for full inertia duration
+      if (gestureTriggered.current) {
+        if (gestureLockTimeout.current) clearTimeout(gestureLockTimeout.current);
+        gestureLockTimeout.current = setTimeout(() => {
+          gestureTriggered.current = false;
+        }, GESTURE_LOCK_DURATION);
       }
     }
-    
-    // Detect gesture end (no wheel events for GESTURE_END_DELAY ms)
-    gestureTimeout.current = setTimeout(() => {
-      gestureTriggered.current = false;
-      wheelDeltaX.current = 0;
-      wheelDeltaY.current = 0;
-    }, GESTURE_END_DELAY);
   }, [activeTab, resetFilters]);
 
   // --------------------------------------------------------------------------
