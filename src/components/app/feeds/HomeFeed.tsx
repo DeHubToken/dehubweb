@@ -21,7 +21,7 @@ import {
 } from '@/components/app/cards';
 
 // DeHub API hook
-import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, useDeHubImages, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -77,17 +77,32 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch main feed from DeHub API
+  // Fetch videos from DeHub API
   const {
-    data: apiData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isApiLoading,
-    isError,
-    refetch,
-    error,
+    data: videosData,
+    fetchNextPage: fetchNextVideos,
+    hasNextPage: hasNextVideos,
+    isFetchingNextPage: isFetchingNextVideos,
+    isLoading: isVideosLoading,
+    isError: isVideosError,
+    refetch: refetchVideos,
+    error: videosError,
   } = useDeHubFeed({
+    unit: PAGE_SIZE,
+    sortMode: 'new',
+    address: walletAddress || undefined,
+  });
+
+  // Fetch images from DeHub API
+  const {
+    data: imagesData,
+    fetchNextPage: fetchNextImages,
+    hasNextPage: hasNextImages,
+    isFetchingNextPage: isFetchingNextImages,
+    isLoading: isImagesLoading,
+    isError: isImagesError,
+    refetch: refetchImages,
+  } = useDeHubImages({
     unit: PAGE_SIZE,
     sortMode: 'new',
     address: walletAddress || undefined,
@@ -103,9 +118,10 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
-      refetch();
+      refetchVideos();
+      refetchImages();
     }
-  }, [shuffleKey, refetch]);
+  }, [shuffleKey, refetchVideos, refetchImages]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -114,38 +130,69 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
-  // Map API data to feed items
+  // Map API data to feed items - merge videos and images
   const items = useMemo((): UnifiedFeedItem[] => {
-    if (!apiData?.pages) return [];
+    const videoItems: UnifiedFeedItem[] = [];
+    const imageItems: UnifiedFeedItem[] = [];
     
-    const allNFTs = apiData.pages.flatMap(page => page.data || []);
+    // Map videos
+    if (videosData?.pages) {
+      const allVideoNFTs = videosData.pages.flatMap(page => page.data || []);
+      allVideoNFTs.forEach((nft, index) => {
+        videoItems.push({
+          type: 'video',
+          data: mapNFTToVideoItem(nft, index),
+        });
+      });
+    }
     
-    return allNFTs.map((nft, index): UnifiedFeedItem => {
-      // Determine content type using helper function
-      const contentType = getContentType(nft);
-      
-      if (contentType === 'image') {
-        return {
+    // Map images
+    if (imagesData?.pages) {
+      const allImageNFTs = imagesData.pages.flatMap(page => page.data || []);
+      allImageNFTs.forEach((nft, index) => {
+        imageItems.push({
           type: 'image',
           data: mapNFTToImagePost(nft, index),
-        };
+        });
+      });
+    }
+    
+    // Interleave videos and images (2 videos, 1 image pattern)
+    const merged: UnifiedFeedItem[] = [];
+    let videoIdx = 0;
+    let imageIdx = 0;
+    
+    while (videoIdx < videoItems.length || imageIdx < imageItems.length) {
+      // Add 2 videos
+      if (videoIdx < videoItems.length) {
+        merged.push(videoItems[videoIdx++]);
       }
-      // Default to video for video/audio/other types
-      return {
-        type: 'video',
-        data: mapNFTToVideoItem(nft, index),
-      };
-    });
-  }, [apiData]);
+      if (videoIdx < videoItems.length) {
+        merged.push(videoItems[videoIdx++]);
+      }
+      // Add 1 image
+      if (imageIdx < imageItems.length) {
+        merged.push(imageItems[imageIdx++]);
+      }
+    }
+    
+    return merged;
+  }, [videosData, imagesData]);
 
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage) return;
+    if (!loaderRef.current) return;
+    
+    const hasNextPage = hasNextVideos || hasNextImages;
+    const isFetchingNextPage = isFetchingNextVideos || isFetchingNextImages;
+
+    if (!hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isFetchingNextPage) {
-          fetchNextPage();
+          if (hasNextVideos) fetchNextVideos();
+          if (hasNextImages) fetchNextImages();
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -153,7 +200,14 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextVideos, hasNextImages, isFetchingNextVideos, isFetchingNextImages, fetchNextVideos, fetchNextImages]);
+
+  // Derived loading states
+  const isApiLoading = isVideosLoading || isImagesLoading;
+  const isError = isVideosError || isImagesError;
+  const error = videosError;
+  const hasNextPage = hasNextVideos || hasNextImages;
+  const isFetchingNextPage = isFetchingNextVideos || isFetchingNextImages;
 
   const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
     switch (item.type) {
@@ -214,7 +268,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
           : 'Be the first to share something amazing!'}
       </p>
       <button 
-        onClick={() => refetch()}
+        onClick={() => { refetchVideos(); refetchImages(); }}
         className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
       >
         Refresh
