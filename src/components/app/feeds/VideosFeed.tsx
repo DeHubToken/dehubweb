@@ -220,8 +220,27 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   alt={video.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-2 left-2 right-2">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                
+                {/* Creator info at top */}
+                <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
+                    <img 
+                      src={video.channelAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}`}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-white text-[10px] font-medium truncate">{video.channel}</span>
+                </div>
+                
+                {/* Duration badge */}
+                <div className="absolute bottom-2 right-2 bg-black/70 px-1.5 py-0.5 rounded text-[10px] text-white font-medium">
+                  {video.duration}
+                </div>
+                
+                {/* Title at bottom */}
+                <div className="absolute bottom-2 left-2 right-12">
                   <p className="text-white text-xs font-medium line-clamp-1">{video.title}</p>
                 </div>
               </div>
@@ -242,8 +261,27 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                     alt={video.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 right-2">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                  
+                  {/* Creator info at top */}
+                  <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
+                    <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
+                      <img 
+                        src={video.channelAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}`}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-white text-[10px] font-medium truncate">{video.channel}</span>
+                  </div>
+                  
+                  {/* Duration badge */}
+                  <div className="absolute bottom-2 right-2 bg-black/70 px-1.5 py-0.5 rounded text-[10px] text-white font-medium">
+                    {video.duration}
+                  </div>
+                  
+                  {/* Title at bottom */}
+                  <div className="absolute bottom-2 left-2 right-12">
                     <p className="text-white text-xs font-medium line-clamp-1">{video.title}</p>
                   </div>
                 </div>
