@@ -393,8 +393,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         </div>
       </div>
 
-      {/* Title - below header */}
-      <div className="px-3 pb-2">
+      {/* Title - below header, aligned with username */}
+      <div className="pl-[56px] pr-3 pb-2">
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
       </div>
 

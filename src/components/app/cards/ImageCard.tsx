@@ -238,9 +238,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         </div>
       </div>
 
-      {/* Title & Description - below header */}
+      {/* Title & Description - below header, aligned with username */}
       {(post.title || post.description) && (
-        <div className="px-3 pb-2">
+        <div className="pl-[56px] pr-3 pb-2">
           <FeedDescription 
             title={post.title} 
             description={post.description} 
