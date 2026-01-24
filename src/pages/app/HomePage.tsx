@@ -283,25 +283,28 @@ export default function HomePage() {
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 lg:mt-0">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-            {FEED_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => handleTabClick(tab.value)}
-                className={cn(
-                  'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl text-white',
-                  activeTab === tab.value 
-                    ? 'bg-zinc-800' 
-                    : 'hover:bg-white/5 transition-colors'
-                )}
-              >
-                <tab.icon className="w-4 h-4" />
-              </button>
-            ))}
+            {FEED_TABS.map((tab) => {
+              const isActive = activeTab === tab.value;
+              return (
+                <button
+                  key={`${tab.value}-${activeTab}`}
+                  onClick={() => handleTabClick(tab.value)}
+                  className={cn(
+                    'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl text-white',
+                    isActive 
+                      ? 'bg-zinc-800' 
+                      : 'hover:bg-white/5'
+                  )}
+                >
+                  <tab.icon className="w-4 h-4" />
+                </button>
+              );
+            })}
             
             {/* Settings Button */}
             <button
               onClick={() => setShowFeedSettings(true)}
-              className="flex items-center justify-center px-3 py-2 rounded-xl transition-colors text-white hover:bg-white/5"
+              className="flex items-center justify-center px-3 py-2 rounded-xl text-white hover:bg-white/5"
               aria-label="Feed settings"
             >
               <Settings2 className="w-4 h-4" />
