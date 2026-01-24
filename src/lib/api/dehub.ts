@@ -359,7 +359,12 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
 }
 
 export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
-  return apiCall<DeHubNFT>(`/api/nft_info/${tokenId}`);
+  const response = await apiCall<{ result: DeHubNFT } | DeHubNFT>(`/api/nft_info/${tokenId}`);
+  // Handle wrapped response from API
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as DeHubNFT;
 }
 
 // API comment response from /api/nft/{tokenId}/comments
