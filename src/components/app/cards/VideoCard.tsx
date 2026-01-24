@@ -196,13 +196,22 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
     const x = clientX - rect.left;
-    const isRightSide = x > rect.width / 2;
+    const relativeX = x / rect.width; // 0 to 1
     
+    // Center zone (37.5% - 62.5%) - fullscreen only, no seek
+    if (relativeX >= 0.375 && relativeX <= 0.625) {
+      videoRef.current?.requestFullscreen();
+      return;
+    }
+    
+    // Only seek if video is playing
     if (videoRef.current && isPlaying) {
-      if (isRightSide) {
+      if (relativeX > 0.625) {
+        // Right 37.5% - fast forward
         videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
         setSeekIndicator('right');
       } else {
+        // Left 37.5% - rewind
         videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
         setSeekIndicator('left');
       }
@@ -257,20 +266,20 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     // Only prevent default after we've confirmed this isn't a button/control touch
     e.preventDefault();
     
-    // Center zone (30-70%) for play/pause
-    if (relativeX > 0.3 && relativeX < 0.7) {
+    // Center zone (37.5% - 62.5%) for play/pause
+    if (relativeX >= 0.375 && relativeX <= 0.625) {
       handlePlayClick();
       return;
     }
     
     // Left/right zones for seeking (only when playing)
     if (videoRef.current && isPlaying) {
-      if (relativeX >= 0.7) {
-        // Right side - fast forward
+      if (relativeX > 0.625) {
+        // Right 37.5% - fast forward
         videoRef.current.currentTime = Math.min(videoRef.current.currentTime + 10, videoRef.current.duration);
         setSeekIndicator('right');
       } else {
-        // Left side - rewind
+        // Left 37.5% - rewind
         videoRef.current.currentTime = Math.max(videoRef.current.currentTime - 10, 0);
         setSeekIndicator('left');
       }
