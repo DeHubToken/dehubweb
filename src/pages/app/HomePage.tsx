@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -227,11 +228,16 @@ export default function HomePage() {
       const tabValues = FEED_TABS.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
+      // Use flushSync to force immediate state update and prevent visual lag
       if (isLeftSwipe && currentIndex < tabValues.length - 1) {
-        setActiveTab(tabValues[currentIndex + 1]);
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex + 1]);
+        });
         resetFilters();
       } else if (isRightSwipe && currentIndex > 0) {
-        setActiveTab(tabValues[currentIndex - 1]);
+        flushSync(() => {
+          setActiveTab(tabValues[currentIndex - 1]);
+        });
         resetFilters();
       }
     }
@@ -282,8 +288,10 @@ export default function HomePage() {
                 key={tab.value}
                 onClick={() => handleTabClick(tab.value)}
                 className={cn(
-                  'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl transition-colors text-white hover:bg-white/5',
-                  activeTab === tab.value && 'bg-zinc-800 hover:bg-zinc-800'
+                  'flex-1 flex items-center justify-center px-3 sm:px-4 py-2 rounded-xl text-white',
+                  activeTab === tab.value 
+                    ? 'bg-zinc-800' 
+                    : 'hover:bg-white/5 transition-colors'
                 )}
               >
                 <tab.icon className="w-4 h-4" />
