@@ -21,7 +21,8 @@ import {
 } from '@/components/app/cards';
 
 // DeHub API hook
-import { useDeHubFeed, useDeHubStoryUsers, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 
 import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
@@ -34,10 +35,37 @@ type UnifiedFeedItem =
   | { type: 'shorts'; data: ShortVideo[] };
 
 const PAGE_SIZE = 15;
+const SHORTS_INSERT_INTERVAL = 6;
 
 interface HomeFeedProps {
   shuffleKey: number;
   isRefreshing: boolean;
+}
+
+// Helper to format counts
+function formatCount(count: number): string {
+  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return count.toString();
+}
+
+// Map NFT to ShortVideo format
+function mapNFTToShortVideo(nft: any): ShortVideo {
+  const id = String(nft.tokenId || nft.id || nft.token_id);
+  
+  return {
+    id,
+    type: 'short',
+    username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
+    verified: nft.creator?.is_verified || false,
+    likes: formatCount(nft.totalVotes?.for || nft.like_count || 0),
+    thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
+    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
+    description: nft.description || nft.name || nft.title || '',
+    sound: 'Original Sound',
+    comments: formatCount(nft.commentCount || nft.comment_count || 0),
+    shares: formatCount(Math.floor(Math.random() * 1000)),
+  };
 }
 
 export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
@@ -49,7 +77,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch from DeHub API
+  // Fetch main feed from DeHub API
   const {
     data: apiData,
     fetchNextPage,
@@ -65,12 +93,26 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     address: walletAddress || undefined,
   });
 
+  // Fetch shorts separately for the carousel
+  const { data: shortsData } = useDeHubVideos({
+    unit: 10,
+    sortMode: 'popular',
+    address: walletAddress || undefined,
+  });
+
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
       refetch();
     }
   }, [shuffleKey, refetch]);
+
+  // Map shorts data
+  const shorts = useMemo((): ShortVideo[] => {
+    if (!shortsData?.pages) return [];
+    const allNFTs = shortsData.pages.flatMap(page => page.data || []);
+    return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
+  }, [shortsData]);
 
   // Map API data to feed items
   const items = useMemo((): UnifiedFeedItem[] => {
@@ -130,6 +172,33 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     }
   };
 
+  // Render feed items with shorts carousel inserted after every N posts
+  const renderFeedWithShorts = () => {
+    const elements: React.ReactNode[] = [];
+    let shortsInserted = false;
+
+    items.forEach((item, index) => {
+      elements.push(renderFeedItem(item, index));
+
+      // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts
+      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0) {
+        elements.push(
+          <ShortsReel key={`shorts-carousel-${index}`} shorts={shorts} />
+        );
+        shortsInserted = true;
+      }
+    });
+
+    // If we have items but haven't inserted shorts yet (less than 6 items), add at the end
+    if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
+      elements.push(
+        <ShortsReel key="shorts-carousel-end" shorts={shorts} />
+      );
+    }
+
+    return elements;
+  };
+
   const isLoading = isApiLoading || isRefreshing;
 
   // Empty state component
@@ -167,7 +236,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
             <EmptyState />
           ) : (
             <>
-              {items.map((item, index) => renderFeedItem(item, index))}
+              {renderFeedWithShorts()}
               
               {/* Infinite scroll loader */}
               <div ref={loaderRef} className="py-4 flex justify-center">
