@@ -19,6 +19,7 @@ import { CommentsSection } from './CommentsSection';
 import { TranslatableGroup } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { getViewCount } from '@/lib/feed-utils';
+import { SwipeableCarousel } from '../SwipeableCarousel';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -244,8 +245,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         </div>
       </div>
 
-      {/* Image Carousel */}
-      <ImageCarousel images={images} />
+      {/* Image Carousel - wrapped to prevent tab switching on swipe */}
+      <SwipeableCarousel>
+        <ImageCarousel images={images} />
+      </SwipeableCarousel>
 
       {/* Info & Actions */}
       <div className="p-3 space-y-2">
