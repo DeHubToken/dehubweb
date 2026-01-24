@@ -650,13 +650,23 @@ export interface LeaderboardResponse {
 }
 
 export type LeaderboardSortMode = 'holdings' | 'sentTips' | 'receivedTips';
+export type LeaderboardPeriod = 'day' | 'week' | 'month' | 'year' | 'all';
 
 /**
  * Fetch DHB token leaderboard
  * @param sort - Sort criteria: holdings (default), sentTips, receivedTips
+ * @param period - Time period filter: day, week, month, year, all (default)
  */
-export async function getLeaderboard(sort: LeaderboardSortMode = 'holdings'): Promise<LeaderboardResponse> {
-  return apiCall<LeaderboardResponse>("/api/leaderboard", {
-    params: { sort },
-  });
+export async function getLeaderboard(
+  sort: LeaderboardSortMode = 'holdings',
+  period: LeaderboardPeriod = 'all'
+): Promise<LeaderboardResponse> {
+  const params: Record<string, string> = { sort };
+  
+  // Only add period param if not 'all' (all time is the default behavior)
+  if (period !== 'all') {
+    params.period = period;
+  }
+  
+  return apiCall<LeaderboardResponse>("/api/leaderboard", { params });
 }
