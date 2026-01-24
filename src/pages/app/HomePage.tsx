@@ -37,9 +37,9 @@ import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 const SWIPE_THRESHOLD = 50;
 const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
-const TRACKPAD_THRESHOLD = 80;
-/** Lock duration after triggering a tab switch (ms) */
-const GESTURE_LOCK_DURATION = 500;
+const TRACKPAD_THRESHOLD = 50;
+/** Delay to detect gesture end (ms) */
+const GESTURE_END_DELAY = 120;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -263,25 +263,26 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    // If gesture is locked (we already switched tabs), ignore until gesture ends
+    // Clear any pending gesture end timeout
+    if (gestureEndTimeout.current) {
+      clearTimeout(gestureEndTimeout.current);
+    }
+    
+    // If locked, just wait for gesture to end
     if (isGestureLocked.current) {
-      // Reset the end timeout since events are still coming
-      if (gestureEndTimeout.current) {
-        clearTimeout(gestureEndTimeout.current);
-      }
       gestureEndTimeout.current = setTimeout(() => {
         isGestureLocked.current = false;
         wheelDeltaX.current = 0;
         wheelDeltaY.current = 0;
-      }, GESTURE_LOCK_DURATION);
+      }, GESTURE_END_DELAY);
       return;
     }
     
-    // Accumulate deltas
+    // Accumulate
     wheelDeltaX.current += e.deltaX;
     wheelDeltaY.current += Math.abs(e.deltaY);
     
-    // Only trigger if horizontal movement dominates vertical
+    // Only trigger if horizontal dominates
     const absDeltaX = Math.abs(wheelDeltaX.current);
     if (absDeltaX > TRACKPAD_THRESHOLD && absDeltaX > wheelDeltaY.current * 1.5) {
       const tabValues = FEED_TABS.map(tab => tab.value);
@@ -289,38 +290,28 @@ export default function HomePage() {
       
       let switched = false;
       if (wheelDeltaX.current > 0 && currentIndex < tabValues.length - 1) {
-        // Swipe left (next tab)
-        flushSync(() => {
-          setActiveTab(tabValues[currentIndex + 1]);
-        });
+        flushSync(() => setActiveTab(tabValues[currentIndex + 1]));
         resetFilters();
         switched = true;
       } else if (wheelDeltaX.current < 0 && currentIndex > 0) {
-        // Swipe right (previous tab)
-        flushSync(() => {
-          setActiveTab(tabValues[currentIndex - 1]);
-        });
+        flushSync(() => setActiveTab(tabValues[currentIndex - 1]));
         resetFilters();
         switched = true;
       }
       
       if (switched) {
-        // Lock gesture - ignore all further events until gesture ends
         isGestureLocked.current = true;
         wheelDeltaX.current = 0;
         wheelDeltaY.current = 0;
-        
-        // Set timeout to unlock after gesture ends
-        if (gestureEndTimeout.current) {
-          clearTimeout(gestureEndTimeout.current);
-        }
-        gestureEndTimeout.current = setTimeout(() => {
-          isGestureLocked.current = false;
-          wheelDeltaX.current = 0;
-          wheelDeltaY.current = 0;
-        }, GESTURE_LOCK_DURATION);
       }
     }
+    
+    // Unlock when gesture ends (no events for GESTURE_END_DELAY)
+    gestureEndTimeout.current = setTimeout(() => {
+      isGestureLocked.current = false;
+      wheelDeltaX.current = 0;
+      wheelDeltaY.current = 0;
+    }, GESTURE_END_DELAY);
   }, [activeTab, resetFilters]);
 
   // --------------------------------------------------------------------------

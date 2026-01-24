@@ -45,15 +45,14 @@ function ImageCarousel({ images }: { images: string[] }) {
   const isGestureLocked = useRef(false);
   const gestureEndTimeout = useRef<NodeJS.Timeout | null>(null);
   
-  const TRACKPAD_THRESHOLD = 60;
-  const GESTURE_LOCK_DURATION = 500;
+  const TRACKPAD_THRESHOLD = 30;
+  const GESTURE_END_DELAY = 120; // Short delay to detect gesture end
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrentIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
   
-  // Set up the select callback when emblaApi becomes available
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.on('select', onSelect);
@@ -66,7 +65,6 @@ function ImageCarousel({ images }: { images: string[] }) {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
   
-  // Handle trackpad swipe for image navigation
   const handleWheel = useCallback((e: React.WheelEvent) => {
     if (!emblaApi || images.length <= 1) return;
     
@@ -76,44 +74,39 @@ function ImageCarousel({ images }: { images: string[] }) {
     // Stop propagation to prevent tab switching
     e.stopPropagation();
     
-    // If gesture is locked (we already scrolled), ignore until gesture ends
+    // Clear any pending gesture end timeout
+    if (gestureEndTimeout.current) {
+      clearTimeout(gestureEndTimeout.current);
+    }
+    
+    // If locked, just wait for gesture to end
     if (isGestureLocked.current) {
-      // Reset the end timeout since events are still coming
-      if (gestureEndTimeout.current) {
-        clearTimeout(gestureEndTimeout.current);
-      }
       gestureEndTimeout.current = setTimeout(() => {
         isGestureLocked.current = false;
         wheelDeltaX.current = 0;
-      }, GESTURE_LOCK_DURATION);
+      }, GESTURE_END_DELAY);
       return;
     }
     
-    // Accumulate deltas
+    // Accumulate
     wheelDeltaX.current += e.deltaX;
     
-    const absDeltaX = Math.abs(wheelDeltaX.current);
-    if (absDeltaX > TRACKPAD_THRESHOLD) {
-      // Trigger scroll
+    if (Math.abs(wheelDeltaX.current) > TRACKPAD_THRESHOLD) {
       if (wheelDeltaX.current > 0) {
         emblaApi.scrollNext();
       } else {
         emblaApi.scrollPrev();
       }
       
-      // Lock gesture - ignore all further events until gesture ends
       isGestureLocked.current = true;
       wheelDeltaX.current = 0;
-      
-      // Set timeout to unlock after gesture ends
-      if (gestureEndTimeout.current) {
-        clearTimeout(gestureEndTimeout.current);
-      }
-      gestureEndTimeout.current = setTimeout(() => {
-        isGestureLocked.current = false;
-        wheelDeltaX.current = 0;
-      }, GESTURE_LOCK_DURATION);
     }
+    
+    // Set timeout to unlock when gesture ends
+    gestureEndTimeout.current = setTimeout(() => {
+      isGestureLocked.current = false;
+      wheelDeltaX.current = 0;
+    }, GESTURE_END_DELAY);
   }, [emblaApi, images.length]);
   
   const hasMultiple = images.length > 1;
