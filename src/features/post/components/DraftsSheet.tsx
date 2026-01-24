@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, Save, Trash2, FileText, Clock, Image, Video, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -57,21 +57,20 @@ export function DraftsSheet({
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent 
-        side="bottom" 
-        className="bg-white/10 backdrop-blur-2xl border-0 border-t border-white/20 rounded-t-3xl shadow-[0_-10px_60px_-15px_rgba(255,255,255,0.1)] max-h-[80vh] overflow-hidden flex flex-col"
+    <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DrawerContent 
+        glass
+        hideHandle
+        className="max-h-[80vh] overflow-hidden flex flex-col px-4 pb-6"
       >
-        <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-        
-        <SheetHeader className="relative pb-4 border-b border-white/10 shrink-0">
+        <DrawerHeader className="relative pb-4 border-b border-white/10 shrink-0 px-0">
           <div className="flex items-center justify-between">
             <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors">
               <X className="w-5 h-5 text-zinc-400" />
             </button>
-            <SheetTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
+            <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
               Drafts
-            </SheetTitle>
+            </DrawerTitle>
             <button
               onClick={handleSave}
               disabled={!canSave}
@@ -86,7 +85,7 @@ export function DraftsSheet({
               Save Current
             </button>
           </div>
-        </SheetHeader>
+        </DrawerHeader>
 
         <div className="relative flex-1 overflow-y-auto pt-4">
           {drafts.length === 0 ? (
@@ -163,7 +162,7 @@ export function DraftsSheet({
           {/* Safe area padding */}
           <div className="h-[env(safe-area-inset-bottom,16px)]" />
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }

@@ -22,11 +22,11 @@ import { motion } from 'framer-motion';
 import { voteOnNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 
 interface ActionBarProps {
   /** Post ID for info navigation and voting */
@@ -254,24 +254,16 @@ export function ActionBar({
             <Share2 className="w-5 h-5" />
             <span className="text-xs text-zinc-400">{formatCount(shareCount)}</span>
           </button>
-          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-            <SheetContent 
-              side="bottom" 
-              className="bg-black/40 border-0 border-t border-white/10 rounded-t-3xl shadow-[0_-10px_60px_-15px_rgba(255,255,255,0.1)]"
-              style={{ 
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)'
-              }}
-            >
-              <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-              <SheetHeader className="relative">
-                <SheetTitle className="text-white/90 font-semibold">Share</SheetTitle>
-              </SheetHeader>
-              <div className="flex flex-col gap-1 mt-4 relative">
+          <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
+            <DrawerContent glass className="px-4 pb-6">
+              <DrawerHeader className="relative">
+                <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex flex-col gap-1 mt-2 relative">
                 <ShareOptions />
               </div>
-            </SheetContent>
-          </Sheet>
+            </DrawerContent>
+          </Drawer>
         </div>
 
         {/* Right side actions */}
