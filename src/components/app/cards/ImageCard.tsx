@@ -238,16 +238,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         </div>
       </div>
 
-      {/* Title & Description - below header, aligned with username */}
-      {(post.title || post.description) && (
-        <div className="pl-[56px] pr-3 pb-2">
-          <FeedDescription 
-            title={post.title} 
-            description={post.description} 
-          />
-        </div>
-      )}
-
       {/* Image Carousel */}
       <ImageCarousel images={images} />
 
@@ -265,6 +255,12 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         />
         
         <p className="font-semibold text-white text-sm">{post.likes.toLocaleString()} likes</p>
+        
+        {/* Title & Description */}
+        <FeedDescription 
+          title={post.title} 
+          description={post.description} 
+        />
         
         <div className="flex items-center gap-3">
           <span className="text-zinc-500 text-xs">{post.timeAgo}</span>
