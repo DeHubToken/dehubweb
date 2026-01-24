@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
 import { getNFTComments, postComment, getMediaUrl, type ApiCommentResponse } from '@/lib/api/dehub';
@@ -142,19 +142,20 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
   }, [isAuthenticated, user, replyTo, tokenId, queryClient]);
 
   return (
-    <Sheet open onOpenChange={(open) => !open && onClose()}>
-      <SheetContent 
-        side="bottom" 
-        className="h-[70vh] bg-zinc-900 border-t border-zinc-800 rounded-t-2xl p-0"
+    <Drawer open onOpenChange={(open) => !open && onClose()}>
+      <DrawerContent 
+        glass 
+        hideHandle
+        className="h-[70vh] p-0"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
           <h2 className="text-white font-semibold">
             Comments {comments.length > 0 && `(${comments.length})`}
           </h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -207,7 +208,7 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
         />
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }
