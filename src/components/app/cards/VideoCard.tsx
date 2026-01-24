@@ -36,7 +36,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -108,9 +108,11 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsMuted(prev => !prev);
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    videoPlaybackManager.globalMuted = newMuted; // Persist globally for future videos
     if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
+      videoRef.current.muted = newMuted;
     }
   }, [isMuted]);
 

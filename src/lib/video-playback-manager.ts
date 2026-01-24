@@ -15,6 +15,7 @@ class VideoPlaybackManager {
   private static instance: VideoPlaybackManager;
   private currentlyPlaying: VideoInstance | null = null;
   private registeredVideos: Map<string, VideoInstance> = new Map();
+  private _globalMuted: boolean = true; // Start muted by default
 
   private constructor() {}
 
@@ -23,6 +24,20 @@ class VideoPlaybackManager {
       VideoPlaybackManager.instance = new VideoPlaybackManager();
     }
     return VideoPlaybackManager.instance;
+  }
+
+  /**
+   * Get the global mute preference
+   */
+  get globalMuted(): boolean {
+    return this._globalMuted;
+  }
+
+  /**
+   * Set the global mute preference (persists for all future videos)
+   */
+  set globalMuted(muted: boolean) {
+    this._globalMuted = muted;
   }
 
   /**
