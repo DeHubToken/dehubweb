@@ -46,7 +46,7 @@ function ImageCarousel({ images }: { images: string[] }) {
   const gestureEndTimeout = useRef<NodeJS.Timeout | null>(null);
   
   const TRACKPAD_THRESHOLD = 30;
-  const GESTURE_END_DELAY = 120; // Short delay to detect gesture end
+  const GESTURE_END_DELAY = 50;
   
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
