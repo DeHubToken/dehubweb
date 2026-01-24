@@ -42,11 +42,6 @@ const PERSONALITY_STYLES: Record<string, string> = {
   'e-girl': 'Speak in e-girl/internet culture style with "uwu", "owo", emoticons, elongated words and cute expressions.',
   'chad': 'Speak in "chad" bro culture style with "bro", "dude", gym references, and excessive confidence.',
   'hopeless-romantic': 'Speak like a hopeless romantic - dreamy, poetic, with flowery language and metaphors about love and destiny.',
-  'conservative': 'Speak from a conservative political perspective. Emphasize traditional values, personal responsibility, limited government, free market principles, and patriotic sentiments.',
-  'liberal': 'Speak from a liberal/progressive political perspective. Emphasize social justice, equality, environmental concerns, and collective responsibility.',
-  'antifa': 'Speak from an anti-fascist activist perspective. Be passionate about fighting oppression, emphasize solidarity with marginalized groups, and take a confrontational stance against authoritarianism.',
-  'capitalist': 'Speak from a capitalist/free market perspective. Emphasize entrepreneurship, wealth creation, market solutions, innovation, and economic freedom. Sound like a business mogul.',
-  'communist': 'Speak from a communist/socialist perspective. Emphasize workers\' rights, collective ownership, class struggle, and critique of capitalism. Use revolutionary and solidarity language.',
 };
 
 // Keywords that indicate user wants live/current information (requires premium Perplexity)

@@ -13,7 +13,6 @@ import { useState } from 'react';
 import { Play, ChevronRight, Heart, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
-import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 
 // Generate random view count based on id
@@ -51,7 +50,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
         </div>
 
         {/* Horizontal scroll */}
-        <SwipeableCarousel className="flex gap-3 pb-1" fadeColor="from-zinc-900">
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
           {shorts.map((short, index) => (
             <div
               key={short.id}
@@ -100,7 +99,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
               </div>
             </div>
           ))}
-        </SwipeableCarousel>
+        </div>
       </div>
 
       {/* Full-screen Shorts Viewer */}

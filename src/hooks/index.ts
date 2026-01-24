@@ -12,7 +12,6 @@
 
 export { useAudioAnalyser } from './use-audio-analyser';
 export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
-export { useFeedPrefetch } from './use-feed-prefetch';
 export { useDeHubProfile, useDeHubUserContent, separateUserContent, mapUserToProfile, type ProfileData } from './use-dehub-profile';
 export { useGlitchEffect } from './use-glitch-effect';
 export { GlobalDropZoneProvider, useGlobalDropZone } from './use-global-drop-zone';

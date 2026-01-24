@@ -16,7 +16,6 @@ import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
-import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 
 // Category images
@@ -112,18 +111,21 @@ function LiveCategoriesCarousel() {
           See all <ChevronRight className="w-4 h-4" />
         </button>
       </div>
-      <SwipeableCarousel className="flex gap-3 px-1" fadeColor="from-zinc-900">
-        {LIVE_CATEGORIES.map((cat) => (
-          <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-            <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2 relative">
-              <img src={cat.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <div className="relative">
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
+          {LIVE_CATEGORIES.map((cat) => (
+            <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
+              <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2 relative">
+                <img src={cat.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              </div>
+              <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
+              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
             </div>
-            <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
-            <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
-          </div>
-        ))}
-      </SwipeableCarousel>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -281,20 +283,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
       {/* Category Pills */}
       <div className="bg-zinc-900 rounded-2xl p-3 mb-3">
-        <SwipeableCarousel className="flex gap-2 px-1" fadeColor="from-zinc-900">
-          {CATEGORY_PILLS.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={cn(
-                'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                selectedCategory === cat ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {cat}
-            </button>
-          ))}
-        </SwipeableCarousel>
+        <div className="relative">
+          {/* Right fade only */}
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
+            {CATEGORY_PILLS.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={cn(
+                  'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
+                  selectedCategory === cat ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Featured/Ad Row - First 3 videos as thumbnails */}
@@ -340,8 +347,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           </div>
           
           {/* Mobile: Horizontally swipeable */}
-          <div className="sm:hidden">
-            <SwipeableCarousel className="flex gap-2" fadeColor="from-zinc-900">
+          <div className="sm:hidden relative">
+            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
               {videos.slice(0, 3).map((video) => (
                 <div 
                   key={`featured-mobile-${video.id}`}
@@ -377,7 +385,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   </div>
                 </div>
               ))}
-            </SwipeableCarousel>
+            </div>
           </div>
         </div>
       )}
