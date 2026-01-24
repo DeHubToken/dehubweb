@@ -297,7 +297,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       ) : (
         <>
           <div className="space-y-3">
-            {videos.map((video) => (
+            {/* Skip first 3 videos if featured row is shown */}
+            {(videos.length >= 3 ? videos.slice(3) : videos).map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
