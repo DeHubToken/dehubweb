@@ -10,7 +10,8 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Coins } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2 } from 'lucide-react';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -372,7 +373,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
               </SheetHeader>
               <div className="flex flex-col gap-1 pb-4">
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Coins className="w-5 h-5" /> Send Tip
+                  <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <ListPlus className="w-5 h-5" /> Queue
