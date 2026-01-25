@@ -91,21 +91,21 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         accountAbstractionProvider,
         // External wallets keep their EOA, only embedded wallets get smart accounts
         useAAWithExternalWallet: false,
-        uiConfig: {
-          appName: "DeHub",
-          mode: "dark" as const,
-          theme: {
-            primary: "#ffffff",
-            onPrimary: "#000000",
-          },
-          logoLight: "https://dehub.io/default-icon.png",
-          logoDark: "https://dehub.io/default-icon-dark.png",
-          loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
-          primaryButton: "socialLogin" as const,
-          modalZIndex: "99999",
-          loginGridCol: 3,
-          defaultLanguage: "en",
-        },
+        // uiConfig: {
+        //   appName: "DeHub",
+        //   mode: "dark" as const,
+        //   theme: {
+        //     primary: "#ffffff",
+        //     onPrimary: "#000000",
+        //   },
+        //   logoLight: "https://dehub.io/default-icon.png",
+        //   logoDark: "https://dehub.io/default-icon-dark.png",
+        //   loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
+        //   primaryButton: "socialLogin" as const,
+        //   modalZIndex: "99999",
+        //   loginGridCol: 3,
+        //   defaultLanguage: "en",
+        // },
       };
 
       web3authInstance = new Web3Auth(web3AuthOptions as unknown as Web3AuthOptions);
