@@ -55,7 +55,10 @@ async function getPimlicoApiKey(): Promise<string> {
   throw new Error("Pimlico API key not configured");
 }
 
-export async function getWeb3Auth(): Promise<Web3Auth> {
+/**
+ * Initialize Web3Auth - call this early in app lifecycle
+ */
+export async function initWeb3Auth(): Promise<Web3Auth> {
   if (web3authInstance?.status === "connected" || web3authInstance?.status === "ready") {
     return web3authInstance;
   }
@@ -72,24 +75,17 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
       const web3AuthOptions: Web3AuthOptions = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        // v10 uses accountAbstractionConfig with chains array
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [
             {
-              chainId: "0x2105", // Base Mainnet
-              bundlerConfig: {
-                url: pimlicoUrl,
-              },
-              paymasterConfig: {
-                url: pimlicoUrl,
-              },
+              chainId: "0x2105",
+              bundlerConfig: { url: pimlicoUrl },
+              paymasterConfig: { url: pimlicoUrl },
             },
           ],
         },
-        // External wallets keep their EOA, only embedded wallets get smart accounts
         useAAWithExternalWallet: false,
-        // Configure social login methods via modalConfig
         modalConfig: {
           connectors: {
             [WALLET_CONNECTORS.AUTH]: {
@@ -124,20 +120,65 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
 
       web3authInstance = new Web3Auth(web3AuthOptions);
 
-      // Initialize modal - v10 uses popup by default
+      // Initialize and wait for ready state
       await web3authInstance.init();
-      console.log("[Web3Auth] Modal initialized, status:", web3authInstance.status);
+      
+      // Wait for the instance to be truly ready
+      if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
+        console.log("[Web3Auth] Waiting for ready state, current:", web3authInstance.status);
+        await new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error("Web3Auth init timeout")), 10000);
+          const checkReady = () => {
+            if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
+              clearTimeout(timeout);
+              resolve();
+            } else if (web3authInstance?.status === "errored") {
+              clearTimeout(timeout);
+              reject(new Error("Web3Auth initialization failed"));
+            } else {
+              setTimeout(checkReady, 100);
+            }
+          };
+          checkReady();
+        });
+      }
+      
+      console.log("[Web3Auth] Initialized, status:", web3authInstance.status);
 
       if (web3authInstance.status === "errored") {
         throw new Error("[Web3Auth] Failed to initialize - check Client ID and allowed origins");
       }
+      
       return web3authInstance;
+    } catch (error) {
+      web3authInstance = null;
+      throw error;
     } finally {
       isInitializing = false;
     }
   })();
 
   return initPromise;
+}
+
+/**
+ * Get the initialized Web3Auth instance - throws if not initialized
+ */
+export function getWeb3Auth(): Web3Auth {
+  if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
+    throw new Error("Web3Auth not initialized. Call initWeb3Auth() first.");
+  }
+  return web3authInstance;
+}
+
+/**
+ * Get Web3Auth instance, initializing if needed (for backward compatibility)
+ */
+export async function getOrInitWeb3Auth(): Promise<Web3Auth> {
+  if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
+    return web3authInstance;
+  }
+  return initWeb3Auth();
 }
 
 export function getWeb3AuthInstance(): Web3Auth | null {
