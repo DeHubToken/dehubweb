@@ -14,7 +14,7 @@ import {
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
-import { getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
+import { initWeb3Auth, getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
 import { deploySmartAccount } from '@/lib/smart-account';
 import type { Web3Auth } from '@web3auth/modal';
 import { createWalletClient, custom } from 'viem';
@@ -103,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Pre-initialize Web3Auth in background
-      getWeb3Auth()
+      initWeb3Auth()
         .then((instance) => setWeb3auth(instance))
         .catch((err) => console.warn('Web3Auth pre-init failed:', err));
     };
@@ -115,9 +115,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsConnecting(true);
 
     try {
+      // Ensure Web3Auth is initialized and ready
       let web3authInstance = web3auth;
-      if (!web3authInstance) {
-        web3authInstance = await getWeb3Auth();
+      if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
+        web3authInstance = await initWeb3Auth();
         setWeb3auth(web3authInstance);
       }
 
