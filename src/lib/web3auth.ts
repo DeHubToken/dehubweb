@@ -5,7 +5,6 @@
  * External wallets use EOA directly, embedded wallets get smart accounts.
  */
 
-// In v10, everything is re-exported from @web3auth/modal
 import { 
   Web3Auth, 
   type Web3AuthOptions, 
@@ -69,7 +68,7 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
 
       const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
-      // Web3Auth v10 modal options with AA configuration
+      // Web3Auth v10 modal options - popup is the default uxMode
       const web3AuthOptions: Web3AuthOptions = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
@@ -90,7 +89,7 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
         },
         // External wallets keep their EOA, only embedded wallets get smart accounts
         useAAWithExternalWallet: false,
-        // Configure social login methods via modalConfig (v10 approach)
+        // Configure social login methods via modalConfig
         modalConfig: {
           connectors: {
             [WALLET_CONNECTORS.AUTH]: {
@@ -121,14 +120,11 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
             },
           },
         },
-        uiConfig: {
-          uxMode: "popup",
-        },
       };
 
       web3authInstance = new Web3Auth(web3AuthOptions);
 
-      // Initialize modal
+      // Initialize modal - v10 uses popup by default
       await web3authInstance.init();
       console.log("[Web3Auth] Modal initialized, status:", web3authInstance.status);
 
