@@ -59,15 +59,26 @@ async function getPimlicoApiKey(): Promise<string> {
  * Initialize Web3Auth - call this early in app lifecycle
  */
 export async function initWeb3Auth(): Promise<Web3Auth> {
+  console.log("[Web3Auth] initWeb3Auth called");
+  console.log("[Web3Auth] Current instance status:", web3authInstance?.status || "null");
+  
   if (web3authInstance?.status === "connected" || web3authInstance?.status === "ready") {
+    console.log("[Web3Auth] Already initialized, returning existing instance");
     return web3authInstance;
   }
-  if (isInitializing && initPromise) return initPromise;
+  if (isInitializing && initPromise) {
+    console.log("[Web3Auth] Already initializing, returning existing promise");
+    return initPromise;
+  }
 
   isInitializing = true;
+  console.log("[Web3Auth] Starting initialization...");
+  
   initPromise = (async () => {
     try {
+      console.log("[Web3Auth] Fetching config from edge functions...");
       const [clientId, pimlicoApiKey] = await Promise.all([getWeb3AuthClientId(), getPimlicoApiKey()]);
+      console.log("[Web3Auth] Config fetched - clientId:", clientId?.substring(0, 10) + "...", "pimlicoKey:", pimlicoApiKey?.substring(0, 10) + "...");
 
       const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
@@ -118,21 +129,39 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         },
       };
 
+      console.log("[Web3Auth] Creating Web3Auth instance with options:", {
+        clientId: clientId?.substring(0, 10) + "...",
+        network: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        chainId: "0x2105",
+        useAAWithExternalWallet: false,
+      });
+      
       web3authInstance = new Web3Auth(web3AuthOptions);
+      console.log("[Web3Auth] Instance created, status:", web3authInstance.status);
 
       // Initialize and wait for ready state
+      console.log("[Web3Auth] Calling init()...");
       await web3authInstance.init();
+      console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
+      console.log("[Web3Auth] connected:", web3authInstance.connected);
+      console.log("[Web3Auth] provider:", web3authInstance.provider ? "exists" : "null");
       
       // Wait for the instance to be truly ready
       if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
         console.log("[Web3Auth] Waiting for ready state, current:", web3authInstance.status);
         await new Promise<void>((resolve, reject) => {
-          const timeout = setTimeout(() => reject(new Error("Web3Auth init timeout")), 10000);
+          const timeout = setTimeout(() => {
+            console.error("[Web3Auth] Timeout waiting for ready state");
+            reject(new Error("Web3Auth init timeout"));
+          }, 10000);
           const checkReady = () => {
+            console.log("[Web3Auth] Checking status:", web3authInstance?.status);
             if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
+              console.log("[Web3Auth] Now ready!");
               clearTimeout(timeout);
               resolve();
             } else if (web3authInstance?.status === "errored") {
+              console.error("[Web3Auth] Initialization errored");
               clearTimeout(timeout);
               reject(new Error("Web3Auth initialization failed"));
             } else {
@@ -143,7 +172,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         });
       }
       
-      console.log("[Web3Auth] Initialized, status:", web3authInstance.status);
+      console.log("[Web3Auth] ✓ Fully initialized, final status:", web3authInstance.status);
 
       if (web3authInstance.status === "errored") {
         throw new Error("[Web3Auth] Failed to initialize - check Client ID and allowed origins");
@@ -151,6 +180,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       
       return web3authInstance;
     } catch (error) {
+      console.error("[Web3Auth] Initialization error:", error);
       web3authInstance = null;
       throw error;
     } finally {
@@ -165,6 +195,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
  * Get the initialized Web3Auth instance - throws if not initialized
  */
 export function getWeb3Auth(): Web3Auth {
+  console.log("[Web3Auth] getWeb3Auth called, status:", web3authInstance?.status || "null");
   if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
     throw new Error("Web3Auth not initialized. Call initWeb3Auth() first.");
   }
@@ -175,6 +206,7 @@ export function getWeb3Auth(): Web3Auth {
  * Get Web3Auth instance, initializing if needed (for backward compatibility)
  */
 export async function getOrInitWeb3Auth(): Promise<Web3Auth> {
+  console.log("[Web3Auth] getOrInitWeb3Auth called");
   if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
     return web3authInstance;
   }
