@@ -1,14 +1,13 @@
 /**
  * Web3Auth Configuration with Smart Accounts
  * ============================================
- * Uses Web3Auth with AccountAbstractionProvider for embedded wallets.
+ * Uses Web3Auth v10 with Smart Accounts via dashboard configuration.
  * External wallets use EOA directly, embedded wallets get smart accounts.
  */
 
-import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
+import { Web3Auth, Web3AuthOptions, WALLET_CONNECTORS } from "@web3auth/modal";
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
 import { supabase } from "@/integrations/supabase/client";
 
 const chainConfig = {
@@ -64,53 +63,73 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
 
       const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
-      // Create the Account Abstraction Provider for embedded wallets
-      const accountAbstractionProvider = new AccountAbstractionProvider({
-        config: {
-          chainConfig,
-          smartAccountInit: new SafeSmartAccount(),
-          bundlerConfig: {
-            url: pimlicoUrl,
-          },
-          paymasterConfig: {
-            url: pimlicoUrl,
-          },
-        },
-      });
-
       // Create the private key provider for the underlying key management
       const privateKeyProvider = new EthereumPrivateKeyProvider({
         config: { chainConfig },
       });
 
-      // Web3Auth v10 modal options with AA provider
-      const web3AuthOptions = {
+      // Web3Auth v10 modal options with AA configuration
+      // In v10, Smart Accounts are configured directly in options, not via separate provider
+      const web3AuthOptions: Web3AuthOptions = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        privateKeyProvider,
-        accountAbstractionProvider,
+        privateKeyProvider: privateKeyProvider as unknown as Web3AuthOptions["privateKeyProvider"],
+        // v10 uses accountAbstractionConfig with chains array
+        accountAbstractionConfig: {
+          smartAccountType: "safe",
+          chains: [
+            {
+              chainId: "0x2105", // Base Mainnet
+              bundlerConfig: {
+                url: pimlicoUrl,
+              },
+              paymasterConfig: {
+                url: pimlicoUrl,
+              },
+            },
+          ],
+        },
         // External wallets keep their EOA, only embedded wallets get smart accounts
         useAAWithExternalWallet: false,
-        // uiConfig: {
-        //   appName: "DeHub",
-        //   mode: "dark" as const,
-        //   theme: {
-        //     primary: "#ffffff",
-        //     onPrimary: "#000000",
-        //   },
-        //   logoLight: "https://dehub.io/default-icon.png",
-        //   logoDark: "https://dehub.io/default-icon-dark.png",
-        //   loginMethodsOrder: ["email_passwordless", "google", "twitter", "discord", "apple"],
-        //   primaryButton: "socialLogin" as const,
-        //   modalZIndex: "99999",
-        //   loginGridCol: 3,
-        //   defaultLanguage: "en",
-        // },
+        // Configure social login methods via modalConfig (v10 approach)
+        modalConfig: {
+          connectors: {
+            [WALLET_CONNECTORS.AUTH]: {
+              label: "auth",
+              showOnModal: true,
+              loginMethods: {
+                email_passwordless: {
+                  name: "Email",
+                  showOnModal: true,
+                },
+                google: {
+                  name: "Google",
+                  showOnModal: true,
+                },
+                twitter: {
+                  name: "Twitter",
+                  showOnModal: true,
+                },
+                discord: {
+                  name: "Discord",
+                  showOnModal: true,
+                },
+                apple: {
+                  name: "Apple",
+                  showOnModal: true,
+                },
+              },
+            },
+          },
+        },
+        uiConfig: {
+          uxMode: "popup",
+        },
       };
 
-      web3authInstance = new Web3Auth(web3AuthOptions as unknown as Web3AuthOptions);
+      web3authInstance = new Web3Auth(web3AuthOptions);
 
-      // Initialize modal - use init() as initModal() may not exist in all versions
+      // Initialize modal
       await web3authInstance.init();
       console.log("[Web3Auth] Modal initialized, status:", web3authInstance.status);
 
