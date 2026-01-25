@@ -1,15 +1,21 @@
 /**
  * Web3Auth Configuration with Smart Accounts
  * ============================================
- * Uses Web3Auth v10 with Smart Accounts via dashboard configuration.
+ * Uses Web3Auth v10 Modal SDK with Smart Accounts.
  * External wallets use EOA directly, embedded wallets get smart accounts.
  */
 
-import { Web3Auth, Web3AuthOptions, WALLET_CONNECTORS } from "@web3auth/modal";
-import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+// In v10, everything is re-exported from @web3auth/modal
+import { 
+  Web3Auth, 
+  type Web3AuthOptions, 
+  WALLET_CONNECTORS,
+  CHAIN_NAMESPACES,
+  WEB3AUTH_NETWORK,
+} from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
 
+// Chain configuration for Base Mainnet
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0x2105",
@@ -63,17 +69,10 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
 
       const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
-      // Create the private key provider for the underlying key management
-      const privateKeyProvider = new EthereumPrivateKeyProvider({
-        config: { chainConfig },
-      });
-
       // Web3Auth v10 modal options with AA configuration
-      // In v10, Smart Accounts are configured directly in options, not via separate provider
       const web3AuthOptions: Web3AuthOptions = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        privateKeyProvider: privateKeyProvider as unknown as Web3AuthOptions["privateKeyProvider"],
         // v10 uses accountAbstractionConfig with chains array
         accountAbstractionConfig: {
           smartAccountType: "safe",
@@ -133,7 +132,6 @@ export async function getWeb3Auth(): Promise<Web3Auth> {
       await web3authInstance.init();
       console.log("[Web3Auth] Modal initialized, status:", web3authInstance.status);
 
-      // Only check for explicit error state - "not_ready" is expected after initModal()
       if (web3authInstance.status === "errored") {
         throw new Error("[Web3Auth] Failed to initialize - check Client ID and allowed origins");
       }
