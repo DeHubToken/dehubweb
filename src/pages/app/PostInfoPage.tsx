@@ -17,6 +17,9 @@ import { getNFTInfo, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import medal1 from '@/assets/medal-1.png';
+import medal2 from '@/assets/medal-2.png';
+import medal3 from '@/assets/medal-3.png';
 
 // Chain configuration
 const CHAIN_CONFIG: Record<number, { name: string; explorerUrl: string; explorerName: string }> = {
@@ -300,28 +303,45 @@ export default function PostInfoPage() {
                 </>
               ) : holders.length > 0 ? (
                 // Real holders from on-chain data
-                holders.map((holder, index) => (
-                  <div key={holder.address} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-bold text-white">#{index + 1}</span>
+                holders.map((holder, index) => {
+                  const rank = index + 1;
+                  return (
+                    <div key={holder.address} className="flex items-center gap-3">
+                      {rank <= 3 ? (
+                        <div className="medal-shine-container w-10 h-10 shrink-0">
+                          <img 
+                            src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
+                            alt={`Rank ${rank}`} 
+                            className="w-10 h-10 object-contain"
+                          />
+                          <div 
+                            className="medal-shine-overlay"
+                            style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
+                          <span className="text-sm font-bold text-white">{rank}</span>
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-medium truncate font-mono text-sm">
+                          {truncateAddr(holder.address)}
+                        </p>
+                        <p className="text-xs text-white/60">
+                          {holder.balance}/{TOTAL_FRACTIONS} fractions ({holder.percentage}%)
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(holder.address, 'Wallet address')}
+                        className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
+                        aria-label="Copy wallet address"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium truncate font-mono text-sm">
-                        {truncateAddr(holder.address)}
-                      </p>
-                      <p className="text-xs text-white/60">
-                        {holder.balance}/{TOTAL_FRACTIONS} fractions ({holder.percentage}%)
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => copyToClipboard(holder.address, 'Wallet address')}
-                      className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                      aria-label="Copy wallet address"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 // Fallback: Show creator as 100% owner
                 <div className="flex items-center gap-3">
