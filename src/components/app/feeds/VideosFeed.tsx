@@ -8,6 +8,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Loader2, RefreshCw, Video, Play, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -15,7 +16,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { getMediaUrl, getCategories, type DeHubCategory } from '@/lib/api/dehub';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 
@@ -46,7 +47,16 @@ interface VideosFeedProps {
 const DURATION_OPTIONS = ['0-1m', '1-4m', '4-20m', '20m+'];
 const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented'];
 const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
-const CATEGORY_PILLS = ['All', 'PPV', 'W2E', 'Programming', 'Web Dev', 'JavaScript', 'React', 'Python', 'Gaming', 'Music'];
+
+// Fallback categories if API fails
+const FALLBACK_CATEGORIES: DeHubCategory[] = [
+  { id: 'gaming', name: 'Gaming', slug: 'gaming' },
+  { id: 'music', name: 'Music', slug: 'music' },
+  { id: 'entertainment', name: 'Entertainment', slug: 'entertainment' },
+  { id: 'education', name: 'Education', slug: 'education' },
+  { id: 'crypto', name: 'Crypto', slug: 'crypto' },
+  { id: 'programming', name: 'Programming', slug: 'programming' },
+];
 
 const SORT_MAP: Record<string, 'new' | 'popular' | 'trending'> = {
   'New to Old': 'new',
@@ -170,10 +180,26 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // null = All
   const loaderRef = useRef<HTMLDivElement>(null);
   
   const { walletAddress } = useAuth();
+
+  // Fetch categories from API
+  const { data: apiCategories } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+
+  // Use API categories with fallback
+  const categories = useMemo(() => {
+    if (apiCategories && Array.isArray(apiCategories) && apiCategories.length > 0) {
+      return apiCategories;
+    }
+    return FALLBACK_CATEGORIES;
+  }, [apiCategories]);
 
   const {
     data: apiData,
@@ -186,7 +212,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   } = useDeHubVideos({
     unit: 20,
     sortMode: SORT_MAP[selectedSort] || 'new',
-    category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+    category: selectedCategory || undefined,
     address: walletAddress || undefined,
   });
 
@@ -289,16 +315,30 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
-            {CATEGORY_PILLS.map((cat) => (
+            {/* All option */}
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={cn(
+                'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
+                selectedCategory === null ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              All
+            </button>
+            {/* Dynamic categories from API */}
+            {categories.map((cat) => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={cat.id || cat.slug}
+                onClick={() => setSelectedCategory(cat.slug || cat.id)}
                 className={cn(
                   'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                  selectedCategory === cat ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  selectedCategory === (cat.slug || cat.id) ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 )}
               >
-                {cat}
+                {cat.name}
+                {cat.nft_count !== undefined && cat.nft_count > 0 && (
+                  <span className="ml-1.5 text-xs opacity-60">({formatCount(cat.nft_count)})</span>
+                )}
               </button>
             ))}
           </SwipeableCarousel>
