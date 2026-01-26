@@ -94,6 +94,8 @@ export interface ImagePost extends BaseFeedItem {
   /** @deprecated Use title/description instead */
   caption: string;
   comments: number;
+  /** Formatted view count string (e.g., "1.2K") */
+  views: string;
   timeAgo: string;
   /** Creator's user ID for navigation */
   creatorId?: string;

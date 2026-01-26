@@ -365,6 +365,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 2453,
     caption: 'Exploring the mountains 🏔️ Nothing beats this view!',
     comments: 89,
+    views: '12.4K',
     timeAgo: '2 hours ago',
   },
   {
@@ -377,6 +378,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 1832,
     caption: 'Homemade pizza night 🍕 Recipe in bio!',
     comments: 156,
+    views: '8.2K',
     timeAgo: '4 hours ago',
   },
   {
@@ -389,6 +391,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 4521,
     caption: 'City lights never get old ✨',
     comments: 234,
+    views: '23.1K',
     timeAgo: '1 hour ago',
   },
   {
@@ -401,6 +404,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 3876,
     caption: 'Found this hidden gem while hiking 🌲',
     comments: 178,
+    views: '15.6K',
     timeAgo: '3 hours ago',
   },
   {
@@ -413,6 +417,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 8934,
     caption: 'Meet my new best friend! 🐕',
     comments: 567,
+    views: '45.2K',
     timeAgo: '5 hours ago',
   },
   {
@@ -425,6 +430,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 5678,
     caption: 'New collection just dropped 👗',
     comments: 345,
+    views: '28.9K',
     timeAgo: '6 hours ago',
   },
   {
@@ -437,6 +443,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 2341,
     caption: 'Morning ritual ☕ Perfect latte art today',
     comments: 123,
+    views: '9.8K',
     timeAgo: '30 minutes ago',
   },
   {
@@ -449,6 +456,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 6789,
     caption: 'Progress not perfection 💪',
     comments: 456,
+    views: '34.5K',
     timeAgo: '2 hours ago',
   },
   {
@@ -461,6 +469,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 9876,
     caption: 'Golden hour magic 🌅',
     comments: 678,
+    views: '52.3K',
     timeAgo: '1 hour ago',
   },
   {
@@ -473,6 +482,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 4567,
     caption: 'Lines and symmetry 📐',
     comments: 234,
+    views: '21.7K',
     timeAgo: '4 hours ago',
   },
   {
@@ -485,6 +495,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 7654,
     caption: 'Paradise found 🏝️',
     comments: 345,
+    views: '38.9K',
     timeAgo: '5 hours ago',
   },
   {
@@ -497,6 +508,7 @@ export const SAMPLE_IMAGES: ImagePost[] = [
     likes: 5432,
     caption: 'Dream machine 🚗',
     comments: 567,
+    views: '27.1K',
     timeAgo: '3 hours ago',
   },
 ];

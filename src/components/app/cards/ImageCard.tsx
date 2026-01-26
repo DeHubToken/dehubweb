@@ -18,7 +18,6 @@ import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { TranslatableGroup } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
-import { getViewCount } from '@/lib/feed-utils';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
@@ -336,7 +335,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           <span className="text-zinc-500 text-xs">{post.timeAgo}</span>
           <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
             <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
-            <span className="leading-none">{getViewCount(post.id)}</span>
+            <span className="leading-none">{post.views || '0'}</span>
           </span>
         </div>
       </div>

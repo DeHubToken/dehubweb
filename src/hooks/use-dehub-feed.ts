@@ -204,6 +204,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   // Get stats
   const likes = nft.totalVotes?.for || nft.like_count || 0;
   const comments = nft.commentCount || nft.comment_count || 0;
+  const viewCount = nft.views || nft.view_count || 0;
   
   // Get created date
   const createdAt = nft.createdAt || nft.created_at;
@@ -229,6 +230,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     likes,
     caption: description || title, // Legacy field for backwards compatibility
     comments,
+    views: formatViews(viewCount).replace(' views', ''),
     timeAgo: formatTimeAgo(createdAt),
     creatorId,
     creatorUsername,

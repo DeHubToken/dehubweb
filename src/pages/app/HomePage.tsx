@@ -66,6 +66,7 @@ export default function HomePage() {
     subscribed: true,
     trending: true,
     latest: false,
+    uploadDate: 'all',
   });
   
   // Mobile touch gesture refs
