@@ -95,14 +95,13 @@ export function SidebarChat() {
             onKeyDown={handleKeyDown}
             className="h-8 text-sm bg-zinc-800 border-zinc-700 rounded-lg"
           />
-          <Button
+          <button
             onClick={handleSend}
-            size="icon"
-            className="h-8 w-8 rounded-lg bg-white text-black hover:bg-zinc-200"
             disabled={!newMessage.trim()}
+            className="h-8 w-8 flex items-center justify-center disabled:opacity-40"
           >
-            <Send className="w-4 h-4" />
-          </Button>
+            <Send className="w-4 h-4 text-white" />
+          </button>
         </div>
       </div>
     </div>
