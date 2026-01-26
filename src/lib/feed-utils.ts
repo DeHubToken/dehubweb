@@ -95,40 +95,17 @@ export function sortByMostComments<T extends DeHubNFT>(items: T[]): T[] {
 export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValue): T[] {
   if (items.length === 0) return items;
   
-  // Debug: Log sorting info
-  console.log(`[Feed Sort] Applying "${sortValue}" to ${items.length} items`);
-  
-  let sorted: T[];
   switch (sortValue) {
     case 'most-viewed':
-      sorted = sortByMostViewed(items);
-      break;
+      return sortByMostViewed(items);
     case 'most-liked':
-      sorted = sortByMostLiked(items);
-      break;
+      return sortByMostLiked(items);
     case 'most-comments':
-      sorted = sortByMostComments(items);
-      break;
+      return sortByMostComments(items);
     case 'latest':
     default:
-      sorted = sortByLatest(items);
-      break;
+      return sortByLatest(items);
   }
-  
-  // Debug: Log first 3 items after sorting
-  if (sorted.length > 0) {
-    const topItems = sorted.slice(0, 3).map(nft => {
-      const vals = getNFTSortValues(nft);
-      return { 
-        name: (nft as any).name?.slice(0, 20), 
-        views: vals.views, 
-        likes: vals.likes 
-      };
-    });
-    console.log(`[Feed Sort] Top 3 after "${sortValue}":`, topItems);
-  }
-  
-  return sorted;
 }
 
 // ============================================================================

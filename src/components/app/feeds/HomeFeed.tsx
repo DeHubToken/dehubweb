@@ -203,51 +203,42 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
-  // Map API data to feed items - merge videos and images with client-side sorting and filtering
+  // Helper to determine content type from NFT
+  const getContentType = (nft: DeHubNFT): 'video' | 'image' => {
+    const postType = (nft as any).postType || '';
+    if (postType === 'feed-images' || postType.includes('image')) return 'image';
+    return 'video';
+  };
+
+  // Map API data to feed items - COMBINE all NFTs first, then sort together
   const items = useMemo((): UnifiedFeedItem[] => {
-    // Get raw NFTs
+    // Get raw NFTs and tag them with their source type
     const rawVideoNFTs: DeHubNFT[] = videosData?.pages?.flatMap(page => page.data || []) || [];
     const rawImageNFTs: DeHubNFT[] = imagesData?.pages?.flatMap(page => page.data || []) || [];
     
-    // Apply date filtering first
-    const filteredVideoNFTs = filterByDate(rawVideoNFTs, selectedDate.value);
-    const filteredImageNFTs = filterByDate(rawImageNFTs, selectedDate.value);
+    // Combine ALL NFTs into a single array
+    const allNFTs: DeHubNFT[] = [...rawVideoNFTs, ...rawImageNFTs];
     
-    // Apply sorting to filtered results
-    const sortedVideoNFTs = applySorting(filteredVideoNFTs, selectedSort.value);
-    const sortedImageNFTs = applySorting(filteredImageNFTs, selectedSort.value);
+    // Apply date filtering to the combined array
+    const filteredNFTs = filterByDate(allNFTs, selectedDate.value);
     
-    // Map to feed items
-    const videoItems: UnifiedFeedItem[] = sortedVideoNFTs.map((nft, index) => ({
-      type: 'video' as const,
-      data: mapNFTToVideoItem(nft, index),
-    }));
+    // Apply sorting to the COMBINED filtered results - this ensures global ordering
+    const sortedNFTs = applySorting(filteredNFTs, selectedSort.value);
     
-    const imageItems: UnifiedFeedItem[] = sortedImageNFTs.map((nft, index) => ({
-      type: 'image' as const,
-      data: mapNFTToImagePost(nft, index),
-    }));
-    
-    // Interleave videos and images (2 videos, 1 image pattern)
-    const merged: UnifiedFeedItem[] = [];
-    let videoIdx = 0;
-    let imageIdx = 0;
-    
-    while (videoIdx < videoItems.length || imageIdx < imageItems.length) {
-      // Add 2 videos
-      if (videoIdx < videoItems.length) {
-        merged.push(videoItems[videoIdx++]);
+    // Map each NFT to its correct type based on postType
+    return sortedNFTs.map((nft, index) => {
+      const contentType = getContentType(nft);
+      if (contentType === 'image') {
+        return {
+          type: 'image' as const,
+          data: mapNFTToImagePost(nft, index),
+        };
       }
-      if (videoIdx < videoItems.length) {
-        merged.push(videoItems[videoIdx++]);
-      }
-      // Add 1 image
-      if (imageIdx < imageItems.length) {
-        merged.push(imageItems[imageIdx++]);
-      }
-    }
-    
-    return merged;
+      return {
+        type: 'video' as const,
+        data: mapNFTToVideoItem(nft, index),
+      };
+    });
   }, [videosData, imagesData, selectedSort.value, selectedDate.value]);
 
   // Infinite scroll observer
