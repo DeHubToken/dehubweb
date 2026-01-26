@@ -182,8 +182,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
               <div className="flex items-center gap-2 lg:gap-3">
                 <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0">
-                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentShort.username}`} />
-                  <AvatarFallback>{currentShort.username[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-zinc-700 text-white font-medium">{currentShort.username[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-semibold text-sm lg:text-base truncate">@{currentShort.username}</p>
@@ -287,8 +286,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               <div className="absolute top-4 left-4 z-10">
                 <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
                   <Avatar className="w-8 h-8 border border-white/20">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${currentShort.username}`} />
-                    <AvatarFallback>{currentShort.username[0]}</AvatarFallback>
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{currentShort.username[0]?.toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="text-white text-sm font-medium">@{currentShort.username}</span>

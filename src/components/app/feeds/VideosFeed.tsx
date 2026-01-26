@@ -493,13 +493,19 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
-                    <img 
-                      src={video.channelAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}`}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  {video.channelAvatar ? (
+                    <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
+                      <img 
+                        src={video.channelAvatar}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-5 h-5 rounded-full bg-zinc-700 border border-white/30 flex-shrink-0 flex items-center justify-center">
+                      <span className="text-white text-[8px] font-medium">{video.channel?.[0]?.toUpperCase()}</span>
+                    </div>
+                  )}
                   <span className="text-white text-[10px] font-medium truncate">{video.channel}</span>
                 </div>
                 
@@ -534,13 +540,19 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   
                   {/* Creator info at top */}
                   <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                    <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
-                      <img 
-                        src={video.channelAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}`}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    {video.channelAvatar ? (
+                      <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
+                        <img 
+                          src={video.channelAvatar}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 rounded-full bg-zinc-700 border border-white/30 flex-shrink-0 flex items-center justify-center">
+                        <span className="text-white text-[8px] font-medium">{video.channel?.[0]?.toUpperCase()}</span>
+                      </div>
+                    )}
                     <span className="text-white text-[10px] font-medium truncate">{video.channel}</span>
                   </div>
                   

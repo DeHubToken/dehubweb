@@ -17,11 +17,7 @@ const sizeClasses = {
 export function UserAvatar({ name, handle, size = 'md', className }: UserAvatarProps) {
   return (
     <Avatar className={cn(sizeClasses[size], className)}>
-      <AvatarImage
-        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${handle}`}
-        alt={`${name}'s avatar`}
-      />
-      <AvatarFallback className="bg-zinc-700 text-white">
+      <AvatarFallback className="bg-zinc-700 text-white font-medium">
         {name.charAt(0).toUpperCase()}
       </AvatarFallback>
     </Avatar>

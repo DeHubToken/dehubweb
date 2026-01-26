@@ -139,8 +139,7 @@ function ProfileSettings() {
       <div className="flex items-center gap-4">
         <div className="relative">
           <Avatar className="w-20 h-20">
-            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=felix" />
-            <AvatarFallback className="bg-zinc-700 text-white text-xl">U</AvatarFallback>
+            <AvatarFallback className="bg-zinc-700 text-white text-xl font-medium">U</AvatarFallback>
           </Avatar>
           <button className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center hover:bg-zinc-600 transition-colors">
             <Camera className="w-4 h-4 text-white" />
@@ -718,10 +717,10 @@ const MOCK_WALLET_ADDRESS = '0x7a3B...F92d8E4c1Ab7';
 const MOCK_WALLET_ADDRESS_FULL = '0x7a3B4c5D6e8F92d8E4c1Ab7C3d2E1f0A9B8C7D6E';
 
 const MOCK_USERS_TO_ASSIGN = [
-  { id: '1', handle: '@alice', name: 'Alice Smith', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice' },
-  { id: '2', handle: '@bob', name: 'Bob Johnson', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob' },
-  { id: '3', handle: '@charlie', name: 'Charlie Brown', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=charlie' },
-  { id: '4', handle: '@diana', name: 'Diana Prince', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=diana' },
+  { id: '1', handle: '@alice', name: 'Alice Smith', avatar: undefined },
+  { id: '2', handle: '@bob', name: 'Bob Johnson', avatar: undefined },
+  { id: '3', handle: '@charlie', name: 'Charlie Brown', avatar: undefined },
+  { id: '4', handle: '@diana', name: 'Diana Prince', avatar: undefined },
 ];
 
 function AssetsSettings() {

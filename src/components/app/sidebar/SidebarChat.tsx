@@ -66,9 +66,8 @@ export function SidebarChat() {
             messages.map((msg) => (
               <div key={msg.id} className="flex items-start gap-2">
                 <Avatar className="w-6 h-6 flex-shrink-0">
-                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.userName}`} />
-                  <AvatarFallback className="bg-zinc-700 text-white text-[10px]">
-                    {msg.userName.charAt(0)}
+                  <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
+                    {msg.userName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">

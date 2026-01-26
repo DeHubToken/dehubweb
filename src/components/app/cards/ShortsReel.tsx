@@ -69,12 +69,8 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-full overflow-hidden border border-white/30 flex-shrink-0">
-                    <img 
-                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${short.username}`}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="w-5 h-5 rounded-full bg-zinc-700 border border-white/30 flex-shrink-0 flex items-center justify-center">
+                    <span className="text-white text-[8px] font-medium">{short.username?.[0]?.toUpperCase()}</span>
                   </div>
                   <span className="text-white text-[10px] font-medium truncate">{short.username}</span>
                 </div>

@@ -292,18 +292,15 @@ export default function NotificationsPage() {
                 {notification.type === 'subscription' ? (
                   <div className="flex -space-x-2">
                     <Avatar className="w-10 h-10 border-2 border-zinc-900">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=sub1`} />
-                      <AvatarFallback className="bg-purple-500 text-white text-xs">S</AvatarFallback>
+                      <AvatarFallback className="bg-purple-500 text-white text-xs font-medium">S</AvatarFallback>
                     </Avatar>
                     <Avatar className="w-10 h-10 border-2 border-zinc-900">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=sub2`} />
-                      <AvatarFallback className="bg-zinc-600 text-white text-xs">+</AvatarFallback>
+                      <AvatarFallback className="bg-zinc-600 text-white text-xs font-medium">+</AvatarFallback>
                     </Avatar>
                   </div>
                 ) : (
                   <Avatar className="w-10 h-10">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${notification.users[0].name}`} />
-                    <AvatarFallback className="bg-zinc-700 text-white">
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium">
                       {notification.users[0].name.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>

@@ -24,8 +24,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
   return (
     <div className="flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group">
       <Avatar className="w-8 h-8 flex-shrink-0">
-        <AvatarImage src={message.userAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${message.userName}`} />
-        <AvatarFallback className="bg-zinc-700 text-white text-xs">
+        {message.userAvatar && <AvatarImage src={message.userAvatar} />}
+        <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
           {message.userName.charAt(0).toUpperCase()}
         </AvatarFallback>
       </Avatar>

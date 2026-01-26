@@ -58,7 +58,7 @@ export function WhoToFollow() {
     if (user.avatarUrl) {
       return getMediaUrl(user.avatarUrl);
     }
-    return `https://api.dicebear.com/7.x/identicon/svg?seed=${user.address}`;
+    return undefined; // No fallback image - use initial instead
   };
 
   const getDisplayName = (user: UniqueUser) => {
@@ -112,8 +112,8 @@ export function WhoToFollow() {
             className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
           >
             <Avatar className="w-10 h-10">
-              <AvatarImage src={getAvatarUrl(user)} />
-              <AvatarFallback className="bg-zinc-700 text-white">
+              {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium">
                 {getDisplayName(user).charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
