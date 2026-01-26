@@ -55,7 +55,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <span className="text-zinc-500 text-xs">{post.createdAt}</span>
           <span className="flex items-center gap-1 text-zinc-500 text-xs">
             <Eye className="w-3 h-3" />
-            {getViewCount(post.id)} views
+            {getViewCount(post.id)}
           </span>
         </div>
       </div>

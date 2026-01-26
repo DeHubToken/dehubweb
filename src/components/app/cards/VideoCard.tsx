@@ -20,6 +20,7 @@ import { PostAIChat } from './PostAIChat';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { getViewCount } from '@/lib/feed-utils';
 import {
   Drawer,
   DrawerContent,
@@ -592,7 +593,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           <span className="text-zinc-500 text-xs">{video.uploadedAgo}</span>
           <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
             <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
-            <span className="leading-none">{video.views} views</span>
+            <span className="leading-none">{video.views?.replace(' views', '') || getViewCount(video.id)}</span>
           </span>
         </div>
 
