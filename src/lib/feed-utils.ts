@@ -27,7 +27,7 @@ export type SortValue = SortOption['value'];
 // ============================================================================
 
 export const DATE_FILTER_OPTIONS = [
-  { label: 'Any time', value: 'all' as const },
+  { label: 'All time', value: 'all' as const },
   { label: 'Today', value: 'today' as const },
   { label: 'This week', value: 'week' as const },
   { label: 'This month', value: 'month' as const },
