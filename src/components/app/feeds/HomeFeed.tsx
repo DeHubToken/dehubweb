@@ -11,7 +11,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -153,7 +153,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch videos from DeHub API
+  // Fetch videos from DeHub API - pass sortMode based on selected filter
   const {
     data: videosData,
     fetchNextPage: fetchNextVideos,
@@ -165,10 +165,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     error: videosError,
   } = useDeHubFeed({
     unit: PAGE_SIZE,
+    sortMode: getApiSortMode(selectedSort.value),
     address: walletAddress || undefined,
   });
 
-  // Fetch images from DeHub API
+  // Fetch images from DeHub API - pass same sortMode for consistent sorting
   const {
     data: imagesData,
     fetchNextPage: fetchNextImages,
@@ -179,6 +180,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     refetch: refetchImages,
   } = useDeHubImages({
     unit: PAGE_SIZE,
+    sortMode: getApiSortMode(selectedSort.value),
     address: walletAddress || undefined,
   });
 

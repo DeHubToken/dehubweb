@@ -356,6 +356,7 @@ export function useDeHubVideos(options: Omit<UseDeHubFeedOptions, 'postType'> = 
 /**
  * Hook to fetch image content specifically
  * Uses postType: "feed-images" to filter for images
+ * Now accepts sortMode for API-level sorting
  */
 export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = {}) {
   return useDeHubFeed({

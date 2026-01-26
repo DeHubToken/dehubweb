@@ -18,7 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 // Category images
@@ -293,7 +293,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   } = useDeHubVideos({
     unit: 20,
-    // API sortMode not used - we sort client-side
+    sortMode: getApiSortMode(selectedSort.value),
     category: selectedCategory || undefined,
     address: walletAddress || undefined,
   });

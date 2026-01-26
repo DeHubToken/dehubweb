@@ -23,6 +23,32 @@ export type SortOption = typeof SORT_OPTIONS[number];
 export type SortValue = SortOption['value'];
 
 // ============================================================================
+// API SORT MODE MAPPING
+// ============================================================================
+
+/**
+ * Map UI sort values to DeHub API sortMode parameter.
+ * - "new" = newest first (default)
+ * - "popular" = sorted by views/likes 
+ * - "trending" = currently trending
+ */
+export type ApiSortMode = 'new' | 'popular' | 'trending';
+
+export function getApiSortMode(sortValue: SortValue): ApiSortMode {
+  switch (sortValue) {
+    case 'most-viewed':
+    case 'most-liked':
+      return 'popular';
+    case 'most-comments':
+      // API doesn't support comment sorting, use popular as fallback
+      return 'popular';
+    case 'latest':
+    default:
+      return 'new';
+  }
+}
+
+// ============================================================================
 // DATE FILTER OPTIONS (Used across all feeds)
 // ============================================================================
 
