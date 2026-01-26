@@ -42,7 +42,7 @@ export function TabbedSidePanel() {
       </div>
 
       {/* Tab Content */}
-      <div className="p-4 h-[400px]">
+      <div className="px-0 py-4 h-[400px]">
         {activeTab === 'follow' && <WhoToFollow />}
         {activeTab === 'leaderboard' && <SidebarLeaderboard />}
         {activeTab === 'chat' && <SidebarChat />}

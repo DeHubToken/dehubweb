@@ -82,7 +82,7 @@ export function SidebarLeaderboard() {
             <div
               key={entry.account}
               onClick={() => handleUserClick(entry)}
-              className="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
+              className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
             >
               {/* Rank */}
               <div className="w-7 flex-shrink-0 flex items-center justify-center">

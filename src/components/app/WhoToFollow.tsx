@@ -109,7 +109,7 @@ export function WhoToFollow() {
           <div
             key={user.address}
             onClick={() => handleUserClick(user)}
-            className="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
+            className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
           >
             <Avatar className="w-10 h-10">
               <AvatarImage src={getAvatarUrl(user)} />
