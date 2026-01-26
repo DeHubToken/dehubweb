@@ -13,7 +13,7 @@ import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, getMediaUrl, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
@@ -100,7 +100,7 @@ export default function LeaderboardPage() {
     if (entry.avatarUrl) {
       return getMediaUrl(entry.avatarUrl);
     }
-    return `https://api.dicebear.com/7.x/identicon/svg?seed=${entry.account}`;
+    return null;
   };
 
   const getDisplayName = (entry: LeaderboardEntry) => {
@@ -268,12 +268,12 @@ export default function LeaderboardPage() {
 
                   {/* User */}
                   <div className="col-span-7 sm:col-span-5 flex items-center gap-3">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={getAvatarUrl(entry)} />
-                      <AvatarFallback className="bg-zinc-700 text-white">
-                        {getDisplayName(entry).charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <LeaderboardUserAvatar
+                      avatarUrl={getAvatarUrl(entry)}
+                      fallbackSeed={entry.account}
+                      displayName={getDisplayName(entry)}
+                      size="md"
+                    />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
