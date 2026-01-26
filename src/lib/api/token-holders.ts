@@ -5,7 +5,7 @@
  * Each token has 1000 fractions that can be owned by different wallets.
  */
 
-import { createPublicClient, http, parseAbiItem, type Address } from 'viem';
+import { createPublicClient, http, parseAbiItem, encodeFunctionData, decodeFunctionResult, type Address, type Hex } from 'viem';
 import { base, bsc } from 'viem/chains';
 
 export interface TokenHolder {
@@ -23,13 +23,21 @@ export const DEHUB_CONTRACTS: Record<number, Address> = {
 // Total fractions per token
 export const TOTAL_FRACTIONS = 1000;
 
-// ERC-1155 Transfer events ABI
+// ERC-1155 balanceOf ABI for querying current holdings
+const BALANCE_OF_ABI = [{
+  name: 'balanceOf',
+  type: 'function',
+  stateMutability: 'view',
+  inputs: [
+    { type: 'address', name: 'account' },
+    { type: 'uint256', name: 'id' }
+  ],
+  outputs: [{ type: 'uint256', name: '' }]
+}] as const;
+
+// ERC-1155 Transfer events ABI for finding holder addresses
 const TRANSFER_SINGLE_ABI = parseAbiItem(
   'event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value)'
-);
-
-const TRANSFER_BATCH_ABI = parseAbiItem(
-  'event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values)'
 );
 
 // Create public clients for each chain
@@ -44,8 +52,12 @@ const clients = {
   }),
 };
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const QUERY_TIMEOUT_MS = 8000; // 8 second timeout
+const RECENT_BLOCKS = 500_000n; // ~2 weeks on Base
+
 /**
- * Get token holders by querying Transfer events and aggregating balances
+ * Get token holders by querying recent transfers then checking current balances
  */
 export async function getTokenHolders(
   tokenId: number | string,
@@ -54,7 +66,7 @@ export async function getTokenHolders(
   const contractAddress = DEHUB_CONTRACTS[chainId];
   const client = clients[chainId as keyof typeof clients];
   
-  if (!contractAddress || contractAddress === '0x0000000000000000000000000000000000000000') {
+  if (!contractAddress || contractAddress === ZERO_ADDRESS) {
     console.warn('Contract address not configured for chain:', chainId);
     return [];
   }
@@ -64,62 +76,112 @@ export async function getTokenHolders(
     return [];
   }
   
-  try {
-    // Query TransferSingle events for this token ID
-    const singleLogs = await client.getLogs({
-      address: contractAddress,
-      event: TRANSFER_SINGLE_ABI,
-      fromBlock: 'earliest',
-      toBlock: 'latest',
-    });
-    
-    // Filter logs for the specific token ID
-    const tokenIdBigInt = BigInt(tokenId);
-    const filteredLogs = singleLogs.filter((log) => {
-      const args = log.args as { id?: bigint };
-      return args.id === tokenIdBigInt;
-    });
-    
-    // Aggregate balances from transfer events
-    const balances = new Map<string, bigint>();
-    const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-    
-    for (const log of filteredLogs) {
-      const { from, to, value } = log.args as { from: string; to: string; value: bigint };
+  const tokenIdBigInt = BigInt(tokenId);
+  
+  // Wrap in timeout to prevent hanging
+  const timeoutPromise = new Promise<TokenHolder[]>((_, reject) =>
+    setTimeout(() => reject(new Error('Query timeout')), QUERY_TIMEOUT_MS)
+  );
+  
+  const fetchHolders = async (): Promise<TokenHolder[]> => {
+    try {
+      // Get current block number
+      const currentBlock = await client.getBlockNumber();
+      const fromBlock = currentBlock > RECENT_BLOCKS ? currentBlock - RECENT_BLOCKS : 0n;
       
-      // Subtract from sender (unless mint)
-      if (from && from !== ZERO_ADDRESS) {
-        const currentBalance = balances.get(from.toLowerCase()) || 0n;
-        balances.set(from.toLowerCase(), currentBalance - value);
+      // Query recent TransferSingle events to find addresses that have held this token
+      const singleLogs = await client.getLogs({
+        address: contractAddress,
+        event: TRANSFER_SINGLE_ABI,
+        fromBlock,
+        toBlock: 'latest',
+      });
+      
+      // Filter logs for the specific token ID and collect unique addresses
+      const addresses = new Set<string>();
+      
+      for (const log of singleLogs) {
+        const args = log.args as { id?: bigint; from?: string; to?: string };
+        if (args.id !== tokenIdBigInt) continue;
+        
+        if (args.from && args.from !== ZERO_ADDRESS) {
+          addresses.add(args.from.toLowerCase());
+        }
+        if (args.to && args.to !== ZERO_ADDRESS) {
+          addresses.add(args.to.toLowerCase());
+        }
       }
       
-      // Add to receiver (unless burn)
-      if (to && to !== ZERO_ADDRESS) {
-        const currentBalance = balances.get(to.toLowerCase()) || 0n;
-        balances.set(to.toLowerCase(), currentBalance + value);
+      if (addresses.size === 0) {
+        return [];
       }
-    }
-    
-    // Convert to array and filter out zero balances
-    const holders: TokenHolder[] = [];
-    
-    for (const [address, balance] of balances.entries()) {
-      if (balance > 0n) {
-        const balanceNum = Number(balance);
-        holders.push({
-          address,
-          balance: balanceNum,
-          percentage: Math.round((balanceNum / TOTAL_FRACTIONS) * 100),
+      
+      // Query current balanceOf for each discovered address
+      const holders: TokenHolder[] = [];
+      
+      // Batch the balance queries (max 10 concurrent)
+      const addressArray = Array.from(addresses);
+      const batchSize = 10;
+      
+      for (let i = 0; i < addressArray.length; i += batchSize) {
+        const batch = addressArray.slice(i, i + batchSize);
+        const balancePromises = batch.map(async (addr) => {
+          try {
+            const callData = encodeFunctionData({
+              abi: BALANCE_OF_ABI,
+              functionName: 'balanceOf',
+              args: [addr as Address, tokenIdBigInt],
+            });
+            
+            const result = await client.call({
+              to: contractAddress,
+              data: callData,
+            });
+            
+            if (!result.data) {
+              return { addr, balance: 0n };
+            }
+            
+            const balance = decodeFunctionResult({
+              abi: BALANCE_OF_ABI,
+              functionName: 'balanceOf',
+              data: result.data as Hex,
+            }) as bigint;
+            
+            return { addr, balance };
+          } catch {
+            return { addr, balance: 0n };
+          }
         });
+        
+        const results = await Promise.all(balancePromises);
+        
+        for (const { addr, balance } of results) {
+          if (balance > 0n) {
+            const balanceNum = Number(balance);
+            holders.push({
+              address: addr,
+              balance: balanceNum,
+              percentage: Math.round((balanceNum / TOTAL_FRACTIONS) * 100),
+            });
+          }
+        }
       }
+      
+      // Sort by balance descending
+      holders.sort((a, b) => b.balance - a.balance);
+      
+      return holders;
+    } catch (error) {
+      console.error('Error fetching token holders:', error);
+      return [];
     }
-    
-    // Sort by balance descending
-    holders.sort((a, b) => b.balance - a.balance);
-    
-    return holders;
+  };
+  
+  try {
+    return await Promise.race([fetchHolders(), timeoutPromise]);
   } catch (error) {
-    console.error('Error fetching token holders:', error);
+    console.warn('Token holders query failed or timed out:', error);
     return [];
   }
 }
