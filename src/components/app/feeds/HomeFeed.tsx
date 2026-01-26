@@ -2,13 +2,15 @@
  * Home Feed Component
  * ===================
  * Mixed content feed with infinite scroll for the home tab.
- * Fetches content from DeHub API.
+ * Fetches content from DeHub API with sorting options.
  * 
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 // Card components
 import { 
@@ -21,11 +23,15 @@ import {
 } from '@/components/app/cards';
 
 // DeHub API hook
-import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, useDeHubImages, mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, useDeHubImages, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 
 import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
+
+// ============================================================================
+// TYPES & CONSTANTS
+// ============================================================================
 
 type UnifiedFeedItem = 
   | { type: 'post'; data: TextPost }
@@ -34,22 +40,34 @@ type UnifiedFeedItem =
   | { type: 'live'; data: LiveStream }
   | { type: 'shorts'; data: ShortVideo[] };
 
+// Sort options that map directly to DeHub API values
+const SORT_OPTIONS = [
+  { label: 'Latest', value: 'new' as const },
+  { label: 'Trending', value: 'trending' as const },
+  { label: 'Popular', value: 'popular' as const },
+];
+
+type SortOption = typeof SORT_OPTIONS[number];
+
 const PAGE_SIZE = 15;
 const SHORTS_INSERT_INTERVAL = 6;
 
 interface HomeFeedProps {
   shuffleKey: number;
   isRefreshing: boolean;
+  showFilters?: boolean;
 }
 
-// Helper to format counts
+// ============================================================================
+// HELPERS
+// ============================================================================
+
 function formatCount(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
   return count.toString();
 }
 
-// Map NFT to ShortVideo format
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);
   
@@ -68,16 +86,48 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
   };
 }
 
-export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
-  const loaderRef = useRef<HTMLDivElement>(null);
+// ============================================================================
+// FILTER SECTION COMPONENT
+// ============================================================================
 
-  // Get wallet address for authenticated requests
+function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {SORT_OPTIONS.map((option) => (
+          <button
+            key={option.label}
+            onClick={() => onSelect(option)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              selected.label === option.label
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
+export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
+  const loaderRef = useRef<HTMLDivElement>(null);
+  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+
   const { walletAddress } = useAuth();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch videos from DeHub API
+  // Fetch videos from DeHub API with selected sort
   const {
     data: videosData,
     fetchNextPage: fetchNextVideos,
@@ -89,11 +139,11 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     error: videosError,
   } = useDeHubFeed({
     unit: PAGE_SIZE,
-    sortMode: 'new',
+    sortMode: selectedSort.value,
     address: walletAddress || undefined,
   });
 
-  // Fetch images from DeHub API
+  // Fetch images from DeHub API with selected sort
   const {
     data: imagesData,
     fetchNextPage: fetchNextImages,
@@ -104,7 +154,7 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
     refetch: refetchImages,
   } = useDeHubImages({
     unit: PAGE_SIZE,
-    sortMode: 'new',
+    sortMode: selectedSort.value,
     address: walletAddress || undefined,
   });
 
@@ -255,7 +305,6 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
 
   const isLoading = isApiLoading || isRefreshing;
 
-  // Empty state component
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
@@ -284,6 +333,23 @@ export function HomeFeed({ shuffleKey, isRefreshing }: HomeFeedProps) {
         </div>
       ) : (
         <>
+          {/* Filters */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="overflow-hidden"
+              >
+                <div className="bg-zinc-900 rounded-2xl p-4 mb-3">
+                  <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <StoriesBar users={storyUsers} />
           
           {items.length === 0 ? (

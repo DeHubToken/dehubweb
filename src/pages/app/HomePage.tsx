@@ -53,6 +53,7 @@ export default function HomePage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Filter states for each feed type
+  const [showHomeFilters, setShowHomeFilters] = useState(false);
   const [showShortsFilters, setShowShortsFilters] = useState(false);
   const [showImagesCollage, setShowImagesCollage] = useState(false);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
@@ -137,6 +138,7 @@ export default function HomePage() {
    * Reset all filter states.
    */
   const resetFilters = () => {
+    setShowHomeFilters(false);
     setShowShortsFilters(false);
     setShowImagesCollage(false);
     setShowVideosFilters(false);
@@ -153,7 +155,9 @@ export default function HomePage() {
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      if (tabValue === 'home' || tabValue === 'live') {
+      if (tabValue === 'home') {
+        setShowHomeFilters(prev => !prev);
+      } else if (tabValue === 'live') {
         triggerRefresh();
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
@@ -332,7 +336,7 @@ export default function HomePage() {
       case 'music':
         return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       default:
-        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} />;
+        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} />;
     }
   };
 
