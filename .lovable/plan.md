@@ -1,52 +1,46 @@
 
-# Add PPV, W2E, and Locked Filters to Home and Video Tabs
+# Add PPV/W2E/Locked Badges to Video Thumbnails
 
 ## Overview
-Add content type filters (PPV, Bounty/W2E, Locked) to the Home and Video feeds, allowing users to filter for premium pay-per-view content, watch-to-earn bounty content, and subscriber-only locked content.
+Add a liquid glass badge to the top-left corner of video thumbnails that displays content type (PPV, Bounty, Locked) based on API data. For PPV content, the badge will show the price and currency as returned by the API.
 
 ## Current State
-- The ExplorePage already has PPV and Bounty filter pills (UI only, not connected to API)
-- The DeHub API returns `is_ppv`, `ppv_price`, and `is_live` fields on NFT objects
-- HomeFeed and VideosFeed have Sort and Upload Date filters, but no content type filters
-- The `SearchNFTsParams` interface doesn't include PPV/W2E filter parameters
+- The DeHub API already returns `is_ppv`, `ppv_price`, and `is_live` fields on NFT objects
+- The `VideoCard` component uses liquid glass styling for other overlays (duration badge, controls)
+- The `VideoItem` type doesn't include PPV/W2E/locked fields yet
+- The mapping function doesn't pass these fields through
 
 ## Implementation Plan
 
-### 1. Extend feed-utils.ts with Content Type Filter Options
-Add new filter constants for content types:
-- **PPV** - Pay-per-view premium content
-- **Bounty** - Watch-to-earn content with rewards  
-- **Locked** - Subscriber-only content
+### 1. Extend VideoItem Interface
+Add new optional fields to track content access type:
+- `isPPV` - Whether content is pay-per-view
+- `ppvPrice` - Price amount for PPV content
+- `ppvCurrency` - Currency symbol (e.g., "USDC", "DHB")
+- `isW2E` - Whether content is watch-to-earn/bounty
+- `isLocked` - Whether content is subscriber-only
 
-### 2. Update SearchNFTsParams Interface
-Extend the API interface to support content type filtering:
-- `isPPV` - Filter for pay-per-view content
-- `isW2E` - Filter for watch-to-earn content
-- `isLocked` - Filter for subscriber-only content
+### 2. Update mapNFTToVideoItem Function
+Map the API response fields to the new VideoItem properties:
+- Map `is_ppv` to `isPPV`
+- Map `ppv_price` to `ppvPrice`
+- Extract currency from API response or default to "USDC"
+- Check for W2E/bounty indicators
+- Check for locked/subscriber-only indicators
 
-### 3. Update searchNFTs Function
-Pass the new filter parameters to the API call.
+### 3. Create Content Badge Component
+Add a liquid glass badge positioned at the top-left of the video thumbnail:
+- Uses the established liquid glass styling: `bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10`
+- Shows appropriate icon and text based on content type
+- For PPV: Display price with currency (e.g., "5.00 USDC")
+- For Bounty: Display "Bounty" with gift/star icon
+- For Locked: Display "Locked" with lock icon
 
-### 4. Add Client-Side Filtering
-Since the API may not fully support these filters server-side, implement client-side filtering as a fallback:
-- Filter NFTs where `is_ppv === true` for PPV
-- Filter NFTs where W2E fields exist (if available in response)
-- Filter NFTs where content is marked as locked/subscriber-only
-
-### 5. Update HomeFeed Component
-- Add content type filter state (ppv, w2e, locked toggles)
-- Add filter UI section with toggle pills
-- Pass filter params to API hook
-- Apply client-side filtering to results
-
-### 6. Update VideosFeed Component
-- Add same content type filter state
-- Add filter UI pills in the existing filter section
-- Pass filter params to API hook
-- Apply client-side filtering
-
-### 7. Update useDeHubFeed Hook
-Accept new filter parameters and pass to the API.
+### 4. Update VideoCard Component
+Add the badge to the thumbnail area with priority logic:
+- Position: `absolute top-2 left-2`
+- Only show if content has one of these flags
+- If multiple flags are set, show the most relevant (PPV takes priority)
 
 ---
 
@@ -54,56 +48,92 @@ Accept new filter parameters and pass to the API.
 
 ### File Changes
 
-**src/lib/feed-utils.ts**
+**src/types/feed.types.ts**
 ```typescript
-// Add content type filter options
-export const CONTENT_TYPE_FILTERS = [
-  { label: 'PPV', value: 'ppv' as const, description: 'Pay-per-view' },
-  { label: 'Bounty', value: 'w2e' as const, description: 'Watch to earn' },
-  { label: 'Locked', value: 'locked' as const, description: 'Subscribers only' },
-] as const;
-
-export type ContentTypeFilter = typeof CONTENT_TYPE_FILTERS[number]['value'];
-
-// Client-side filter function
-export function filterByContentType<T extends DeHubNFT>(
-  items: T[], 
-  filters: { ppv?: boolean; w2e?: boolean; locked?: boolean }
-): T[] {
-  return items.filter(nft => {
-    if (filters.ppv && !nft.is_ppv) return false;
-    // W2E and locked filtering based on available fields
-    return true;
-  });
-}
-```
-
-**src/lib/api/dehub.ts**
-```typescript
-export interface SearchNFTsParams {
-  // ... existing params
+export interface VideoItem extends BaseFeedItem {
+  // ... existing fields
+  
+  /** Whether content is pay-per-view */
   isPPV?: boolean;
+  /** PPV price amount */
+  ppvPrice?: number;
+  /** PPV currency (e.g., "USDC", "DHB") */
+  ppvCurrency?: string;
+  /** Whether content is watch-to-earn/bounty */
   isW2E?: boolean;
+  /** Whether content is subscriber-only locked */
   isLocked?: boolean;
 }
 ```
 
-**src/components/app/feeds/HomeFeed.tsx**
-- Add state: `contentFilters: { ppv: boolean, w2e: boolean, locked: boolean }`
-- Add UI: Toggle pills for PPV, Bounty, Locked in filter section
-- Apply filtering before rendering
+**src/hooks/use-dehub-feed.ts**
+```typescript
+export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
+  // ... existing mapping
+  
+  // Map content access fields
+  const isPPV = nft.is_ppv ?? false;
+  const ppvPrice = nft.ppv_price;
+  const ppvCurrency = 'USDC'; // Default currency, update if API provides it
+  const isW2E = nft.is_w2e ?? false;
+  const isLocked = nft.is_locked ?? false;
+  
+  return {
+    // ... existing fields
+    isPPV,
+    ppvPrice,
+    ppvCurrency,
+    isW2E,
+    isLocked,
+  };
+}
+```
 
-**src/components/app/feeds/VideosFeed.tsx**
-- Same changes as HomeFeed
-- Add pills in the existing filter section alongside Sort/Duration/Upload Date
+**src/components/app/cards/VideoCard.tsx**
+```typescript
+import { Lock, Gift, DollarSign } from 'lucide-react';
 
-### UI Design
-Filter pills will match the existing button style:
-- Inactive: `bg-zinc-800 text-zinc-300`
-- Active: `bg-white text-black`
-- Grouped under "Content Type" label
+// Inside the thumbnail container, add:
+{/* Content Type Badge - PPV/Bounty/Locked */}
+{(video.isPPV || video.isW2E || video.isLocked) && (
+  <div className="absolute top-2 left-2 z-10">
+    {video.isPPV && video.ppvPrice ? (
+      <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+        <DollarSign className="w-3 h-3 text-white" />
+        <span className="text-white text-xs font-medium">
+          {video.ppvPrice.toFixed(2)} {video.ppvCurrency}
+        </span>
+      </div>
+    ) : video.isW2E ? (
+      <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+        <Gift className="w-3 h-3 text-white" />
+        <span className="text-white text-xs font-medium">Bounty</span>
+      </div>
+    ) : video.isLocked ? (
+      <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+        <Lock className="w-3 h-3 text-white" />
+        <span className="text-white text-xs font-medium">Locked</span>
+      </div>
+    ) : null}
+  </div>
+)}
+```
 
-### Filter Behavior
-- Filters are additive (OR logic) - if PPV and Bounty are both on, show either
-- When no content type filters are active, show all content
-- Filters persist during session but reset on page reload
+### Badge Priority
+When multiple flags are present on the same content:
+1. **PPV** (highest priority) - Shows price
+2. **Bounty/W2E** - Shows bounty badge
+3. **Locked** - Shows lock badge
+
+### Visual Design
+The badge follows the liquid glass design system:
+- Background: `bg-black/40`
+- Blur: `backdrop-blur-[24px]`
+- Saturation: `saturate-[180%]`
+- Border: `border border-white/10`
+- Border radius: `rounded-lg`
+- Padding: `px-2 py-1`
+- Text: `text-white text-xs font-medium`
+
+### Note About API Data
+The API currently returns `is_ppv` and `ppv_price` fields. If the API provides additional fields for W2E or locked content in the future, the mapping can be extended. For now, these fields will be checked but may not be populated by the current API response.
