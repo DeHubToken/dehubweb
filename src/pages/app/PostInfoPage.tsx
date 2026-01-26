@@ -25,7 +25,7 @@ import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
 
-// Mock data for listings and offers (to be replaced with real API data)
+// Types for listings and offers (data will come from API)
 interface Listing {
   id: string;
   seller: string;
@@ -45,46 +45,6 @@ interface Offer {
   status: 'pending' | 'accepted' | 'rejected';
 }
 
-const mockListings: Listing[] = [
-  {
-    id: '1',
-    seller: '0x1234567890abcdef1234567890abcdef12345678',
-    amount: 100,
-    pricePerFraction: 0.01,
-    totalPrice: 1,
-    createdAt: '2024-01-15T10:30:00Z',
-  },
-  {
-    id: '2',
-    seller: '0xabcdef1234567890abcdef1234567890abcdef12',
-    amount: 50,
-    pricePerFraction: 0.015,
-    totalPrice: 0.75,
-    createdAt: '2024-01-14T08:15:00Z',
-  },
-];
-
-const mockOffers: Offer[] = [
-  {
-    id: '1',
-    buyer: '0x9876543210fedcba9876543210fedcba98765432',
-    amount: 200,
-    pricePerFraction: 0.008,
-    totalPrice: 1.6,
-    createdAt: '2024-01-15T14:20:00Z',
-    status: 'pending',
-  },
-  {
-    id: '2',
-    buyer: '0xfedcba9876543210fedcba9876543210fedcba98',
-    amount: 75,
-    pricePerFraction: 0.012,
-    totalPrice: 0.9,
-    createdAt: '2024-01-13T16:45:00Z',
-    status: 'pending',
-  },
-];
-
 // FractionMarketplace Component
 interface FractionMarketplaceProps {
   holders: { address: string; balance: number; percentage: number }[];
@@ -100,23 +60,6 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
     ? holders.find(h => h.address.toLowerCase() === walletAddress.toLowerCase())
     : null;
   const userOwnsFractions = !!userHolding && userHolding.balance > 0;
-  
-  const formatPrice = (price: number) => {
-    return `${price.toFixed(4)} ETH`;
-  };
-  
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
 
   const handleListFraction = () => {
     toast.info('List fraction feature coming soon');
@@ -124,14 +67,6 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
 
   const handleMakeOffer = () => {
     toast.info('Make offer feature coming soon');
-  };
-
-  const handleBuyListing = (listing: Listing) => {
-    toast.info(`Buy ${listing.amount} fractions for ${formatPrice(listing.totalPrice)}`);
-  };
-
-  const handleAcceptOffer = (offer: Offer) => {
-    toast.info(`Accept offer of ${formatPrice(offer.totalPrice)} for ${offer.amount} fractions`);
   };
 
   return (
@@ -156,120 +91,41 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
         
         {/* Listings Tab */}
         <TabsContent value="listings" className="p-4 mt-0">
+          {/* Empty state - no listings */}
+          <div className="text-center py-8">
+            <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
+            <p className="text-white/40 text-sm">No listings yet</p>
+          </div>
+          
           {/* User action - List fractions if they own some */}
           {userOwnsFractions && (
             <Button 
               onClick={handleListFraction}
-              className="w-full mb-4 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30"
+              className="w-full mt-4 bg-white/10 hover:bg-white/20 text-white border border-white/20"
             >
               <Plus className="w-4 h-4 mr-2" />
               List Your Fractions ({userHolding.balance} available)
             </Button>
           )}
-          
-          {/* Listings list */}
-          {mockListings.length > 0 ? (
-            <div className="space-y-3">
-              {mockListings.map((listing) => (
-                <div key={listing.id} className="bg-white/5 rounded-xl p-3 border border-white/10">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-white/60 font-mono">
-                      {truncateAddr(listing.seller)}
-                    </span>
-                    <span className="text-xs text-white/40">{formatDate(listing.createdAt)}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white font-medium">{listing.amount} fractions</p>
-                      <p className="text-xs text-white/60">
-                        {formatPrice(listing.pricePerFraction)} each
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-white">{formatPrice(listing.totalPrice)}</p>
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleBuyListing(listing)}
-                        className="mt-1 h-7 text-xs"
-                      >
-                        Buy
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
-              <p className="text-white/40 text-sm">No listings yet</p>
-            </div>
-          )}
         </TabsContent>
         
         {/* Offers Tab */}
         <TabsContent value="offers" className="p-4 mt-0">
+          {/* Empty state - no offers */}
+          <div className="text-center py-8">
+            <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
+            <p className="text-white/40 text-sm">No offers yet</p>
+          </div>
+          
           {/* User action - Make offer if they don't own fractions */}
           {!userOwnsFractions && (
             <Button 
               onClick={handleMakeOffer}
-              className="w-full mb-4 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30"
+              className="w-full mt-4 bg-white/10 hover:bg-white/20 text-white border border-white/20"
             >
               <Plus className="w-4 h-4 mr-2" />
               Make an Offer
             </Button>
-          )}
-          
-          {/* Offers list */}
-          {mockOffers.length > 0 ? (
-            <div className="space-y-3">
-              {mockOffers.map((offer) => (
-                <div key={offer.id} className="bg-white/5 rounded-xl p-3 border border-white/10">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-white/60 font-mono">
-                      {truncateAddr(offer.buyer)}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${
-                        offer.status === 'pending' 
-                          ? 'bg-yellow-500/20 text-yellow-400' 
-                          : offer.status === 'accepted'
-                            ? 'bg-green-500/20 text-green-400'
-                            : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {offer.status}
-                      </span>
-                      <span className="text-xs text-white/40">{formatDate(offer.createdAt)}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white font-medium">{offer.amount} fractions</p>
-                      <p className="text-xs text-white/60">
-                        {formatPrice(offer.pricePerFraction)} each
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-white">{formatPrice(offer.totalPrice)}</p>
-                      {userOwnsFractions && offer.status === 'pending' && (
-                        <Button 
-                          size="sm" 
-                          onClick={() => handleAcceptOffer(offer)}
-                          className="mt-1 h-7 text-xs"
-                        >
-                          Accept
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
-              <p className="text-white/40 text-sm">No offers yet</p>
-            </div>
           )}
         </TabsContent>
       </Tabs>
