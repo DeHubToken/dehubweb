@@ -128,7 +128,7 @@ export function WhoToFollow() {
               size="sm"
               variant="outline"
               onClick={(e) => handleFollow(e, user)}
-              className="h-8 px-4 text-xs font-semibold border-zinc-600 hover:bg-white hover:text-black transition-colors"
+              className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
             >
               Follow
             </Button>
