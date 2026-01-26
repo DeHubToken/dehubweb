@@ -11,7 +11,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, applySorting, type SortOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -84,25 +84,56 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
 // FILTER SECTION COMPONENT
 // ============================================================================
 
-function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
+interface FilterSectionProps {
+  selectedSort: SortOption;
+  onSortSelect: (o: SortOption) => void;
+  selectedDate: DateFilterOption;
+  onDateSelect: (o: DateFilterOption) => void;
+}
+
+function SortFilterSection({ selectedSort, onSortSelect, selectedDate, onDateSelect }: FilterSectionProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {SORT_OPTIONS.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelect(option)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+    <div className="flex flex-col gap-4">
+      {/* Sort Options */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+        <div className="flex gap-1.5 flex-wrap">
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSortSelect(option)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selectedSort.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      {/* Date Filter Options */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+        <div className="flex gap-1.5 flex-wrap">
+          {DATE_FILTER_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => onDateSelect(option)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selectedDate.value === option.value
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -115,6 +146,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
+  const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
 
   const { walletAddress } = useAuth();
 
@@ -171,15 +203,19 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
-  // Map API data to feed items - merge videos and images with client-side sorting
+  // Map API data to feed items - merge videos and images with client-side sorting and filtering
   const items = useMemo((): UnifiedFeedItem[] => {
     // Get raw NFTs
     const rawVideoNFTs: DeHubNFT[] = videosData?.pages?.flatMap(page => page.data || []) || [];
     const rawImageNFTs: DeHubNFT[] = imagesData?.pages?.flatMap(page => page.data || []) || [];
     
-    // Apply sorting to each
-    const sortedVideoNFTs = applySorting(rawVideoNFTs, selectedSort.value);
-    const sortedImageNFTs = applySorting(rawImageNFTs, selectedSort.value);
+    // Apply date filtering first
+    const filteredVideoNFTs = filterByDate(rawVideoNFTs, selectedDate.value);
+    const filteredImageNFTs = filterByDate(rawImageNFTs, selectedDate.value);
+    
+    // Apply sorting to filtered results
+    const sortedVideoNFTs = applySorting(filteredVideoNFTs, selectedSort.value);
+    const sortedImageNFTs = applySorting(filteredImageNFTs, selectedSort.value);
     
     // Map to feed items
     const videoItems: UnifiedFeedItem[] = sortedVideoNFTs.map((nft, index) => ({
@@ -212,7 +248,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     }
     
     return merged;
-  }, [videosData, imagesData, selectedSort.value]);
+  }, [videosData, imagesData, selectedSort.value, selectedDate.value]);
 
   // Infinite scroll observer
   useEffect(() => {
@@ -329,7 +365,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
                 className="overflow-hidden"
               >
                 <div className="bg-zinc-900 rounded-2xl p-4 mb-3">
-                  <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+                  <SortFilterSection 
+                    selectedSort={selectedSort} 
+                    onSortSelect={setSelectedSort}
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                  />
                 </div>
               </motion.div>
             )}
