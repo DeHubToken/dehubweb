@@ -474,8 +474,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         </div>
       </div>
 
-      {/* Featured/Ad Row - First 3 videos as thumbnails */}
-      {videos.length >= 3 && (
+      {/* Featured/Ad Row - First 3 videos as thumbnails (only show for "Latest" sort) */}
+      {videos.length >= 3 && selectedSort.value === 'latest' && (
         <div className="mb-3">
           {/* Desktop/Tablet: 3 thumbnails in a row */}
           <div className="hidden sm:grid grid-cols-3 gap-2">
@@ -580,8 +580,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       ) : (
         <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
           <div className="space-y-3">
-            {/* Skip first 3 videos if featured row is shown, then insert carousels at intervals */}
-            {(videos.length >= 3 ? videos.slice(3) : videos).map((video, index) => {
+            {/* Skip first 3 videos ONLY if featured row is shown (only for "Latest" sort), then insert carousels at intervals */}
+            {(videos.length >= 3 && selectedSort.value === 'latest' ? videos.slice(3) : videos).map((video, index) => {
               const elements: React.ReactNode[] = [];
               
               // Add video card
