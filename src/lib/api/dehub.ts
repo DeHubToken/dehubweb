@@ -676,7 +676,8 @@ export type LeaderboardSortMode = 'holdings' | 'sentTips' | 'receivedTips';
 export type LeaderboardPeriod = 'day' | 'week' | 'month' | 'year' | 'all';
 
 /**
- * Fetch DHB token leaderboard
+ * Fetch leaderboard data - tries server cache first (refreshed every 6 hours)
+ * Falls back to direct API if cache unavailable
  * @param sort - Sort criteria: holdings (default), sentTips, receivedTips
  * @param period - Time period filter: day, week, month, year, all (default)
  */
@@ -684,9 +685,27 @@ export async function getLeaderboard(
   sort: LeaderboardSortMode = 'holdings',
   period: LeaderboardPeriod = 'all'
 ): Promise<LeaderboardResponse> {
-  const params: Record<string, string> = { sort };
+  // Try to get from server cache first
+  try {
+    const { supabase } = await import('@/integrations/supabase/client');
+    
+    const { data: cached, error } = await supabase
+      .from('leaderboard_cache')
+      .select('data, updated_at')
+      .eq('sort_mode', sort)
+      .eq('period', period)
+      .single();
+    
+    if (!error && cached?.data) {
+      console.log(`[Leaderboard] Using cached data from ${cached.updated_at}`);
+      return cached.data as unknown as LeaderboardResponse;
+    }
+  } catch (cacheError) {
+    console.warn('[Leaderboard] Cache unavailable, falling back to API:', cacheError);
+  }
   
-  // Only add period param if not 'all' (all time is the default behavior)
+  // Fallback to direct API call
+  const params: Record<string, string> = { sort };
   if (period !== 'all') {
     params.period = period;
   }
