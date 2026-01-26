@@ -26,3 +26,9 @@ verify_jwt = false
 
 [functions.detect-language]
 verify_jwt = false
+
+[functions.get-pimlico-config]
+verify_jwt = false
+
+[functions.get-rpc-endpoints]
+verify_jwt = false
