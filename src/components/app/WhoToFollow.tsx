@@ -1,58 +1,12 @@
-import { useState, useRef, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { SUGGESTED_USERS, EXTENDED_SUGGESTED_USERS, GENERATED_SUGGESTED_USERS } from '@/constants/app.constants';
-import { UserAvatar } from './UserAvatar';
-import { VerifiedBadge } from './VerifiedBadge';
-
-const ALL_USERS = [...SUGGESTED_USERS, ...EXTENDED_SUGGESTED_USERS, ...GENERATED_SUGGESTED_USERS];
-const BATCH_SIZE = 20;
+import { UserPlus } from 'lucide-react';
 
 export function WhoToFollow() {
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    if (scrollTop + clientHeight >= scrollHeight - 50) {
-      setVisibleCount(prev => Math.min(prev + BATCH_SIZE, ALL_USERS.length));
-    }
-  }, []);
-
-  const visibleUsers = ALL_USERS.slice(0, visibleCount);
-
   return (
-    <div className="relative">
-      {/* Bottom fade */}
-      <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
-      
-      <div 
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="max-h-[280px] overflow-y-auto scrollbar-invisible space-y-3 pr-1 pb-2"
-      >
-        {visibleUsers.map((user) => (
-          <div key={user.id} className="flex items-center gap-3">
-            <UserAvatar name={user.name} handle={user.handle} size="md" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1">
-                <span className="font-semibold truncate text-white">{user.name}</span>
-                {user.verified && <VerifiedBadge />}
-              </div>
-              <span className="text-zinc-500 text-sm truncate block">{user.handle}</span>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 hover:text-white bg-transparent"
-            >
-              Follow
-            </Button>
-          </div>
-        ))}
+    <div className="flex flex-col items-center justify-center py-8 text-center">
+      <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+        <UserPlus className="w-6 h-6 text-zinc-500" />
       </div>
+      <p className="text-zinc-400 text-sm">No suggestions yet</p>
     </div>
   );
 }

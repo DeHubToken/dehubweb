@@ -50,7 +50,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo {
     description: nft.description || nft.name || nft.title || '',
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
-    shares: formatLikes(Math.floor(Math.random() * 1000)),
+    shares: '0',
   };
 }
 
