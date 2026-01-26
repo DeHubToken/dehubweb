@@ -600,7 +600,23 @@ export async function getSavedPosts(page: number = 1, limit: number = 20): Promi
 
 // Category functions
 export async function getCategories(): Promise<DeHubCategory[]> {
-  return apiCall<DeHubCategory[]>("/api/get_categories");
+  const response = await apiCall<string[] | DeHubCategory[]>("/api/get_categories");
+  
+  // API returns an array of strings, normalize to DeHubCategory objects
+  if (Array.isArray(response) && response.length > 0) {
+    // Check if it's already in the expected format
+    if (typeof response[0] === 'object' && 'name' in response[0]) {
+      return response as DeHubCategory[];
+    }
+    // Convert string array to category objects
+    return (response as string[]).map((name) => ({
+      id: name.toLowerCase().trim(),
+      name: name.trim(),
+      slug: name.toLowerCase().trim().replace(/\s+/g, '-'),
+    }));
+  }
+  
+  return [];
 }
 
 // Content creation
