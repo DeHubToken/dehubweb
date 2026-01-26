@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
 import { getLeaderboard, getMediaUrl, type LeaderboardEntry } from '@/lib/api/dehub';
 import medal1 from '@/assets/medal-1.png';
@@ -35,7 +35,7 @@ export function SidebarLeaderboard() {
     if (entry.avatarUrl) {
       return getMediaUrl(entry.avatarUrl);
     }
-    return `https://api.dicebear.com/7.x/identicon/svg?seed=${entry.account}`;
+    return null;
   };
 
   const getDisplayName = (entry: LeaderboardEntry) => {
@@ -106,12 +106,12 @@ export function SidebarLeaderboard() {
               </div>
 
               {/* Avatar */}
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={getAvatarUrl(entry)} />
-                <AvatarFallback className="bg-zinc-700 text-white text-xs">
-                  {getDisplayName(entry).charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <LeaderboardUserAvatar
+                avatarUrl={getAvatarUrl(entry)}
+                fallbackSeed={entry.account}
+                displayName={getDisplayName(entry)}
+                size="sm"
+              />
 
               {/* User Info */}
               <div className="flex-1 min-w-0">
