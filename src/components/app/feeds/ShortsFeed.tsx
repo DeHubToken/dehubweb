@@ -16,7 +16,7 @@ import { useDeHubVideos } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { SORT_OPTIONS, applySorting, type SortOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
 
 // ============================================================================
@@ -34,14 +34,7 @@ const DURATION_FILTERS = [
   { label: '60s+', min: 60, max: Infinity },
 ];
 
-// Upload date filters (client-side filtering)
-const UPLOAD_DATE_FILTERS = [
-  { label: 'Any time', days: null },
-  { label: 'Today', days: 1 },
-  { label: 'This week', days: 7 },
-  { label: 'This month', days: 30 },
-  { label: 'This year', days: 365 },
-];
+// Upload date filters - imported from feed-utils for consistency
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
@@ -54,7 +47,6 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
 ];
 
 type DurationFilter = typeof DURATION_FILTERS[number];
-type UploadDateFilter = typeof UPLOAD_DATE_FILTERS[number];
 
 // ============================================================================
 // HELPERS
@@ -171,12 +163,12 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
   );
 }
 
-function UploadDateFilterSection({ selected, onSelect }: { selected: UploadDateFilter; onSelect: (o: UploadDateFilter) => void }) {
+function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterOption; onSelect: (o: DateFilterOption) => void }) {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
       <div className="flex gap-1.5 flex-wrap">
-        {UPLOAD_DATE_FILTERS.map((option) => (
+        {DATE_FILTER_OPTIONS.map((option) => (
           <button
             key={option.label}
             onClick={() => onSelect(option)}
@@ -210,7 +202,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
   // Duration and upload date are client-side filters
   const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_FILTERS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -263,44 +255,32 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     return apiData.pages.flatMap(page => page.data || []);
   }, [apiData]);
 
-  // Apply client-side sorting and map to ShortVideo array
+  // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
-    const sorted = applySorting(allRawNFTs, selectedSort.value);
+    const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
+    const sorted = applySorting(dateFiltered, selectedSort.value);
     return sorted.map((nft, index) => mapToShortVideo(nft, index));
-  }, [allRawNFTs, selectedSort.value]);
+  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value]);
 
-  // Apply client-side filters
+  // Apply client-side duration filter
   const shorts = useMemo((): ShortVideo[] => {
-    let result = allShorts;
-    
     // Duration filter
     if (selectedDuration.max !== Infinity || selectedDuration.min !== 0) {
-      result = result.filter(short => {
+      return allShorts.filter(short => {
         return short.durationSeconds >= selectedDuration.min && short.durationSeconds < selectedDuration.max;
       });
     }
     
-    // Upload date filter
-    if (selectedUploadDate.days !== null) {
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - selectedUploadDate.days);
-      
-      result = result.filter(short => {
-        const shortDate = parseTimeAgoToDate(short.uploadedAgo);
-        return shortDate >= cutoffDate;
-      });
-    }
-    
-    return result;
-  }, [allShorts, selectedDuration, selectedUploadDate]);
+    return allShorts;
+  }, [allShorts, selectedDuration]);
 
   // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.label !== 'Any time';
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
 
   // Reset client-side filters
   const clearFilters = () => {
     setSelectedDuration(DURATION_FILTERS[0]);
-    setSelectedUploadDate(UPLOAD_DATE_FILTERS[0]);
+    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
   };
 
   // Infinite scroll observer
