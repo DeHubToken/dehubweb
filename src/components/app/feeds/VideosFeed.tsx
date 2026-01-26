@@ -16,8 +16,9 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
-import { getMediaUrl, getCategories, type DeHubCategory } from '@/lib/api/dehub';
+import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { SORT_OPTIONS, applySorting, type SortOption } from '@/lib/feed-utils';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 // Category images
@@ -44,12 +45,7 @@ interface VideosFeedProps {
 // CONSTANTS
 // ============================================================================
 
-// Sort options that map directly to DeHub API values
-const SORT_OPTIONS = [
-  { label: 'Newest', value: 'new' as const },
-  { label: 'Popular', value: 'popular' as const },
-  { label: 'Trending', value: 'trending' as const },
-];
+// Sort options are imported from feed-utils
 
 // Duration filters (client-side filtering)
 const DURATION_FILTERS = [
@@ -186,7 +182,6 @@ function LiveCategoriesCarousel() {
   );
 }
 
-type SortOption = typeof SORT_OPTIONS[number];
 type DurationFilter = typeof DURATION_FILTERS[number];
 type UploadDateFilter = typeof UPLOAD_DATE_FILTERS[number];
 
@@ -270,8 +265,8 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: UploadDateF
 // ============================================================================
 
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
-  // Sort is sent to API directly
-  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+  // Sort is now client-side
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
   // Duration and upload date are client-side filters
   const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_FILTERS[0]);
@@ -306,7 +301,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   } = useDeHubVideos({
     unit: 20,
-    sortMode: selectedSort.value, // Direct API value
+    // API sortMode not used - we sort client-side
     category: selectedCategory || undefined,
     address: walletAddress || undefined,
   });
@@ -314,7 +309,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   // Fetch shorts for the carousel
   const { data: shortsData } = useDeHubVideos({
     unit: 10,
-    sortMode: 'popular',
     address: walletAddress || undefined,
   });
 
@@ -324,12 +318,17 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     }
   }, [refreshKey, refetch]);
 
-  // Map API data to video items
-  const allVideos = useMemo(() => {
+  // Get raw NFTs for sorting
+  const allRawNFTs = useMemo((): DeHubNFT[] => {
     if (!apiData?.pages) return [];
-    const allNFTs = apiData.pages.flatMap(page => page.data || []);
-    return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
+    return apiData.pages.flatMap(page => page.data || []);
   }, [apiData]);
+
+  // Apply client-side sorting and map to video items
+  const allVideos = useMemo(() => {
+    const sorted = applySorting(allRawNFTs, selectedSort.value);
+    return sorted.map((nft, index) => mapNFTToVideoItem(nft, index));
+  }, [allRawNFTs, selectedSort.value]);
 
   // Apply client-side filters (duration and upload date)
   const videos = useMemo((): VideoItem[] => {
