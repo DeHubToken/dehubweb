@@ -23,6 +23,21 @@ export type SortOption = typeof SORT_OPTIONS[number];
 export type SortValue = SortOption['value'];
 
 // ============================================================================
+// DATE FILTER OPTIONS (Used across all feeds)
+// ============================================================================
+
+export const DATE_FILTER_OPTIONS = [
+  { label: 'Any time', value: 'all' as const },
+  { label: 'Today', value: 'today' as const },
+  { label: 'This week', value: 'week' as const },
+  { label: 'This month', value: 'month' as const },
+  { label: 'This year', value: 'year' as const },
+] as const;
+
+export type DateFilterOption = typeof DATE_FILTER_OPTIONS[number];
+export type DateFilterValue = DateFilterOption['value'];
+
+// ============================================================================
 // SORTING FUNCTIONS
 // ============================================================================
 
@@ -89,6 +104,56 @@ export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValu
     default:
       return sortByLatest(items);
   }
+}
+
+// ============================================================================
+// DATE FILTERING FUNCTIONS
+// ============================================================================
+
+/**
+ * Get the cutoff timestamp for a date filter value
+ */
+function getDateCutoff(dateFilter: DateFilterValue): number {
+  const now = new Date();
+  
+  switch (dateFilter) {
+    case 'today': {
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      return startOfDay.getTime();
+    }
+    case 'week': {
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - 7);
+      return startOfWeek.getTime();
+    }
+    case 'month': {
+      const startOfMonth = new Date(now);
+      startOfMonth.setMonth(now.getMonth() - 1);
+      return startOfMonth.getTime();
+    }
+    case 'year': {
+      const startOfYear = new Date(now);
+      startOfYear.setFullYear(now.getFullYear() - 1);
+      return startOfYear.getTime();
+    }
+    case 'all':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Filter NFTs by upload date
+ */
+export function filterByDate<T extends DeHubNFT>(items: T[], dateFilter: DateFilterValue): T[] {
+  if (dateFilter === 'all') return items;
+  
+  const cutoff = getDateCutoff(dateFilter);
+  
+  return items.filter(nft => {
+    const createdAt = new Date(nft.createdAt || nft.created_at || 0).getTime();
+    return createdAt >= cutoff;
+  });
 }
 
 // ============================================================================
