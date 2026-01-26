@@ -328,11 +328,11 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             {/* Dynamic categories from API */}
             {categories.map((cat) => (
               <button
-                key={cat.id || cat.slug}
-                onClick={() => setSelectedCategory(cat.slug || cat.id)}
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
                 className={cn(
                   'px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-                  selectedCategory === (cat.slug || cat.id) ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  selectedCategory === cat.id ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                 )}
               >
                 {cat.name}

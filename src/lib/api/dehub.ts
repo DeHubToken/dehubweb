@@ -609,8 +609,9 @@ export async function getCategories(): Promise<DeHubCategory[]> {
       return response as DeHubCategory[];
     }
     // Convert string array to category objects
+    // IMPORTANT: Keep the original name for API calls since the API is case-sensitive
     return (response as string[]).map((name) => ({
-      id: name.toLowerCase().trim(),
+      id: name.trim(), // Use original name as ID for API calls
       name: name.trim(),
       slug: name.toLowerCase().trim().replace(/\s+/g, '-'),
     }));
