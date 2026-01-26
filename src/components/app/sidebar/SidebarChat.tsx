@@ -42,7 +42,7 @@ export function SidebarChat() {
   };
 
   return (
-    <div className="flex flex-col h-[400px]">
+    <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center gap-2 pb-3 border-b border-zinc-800">
         <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
