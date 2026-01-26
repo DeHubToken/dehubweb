@@ -23,12 +23,13 @@ export function SidebarLeaderboard() {
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['leaderboard', 'holdings', 'all'],
+    queryKey: ['sidebar-leaderboard', 'holdings', 'all'],
     queryFn: () => getLeaderboard('holdings', 'all'),
-    staleTime: 60_000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
   });
 
-  const entries = data?.result?.byWalletBalance?.slice(0, 5) || [];
+  const entries = data?.result?.byWalletBalance?.slice(0, 50) || [];
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
     if (entry.avatarUrl) {
@@ -72,66 +73,72 @@ export function SidebarLeaderboard() {
   }
 
   return (
-    <div className="space-y-2">
-      {entries.map((entry, index) => {
-        const rank = index + 1;
-        return (
-          <div
-            key={entry.account}
-            onClick={() => handleUserClick(entry)}
-            className="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
-          >
-            {/* Rank */}
-            <div className="w-7 flex-shrink-0 flex items-center justify-center">
-              {rank <= 3 ? (
-                <div className="medal-shine-container w-6 h-6">
-                  <img 
-                    src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
-                    alt={`Rank ${rank}`} 
-                    className="w-6 h-6 object-contain"
-                  />
-                  <div 
-                    className="medal-shine-overlay"
-                    style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
-                  />
-                </div>
-              ) : (
-                <div className="w-5 h-5 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
-                  {rank}
-                </div>
-              )}
+    <div className="flex flex-col h-full">
+      {/* Scrollable list */}
+      <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+        {entries.map((entry, index) => {
+          const rank = index + 1;
+          return (
+            <div
+              key={entry.account}
+              onClick={() => handleUserClick(entry)}
+              className="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
+            >
+              {/* Rank */}
+              <div className="w-7 flex-shrink-0 flex items-center justify-center">
+                {rank <= 3 ? (
+                  <div className="medal-shine-container w-6 h-6">
+                    <img 
+                      src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
+                      alt={`Rank ${rank}`} 
+                      className="w-6 h-6 object-contain"
+                    />
+                    <div 
+                      className="medal-shine-overlay"
+                      style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-5 h-5 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
+                    {rank}
+                  </div>
+                )}
+              </div>
+
+              {/* Avatar */}
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={getAvatarUrl(entry)} />
+                <AvatarFallback className="bg-zinc-700 text-white text-xs">
+                  {getDisplayName(entry).charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* User Info */}
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</div>
+                <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
+              </div>
+
+              {/* Value */}
+              <div className="text-right flex-shrink-0">
+                <span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
+              </div>
             </div>
+          );
+        })}
+      </div>
 
-            {/* Avatar */}
-            <Avatar className="w-8 h-8">
-              <AvatarImage src={getAvatarUrl(entry)} />
-              <AvatarFallback className="bg-zinc-700 text-white text-xs">
-                {getDisplayName(entry).charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-
-            {/* User Info */}
-            <div className="flex-1 min-w-0">
-              <div className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</div>
-              <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
-            </div>
-
-            {/* Value */}
-            <div className="text-right flex-shrink-0">
-              <span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
-            </div>
-          </div>
-        );
-      })}
-
-      {/* View All Button */}
-      <Button
-        variant="ghost"
-        onClick={() => navigate('/app/leaderboard')}
-        className="w-full mt-2 text-white/70 hover:text-white hover:bg-zinc-800/50"
-      >
-        View All
-      </Button>
+      {/* Bottom fade gradient */}
+      <div className="relative">
+        <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/app/leaderboard')}
+          className="w-full mt-2 text-white/70 hover:text-white hover:bg-zinc-800/50"
+        >
+          View All
+        </Button>
+      </div>
     </div>
   );
 }
