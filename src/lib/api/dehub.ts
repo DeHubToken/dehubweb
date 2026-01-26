@@ -344,7 +344,7 @@ export async function authenticateWallet(
 
 // NFT/Content functions
 export async function searchNFTs(params: SearchNFTsParams = {}): Promise<PaginatedResponse<DeHubNFT>> {
-  return apiCall<PaginatedResponse<DeHubNFT>>("/api/search_nfts", {
+  const response = await apiCall<{ result: DeHubNFT[] } | PaginatedResponse<DeHubNFT>>("/api/search_nfts", {
     params: {
       page: params.page,
       unit: params.unit,
@@ -356,6 +356,19 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
       address: params.address,
     },
   });
+  
+  // Handle wrapped response from API (returns { result: [...] })
+  if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
+    return {
+      data: response.result,
+      total: response.result.length,
+      page: params.page || 0,
+      limit: params.unit || 10,
+      has_more: response.result.length === (params.unit || 10),
+    };
+  }
+  
+  return response as PaginatedResponse<DeHubNFT>;
 }
 
 export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
