@@ -9,7 +9,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, RefreshCw, Video, Play, ChevronRight } from 'lucide-react';
+import { Loader2, RefreshCw, Video, Play, ChevronRight, Filter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -18,7 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory } from '@/lib/api/dehub';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import type { ShortVideo } from '@/types/feed.types';
+import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 // Category images
 import minecraftCategory from '@/assets/minecraft-category.png';
@@ -44,9 +44,30 @@ interface VideosFeedProps {
 // CONSTANTS
 // ============================================================================
 
-const DURATION_OPTIONS = ['0-1m', '1-4m', '4-20m', '20m+'];
-const SORT_OPTIONS = ['New to Old', 'Most Liked', 'Most Viewed', 'Most Commented'];
-const UPLOAD_DATE_OPTIONS = ['1d', '1w', '1y', 'All Time'];
+// Sort options that map directly to DeHub API values
+const SORT_OPTIONS = [
+  { label: 'Newest', value: 'new' as const },
+  { label: 'Popular', value: 'popular' as const },
+  { label: 'Trending', value: 'trending' as const },
+];
+
+// Duration filters (client-side filtering)
+const DURATION_FILTERS = [
+  { label: 'Any', min: 0, max: Infinity },
+  { label: '< 1 min', min: 0, max: 60 },
+  { label: '1-4 min', min: 60, max: 240 },
+  { label: '4-20 min', min: 240, max: 1200 },
+  { label: '20+ min', min: 1200, max: Infinity },
+];
+
+// Upload date filters (client-side filtering)
+const UPLOAD_DATE_FILTERS = [
+  { label: 'Any time', days: null },
+  { label: 'Today', days: 1 },
+  { label: 'This week', days: 7 },
+  { label: 'This month', days: 30 },
+  { label: 'This year', days: 365 },
+];
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
@@ -57,13 +78,6 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
   { id: 'crypto', name: 'Crypto', slug: 'crypto' },
   { id: 'programming', name: 'Programming', slug: 'programming' },
 ];
-
-const SORT_MAP: Record<string, 'new' | 'popular' | 'trending'> = {
-  'New to Old': 'new',
-  'Most Liked': 'popular',
-  'Most Viewed': 'popular',
-  'Most Commented': 'trending',
-};
 
 const LIVE_CATEGORIES_INSERT_AFTER = 5;
 const SHORTS_INSERT_AFTER = 9;
@@ -84,6 +98,37 @@ function formatCount(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
   return count.toString();
+}
+
+// Parse duration string to seconds (e.g., "3:45" → 225, "1:02:30" → 3750)
+function parseDurationToSeconds(duration: string): number {
+  if (!duration) return 0;
+  const parts = duration.split(':').map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2]; // HH:MM:SS
+  if (parts.length === 2) return parts[0] * 60 + parts[1]; // MM:SS
+  return parts[0] || 0;
+}
+
+// Parse timeAgo string to approximate Date (e.g., "2d ago" → Date 2 days ago)
+function parseTimeAgoToDate(timeAgo: string): Date {
+  const now = new Date();
+  if (!timeAgo) return now;
+  
+  const match = timeAgo.match(/(\d+)\s*(m|h|d|w|mo|y)/i);
+  if (!match) return now;
+  
+  const value = parseInt(match[1], 10);
+  const unit = match[2].toLowerCase();
+  
+  switch (unit) {
+    case 'm': return new Date(now.getTime() - value * 60 * 1000);
+    case 'h': return new Date(now.getTime() - value * 60 * 60 * 1000);
+    case 'd': return new Date(now.getTime() - value * 24 * 60 * 60 * 1000);
+    case 'w': return new Date(now.getTime() - value * 7 * 24 * 60 * 60 * 1000);
+    case 'mo': return new Date(now.getTime() - value * 30 * 24 * 60 * 60 * 1000);
+    case 'y': return new Date(now.getTime() - value * 365 * 24 * 60 * 60 * 1000);
+    default: return now;
+  }
 }
 
 // Map NFT to ShortVideo format
@@ -141,30 +186,78 @@ function LiveCategoriesCarousel() {
   );
 }
 
-interface FilterSectionProps {
-  label: string;
-  options: string[];
-  selected: string;
-  onSelect: (value: string) => void;
-}
+type SortOption = typeof SORT_OPTIONS[number];
+type DurationFilter = typeof DURATION_FILTERS[number];
+type UploadDateFilter = typeof UPLOAD_DATE_FILTERS[number];
 
-function FilterSection({ label, options, selected, onSelect }: FilterSectionProps) {
+// Sort Filter Section
+function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">{label}</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
       <div className="flex gap-1.5 flex-wrap">
-        {options.map((option) => (
+        {SORT_OPTIONS.map((option) => (
           <button
-            key={option}
+            key={option.label}
             onClick={() => onSelect(option)}
             className={cn(
               'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected === option
+              selected.label === option.label
                 ? 'bg-white text-black'
                 : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
             )}
           >
-            {option}
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Duration Filter Section
+function DurationFilterSection({ selected, onSelect }: { selected: DurationFilter; onSelect: (o: DurationFilter) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Duration</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {DURATION_FILTERS.map((option) => (
+          <button
+            key={option.label}
+            onClick={() => onSelect(option)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              selected.label === option.label
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Upload Date Filter Section
+function UploadDateFilterSection({ selected, onSelect }: { selected: UploadDateFilter; onSelect: (o: UploadDateFilter) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {UPLOAD_DATE_FILTERS.map((option) => (
+          <button
+            key={option.label}
+            onClick={() => onSelect(option)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              selected.label === option.label
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {option.label}
           </button>
         ))}
       </div>
@@ -177,9 +270,11 @@ function FilterSection({ label, options, selected, onSelect }: FilterSectionProp
 // ============================================================================
 
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
-  const [selectedDuration, setSelectedDuration] = useState(DURATION_OPTIONS[0]);
+  // Sort is sent to API directly
   const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_OPTIONS[3]);
+  // Duration and upload date are client-side filters
+  const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_FILTERS[0]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // null = All
   const loaderRef = useRef<HTMLDivElement>(null);
   
@@ -211,7 +306,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   } = useDeHubVideos({
     unit: 20,
-    sortMode: SORT_MAP[selectedSort] || 'new',
+    sortMode: selectedSort.value, // Direct API value
     category: selectedCategory || undefined,
     address: walletAddress || undefined,
   });
@@ -229,11 +324,38 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     }
   }, [refreshKey, refetch]);
 
-  const videos = useMemo(() => {
+  // Map API data to video items
+  const allVideos = useMemo(() => {
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToVideoItem(nft, index));
   }, [apiData]);
+
+  // Apply client-side filters (duration and upload date)
+  const videos = useMemo((): VideoItem[] => {
+    let result = allVideos;
+    
+    // Duration filter
+    if (selectedDuration.max !== Infinity || selectedDuration.min !== 0) {
+      result = result.filter(video => {
+        const secs = parseDurationToSeconds(video.duration);
+        return secs >= selectedDuration.min && secs < selectedDuration.max;
+      });
+    }
+    
+    // Upload date filter
+    if (selectedUploadDate.days !== null) {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - selectedUploadDate.days);
+      
+      result = result.filter(video => {
+        const videoDate = parseTimeAgoToDate(video.uploadedAgo);
+        return videoDate >= cutoffDate;
+      });
+    }
+    
+    return result;
+  }, [allVideos, selectedDuration, selectedUploadDate]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -241,6 +363,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     const allNFTs = shortsData.pages.flatMap(page => page.data || []);
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
+
+  // Check if any client-side filters are active
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.label !== 'Any time';
 
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
@@ -257,6 +382,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Reset client-side filters
+  const clearFilters = () => {
+    setSelectedDuration(DURATION_FILTERS[0]);
+    setSelectedUploadDate(UPLOAD_DATE_FILTERS[0]);
+  };
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -275,6 +406,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       >
         <RefreshCw className="w-4 h-4" />
         Refresh
+      </button>
+    </div>
+  );
+
+  // Filtered empty state (when filters return no results but API has data)
+  const FilteredEmptyState = () => (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+        <Filter className="w-6 h-6 text-zinc-500" />
+      </div>
+      <h3 className="text-white font-semibold mb-1">No matches</h3>
+      <p className="text-zinc-400 text-sm mb-3">
+        Try adjusting your filters
+      </p>
+      <button 
+        onClick={clearFilters}
+        className="text-sm text-white/70 hover:text-white underline"
+      >
+        Clear filters
       </button>
     </div>
   );
@@ -300,9 +450,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             className="overflow-hidden"
           >
             <div className="bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
-              <FilterSection label="Duration" options={DURATION_OPTIONS} selected={selectedDuration} onSelect={setSelectedDuration} />
-              <FilterSection label="Sort" options={SORT_OPTIONS} selected={selectedSort} onSelect={setSelectedSort} />
-              <FilterSection label="Upload Date" options={UPLOAD_DATE_OPTIONS} selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
+              <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+              <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
+              <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
             </div>
           </motion.div>
         )}
@@ -432,8 +582,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       )}
 
       {/* Video Grid or Empty State */}
-      {videos.length === 0 ? (
+      {allVideos.length === 0 ? (
         <EmptyState />
+      ) : videos.length === 0 && hasActiveFilters ? (
+        <FilteredEmptyState />
       ) : (
         <>
           <div className="space-y-3">
