@@ -54,24 +54,24 @@ export const EXPLORE_TABS: SearchTab[] = [
 ];
 
 export const SUGGESTED_USERS: UserType[] = [
-  { id: '1', name: 'React Team', handle: '@reactjs', verified: true },
-  { id: '2', name: 'TypeScript', handle: '@typescript', verified: true },
-  { id: '3', name: 'Tailwind CSS', handle: '@tailwindcss', verified: true },
-  { id: '4', name: 'Vite.js', handle: '@vitejs', verified: true },
+  { id: '1', name: 'React Team', handle: '@reactjs', verified: false },
+  { id: '2', name: 'TypeScript', handle: '@typescript', verified: false },
+  { id: '3', name: 'Tailwind CSS', handle: '@tailwindcss', verified: false },
+  { id: '4', name: 'Vite.js', handle: '@vitejs', verified: false },
   { id: '5', name: 'Web3 Builder', handle: '@web3builder', verified: false },
 ];
 
 export const EXTENDED_SUGGESTED_USERS: UserType[] = [
-  { id: '6', name: 'Next.js', handle: '@nextjs', verified: true },
-  { id: '7', name: 'Ethereum', handle: '@ethereum', verified: true },
-  { id: '8', name: 'Solana', handle: '@solana', verified: true },
-  { id: '9', name: 'Figma', handle: '@figma', verified: true },
-  { id: '10', name: 'GitHub', handle: '@github', verified: true },
-  { id: '11', name: 'OpenAI', handle: '@openai', verified: true },
-  { id: '12', name: 'Vercel', handle: '@vercel', verified: true },
-  { id: '13', name: 'Cloudflare', handle: '@cloudflare', verified: true },
+  { id: '6', name: 'Next.js', handle: '@nextjs', verified: false },
+  { id: '7', name: 'Ethereum', handle: '@ethereum', verified: false },
+  { id: '8', name: 'Solana', handle: '@solana', verified: false },
+  { id: '9', name: 'Figma', handle: '@figma', verified: false },
+  { id: '10', name: 'GitHub', handle: '@github', verified: false },
+  { id: '11', name: 'OpenAI', handle: '@openai', verified: false },
+  { id: '12', name: 'Vercel', handle: '@vercel', verified: false },
+  { id: '13', name: 'Cloudflare', handle: '@cloudflare', verified: false },
   { id: '14', name: 'Prisma', handle: '@prisma', verified: false },
-  { id: '15', name: 'Supabase', handle: '@supabase', verified: true },
+  { id: '15', name: 'Supabase', handle: '@supabase', verified: false },
 ];
 
 // Generate 100 more suggested users
@@ -83,7 +83,7 @@ export const GENERATED_SUGGESTED_USERS: UserType[] = Array.from({ length: 100 },
     id: `${16 + i}`,
     name,
     handle: `@${name.toLowerCase().replace(' ', '_')}`,
-    verified: i % 3 === 0,
+    verified: false,
   };
 });
 

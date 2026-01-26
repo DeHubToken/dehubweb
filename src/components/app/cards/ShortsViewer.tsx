@@ -19,12 +19,7 @@ interface ShortsViewerProps {
   onClose: () => void;
 }
 
-// Mock comments data
-const MOCK_COMMENTS = [
-  { id: '1', username: 'viewer123', text: 'lets gooo!!', avatar: 'user1' },
-  { id: '2', username: 'fan_account', text: 'Another one!', avatar: 'user2' },
-  { id: '3', username: 'random_user', text: 'This is amazing content 🔥', avatar: 'user3' },
-];
+// Comments are now loaded from real API - no mock data
 
 export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -206,32 +201,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             {/* Comments - Rest of panel */}
             <div className="flex-1 bg-zinc-900/50 rounded-2xl p-4 flex flex-col min-h-0">
               <p className="text-white/60 text-xs mb-3 flex-shrink-0">Comments</p>
-              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3">
-                {MOCK_COMMENTS.map((c) => (
-                  <div key={c.id} className="flex items-start gap-2">
-                    <Avatar className="w-7 h-7 flex-shrink-0">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${c.avatar}`} />
-                      <AvatarFallback>U</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-white text-sm font-medium">{c.username}</span>
-                      <p className="text-white/70 text-sm">{c.text}</p>
-                    </div>
-                  </div>
-                ))}
-                {/* More comments for scrolling */}
-                {[...Array(10)].map((_, i) => (
-                  <div key={`extra-${i}`} className="flex items-start gap-2">
-                    <Avatar className="w-7 h-7 flex-shrink-0">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=extra${i}`} />
-                      <AvatarFallback>U</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-white text-sm font-medium">user_{i + 100}</span>
-                      <p className="text-white/70 text-sm">Great content! 🔥</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 flex items-center justify-center">
+                <p className="text-white/40 text-sm">No comments yet</p>
               </div>
               
               {/* Comment input */}
@@ -331,19 +302,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
 
               {/* Comments Section */}
               <div className="absolute bottom-0 left-0 right-0 z-10 p-4 space-y-3">
-                <div className="space-y-3 max-h-[150px] overflow-y-auto scrollbar-hide">
-                  {MOCK_COMMENTS.map((c) => (
-                    <div key={c.id} className="flex items-start gap-2">
-                      <Avatar className="w-7 h-7 flex-shrink-0">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${c.avatar}`} />
-                        <AvatarFallback>U</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-white text-sm font-medium">{c.username}</span>
-                        <p className="text-white/80 text-sm line-clamp-2">{c.text}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="space-y-3 max-h-[150px] overflow-y-auto scrollbar-hide flex items-center justify-center">
+                  <p className="text-white/40 text-sm">No comments yet</p>
                 </div>
                 <div className="flex items-center gap-3 pt-2">
                   <div className="flex-1 relative">

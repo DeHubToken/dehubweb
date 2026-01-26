@@ -33,7 +33,7 @@ const MOCK_PROFILE: ProfileData = {
   id: 'mock-user',
   name: 'Alice Cooper',
   handle: '@alice_cooper',
-  verified: true,
+  verified: false,
   bio: 'Tech enthusiast & startup founder 🚀 Building the future one line of code at a time. Always exploring new technologies!',
   joinedDate: 'January 2024',
   following: 416,
@@ -87,7 +87,7 @@ const REPLY_THREADS = [
   {
     id: 'reply-1',
     originalPost: {
-      author: { id: 'user-1', name: 'Marcus Chen', handle: '@marcusdev', verified: true },
+      author: { id: 'user-1', name: 'Marcus Chen', handle: '@marcusdev', verified: false },
       content: 'Just shipped our new AI feature and the response has been incredible! 🚀 Sometimes you just have to trust the process.',
       stats: { comments: 89, reposts: 234, likes: 1205 },
     },
@@ -105,7 +105,7 @@ const REPLY_THREADS = [
   {
     id: 'reply-3',
     originalPost: {
-      author: { id: 'user-3', name: 'TechCrunch', handle: '@techcrunch', verified: true },
+      author: { id: 'user-3', name: 'TechCrunch', handle: '@techcrunch', verified: false },
       content: 'Breaking: OpenAI announces new partnership with major enterprise clients. The AI arms race continues to heat up.',
       stats: { comments: 423, reposts: 1567, likes: 4521 },
     },
@@ -114,7 +114,7 @@ const REPLY_THREADS = [
   {
     id: 'reply-4',
     originalPost: {
-      author: { id: 'user-4', name: 'Dev Community', handle: '@devdotcom', verified: true },
+      author: { id: 'user-4', name: 'Dev Community', handle: '@devdotcom', verified: false },
       content: 'What\'s the one piece of advice you\'d give to junior developers starting their career in 2024?',
       stats: { comments: 892, reposts: 345, likes: 2103 },
     },
@@ -132,7 +132,7 @@ const REPLY_THREADS = [
   {
     id: 'reply-6',
     originalPost: {
-      author: { id: 'user-6', name: 'Elena Vasquez', handle: '@elenavtech', verified: true },
+      author: { id: 'user-6', name: 'Elena Vasquez', handle: '@elenavtech', verified: false },
       content: 'Reminder: Taking breaks isn\'t laziness, it\'s maintenance. Your brain needs downtime to process and create. Go touch grass sometimes.',
       stats: { comments: 234, reposts: 567, likes: 3421 },
     },
@@ -141,7 +141,7 @@ const REPLY_THREADS = [
   {
     id: 'reply-7',
     originalPost: {
-      author: { id: 'user-7', name: 'Startup Grind', handle: '@startupgrind', verified: true },
+      author: { id: 'user-7', name: 'Startup Grind', handle: '@startupgrind', verified: false },
       content: 'What\'s the biggest lesson you learned from a failed project?',
       stats: { comments: 445, reposts: 234, likes: 1876 },
     },
@@ -159,7 +159,7 @@ const REPLY_THREADS = [
   {
     id: 'reply-9',
     originalPost: {
-      author: { id: 'user-9', name: 'Product Hunt', handle: '@producthunt', verified: true },
+      author: { id: 'user-9', name: 'Product Hunt', handle: '@producthunt', verified: false },
       content: 'What product would you build if you had unlimited resources and time?',
       stats: { comments: 1234, reposts: 456, likes: 5678 },
     },
