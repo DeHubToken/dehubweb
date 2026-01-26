@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -439,6 +439,30 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
             className="w-full h-full object-cover"
             loading="lazy"
           />
+        )}
+        
+        {/* Content Type Badge - PPV/Bounty/Locked */}
+        {(video.isPPV || video.isW2E || video.isLocked) && (
+          <div className="absolute top-2 left-2 z-10">
+            {video.isPPV && video.ppvPrice ? (
+              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+                <DollarSign className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {video.ppvPrice.toFixed(2)} {video.ppvCurrency || 'USDC'}
+                </span>
+              </div>
+            ) : video.isW2E ? (
+              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+                <Gift className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">Bounty</span>
+              </div>
+            ) : video.isLocked ? (
+              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+                <Lock className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">Locked</span>
+              </div>
+            ) : null}
+          </div>
         )}
         
         {/* Loading spinner */}

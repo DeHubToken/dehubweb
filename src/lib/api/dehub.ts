@@ -148,10 +148,13 @@ export interface DeHubNFT {
   category?: string | string[];
   tags?: string[];
 
-  // PPV/Live
+  // PPV/Live/Content Access
   is_live?: boolean;
   is_ppv?: boolean;
   ppv_price?: number;
+  ppv_currency?: string;
+  is_w2e?: boolean;
+  is_locked?: boolean;
 
   // User interaction state (returned when address param is provided)
   isLiked?: boolean;
