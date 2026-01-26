@@ -34,7 +34,8 @@ export function LeaderboardUserAvatar({
   const imageUrl = imageError || !avatarUrl ? dicebearUrl : avatarUrl;
 
   return (
-    <Avatar className={cn(sizeClasses[size], className)}>
+    // key forces remount when switching from failed CDN to Dicebear fallback
+    <Avatar key={imageUrl} className={cn(sizeClasses[size], className)}>
       <AvatarImage 
         src={imageUrl} 
         alt={`${displayName}'s avatar`}
