@@ -272,9 +272,11 @@ export default function PostInfoPage() {
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs text-white/60">Distribution</span>
                 <span className="text-xs font-medium text-white">
-                  {holders.length > 0 
-                    ? `${holders.length} owner${holders.length > 1 ? 's' : ''}`
-                    : 'Loading...'
+                  {isLoadingHolders 
+                    ? 'Loading...'
+                    : holders.length > 0 
+                      ? `${holders.length} owner${holders.length > 1 ? 's' : ''}`
+                      : '1 owner'
                   }
                 </span>
               </div>
