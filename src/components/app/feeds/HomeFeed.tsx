@@ -11,7 +11,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, applySorting, filterByDate, filterByContentType, getApiSortMode, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -89,9 +89,18 @@ interface FilterSectionProps {
   onSortSelect: (o: SortOption) => void;
   selectedDate: DateFilterOption;
   onDateSelect: (o: DateFilterOption) => void;
+  contentFilters: ContentTypeFilters;
+  onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
 }
 
-function SortFilterSection({ selectedSort, onSortSelect, selectedDate, onDateSelect }: FilterSectionProps) {
+function SortFilterSection({ 
+  selectedSort, 
+  onSortSelect, 
+  selectedDate, 
+  onDateSelect,
+  contentFilters,
+  onContentFilterToggle,
+}: FilterSectionProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Sort Options */}
@@ -135,6 +144,27 @@ function SortFilterSection({ selectedSort, onSortSelect, selectedDate, onDateSel
           ))}
         </div>
       </div>
+
+      {/* Content Type Filters */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+        <div className="flex gap-1.5 flex-wrap">
+          {CONTENT_TYPE_FILTERS.map((filter) => (
+            <button
+              key={filter.value}
+              onClick={() => onContentFilterToggle(filter.value)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                contentFilters[filter.value]
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -147,6 +177,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   const loaderRef = useRef<HTMLDivElement>(null);
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
+  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
+    ppv: false,
+    w2e: false,
+    locked: false,
+  });
+
+  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
+    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+  };
 
   const { walletAddress } = useAuth();
 
@@ -222,10 +261,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     const allNFTs: DeHubNFT[] = [...rawVideoNFTs, ...rawImageNFTs];
     
     // Apply date filtering to the combined array
-    const filteredNFTs = filterByDate(allNFTs, selectedDate.value);
+    const dateFiltered = filterByDate(allNFTs, selectedDate.value);
+    
+    // Apply content type filtering (PPV, W2E, Locked)
+    const contentFiltered = filterByContentType(dateFiltered, contentFilters);
     
     // Apply sorting to the COMBINED filtered results - this ensures global ordering
-    const sortedNFTs = applySorting(filteredNFTs, selectedSort.value);
+    const sortedNFTs = applySorting(contentFiltered, selectedSort.value);
     
     // Map each NFT to its correct type based on postType
     return sortedNFTs.map((nft, index) => {
@@ -241,7 +283,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
         data: mapNFTToVideoItem(nft, index),
       };
     });
-  }, [videosData, imagesData, selectedSort.value, selectedDate.value]);
+  }, [videosData, imagesData, selectedSort.value, selectedDate.value, contentFilters]);
 
   // Infinite scroll observer
   useEffect(() => {
@@ -363,6 +405,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
                     onSortSelect={setSelectedSort}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
+                    contentFilters={contentFilters}
+                    onContentFilterToggle={toggleContentFilter}
                   />
                 </div>
               </motion.div>
