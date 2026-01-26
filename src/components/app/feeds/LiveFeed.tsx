@@ -9,30 +9,8 @@
 
 import { useEffect, useRef, useMemo } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
-import minecraftCategory from '@/assets/minecraft-category.png';
-import codCategory from '@/assets/cod-category.png';
-import gtaCategory from '@/assets/gta-category.png';
-import fortniteCategory from '@/assets/fortnite-category.png';
-import valorantCategory from '@/assets/valorant-category.png';
-import leagueCategory from '@/assets/league-category.png';
-import apexCategory from '@/assets/apex-category.png';
-import justchattingCategory from '@/assets/justchatting-category.png';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
-import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-
-const CATEGORIES = [
-  { name: 'Just Chatting', viewers: '412K', image: justchattingCategory },
-  { name: 'Fortnite', viewers: '189K', image: fortniteCategory },
-  { name: 'Valorant', viewers: '156K', image: valorantCategory },
-  { name: 'Minecraft', viewers: '134K', image: minecraftCategory },
-  { name: 'League of Legends', viewers: '298K', image: leagueCategory },
-  { name: 'Call of Duty', viewers: '167K', image: codCategory },
-  { name: 'GTA V', viewers: '145K', image: gtaCategory },
-  { name: 'Apex Legends', viewers: '112K', image: apexCategory },
-  { name: 'Music', viewers: '89K', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=130&fit=crop' },
-  { name: 'Art', viewers: '67K', image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=100&h=130&fit=crop' },
-];
 
 interface LiveFeedProps {
   isRefreshing?: boolean;
@@ -150,27 +128,16 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
         )}
       </div>
 
-      {/* Categories */}
+      {/* Categories - Empty State */}
       <div className="bg-zinc-900 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-bold text-white">Categories</h2>
-          <button className="text-red-400 text-sm hover:underline">Show All</button>
         </div>
-        <div className="relative">
-          {/* Right fade only */}
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-          
-          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
-            {CATEGORIES.map((cat) => (
-              <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-                <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2">
-                  <img src={cat.image} alt="" className="w-full h-full object-cover" />
-                </div>
-                <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
-                <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
-              </div>
-            ))}
-          </SwipeableCarousel>
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+            <RefreshCw className="w-6 h-6 text-zinc-500" />
+          </div>
+          <p className="text-zinc-400 text-sm">No categories available</p>
         </div>
       </div>
     </div>

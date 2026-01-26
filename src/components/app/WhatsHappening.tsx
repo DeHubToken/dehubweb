@@ -1,38 +1,7 @@
-import { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { TRENDING_TOPICS, EXTENDED_TRENDING_TOPICS, GENERATED_TRENDING_TOPICS } from '@/constants/app.constants';
-
-// Parse post count and sort by most to least
-const parsePostCount = (postCount: string): number => {
-  const match = postCount.match(/([\d.]+)([KM]?)/i);
-  if (!match) return 0;
-  const num = parseFloat(match[1]);
-  const suffix = match[2].toUpperCase();
-  if (suffix === 'M') return num * 1000000;
-  if (suffix === 'K') return num * 1000;
-  return num;
-};
-
-const ALL_TOPICS = [...TRENDING_TOPICS, ...EXTENDED_TRENDING_TOPICS, ...GENERATED_TRENDING_TOPICS]
-  .sort((a, b) => parsePostCount(b.postCount) - parsePostCount(a.postCount));
-const BATCH_SIZE = 20;
+import { TrendingUp } from 'lucide-react';
 
 export function WhatsHappening() {
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    if (scrollTop + clientHeight >= scrollHeight - 50) {
-      setVisibleCount(prev => Math.min(prev + BATCH_SIZE, ALL_TOPICS.length));
-    }
-  }, []);
-
-  const visibleTopics = ALL_TOPICS.slice(0, visibleCount);
-
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4 pr-1.5">
@@ -44,22 +13,11 @@ export function WhatsHappening() {
           All
         </Link>
       </div>
-      <div className="relative">
-        {/* Bottom fade */}
-        <div className="absolute left-0 right-0 bottom-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
-        
-        <div 
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="max-h-[240px] overflow-y-auto overflow-x-hidden scrollbar-invisible space-y-4 pr-1 pb-2"
-        >
-          {visibleTopics.map((item, index) => (
-            <div key={`${item.tag}-${index}`} className="pl-0.5">
-              <p className="font-semibold text-white">{item.tag}</p>
-              <p className="text-white/70 text-sm">{item.postCount}</p>
-            </div>
-          ))}
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+          <TrendingUp className="w-6 h-6 text-zinc-500" />
         </div>
+        <p className="text-zinc-400 text-sm">No trending topics yet</p>
       </div>
     </div>
   );

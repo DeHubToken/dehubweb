@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, X, ChevronDown, Loader2 } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 
 const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
@@ -46,22 +47,6 @@ const COUNTRY_OPTIONS = [
   'Argentina',
   'Colombia',
   'Chile',
-];
-
-// Mock search results
-const MOCK_USERS = [
-  { id: '1', name: 'Alex Johnson', handle: '@alexj', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face', verified: true },
-  { id: '2', name: 'Sarah Miller', handle: '@sarahm', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face', verified: true },
-  { id: '3', name: 'Mike Chen', handle: '@mikechen', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face', verified: false },
-  { id: '4', name: 'Emma Wilson', handle: '@emmaw', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face', verified: true },
-  { id: '5', name: 'David Park', handle: '@davidp', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face', verified: false },
-];
-
-const MOCK_POSTS = [
-  { id: '1', author: 'Alex Johnson', handle: '@alexj', content: 'Just discovered an amazing new fitness routine! 💪', likes: 234, time: '2h ago' },
-  { id: '2', author: 'Sarah Miller', handle: '@sarahm', content: 'Cooking up something special tonight 🍳', likes: 567, time: '4h ago' },
-  { id: '3', author: 'Mike Chen', handle: '@mikechen', content: 'New music dropping soon! Stay tuned 🎵', likes: 892, time: '6h ago' },
-  { id: '4', author: 'Emma Wilson', handle: '@emmaw', content: 'Art is not what you see, but what you make others see 🎨', likes: 1203, time: '8h ago' },
 ];
 
 type FilterState = {
@@ -114,9 +99,9 @@ const FilterDropdown = ({
   );
 
   return (
-    <div className="relative">
+    <>
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpen(true)}
         className={cn(
           'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
           value !== options[0]
@@ -125,71 +110,68 @@ const FilterDropdown = ({
         )}
       >
         <span>{label}: {value}</span>
-        <ChevronDown className={cn('w-3 h-3 transition-transform', open && 'rotate-180')} />
+        <ChevronDown className="w-3 h-3" />
       </button>
-      <AnimatePresence>
-        {open && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="absolute top-full right-0 mt-2 bg-zinc-900 backdrop-blur-xl border border-white/10 rounded-lg p-2 min-w-[180px] z-50 shadow-2xl"
-            >
-              {/* Search input */}
-              <div className="relative mb-2">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-7 pr-8 py-1.5 bg-zinc-800 border border-white/10 rounded-md text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSearchQuery('');
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-              {/* Scrollable options list - 8 items visible (~280px) */}
-              <div className="max-h-[280px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-                {filteredOptions.length > 0 ? (
-                  filteredOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        onChange(option);
-                        setOpen(false);
-                        setSearchQuery('');
-                      }}
-                      className={cn(
-                        'w-full text-left px-3 py-2 rounded-md text-sm transition-colors',
-                        value === option
-                          ? 'bg-white/10 text-white'
-                          : 'text-zinc-400 hover:bg-white/10 hover:text-white'
-                      )}
-                    >
-                      {option}
-                    </button>
-                  ))
-                ) : (
-                  <div className="px-3 py-2 text-sm text-zinc-500">No results</div>
-                )}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
+      
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent glass className="max-h-[70vh]">
+          <DrawerHeader className="border-b border-white/10">
+            <DrawerTitle className="text-white">Select {label}</DrawerTitle>
+          </DrawerHeader>
+          
+          {/* Search input */}
+          <div className="p-4 border-b border-white/10">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+          
+          {/* Options list */}
+          <div className="flex-1 overflow-y-auto max-h-[50vh] pb-safe">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    onChange(option);
+                    setOpen(false);
+                    setSearchQuery('');
+                  }}
+                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
+                >
+                  <span className={cn(
+                    'text-sm',
+                    value === option ? 'text-white font-medium' : 'text-zinc-400'
+                  )}>
+                    {option}
+                  </span>
+                  {value === option && (
+                    <Check className="w-4 h-4 text-primary" />
+                  )}
+                </button>
+              ))
+            ) : (
+              <div className="px-4 py-8 text-center text-sm text-zinc-500">No results found</div>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 
@@ -209,21 +191,9 @@ export default function ExplorePage() {
 
   const isSearching = searchQuery.length >= 3;
 
-  // Filter results based on search query and active tab
+  // Search results - returns empty since no mock data
   const searchResults = useMemo(() => {
-    if (!isSearching) return { users: [], posts: [] };
-    
-    const query = searchQuery.toLowerCase();
-    
-    const users = MOCK_USERS.filter(
-      u => u.name.toLowerCase().includes(query) || u.handle.toLowerCase().includes(query)
-    );
-    
-    const posts = MOCK_POSTS.filter(
-      p => p.content.toLowerCase().includes(query) || p.author.toLowerCase().includes(query)
-    );
-    
-    return { users, posts };
+    return { users: [], posts: [] };
   }, [searchQuery, isSearching]);
 
   const activeFilterCount = [

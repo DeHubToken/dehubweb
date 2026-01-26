@@ -50,8 +50,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
+import { Search } from 'lucide-react';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -1177,70 +1179,83 @@ function GeoBlockingSelector() {
         </div>
       )}
 
-      {/* Dropdown */}
-      <div className="relative">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white hover:bg-zinc-700 transition-colors"
+      {/* Trigger Button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white hover:bg-zinc-700 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-zinc-500" />
+          <span className="text-zinc-400">
+            {blockedCountries.length === 0 
+              ? 'Select countries to block...' 
+              : `${blockedCountries.length} ${blockedCountries.length === 1 ? 'country' : 'countries'} blocked`}
+          </span>
+        </div>
+        <svg 
+          className="w-4 h-4 text-zinc-500" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
         >
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-zinc-500" />
-            <span className="text-zinc-400">
-              {blockedCountries.length === 0 
-                ? 'Select countries to block...' 
-                : `${blockedCountries.length} ${blockedCountries.length === 1 ? 'country' : 'countries'} blocked`}
-            </span>
-          </div>
-          <svg 
-            className={`w-4 h-4 text-zinc-500 transition-transform ${isOpen ? '' : 'rotate-180'}`} 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
 
-        {isOpen && (
-          <div className="absolute z-50 w-full bottom-full mb-2 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl overflow-hidden">
-            {/* Search */}
-            <div className="p-2 border-b border-zinc-700">
+      {/* Drawer */}
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerContent glass className="max-h-[70vh]">
+          <DrawerHeader className="border-b border-white/10">
+            <DrawerTitle className="text-white">Block Countries</DrawerTitle>
+          </DrawerHeader>
+          
+          {/* Search input */}
+          <div className="p-4 border-b border-white/10">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
                 type="text"
                 placeholder="Search countries..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-600 rounded-lg text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-zinc-500"
+                className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
               />
+              {search && (
+                <button
+                  onClick={() => setSearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
-
-            {/* Country List */}
-            <div className="max-h-64 overflow-y-auto">
-              {filteredCountries.map(country => (
+          </div>
+          
+          {/* Country List */}
+          <div className="flex-1 overflow-y-auto max-h-[50vh] pb-safe">
+            {filteredCountries.length > 0 ? (
+              filteredCountries.map(country => (
                 <button
                   key={country.code}
                   onClick={() => toggleCountry(country.code)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-700 transition-colors text-left"
+                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors text-left"
                 >
                   <span className="text-white text-sm">{country.name}</span>
                   {blockedCountries.includes(country.code) && (
                     <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center">
-                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <Check className="w-3 h-3 text-white" />
                     </div>
                   )}
                 </button>
-              ))}
-              {filteredCountries.length === 0 && (
-                <div className="px-4 py-3 text-zinc-500 text-sm text-center">
-                  No countries found
-                </div>
-              )}
-            </div>
+              ))
+            ) : (
+              <div className="px-4 py-8 text-center text-sm text-zinc-500">
+                No countries found
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
