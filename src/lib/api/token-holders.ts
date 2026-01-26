@@ -7,6 +7,7 @@
 
 import { createPublicClient, http, parseAbiItem, encodeFunctionData, decodeFunctionResult, type Address, type Hex } from 'viem';
 import { base, bsc } from 'viem/chains';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface TokenHolder {
   address: string;
@@ -40,21 +41,43 @@ const TRANSFER_SINGLE_ABI = parseAbiItem(
   'event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value)'
 );
 
-// Create public clients for each chain
-const clients = {
-  8453: createPublicClient({
-    chain: base,
-    transport: http(),
-  }),
-  56: createPublicClient({
-    chain: bsc,
-    transport: http(),
-  }),
-};
-
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-const QUERY_TIMEOUT_MS = 8000; // 8 second timeout
+const QUERY_TIMEOUT_MS = 15000; // 15 second timeout (increased for Alchemy)
 const RECENT_BLOCKS = 500_000n; // ~2 weeks on Base
+
+// Cache RPC endpoints to avoid repeated edge function calls
+let cachedEndpoints: { base: string; bsc: string } | null = null;
+
+/**
+ * Fetch RPC endpoints from the edge function
+ */
+async function getRpcEndpoints(): Promise<{ base: string; bsc: string }> {
+  if (cachedEndpoints) {
+    return cachedEndpoints;
+  }
+  
+  try {
+    const { data, error } = await supabase.functions.invoke('get-rpc-endpoints');
+    
+    if (error || !data) {
+      console.warn('Failed to fetch RPC endpoints from edge function, using fallback');
+      // Fallback to public RPCs if edge function fails
+      return {
+        base: 'https://mainnet.base.org',
+        bsc: 'https://bsc-dataseed1.binance.org',
+      };
+    }
+    
+    cachedEndpoints = data;
+    return data;
+  } catch (err) {
+    console.warn('Error fetching RPC endpoints:', err);
+    return {
+      base: 'https://mainnet.base.org',
+      bsc: 'https://bsc-dataseed1.binance.org',
+    };
+  }
+}
 
 /**
  * Get token holders by querying recent transfers then checking current balances
@@ -64,15 +87,9 @@ export async function getTokenHolders(
   chainId: number = 8453
 ): Promise<TokenHolder[]> {
   const contractAddress = DEHUB_CONTRACTS[chainId];
-  const client = clients[chainId as keyof typeof clients];
   
   if (!contractAddress || contractAddress === ZERO_ADDRESS) {
     console.warn('Contract address not configured for chain:', chainId);
-    return [];
-  }
-  
-  if (!client) {
-    console.warn('No client configured for chain:', chainId);
     return [];
   }
   
@@ -85,9 +102,23 @@ export async function getTokenHolders(
   
   const fetchHolders = async (): Promise<TokenHolder[]> => {
     try {
+      // Get RPC endpoints dynamically
+      const endpoints = await getRpcEndpoints();
+      const rpcUrl = chainId === 8453 ? endpoints.base : endpoints.bsc;
+      
+      console.log(`[TokenHolders] Using RPC: ${rpcUrl.includes('alchemy') ? 'Alchemy' : 'Public'} for chain ${chainId}`);
+      
+      // Create client with the appropriate RPC
+      const client = createPublicClient({
+        chain: chainId === 8453 ? base : bsc,
+        transport: http(rpcUrl),
+      });
+      
       // Get current block number
       const currentBlock = await client.getBlockNumber();
       const fromBlock = currentBlock > RECENT_BLOCKS ? currentBlock - RECENT_BLOCKS : 0n;
+      
+      console.log(`[TokenHolders] Querying events from block ${fromBlock} to ${currentBlock} for token ${tokenId}`);
       
       // Query recent TransferSingle events to find addresses that have held this token
       const singleLogs = await client.getLogs({
@@ -96,6 +127,8 @@ export async function getTokenHolders(
         fromBlock,
         toBlock: 'latest',
       });
+      
+      console.log(`[TokenHolders] Found ${singleLogs.length} transfer events`);
       
       // Filter logs for the specific token ID and collect unique addresses
       const addresses = new Set<string>();
@@ -111,6 +144,8 @@ export async function getTokenHolders(
           addresses.add(args.to.toLowerCase());
         }
       }
+      
+      console.log(`[TokenHolders] Found ${addresses.size} unique addresses for token ${tokenId}`);
       
       if (addresses.size === 0) {
         return [];
@@ -167,6 +202,8 @@ export async function getTokenHolders(
           }
         }
       }
+      
+      console.log(`[TokenHolders] Found ${holders.length} current holders for token ${tokenId}`);
       
       // Sort by balance descending
       holders.sort((a, b) => b.balance - a.balance);
