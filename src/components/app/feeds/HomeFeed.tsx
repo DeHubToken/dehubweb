@@ -374,7 +374,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
           {items.length === 0 ? (
             <EmptyState />
           ) : (
-            <div key={`${selectedSort.value}-${selectedDate.value}`}>
+            <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
               {renderFeedWithShorts()}
               
               {/* Infinite scroll loader */}
