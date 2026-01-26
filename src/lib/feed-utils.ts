@@ -6,6 +6,95 @@
  * @module lib/feed-utils
  */
 
+import type { DeHubNFT } from '@/lib/api/dehub';
+
+// ============================================================================
+// SORT OPTIONS (Used across all feeds)
+// ============================================================================
+
+export const SORT_OPTIONS = [
+  { label: 'Latest', value: 'latest' as const },
+  { label: 'Most Viewed', value: 'most-viewed' as const },
+  { label: 'Most Liked', value: 'most-liked' as const },
+  { label: 'Most Comments', value: 'most-comments' as const },
+] as const;
+
+export type SortOption = typeof SORT_OPTIONS[number];
+export type SortValue = SortOption['value'];
+
+// ============================================================================
+// SORTING FUNCTIONS
+// ============================================================================
+
+/**
+ * Extract raw sorting values from an NFT object
+ */
+function getNFTSortValues(nft: DeHubNFT) {
+  return {
+    views: nft.views || nft.view_count || 0,
+    likes: nft.totalVotes?.for || nft.like_count || 0,
+    comments: nft.commentCount || nft.comment_count || 0,
+    createdAt: new Date(nft.createdAt || nft.created_at || 0).getTime(),
+  };
+}
+
+/**
+ * Sort NFTs by creation date (newest first)
+ */
+export function sortByLatest<T extends DeHubNFT>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    return getNFTSortValues(b).createdAt - getNFTSortValues(a).createdAt;
+  });
+}
+
+/**
+ * Sort NFTs by view count (highest first)
+ */
+export function sortByMostViewed<T extends DeHubNFT>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    return getNFTSortValues(b).views - getNFTSortValues(a).views;
+  });
+}
+
+/**
+ * Sort NFTs by like count (highest first)
+ */
+export function sortByMostLiked<T extends DeHubNFT>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    return getNFTSortValues(b).likes - getNFTSortValues(a).likes;
+  });
+}
+
+/**
+ * Sort NFTs by comment count (highest first)
+ */
+export function sortByMostComments<T extends DeHubNFT>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    return getNFTSortValues(b).comments - getNFTSortValues(a).comments;
+  });
+}
+
+/**
+ * Apply sorting based on sort value
+ */
+export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValue): T[] {
+  switch (sortValue) {
+    case 'most-viewed':
+      return sortByMostViewed(items);
+    case 'most-liked':
+      return sortByMostLiked(items);
+    case 'most-comments':
+      return sortByMostComments(items);
+    case 'latest':
+    default:
+      return sortByLatest(items);
+  }
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
 /**
  * Shuffle an array deterministically based on a seed.
  * Useful for consistent randomization on refresh.

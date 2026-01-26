@@ -11,6 +11,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { SORT_OPTIONS, applySorting, type SortOption } from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -24,7 +25,7 @@ import {
 
 // DeHub API hook
 import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, useDeHubImages, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 
 import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
@@ -40,14 +41,7 @@ type UnifiedFeedItem =
   | { type: 'live'; data: LiveStream }
   | { type: 'shorts'; data: ShortVideo[] };
 
-// Sort options that map directly to DeHub API values
-const SORT_OPTIONS = [
-  { label: 'Latest', value: 'new' as const },
-  { label: 'Trending', value: 'trending' as const },
-  { label: 'Popular', value: 'popular' as const },
-];
-
-type SortOption = typeof SORT_OPTIONS[number];
+// Sort options are imported from feed-utils
 
 const PAGE_SIZE = 15;
 const SHORTS_INSERT_INTERVAL = 6;
@@ -120,14 +114,14 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
 
   const { walletAddress } = useAuth();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch videos from DeHub API with selected sort
+  // Fetch videos from DeHub API
   const {
     data: videosData,
     fetchNextPage: fetchNextVideos,
@@ -139,11 +133,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     error: videosError,
   } = useDeHubFeed({
     unit: PAGE_SIZE,
-    sortMode: selectedSort.value,
     address: walletAddress || undefined,
   });
 
-  // Fetch images from DeHub API with selected sort
+  // Fetch images from DeHub API
   const {
     data: imagesData,
     fetchNextPage: fetchNextImages,
@@ -154,14 +147,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     refetch: refetchImages,
   } = useDeHubImages({
     unit: PAGE_SIZE,
-    sortMode: selectedSort.value,
     address: walletAddress || undefined,
   });
 
   // Fetch shorts separately for the carousel
   const { data: shortsData } = useDeHubVideos({
     unit: 10,
-    sortMode: 'popular',
     address: walletAddress || undefined,
   });
 
@@ -180,32 +171,26 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
-  // Map API data to feed items - merge videos and images
+  // Map API data to feed items - merge videos and images with client-side sorting
   const items = useMemo((): UnifiedFeedItem[] => {
-    const videoItems: UnifiedFeedItem[] = [];
-    const imageItems: UnifiedFeedItem[] = [];
+    // Get raw NFTs
+    const rawVideoNFTs: DeHubNFT[] = videosData?.pages?.flatMap(page => page.data || []) || [];
+    const rawImageNFTs: DeHubNFT[] = imagesData?.pages?.flatMap(page => page.data || []) || [];
     
-    // Map videos
-    if (videosData?.pages) {
-      const allVideoNFTs = videosData.pages.flatMap(page => page.data || []);
-      allVideoNFTs.forEach((nft, index) => {
-        videoItems.push({
-          type: 'video',
-          data: mapNFTToVideoItem(nft, index),
-        });
-      });
-    }
+    // Apply sorting to each
+    const sortedVideoNFTs = applySorting(rawVideoNFTs, selectedSort.value);
+    const sortedImageNFTs = applySorting(rawImageNFTs, selectedSort.value);
     
-    // Map images
-    if (imagesData?.pages) {
-      const allImageNFTs = imagesData.pages.flatMap(page => page.data || []);
-      allImageNFTs.forEach((nft, index) => {
-        imageItems.push({
-          type: 'image',
-          data: mapNFTToImagePost(nft, index),
-        });
-      });
-    }
+    // Map to feed items
+    const videoItems: UnifiedFeedItem[] = sortedVideoNFTs.map((nft, index) => ({
+      type: 'video' as const,
+      data: mapNFTToVideoItem(nft, index),
+    }));
+    
+    const imageItems: UnifiedFeedItem[] = sortedImageNFTs.map((nft, index) => ({
+      type: 'image' as const,
+      data: mapNFTToImagePost(nft, index),
+    }));
     
     // Interleave videos and images (2 videos, 1 image pattern)
     const merged: UnifiedFeedItem[] = [];
@@ -227,7 +212,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     }
     
     return merged;
-  }, [videosData, imagesData]);
+  }, [videosData, imagesData, selectedSort.value]);
 
   // Infinite scroll observer
   useEffect(() => {

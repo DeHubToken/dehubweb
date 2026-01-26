@@ -13,21 +13,17 @@ import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { useDeHubVideos } from '@/hooks/use-dehub-feed';
-import { getMediaUrl, getCategories, type DeHubCategory } from '@/lib/api/dehub';
+import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { SORT_OPTIONS, applySorting, type SortOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-// Sort options that map directly to DeHub API values
-const SORT_OPTIONS = [
-  { label: 'Newest', value: 'new' as const },
-  { label: 'Popular', value: 'popular' as const },
-  { label: 'Trending', value: 'trending' as const },
-];
+// Sort options are imported from feed-utils
 
 // Duration filters (client-side filtering) - shorter for shorts
 const DURATION_FILTERS = [
@@ -57,7 +53,6 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
   { id: 'pets', name: 'Pets', slug: 'pets' },
 ];
 
-type SortOption = typeof SORT_OPTIONS[number];
 type DurationFilter = typeof DURATION_FILTERS[number];
 type UploadDateFilter = typeof UPLOAD_DATE_FILTERS[number];
 
@@ -211,8 +206,8 @@ interface ShortsFeedProps {
 }
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
-  // Sort is sent to API directly
-  const [selectedSort, setSelectedSort] = useState(SORT_OPTIONS[0]);
+  // Sort is now client-side
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
   // Duration and upload date are client-side filters
   const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState(UPLOAD_DATE_FILTERS[0]);
@@ -250,7 +245,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   } = useDeHubVideos({
     unit: 15,
-    sortMode: selectedSort.value,
+    // API sortMode not used - we sort client-side
     category: selectedCategory || undefined,
     address: walletAddress || undefined,
   });
@@ -262,12 +257,17 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     }
   }, [refreshKey, refetch]);
 
-  // Map API data to ShortVideo array with extra fields for filtering
-  const allShorts = useMemo(() => {
+  // Get raw NFTs for sorting
+  const allRawNFTs = useMemo((): DeHubNFT[] => {
     if (!apiData?.pages) return [];
-    const allNFTs = apiData.pages.flatMap(page => page.data || []);
-    return allNFTs.map((nft, index) => mapToShortVideo(nft, index));
+    return apiData.pages.flatMap(page => page.data || []);
   }, [apiData]);
+
+  // Apply client-side sorting and map to ShortVideo array
+  const allShorts = useMemo(() => {
+    const sorted = applySorting(allRawNFTs, selectedSort.value);
+    return sorted.map((nft, index) => mapToShortVideo(nft, index));
+  }, [allRawNFTs, selectedSort.value]);
 
   // Apply client-side filters
   const shorts = useMemo((): ShortVideo[] => {
