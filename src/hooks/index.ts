@@ -11,8 +11,19 @@
  */
 
 export { useAudioAnalyser } from './use-audio-analyser';
+export { useDebouncedValue } from './use-debounced-value';
 export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 export { useDeHubProfile, useDeHubUserContent, separateUserContent, mapUserToProfile, type ProfileData } from './use-dehub-profile';
+export { 
+  useDeHubSearch, 
+  getPostTypeForTab, 
+  extractUniqueCreators, 
+  mapNFTsToContent, 
+  flattenSearchResults,
+  type SearchCreator,
+  type UseDeHubSearchOptions 
+} from './use-dehub-search';
+export { useDeHubUserSearch, mapUserToSearchCreator } from './use-dehub-user-search';
 export { useGlitchEffect } from './use-glitch-effect';
 export { GlobalDropZoneProvider, useGlobalDropZone } from './use-global-drop-zone';
 export { useIsMobile } from './use-mobile';

@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,9 +8,21 @@ import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING, SUGGESTED_USERS } from
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { useAuth } from '@/contexts/AuthContext';
+import { 
+  useDeHubSearch, 
+  getPostTypeForTab, 
+  extractUniqueCreators, 
+  flattenSearchResults,
+  type SearchCreator 
+} from '@/hooks/use-dehub-search';
+import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
+import { getMediaUrl } from '@/lib/api/dehub';
+import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
 const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
+const SEARCH_CATEGORIES = ['All', 'Gaming', 'Music', 'Art', 'Programming', 'Crypto', 'Entertainment'];
 const COUNTRY_OPTIONS = [
   'Global',
   'United States',
@@ -175,10 +188,138 @@ const FilterDropdown = ({
   );
 };
 
+// Search result card for content items
+const SearchResultCard = ({ 
+  item 
+}: { 
+  item: {
+    id: string;
+    title?: string;
+    description?: string;
+    thumbnail?: string;
+    media_type?: string;
+    minter?: string;
+    mintername?: string;
+    minterDisplayName?: string;
+    minterAvatarUrl?: string;
+    createdAt?: string;
+    like_count?: number;
+    comment_count?: number;
+  }
+}) => {
+  const navigate = useNavigate();
+  const thumbnailUrl = item.thumbnail ? getMediaUrl(item.thumbnail) : undefined;
+  const avatarUrl = item.minterAvatarUrl ? getMediaUrl(item.minterAvatarUrl) : undefined;
+  const displayName = item.minterDisplayName || item.mintername || 'User';
+  const handle = item.mintername ? `@${item.mintername}` : item.minter?.slice(0, 8);
+  const timeAgo = item.createdAt 
+    ? new Date(item.createdAt).toLocaleDateString() 
+    : '';
+
+  return (
+    <div 
+      className="p-3 bg-zinc-800 rounded-xl cursor-pointer hover:bg-zinc-700/80 transition-colors"
+      onClick={() => navigate(`/app/post/${item.id}`)}
+    >
+      <div className="flex gap-3">
+        {thumbnailUrl && (
+          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-700">
+            <img 
+              src={thumbnailUrl} 
+              alt="" 
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <Avatar className="w-5 h-5">
+              <AvatarImage src={avatarUrl} className="object-cover" />
+              <AvatarFallback className="bg-zinc-600 text-[10px]">{displayName[0]}</AvatarFallback>
+            </Avatar>
+            <span className="text-white text-sm font-medium truncate">{displayName}</span>
+            <span className="text-zinc-500 text-xs">{handle}</span>
+            {timeAgo && (
+              <>
+                <span className="text-zinc-600">·</span>
+                <span className="text-zinc-500 text-xs">{timeAgo}</span>
+              </>
+            )}
+          </div>
+          {item.title && (
+            <p className="text-zinc-300 text-sm line-clamp-2">{item.title}</p>
+          )}
+          {item.description && !item.title && (
+            <p className="text-zinc-400 text-sm line-clamp-2">{item.description}</p>
+          )}
+          <div className="flex items-center gap-3 mt-2 text-xs text-zinc-500">
+            {item.like_count !== undefined && (
+              <span>{item.like_count.toLocaleString()} likes</span>
+            )}
+            {item.comment_count !== undefined && (
+              <span>{item.comment_count.toLocaleString()} comments</span>
+            )}
+            {item.media_type && (
+              <span className="px-1.5 py-0.5 bg-zinc-700 rounded text-[10px] uppercase">
+                {item.media_type}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// User result card
+const UserResultCard = ({ user }: { user: SearchCreator }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <div 
+      className="flex items-center justify-between cursor-pointer hover:bg-zinc-800/50 rounded-lg p-2 -mx-2 transition-colors"
+      onClick={() => navigate(`/app/profile/${user.handle.replace('@', '')}`)}
+    >
+      <div className="flex items-center gap-3">
+        <Avatar className="w-10 h-10">
+          <AvatarImage src={user.avatar} className="object-cover" />
+          <AvatarFallback className="bg-zinc-700">{user.name[0]}</AvatarFallback>
+        </Avatar>
+        <div>
+          <p className="text-white font-medium flex items-center gap-1">
+            {user.name}
+            {user.verified && <VerifiedBadge className="w-3.5 h-3.5" />}
+          </p>
+          <p className="text-zinc-500 text-sm">{user.handle}</p>
+          {user.bio && (
+            <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5">{user.bio}</p>
+          )}
+        </div>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+        onClick={(e) => {
+          e.stopPropagation();
+          // TODO: Implement follow functionality
+        }}
+      >
+        Follow
+      </Button>
+    </div>
+  );
+};
+
 export default function ExplorePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { walletAddress } = useAuth();
+  
   const [activeTab, setActiveTab] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [filters, setFilters] = useState<FilterState>({
     w2e: false,
     ppv: false,
@@ -189,12 +330,71 @@ export default function ExplorePage() {
   });
   const [selectedCountry, setSelectedCountry] = useState('Global');
 
-  const isSearching = searchQuery.length >= 3;
+  // Sync search query with URL
+  useEffect(() => {
+    const urlQuery = searchParams.get('q') || '';
+    if (urlQuery && urlQuery !== searchQuery) {
+      setSearchQuery(urlQuery);
+    }
+  }, [searchParams]);
 
-  // Search results - returns empty since no mock data
+  // Update URL when search query changes
+  useEffect(() => {
+    if (searchQuery.trim().length >= 3) {
+      setSearchParams({ q: searchQuery.trim() }, { replace: true });
+    } else if (searchParams.has('q')) {
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchQuery, setSearchParams, searchParams]);
+
+  const isSearching = searchQuery.trim().length >= 3;
+
+  // API search hook
+  const {
+    data: searchData,
+    isLoading: isSearchLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    error: searchError,
+  } = useDeHubSearch({
+    query: searchQuery,
+    postType: getPostTypeForTab(activeTab),
+    category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
+    address: walletAddress || undefined,
+    enabled: isSearching,
+  });
+
+  // Exact username lookup for @username queries
+  const {
+    data: exactUser,
+    isLoading: isUserLoading,
+    isUsernameQuery,
+  } = useDeHubUserSearch({
+    query: searchQuery,
+    enabled: isSearching && (activeTab === 'all' || activeTab === 'people'),
+  });
+
+  // Process search results
   const searchResults = useMemo(() => {
-    return { users: [], posts: [] };
-  }, [searchQuery, isSearching]);
+    const allItems = flattenSearchResults(searchData) || [];
+    const creators = extractUniqueCreators(allItems) || [];
+    
+    // Add exact user match to top if found and not already in list
+    let peopleResults = creators;
+    if (exactUser && exactUser.id) {
+      const exists = creators.some(c => c.id === exactUser.id);
+      if (!exists) {
+        peopleResults = [exactUser, ...creators];
+      }
+    }
+    
+    return {
+      users: peopleResults.filter(u => u && u.id),
+      posts: allItems.filter(p => p && (p.id || p.tokenId)),
+      total: searchData?.pages?.[0]?.total || 0,
+    };
+  }, [searchData, exactUser]);
 
   const activeFilterCount = [
     filters.w2e,
@@ -214,7 +414,19 @@ export default function ExplorePage() {
       shares: 'Any',
       comments: 'Any',
     });
+    setSelectedCategory('All');
   };
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const showLoading = isSearchLoading || isUserLoading;
+  const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
+  const showNoResults = isSearching && !showLoading && searchResults.users.length === 0 && searchResults.posts.length === 0;
+  const showMinCharsHint = searchQuery.length > 0 && searchQuery.length < 3;
 
   return (
     <div className="min-h-screen">
@@ -231,6 +443,14 @@ export default function ExplorePage() {
                 placeholder="Search for people, posts, or content..."
                 className="w-full pl-12 pr-4 py-3 bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -247,6 +467,13 @@ export default function ExplorePage() {
               )}
             </button>
           </div>
+          
+          {/* Min chars hint */}
+          {showMinCharsHint && (
+            <p className="text-zinc-500 text-xs mt-2 pl-1">
+              Type at least 3 characters to search
+            </p>
+          )}
         </div>
 
         {/* Filters Panel */}
@@ -261,7 +488,7 @@ export default function ExplorePage() {
               <div className="bg-zinc-900 rounded-2xl p-4 space-y-4 pb-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-white font-semibold">Filters</h3>
-                  {activeFilterCount > 0 && (
+                  {(activeFilterCount > 0 || selectedCategory !== 'All') && (
                     <button
                       onClick={resetFilters}
                       className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors"
@@ -271,6 +498,23 @@ export default function ExplorePage() {
                     </button>
                   )}
                 </div>
+
+                {/* Category Filters */}
+                {isSearching && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider">Category</p>
+                    <div className="flex flex-wrap gap-2">
+                      {SEARCH_CATEGORIES.map((cat) => (
+                        <FilterPill
+                          key={cat}
+                          label={cat}
+                          active={selectedCategory === cat}
+                          onClick={() => setSelectedCategory(cat)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Content Type Filters */}
                 <div className="space-y-2">
@@ -377,9 +621,16 @@ export default function ExplorePage() {
               {/* Search Results Header */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">
-                    Results for "{searchQuery}"
-                  </h2>
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-bold text-white">
+                      Results for "{searchQuery}"
+                    </h2>
+                    {!showLoading && searchResults.total > 0 && (
+                      <p className="text-zinc-500 text-sm mt-1">
+                        {searchResults.total.toLocaleString()} results found
+                      </p>
+                    )}
+                  </div>
                   <button
                     onClick={() => setSearchQuery('')}
                     className="text-zinc-400 hover:text-white transition-colors"
@@ -388,67 +639,112 @@ export default function ExplorePage() {
                   </button>
                 </div>
 
-                {/* People Results */}
-                {(activeTab === 'all' || activeTab === 'people') && searchResults.users.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">People</h3>
-                    <div className="space-y-3">
-                      {searchResults.users.map((user) => (
-                        <div key={user.id} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="w-10 h-10">
-                              <AvatarImage src={user.avatar} className="object-cover" />
-                              <AvatarFallback className="bg-zinc-700">{user.name[0]}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="text-white font-medium flex items-center gap-1">
-                                {user.name}
-                                {user.verified && (
-                                  <span className="text-blue-400 text-xs">✓</span>
-                                )}
-                              </p>
-                              <p className="text-zinc-500 text-sm">{user.handle}</p>
-                            </div>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-                          >
-                            Follow
-                          </Button>
-                        </div>
-                      ))}
+                {/* Loading State */}
+                {showLoading && (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="flex items-center gap-3 text-zinc-400">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Searching...</span>
                     </div>
                   </div>
                 )}
 
-                {/* Posts Results */}
-                {(activeTab === 'all' || activeTab === 'posts') && searchResults.posts.length > 0 && (
-                  <div>
-                    <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">Posts</h3>
-                    <div className="space-y-3">
-                      {searchResults.posts.map((post) => (
-                        <div key={post.id} className="p-3 bg-zinc-800 rounded-xl">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-white font-medium">{post.author}</span>
-                            <span className="text-zinc-500 text-sm">{post.handle}</span>
-                            <span className="text-zinc-600">·</span>
-                            <span className="text-zinc-500 text-sm">{post.time}</span>
-                          </div>
-                          <p className="text-zinc-300">{post.content}</p>
-                          <p className="text-zinc-500 text-sm mt-2">{post.likes} likes</p>
-                        </div>
+                {/* Error State */}
+                {searchError && (
+                  <div className="text-center py-8">
+                    <p className="text-red-400">Unable to search. Please try again.</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3 border-zinc-700 text-white hover:bg-zinc-800"
+                      onClick={() => window.location.reload()}
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                )}
+
+                {/* People Results */}
+                {showResults && (activeTab === 'all' || activeTab === 'people') && searchResults.users.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
+                      People ({searchResults.users.length})
+                    </h3>
+                    <div className="space-y-1">
+                      {searchResults.users.slice(0, activeTab === 'people' ? undefined : 5).map((user, idx) => (
+                        <UserResultCard key={user.id || `user-${idx}`} user={user} />
                       ))}
                     </div>
+                    {activeTab === 'all' && searchResults.users.length > 5 && (
+                      <button
+                        onClick={() => setActiveTab('people')}
+                        className="text-primary text-sm mt-3 hover:underline"
+                      >
+                        View all {searchResults.users.length} people
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Content Results */}
+                {showResults && activeTab !== 'people' && searchResults.posts.length > 0 && (
+                  <div>
+                    <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
+                      {activeTab === 'all' ? 'Content' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({searchResults.posts.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {searchResults.posts.map((post) => (
+                        <SearchResultCard key={post.id || post.tokenId} item={{
+                          id: String(post.id || post.tokenId),
+                          title: post.title || post.name,
+                          description: post.description,
+                          thumbnail: post.imageUrl || post.thumbnail_url,
+                          media_type: post.media_type || post.postType,
+                          minter: post.minter,
+                          mintername: post.mintername,
+                          minterDisplayName: post.minterDisplayName,
+                          minterAvatarUrl: post.minterAvatarUrl,
+                          createdAt: post.createdAt || post.created_at,
+                          like_count: post.like_count,
+                          comment_count: post.comment_count || post.commentCount,
+                        }} />
+                      ))}
+                    </div>
+
+                    {/* Load More */}
+                    {hasNextPage && (
+                      <div className="flex justify-center mt-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleLoadMore}
+                          disabled={isFetchingNextPage}
+                          className="border-zinc-700 text-white hover:bg-zinc-800"
+                        >
+                          {isFetchingNextPage ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                              Loading...
+                            </>
+                          ) : (
+                            'Load More'
+                          )}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* No Results */}
-                {searchResults.users.length === 0 && searchResults.posts.length === 0 && (
+                {showNoResults && (
                   <div className="text-center py-8">
                     <p className="text-zinc-400">No results found for "{searchQuery}"</p>
                     <p className="text-zinc-500 text-sm mt-1">Try searching for something else</p>
+                    {isUsernameQuery && (
+                      <p className="text-zinc-500 text-sm mt-2">
+                        Tip: Remove the @ to search for content instead of exact usernames
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
