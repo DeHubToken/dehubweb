@@ -3,8 +3,7 @@ import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { searchNFTs, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
-import { VerifiedBadge } from './VerifiedBadge';
+import { searchNFTs, getMediaUrl } from '@/lib/api/dehub';
 
 interface UniqueUser {
   address: string;
@@ -118,10 +117,7 @@ export function WhoToFollow() {
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
-                <VerifiedBadge className="w-3.5 h-3.5" />
-              </div>
+              <span className="font-semibold text-white text-sm truncate block">{getDisplayName(user)}</span>
               <span className="text-zinc-500 text-xs">{getHandle(user)}</span>
             </div>
             <Button
