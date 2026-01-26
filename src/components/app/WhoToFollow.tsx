@@ -3,47 +3,83 @@ import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getLeaderboard, getMediaUrl, type LeaderboardEntry } from '@/lib/api/dehub';
+import { searchNFTs, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { VerifiedBadge } from './VerifiedBadge';
+
+interface UniqueUser {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarUrl?: string;
+}
 
 export function WhoToFollow() {
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['suggestions', 'followers'],
-    queryFn: () => getLeaderboard('holdings', 'all'),
-    staleTime: 60_000,
+    queryKey: ['suggestions', 'recently-active'],
+    queryFn: async () => {
+      // Fetch recent posts to find active users
+      const response = await searchNFTs({ 
+        sortMode: 'new', 
+        unit: 100,
+        page: 0 
+      });
+      
+      // Extract unique users from recent posts
+      const seenAddresses = new Set<string>();
+      const uniqueUsers: UniqueUser[] = [];
+      
+      for (const nft of response.data || []) {
+        const address = nft.minter;
+        if (!address || seenAddresses.has(address)) continue;
+        
+        seenAddresses.add(address);
+        uniqueUsers.push({
+          address,
+          username: nft.mintername,
+          displayName: nft.minterDisplayName,
+          avatarUrl: nft.minterAvatarUrl,
+        });
+        
+        // Stop after 50 unique users
+        if (uniqueUsers.length >= 50) break;
+      }
+      
+      return uniqueUsers;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes cache
   });
 
-  const suggestions = data?.result?.byWalletBalance?.slice(0, 5) || [];
+  const suggestions = data || [];
 
-  const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl) {
-      return getMediaUrl(entry.avatarUrl);
+  const getAvatarUrl = (user: UniqueUser) => {
+    if (user.avatarUrl) {
+      return getMediaUrl(user.avatarUrl);
     }
-    return `https://api.dicebear.com/7.x/identicon/svg?seed=${entry.account}`;
+    return `https://api.dicebear.com/7.x/identicon/svg?seed=${user.address}`;
   };
 
-  const getDisplayName = (entry: LeaderboardEntry) => {
-    return entry.userDisplayName || entry.username || `${entry.account.slice(0, 6)}...${entry.account.slice(-4)}`;
+  const getDisplayName = (user: UniqueUser) => {
+    return user.displayName || user.username || `${user.address.slice(0, 6)}...${user.address.slice(-4)}`;
   };
 
-  const getHandle = (entry: LeaderboardEntry) => {
-    if (entry.username) return `@${entry.username}`;
-    return `${entry.account.slice(0, 6)}...${entry.account.slice(-4)}`;
+  const getHandle = (user: UniqueUser) => {
+    if (user.username) return `@${user.username}`;
+    return `${user.address.slice(0, 6)}...${user.address.slice(-4)}`;
   };
 
-  const formatNumber = (num: number | undefined): string => {
-    if (num === undefined || num === null) return '0';
-    if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
-    if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K`;
-    return num.toLocaleString();
-  };
-
-  const handleUserClick = (entry: LeaderboardEntry) => {
-    if (entry.username) {
-      navigate(`/${entry.username}`);
+  const handleUserClick = (user: UniqueUser) => {
+    if (user.username) {
+      navigate(`/${user.username}`);
     }
+  };
+
+  const handleFollow = (e: React.MouseEvent, user: UniqueUser) => {
+    e.stopPropagation();
+    // TODO: Implement follow API call
+    console.log('Follow user:', user.address);
   };
 
   if (isLoading) {
@@ -66,31 +102,44 @@ export function WhoToFollow() {
   }
 
   return (
-    <div className="space-y-3">
-      {suggestions.map((entry) => (
-        <div
-          key={entry.account}
-          onClick={() => handleUserClick(entry)}
-          className="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
-        >
-          <Avatar className="w-10 h-10">
-            <AvatarImage src={getAvatarUrl(entry)} />
-            <AvatarFallback className="bg-zinc-700 text-white">
-              {getDisplayName(entry).charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1">
-              <span className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</span>
-              <VerifiedBadge className="w-3.5 h-3.5" />
+    <div className="flex flex-col h-full">
+      {/* Scrollable list */}
+      <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+        {suggestions.map((user) => (
+          <div
+            key={user.address}
+            onClick={() => handleUserClick(user)}
+            className="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer"
+          >
+            <Avatar className="w-10 h-10">
+              <AvatarImage src={getAvatarUrl(user)} />
+              <AvatarFallback className="bg-zinc-700 text-white">
+                {getDisplayName(user).charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
+                <VerifiedBadge className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-zinc-500 text-xs">{getHandle(user)}</span>
             </div>
-            <span className="text-zinc-500 text-xs">{getHandle(entry)}</span>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={(e) => handleFollow(e, user)}
+              className="h-8 px-4 text-xs font-semibold border-zinc-600 hover:bg-white hover:text-black transition-colors"
+            >
+              Follow
+            </Button>
           </div>
-          <div className="text-right">
-            <span className="text-zinc-400 text-xs">{formatNumber(entry.followers)} followers</span>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      {/* Bottom fade gradient */}
+      <div className="relative">
+        <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
+      </div>
     </div>
   );
 }
