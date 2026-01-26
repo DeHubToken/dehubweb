@@ -143,6 +143,13 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const dislikeCount = nft.totalVotes?.against || nft.dislike_count || 0;
   const commentCount = nft.commentCount || nft.comment_count || 0;
   
+  // Map content access fields from API
+  const isPPV = nft.is_ppv ?? false;
+  const ppvPrice = nft.ppv_price;
+  const ppvCurrency = nft.ppv_currency || 'USDC';
+  const isW2E = nft.is_w2e ?? false;
+  const isLocked = nft.is_locked ?? false;
+  
   return {
     id,
     type: 'video',
@@ -162,6 +169,11 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     likeCount,
     dislikeCount,
     commentCount,
+    isPPV,
+    ppvPrice,
+    ppvCurrency,
+    isW2E,
+    isLocked,
   };
 }
 

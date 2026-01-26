@@ -72,6 +72,16 @@ export interface VideoItem extends BaseFeedItem {
   dislikeCount?: number;
   /** Number of comments */
   commentCount?: number;
+  /** Whether content is pay-per-view */
+  isPPV?: boolean;
+  /** PPV price amount */
+  ppvPrice?: number;
+  /** PPV currency (e.g., "USDC", "DHB") */
+  ppvCurrency?: string;
+  /** Whether content is watch-to-earn/bounty */
+  isW2E?: boolean;
+  /** Whether content is subscriber-only locked */
+  isLocked?: boolean;
 }
 
 /**
