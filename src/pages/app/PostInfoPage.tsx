@@ -97,16 +97,27 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
             <p className="text-white/40 text-sm">No listings yet</p>
           </div>
           
-          {/* User action - List fractions if they own some */}
-          {userOwnsFractions && (
-            <Button 
-              onClick={handleListFraction}
-              className="w-full mt-4 bg-white/10 hover:bg-white/20 text-white border border-white/20"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              List Your Fractions ({userHolding.balance} available)
-            </Button>
-          )}
+          {/* User actions */}
+          <div className="space-y-3">
+            {userOwnsFractions && (
+              <Button 
+                onClick={handleListFraction}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                List Your Fractions ({userHolding.balance} available)
+              </Button>
+            )}
+            {!userOwnsFractions && (
+              <Button 
+                onClick={handleMakeOffer}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Make an Offer
+              </Button>
+            )}
+          </div>
         </TabsContent>
         
         {/* Offers Tab */}
@@ -117,16 +128,27 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
             <p className="text-white/40 text-sm">No offers yet</p>
           </div>
           
-          {/* User action - Make offer if they don't own fractions */}
-          {!userOwnsFractions && (
-            <Button 
-              onClick={handleMakeOffer}
-              className="w-full mt-4 bg-white/10 hover:bg-white/20 text-white border border-white/20"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Make an Offer
-            </Button>
-          )}
+          {/* User actions */}
+          <div className="space-y-3">
+            {userOwnsFractions && (
+              <Button 
+                onClick={handleListFraction}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                List Your Fractions ({userHolding.balance} available)
+              </Button>
+            )}
+            {!userOwnsFractions && (
+              <Button 
+                onClick={handleMakeOffer}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Make an Offer
+              </Button>
+            )}
+          </div>
         </TabsContent>
       </Tabs>
     </section>
