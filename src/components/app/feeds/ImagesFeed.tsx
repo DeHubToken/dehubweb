@@ -32,11 +32,19 @@ interface ImagesFeedProps {
 // ============================================================================
 
 function CollageView({ posts }: { posts: ImagePost[] }) {
+  // Create a masonry-style layout that never leaves top corners blank
+  // Using CSS grid-auto-flow: dense ensures gaps are filled
+  
   return (
     <div className="p-1 sm:p-2">
-      <div className="grid grid-cols-3 gap-0.5 sm:gap-1">
+      <div 
+        className="grid grid-cols-3 gap-0.5 sm:gap-1"
+        style={{ gridAutoFlow: 'dense' }}
+      >
         {posts.map((post, index) => {
-          const isLargeTile = (index + 1) % 3 === 0 && index !== 0;
+          // Make every 4th item (starting from 0) a large tile: 0, 4, 8, 12...
+          // This creates a balanced pattern with dense packing
+          const isLargeTile = index % 4 === 0;
           
           return (
             <div
