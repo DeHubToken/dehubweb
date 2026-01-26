@@ -9,17 +9,273 @@
  * - Engagement stats
  */
 
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+
+// Mock data for listings and offers (to be replaced with real API data)
+interface Listing {
+  id: string;
+  seller: string;
+  amount: number;
+  pricePerFraction: number;
+  totalPrice: number;
+  createdAt: string;
+}
+
+interface Offer {
+  id: string;
+  buyer: string;
+  amount: number;
+  pricePerFraction: number;
+  totalPrice: number;
+  createdAt: string;
+  status: 'pending' | 'accepted' | 'rejected';
+}
+
+const mockListings: Listing[] = [
+  {
+    id: '1',
+    seller: '0x1234567890abcdef1234567890abcdef12345678',
+    amount: 100,
+    pricePerFraction: 0.01,
+    totalPrice: 1,
+    createdAt: '2024-01-15T10:30:00Z',
+  },
+  {
+    id: '2',
+    seller: '0xabcdef1234567890abcdef1234567890abcdef12',
+    amount: 50,
+    pricePerFraction: 0.015,
+    totalPrice: 0.75,
+    createdAt: '2024-01-14T08:15:00Z',
+  },
+];
+
+const mockOffers: Offer[] = [
+  {
+    id: '1',
+    buyer: '0x9876543210fedcba9876543210fedcba98765432',
+    amount: 200,
+    pricePerFraction: 0.008,
+    totalPrice: 1.6,
+    createdAt: '2024-01-15T14:20:00Z',
+    status: 'pending',
+  },
+  {
+    id: '2',
+    buyer: '0xfedcba9876543210fedcba9876543210fedcba98',
+    amount: 75,
+    pricePerFraction: 0.012,
+    totalPrice: 0.9,
+    createdAt: '2024-01-13T16:45:00Z',
+    status: 'pending',
+  },
+];
+
+// FractionMarketplace Component
+interface FractionMarketplaceProps {
+  holders: { address: string; balance: number; percentage: number }[];
+  nftInfo: DeHubNFT;
+  truncateAddr: (address: string) => string;
+}
+
+function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketplaceProps) {
+  const { user, walletAddress } = useAuth();
+  
+  // Check if current user owns any fractions
+  const userHolding = walletAddress 
+    ? holders.find(h => h.address.toLowerCase() === walletAddress.toLowerCase())
+    : null;
+  const userOwnsFractions = !!userHolding && userHolding.balance > 0;
+  
+  const formatPrice = (price: number) => {
+    return `${price.toFixed(4)} ETH`;
+  };
+  
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  const handleListFraction = () => {
+    toast.info('List fraction feature coming soon');
+  };
+
+  const handleMakeOffer = () => {
+    toast.info('Make offer feature coming soon');
+  };
+
+  const handleBuyListing = (listing: Listing) => {
+    toast.info(`Buy ${listing.amount} fractions for ${formatPrice(listing.totalPrice)}`);
+  };
+
+  const handleAcceptOffer = (offer: Offer) => {
+    toast.info(`Accept offer of ${formatPrice(offer.totalPrice)} for ${offer.amount} fractions`);
+  };
+
+  return (
+    <section className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+      <Tabs defaultValue="listings" className="w-full">
+        <TabsList className="w-full bg-transparent border-b border-white/10 rounded-none h-auto p-0">
+          <TabsTrigger 
+            value="listings" 
+            className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
+          >
+            <Tag className="w-4 h-4 mr-2" />
+            Listings
+          </TabsTrigger>
+          <TabsTrigger 
+            value="offers" 
+            className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
+          >
+            <HandCoins className="w-4 h-4 mr-2" />
+            Offers
+          </TabsTrigger>
+        </TabsList>
+        
+        {/* Listings Tab */}
+        <TabsContent value="listings" className="p-4 mt-0">
+          {/* User action - List fractions if they own some */}
+          {userOwnsFractions && (
+            <Button 
+              onClick={handleListFraction}
+              className="w-full mb-4 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              List Your Fractions ({userHolding.balance} available)
+            </Button>
+          )}
+          
+          {/* Listings list */}
+          {mockListings.length > 0 ? (
+            <div className="space-y-3">
+              {mockListings.map((listing) => (
+                <div key={listing.id} className="bg-white/5 rounded-xl p-3 border border-white/10">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-white/60 font-mono">
+                      {truncateAddr(listing.seller)}
+                    </span>
+                    <span className="text-xs text-white/40">{formatDate(listing.createdAt)}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">{listing.amount} fractions</p>
+                      <p className="text-xs text-white/60">
+                        {formatPrice(listing.pricePerFraction)} each
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-white">{formatPrice(listing.totalPrice)}</p>
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleBuyListing(listing)}
+                        className="mt-1 h-7 text-xs"
+                      >
+                        Buy
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
+              <p className="text-white/40 text-sm">No listings yet</p>
+            </div>
+          )}
+        </TabsContent>
+        
+        {/* Offers Tab */}
+        <TabsContent value="offers" className="p-4 mt-0">
+          {/* User action - Make offer if they don't own fractions */}
+          {!userOwnsFractions && (
+            <Button 
+              onClick={handleMakeOffer}
+              className="w-full mb-4 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Make an Offer
+            </Button>
+          )}
+          
+          {/* Offers list */}
+          {mockOffers.length > 0 ? (
+            <div className="space-y-3">
+              {mockOffers.map((offer) => (
+                <div key={offer.id} className="bg-white/5 rounded-xl p-3 border border-white/10">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-white/60 font-mono">
+                      {truncateAddr(offer.buyer)}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${
+                        offer.status === 'pending' 
+                          ? 'bg-yellow-500/20 text-yellow-400' 
+                          : offer.status === 'accepted'
+                            ? 'bg-green-500/20 text-green-400'
+                            : 'bg-red-500/20 text-red-400'
+                      }`}>
+                        {offer.status}
+                      </span>
+                      <span className="text-xs text-white/40">{formatDate(offer.createdAt)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">{offer.amount} fractions</p>
+                      <p className="text-xs text-white/60">
+                        {formatPrice(offer.pricePerFraction)} each
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-white">{formatPrice(offer.totalPrice)}</p>
+                      {userOwnsFractions && offer.status === 'pending' && (
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleAcceptOffer(offer)}
+                          className="mt-1 h-7 text-xs"
+                        >
+                          Accept
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
+              <p className="text-white/40 text-sm">No offers yet</p>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </section>
+  );
+}
 
 // Chain configuration
 const CHAIN_CONFIG: Record<number, { name: string; explorerUrl: string; explorerName: string }> = {
@@ -259,6 +515,13 @@ export default function PostInfoPage() {
               </button>
             </div>
           </section>
+
+          {/* Listings & Offers Tabs */}
+          <FractionMarketplace 
+            holders={holders} 
+            nftInfo={nftInfo} 
+            truncateAddr={truncateAddr}
+          />
 
           {/* Fraction Ownership */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">
