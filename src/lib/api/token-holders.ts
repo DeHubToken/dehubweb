@@ -44,9 +44,54 @@ const TRANSFER_SINGLE_ABI = parseAbiItem(
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const QUERY_TIMEOUT_MS = 15000; // 15 second timeout (increased for Alchemy)
 const RECENT_BLOCKS = 500_000n; // ~2 weeks on Base
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minute cache TTL
 
 // Cache RPC endpoints to avoid repeated edge function calls
 let cachedEndpoints: { base: string; bsc: string } | null = null;
+
+// LocalStorage cache for token holders (persists across sessions)
+interface CachedHolders {
+  holders: TokenHolder[];
+  timestamp: number;
+}
+
+function getCacheKey(tokenId: number | string, chainId: number): string {
+  return `token-holders-${chainId}-${tokenId}`;
+}
+
+function getCachedHolders(tokenId: number | string, chainId: number): TokenHolder[] | null {
+  try {
+    const key = getCacheKey(tokenId, chainId);
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+    
+    const parsed: CachedHolders = JSON.parse(cached);
+    const age = Date.now() - parsed.timestamp;
+    
+    // Return cached data if less than TTL
+    if (age < CACHE_TTL_MS) {
+      console.log(`[TokenHolders] Using cached data (${Math.round(age / 1000)}s old)`);
+      return parsed.holders;
+    }
+    
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedHolders(tokenId: number | string, chainId: number, holders: TokenHolder[]): void {
+  try {
+    const key = getCacheKey(tokenId, chainId);
+    const cached: CachedHolders = {
+      holders,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(key, JSON.stringify(cached));
+  } catch {
+    // localStorage might be full or disabled
+  }
+}
 
 /**
  * Fetch RPC endpoints from the edge function
@@ -91,6 +136,12 @@ export async function getTokenHolders(
   if (!contractAddress || contractAddress === ZERO_ADDRESS) {
     console.warn('Contract address not configured for chain:', chainId);
     return [];
+  }
+  
+  // Check localStorage cache first
+  const cached = getCachedHolders(tokenId, chainId);
+  if (cached !== null) {
+    return cached;
   }
   
   const tokenIdBigInt = BigInt(tokenId);
@@ -207,6 +258,9 @@ export async function getTokenHolders(
       
       // Sort by balance descending
       holders.sort((a, b) => b.balance - a.balance);
+      
+      // Cache the results in localStorage
+      setCachedHolders(tokenId, chainId, holders);
       
       return holders;
     } catch (error) {

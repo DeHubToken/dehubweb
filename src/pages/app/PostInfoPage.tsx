@@ -10,11 +10,11 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
-import { getTokenHolders, TokenHolder, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
+import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -40,33 +40,30 @@ export default function PostInfoPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   
-  const [nftInfo, setNftInfo] = useState<DeHubNFT | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [holders, setHolders] = useState<TokenHolder[]>([]);
-  const [isLoadingHolders, setIsLoadingHolders] = useState(false);
+  // Fetch NFT info with React Query
+  const { 
+    data: nftInfo, 
+    isLoading, 
+    error 
+  } = useQuery({
+    queryKey: ['nft-info', postId],
+    queryFn: () => getNFTInfo(postId!),
+    enabled: !!postId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes in cache
+  });
   
-  useEffect(() => {
-    if (postId) {
-      setIsLoading(true);
-      setError(null);
-      getNFTInfo(postId)
-        .then(setNftInfo)
-        .catch(err => setError(err.message || 'Failed to load post info'))
-        .finally(() => setIsLoading(false));
-    }
-  }, [postId]);
-  
-  // Fetch token holders when NFT info is loaded
-  useEffect(() => {
-    if (nftInfo?.tokenId && nftInfo?.chainId) {
-      setIsLoadingHolders(true);
-      getTokenHolders(nftInfo.tokenId, nftInfo.chainId)
-        .then(setHolders)
-        .catch(err => console.error('Failed to load holders:', err))
-        .finally(() => setIsLoadingHolders(false));
-    }
-  }, [nftInfo?.tokenId, nftInfo?.chainId]);
+  // Fetch token holders with React Query (cached for 5 minutes)
+  const { 
+    data: holders = [], 
+    isLoading: isLoadingHolders 
+  } = useQuery({
+    queryKey: ['token-holders', nftInfo?.tokenId, nftInfo?.chainId],
+    queryFn: () => getTokenHolders(nftInfo!.tokenId, nftInfo!.chainId),
+    enabled: !!nftInfo?.tokenId && !!nftInfo?.chainId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes in cache
+  });
   
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -124,7 +121,7 @@ export default function PostInfoPage() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center p-8 text-center">
-          <p className="text-white/60 mb-4">{error || 'Post not found'}</p>
+          <p className="text-white/60 mb-4">{error?.message || 'Post not found'}</p>
           <button
             onClick={() => navigate(-1)}
             className="text-primary hover:underline"
