@@ -185,6 +185,63 @@ export function filterByDate<T extends DeHubNFT>(items: T[], dateFilter: DateFil
 }
 
 // ============================================================================
+// CONTENT TYPE FILTER OPTIONS (PPV, Bounty, Locked)
+// ============================================================================
+
+export const CONTENT_TYPE_FILTERS = [
+  { label: 'PPV', value: 'ppv' as const, description: 'Pay-per-view content' },
+  { label: 'Bounty', value: 'w2e' as const, description: 'Watch to earn' },
+  { label: 'Locked', value: 'locked' as const, description: 'Subscribers only' },
+] as const;
+
+export type ContentTypeFilterOption = typeof CONTENT_TYPE_FILTERS[number];
+export type ContentTypeFilterValue = ContentTypeFilterOption['value'];
+
+export interface ContentTypeFilters {
+  ppv: boolean;
+  w2e: boolean;
+  locked: boolean;
+}
+
+/**
+ * Filter NFTs by content type (PPV, W2E/Bounty, Locked)
+ * Uses OR logic - if multiple filters are active, show items matching ANY filter
+ */
+export function filterByContentType<T extends DeHubNFT>(
+  items: T[],
+  filters: ContentTypeFilters
+): T[] {
+  const hasActiveFilters = filters.ppv || filters.w2e || filters.locked;
+  
+  // If no filters active, return all items
+  if (!hasActiveFilters) return items;
+  
+  return items.filter(nft => {
+    // PPV check - use is_ppv field or check for ppv_price > 0
+    if (filters.ppv && (nft.is_ppv || (nft.ppv_price && nft.ppv_price > 0))) {
+      return true;
+    }
+    
+    // W2E/Bounty check - currently API doesn't expose this field directly
+    // Placeholder: check for any w2e-related fields in the response
+    if (filters.w2e) {
+      // @ts-ignore - checking for potential w2e fields
+      const hasW2E = nft.is_w2e || nft.isW2E || nft.bounty || nft.reward;
+      if (hasW2E) return true;
+    }
+    
+    // Locked check - subscriber-only content
+    if (filters.locked) {
+      // @ts-ignore - checking for potential locked fields
+      const isLocked = nft.is_locked || nft.isLocked || nft.subscribersOnly;
+      if (isLocked) return true;
+    }
+    
+    return false;
+  });
+}
+
+// ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 

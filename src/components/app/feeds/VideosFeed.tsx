@@ -18,7 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, applySorting, filterByDate, filterByContentType, getApiSortMode, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 // Category images
@@ -252,6 +252,37 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
   );
 }
 
+// Content Type Filter Section
+function ContentTypeFilterSection({ 
+  filters, 
+  onToggle 
+}: { 
+  filters: ContentTypeFilters; 
+  onToggle: (filter: keyof ContentTypeFilters) => void 
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {CONTENT_TYPE_FILTERS.map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => onToggle(filter.value)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              filters[filter.value]
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
@@ -263,7 +294,16 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // null = All
+  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
+    ppv: false,
+    w2e: false,
+    locked: false,
+  });
   const loaderRef = useRef<HTMLDivElement>(null);
+
+  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
+    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+  };
   
   const { walletAddress } = useAuth();
 
@@ -316,12 +356,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return apiData.pages.flatMap(page => page.data || []);
   }, [apiData]);
 
-  // Apply date filter on raw NFTs, then sort and map to video items
+  // Apply date and content type filters on raw NFTs, then sort and map to video items
   const allVideos = useMemo(() => {
     const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
-    const sorted = applySorting(dateFiltered, selectedSort.value);
+    const contentFiltered = filterByContentType(dateFiltered, contentFilters);
+    const sorted = applySorting(contentFiltered, selectedSort.value);
     return sorted.map((nft, index) => mapNFTToVideoItem(nft, index));
-  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value]);
+  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value, contentFilters]);
 
   // Apply client-side duration filter
   const videos = useMemo((): VideoItem[] => {
@@ -344,7 +385,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [shortsData]);
 
   // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
 
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
@@ -366,6 +407,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const clearFilters = () => {
     setSelectedDuration(DURATION_FILTERS[0]);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+    setContentFilters({ ppv: false, w2e: false, locked: false });
   };
 
   const EmptyState = () => (
@@ -432,6 +474,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
               <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
               <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
+              <ContentTypeFilterSection filters={contentFilters} onToggle={toggleContentFilter} />
             </div>
           </motion.div>
         )}
