@@ -15,10 +15,9 @@ export interface TokenHolder {
 }
 
 // DeHub NFT Contract addresses per chain
-// TODO: Replace with actual contract addresses
 export const DEHUB_CONTRACTS: Record<number, Address> = {
-  8453: '0x0000000000000000000000000000000000000000', // Base - needs real address
-  56: '0x0000000000000000000000000000000000000000',   // BNB Chain - needs real address
+  8453: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Base
+  56: '0x1065F5922a336C75623B55D22c4a0C760efCe947',   // BNB Chain
 };
 
 // Total fractions per token
