@@ -381,7 +381,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
           {items.length === 0 ? (
             <EmptyState />
           ) : (
-            <>
+            <div key={`${selectedSort.value}-${selectedDate.value}`}>
               {renderFeedWithShorts()}
               
               {/* Infinite scroll loader */}
@@ -396,7 +396,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
                   <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
                 )}
               </div>
-            </>
+            </div>
           )}
         </>
       )}

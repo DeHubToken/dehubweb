@@ -578,7 +578,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       ) : videos.length === 0 && hasActiveFilters ? (
         <FilteredEmptyState />
       ) : (
-        <>
+        <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
           <div className="space-y-3">
             {/* Skip first 3 videos if featured row is shown, then insert carousels at intervals */}
             {(videos.length >= 3 ? videos.slice(3) : videos).map((video, index) => {
@@ -613,7 +613,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
