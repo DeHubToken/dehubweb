@@ -1054,7 +1054,7 @@ function MessagesSettings() {
             <span>Media: 900 MB</span>
           </div>
           <p className="text-center text-xs text-zinc-600 mt-3">
-            Increase your stakeholdings or sign up to premium to unlock more storage
+            Increase your stakeholdings or upgrade to premium to unlock more storage
           </p>
         </div>
       </div>

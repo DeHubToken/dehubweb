@@ -191,7 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] Creating sign message...');
       const timestamp = Math.floor(Date.now() / 1000);
       const displayedDate = new Date(timestamp * 1000);
-      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      const message = `Welcome to DeHub!\n\nClick to log in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
       console.log('[Auth] Requesting signature...');
       const signature = await walletClient.signMessage({
@@ -236,7 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const errorMessage = error instanceof Error ? error.message : 'Connection failed';
       if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected')) {
-        throw new Error('Sign-in was cancelled');
+        throw new Error('Log in was cancelled');
       } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
         throw new Error('Please switch to Base network and try again');
       }
