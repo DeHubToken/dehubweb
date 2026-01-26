@@ -13,7 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import assistantAvatar from '@/assets/assistant-avatar.png';
 
 interface AuthGateProps {
-  /** Description shown below "Sign in required" */
+  /** Description shown below "Log in required" */
   description: string;
 }
 
@@ -45,10 +45,10 @@ export function AuthGate({ description }: AuthGateProps) {
         <>
           <img 
             src={assistantAvatar} 
-            alt="Sign in" 
+            alt="Log in" 
             className="w-20 h-20 object-contain mb-6"
           />
-          <h2 className="text-xl font-semibold text-white mb-2">Sign in required</h2>
+          <h2 className="text-xl font-semibold text-white mb-2">Log in required</h2>
           <p className="text-white/60 text-center mb-6 max-w-sm">
             {description}
           </p>

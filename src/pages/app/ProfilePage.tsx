@@ -662,7 +662,7 @@ export default function ProfilePage() {
         <p className="text-zinc-400 max-w-md">
           {isProfileError 
             ? "Unable to load profile. Please try again later."
-            : "This user doesn't exist or you need to sign in to view your profile."}
+            : "This user doesn't exist or you need to log in to view your profile."}
         </p>
       </div>
     );
