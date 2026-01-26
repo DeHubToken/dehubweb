@@ -118,9 +118,8 @@ export default function MessagesPage() {
               >
                 <div className="relative">
                   <Avatar className="w-12 h-12">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${conv.name}`} />
-                    <AvatarFallback className="bg-zinc-700 text-white">
-                      {conv.name.charAt(0)}
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium">
+                      {conv.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   {conv.isPinned && (

@@ -44,12 +44,14 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
             <Avatar className="w-7 h-7">
-              <AvatarImage
-                src={user.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username || user.wallet_address}`}
-                alt={`${user.display_name || user.username}'s avatar`}
-                className="object-cover"
-              />
-              <AvatarFallback className="bg-zinc-700 text-white text-xs">
+              {user.avatar_url && (
+                <AvatarImage
+                  src={user.avatar_url}
+                  alt={`${user.display_name || user.username}'s avatar`}
+                  className="object-cover"
+                />
+              )}
+              <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
                 {(user.display_name || user.username)?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>

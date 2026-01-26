@@ -28,20 +28,19 @@ export function LeaderboardUserAvatar({
 }: LeaderboardUserAvatarProps) {
   const [imageError, setImageError] = useState(false);
   
-  const dicebearUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${fallbackSeed}`;
-  
-  // Determine which URL to use
-  const imageUrl = imageError || !avatarUrl ? dicebearUrl : avatarUrl;
+  // Only use the avatarUrl if it exists and hasn't errored
+  const showImage = avatarUrl && !imageError;
 
   return (
-    // key forces remount when switching from failed CDN to Dicebear fallback
-    <Avatar key={imageUrl} className={cn(sizeClasses[size], className)}>
-      <AvatarImage 
-        src={imageUrl} 
-        alt={`${displayName}'s avatar`}
-        onError={() => setImageError(true)}
-      />
-      <AvatarFallback className="bg-zinc-700 text-white text-xs">
+    <Avatar key={avatarUrl || fallbackSeed} className={cn(sizeClasses[size], className)}>
+      {showImage && (
+        <AvatarImage 
+          src={avatarUrl} 
+          alt={`${displayName}'s avatar`}
+          onError={() => setImageError(true)}
+        />
+      )}
+      <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
         {displayName.charAt(0).toUpperCase()}
       </AvatarFallback>
     </Avatar>

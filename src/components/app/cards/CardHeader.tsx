@@ -63,10 +63,9 @@ export function CardHeader({
   const navigate = useNavigate();
   const badge = CONTENT_BADGES[contentType];
 
-  // Determine avatar source - if it's a URL use it, otherwise use dicebear
-  const avatarSrc = avatarSeed.startsWith('http') 
-    ? avatarSeed 
-    : `https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarSeed}`;
+  // Only use avatarSeed as image source if it's a real URL
+  const hasRealAvatar = avatarSeed.startsWith('http');
+  const avatarSrc = hasRealAvatar ? avatarSeed : undefined;
 
   const handleProfileClick = () => {
     // Prefer username-based navigation, fallback to ID
@@ -91,15 +90,15 @@ export function CardHeader({
           <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
             <div className="p-0.5 bg-zinc-900 rounded-full">
               <Avatar className="w-8 h-8">
-                <AvatarImage src={avatarSrc} />
-                <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
+                {avatarSrc && <AvatarImage src={avatarSrc} />}
+                <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
           </div>
         ) : (
           <Avatar className="w-8 h-8">
-            <AvatarImage src={avatarSrc} />
-            <AvatarFallback className="bg-zinc-700">{username[0]}</AvatarFallback>
+            {avatarSrc && <AvatarImage src={avatarSrc} />}
+            <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
         <div className="flex items-center gap-1">

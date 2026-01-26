@@ -87,7 +87,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
-    avatar: apiComment.writor?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${apiComment.address}`,
+    avatar: apiComment.writor?.avatarUrl || undefined, // No fallback - use initial
     text: apiComment.content,
     likes: 0,
     dislikes: 0,
@@ -485,7 +485,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     const tempComment: Comment = {
       id: tempId,
       username: user.username || 'you',
-      avatar: user.avatarImageUrl || user.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser`,
+      avatar: user.avatarImageUrl || user.avatarUrl || undefined,
       text: newComment,
       likes: 0,
       dislikes: 0,
@@ -689,8 +689,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
           <div className="flex gap-2 pb-4">
             <Avatar className="w-8 h-8 flex-shrink-0">
-              <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=currentuser"} />
-              <AvatarFallback className="bg-zinc-700">{user?.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
+              {(user?.avatarImageUrl || user?.avatarUrl) && (
+                <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl} />
+              )}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium">{user?.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
             </Avatar>
             <div className="flex-1 flex gap-2">
               {isRecording ? (
