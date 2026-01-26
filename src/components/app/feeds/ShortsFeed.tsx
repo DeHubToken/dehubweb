@@ -413,7 +413,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         ) : shorts.length === 0 && hasActiveFilters ? (
           <FilteredEmptyState />
         ) : (
-          <>
+          <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
             {/* Shorts Grid - TikTok Style */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
               {shorts.map((short, index) => (
@@ -472,7 +472,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 <p className="text-zinc-500 text-sm">No more shorts to load</p>
               )}
             </div>
-          </>
+          </div>
         )}
       </div>
 
