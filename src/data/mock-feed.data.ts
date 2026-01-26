@@ -32,7 +32,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-3',
     type: 'post',
-    author: { id: 'a3', name: 'Tech Insider', handle: '@techinsider', verified: true },
+    author: { id: 'a3', name: 'Tech Insider', handle: '@techinsider', verified: false },
     content: 'Breaking: New AI developments are reshaping how we think about creativity and automation. Thread 🧵',
     createdAt: '5h',
     stats: { comments: 156, reposts: 234, likes: 1024 },
@@ -40,7 +40,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-4',
     type: 'post',
-    author: { id: 'a4', name: 'Gaming Wizard', handle: '@gamingwiz', verified: true },
+    author: { id: 'a4', name: 'Gaming Wizard', handle: '@gamingwiz', verified: false },
     content: 'Just hit Diamond rank after 200 hours! The grind was worth it 🎮✨',
     createdAt: '1h',
     stats: { comments: 87, reposts: 34, likes: 567 },
@@ -48,7 +48,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-5',
     type: 'post',
-    author: { id: 'a5', name: 'Crypto Analyst', handle: '@cryptoanalyst', verified: true },
+    author: { id: 'a5', name: 'Crypto Analyst', handle: '@cryptoanalyst', verified: false },
     content: 'Market update: Interesting patterns forming in the charts. Stay vigilant 📊💎',
     createdAt: '4h',
     stats: { comments: 234, reposts: 89, likes: 1567 },
@@ -64,7 +64,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-7',
     type: 'post',
-    author: { id: 'a7', name: 'Music Producer', handle: '@beatmaker', verified: true },
+    author: { id: 'a7', name: 'Music Producer', handle: '@beatmaker', verified: false },
     content: 'New track dropping at midnight! 🎵 Been working on this one for months. 🔥',
     createdAt: '30m',
     stats: { comments: 312, reposts: 456, likes: 3421 },
@@ -88,7 +88,7 @@ export const MOCK_POSTS: TextPost[] = [
   {
     id: 'post-10',
     type: 'post',
-    author: { id: 'a10', name: 'Book Worm', handle: '@readingtime', verified: true },
+    author: { id: 'a10', name: 'Book Worm', handle: '@readingtime', verified: false },
     content: 'Just finished "Atomic Habits" - absolutely life changing! 📚 What should I read next?',
     createdAt: '7h',
     stats: { comments: 189, reposts: 78, likes: 1456 },

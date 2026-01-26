@@ -16,16 +16,16 @@ import { cn } from '@/lib/utils';
 
 // Mock users for demo - in production this would come from API
 const MOCK_USERS: DeHubUser[] = [
-  { id: '1', username: 'malik', displayName: 'Malik Jan', avatarImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', isVerified: true },
-  { id: '2', username: 'mikehales', displayName: 'Mike Hales', avatarImageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', isVerified: true },
-  { id: '3', username: 'indijay', displayName: 'Indi Jay', avatarImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100', isVerified: true },
-  { id: '4', username: 'bailey', displayName: 'Bailey Young', avatarImageUrl: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=100', isVerified: true },
+  { id: '1', username: 'malik', displayName: 'Malik Jan', avatarImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', isVerified: false },
+  { id: '2', username: 'mikehales', displayName: 'Mike Hales', avatarImageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', isVerified: false },
+  { id: '3', username: 'indijay', displayName: 'Indi Jay', avatarImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100', isVerified: false },
+  { id: '4', username: 'bailey', displayName: 'Bailey Young', avatarImageUrl: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=100', isVerified: false },
   { id: '5', username: 'cryptoqueen', displayName: 'Crypto Queen', avatarImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100', isVerified: false },
   { id: '6', username: 'web3wizard', displayName: 'Web3 Wizard', avatarImageUrl: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100', isVerified: false },
   { id: '7', username: 'nftcollector', displayName: 'NFT Collector', avatarImageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100', isVerified: false },
-  { id: '8', username: 'defidev', displayName: 'DeFi Dev', avatarImageUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100', isVerified: true },
+  { id: '8', username: 'defidev', displayName: 'DeFi Dev', avatarImageUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100', isVerified: false },
   { id: '9', username: 'tokenmaster', displayName: 'Token Master', avatarImageUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100', isVerified: false },
-  { id: '10', username: 'blockchainguru', displayName: 'Blockchain Guru', avatarImageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100', isVerified: true },
+  { id: '10', username: 'blockchainguru', displayName: 'Blockchain Guru', avatarImageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100', isVerified: false },
 ];
 
 export interface MentionUser {
