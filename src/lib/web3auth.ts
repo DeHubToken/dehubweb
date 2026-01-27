@@ -3,6 +3,9 @@
  * ============================================
  * Uses Web3Auth v10 Modal SDK with Smart Accounts.
  * External wallets use EOA directly, embedded wallets get smart accounts.
+ * 
+ * Note: Web3Auth v10 Modal SDK uses the built-in accountAbstractionConfig
+ * which is different from the older @web3auth/account-abstraction-provider package.
  */
 
 import { 
@@ -97,23 +100,25 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
       const pimlicoUrl = `https://api.pimlico.io/v2/8453/rpc?apikey=${pimlicoApiKey}`;
 
-      // Step 2: Create Web3Auth options
+      // Step 2: Create Web3Auth options using v10 built-in accountAbstractionConfig
       console.log("[Web3Auth] Step 2: Creating Web3Auth options...");
       const web3AuthOptions: Web3AuthOptions = {
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         
+        // Web3Auth v10 built-in Account Abstraction config for Safe Smart Accounts
         accountAbstractionConfig: {
           smartAccountType: "safe",
           chains: [
             {
-              chainId: "0x2105",
+              chainId: "0x2105", // Base Mainnet
               bundlerConfig: { url: pimlicoUrl },
               paymasterConfig: { url: pimlicoUrl },
             },
           ],
         },
         useAAWithExternalWallet: false,
+        
         // UI config for modal appearance
         uiConfig: {
           appName: "DeHub",
@@ -145,7 +150,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] Options created:");
       console.log("[Web3Auth]   - network:", WEB3AUTH_NETWORK.SAPPHIRE_MAINNET);
       console.log("[Web3Auth]   - chainId:", chainConfig.chainId);
+      console.log("[Web3Auth]   - smartAccountType: safe");
       console.log("[Web3Auth]   - useAAWithExternalWallet:", false);
+      console.log("[Web3Auth]   - bundlerUrl:", pimlicoUrl.substring(0, 40) + "...");
 
       // Step 3: Create instance
       console.log("[Web3Auth] Step 3: Creating Web3Auth instance...");
