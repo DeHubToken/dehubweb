@@ -87,15 +87,15 @@ export default function CreatorsPage() {
               top: `${Math.random() * 100}%`,
               width: `${Math.random() * 4 + 1}px`,
               height: `${Math.random() * 4 + 1}px`,
-              backgroundColor: '#000',
-              opacity: 0.15 + Math.random() * 0.1,
+              backgroundColor: `rgb(${30 + Math.random() * 20}, ${30 + Math.random() * 20}, ${30 + Math.random() * 20})`,
+              opacity: 0.3 + Math.random() * 0.2,
             }}
           />
         ))}
         <div 
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.5) 100%)',
+            background: 'radial-gradient(ellipse at center, rgba(20,20,20,0.1) 0%, rgba(15,15,15,0.2) 70%, rgba(10,10,10,0.3) 100%)',
           }}
         />
       </div>
