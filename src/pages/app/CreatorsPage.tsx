@@ -191,13 +191,12 @@ export default function CreatorsPage() {
             {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-zinc-300">
-                Email to Contact <span className="text-red-400">*</span>
+                Email or Telegram ID to Contact <span className="text-red-400">*</span>
               </Label>
               <Input
                 id="email"
                 name="email"
-                type="email"
-                placeholder="you@example.com"
+                placeholder="you@example.com or @username"
                 value={formData.email}
                 onChange={handleChange}
                 required
