@@ -1,11 +1,11 @@
 /**
  * Web3Auth Configuration with Smart Accounts
  * ============================================
- * Uses Web3Auth v10 Modal SDK with Smart Accounts.
+ * Uses Web3Auth v10 Modal SDK with built-in Account Abstraction.
  * External wallets use EOA directly, embedded wallets get smart accounts.
  *
  * Note: Web3Auth v10 Modal SDK uses the built-in accountAbstractionConfig
- * which is different from the older @web3auth/account-abstraction-provider package.
+ * which handles Safe Smart Account creation with Pimlico paymaster.
  */
 
 import { Web3Auth, type Web3AuthOptions, WALLET_CONNECTORS, CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/modal";
@@ -180,7 +180,6 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             const currentStatus = web3authInstance?.status;
 
             if (pollCount % 10 === 0) {
-              // Log every 1 second
               console.log("[Web3Auth]   - Poll #" + pollCount + ", status:", currentStatus);
             }
 
