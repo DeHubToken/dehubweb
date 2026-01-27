@@ -6,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { UsernameRequiredModal } from "@/components/app/modals";
 import Index from "./pages/Index";
 import DeleteAccount from "./pages/DeleteAccount";
+import CreatorsPage from "./pages/app/CreatorsPage";
 import NotFound from "./pages/NotFound";
 
 // App routes
@@ -36,6 +37,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
+            <Route path="/creators" element={<CreatorsPage />} />
             
             {/* App routes with shared layout */}
             <Route path="/app" element={<AppLayout />}>
