@@ -109,7 +109,7 @@ export default function CreatorsPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-black/20 backdrop-blur-[24px] saturate-[180%] border border-white/10 rounded-2xl p-6 space-y-5">
+          <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
             {/* X Username */}
             <div className="space-y-2">
               <Label htmlFor="x_username" className="text-zinc-300">X (Twitter) Username</Label>
@@ -241,7 +241,7 @@ export default function CreatorsPage() {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 bg-black/20 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-black/30 font-semibold rounded-xl"
+            className="w-full h-12 bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-black/60 font-semibold rounded-xl"
           >
             {isSubmitting ? (
               <>
