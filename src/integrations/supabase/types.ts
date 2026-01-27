@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      creator_applications: {
+        Row: {
+          created_at: string
+          email: string
+          expected_compensation: string
+          id: string
+          instagram_username: string | null
+          other_socials: string | null
+          total_follower_reach: string
+          twitch_username: string | null
+          x_username: string | null
+          youtube_username: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expected_compensation: string
+          id?: string
+          instagram_username?: string | null
+          other_socials?: string | null
+          total_follower_reach: string
+          twitch_username?: string | null
+          x_username?: string | null
+          youtube_username?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expected_compensation?: string
+          id?: string
+          instagram_username?: string | null
+          other_socials?: string | null
+          total_follower_reach?: string
+          twitch_username?: string | null
+          x_username?: string | null
+          youtube_username?: string | null
+        }
+        Relationships: []
+      }
       leaderboard_cache: {
         Row: {
           data: Json
