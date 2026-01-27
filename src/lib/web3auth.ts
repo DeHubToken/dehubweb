@@ -108,7 +108,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         //     },
         //   ],
         // },
-        useAAWithExternalWallet: false,
+        // useAAWithExternalWallet: false,
       };
 
       console.log("[Web3Auth] Options created:");
