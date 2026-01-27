@@ -98,16 +98,16 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
 
         // Web3Auth v10 built-in Account Abstraction config for Safe Smart Accounts
-        accountAbstractionConfig: {
-          smartAccountType: "safe",
-          chains: [
-            {
-              chainId: "0x2105", // Base Mainnet
-              bundlerConfig: { url: pimlicoUrl },
-              paymasterConfig: { url: pimlicoUrl },
-            },
-          ],
-        },
+        // accountAbstractionConfig: {
+        //   smartAccountType: "safe",
+        //   chains: [
+        //     {
+        //       chainId: "0x2105", // Base Mainnet
+        //       bundlerConfig: { url: pimlicoUrl },
+        //       paymasterConfig: { url: pimlicoUrl },
+        //     },
+        //   ],
+        // },
         useAAWithExternalWallet: false,
       };
 
