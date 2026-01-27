@@ -75,7 +75,30 @@ export default function CreatorsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Subtle pixelated gradient overlay */}
+      <div className="absolute inset-0 pointer-events-none">
+        {Array.from({ length: 80 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              width: `${Math.random() * 4 + 1}px`,
+              height: `${Math.random() * 4 + 1}px`,
+              backgroundColor: '#000',
+              opacity: 0.15 + Math.random() * 0.1,
+            }}
+          />
+        ))}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.5) 100%)',
+          }}
+        />
+      </div>
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
