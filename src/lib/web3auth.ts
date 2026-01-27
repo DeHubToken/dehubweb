@@ -1,11 +1,11 @@
 /**
  * Web3Auth Configuration with Smart Accounts
  * ============================================
- * Uses Web3Auth v10 Modal SDK with built-in Account Abstraction.
+ * Uses Web3Auth v10 Modal SDK with Smart Accounts.
  * External wallets use EOA directly, embedded wallets get smart accounts.
  *
  * Note: Web3Auth v10 Modal SDK uses the built-in accountAbstractionConfig
- * which handles Safe Smart Account creation with Pimlico paymaster.
+ * which is different from the older @web3auth/account-abstraction-provider package.
  */
 
 import { Web3Auth, type Web3AuthOptions, WALLET_CONNECTORS, CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/modal";
@@ -109,34 +109,6 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           ],
         },
         useAAWithExternalWallet: false,
-
-        // UI config for modal appearance
-        uiConfig: {
-          appName: "DeHub",
-          mode: "dark",
-          theme: {
-            primary: "#ffffff",
-            onPrimary: "#000000",
-          },
-        },
-        modalConfig: {
-          connectors: {
-            [WALLET_CONNECTORS.AUTH]: {
-              label: "auth",
-              showOnModal: true,
-              loginMethods: {
-                email_passwordless: { name: "Email", showOnModal: true, authConnectionId: "dehub" },
-                google: { name: "Google", showOnModal: true, authConnectionId: "dehub-mainnet" },
-                twitter: { name: "Twitter", showOnModal: true },
-                discord: { name: "Discord", showOnModal: true },
-                sms_passwordless: {
-                  name: "sms passwordless login",
-                  authConnectionId: "dehub-sms",
-                },
-              },
-            },
-          },
-        },
       };
 
       console.log("[Web3Auth] Options created:");
@@ -180,6 +152,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             const currentStatus = web3authInstance?.status;
 
             if (pollCount % 10 === 0) {
+              // Log every 1 second
               console.log("[Web3Auth]   - Poll #" + pollCount + ", status:", currentStatus);
             }
 
