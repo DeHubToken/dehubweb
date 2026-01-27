@@ -78,17 +78,14 @@ export default function CreatorsPage() {
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Tilted background image */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          transform: 'rotate(-3deg) scale(1.1)',
-          transformOrigin: 'center center',
-        }}
-      >
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
         <img 
           src={creatorsBg} 
           alt="" 
-          className="w-full h-full object-cover opacity-60"
+          className="h-[120%] w-auto object-cover opacity-60 lg:rotate-[-8deg]"
+          style={{
+            aspectRatio: '9/16',
+          }}
         />
       </div>
       {/* Dark overlay for readability */}
