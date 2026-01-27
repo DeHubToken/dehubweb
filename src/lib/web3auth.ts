@@ -24,6 +24,51 @@ let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let cachedClientId: string | null = null;
 
+/**
+ * Some privacy browsers/adblockers block Segment (api.segment.io).
+ * Web3Auth uses Segment for telemetry; in certain environments the SDK can appear to hang
+ * on "verifying" while those requests are repeatedly retried.
+ *
+ * This patch no-ops ONLY Segment calls and leaves all other fetch calls untouched.
+ */
+function patchSegmentFetchOnce() {
+  const g = globalThis as unknown as {
+    fetch?: typeof fetch;
+    __dehub_segment_fetch_patched?: boolean;
+  };
+
+  if (g.__dehub_segment_fetch_patched) return;
+  if (typeof g.fetch !== "function") return;
+
+  const originalFetch = g.fetch.bind(globalThis);
+
+  g.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    try {
+      const url =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.toString()
+            : input.url;
+
+      if (url.includes("api.segment.io")) {
+        // Return a successful no-op response.
+        return new Response("", {
+          status: 200,
+          headers: { "content-type": "text/plain" },
+        });
+      }
+    } catch {
+      // If URL parsing fails for any reason, fall through.
+    }
+
+    return originalFetch(input as any, init);
+  }) as typeof fetch;
+
+  g.__dehub_segment_fetch_patched = true;
+  console.log("[Web3Auth] Patched fetch to no-op api.segment.io telemetry calls");
+}
+
 async function getWeb3AuthClientId(): Promise<string> {
   if (cachedClientId) return cachedClientId;
   console.log("[Web3Auth] Fetching client ID from edge function...");
@@ -61,6 +106,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
   initPromise = (async () => {
     try {
+      // Apply environment hardening before SDK bootstraps its internal telemetry.
+      patchSegmentFetchOnce();
+
       // Fetch client ID
       console.log("[Web3Auth] Fetching configuration...");
       const clientId = await getWeb3AuthClientId();
@@ -71,6 +119,10 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       web3authInstance = new Web3Auth({
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        // Redirect UX mode is more reliable than popups/iframes in some privacy browsers.
+        uiConfig: {
+          uxMode: "redirect",
+        },
       });
       console.log("[Web3Auth] ✓ Instance created");
 
