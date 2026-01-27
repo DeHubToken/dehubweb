@@ -1,7 +1,8 @@
 /**
- * Web3Auth Configuration - Simplified Setup
- * ==========================================
- * Basic Web3Auth Modal SDK setup for Base Mainnet.
+ * Web3Auth Configuration - Redirect Mode Setup
+ * =============================================
+ * Web3Auth Modal SDK for Base Mainnet using redirect mode
+ * to avoid Cross-Origin-Opener-Policy (COOP) issues.
  */
 
 import { Web3Auth, CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/modal";
@@ -66,13 +67,16 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       const clientId = await getWeb3AuthClientId();
       console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
 
-      // Create Web3Auth instance with minimal config
-      console.log("[Web3Auth] Creating Web3Auth instance...");
+      // Create Web3Auth instance with redirect mode via uiConfig to avoid COOP issues
+      console.log("[Web3Auth] Creating Web3Auth instance with redirect mode...");
       web3authInstance = new Web3Auth({
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-      });
-      console.log("[Web3Auth] ✓ Instance created");
+        uiConfig: {
+          uxMode: "redirect",
+        },
+      } as any); // Type assertion needed as uxMode in uiConfig is not fully typed
+      console.log("[Web3Auth] ✓ Instance created with redirect mode");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
