@@ -126,7 +126,7 @@ export default function CreatorsPage() {
               <Input
                 id="twitch_username"
                 name="twitch_username"
-                placeholder="username"
+                placeholder="@username"
                 value={formData.twitch_username}
                 onChange={handleChange}
                 className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
@@ -165,7 +165,7 @@ export default function CreatorsPage() {
               <Textarea
                 id="other_socials"
                 name="other_socials"
-                placeholder="Discord, etc."
+                placeholder=""
                 value={formData.other_socials}
                 onChange={handleChange}
                 className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500 min-h-[80px]"
