@@ -7,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ArrowLeft, Send, Loader2 } from 'lucide-react';
-import creatorsBg from '@/assets/creators-bg.png';
 
 export default function CreatorsPage() {
   const navigate = useNavigate();
@@ -77,21 +76,29 @@ export default function CreatorsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Tilted background image */}
+      {/* Subtle pixelated gradient overlay */}
       <div className="absolute inset-0 pointer-events-none">
-        <img 
-          src={creatorsBg} 
-          alt="" 
-          className="w-full h-full object-cover opacity-60"
+        {Array.from({ length: 80 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              width: `${Math.random() * 4 + 1}px`,
+              height: `${Math.random() * 4 + 1}px`,
+              backgroundColor: `rgb(${30 + Math.random() * 20}, ${30 + Math.random() * 20}, ${30 + Math.random() * 20})`,
+              opacity: 0.3 + Math.random() * 0.2,
+            }}
+          />
+        ))}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(20,20,20,0.1) 0%, rgba(15,15,15,0.2) 70%, rgba(10,10,10,0.3) 100%)',
+          }}
         />
       </div>
-      {/* Dark overlay for readability */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.8) 100%)',
-        }}
-      />
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
