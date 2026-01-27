@@ -16,6 +16,7 @@ export default function CreatorsPage() {
     youtube_username: '',
     twitch_username: '',
     instagram_username: '',
+    tiktok_username: '',
     total_follower_reach: '',
     other_socials: '',
     email: '',
@@ -59,6 +60,7 @@ export default function CreatorsPage() {
         youtube_username: '',
         twitch_username: '',
         instagram_username: '',
+        tiktok_username: '',
         total_follower_reach: '',
         other_socials: '',
         email: '',
@@ -73,22 +75,20 @@ export default function CreatorsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex flex-col items-center mb-8">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/')}
-            className="rounded-full hover:bg-zinc-800"
+            className="rounded-full hover:bg-zinc-800 absolute left-4 top-8"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Creator Application</h1>
-            <p className="text-zinc-400 text-sm">Join the DeHub creator network</p>
-          </div>
+          <h1 className="text-2xl font-bold text-center">Creator Application</h1>
+          <p className="text-zinc-400 text-sm text-center">Join the DeHub creator network</p>
         </div>
 
         {/* Form */}
@@ -162,13 +162,26 @@ export default function CreatorsPage() {
               />
             </div>
 
+            {/* TikTok Username */}
+            <div className="space-y-2">
+              <Label htmlFor="tiktok_username" className="text-zinc-300">TikTok Username</Label>
+              <Input
+                id="tiktok_username"
+                name="tiktok_username"
+                placeholder="@username"
+                value={formData.tiktok_username}
+                onChange={handleChange}
+                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
+              />
+            </div>
+
             {/* Other Socials */}
             <div className="space-y-2">
               <Label htmlFor="other_socials" className="text-zinc-300">Other Usernames/Socials</Label>
               <Textarea
                 id="other_socials"
                 name="other_socials"
-                placeholder="TikTok, Discord, etc."
+                placeholder="Discord, etc."
                 value={formData.other_socials}
                 onChange={handleChange}
                 className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500 min-h-[80px]"
