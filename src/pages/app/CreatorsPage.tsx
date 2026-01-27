@@ -235,7 +235,7 @@ export default function CreatorsPage() {
               <Input
                 id="expected_compensation"
                 name="expected_compensation"
-                placeholder="e.g., $500/month or revenue share"
+                placeholder="e.g., $500/month"
                 value={formData.expected_compensation}
                 onChange={handleChange}
                 required
