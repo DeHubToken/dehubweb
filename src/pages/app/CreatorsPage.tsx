@@ -146,22 +146,6 @@ export default function CreatorsPage() {
               />
             </div>
 
-            {/* Total Follower Reach */}
-            <div className="space-y-2">
-              <Label htmlFor="total_follower_reach" className="text-zinc-300">
-                Total Follower Reach <span className="text-red-400">*</span>
-              </Label>
-              <Input
-                id="total_follower_reach"
-                name="total_follower_reach"
-                placeholder="e.g., 500K across all platforms"
-                value={formData.total_follower_reach}
-                onChange={handleChange}
-                required
-                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
-              />
-            </div>
-
             {/* TikTok Username */}
             <div className="space-y-2">
               <Label htmlFor="tiktok_username" className="text-zinc-300">TikTok Username</Label>
@@ -185,6 +169,22 @@ export default function CreatorsPage() {
                 value={formData.other_socials}
                 onChange={handleChange}
                 className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500 min-h-[80px]"
+              />
+            </div>
+
+            {/* Total Follower Reach */}
+            <div className="space-y-2">
+              <Label htmlFor="total_follower_reach" className="text-zinc-300">
+                Total Follower Reach <span className="text-red-400">*</span>
+              </Label>
+              <Input
+                id="total_follower_reach"
+                name="total_follower_reach"
+                placeholder="e.g., 500K across all platforms"
+                value={formData.total_follower_reach}
+                onChange={handleChange}
+                required
+                className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500"
               />
             </div>
 
