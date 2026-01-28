@@ -14,7 +14,7 @@ import {
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
-import { initWeb3Auth, getWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
+import { initWeb3Auth, disconnectWeb3Auth, hasRedirectResult } from '@/lib/web3auth';
 import { deploySmartAccount } from '@/lib/smart-account';
 import type { Web3Auth } from '@web3auth/modal';
 import { createWalletClient, custom } from 'viem';
@@ -66,14 +66,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
-  // Check for existing session on mount and pre-initialize Web3Auth
+  // Check for existing session on mount and handle redirect callback
   useEffect(() => {
     const init = async () => {
       try {
+        const hasRedirect = hasRedirectResult();
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
 
-        if (token && savedWallet && !isTokenExpired()) {
+        // If we have a redirect result, we need to complete the auth flow
+        if (hasRedirect) {
+          console.log('[Auth] Detected redirect result, completing auth flow...');
+          setIsConnecting(true);
+          try {
+            const web3authInstance = await initWeb3Auth();
+            setWeb3auth(web3authInstance);
+            
+            if (web3authInstance.connected && web3authInstance.provider) {
+              console.log('[Auth] Web3Auth connected after redirect, completing DeHub auth...');
+              // Complete the DeHub authentication
+              await completeDeHubAuth(web3authInstance);
+            } else {
+              console.log('[Auth] Redirect detected but not connected');
+            }
+          } catch (error) {
+            console.error('[Auth] Redirect auth completion failed:', error);
+          } finally {
+            setIsConnecting(false);
+          }
+        } else if (token && savedWallet && !isTokenExpired()) {
+          // Normal session restoration
           try {
             console.log('Restoring session, fetching account info...');
             const userData = await getAccountInfo(savedWallet);
@@ -102,14 +124,66 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       }
 
-      // Pre-initialize Web3Auth in background
-      initWeb3Auth()
-        .then((instance) => setWeb3auth(instance))
-        .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+      // Pre-initialize Web3Auth in background (if not already done by redirect handling)
+      if (!hasRedirectResult()) {
+        initWeb3Auth()
+          .then((instance) => setWeb3auth(instance))
+          .catch((err) => console.warn('Web3Auth pre-init failed:', err));
+      }
     };
 
     init();
   }, []);
+
+  // Helper function to complete DeHub authentication after Web3Auth connects
+  const completeDeHubAuth = async (web3authInstance: Web3Auth) => {
+    if (!web3authInstance.provider) {
+      throw new Error('No provider available');
+    }
+
+    const walletClient = createWalletClient({
+      chain: base,
+      transport: custom(web3authInstance.provider),
+    });
+    
+    const [address] = await walletClient.getAddresses();
+    const normalizedAddress = address.toLowerCase();
+    
+    console.log('[Auth] Wallet address:', normalizedAddress);
+
+    // Create sign message for DeHub auth
+    const timestamp = Math.floor(Date.now() / 1000);
+    const displayedDate = new Date(timestamp * 1000);
+    const message = `Welcome to DeHub!\n\nClick to log in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+    const signature = await walletClient.signMessage({
+      account: address,
+      message,
+    });
+
+    const BASE_CHAIN_ID = 8453;
+
+    const authResponse = await authenticateWallet(
+      normalizedAddress,
+      signature,
+      timestamp,
+      BASE_CHAIN_ID
+    );
+
+    const normalizedUser = normalizeUser(authResponse.user, normalizedAddress);
+
+    localStorage.setItem('dehub_wallet', normalizedAddress);
+    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+
+    setWalletAddress(normalizedAddress);
+    setUser(normalizedUser);
+
+    if (!normalizedUser.username) {
+      setRequiresUsername(true);
+    }
+    
+    console.log('[Auth] ✓ DeHub authentication complete');
+  };
 
   const connect = useCallback(async () => {
     console.log('[Auth] connect() called');
@@ -130,12 +204,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('[Auth] Web3Auth already ready, status:', web3authInstance.status);
       }
 
+      // In redirect mode, connect() will redirect to the auth provider
+      // The user will be redirected back and the auth will complete in the useEffect
       console.log('[Auth] Calling web3authInstance.connect()...');
       console.log('[Auth] Instance status before connect:', web3authInstance.status);
-      console.log('[Auth] Instance connected before connect:', web3authInstance.connected);
       
       const web3authProvider = await web3authInstance.connect();
       
+      // If we get here (popup mode or already connected), complete auth
       console.log('[Auth] connect() returned');
       console.log('[Auth] Provider:', web3authProvider ? 'exists' : 'null');
       
@@ -144,95 +220,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] Web3Auth connected successfully');
-      console.log('[Auth] Instance status after connect:', web3authInstance.status);
-
-      // Get the wallet address - this will be the smart account address for embedded wallets
-      // or the EOA for external wallets (handled automatically by Web3Auth)
-      console.log('[Auth] Creating wallet client...');
-      const walletClient = createWalletClient({
-        chain: base,
-        transport: custom(web3authProvider),
-      });
-      
-      console.log('[Auth] Getting addresses...');
-      const [address] = await walletClient.getAddresses();
-      const normalizedAddress = address.toLowerCase();
-      
-      console.log('[Auth] Wallet address:', normalizedAddress);
 
       // For embedded wallets (social/email login), ensure the smart account is deployed
-      // We detect embedded wallets by checking if userInfo is available (external wallets don't have it)
       let isEmbedded = false;
       try {
-        console.log('[Auth] Checking if embedded wallet (getUserInfo)...');
         const userInfo = await web3authInstance.getUserInfo();
-        console.log('[Auth] UserInfo:', userInfo);
         isEmbedded = !!userInfo?.email || !!userInfo?.name;
-      } catch (e) {
-        // getUserInfo throws for external wallets
-        console.log('[Auth] getUserInfo threw (external wallet):', e);
+      } catch {
         isEmbedded = false;
       }
-
-      console.log('[Auth] Is embedded wallet:', isEmbedded);
 
       if (isEmbedded) {
         console.log('[Auth] Embedded wallet detected, ensuring smart account is deployed...');
         try {
+          const walletClient = createWalletClient({
+            chain: base,
+            transport: custom(web3authProvider),
+          });
+          const [address] = await walletClient.getAddresses();
           await deploySmartAccount(address);
           console.log('[Auth] Smart account ready');
         } catch (deployError) {
           console.error('[Auth] Smart account deployment failed:', deployError);
-          // Continue with auth - the account might deploy on first real transaction
         }
       }
 
-      // Create sign message for DeHub auth
-      console.log('[Auth] Creating sign message...');
-      const timestamp = Math.floor(Date.now() / 1000);
-      const displayedDate = new Date(timestamp * 1000);
-      const message = `Welcome to DeHub!\n\nClick to log in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-      console.log('[Auth] Requesting signature...');
-      const signature = await walletClient.signMessage({
-        account: address,
-        message,
-      });
-      console.log('[Auth] Signature obtained');
-
-      const BASE_CHAIN_ID = 8453;
-
-      // Authenticate with DeHub API
-      console.log('[Auth] Authenticating with DeHub API...');
-      const authResponse = await authenticateWallet(
-        normalizedAddress,
-        signature,
-        timestamp,
-        BASE_CHAIN_ID
-      );
-      console.log('[Auth] DeHub API response received');
-
-      const normalizedUser = normalizeUser(authResponse.user, normalizedAddress);
-      console.log('[Auth] User normalized:', normalizedUser.address);
-
-      localStorage.setItem('dehub_wallet', normalizedAddress);
-      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-
-      setWalletAddress(normalizedAddress);
-      setUser(normalizedUser);
-
-      if (!normalizedUser.username) {
-        console.log('[Auth] User has no username, setting requiresUsername');
-        setRequiresUsername(true);
-      }
+      // Complete DeHub authentication
+      await completeDeHubAuth(web3authInstance);
       
       console.log('[Auth] ✓ Connection complete!');
     } catch (error: unknown) {
       console.error('[Auth] Connection failed:', error);
-      console.error('[Auth] Error type:', typeof error);
-      console.error('[Auth] Error name:', error instanceof Error ? error.name : 'unknown');
-      console.error('[Auth] Error message:', error instanceof Error ? error.message : String(error));
-      console.error('[Auth] Error stack:', error instanceof Error ? error.stack : 'no stack');
       
       const errorMessage = error instanceof Error ? error.message : 'Connection failed';
       if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected')) {

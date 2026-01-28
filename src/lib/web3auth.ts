@@ -3,6 +3,9 @@
  * =============================================
  * Web3Auth Modal SDK for Base Mainnet using redirect mode
  * to avoid Cross-Origin-Opener-Policy (COOP) issues.
+ * 
+ * After redirect login, Web3Auth automatically processes the 
+ * callback during init() and sets connected=true if successful.
  */
 
 import { Web3Auth, CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/modal";
@@ -24,6 +27,16 @@ let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let cachedClientId: string | null = null;
+
+/**
+ * Check if URL contains Web3Auth redirect parameters
+ */
+export function hasRedirectResult(): boolean {
+  const hash = window.location.hash;
+  const search = window.location.search;
+  // Web3Auth uses b64Params in hash or query for redirect results
+  return hash.includes('b64Params') || search.includes('b64Params');
+}
 
 async function getWeb3AuthClientId(): Promise<string> {
   if (cachedClientId) return cachedClientId;
@@ -67,7 +80,11 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       const clientId = await getWeb3AuthClientId();
       console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
 
+      const hasRedirect = hasRedirectResult();
+      console.log("[Web3Auth] Has redirect result in URL:", hasRedirect);
+
       // Create Web3Auth instance with REDIRECT mode to avoid COOP issues
+      // Note: Web3Auth Modal v10+ handles chain config internally
       console.log("[Web3Auth] Creating Web3Auth instance with redirect mode...");
       web3authInstance = new Web3Auth({
         clientId,
@@ -78,33 +95,29 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       });
       console.log("[Web3Auth] ✓ Instance created");
 
-      // Initialize
+      // Initialize - this will automatically process redirect result if present
       console.log("[Web3Auth] Calling init()...");
-      await web3authInstance.init();
+      
+      // Use a longer timeout for redirect handling
+      const initTimeout = hasRedirect ? 30000 : 15000;
+      
+      const initWithTimeout = Promise.race([
+        web3authInstance.init(),
+        new Promise<never>((_, reject) => 
+          setTimeout(() => reject(new Error("Web3Auth init timeout")), initTimeout)
+        )
+      ]);
+      
+      await initWithTimeout;
       console.log("[Web3Auth] ✓ init() completed, status:", web3authInstance.status);
+      console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      // Wait for ready state if needed
-      if (web3authInstance.status !== "ready" && web3authInstance.status !== "connected") {
-        console.log("[Web3Auth] Waiting for ready state...");
-        await new Promise<void>((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            reject(new Error("Web3Auth init timeout"));
-          }, 10000);
-
-          const checkReady = () => {
-            const status = web3authInstance?.status;
-            if (status === "ready" || status === "connected") {
-              clearTimeout(timeout);
-              resolve();
-            } else if (status === "errored") {
-              clearTimeout(timeout);
-              reject(new Error("Web3Auth errored"));
-            } else {
-              setTimeout(checkReady, 100);
-            }
-          };
-          checkReady();
-        });
+      // If we came from a redirect and are now connected, clean up the URL
+      if (hasRedirect && web3authInstance.connected) {
+        console.log("[Web3Auth] ✓ Redirect login successful, cleaning URL...");
+        // Clean up URL without triggering navigation
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
       }
 
       console.log("[Web3Auth] ✓ INITIALIZATION COMPLETE, status:", web3authInstance.status);
