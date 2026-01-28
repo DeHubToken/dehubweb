@@ -39,6 +39,7 @@ export interface UnifiedFeedItem {
   name: string;
   description?: string;
   imageUrl: string;
+  imageUrls?: string[];  // Array of image paths for multi-image posts
   videoUrl?: string;
   minter: string;
   owner?: string;
@@ -71,7 +72,6 @@ export interface UnifiedFeedItem {
     alreadySubscribed?: boolean;
   }>;
   isLiked?: boolean;
-  isDisliked?: boolean;
   isSaved?: boolean;
   createdAt: string;
   updatedAt?: string;
@@ -215,7 +215,6 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
-    isDisliked: item.isDisliked ?? false,
     likeCount: item.totalVotes?.for || 0,
     dislikeCount: item.totalVotes?.against || 0,
     commentCount: item.commentCount || 0,
@@ -228,13 +227,36 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
 }
 
 /**
+ * Build multi-image URLs: cdn/feed-images/{filename}
+ * API returns array like ["feed-images/abc.jpg", "feed-images/def.png"]
+ * We extract filename and build: https://dehubcdn.../feed-images/{filename}
+ */
+function buildImageUrls(apiImageUrls: string[] | undefined): string[] | undefined {
+  if (!apiImageUrls || apiImageUrls.length === 0) return undefined;
+  
+  return apiImageUrls.map((imgUrl) => {
+    if (imgUrl.startsWith('http')) return imgUrl;
+    const filename = imgUrl.split('/').pop() || '';
+    if (filename) {
+      return `${DEHUB_CDN_BASE}feed-images/${filename}`;
+    }
+    return imgUrl;
+  });
+}
+
+/**
  * Map unified feed item to ImagePost
  */
 export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
-  // Build canonical URLs: cdn/images/{tokenId}.{ext} and cdn/avatars/{address}.{ext}
-  const image = buildImageUrl(item.tokenId, item.imageUrl);
+  // Build multi-image URLs if available
+  const imageUrls = buildImageUrls(item.imageUrls);
+  
+  // Primary image: first from imageUrls array, or fallback to single imageUrl
+  const image = imageUrls?.[0] || buildImageUrl(item.tokenId, item.imageUrl);
+  
+  // Build avatar URL
   const avatar = item.minterAvatarUrl 
     ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
     : 'user';
@@ -246,7 +268,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     verified: false,
     avatar,
     image,
-    imageUrls: undefined, // Single image from unified feed
+    imageUrls,
     title: item.name,
     description: item.description,
     likes: item.totalVotes?.for || 0,
@@ -257,7 +279,6 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
-    isDisliked: item.isDisliked ?? false,
   };
 }
 

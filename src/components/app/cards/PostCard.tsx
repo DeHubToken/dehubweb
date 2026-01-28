@@ -65,6 +65,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         onComment={() => setShowComments(true)}
         likeCount={post.stats.likes}
         commentCount={post.stats.comments}
+        hideDislike
       />
 
       {/* Comments Sheet */}
