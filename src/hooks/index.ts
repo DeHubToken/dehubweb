@@ -13,6 +13,7 @@
 export { useAudioAnalyser } from './use-audio-analyser';
 export { useDebouncedValue } from './use-debounced-value';
 export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
+export { useUnifiedFeed, mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem, type UnifiedFeedParams } from './use-unified-feed';
 export { useDeHubProfile, useDeHubUserContent, separateUserContent, mapUserToProfile, type ProfileData } from './use-dehub-profile';
 export { 
   useDeHubSearch, 
