@@ -1,11 +1,8 @@
 /**
- * Web3Auth Configuration - Redirect Mode Setup
- * =============================================
- * Web3Auth Modal SDK for Base Mainnet using redirect mode
- * to avoid Cross-Origin-Opener-Policy (COOP) issues.
- * 
- * After redirect login, Web3Auth automatically processes the 
- * callback during init() and sets connected=true if successful.
+ * Web3Auth Configuration with Account Abstraction
+ * =================================================
+ * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico-powered
+ * Account Abstraction for gasless transactions.
  */
 
 import { Web3Auth, CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/modal";
@@ -14,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 // Chain configuration for Base Mainnet
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x2105",
+  chainId: "0x2105", // 8453 in hex
   rpcTarget: "https://mainnet.base.org",
   displayName: "Base Mainnet",
   blockExplorerUrl: "https://basescan.org",
@@ -27,9 +24,10 @@ let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let cachedClientId: string | null = null;
+let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
 
 /**
- * Check if URL contains Web3Auth redirect parameters (for potential future use)
+ * Check if URL contains Web3Auth redirect parameters
  */
 export function hasRedirectResult(): boolean {
   const hash = window.location.hash;
@@ -49,8 +47,20 @@ async function getWeb3AuthClientId(): Promise<string> {
   throw new Error("Web3Auth client ID not configured");
 }
 
+async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
+  if (cachedPimlicoConfig) return cachedPimlicoConfig;
+  console.log("[Web3Auth] Fetching Pimlico config from edge function...");
+  const { data, error } = await supabase.functions.invoke("get-pimlico-config");
+  console.log("[Web3Auth] get-pimlico-config response:", { data, error });
+  if (!error && data?.bundlerUrl && data?.paymasterUrl) {
+    cachedPimlicoConfig = data;
+    return cachedPimlicoConfig;
+  }
+  throw new Error("Pimlico API key not configured");
+}
+
 /**
- * Initialize Web3Auth - call this early in app lifecycle
+ * Initialize Web3Auth with Account Abstraction via Pimlico
  */
 export async function initWeb3Auth(): Promise<Web3Auth> {
   console.log("[Web3Auth] initWeb3Auth() called");
@@ -74,20 +84,41 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
   initPromise = (async () => {
     try {
-      // Fetch client ID
-      console.log("[Web3Auth] Fetching configuration...");
-      const clientId = await getWeb3AuthClientId();
+      // Fetch configurations in parallel
+      console.log("[Web3Auth] Fetching configurations...");
+      const [clientId, pimlicoConfig] = await Promise.all([
+        getWeb3AuthClientId(),
+        getPimlicoConfig(),
+      ]);
       console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
+      console.log("[Web3Auth] ✓ Pimlico config fetched");
 
-      // Create Web3Auth instance
-      // Note: Web3Auth Modal v10+ handles chain config via dashboard
-      // uxMode is no longer a uiConfig option in v10 - use dashboard settings
-      console.log("[Web3Auth] Creating Web3Auth instance...");
+      // Create Web3Auth instance with v10 accountAbstractionConfig
+      // Uses Safe Smart Account with Pimlico bundler and paymaster
+      console.log("[Web3Auth] Creating Web3Auth instance with AA config...");
       web3authInstance = new Web3Auth({
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        // v10 Account Abstraction configuration
+        accountAbstractionConfig: {
+          smartAccountType: "safe",
+          chains: [
+            {
+              chainId: "0x2105", // Base Mainnet
+              bundlerConfig: {
+                url: pimlicoConfig.bundlerUrl,
+              },
+              paymasterConfig: {
+                url: pimlicoConfig.paymasterUrl,
+              },
+            },
+          ],
+        },
+        // Use AA only for embedded wallets (social/email login)
+        // External wallets like MetaMask will use their own accounts
+        useAAWithExternalWallet: false,
       });
-      console.log("[Web3Auth] ✓ Instance created");
+      console.log("[Web3Auth] ✓ Instance created with Account Abstraction");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -103,7 +134,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] ✓ init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      console.log("[Web3Auth] ✓ INITIALIZATION COMPLETE, status:", web3authInstance.status);
+      console.log("[Web3Auth] ✓ INITIALIZATION COMPLETE with Pimlico AA, status:", web3authInstance.status);
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] ✗ INITIALIZATION FAILED:", error);
