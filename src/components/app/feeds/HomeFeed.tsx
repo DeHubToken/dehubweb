@@ -91,6 +91,9 @@ function getSortByFromOption(sortValue: string): 'views' | 'likes' | 'createdAt'
       return 'views';
     case 'most-liked':
       return 'likes';
+    case 'most-comments':
+      // Not included in return union; handled by caller with sortBy override
+      return 'views';
     case 'latest':
     default:
       return 'createdAt';
@@ -210,7 +213,8 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
+  // Match unified feed default: most viewed
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]);
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
     ppv: false,
@@ -228,7 +232,22 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   const { storyUsers } = useDeHubStoryUsers(10);
 
   // Build API params from filters
-  const sortBy = getSortByFromOption(selectedSort.value);
+  // Only pass sortBy when it differs from the API's default (views desc)
+  const sortBy = useMemo(() => {
+    switch (selectedSort.value) {
+      case 'most-viewed':
+        return undefined;
+      case 'most-liked':
+        return 'likes' as const;
+      case 'most-comments':
+        return 'comments' as const;
+      case 'latest':
+      default:
+        return 'createdAt' as const;
+    }
+  }, [selectedSort.value]);
+
+  const sortOrder = sortBy ? 'desc' : undefined;
   const range = getDateRange(selectedDate.value);
 
   // Fetch unified feed
@@ -244,7 +263,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   } = useUnifiedFeed({
     limit: PAGE_SIZE,
     sortBy,
-    sortOrder: 'desc',
+    sortOrder,
     address: walletAddress || undefined,
     range,
     // Apply content type filters
