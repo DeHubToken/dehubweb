@@ -2,7 +2,8 @@
  * Auth Context
  * ============
  * Provides Web3Auth authentication integrated with DeHub API.
- * Smart accounts are handled automatically by Web3Auth's AccountAbstractionProvider.
+ * Smart accounts are handled automatically by Web3Auth's AccountAbstractionProvider
+ * with Pimlico paymaster for gasless transactions.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -16,7 +17,6 @@ import {
   type DeHubUser 
 } from '@/lib/api/dehub';
 import { initWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
-import { deploySmartAccount } from '@/lib/smart-account';
 import type { Web3Auth } from '@web3auth/modal';
 import { createWalletClient, custom } from 'viem';
 import { base } from 'viem/chains';
@@ -208,33 +208,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[Auth] Web3Auth connected successfully');
-
-      // For embedded wallets (social/email login), ensure the smart account is deployed
-      let isEmbedded = false;
-      try {
-        const userInfo = await web3authInstance.getUserInfo();
-        isEmbedded = !!userInfo?.email || !!userInfo?.name;
-      } catch {
-        isEmbedded = false;
-      }
-
-      if (isEmbedded) {
-        console.log('[Auth] Embedded wallet detected, ensuring smart account is deployed...');
-        try {
-          const walletClient = createWalletClient({
-            chain: base,
-            transport: custom(web3authProvider),
-          });
-          const [address] = await walletClient.getAddresses();
-          await deploySmartAccount(address);
-          console.log('[Auth] Smart account ready');
-        } catch (deployError) {
-          console.error('[Auth] Smart account deployment failed:', deployError);
-          // Disconnect Web3Auth since we can't proceed without smart account
-          await web3authInstance.logout();
-          throw new Error('Smart account deployment failed. Please try again.');
-        }
-      }
+      
+      // Note: Smart account deployment is now handled automatically by
+      // Web3Auth's AccountAbstractionProvider with Pimlico paymaster.
+      // The first transaction will trigger deployment if needed.
 
       // Complete DeHub authentication (signature)
       try {
@@ -272,7 +249,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userFriendlyMessage = 'Connection timed out. Please try again.';
       } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
         userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
-      } else if (errorMessage.includes('Smart account deployment failed')) {
+      } else if (errorMessage.includes('bundler') || errorMessage.includes('paymaster')) {
         userFriendlyMessage = 'Account setup failed. Please try again.';
       }
       
