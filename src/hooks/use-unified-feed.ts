@@ -138,36 +138,46 @@ function formatTimeAgo(dateString?: string): string {
  * Map unified feed item to VideoItem
  */
 /**
- * Build absolute URL from API path - uses the exact path from API which includes correct extension
- * Examples: images/2008.jpg, nfts/images/61.jpeg, statics/avatars/xxx.octet-stream
+ * Extract file extension from API path
+ * Converts .octet-stream to .jpg for better browser compatibility
  */
-function buildMediaUrl(path: string | undefined): string {
-  if (!path) return '';
-  if (path.startsWith('http')) return path;
-  return `${DEHUB_CDN_BASE}${path}`;
+function getExtension(path: string): string {
+  const match = path.match(/\.([a-zA-Z0-9-]+)$/);
+  if (!match) return 'jpg';
+  const ext = match[1].toLowerCase();
+  // Convert octet-stream to jpg
+  return ext === 'octet-stream' ? 'jpg' : ext;
 }
 
 /**
- * Build video URL - uses the exact API videoUrl path
- * Only append .mp4 for simple "videos/xxx" paths without extension
- * Leave paths like "videos/xxx.mp4" or "streams/video/xxx" as-is
+ * Build canonical image URL: cdn/images/{tokenId}.{ext}
+ * API returns paths like "images/2008.jpg" or "nfts/images/61.jpeg"
+ * We normalize to: https://dehubcdn.../images/{tokenId}.{ext}
  */
-function buildVideoUrl(item: UnifiedFeedItem): string | undefined {
-  if (!item.videoUrl) return undefined;
-  const videoPath = item.videoUrl;
-  
-  // Check if path already has a video extension
-  if (videoPath.match(/\.(mp4|webm|mov|m3u8)$/i)) {
-    return buildMediaUrl(videoPath);
-  }
-  
-  // For "streams/video/xxx" format, don't append extension - use HLS or direct path
-  if (videoPath.startsWith('streams/')) {
-    return buildMediaUrl(videoPath);
-  }
-  
-  // For simple "videos/xxx" paths, append .mp4
-  return `${buildMediaUrl(videoPath)}.mp4`;
+function buildImageUrl(tokenId: number, apiImagePath: string | undefined): string {
+  if (!apiImagePath) return '';
+  if (apiImagePath.startsWith('http')) return apiImagePath;
+  const ext = getExtension(apiImagePath);
+  return `${DEHUB_CDN_BASE}images/${tokenId}.${ext}`;
+}
+
+/**
+ * Build canonical avatar URL: cdn/avatars/{address}.{ext}
+ * API returns paths like "avatars/xxx.jpg" or "statics/avatars/xxx.octet-stream"
+ * We normalize to: https://dehubcdn.../avatars/{address}.{ext}
+ */
+function buildAvatarUrl(address: string, apiAvatarPath: string | undefined): string {
+  if (!apiAvatarPath) return '';
+  if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
+  const ext = getExtension(apiAvatarPath);
+  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+}
+
+/**
+ * Build video URL: cdn/videos/{tokenId}.mp4
+ */
+function buildVideoUrl(tokenId: number): string {
+  return `${DEHUB_CDN_BASE}videos/${tokenId}.mp4`;
 }
 
 /**
@@ -176,10 +186,12 @@ function buildVideoUrl(item: UnifiedFeedItem): string | undefined {
 export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
-  // Use actual URLs from API response (handles .jpg, .jpeg, .octet-stream, etc.)
-  const thumbnail = buildMediaUrl(item.imageUrl);
-  const videoUrl = buildVideoUrl(item);
-  const channelAvatar = item.minterAvatarUrl ? buildMediaUrl(item.minterAvatarUrl) : 'user';
+  // Build canonical URLs: cdn/images/{tokenId}.{ext} and cdn/avatars/{address}.{ext}
+  const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
+  const videoUrl = buildVideoUrl(item.tokenId);
+  const channelAvatar = item.minterAvatarUrl 
+    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
+    : 'user';
   
   // Determine PPV/W2E/Locked status from streamInfo
   const isPPV = item.streamInfo?.isPayPerView ?? false;
@@ -219,9 +231,11 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
 export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
-  // Use actual URLs from API response (handles .jpg, .jpeg, .octet-stream, etc.)
-  const image = buildMediaUrl(item.imageUrl);
-  const avatar = item.minterAvatarUrl ? buildMediaUrl(item.minterAvatarUrl) : 'user';
+  // Build canonical URLs: cdn/images/{tokenId}.{ext} and cdn/avatars/{address}.{ext}
+  const image = buildImageUrl(item.tokenId, item.imageUrl);
+  const avatar = item.minterAvatarUrl 
+    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
+    : 'user';
   
   return {
     id,
@@ -251,8 +265,10 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
 export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
   const id = String(item.tokenId);
   
-  // Use actual avatar URL from API response
-  const avatarUrl = item.minterAvatarUrl ? buildMediaUrl(item.minterAvatarUrl) : item.minter;
+  // Build canonical avatar URL: cdn/avatars/{address}.{ext}
+  const avatarUrl = item.minterAvatarUrl 
+    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
+    : item.minter;
   
   return {
     id,
