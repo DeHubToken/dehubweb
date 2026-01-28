@@ -67,11 +67,14 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       const clientId = await getWeb3AuthClientId();
       console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
 
-      // Create Web3Auth instance with popup mode
-      console.log("[Web3Auth] Creating Web3Auth instance...");
+      // Create Web3Auth instance with REDIRECT mode to avoid COOP issues
+      console.log("[Web3Auth] Creating Web3Auth instance with redirect mode...");
       web3authInstance = new Web3Auth({
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        uiConfig: {
+          uxMode: "redirect", // Use redirect mode to bypass COOP entirely
+        },
       });
       console.log("[Web3Auth] ✓ Instance created");
 
