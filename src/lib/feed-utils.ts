@@ -203,6 +203,20 @@ export interface ContentTypeFilters {
   locked: boolean;
 }
 
+// ============================================================================
+// POST TYPE FILTER OPTIONS (Video, Images, Text)
+// ============================================================================
+
+export const POST_TYPE_FILTERS = [
+  { label: 'All', value: 'all' as const },
+  { label: 'Videos', value: 'video' as const },
+  { label: 'Images', value: 'feed-images' as const },
+  { label: 'Text', value: 'feed-simple' as const },
+] as const;
+
+export type PostTypeFilterOption = typeof POST_TYPE_FILTERS[number];
+export type PostTypeFilterValue = PostTypeFilterOption['value'];
+
 /**
  * Filter NFTs by content type (PPV, W2E/Bounty, Locked)
  * Uses OR logic - if multiple filters are active, show items matching ANY filter

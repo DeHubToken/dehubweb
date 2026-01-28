@@ -11,7 +11,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, POST_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type PostTypeFilterValue } from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -127,6 +127,8 @@ interface FilterSectionProps {
   onSortSelect: (o: SortOption) => void;
   selectedDate: DateFilterOption;
   onDateSelect: (o: DateFilterOption) => void;
+  selectedPostType: PostTypeFilterValue;
+  onPostTypeSelect: (v: PostTypeFilterValue) => void;
   contentFilters: ContentTypeFilters;
   onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
 }
@@ -136,6 +138,8 @@ function SortFilterSection({
   onSortSelect, 
   selectedDate, 
   onDateSelect,
+  selectedPostType,
+  onPostTypeSelect,
   contentFilters,
   onContentFilterToggle,
 }: FilterSectionProps) {
@@ -183,9 +187,30 @@ function SortFilterSection({
         </div>
       </div>
 
+      {/* Post Type Filter */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Post Type</span>
+        <div className="flex gap-1.5 flex-wrap">
+          {POST_TYPE_FILTERS.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => onPostTypeSelect(option.value)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selectedPostType === option.value
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Content Type Filters */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
         <div className="flex gap-1.5 flex-wrap">
           {CONTENT_TYPE_FILTERS.map((filter) => (
             <button
@@ -213,9 +238,10 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  // Match unified feed default: most viewed
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]);
+  // API default is now "most liked"
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[2]); // Most Liked
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
+  const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
     ppv: false,
     w2e: false,
@@ -232,13 +258,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   const { storyUsers } = useDeHubStoryUsers(10);
 
   // Build API params from filters
-  // Only pass sortBy when it differs from the API's default (views desc)
+  // API default is now 'likes' (most liked)
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
-      case 'most-viewed':
-        return undefined;
       case 'most-liked':
-        return 'likes' as const;
+        return undefined; // API default
+      case 'most-viewed':
+        return 'views' as const;
       case 'most-comments':
         return 'comments' as const;
       case 'latest':
@@ -266,6 +292,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     sortOrder,
     address: walletAddress || undefined,
     range,
+    // Apply post type filter
+    postType: selectedPostType === 'all' ? undefined : selectedPostType,
     // Apply content type filters
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
@@ -416,6 +444,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
                     onSortSelect={setSelectedSort}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
+                    selectedPostType={selectedPostType}
+                    onPostTypeSelect={setSelectedPostType}
                     contentFilters={contentFilters}
                     onContentFilterToggle={toggleContentFilter}
                   />
