@@ -24,7 +24,7 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, walletAddress, disconnect } = useAuth();
+  const { isAuthenticated, user, walletAddress, disconnect, connect, isConnecting } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -39,9 +39,13 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     navigate('/app');
   };
 
-  const handlePostClick = () => {
+  const handlePostClick = async () => {
     if (!isAuthenticated) {
-      setShowAuthPrompt(true);
+      try {
+        await connect();
+      } catch {
+        // Error is already toasted in AuthContext
+      }
       return;
     }
     onPostClick();
@@ -144,12 +148,18 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
           <Button 
             onClick={handlePostClick}
-            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2"
+            disabled={isConnecting}
+            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2 disabled:opacity-70"
           >
             {isAuthenticated ? (
               <>
                 <PenSquare className="w-[18px] h-[18px]" />
                 Post
+              </>
+            ) : isConnecting ? (
+              <>
+                <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Connecting...
               </>
             ) : (
               <>

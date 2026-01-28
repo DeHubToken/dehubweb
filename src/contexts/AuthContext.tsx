@@ -6,6 +6,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import { 
   authenticateWallet, 
   getAccountInfo,
@@ -230,12 +231,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] Connection failed:', error);
       
       const errorMessage = error instanceof Error ? error.message : 'Connection failed';
-      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected')) {
-        throw new Error('Log in was cancelled');
+      let userFriendlyMessage = 'Connection failed. Please try again.';
+      
+      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User closed')) {
+        userFriendlyMessage = 'Log in was cancelled';
       } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
-        throw new Error('Please switch to Base network and try again');
+        userFriendlyMessage = 'Please switch to Base network and try again';
+      } else if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
+        userFriendlyMessage = 'Connection timed out. Please try again.';
+      } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
+        userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
       }
-      throw error;
+      
+      toast.error(userFriendlyMessage);
+      throw new Error(userFriendlyMessage);
     } finally {
       console.log('[Auth] connect() finished, setting isConnecting=false');
       setIsConnecting(false);
