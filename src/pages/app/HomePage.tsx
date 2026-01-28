@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
-import { Settings2 } from 'lucide-react';
+import { Settings2, SlidersHorizontal } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -367,6 +367,22 @@ export default function HomePage() {
                 </button>
               );
             })}
+            
+            {/* Filter Button - contextual to active tab */}
+            {['home', 'videos', 'shorts', 'images', 'music'].includes(activeTab) && (
+              <button
+                onClick={() => handleTabClick(activeTab)}
+                className={cn(
+                  'flex items-center justify-center px-3 py-2 rounded-xl text-white transition-colors',
+                  (showHomeFilters || showVideosFilters || showShortsFilters || showImagesCollage || showMusicFilters)
+                    ? 'bg-zinc-800'
+                    : 'hover:bg-white/5'
+                )}
+                aria-label="Toggle filters"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+              </button>
+            )}
             
             {/* Settings Button */}
             <button
