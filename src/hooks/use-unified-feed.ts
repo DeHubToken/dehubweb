@@ -46,8 +46,10 @@ export interface UnifiedFeedItem {
   status?: string;
   category?: string[];
   views: number;
-  likes: number;
-  dislikes: number;
+  totalVotes?: {
+    for: number;
+    against: number;
+  };
   commentCount: number;
   videoDuration?: number;
   minterUsername?: string;
@@ -214,8 +216,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
-    likeCount: item.likes || 0,
-    dislikeCount: item.dislikes || 0,
+    likeCount: item.totalVotes?.for || 0,
+    dislikeCount: item.totalVotes?.against || 0,
     commentCount: item.commentCount || 0,
     isPPV,
     ppvPrice: item.streamInfo?.payPerViewAmount,
@@ -247,7 +249,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     imageUrls: undefined, // Single image from unified feed
     title: item.name,
     description: item.description,
-    likes: item.likes || 0,
+    likes: item.totalVotes?.for || 0,
     caption: item.description || item.name || '',
     comments: item.commentCount || 0,
     views: formatViews(item.views).replace(' views', ''),
@@ -285,7 +287,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     stats: {
       comments: item.commentCount || 0,
       reposts: 0,
-      likes: item.likes || 0,
+      likes: item.totalVotes?.for || 0,
     },
   };
 }
