@@ -11,13 +11,15 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     headers: {
       // Allow Web3Auth popup to communicate back to the opener window
-      "Cross-Origin-Opener-Policy": "unsafe-none",
+      // NOTE: Some OAuth providers set COOP=same-origin in the popup.
+      // Using same-origin-allow-popups is often more compatible with OAuth/Web3Auth popups.
+      "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
       "Cross-Origin-Embedder-Policy": "unsafe-none",
     },
   },
   preview: {
     headers: {
-      "Cross-Origin-Opener-Policy": "unsafe-none",
+      "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
       "Cross-Origin-Embedder-Policy": "unsafe-none",
     },
   },
