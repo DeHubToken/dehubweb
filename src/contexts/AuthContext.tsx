@@ -14,7 +14,7 @@ import {
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
-import { initWeb3Auth, disconnectWeb3Auth, hasRedirectResult } from '@/lib/web3auth';
+import { initWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
 import { deploySmartAccount } from '@/lib/smart-account';
 import type { Web3Auth } from '@web3auth/modal';
 import { createWalletClient, custom } from 'viem';
@@ -66,36 +66,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
-  // Check for existing session on mount and handle redirect callback
+  // Check for existing session on mount
   useEffect(() => {
     const init = async () => {
       try {
-        const hasRedirect = hasRedirectResult();
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
 
-        // If we have a redirect result, we need to complete the auth flow
-        if (hasRedirect) {
-          console.log('[Auth] Detected redirect result, completing auth flow...');
-          setIsConnecting(true);
-          try {
-            const web3authInstance = await initWeb3Auth();
-            setWeb3auth(web3authInstance);
-            
-            if (web3authInstance.connected && web3authInstance.provider) {
-              console.log('[Auth] Web3Auth connected after redirect, completing DeHub auth...');
-              // Complete the DeHub authentication
-              await completeDeHubAuth(web3authInstance);
-            } else {
-              console.log('[Auth] Redirect detected but not connected');
-            }
-          } catch (error) {
-            console.error('[Auth] Redirect auth completion failed:', error);
-          } finally {
-            setIsConnecting(false);
-          }
-        } else if (token && savedWallet && !isTokenExpired()) {
-          // Normal session restoration
+        if (token && savedWallet && !isTokenExpired()) {
+          // Session restoration
           try {
             console.log('Restoring session, fetching account info...');
             const userData = await getAccountInfo(savedWallet);
@@ -124,12 +103,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       }
 
-      // Pre-initialize Web3Auth in background (if not already done by redirect handling)
-      if (!hasRedirectResult()) {
-        initWeb3Auth()
-          .then((instance) => setWeb3auth(instance))
-          .catch((err) => console.warn('Web3Auth pre-init failed:', err));
-      }
+      // Pre-initialize Web3Auth in background
+      initWeb3Auth()
+        .then((instance) => setWeb3auth(instance))
+        .catch((err) => console.warn('Web3Auth pre-init failed:', err));
     };
 
     init();
