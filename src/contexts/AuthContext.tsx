@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Helper function to complete DeHub authentication after Web3Auth connects
-  // Uses personal_sign for EOA-compatible signature that backend can verify
+  // Detects EOA vs smart account and uses appropriate signing method
   const completeDeHubAuth = async (web3authInstance: Web3Auth) => {
     if (!web3authInstance.provider) {
       throw new Error('No provider available');
@@ -132,27 +132,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const address = accounts[0];
     const normalizedAddress = address.toLowerCase();
     
+    // Detect if this is social login (embedded wallet) or external wallet (EOA)
+    // getUserInfo returns user data for social logins, null/empty for external wallets
+    let isEmbeddedWallet = false;
+    try {
+      const userInfo = await web3authInstance.getUserInfo();
+      // If we have user info with a verifier, it's a social/embedded login
+      isEmbeddedWallet = !!(userInfo && (userInfo as Record<string, unknown>).typeOfLogin);
+      console.log('[Auth] User info:', (userInfo as Record<string, unknown>)?.typeOfLogin || 'external wallet');
+    } catch {
+      // getUserInfo throws for external wallets
+      isEmbeddedWallet = false;
+    }
+    
     console.log('[Auth] Wallet address:', normalizedAddress);
+    console.log('[Auth] Is embedded wallet (social login):', isEmbeddedWallet);
 
     // Create sign message for DeHub auth
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
     const message = `Welcome to DeHub!\n\nClick to log in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Use personal_sign directly for EOA-compatible signature
-    // This matches how mobile does it and produces a signature the backend can verify
     let signature: string;
-    try {
-      // Try standard param order: [message, address]
+    
+    if (!isEmbeddedWallet) {
+      // EOA path: use personal_sign with injected provider
+      console.log('[Auth] Using EOA signing path');
+      try {
+        // Try standard param order: [message, address]
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [message, address],
+        }) as string;
+      } catch {
+        // Fallback: some providers expect [address, message]
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [address, message],
+        }) as string;
+      }
+    } else {
+      // Smart account path (social login): use Web3Auth provider directly
+      console.log('[Auth] Using smart account signing path');
       signature = await provider.request({
         method: 'personal_sign',
-        params: [message, address],
-      }) as string;
-    } catch {
-      // Fallback: some providers expect [address, message]
-      signature = await provider.request({
-        method: 'personal_sign',
-        params: [address, message],
+        params: [message, normalizedAddress],
       }) as string;
     }
     
