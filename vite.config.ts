@@ -26,10 +26,15 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     nodePolyfills({
-      include: ['buffer', 'process', 'stream', 'util'],
+      include: ['buffer', 'process', 'stream', 'util', 'events'],
       globals: {
         Buffer: true,
         process: true,
+        global: true,
+      },
+      overrides: {
+        // Ensure process.nextTick is available
+        process: 'process/browser',
       },
     }),
     mode === "development" && componentTagger(),
