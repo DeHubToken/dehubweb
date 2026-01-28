@@ -28,6 +28,7 @@ interface AuthContextType {
   isLoading: boolean;
   isConnecting: boolean;
   requiresUsername: boolean;
+  needsSignature: boolean; // Web3Auth connected but signature pending
   web3auth: Web3Auth | null;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
@@ -63,6 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
   const [requiresUsername, setRequiresUsername] = useState(false);
+  const [needsSignature, setNeedsSignature] = useState(false);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
@@ -166,11 +168,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const connect = useCallback(async () => {
     console.log('[Auth] connect() called');
     console.log('[Auth] Current web3auth state:', web3auth?.status || 'null');
+    console.log('[Auth] needsSignature:', needsSignature);
     setIsConnecting(true);
 
     try {
-      // Ensure Web3Auth is initialized and ready
       let web3authInstance = web3auth;
+      
+      // If we already have a connected instance and just need signature, skip Web3Auth connect
+      if (needsSignature && web3authInstance?.connected && web3authInstance?.provider) {
+        console.log('[Auth] Retrying signature with existing connection...');
+        await completeDeHubAuth(web3authInstance);
+        setNeedsSignature(false);
+        console.log('[Auth] ✓ Signature retry successful!');
+        return;
+      }
+
+      // Ensure Web3Auth is initialized and ready
       console.log('[Auth] Checking if web3auth needs initialization...');
       
       if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
@@ -182,14 +195,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('[Auth] Web3Auth already ready, status:', web3authInstance.status);
       }
 
-      // In redirect mode, connect() will redirect to the auth provider
-      // The user will be redirected back and the auth will complete in the useEffect
       console.log('[Auth] Calling web3authInstance.connect()...');
       console.log('[Auth] Instance status before connect:', web3authInstance.status);
       
       const web3authProvider = await web3authInstance.connect();
       
-      // If we get here (popup mode or already connected), complete auth
       console.log('[Auth] connect() returned');
       console.log('[Auth] Provider:', web3authProvider ? 'exists' : 'null');
       
@@ -220,11 +230,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('[Auth] Smart account ready');
         } catch (deployError) {
           console.error('[Auth] Smart account deployment failed:', deployError);
+          // Disconnect Web3Auth since we can't proceed without smart account
+          await web3authInstance.logout();
+          throw new Error('Smart account deployment failed. Please try again.');
         }
       }
 
-      // Complete DeHub authentication
-      await completeDeHubAuth(web3authInstance);
+      // Complete DeHub authentication (signature)
+      try {
+        await completeDeHubAuth(web3authInstance);
+        setNeedsSignature(false);
+      } catch (signError) {
+        console.error('[Auth] Signature failed:', signError);
+        const signErrorMessage = signError instanceof Error ? signError.message : 'Signature failed';
+        
+        // Check if user rejected the signature
+        if (signErrorMessage.includes('user rejected') || signErrorMessage.includes('User rejected') || signErrorMessage.includes('User denied')) {
+          // Keep Web3Auth connected, allow retry
+          setNeedsSignature(true);
+          toast.error('Please sign the message to complete login');
+          return;
+        }
+        
+        // For other errors, disconnect and fail
+        await web3authInstance.logout();
+        throw signError;
+      }
       
       console.log('[Auth] ✓ Connection complete!');
     } catch (error: unknown) {
@@ -241,6 +272,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userFriendlyMessage = 'Connection timed out. Please try again.';
       } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
         userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
+      } else if (errorMessage.includes('Smart account deployment failed')) {
+        userFriendlyMessage = 'Account setup failed. Please try again.';
       }
       
       toast.error(userFriendlyMessage);
@@ -249,7 +282,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[Auth] connect() finished, setting isConnecting=false');
       setIsConnecting(false);
     }
-  }, [web3auth]);
+  }, [web3auth, needsSignature]);
 
   const disconnect = useCallback(async () => {
     try {
@@ -263,6 +296,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setWalletAddress(null);
     setRequiresUsername(false);
+    setNeedsSignature(false);
   }, []);
 
   const refreshUser = useCallback(async () => {
@@ -294,6 +328,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isConnecting,
         requiresUsername,
+        needsSignature,
         web3auth,
         connect,
         disconnect,
