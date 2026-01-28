@@ -1,12 +1,8 @@
 /**
  * Home Feed Component
  * ===================
- * Mixed content feed with infinite scroll for the home tab.
- * Fetches content from DeHub API with sorting options.
- * 
- * NOTE: This component uses the legacy /api/search_nfts endpoint as the
- * unified /api/feed endpoint has a backend bug. When fixed, switch to
- * useUnifiedFeed from '@/hooks/use-unified-feed'.
+ * Mixed content feed using the unified /api/feed endpoint.
+ * Renders videos, images, and text posts based on postType.
  * 
  * @module components/app/feeds/HomeFeed
  */
@@ -15,39 +11,41 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, applySorting, filterByDate, filterByContentType, getApiSortMode, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
 
 // Card components
 import { 
   PostCard, 
   VideoCard, 
   ImageCard, 
-  LiveCard, 
   ShortsReel, 
   StoriesBar 
 } from '@/components/app/cards';
 
-// DeHub API hook
-import { useDeHubFeed, useDeHubStoryUsers, useDeHubVideos, useDeHubImages, mapNFTToVideoItem, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
-import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
+// Unified feed hook
+import { 
+  useUnifiedFeed, 
+  mapToVideoItem, 
+  mapToImagePost, 
+  mapToTextPost,
+} from '@/hooks/use-unified-feed';
+import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 
-import type { VideoItem, ImagePost, TextPost, LiveStream, ShortVideo } from '@/types/feed.types';
+import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
 // ============================================================================
 // TYPES & CONSTANTS
 // ============================================================================
 
-type UnifiedFeedItem = 
+type FeedItemType = 
   | { type: 'post'; data: TextPost }
   | { type: 'video'; data: VideoItem }
   | { type: 'image'; data: ImagePost }
-  | { type: 'live'; data: LiveStream }
   | { type: 'shorts'; data: ShortVideo[] };
 
-// Sort options are imported from feed-utils
-
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 6;
 
 interface HomeFeedProps {
@@ -82,6 +80,39 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     comments: formatCount(nft.commentCount || nft.comment_count || 0),
     shares: formatCount(Math.floor(Math.random() * 1000)),
   };
+}
+
+/**
+ * Map API sortBy to our sort option value
+ */
+function getSortByFromOption(sortValue: string): 'views' | 'likes' | 'createdAt' {
+  switch (sortValue) {
+    case 'most-viewed':
+      return 'views';
+    case 'most-liked':
+      return 'likes';
+    case 'latest':
+    default:
+      return 'createdAt';
+  }
+}
+
+/**
+ * Map date filter to API range parameter
+ */
+function getDateRange(dateValue: string): 'day' | 'week' | 'month' | 'year' | undefined {
+  switch (dateValue) {
+    case 'today':
+      return 'day';
+    case 'week':
+      return 'week';
+    case 'month':
+      return 'month';
+    case 'year':
+      return 'year';
+    default:
+      return undefined; // all time
+  }
 }
 
 // ============================================================================
@@ -196,35 +227,30 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch videos from DeHub API - pass sortMode based on selected filter
-  const {
-    data: videosData,
-    fetchNextPage: fetchNextVideos,
-    hasNextPage: hasNextVideos,
-    isFetchingNextPage: isFetchingNextVideos,
-    isLoading: isVideosLoading,
-    isError: isVideosError,
-    refetch: refetchVideos,
-    error: videosError,
-  } = useDeHubFeed({
-    unit: PAGE_SIZE,
-    sortMode: getApiSortMode(selectedSort.value),
-    address: walletAddress || undefined,
-  });
+  // Build API params from filters
+  const sortBy = getSortByFromOption(selectedSort.value);
+  const range = getDateRange(selectedDate.value);
 
-  // Fetch images from DeHub API - pass same sortMode for consistent sorting
+  // Fetch unified feed
   const {
-    data: imagesData,
-    fetchNextPage: fetchNextImages,
-    hasNextPage: hasNextImages,
-    isFetchingNextPage: isFetchingNextImages,
-    isLoading: isImagesLoading,
-    isError: isImagesError,
-    refetch: refetchImages,
-  } = useDeHubImages({
-    unit: PAGE_SIZE,
-    sortMode: getApiSortMode(selectedSort.value),
+    data: feedData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    refetch,
+    error,
+  } = useUnifiedFeed({
+    limit: PAGE_SIZE,
+    sortBy,
+    sortOrder: 'desc',
     address: walletAddress || undefined,
+    range,
+    // Apply content type filters
+    isPPV: contentFilters.ppv ? true : undefined,
+    hasBounty: contentFilters.w2e ? true : undefined,
+    isLocked: contentFilters.locked ? true : undefined,
   });
 
   // Fetch shorts separately for the carousel
@@ -236,10 +262,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
-      refetchVideos();
-      refetchImages();
+      refetch();
     }
-  }, [shuffleKey, refetchVideos, refetchImages]);
+  }, [shuffleKey, refetch]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -248,61 +273,33 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
-  // Helper to determine content type from NFT
-  const getContentType = (nft: DeHubNFT): 'video' | 'image' => {
-    const postType = (nft as any).postType || '';
-    if (postType === 'feed-images' || postType.includes('image')) return 'image';
-    return 'video';
-  };
-
-  // Map API data to feed items - COMBINE all NFTs first, then sort together
-  const items = useMemo((): UnifiedFeedItem[] => {
-    // Get raw NFTs and tag them with their source type
-    const rawVideoNFTs: DeHubNFT[] = videosData?.pages?.flatMap(page => page.data || []) || [];
-    const rawImageNFTs: DeHubNFT[] = imagesData?.pages?.flatMap(page => page.data || []) || [];
+  // Map unified feed items to component-ready data
+  const items = useMemo((): FeedItemType[] => {
+    if (!feedData?.pages) return [];
     
-    // Combine ALL NFTs into a single array
-    const allNFTs: DeHubNFT[] = [...rawVideoNFTs, ...rawImageNFTs];
+    const allItems = feedData.pages.flatMap(page => page.items || []);
     
-    // Apply date filtering to the combined array
-    const dateFiltered = filterByDate(allNFTs, selectedDate.value);
-    
-    // Apply content type filtering (PPV, W2E, Locked)
-    const contentFiltered = filterByContentType(dateFiltered, contentFilters);
-    
-    // Apply sorting to the COMBINED filtered results - this ensures global ordering
-    const sortedNFTs = applySorting(contentFiltered, selectedSort.value);
-    
-    // Map each NFT to its correct type based on postType
-    return sortedNFTs.map((nft, index) => {
-      const contentType = getContentType(nft);
-      if (contentType === 'image') {
-        return {
-          type: 'image' as const,
-          data: mapNFTToImagePost(nft, index),
-        };
+    return allItems.map((item, index): FeedItemType => {
+      switch (item.postType) {
+        case 'feed-images':
+          return { type: 'image', data: mapToImagePost(item, index) };
+        case 'feed-simple':
+          return { type: 'post', data: mapToTextPost(item, index) };
+        case 'video':
+        default:
+          return { type: 'video', data: mapToVideoItem(item, index) };
       }
-      return {
-        type: 'video' as const,
-        data: mapNFTToVideoItem(nft, index),
-      };
     });
-  }, [videosData, imagesData, selectedSort.value, selectedDate.value, contentFilters]);
+  }, [feedData]);
 
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current) return;
-    
-    const hasNextPage = hasNextVideos || hasNextImages;
-    const isFetchingNextPage = isFetchingNextVideos || isFetchingNextImages;
-
-    if (!hasNextPage) return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isFetchingNextPage) {
-          if (hasNextVideos) fetchNextVideos();
-          if (hasNextImages) fetchNextImages();
+          fetchNextPage();
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -310,16 +307,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextVideos, hasNextImages, isFetchingNextVideos, isFetchingNextImages, fetchNextVideos, fetchNextImages]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Derived loading states
-  const isApiLoading = isVideosLoading || isImagesLoading;
-  const isError = isVideosError || isImagesError;
-  const error = videosError;
-  const hasNextPage = hasNextVideos || hasNextImages;
-  const isFetchingNextPage = isFetchingNextVideos || isFetchingNextImages;
-
-  const renderFeedItem = (item: UnifiedFeedItem, index: number) => {
+  const renderFeedItem = (item: FeedItemType, index: number) => {
     switch (item.type) {
       case 'post':
         return <PostCard key={`post-${item.data.id}-${index}`} post={item.data} />;
@@ -327,8 +317,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
         return <VideoCard key={`video-${item.data.id}-${index}`} video={item.data} />;
       case 'image':
         return <ImageCard key={`image-${item.data.id}-${index}`} post={item.data} />;
-      case 'live':
-        return <LiveCard key={`live-${item.data.id}-${index}`} stream={item.data} />;
       case 'shorts':
         return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
       default:
@@ -363,7 +351,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return elements;
   };
 
-  const isLoading = isApiLoading || isRefreshing;
+  const isLoadingState = isLoading || isRefreshing;
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -377,7 +365,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
           : 'Be the first to share something amazing!'}
       </p>
       <button 
-        onClick={() => { refetchVideos(); refetchImages(); }}
+        onClick={() => refetch()}
         className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
       >
         Refresh
@@ -387,7 +375,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
 
   return (
     <div className="p-2 sm:p-3 space-y-3">
-      {isLoading ? (
+      {isLoadingState ? (
         <div className="flex items-center justify-center py-32">
           <Loader2 className="w-10 h-10 text-white animate-spin" />
         </div>
