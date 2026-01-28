@@ -137,18 +137,38 @@ function formatTimeAgo(dateString?: string): string {
 /**
  * Map unified feed item to VideoItem
  */
+/**
+ * Build absolute URL from API path - handles various extensions (.jpg, .jpeg, .octet-stream, etc.)
+ */
+function buildMediaUrl(path: string | undefined): string {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return `${DEHUB_CDN_BASE}${path}`;
+}
+
+/**
+ * Build video URL - use API videoUrl if available, handles various formats
+ */
+function buildVideoUrl(item: UnifiedFeedItem): string | undefined {
+  if (!item.videoUrl) return undefined;
+  const base = buildMediaUrl(item.videoUrl);
+  // Add .mp4 if no extension present
+  if (!base.match(/\.(mp4|webm|mov)$/i)) {
+    return `${base}.mp4`;
+  }
+  return base;
+}
+
+/**
+ * Map unified feed item to VideoItem
+ */
 export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
-  // Build thumbnail URL
-  const thumbnail = item.imageUrl 
-    ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${DEHUB_CDN_BASE}${item.imageUrl}`)
-    : '';
-  
-  // Build video URL
-  const videoUrl = item.tokenId 
-    ? `${DEHUB_CDN_BASE}videos/${item.tokenId}.mp4` 
-    : undefined;
+  // Use actual URLs from API response (handles .jpg, .jpeg, .octet-stream, etc.)
+  const thumbnail = buildMediaUrl(item.imageUrl);
+  const videoUrl = buildVideoUrl(item);
+  const channelAvatar = item.minterAvatarUrl ? buildMediaUrl(item.minterAvatarUrl) : 'user';
   
   // Determine PPV/W2E/Locked status from streamInfo
   const isPPV = item.streamInfo?.isPayPerView ?? false;
@@ -163,9 +183,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     duration: formatDuration(item.videoDuration),
     title: item.name || 'Untitled',
     channel: item.minterDisplayName || item.minterUsername || 'Unknown Creator',
-    channelAvatar: item.minterAvatarUrl 
-      ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : `${DEHUB_CDN_BASE}${item.minterAvatarUrl}`)
-      : 'user',
+    channelAvatar,
     verified: false,
     views: formatViews(item.views),
     uploadedAgo: formatTimeAgo(item.createdAt),
@@ -190,19 +208,16 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
 export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
-  // Build image URL
-  const image = item.imageUrl 
-    ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${DEHUB_CDN_BASE}${item.imageUrl}`)
-    : '';
+  // Use actual URLs from API response (handles .jpg, .jpeg, .octet-stream, etc.)
+  const image = buildMediaUrl(item.imageUrl);
+  const avatar = item.minterAvatarUrl ? buildMediaUrl(item.minterAvatarUrl) : 'user';
   
   return {
     id,
     type: 'image',
     username: item.minterUsername || item.minterDisplayName || 'unknown',
     verified: false,
-    avatar: item.minterAvatarUrl 
-      ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : `${DEHUB_CDN_BASE}${item.minterAvatarUrl}`)
-      : 'user',
+    avatar,
     image,
     imageUrls: undefined, // Single image from unified feed
     title: item.name,
@@ -225,6 +240,9 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
 export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
   const id = String(item.tokenId);
   
+  // Use actual avatar URL from API response
+  const avatarUrl = item.minterAvatarUrl ? buildMediaUrl(item.minterAvatarUrl) : item.minter;
+  
   return {
     id,
     type: 'post',
@@ -232,9 +250,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       id: item.minter,
       name: item.minterDisplayName || item.minterUsername || 'Unknown',
       handle: item.minterUsername || item.minter,
-      avatarSeed: item.minterAvatarUrl 
-        ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : `${DEHUB_CDN_BASE}${item.minterAvatarUrl}`)
-        : item.minter,
+      avatarSeed: avatarUrl,
       verified: false,
     },
     content: item.description || item.name || '',
