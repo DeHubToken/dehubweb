@@ -18,11 +18,19 @@ interface AuthGateProps {
 }
 
 export function AuthGate({ description }: AuthGateProps) {
-  const { connect, isLoading } = useAuth();
+  const { connect, isLoading, isConnecting } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Show skeleton while auth is loading OR while image hasn't loaded yet
   const showSkeleton = isLoading || !imageLoaded;
+
+  const handleLogin = async () => {
+    try {
+      await connect();
+    } catch {
+      // Error is already toasted in AuthContext
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8">
@@ -53,10 +61,18 @@ export function AuthGate({ description }: AuthGateProps) {
             {description}
           </p>
           <Button 
-            onClick={() => connect()}
-            className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6"
+            onClick={handleLogin}
+            disabled={isConnecting}
+            className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6 min-w-[100px]"
           >
-            Log in
+            {isConnecting ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                Connecting...
+              </span>
+            ) : (
+              'Log in'
+            )}
           </Button>
         </>
       )}
