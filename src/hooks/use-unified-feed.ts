@@ -23,6 +23,7 @@ export interface UnifiedFeedParams {
   sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments';
   sortOrder?: 'asc' | 'desc';
   postType?: 'all' | 'video' | 'feed-images' | 'feed-simple';
+  status?: 'minted' | 'pending' | 'failed';
   minter?: string;
   address?: string;
   isPPV?: boolean;
@@ -326,6 +327,7 @@ async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<Unified
   if (params.sortBy) url.searchParams.set('sortBy', params.sortBy);
   if (params.sortOrder) url.searchParams.set('sortOrder', params.sortOrder);
   if (params.postType && params.postType !== 'all') url.searchParams.set('postType', params.postType);
+  if (params.status) url.searchParams.set('status', params.status);
   if (params.minter) url.searchParams.set('minter', params.minter);
   if (params.address) url.searchParams.set('address', params.address);
   if (params.isPPV !== undefined) url.searchParams.set('isPPV', String(params.isPPV));

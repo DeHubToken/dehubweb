@@ -292,6 +292,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     sortOrder,
     address: walletAddress || undefined,
     range,
+    // Only show minted content
+    status: 'minted',
     // Apply post type filter
     postType: selectedPostType === 'all' ? undefined : selectedPostType,
     // Apply content type filters
