@@ -18,8 +18,7 @@ import {
 } from '@/lib/api/dehub';
 import { initWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
-import { createWalletClient, custom } from 'viem';
-import { base } from 'viem/chains';
+import type { IProvider } from '@web3auth/modal';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -116,17 +115,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Helper function to complete DeHub authentication after Web3Auth connects
+  // Uses personal_sign for EOA-compatible signature that backend can verify
   const completeDeHubAuth = async (web3authInstance: Web3Auth) => {
     if (!web3authInstance.provider) {
       throw new Error('No provider available');
     }
 
-    const walletClient = createWalletClient({
-      chain: base,
-      transport: custom(web3authInstance.provider),
-    });
+    const provider = web3authInstance.provider as IProvider;
     
-    const [address] = await walletClient.getAddresses();
+    // Get address using eth_accounts
+    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available');
+    }
+    
+    const address = accounts[0];
     const normalizedAddress = address.toLowerCase();
     
     console.log('[Auth] Wallet address:', normalizedAddress);
@@ -136,10 +139,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const displayedDate = new Date(timestamp * 1000);
     const message = `Welcome to DeHub!\n\nClick to log in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    const signature = await walletClient.signMessage({
-      account: address,
-      message,
-    });
+    // Use personal_sign directly for EOA-compatible signature
+    // This matches how mobile does it and produces a signature the backend can verify
+    let signature: string;
+    try {
+      // Try standard param order: [message, address]
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [message, address],
+      }) as string;
+    } catch {
+      // Fallback: some providers expect [address, message]
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [address, message],
+      }) as string;
+    }
+    
+    console.log('[Auth] Signature obtained, length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
 
