@@ -4,6 +4,10 @@
  * Mixed content feed with infinite scroll for the home tab.
  * Fetches content from DeHub API with sorting options.
  * 
+ * NOTE: This component uses the legacy /api/search_nfts endpoint as the
+ * unified /api/feed endpoint has a backend bug. When fixed, switch to
+ * useUnifiedFeed from '@/hooks/use-unified-feed'.
+ * 
  * @module components/app/feeds/HomeFeed
  */
 
