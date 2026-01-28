@@ -137,11 +137,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let isEmbeddedWallet = false;
     try {
       const userInfo = await web3authInstance.getUserInfo();
-      // If we have user info with a verifier, it's a social/embedded login
-      isEmbeddedWallet = !!(userInfo && (userInfo as Record<string, unknown>).typeOfLogin);
-      console.log('[Auth] User info:', (userInfo as Record<string, unknown>)?.typeOfLogin || 'external wallet');
-    } catch {
+      console.log('[Auth] Full userInfo:', JSON.stringify(userInfo, null, 2));
+      
+      // Check multiple indicators of social/embedded login
+      // Social logins have email, name, verifier, or typeOfLogin
+      const info = userInfo as Record<string, unknown>;
+      isEmbeddedWallet = !!(info && (
+        info.email || 
+        info.name || 
+        info.verifier || 
+        info.typeOfLogin ||
+        info.idToken // Social logins typically have an ID token
+      ));
+      console.log('[Auth] Detection fields:', {
+        email: info?.email,
+        name: info?.name,
+        verifier: info?.verifier,
+        typeOfLogin: info?.typeOfLogin,
+        idToken: info?.idToken ? 'present' : 'none'
+      });
+    } catch (e) {
       // getUserInfo throws for external wallets
+      console.log('[Auth] getUserInfo threw (likely external wallet):', e);
       isEmbeddedWallet = false;
     }
     
