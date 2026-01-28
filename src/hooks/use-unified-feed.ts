@@ -138,7 +138,8 @@ function formatTimeAgo(dateString?: string): string {
  * Map unified feed item to VideoItem
  */
 /**
- * Build absolute URL from API path - handles various extensions (.jpg, .jpeg, .octet-stream, etc.)
+ * Build absolute URL from API path - uses the exact path from API which includes correct extension
+ * Examples: images/2008.jpg, nfts/images/61.jpeg, statics/avatars/xxx.octet-stream
  */
 function buildMediaUrl(path: string | undefined): string {
   if (!path) return '';
@@ -147,16 +148,26 @@ function buildMediaUrl(path: string | undefined): string {
 }
 
 /**
- * Build video URL - use API videoUrl if available, handles various formats
+ * Build video URL - uses the exact API videoUrl path
+ * Only append .mp4 for simple "videos/xxx" paths without extension
+ * Leave paths like "videos/xxx.mp4" or "streams/video/xxx" as-is
  */
 function buildVideoUrl(item: UnifiedFeedItem): string | undefined {
   if (!item.videoUrl) return undefined;
-  const base = buildMediaUrl(item.videoUrl);
-  // Add .mp4 if no extension present
-  if (!base.match(/\.(mp4|webm|mov)$/i)) {
-    return `${base}.mp4`;
+  const videoPath = item.videoUrl;
+  
+  // Check if path already has a video extension
+  if (videoPath.match(/\.(mp4|webm|mov|m3u8)$/i)) {
+    return buildMediaUrl(videoPath);
   }
-  return base;
+  
+  // For "streams/video/xxx" format, don't append extension - use HLS or direct path
+  if (videoPath.startsWith('streams/')) {
+    return buildMediaUrl(videoPath);
+  }
+  
+  // For simple "videos/xxx" paths, append .mp4
+  return `${buildMediaUrl(videoPath)}.mp4`;
 }
 
 /**
