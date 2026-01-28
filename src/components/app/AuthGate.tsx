@@ -18,7 +18,7 @@ interface AuthGateProps {
 }
 
 export function AuthGate({ description }: AuthGateProps) {
-  const { connect, isLoading, isConnecting } = useAuth();
+  const { connect, isLoading, isConnecting, needsSignature } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Show skeleton while auth is loading OR while image hasn't loaded yet
@@ -30,6 +30,12 @@ export function AuthGate({ description }: AuthGateProps) {
     } catch {
       // Error is already toasted in AuthContext
     }
+  };
+
+  const getButtonText = () => {
+    if (isConnecting) return 'Connecting...';
+    if (needsSignature) return 'Sign message';
+    return 'Log in';
   };
 
   return (
@@ -63,15 +69,15 @@ export function AuthGate({ description }: AuthGateProps) {
           <Button 
             onClick={handleLogin}
             disabled={isConnecting}
-            className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6 min-w-[100px]"
+            className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6 min-w-[120px]"
           >
             {isConnecting ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                Connecting...
+                {getButtonText()}
               </span>
             ) : (
-              'Log in'
+              getButtonText()
             )}
           </Button>
         </>

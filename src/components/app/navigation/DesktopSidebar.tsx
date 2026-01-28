@@ -24,7 +24,7 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, walletAddress, disconnect, connect, isConnecting } = useAuth();
+  const { isAuthenticated, user, walletAddress, disconnect, connect, isConnecting, needsSignature } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -160,6 +160,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               <>
                 <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 Connecting...
+              </>
+            ) : needsSignature ? (
+              <>
+                <LogIn className="w-[18px] h-[18px]" />
+                Sign message
               </>
             ) : (
               <>
