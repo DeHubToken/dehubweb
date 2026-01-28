@@ -168,7 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Create sign message for DeHub auth
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
-    const message = `Welcome to DeHub!\n\nClick to log in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
     let signature: string;
     
