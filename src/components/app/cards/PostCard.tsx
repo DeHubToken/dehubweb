@@ -32,9 +32,11 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       <CardHeader
         username={post.author.name}
-        avatarSeed={post.author.handle}
+        avatarSeed={post.author.avatarSeed}
         verified={post.author.verified}
         contentType="post"
+        creatorId={post.author.id}
+        creatorUsername={post.author.handle}
       />
 
       {/* AI Button for text posts - positioned in header area */}
