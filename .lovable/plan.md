@@ -1,90 +1,51 @@
 
+# Fix "0y" Time Display Bug
 
-# Location-Based Radio Station Search
+## Problem
+Posts that are between 360-364 days old display as "0y" instead of "12mo". This is a logic bug in the `formatTimeAgo` function.
 
-## Overview
-Enhance the radio search to automatically detect when users type a country name or country code (like "US", "UK", "Germany") and return stations from that location. The Radio Browser API supports advanced search with multiple filters including `country`, `countrycode`, `name`, and more.
+## Root Cause
+The time formatting logic has a gap:
+- `diffMonths = Math.floor(364 days / 30) = 12`
+- The condition `if (diffMonths < 12)` is **false** when diffMonths is exactly 12
+- It falls through to `return ${diffYears}y` where `diffYears = Math.floor(364 / 365) = 0`
+- Result: "0y"
 
-## How It Will Work
-When a user types in the search box:
-- **"US"** or **"United States"** → Shows all radio stations from the USA
-- **"UK"** or **"United Kingdom"** → Shows all British stations
-- **"jazz US"** → Shows jazz stations from the USA (name + country combined)
-- **"rock germany"** → Shows rock stations from Germany
+## Solution
+Change the condition from `< 12` to `<= 12` so that 12 months displays as "12mo" instead of falling through to years.
 
-## Implementation
+Alternatively, use a more robust approach: only show years when diffYears >= 1.
 
-### 1. Add Country Data Mapping
-Create a mapping of common country codes and names for smart detection:
+## Files to Update
 
-```text
-US → United States
-UK → United Kingdom / Great Britain  
-DE → Germany
-FR → France
-JP → Japan
-... etc
+### 1. `src/hooks/use-unified-feed.ts` (Line 146)
+```typescript
+// Before
+if (diffMonths < 12) return `${diffMonths}mo`;
+return `${diffYears}y`;
+
+// After
+if (diffYears < 1) return `${diffMonths}mo`;
+return `${diffYears}y`;
 ```
 
-### 2. Update Radio Browser API (`src/lib/api/radio-browser.ts`)
+### 2. `src/hooks/use-dehub-feed.ts` (Line 83)
+Same fix - the function is duplicated in both files:
+```typescript
+// Before
+if (diffMonths < 12) return `${diffMonths}mo`;
+return `${diffYears}y`;
 
-**Add new advanced search function:**
-- Use the `/stations/search` endpoint which supports multiple filter parameters
-- Accept optional `countrycode` and `country` parameters
-- Parse user input to detect country codes (2-letter uppercase) or country names
-
-**New function signature:**
-```text
-searchStationsAdvanced({
-  name?: string,
-  country?: string, 
-  countrycode?: string,
-  limit?: number
-}) → RadioStation[]
+// After  
+if (diffYears < 1) return `${diffMonths}mo`;
+return `${diffYears}y`;
 ```
 
-### 3. Add Smart Query Parser
-A utility function that analyzes the search query and extracts:
-- Country code if detected (e.g., "US", "JP")
-- Country name if detected (e.g., "Germany", "Brazil")
-- Remaining text as station name search
+## Technical Explanation
+By checking `diffYears < 1` instead of `diffMonths < 12`, we ensure:
+- 11 months → "11mo"
+- 12 months (360 days) → "12mo"  
+- 13 months (390 days) → "13mo" (still less than 1 year)
+- 365+ days → "1y", "2y", etc.
 
-**Example parsing:**
-```text
-Input: "jazz US"
-Output: { name: "jazz", countrycode: "US" }
-
-Input: "Germany"  
-Output: { country: "Germany" }
-
-Input: "radio london"
-Output: { name: "radio london" }
-```
-
-### 4. Update RadioSection Component (`src/components/app/radio/RadioSection.tsx`)
-
-- Replace the basic `searchStations` call with the new advanced search
-- Pass parsed query parameters to the API
-- Update the "Results for" header to show detected filters (e.g., "Results for jazz in US")
-
-## Technical Details
-
-### Country Code Detection
-- Check if any word in the query matches a known 2-letter ISO country code
-- Common codes: US, UK, DE, FR, JP, BR, IN, AU, CA, ES, IT, NL, SE, etc.
-
-### API Endpoint Used
-```text
-GET /stations/search?name={name}&countrycode={code}&hidebroken=true&order=votes&reverse=true&limit=50
-```
-
-### Files to Modify
-1. **`src/lib/api/radio-browser.ts`** - Add country codes list, advanced search function, and query parser
-2. **`src/components/app/radio/RadioSection.tsx`** - Use new advanced search with parsed query
-
-## User Experience
-- **No UI changes needed** - the search bar works the same way
-- Users simply type what they want: "US pop", "Germany", "jazz UK"
-- Results automatically filter by detected location
-- Search results header shows what filters are active
-
+This eliminates the edge case where content is almost a year old but shows as "0y".
