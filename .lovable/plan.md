@@ -1,77 +1,56 @@
 
 
-# Fix: PPV and Locked Filters Crash Site
+# Remove Duplicate Filter Toggle from Mobile Tab Bar
 
-## Root Cause Identified
+## Current State
 
-When clicking PPV/Locked filters, the app crashes with:
+The sticky tab bar on the Home page has two buttons on the right side:
+1. **Filter Button** (`SlidersHorizontal` icon) - second-to-last position
+2. **Settings Button** (`Settings2` icon) - far right position
+
+You've asked to remove the filter button and keep only the settings button on the far right.
+
+## Implementation
+
+### File: `src/pages/app/HomePage.tsx`
+
+**Remove lines 371-385** - Delete the entire filter button block:
+
+```tsx
+{/* Filter Button - contextual to active tab */}
+{['home', 'videos', 'shorts', 'images', 'music'].includes(activeTab) && (
+  <button
+    onClick={() => handleTabClick(activeTab)}
+    className={cn(
+      'flex items-center justify-center px-3 py-2 rounded-xl text-white transition-colors',
+      (showHomeFilters || showVideosFilters || showShortsFilters || showImagesCollage || showMusicFilters)
+        ? 'bg-zinc-800'
+        : 'hover:bg-white/5'
+    )}
+    aria-label="Toggle filters"
+  >
+    <SlidersHorizontal className="w-4 h-4" />
+  </button>
+)}
 ```
-TypeError: video.ppvPrice.toFixed is not a function
-```
 
-The API returns `payPerViewAmount` as **strings sometimes** (e.g., `"500"`) and **numbers other times** (e.g., `1`). The VideoCard component calls `.toFixed(2)` on this value, which crashes when it's a string.
+**Also clean up the unused import on line 12:**
 
-Evidence from API response:
-```json
-// Sometimes a number:
-"payPerViewAmount": 1
-
-// Sometimes a string:
-"payPerViewAmount": "500"
-```
-
-## Solution
-
-### 1. Fix the Data Mapper (`src/hooks/use-unified-feed.ts`)
-
-**Line 183** - Convert to number when mapping:
-
-```typescript
+Remove `SlidersHorizontal` from the import statement:
+```tsx
 // Before:
-ppvPrice: item.streamInfo?.payPerViewAmount,
+import { Settings2, SlidersHorizontal } from 'lucide-react';
 
 // After:
-ppvPrice: Number(item.streamInfo?.payPerViewAmount) || undefined,
+import { Settings2 } from 'lucide-react';
 ```
-
-### 2. Add Defensive Check in VideoCard (`src/components/app/cards/VideoCard.tsx`)
-
-**Line 464** - Ensure we always call toFixed on a number:
-
-```typescript
-// Before:
-{video.ppvPrice.toFixed(2)} {video.ppvCurrency || 'USDC'}
-
-// After:
-{Number(video.ppvPrice).toFixed(2)} {video.ppvCurrency || 'USDC'}
-```
-
-### 3. Update Interface Types (`src/hooks/use-unified-feed.ts`)
-
-**Lines 65-67** - Reflect that API may return strings:
-
-```typescript
-streamInfo?: {
-  isLockContent: boolean;
-  lockContentAmount?: number | string;  // API returns string sometimes
-  isPayPerView: boolean;
-  payPerViewAmount?: number | string;   // API returns string sometimes
-  // ... rest unchanged
-};
-```
-
-## Summary of Changes
-
-| File | Line | Change |
-|------|------|--------|
-| `src/hooks/use-unified-feed.ts` | 65-67 | Update interface to `number \| string` for lock/ppv amounts |
-| `src/hooks/use-unified-feed.ts` | 183 | Add `Number()` wrapper for `payPerViewAmount` |
-| `src/components/app/cards/VideoCard.tsx` | 464 | Add `Number()` wrapper before `.toFixed()` |
 
 ## Result
 
-After this fix:
-- PPV filter works without crashing
-- Locked filter works without crashing
-- PPV badge displays correctly: "500.00 DHB" instead of crashing
+After this change, the tab bar will show:
+- Tab icons on the left
+- Settings button (gear icon) on the far right only
+- No duplicate filter toggle
+
+Note: Users can still access filters by tapping on the same tab again (existing behavior in `handleTabClick`).
 
