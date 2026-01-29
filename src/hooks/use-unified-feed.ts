@@ -66,6 +66,10 @@ export interface UnifiedFeedItem {
     isPayPerView: boolean;
     payPerViewAmount?: number;
     isAddBounty: boolean;
+    bountyViews?: number;
+    bountyComments?: number;
+    bountyAmount?: number;
+    bountyCurrency?: string;
   };
   plansDetails?: Array<{
     id: number;
@@ -179,6 +183,10 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     ppvCurrency: 'DHB',
     isW2E,
     isLocked,
+    bountyViews: item.streamInfo?.bountyViews,
+    bountyComments: item.streamInfo?.bountyComments,
+    bountyAmount: item.streamInfo?.bountyAmount,
+    bountyCurrency: item.streamInfo?.bountyCurrency || 'DHB',
   };
 }
 
