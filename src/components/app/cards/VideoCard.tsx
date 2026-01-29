@@ -10,8 +10,9 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
+import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
@@ -39,6 +40,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const instanceId = useId();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
@@ -463,10 +465,68 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                 </span>
               </div>
             ) : video.isW2E ? (
-              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
-                <Gift className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">Bounty</span>
-              </div>
+              <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
+                <DrawerTrigger asChild>
+                  <button 
+                    className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Gift className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-medium">Bounty</span>
+                  </button>
+                </DrawerTrigger>
+                <DrawerContent glass className="px-4 pb-6">
+                  <DrawerHeader className="pb-3">
+                    <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                      <Gift className="w-5 h-5 text-amber-400" />
+                      Bounty Rewards
+                    </DrawerTitle>
+                  </DrawerHeader>
+                  <div className="flex flex-col gap-4">
+                    {/* Reward Criteria */}
+                    <div className="space-y-3">
+                      {video.bountyViews && video.bountyViews > 0 && (
+                        <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                          <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                            <Eye className="w-4 h-4 text-emerald-400" />
+                          </div>
+                          <div>
+                            <p className="text-white text-sm font-medium">First {video.bountyViews} views</p>
+                            <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                          </div>
+                        </div>
+                      )}
+                      {video.bountyComments && video.bountyComments > 0 && (
+                        <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                            <MessageCircle className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-white text-sm font-medium">First {video.bountyComments} comments</p>
+                            <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Total Reward Pool */}
+                    {video.bountyAmount && video.bountyAmount > 0 && (
+                      <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl border border-amber-500/20">
+                        <span className="text-zinc-300 text-sm">Total Reward Pool</span>
+                        <div className="flex items-center gap-2">
+                          <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                          <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Call to Action */}
+                    <p className="text-center text-zinc-400 text-sm">
+                      Watch and engage to earn rewards! 🎁
+                    </p>
+                  </div>
+                </DrawerContent>
+              </Drawer>
             ) : video.isLocked ? (
               <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
                 <Lock className="w-3 h-3 text-white" />

@@ -84,6 +84,14 @@ export interface VideoItem extends BaseFeedItem {
   isW2E?: boolean;
   /** Whether content is subscriber-only locked */
   isLocked?: boolean;
+  /** Bounty: number of viewers to reward */
+  bountyViews?: number;
+  /** Bounty: number of commenters to reward */
+  bountyComments?: number;
+  /** Bounty: total reward amount */
+  bountyAmount?: number;
+  /** Bounty: reward currency (DHB, USDC) */
+  bountyCurrency?: string;
 }
 
 /**
