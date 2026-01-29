@@ -120,9 +120,17 @@ function formatViews(count?: number): string {
 
 function formatTimeAgo(dateString?: string): string {
   if (!dateString) return 'Just now';
+  
   const date = new Date(dateString);
+  // Guard against invalid dates
+  if (isNaN(date.getTime())) return 'Just now';
+  
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
+  
+  // Handle future dates or invalid timestamps
+  if (diffMs < 0) return 'Just now';
+  
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
@@ -131,12 +139,12 @@ function formatTimeAgo(dateString?: string): string {
   const diffYears = Math.floor(diffDays / 365);
   
   if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  if (diffWeeks < 4) return `${diffWeeks}w ago`;
-  if (diffMonths < 12) return `${diffMonths}mo ago`;
-  return `${diffYears}y ago`;
+  if (diffMins < 60) return `${diffMins}m`;
+  if (diffHours < 24) return `${diffHours}h`;
+  if (diffDays < 7) return `${diffDays}d`;
+  if (diffWeeks < 4) return `${diffWeeks}w`;
+  if (diffMonths < 12) return `${diffMonths}mo`;
+  return `${diffYears}y`;
 }
 
 // ============================================================================

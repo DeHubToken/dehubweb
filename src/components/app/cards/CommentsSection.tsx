@@ -66,21 +66,33 @@ interface CommentsSectionProps {
 
 function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
+  // Guard against invalid dates
+  if (isNaN(date.getTime())) return 'Just now';
+  
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
+  
+  // Handle future dates or invalid timestamps
+  if (diffMs < 0) return 'Just now';
+  
   const diffMins = Math.floor(diffMs / 60000);
   
   if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffMins < 60) return `${diffMins}m`;
   
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffHours < 24) return `${diffHours}h`;
   
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffDays < 7) return `${diffDays}d`;
   
   const diffWeeks = Math.floor(diffDays / 7);
-  return `${diffWeeks}w ago`;
+  if (diffWeeks < 4) return `${diffWeeks}w`;
+  
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths < 12) return `${diffMonths}mo`;
+  
+  return `${Math.floor(diffDays / 365)}y`;
 }
 
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
