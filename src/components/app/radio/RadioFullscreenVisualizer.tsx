@@ -32,7 +32,7 @@ import {
 interface RadioFullscreenVisualizerProps {
   isOpen: boolean;
   onClose: () => void;
-  getAnalyser: () => AnalyserNode | null;
+  getAnalyser?: () => AnalyserNode | null;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -77,7 +77,8 @@ export function RadioFullscreenVisualizer({
   const draw = useCallback(() => {
     if (!canvasRef.current) return;
     
-    const analyser = getAnalyser();
+    // Safely call getAnalyser - it might not be available yet
+    const analyser = typeof getAnalyser === 'function' ? getAnalyser() : null;
     if (!analyser) {
       animationRef.current = requestAnimationFrame(draw);
       return;
