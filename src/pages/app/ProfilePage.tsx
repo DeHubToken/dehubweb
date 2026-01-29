@@ -832,6 +832,22 @@ export default function ProfilePage() {
                 )}
               </div>
               
+              {profile.walletAddress && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(profile.walletAddress!);
+                    toast.success('Address copied to clipboard');
+                  }}
+                  className="flex items-center gap-1.5 mt-1 text-zinc-500 text-sm hover:text-zinc-300 transition-colors group"
+                >
+                  <Wallet className="w-3.5 h-3.5" />
+                  <span className="font-mono">
+                    {profile.walletAddress.slice(0, 6)}...{profile.walletAddress.slice(-4)}
+                  </span>
+                  <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+              )}
+              
               {profile.bio && (
                 <p className="mt-3 text-white/90 text-sm sm:text-base">{profile.bio}</p>
               )}
@@ -851,16 +867,6 @@ export default function ProfilePage() {
                   <span className="text-zinc-500 ml-1">Followers</span>
                 </button>
               </div>
-              
-              {!isViewingOwnProfile && (
-                <p className="text-zinc-500 text-sm mt-2">
-                  {profile.followsYou ? (
-                    <span className="text-primary">Follows you</span>
-                  ) : (
-                    'Doesn\'t follow you'
-                  )}
-                </p>
-              )}
             </div>
           </div>
         </div>
