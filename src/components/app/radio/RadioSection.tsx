@@ -70,7 +70,7 @@ export function RadioSection() {
   return (
     <div className="space-y-3">
       {/* Sticky Search & Genre Filter */}
-      <div className="sticky top-[5.5rem] lg:top-[3.5rem] z-10 pt-0.5 pb-2 space-y-2.5 bg-black">
+      <div className="sticky top-[5.5rem] lg:top-[3.5rem] z-20 pt-2 pb-3 -mt-2 -mx-2 px-2 sm:-mx-3 sm:px-3 space-y-2.5 bg-black">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
