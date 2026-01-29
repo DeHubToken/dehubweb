@@ -4,8 +4,10 @@ import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
+import { RadioPlayerProvider } from '@/hooks/use-radio-player';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
+import { RadioMiniPlayer } from './radio';
 interface AppLayoutContentProps {
   children?: ReactNode;
 }
@@ -33,6 +35,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       {/* Development Notice Modal */}
       <DevelopmentNoticeModal />
       
+      {/* Radio Mini Player */}
+      <RadioMiniPlayer />
+      
       {/* Global Post Modal for drag & drop */}
       <PostModal 
         isOpen={isPostModalOpen} 
@@ -50,8 +55,10 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <GlobalDropZoneProvider>
-      <AppLayoutContent>{children}</AppLayoutContent>
-    </GlobalDropZoneProvider>
+    <RadioPlayerProvider>
+      <GlobalDropZoneProvider>
+        <AppLayoutContent>{children}</AppLayoutContent>
+      </GlobalDropZoneProvider>
+    </RadioPlayerProvider>
   );
 }
