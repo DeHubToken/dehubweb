@@ -7,7 +7,7 @@
  */
 
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { getAccountInfo, getAccountByUsername, getUserNFTs, getMediaUrl, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername, getUserNFTs, DEHUB_CDN_BASE, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
 import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
@@ -24,6 +24,40 @@ export interface ProfileData {
   followers: number;
   postsCount: number;
   walletAddress?: string;
+}
+
+/**
+ * Extract file extension from API path
+ * Preserves original extension including .octet-stream, .gif, .jpeg, etc.
+ */
+function getExtension(path: string): string {
+  const match = path.match(/\.([a-zA-Z0-9-]+)$/);
+  if (!match) return 'jpg';
+  return match[1].toLowerCase();
+}
+
+/**
+ * Build canonical avatar URL: cdn/avatars/{address}.{ext}
+ * API may return paths like "avatars/xxx.jpg" or "statics/avatars/xxx.octet-stream"
+ * We normalize to: https://dehubcdn.../avatars/{address}.{ext}
+ */
+function buildProfileAvatarUrl(address: string, apiAvatarPath: string | undefined): string | undefined {
+  if (!apiAvatarPath) return undefined;
+  if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
+  const ext = getExtension(apiAvatarPath);
+  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+}
+
+/**
+ * Build canonical cover URL: cdn/covers/{address}.{ext}
+ * API may return paths like "covers/xxx.jpg" or "statics/covers/xxx.gif"
+ * We normalize to: https://dehubcdn.../covers/{address}.{ext}
+ */
+function buildProfileCoverUrl(address: string, apiCoverPath: string | undefined): string | undefined {
+  if (!apiCoverPath) return undefined;
+  if (apiCoverPath.startsWith('http')) return apiCoverPath;
+  const ext = getExtension(apiCoverPath);
+  return `${DEHUB_CDN_BASE}covers/${address}.${ext}`;
 }
 
 /**
@@ -46,9 +80,12 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   const rawAvatarUrl = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
   const rawCoverUrl = user.coverImageUrl || user.coverUrl || user.cover_url;
   
-  // Resolve to full CDN URLs if they're relative paths
-  const avatarUrl = rawAvatarUrl ? getMediaUrl(rawAvatarUrl) : undefined;
-  const coverUrl = rawCoverUrl ? getMediaUrl(rawCoverUrl) : undefined;
+  // Get user address for canonical URL construction
+  const address = user.address || user.wallet_address || '';
+  
+  // Build canonical CDN URLs (strips statics/ or other prefixes)
+  const avatarUrl = buildProfileAvatarUrl(address, rawAvatarUrl);
+  const coverUrl = buildProfileCoverUrl(address, rawCoverUrl);
 
   return {
     id: user._id || user.id || '',
