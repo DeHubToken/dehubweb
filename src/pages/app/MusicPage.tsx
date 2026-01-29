@@ -9,12 +9,10 @@
 import { useState } from 'react';
 import { Play, Music, Mic2, Radio, Disc3 } from 'lucide-react';
 import { VideoCard } from '@/components/app/cards/VideoCard';
-import { PostCard } from '@/components/app/cards/PostCard';
-import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { RadioSection } from '@/components/app/radio';
 import { cn } from '@/lib/utils';
-import { SAMPLE_VIDEOS } from '@/data/mock-feed.data';
-import type { VideoItem, TextPost } from '@/types/feed.types';
+import type { VideoItem } from '@/types/feed.types';
 
 // ============================================================================
 // MOCK DATA
@@ -190,14 +188,14 @@ const AUDIO_TRACKS: AudioTrack[] = [
 // COMPONENTS
 // ============================================================================
 
-type MusicTabValue = 'all' | 'tracks' | 'videos' | 'podcasts' | 'live';
+type MusicTabValue = 'all' | 'tracks' | 'videos' | 'podcasts' | 'live' | 'radio';
 
 const MUSIC_TABS: { icon: typeof Music; label: string; value: MusicTabValue }[] = [
   { icon: Music, label: 'All', value: 'all' },
   { icon: Disc3, label: 'Tracks', value: 'tracks' },
   { icon: Play, label: 'Videos', value: 'videos' },
   { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
-  { icon: Radio, label: 'Live', value: 'live' },
+  { icon: Radio, label: 'Radio', value: 'radio' },
 ];
 
 function AudioTrackCard({ track }: { track: AudioTrack }) {
@@ -281,23 +279,8 @@ export default function MusicPage() {
             ))}
           </div>
         );
-      case 'live':
-        return (
-          <div className="space-y-2 sm:space-y-3">
-            {MUSIC_VIDEOS.slice(0, 3).map((video, i) => (
-              <VideoCard 
-                key={`live-${video.id}`} 
-                video={{
-                  ...video,
-                  id: `live-${video.id}`,
-                  title: `🔴 LIVE: ${video.title}`,
-                  views: `${Math.floor(Math.random() * 10) + 1}.${Math.floor(Math.random() * 9)}K watching`,
-                  uploadedAgo: 'Live now',
-                }} 
-              />
-            ))}
-          </div>
-        );
+      case 'radio':
+        return <RadioSection />;
       default:
         // All - mixed content
         return (
