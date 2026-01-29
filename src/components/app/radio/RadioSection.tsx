@@ -68,7 +68,7 @@ export function RadioSection() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             type="text"
-            placeholder="Search radio stations..."
+            placeholder="Search 50,000+ radio stations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
