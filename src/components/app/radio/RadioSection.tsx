@@ -15,7 +15,8 @@ import { RadioStationCard } from './RadioStationCard';
 import { RadioGenreFilter } from './RadioGenreFilter';
 import { 
   getStationsByGenre, 
-  searchStations,
+  searchStationsAdvanced,
+  parseSearchQuery,
   type RadioGenreId,
   type RadioStation 
 } from '@/lib/api/radio-browser';
@@ -40,14 +41,21 @@ export function RadioSection() {
     enabled: !isSearching,
   });
   
-  // Search stations
+  // Parse search query for country detection
+  const parsedQuery = parseSearchQuery(debouncedSearch);
+  
+  // Search stations with advanced filtering
   const { 
     data: searchResults, 
     isLoading: isLoadingSearch,
     error: searchError 
   } = useQuery({
     queryKey: ['radio-search', debouncedSearch],
-    queryFn: () => searchStations(debouncedSearch, 50),
+    queryFn: () => searchStationsAdvanced({
+      name: parsedQuery.name || undefined,
+      countryCode: parsedQuery.countryCode,
+      limit: 50,
+    }),
     staleTime: 2 * 60 * 1000, // 2 minutes
     enabled: isSearching,
   });
@@ -86,7 +94,10 @@ export function RadioSection() {
         {/* Search Results Header */}
         {isSearching && (
           <div className="flex items-center gap-2 text-sm text-zinc-400">
-            <span>Results for "{debouncedSearch}"</span>
+            <span>
+              Results for {parsedQuery.name ? `"${parsedQuery.name}"` : 'all stations'}
+              {parsedQuery.countryName && ` in ${parsedQuery.countryName}`}
+            </span>
             {!isLoading && <span>({stations.length} stations)</span>}
           </div>
         )}

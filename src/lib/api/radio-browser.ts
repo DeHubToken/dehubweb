@@ -77,6 +77,180 @@ export const RADIO_GENRES = [
 export type RadioGenreId = typeof RADIO_GENRES[number]['id'];
 
 // ============================================================================
+// COUNTRY DATA FOR LOCATION-BASED SEARCH
+// ============================================================================
+
+/** Map of ISO country codes to country names */
+const COUNTRY_CODE_MAP: Record<string, string> = {
+  US: 'United States of America',
+  UK: 'United Kingdom',
+  GB: 'United Kingdom',
+  DE: 'Germany',
+  FR: 'France',
+  JP: 'Japan',
+  BR: 'Brazil',
+  IN: 'India',
+  AU: 'Australia',
+  CA: 'Canada',
+  ES: 'Spain',
+  IT: 'Italy',
+  NL: 'Netherlands',
+  SE: 'Sweden',
+  NO: 'Norway',
+  DK: 'Denmark',
+  FI: 'Finland',
+  PL: 'Poland',
+  RU: 'Russia',
+  MX: 'Mexico',
+  AR: 'Argentina',
+  CL: 'Chile',
+  CO: 'Colombia',
+  KR: 'South Korea',
+  CN: 'China',
+  TW: 'Taiwan',
+  TH: 'Thailand',
+  ID: 'Indonesia',
+  MY: 'Malaysia',
+  SG: 'Singapore',
+  PH: 'Philippines',
+  VN: 'Vietnam',
+  ZA: 'South Africa',
+  EG: 'Egypt',
+  NG: 'Nigeria',
+  KE: 'Kenya',
+  NZ: 'New Zealand',
+  IE: 'Ireland',
+  AT: 'Austria',
+  CH: 'Switzerland',
+  BE: 'Belgium',
+  PT: 'Portugal',
+  GR: 'Greece',
+  CZ: 'Czech Republic',
+  HU: 'Hungary',
+  RO: 'Romania',
+  UA: 'Ukraine',
+  TR: 'Turkey',
+  IL: 'Israel',
+  AE: 'United Arab Emirates',
+  SA: 'Saudi Arabia',
+};
+
+/** Country names that can be detected in search queries */
+const COUNTRY_NAME_MAP: Record<string, string> = {
+  'united states': 'US',
+  'usa': 'US',
+  'america': 'US',
+  'united kingdom': 'GB',
+  'england': 'GB',
+  'britain': 'GB',
+  'germany': 'DE',
+  'france': 'FR',
+  'japan': 'JP',
+  'brazil': 'BR',
+  'india': 'IN',
+  'australia': 'AU',
+  'canada': 'CA',
+  'spain': 'ES',
+  'italy': 'IT',
+  'netherlands': 'NL',
+  'holland': 'NL',
+  'sweden': 'SE',
+  'norway': 'NO',
+  'denmark': 'DK',
+  'finland': 'FI',
+  'poland': 'PL',
+  'russia': 'RU',
+  'mexico': 'MX',
+  'argentina': 'AR',
+  'chile': 'CL',
+  'colombia': 'CO',
+  'south korea': 'KR',
+  'korea': 'KR',
+  'china': 'CN',
+  'taiwan': 'TW',
+  'thailand': 'TH',
+  'indonesia': 'ID',
+  'malaysia': 'MY',
+  'singapore': 'SG',
+  'philippines': 'PH',
+  'vietnam': 'VN',
+  'south africa': 'ZA',
+  'egypt': 'EG',
+  'nigeria': 'NG',
+  'kenya': 'KE',
+  'new zealand': 'NZ',
+  'ireland': 'IE',
+  'austria': 'AT',
+  'switzerland': 'CH',
+  'belgium': 'BE',
+  'portugal': 'PT',
+  'greece': 'GR',
+  'czech republic': 'CZ',
+  'czechia': 'CZ',
+  'hungary': 'HU',
+  'romania': 'RO',
+  'ukraine': 'UA',
+  'turkey': 'TR',
+  'israel': 'IL',
+  'uae': 'AE',
+  'united arab emirates': 'AE',
+  'dubai': 'AE',
+  'saudi arabia': 'SA',
+};
+
+export interface ParsedSearchQuery {
+  name: string;
+  countryCode?: string;
+  countryName?: string;
+}
+
+/**
+ * Parse a search query to extract country and station name
+ * Examples:
+ *   "jazz US" → { name: "jazz", countryCode: "US", countryName: "United States of America" }
+ *   "Germany" → { name: "", countryCode: "DE", countryName: "Germany" }
+ *   "rock germany" → { name: "rock", countryCode: "DE", countryName: "Germany" }
+ *   "radio london" → { name: "radio london" }
+ */
+export function parseSearchQuery(query: string): ParsedSearchQuery {
+  const trimmedQuery = query.trim();
+  const words = trimmedQuery.split(/\s+/);
+  
+  // Check for 2-letter country code (case-insensitive)
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i].toUpperCase();
+    if (word.length === 2 && COUNTRY_CODE_MAP[word]) {
+      const remainingWords = [...words.slice(0, i), ...words.slice(i + 1)];
+      return {
+        name: remainingWords.join(' ').trim(),
+        countryCode: word,
+        countryName: COUNTRY_CODE_MAP[word],
+      };
+    }
+  }
+  
+  // Check for country names (longest match first)
+  const lowerQuery = trimmedQuery.toLowerCase();
+  const sortedCountryNames = Object.keys(COUNTRY_NAME_MAP).sort((a, b) => b.length - a.length);
+  
+  for (const countryName of sortedCountryNames) {
+    const regex = new RegExp(`\\b${countryName}\\b`, 'i');
+    if (regex.test(lowerQuery)) {
+      const countryCode = COUNTRY_NAME_MAP[countryName];
+      const remainingText = lowerQuery.replace(regex, '').replace(/\s+/g, ' ').trim();
+      return {
+        name: remainingText,
+        countryCode,
+        countryName: COUNTRY_CODE_MAP[countryCode],
+      };
+    }
+  }
+  
+  // No country detected
+  return { name: trimmedQuery };
+}
+
+// ============================================================================
 // API FUNCTIONS
 // ============================================================================
 
@@ -131,6 +305,39 @@ export async function searchStations(query: string, limit = 50): Promise<RadioSt
   const encodedQuery = encodeURIComponent(query);
   return fetchWithFallback<RadioStation[]>(
     `/stations/search?name=${encodedQuery}&limit=${limit}&hidebroken=true&order=votes&reverse=true`
+  );
+}
+
+export interface AdvancedSearchParams {
+  name?: string;
+  countryCode?: string;
+  limit?: number;
+}
+
+/**
+ * Advanced search with country filtering
+ * Uses the parsed query to search by name and/or country
+ */
+export async function searchStationsAdvanced(params: AdvancedSearchParams): Promise<RadioStation[]> {
+  const { name, countryCode, limit = 50 } = params;
+  
+  const searchParams = new URLSearchParams();
+  
+  if (name) {
+    searchParams.set('name', name);
+  }
+  
+  if (countryCode) {
+    searchParams.set('countrycode', countryCode);
+  }
+  
+  searchParams.set('limit', limit.toString());
+  searchParams.set('hidebroken', 'true');
+  searchParams.set('order', 'votes');
+  searchParams.set('reverse', 'true');
+  
+  return fetchWithFallback<RadioStation[]>(
+    `/stations/search?${searchParams.toString()}`
   );
 }
 
