@@ -433,10 +433,10 @@ export async function recordView(tokenId: string): Promise<void> {
 }
 
 // User functions
-export async function getAccountInfo(userId: string, viewerAddress?: string): Promise<DeHubUser> {
+export async function getAccountInfo(userId: string, address?: string): Promise<DeHubUser> {
   const params: Record<string, string> = {};
-  if (viewerAddress) {
-    params.address = viewerAddress;
+  if (address) {
+    params.address = address;
   }
   const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(userId)}`, { params });
   // Handle wrapped response from API
@@ -446,12 +446,12 @@ export async function getAccountInfo(userId: string, viewerAddress?: string): Pr
   return response as DeHubUser;
 }
 
-export async function getAccountByUsername(username: string, viewerAddress?: string): Promise<DeHubUser> {
+export async function getAccountByUsername(username: string, address?: string): Promise<DeHubUser> {
   // Remove @ prefix if present
   const cleanUsername = username.replace("@", "");
   const params: Record<string, string> = {};
-  if (viewerAddress) {
-    params.address = viewerAddress;
+  if (address) {
+    params.address = address;
   }
   const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(cleanUsername)}`, { params });
   // Handle wrapped response from API
