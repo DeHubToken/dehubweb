@@ -25,7 +25,16 @@ import MusicPage from "./pages/app/MusicPage";
 import PostInfoPage from "./pages/app/PostInfoPage";
 import AssistantPage from "./pages/app/AssistantPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 2 * 60 * 1000,     // 2 minutes - prevents refetching recently loaded data
+      gcTime: 10 * 60 * 1000,       // 10 minutes - keeps cached data longer
+      refetchOnWindowFocus: false,  // Prevents refetch when switching tabs
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

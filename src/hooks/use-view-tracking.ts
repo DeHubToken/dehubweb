@@ -2,11 +2,71 @@
  * View Tracking Hooks
  * ===================
  * React hooks for integrating view tracking into components.
+ * Uses a shared IntersectionObserver singleton for performance.
  */
 
 import { useEffect, useRef, useCallback } from 'react';
 import { videoViewTracker, feedViewTracker } from '@/lib/view-tracker';
 import { useAuth } from '@/contexts/AuthContext';
+
+// ============================================================================
+// SHARED INTERSECTION OBSERVER SINGLETON
+// ============================================================================
+
+/**
+ * Shared observer for all feed items - reduces CPU overhead from N observers to 1
+ */
+class SharedViewObserver {
+  private observer: IntersectionObserver | null = null;
+  private elementMap = new Map<Element, string>(); // element -> tokenId
+  
+  private getObserver(): IntersectionObserver {
+    if (!this.observer) {
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const tokenId = this.elementMap.get(entry.target);
+            if (!tokenId) return;
+            
+            if (entry.isIntersecting) {
+              feedViewTracker.onVisible(tokenId);
+            } else {
+              feedViewTracker.onHidden(tokenId);
+            }
+          });
+        },
+        { 
+          threshold: 0.5, // Item is "visible" when 50%+ is in viewport
+          rootMargin: '0px',
+        }
+      );
+    }
+    return this.observer;
+  }
+  
+  observe(element: Element, tokenId: string) {
+    this.elementMap.set(element, tokenId);
+    this.getObserver().observe(element);
+  }
+  
+  unobserve(element: Element) {
+    const tokenId = this.elementMap.get(element);
+    if (tokenId) {
+      feedViewTracker.onHidden(tokenId);
+    }
+    this.elementMap.delete(element);
+    this.observer?.unobserve(element);
+  }
+  
+  disconnect() {
+    this.observer?.disconnect();
+    this.elementMap.clear();
+    this.observer = null;
+  }
+}
+
+// Single shared instance
+const sharedViewObserver = new SharedViewObserver();
 
 // ============================================================================
 // VIDEO VIEW TRACKING HOOK
@@ -48,12 +108,12 @@ export function useVideoViewTracking(tokenId: string) {
 }
 
 // ============================================================================
-// FEED ITEM VIEW TRACKING HOOK
+// FEED ITEM VIEW TRACKING HOOK (OPTIMIZED)
 // ============================================================================
 
 /**
  * Hook to track feed item visibility for batch view recording.
- * Uses IntersectionObserver to detect when items enter/leave viewport.
+ * Uses a shared IntersectionObserver singleton for better performance.
  * 
  * @example
  * ```tsx
@@ -67,7 +127,7 @@ export function useVideoViewTracking(tokenId: string) {
 export function useFeedViewTracking(tokenId: string) {
   const { isAuthenticated } = useAuth();
   const elementRef = useRef<HTMLDivElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const observedRef = useRef(false);
   
   useEffect(() => {
     if (!isAuthenticated || !tokenId) return;
@@ -75,32 +135,15 @@ export function useFeedViewTracking(tokenId: string) {
     const element = elementRef.current;
     if (!element) return;
     
-    // Create observer to track visibility
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            feedViewTracker.onVisible(tokenId);
-          } else {
-            feedViewTracker.onHidden(tokenId);
-          }
-        });
-      },
-      { 
-        threshold: 0.5, // Item is "visible" when 50%+ is in viewport
-        rootMargin: '0px',
-      }
-    );
-    
-    observerRef.current.observe(element);
+    // Use shared observer
+    sharedViewObserver.observe(element, tokenId);
+    observedRef.current = true;
     
     return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
+      if (observedRef.current && element) {
+        sharedViewObserver.unobserve(element);
+        observedRef.current = false;
       }
-      // Mark as hidden when unmounting
-      feedViewTracker.onHidden(tokenId);
     };
   }, [tokenId, isAuthenticated]);
   
@@ -110,6 +153,7 @@ export function useFeedViewTracking(tokenId: string) {
 /**
  * Hook that returns a ref callback for tracking feed item views.
  * Alternative API that works better with some component patterns.
+ * Uses shared IntersectionObserver for performance.
  * 
  * @example
  * ```tsx
@@ -122,27 +166,21 @@ export function useFeedViewTracking(tokenId: string) {
  */
 export function useFeedViewTrackingCallback(tokenId: string) {
   const { isAuthenticated } = useAuth();
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const currentElement = useRef<Element | null>(null);
   
   // Cleanup function
   useEffect(() => {
     return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
-      if (tokenId) {
-        feedViewTracker.onHidden(tokenId);
+      if (currentElement.current) {
+        sharedViewObserver.unobserve(currentElement.current);
       }
     };
   }, [tokenId]);
   
   const refCallback = useCallback((element: HTMLDivElement | null) => {
-    // Disconnect previous observer
-    if (observerRef.current && currentElement.current) {
-      observerRef.current.unobserve(currentElement.current);
-      observerRef.current.disconnect();
+    // Disconnect previous element
+    if (currentElement.current) {
+      sharedViewObserver.unobserve(currentElement.current);
     }
     
     if (!element || !isAuthenticated || !tokenId) {
@@ -151,25 +189,7 @@ export function useFeedViewTrackingCallback(tokenId: string) {
     }
     
     currentElement.current = element;
-    
-    // Create new observer
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            feedViewTracker.onVisible(tokenId);
-          } else {
-            feedViewTracker.onHidden(tokenId);
-          }
-        });
-      },
-      { 
-        threshold: 0.5,
-        rootMargin: '0px',
-      }
-    );
-    
-    observerRef.current.observe(element);
+    sharedViewObserver.observe(element, tokenId);
   }, [tokenId, isAuthenticated]);
   
   return refCallback;
