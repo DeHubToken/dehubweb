@@ -6,11 +6,12 @@
  * Mobile: Full-screen video.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import type { ShortVideo } from '@/types/feed.types';
 
 interface ShortsViewerProps {
@@ -33,6 +34,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
+  const currentShort = shorts[currentIndex];
+  
+  // View tracking for the current short
+  const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
+  
+  // Handle video time update for view tracking
+  const handleTimeUpdate = useCallback(() => {
+    if (videoRef.current) {
+      const ct = videoRef.current.currentTime;
+      const dur = videoRef.current.duration;
+      if (dur > 0) {
+        trackView(ct, dur);
+      }
+    }
+  }, [trackView]);
+
   // Lock body scroll when viewer is open
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -43,8 +60,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       document.body.style.touchAction = '';
     };
   }, []);
-
-  const currentShort = shorts[currentIndex];
 
   useEffect(() => {
     if (videoRef.current) {
@@ -245,6 +260,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 autoPlay
                 muted={isMuted}
                 poster={currentShort.thumbnail}
+                onTimeUpdate={handleTimeUpdate}
                 onError={() => console.error('Video load error:', currentShort.videoUrl)}
               />
             ) : (

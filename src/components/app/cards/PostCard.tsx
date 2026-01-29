@@ -17,6 +17,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsSheet } from '../comments';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
+import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { getViewCount } from '@/lib/feed-utils';
 import type { TextPost } from '@/types/feed.types';
 
@@ -27,9 +28,12 @@ interface PostCardProps {
 export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  
+  // View tracking - batches views when post is visible for 2+ seconds
+  const viewRef = useFeedViewTracking(post.id);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
+    <div ref={viewRef} className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       <CardHeader
         username={post.author.name}
         avatarSeed={post.author.avatarSeed}

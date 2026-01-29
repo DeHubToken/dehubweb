@@ -32,4 +32,5 @@ export { usePullToRefresh } from './use-pull-to-refresh';
 
 export { useIsTouchDevice } from './use-touch-device';
 export { useUserLanguage } from './use-user-language';
+export { useVideoViewTracking, useFeedViewTracking, useFeedViewTrackingCallback } from './use-view-tracking';
 export { useVoiceChat } from './use-voice-chat';
