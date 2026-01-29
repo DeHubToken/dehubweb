@@ -18,7 +18,6 @@ import { CommentsSheet } from '../comments';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
-import { getViewCount } from '@/lib/feed-utils';
 import type { TextPost } from '@/types/feed.types';
 
 interface PostCardProps {
@@ -61,7 +60,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <span className="text-zinc-500 text-xs">{post.createdAt}</span>
           <span className="flex items-center gap-1 text-zinc-500 text-xs">
             <Eye className="w-3 h-3" />
-            {getViewCount(post.id)}
+            {post.views || '0'}
           </span>
         </div>
       </div>
