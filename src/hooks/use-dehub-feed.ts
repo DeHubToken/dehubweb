@@ -80,7 +80,7 @@ function formatTimeAgo(dateString?: string): string {
   if (diffHours < 24) return `${diffHours}h`;
   if (diffDays < 7) return `${diffDays}d`;
   if (diffWeeks < 4) return `${diffWeeks}w`;
-  if (diffMonths < 12) return `${diffMonths}mo`;
+  if (diffYears < 1) return `${diffMonths}mo`;
   return `${diffYears}y`;
 }
 
