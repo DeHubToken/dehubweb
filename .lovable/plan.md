@@ -1,76 +1,24 @@
 
-
-# Add Radio Section to Home Page Music Tab
+# Fix Color Hue Slider - Keep Left Side Lit Up
 
 ## Problem
-The Radio feature was incorrectly placed in the separate Music page (`/app/music`) instead of the **Music tab on the Home page** (`/app`). You're on the correct page, but the MusicFeed component is just showing "No music content yet" with empty sub-tabs.
+The color/hue slider in the fullscreen visualizer dims out the left portion when dragging to the right. You want the left side (the selected range) to stay lit up and only the unselected portion on the right to dim out.
 
 ## Solution
-Integrate the `RadioSection` component into the `MusicFeed` component, replacing the current "Live" sub-tab with "Radio" - so when you click the Music tab on the Home page and tap "Radio", you'll see the radio stations.
+Add a semi-transparent overlay on the right side of the thumb (the unselected portion) to create a "dimming" effect, while keeping the left side (selected portion) fully visible with the rainbow gradient.
 
----
+## Implementation
 
-## Changes Required
+**File: `src/components/app/radio/RadioFullscreenVisualizer.tsx`**
 
-### 1. Update MusicFeed Component
-**File:** `src/components/app/feeds/MusicFeed.tsx`
+Update the hue slider section to add a dark overlay that covers only the unselected (right) portion:
 
-**Changes:**
-- Replace the "Live" sub-tab with "Radio" sub-tab using `Radio` icon from lucide-react
-- Import and render the `RadioSection` component when "radio" sub-tab is active
-- Keep the empty states for other sub-tabs (tracks, videos, podcasts) until they have real API data
+1. Wrap the slider in a relative container
+2. Add a pseudo-overlay div that covers from the current thumb position to the right edge
+3. The overlay will have a dark semi-transparent background to "dim" the unselected portion
+4. The left side remains fully vibrant showing the selected range
 
-### Updated Sub-Tab Structure:
-| Tab | Icon | Content |
-|-----|------|---------|
-| All | Music | Empty state (future: all music content) |
-| Tracks | Disc3 | Empty state (future: audio tracks) |
-| Videos | Play | Empty state (future: music videos) |
-| Podcasts | Mic2 | Empty state (future: podcasts) |
-| **Radio** | Radio | **RadioSection with live streaming stations** |
-
----
-
-## User Experience After Fix
-
-1. Navigate to Home page (`/app`)
-2. Tap the **Music** tab (play icon) in the tab bar
-3. Tap the tab again to show sub-tabs OR sub-tabs will be visible
-4. Select **Radio** sub-tab
-5. See the full radio experience: search bar, genre filters, station cards
-6. Tap any station to start streaming with persistent mini-player
-
----
-
-## Technical Details
-
-```tsx
-// Updated sub-tabs in MusicFeed.tsx
-type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio';
-
-const MUSIC_SUB_TABS = [
-  { icon: Music, label: 'All', value: 'all' },
-  { icon: Disc3, label: 'Tracks', value: 'tracks' },
-  { icon: Play, label: 'Videos', value: 'videos' },
-  { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
-  { icon: Radio, label: 'Radio', value: 'radio' }, // Changed from 'live'
-];
-
-// Conditional render in MusicFeed
-{activeSubTab === 'radio' ? (
-  <RadioSection />
-) : (
-  <EmptyState type={getEmptyLabel()} />
-)}
-```
-
----
-
-## Files to Modify
-
-| File | Change |
-|------|--------|
-| `src/components/app/feeds/MusicFeed.tsx` | Add Radio sub-tab and render RadioSection |
-
-No new files needed - the RadioSection component already exists and works.
-
+### Technical Details
+- Calculate the percentage position based on current `hue` value (0-360 maps to 0-100%)
+- Position an absolutely-placed dark overlay from that percentage to 100%
+- This creates the visual effect of the left side being "lit up" and the right side being "dimmed"
