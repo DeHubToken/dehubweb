@@ -7,7 +7,7 @@ import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-dr
 import { RadioPlayerProvider } from '@/hooks/use-radio-player';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
-import { RadioMiniPlayer } from './radio';
+import { RadioMiniPlayer } from '@/components/app/radio';
 interface AppLayoutContentProps {
   children?: ReactNode;
 }
