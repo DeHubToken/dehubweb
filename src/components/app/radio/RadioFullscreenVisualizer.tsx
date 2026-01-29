@@ -326,6 +326,11 @@ export function RadioFullscreenVisualizer({
                     background: 'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))'
                   }}
                 >
+                  {/* Dark overlay for unselected (right) portion */}
+                  <div 
+                    className="absolute top-0 bottom-0 right-0 bg-black/70 pointer-events-none rounded-r-full"
+                    style={{ left: `${(hue / 360) * 100}%` }}
+                  />
                   <Slider
                     value={[hue]}
                     min={0}
