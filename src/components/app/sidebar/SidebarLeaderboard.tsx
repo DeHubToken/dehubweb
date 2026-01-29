@@ -3,7 +3,8 @@ import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
-import { getLeaderboard, getMediaUrl, type LeaderboardEntry } from '@/lib/api/dehub';
+import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
@@ -32,8 +33,8 @@ export function SidebarLeaderboard() {
   const entries = data?.result?.byWalletBalance?.slice(0, 50) || [];
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl) {
-      return getMediaUrl(entry.avatarUrl);
+    if (entry.avatarUrl && entry.account) {
+      return buildAvatarUrl(entry.account, entry.avatarUrl);
     }
     return null;
   };

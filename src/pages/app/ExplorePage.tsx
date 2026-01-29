@@ -17,6 +17,7 @@ import {
   type SearchCreator 
 } from '@/hooks/use-dehub-search';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 
@@ -209,7 +210,7 @@ const SearchResultCard = ({
 }) => {
   const navigate = useNavigate();
   const thumbnailUrl = item.thumbnail ? getMediaUrl(item.thumbnail) : undefined;
-  const avatarUrl = item.minterAvatarUrl ? getMediaUrl(item.minterAvatarUrl) : undefined;
+  const avatarUrl = (item.minterAvatarUrl && item.minter) ? buildAvatarUrl(item.minter, item.minterAvatarUrl) : undefined;
   const displayName = item.minterDisplayName || item.mintername || 'User';
   const handle = item.mintername ? `@${item.mintername}` : item.minter?.slice(0, 8);
   const timeAgo = item.createdAt 

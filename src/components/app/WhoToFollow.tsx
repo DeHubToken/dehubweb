@@ -3,7 +3,8 @@ import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { searchNFTs, getMediaUrl } from '@/lib/api/dehub';
+import { searchNFTs } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 interface UniqueUser {
   address: string;
@@ -54,8 +55,8 @@ export function WhoToFollow() {
   const suggestions = data || [];
 
   const getAvatarUrl = (user: UniqueUser) => {
-    if (user.avatarUrl) {
-      return getMediaUrl(user.avatarUrl);
+    if (user.avatarUrl && user.address) {
+      return buildAvatarUrl(user.address, user.avatarUrl);
     }
     return undefined; // No fallback image - use initial instead
   };

@@ -14,7 +14,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
-import { getNFTInfo, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { getNFTInfo, DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -283,7 +284,7 @@ export default function PostInfoPage() {
   
   // Get creator info
   const creatorName = nftInfo.minterDisplayName || nftInfo.mintername || truncateAddress(nftInfo.minter);
-  const creatorAvatar = getMediaUrl(nftInfo.minterAvatarUrl);
+  const creatorAvatar = buildAvatarUrl(nftInfo.minter, nftInfo.minterAvatarUrl);
 
   return (
     <div className="min-h-screen bg-black">

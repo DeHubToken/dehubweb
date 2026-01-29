@@ -8,7 +8,8 @@
  */
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { searchNFTs, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
+import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
 import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
@@ -74,7 +75,7 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
       id: minterId,
       name: nft.minterDisplayName || nft.mintername || 'User',
       handle: `@${nft.mintername || minterId.slice(0, 8)}`,
-      avatar: nft.minterAvatarUrl ? getMediaUrl(nft.minterAvatarUrl) : undefined,
+      avatar: buildAvatarUrl(minterId, nft.minterAvatarUrl),
       verified: false, // API doesn't return verification on NFT objects
       bio: undefined,
     });

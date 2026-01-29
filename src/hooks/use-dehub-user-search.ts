@@ -7,7 +7,8 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { getAccountByUsername, getMediaUrl, type DeHubUser } from '@/lib/api/dehub';
+import { getAccountByUsername, type DeHubUser } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
 import type { SearchCreator } from './use-dehub-search';
 
@@ -16,12 +17,13 @@ import type { SearchCreator } from './use-dehub-search';
  */
 export function mapUserToSearchCreator(user: DeHubUser): SearchCreator {
   const rawAvatarUrl = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
+  const address = user.address || user.wallet_address || '';
   
   return {
-    id: user._id || user.id || user.address || '',
+    id: user._id || user.id || address || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
-    avatar: rawAvatarUrl ? getMediaUrl(rawAvatarUrl) : undefined,
+    avatar: buildAvatarUrl(address, rawAvatarUrl),
     verified: user.isVerified || user.is_verified || false,
     bio: user.bio,
   };

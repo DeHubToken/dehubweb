@@ -14,7 +14,8 @@ import medal3 from '@/assets/medal-3.png';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
-import { getLeaderboard, getMediaUrl, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
+import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
@@ -97,8 +98,8 @@ export default function LeaderboardPage() {
   };
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
-    if (entry.avatarUrl) {
-      return getMediaUrl(entry.avatarUrl);
+    if (entry.avatarUrl && entry.account) {
+      return buildAvatarUrl(entry.account, entry.avatarUrl);
     }
     return null;
   };
