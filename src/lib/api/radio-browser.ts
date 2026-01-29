@@ -58,6 +58,7 @@ export interface RadioTag {
 
 export const RADIO_GENRES = [
   { id: 'top', label: 'Top Stations', tag: '' },
+  { id: 'lofi', label: 'Lo-Fi', tag: 'lofi' },
   { id: 'pop', label: 'Pop', tag: 'pop' },
   { id: 'rock', label: 'Rock', tag: 'rock' },
   { id: 'hiphop', label: 'Hip-Hop', tag: 'hip hop' },
@@ -70,7 +71,6 @@ export const RADIO_GENRES = [
   { id: 'reggae', label: 'Reggae', tag: 'reggae' },
   { id: 'news', label: 'News', tag: 'news' },
   { id: 'talk', label: 'Talk', tag: 'talk' },
-  { id: 'lofi', label: 'Lo-Fi', tag: 'lofi' },
   { id: 'chill', label: 'Chill', tag: 'chillout' },
 ] as const;
 
