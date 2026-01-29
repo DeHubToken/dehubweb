@@ -136,6 +136,7 @@ const COUNTRY_CODE_MAP: Record<string, string> = {
   UA: 'Ukraine',
   TR: 'Turkey',
   IL: 'Israel',
+  PS: 'Palestine',
   AE: 'United Arab Emirates',
   SA: 'Saudi Arabia',
 };
@@ -197,6 +198,8 @@ const COUNTRY_NAME_MAP: Record<string, string> = {
   'ukraine': 'UA',
   'turkey': 'TR',
   'israel': 'IL',
+  'palestine': 'PS',
+  'gaza': 'PS',
   'uae': 'AE',
   'united arab emirates': 'AE',
   'dubai': 'AE',
