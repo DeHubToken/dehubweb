@@ -1,102 +1,39 @@
 
-# Fix: Bounty Details Not Showing Due to Field Name Mismatch
 
-## Root Cause Identified
+# Fix: Bounty Amount Label - It's Per-User Reward, Not Total Pool
 
-The API returns bounty data using different field names than what the code expects:
+## The Issue
+The bounty drawer currently displays:
+> "Total Reward Pool: 7,500 DHB"
 
-| What API Returns | What Code Reads |
-|-----------------|-----------------|
-| `addBountyFirstXViewers` | `bountyViews` |
-| `addBountyFirstXComments` | `bountyComments` |
-| `addBountyAmount` | `bountyAmount` |
-| `addBountyTokenSymbol` | `bountyCurrency` |
+But this is wrong! The API field `addBountyAmount` is the **reward each qualifying user receives**, not the total pool.
 
-Example from "The Island" video API response:
-```json
-"streamInfo": {
-  "isAddBounty": true,
-  "addBountyFirstXViewers": 15,
-  "addBountyFirstXComments": 15,
-  "addBountyAmount": 7500,
-  "addBountyTokenSymbol": "DHB"
-}
-```
-
-The mapper reads `item.streamInfo?.bountyViews` which returns `undefined`, so the drawer shows nothing.
+## The Fix
+Change the label from "Total Reward Pool" to "Reward per User" or similar.
 
 ---
 
-## Solution
+## Implementation
 
-Update the `streamInfo` interface and mapper in `use-unified-feed.ts` to use the correct API field names.
+### File: `src/components/app/cards/VideoCard.tsx`
 
----
-
-## Implementation Details
-
-### File: `src/hooks/use-unified-feed.ts`
-
-**1. Update the streamInfo interface (lines 63-73):**
-
-Change from:
-```typescript
-streamInfo?: {
-  isLockContent: boolean;
-  lockAmount?: number;
-  isPayPerView: boolean;
-  payPerViewAmount?: number;
-  isAddBounty: boolean;
-  bountyViews?: number;
-  bountyComments?: number;
-  bountyAmount?: number;
-  bountyCurrency?: string;
-};
+**Line 515** - Change:
+```tsx
+<span className="text-zinc-300 text-sm">Total Reward Pool</span>
 ```
 
 To:
-```typescript
-streamInfo?: {
-  isLockContent: boolean;
-  lockAmount?: number;
-  isPayPerView: boolean;
-  payPerViewAmount?: number;
-  isAddBounty: boolean;
-  addBountyFirstXViewers?: number | string;
-  addBountyFirstXComments?: number | string;
-  addBountyAmount?: number;
-  addBountyTokenSymbol?: string;
-  addBountyChainId?: number;
-};
+```tsx
+<span className="text-zinc-300 text-sm">Reward per User</span>
 ```
-
-Note: API sometimes returns these as strings (e.g., `"69"` instead of `69`), so we handle both.
-
-**2. Update the mapToVideoItem function (lines 186-189):**
-
-Change from:
-```typescript
-bountyViews: item.streamInfo?.bountyViews,
-bountyComments: item.streamInfo?.bountyComments,
-bountyAmount: item.streamInfo?.bountyAmount,
-bountyCurrency: item.streamInfo?.bountyCurrency || 'DHB',
-```
-
-To:
-```typescript
-bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
-bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
-bountyAmount: item.streamInfo?.addBountyAmount,
-bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
-```
-
-Using `Number()` ensures string values like `"69"` are converted to numbers.
 
 ---
 
 ## Result
-
-After this fix, the Bounty drawer for "The Island" video will correctly display:
+The bounty drawer will correctly display:
 - "First 15 views get rewarded"
-- "First 15 comments get rewarded"  
-- "Total Reward Pool: 7,500 DHB"
+- "First 15 comments get rewarded"
+- **"Reward per User: 7,500 DHB"** ← Fixed!
+
+Each qualifying viewer/commenter receives 7,500 DHB individually.
+
