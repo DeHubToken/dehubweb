@@ -19,6 +19,7 @@ import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
+import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { getViewCount } from '@/lib/feed-utils';
 import {
@@ -53,6 +54,9 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTouchDevice = useIsTouchDevice();
+  
+  // View tracking - fires view after watching threshold
+  const { onTimeUpdate: trackView } = useVideoViewTracking(video.id);
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
@@ -175,9 +179,16 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
   const handleTimeUpdate = useCallback(() => {
     if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
+      const ct = videoRef.current.currentTime;
+      const dur = videoRef.current.duration;
+      setCurrentTime(ct);
+      
+      // Track video view progress (fires view when threshold met)
+      if (dur > 0) {
+        trackView(ct, dur);
+      }
     }
-  }, []);
+  }, [trackView]);
 
   const handleLoadedMetadata = useCallback(() => {
     if (videoRef.current) {

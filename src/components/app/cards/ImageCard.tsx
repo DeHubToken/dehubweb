@@ -21,6 +21,7 @@ import { PostAIChat } from './PostAIChat';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
+import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -248,6 +249,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
+  
+  // View tracking - batches views when post is visible for 2+ seconds
+  const viewRef = useFeedViewTracking(post.id);
 
   // Get images array - use imageUrls if available, otherwise fall back to single image
   const images = post.imageUrls && post.imageUrls.length > 0 
@@ -260,7 +264,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div ref={viewRef} className="bg-zinc-900 rounded-2xl overflow-hidden">
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
         <CardHeader
