@@ -3,6 +3,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import App from "./App.tsx";
 import "./index.css";
 
+// App entry point
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary>
     <App />
