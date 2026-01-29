@@ -358,8 +358,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     retry: 2,
   });
 
-  // Use static categories (planned real data)
-  const categories = FALLBACK_CATEGORIES;
+  // Use API categories with fallback
+  const categories = useMemo(() => {
+    if (apiCategories && Array.isArray(apiCategories) && apiCategories.length > 0) {
+      return apiCategories;
+    }
+    return FALLBACK_CATEGORIES;
+  }, [apiCategories]);
 
   // Use unified feed with server-side PPV/Bounty/Locked filtering
   const {

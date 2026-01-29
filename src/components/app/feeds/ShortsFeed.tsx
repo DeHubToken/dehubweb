@@ -220,8 +220,13 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     retry: 2,
   });
 
-  // Use static categories (planned real data)
-  const categories = FALLBACK_CATEGORIES;
+  // Use API categories with fallback
+  const categories = useMemo(() => {
+    if (apiCategories && Array.isArray(apiCategories) && apiCategories.length > 0) {
+      return apiCategories;
+    }
+    return FALLBACK_CATEGORIES;
+  }, [apiCategories]);
 
   // Fetch from DeHub API - pass sortMode based on selected filter
   const {
