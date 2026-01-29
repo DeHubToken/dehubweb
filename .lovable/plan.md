@@ -1,235 +1,118 @@
 
-# Fix: TranslatableGroup Not Displaying Translated Text
+# Performance Optimization Plan
 
-## The Problem
+## Issues Identified
 
-When you click "Translate", the API works correctly (returns translated text), but the `TranslatableGroup` component never actually displays the translation. It just keeps showing the original `{children}`.
+After reviewing the codebase and console logs, I found several performance bottlenecks:
 
-**Evidence from network logs:**
-- Request: Turkish text about Galatasaray
-- Response: Status 200, properly translated English text
-- UI: Still shows Turkish text (never updates)
+### 1. Duplicate React Keys (High Priority)
+Console shows: `Warning: Encountered two children with the same key, "astronomy"`
 
-## Root Cause
+This causes React to do extra work reconciling duplicates and can lead to visual glitches. The issue is in `VideosFeed.tsx` where videos with the same title or ID are being rendered.
 
-In `src/components/app/TranslatableText.tsx`, the `TranslatableGroup` component (lines 301-351) has this structure:
+### 2. Multiple IntersectionObservers Per Card (High Priority)
+Every `ImageCard` and `VideoCard` creates its own `IntersectionObserver` for view tracking. With 20+ cards on screen, that's 20+ observers running simultaneously, checking visibility every frame.
 
-```tsx
-export function TranslatableGroup({ text, children }: TranslatableGroupProps) {
-  const { handleTranslate, translatedText, isTranslated, ... } = useTranslation(text);
-  
-  return (
-    <>
-      {children}  // <-- PROBLEM: Always renders original children!
-      <button onClick={handleTranslate}>Translate</button>
-    </>
-  );
-}
-```
+**Fix**: Use a single shared observer for all feed items.
 
-The `translatedText` and `isTranslated` values are captured but **never used** - `children` renders unchanged.
+### 3. Language Detection on Every Card (Medium Priority)
+The `useTranslation` hook in `FeedDescription` runs language detection for every visible post. This triggers:
+- Regex tests on mount
+- Potential API calls to `detect-language` endpoint  
+- Caching logic that still runs even when cache hits
 
-## The Solution
+**Fix**: Debounce detection and batch requests.
 
-Use React Context to pass translation state to child components:
+### 4. Unnecessary Framer Motion Animations (Medium Priority)
+Many cards use `whileHover={{ scale: 1.1 }}` which triggers layout recalculations. On mobile, these hover animations never fire but the component still sets up listeners.
 
-1. **Create a Translation Context** - Holds `isTranslated`, `translatedText`, and `originalText`
-2. **Update TranslatableGroup** - Wrap children in the context provider
-3. **Create TranslatableContent** - A new component that consumes context and swaps text
-4. **Update FeedDescription** - Use `TranslatableContent` for title/description
+**Fix**: Conditionally apply motion only on non-touch devices.
+
+### 5. QueryClient Without Optimized Settings (Low Priority)
+The QueryClient has no `staleTime` or `gcTime` configured, meaning every refetch is treated as fresh data needing full re-render.
 
 ---
 
-## Implementation
+## Implementation Changes
 
-### File: `src/components/app/TranslatableText.tsx`
+### File 1: `src/App.tsx`
+Add optimized QueryClient settings:
+- `staleTime: 2 * 60 * 1000` (2 minutes) - prevents refetching recently loaded data
+- `gcTime: 10 * 60 * 1000` (10 minutes) - keeps cached data longer
+- `refetchOnWindowFocus: false` - prevents refetch when switching tabs
 
-**1. Add Context (after line 27):**
+### File 2: `src/hooks/use-view-tracking.ts`
+Replace individual IntersectionObservers with a shared singleton pattern:
+- Create one observer that tracks all feed items
+- Use a Map to track element -> tokenId relationships
+- Reduces observer count from N to 1
 
-```tsx
-// Context for grouped translations
-interface TranslationContextValue {
-  isTranslated: boolean;
-  translations: Map<string, string>;  // original -> translated
-}
+### File 3: `src/components/app/cards/ImageCard.tsx`
+Optimize the card:
+- Use CSS hover instead of `motion.button` for the AI sparkle icon
+- Add `loading="lazy"` to carousel images
+- Memoize the translation detection to avoid repeated regex runs
 
-const TranslationContext = createContext<TranslationContextValue | null>(null);
-```
+### File 4: `src/hooks/use-dehub-feed.ts` and `src/hooks/use-unified-feed.ts`
+Add unique key generation to prevent React duplicate key warnings:
+- Append index to tokenId for uniqueness
+- Filter out actual duplicates before mapping
 
-**2. Update TranslatableGroup (lines 301-351) to:**
-- Store individual text translations in a Map
-- Translate combined text but also split for individual pieces
-- Provide context to children
-
-```tsx
-export function TranslatableGroup({ text, children }: TranslatableGroupProps) {
-  const {
-    userLang,
-    isTranslated,
-    translatedText,
-    isLoading,
-    error,
-    isDetecting,
-    shouldOfferTranslation,
-    handleTranslate,
-    handleShowOriginal,
-    sourceLang,
-  } = useTranslation(text);
-
-  // Build translations map for context
-  const translations = useMemo(() => {
-    const map = new Map<string, string>();
-    if (isTranslated && translatedText) {
-      map.set(text, translatedText);
-    }
-    return map;
-  }, [text, translatedText, isTranslated]);
-
-  const contextValue = useMemo(() => ({
-    isTranslated,
-    translations,
-  }), [isTranslated, translations]);
-
-  // Render with context
-  return (
-    <TranslationContext.Provider value={contextValue}>
-      {children}
-      {/* Translation controls (keep existing button logic) */}
-      {isTranslated ? (
-        <button onClick={handleShowOriginal} className="...">
-          Translated from {sourceLang} • Show original
-        </button>
-      ) : isDetecting ? (
-        <span>Detecting language...</span>
-      ) : shouldOfferTranslation ? (
-        <button onClick={handleTranslate}>Translate to {userLang}</button>
-      ) : null}
-    </TranslationContext.Provider>
-  );
-}
-```
-
-**3. Add new TranslatableContent component:**
-
-```tsx
-interface TranslatableContentProps {
-  original: string;
-  children?: ReactNode;
-  className?: string;
-  as?: 'p' | 'span' | 'div' | 'h3';
-}
-
-export function TranslatableContent({ 
-  original, 
-  className, 
-  as: Component = 'span' 
-}: TranslatableContentProps) {
-  const context = useContext(TranslationContext);
-  
-  // If no context or not translated, show original
-  if (!context?.isTranslated) {
-    return <Component className={className}>{original}</Component>;
-  }
-  
-  // Check if we have a translation for the full group text
-  const fullTranslation = Array.from(context.translations.values())[0];
-  
-  // For now, if parent text was translated, we show it at parent level
-  // This component just shows original when in group context
-  return <Component className={className}>{original}</Component>;
-}
-```
-
-### File: `src/components/app/cards/ImageCard.tsx`
-
-**Update FeedDescription to show translated text:**
-
-Instead of having `TranslatableGroup` wrap static children, we need to:
-1. Track if translated
-2. Show either original title/description OR translated version
-
-```tsx
-function FeedDescription({ title, description }: { title?: string; description?: string }) {
-  const [expanded, setExpanded] = useState(false);
-  const MAX_LENGTH = 150;
-  
-  const fullText = [title, description].filter(Boolean).join('\n\n');
-  
-  // Use the translation hook directly
-  const {
-    isTranslated,
-    translatedText,
-    isLoading,
-    isDetecting,
-    shouldOfferTranslation,
-    handleTranslate,
-    handleShowOriginal,
-    sourceLang,
-    userLang,
-    error,
-  } = useTranslation(fullText);
-  
-  // Parse translated text back into title/description
-  const [displayTitle, displayDescription] = useMemo(() => {
-    if (isTranslated && translatedText) {
-      const parts = translatedText.split('\n\n');
-      if (title && description) {
-        return [parts[0] || title, parts.slice(1).join('\n\n') || description];
-      }
-      return title ? [translatedText, undefined] : [undefined, translatedText];
-    }
-    return [title, description];
-  }, [isTranslated, translatedText, title, description]);
-  
-  const hasLongDescription = displayDescription && displayDescription.length > MAX_LENGTH;
-  const shownDescription = expanded || !hasLongDescription 
-    ? displayDescription 
-    : `${displayDescription.slice(0, MAX_LENGTH)}...`;
-
-  return (
-    <div className="space-y-1">
-      {displayTitle && (
-        <h3 className="text-white text-sm font-semibold">{displayTitle}</h3>
-      )}
-      {shownDescription && (
-        <p className="text-zinc-300 text-sm">{shownDescription}</p>
-      )}
-      {/* Expand button... */}
-      {/* Translation control */}
-      {isTranslated ? (
-        <button onClick={handleShowOriginal}>
-          Translated from {sourceLang} • Show original
-        </button>
-      ) : shouldOfferTranslation && (
-        <button onClick={handleTranslate}>
-          Translate to {userLang}
-        </button>
-      )}
-    </div>
-  );
-}
-```
+### File 5: `src/components/app/TranslatableText.tsx`
+Optimize language detection:
+- Skip detection if text is very short (under 15 chars)
+- Use `useDeferredValue` for translation state to reduce re-renders
+- Add early exit for same-language content (e.g., English post for English user)
 
 ---
 
-## Summary of Changes
+## Expected Results
 
-| File | Change |
-|------|--------|
-| `src/components/app/TranslatableText.tsx` | Add context, update `TranslatableGroup` to provide it, add `handleShowOriginal` to hook return |
-| `src/components/app/cards/ImageCard.tsx` | Update `FeedDescription` to use `useTranslation` directly and display translated text |
+| Metric | Before | After |
+|--------|--------|-------|
+| IntersectionObservers | ~50 per page | 1 shared |
+| Duplicate key warnings | Yes | None |
+| Translation API calls | Per card | Batched/cached |
+| Query refetches | Every focus | Smart caching |
+| Hover animation setup | All devices | Desktop only |
 
-## Result
-
-After this fix:
-- Click "Translate" → API is called → Translated text is displayed
-- Click "Show original" → Original text is restored
-- Translation button works as expected
+These changes should make the app feel noticeably snappier, especially when scrolling through the feed.
 
 ---
 
-## Technical Notes
+## Technical Details
 
-The simpler approach is to have `FeedDescription` use the `useTranslation` hook directly rather than trying to pass state through children. This avoids complex context plumbing and keeps the translation state local to where it's displayed.
+### Shared IntersectionObserver Pattern
 
-The `TranslatableGroup` pattern was designed for grouping multiple `TranslatableText` components, but the current `FeedDescription` renders raw text elements, not `TranslatableText` components - that's why the translation never showed.
+```text
+┌─────────────────────────────────────────┐
+│       SharedViewObserver (1 instance)   │
+├─────────────────────────────────────────┤
+│ - Single IntersectionObserver           │
+│ - Map<Element, tokenId>                 │
+│ - observe(element, tokenId)             │
+│ - unobserve(element)                    │
+└─────────────────────────────────────────┘
+          │ observes
+          ▼
+┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐
+│Card1│ │Card2│ │Card3│ │Card4│  ... N cards
+└─────┘ └─────┘ └─────┘ └─────┘
+```
+
+### QueryClient Configuration
+
+```typescript
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 2 * 60 * 1000,     // 2 minutes
+      gcTime: 10 * 60 * 1000,       // 10 minutes  
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+```
+
+This prevents the "wall of spinners" effect when navigating back to the home tab.
