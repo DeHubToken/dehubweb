@@ -164,6 +164,8 @@ export interface ShortVideo extends BaseFeedItem {
   sound?: string;
   comments?: string;
   shares?: string;
+  /** Formatted view count string (e.g., "1.2K") */
+  views?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
