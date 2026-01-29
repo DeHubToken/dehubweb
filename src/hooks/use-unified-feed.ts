@@ -142,14 +142,12 @@ function formatTimeAgo(dateString?: string): string {
  */
 /**
  * Extract file extension from API path
- * Converts .octet-stream to .jpg for better browser compatibility
+ * Preserves original extension including .octet-stream, .gif, .jpeg, etc.
  */
 function getExtension(path: string): string {
   const match = path.match(/\.([a-zA-Z0-9-]+)$/);
   if (!match) return 'jpg';
-  const ext = match[1].toLowerCase();
-  // Convert octet-stream to jpg
-  return ext === 'octet-stream' ? 'jpg' : ext;
+  return match[1].toLowerCase();
 }
 
 /**
