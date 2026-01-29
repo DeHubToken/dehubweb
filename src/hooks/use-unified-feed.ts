@@ -243,6 +243,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     },
     content: item.description || item.name || '',
     createdAt: formatTimeAgo(item.createdAt),
+    views: formatViews(item.views).replace(' views', ''),
     stats: {
       comments: item.commentCount || 0,
       reposts: 0,

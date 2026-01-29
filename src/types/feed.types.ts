@@ -37,6 +37,8 @@ export interface TextPost extends BaseFeedItem {
   type: 'post';
   author: User;
   content: string;
+  /** Formatted view count string (e.g., "1.2K") */
+  views?: string;
   stats: {
     comments: number;
     reposts: number;
