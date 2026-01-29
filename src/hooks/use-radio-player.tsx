@@ -30,6 +30,7 @@ interface RadioPlayerState {
   isLoading: boolean;
   volume: number;
   error: string | null;
+  audioElement: HTMLAudioElement | null;
 }
 
 interface RadioPlayerContextValue extends RadioPlayerState {
@@ -62,6 +63,7 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     isLoading: false,
     volume: 0.8,
     error: null,
+    audioElement: null,
   });
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -70,6 +72,9 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
   useEffect(() => {
     audioRef.current = new Audio();
     audioRef.current.volume = state.volume;
+    
+    // Update state with audio element reference
+    setState(prev => ({ ...prev, audioElement: audioRef.current }));
     
     const audio = audioRef.current;
     
