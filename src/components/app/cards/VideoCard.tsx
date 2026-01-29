@@ -509,10 +509,10 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                       )}
                     </div>
                     
-                    {/* Total Reward Pool */}
+                    {/* Reward per User */}
                     {video.bountyAmount && video.bountyAmount > 0 && (
                       <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl border border-amber-500/20">
-                        <span className="text-zinc-300 text-sm">Total Reward Pool</span>
+                        <span className="text-zinc-300 text-sm">Reward per User</span>
                         <div className="flex items-center gap-2">
                           <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                           <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
