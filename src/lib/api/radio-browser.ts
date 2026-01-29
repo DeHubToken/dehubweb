@@ -80,10 +80,15 @@ export type RadioGenreId = typeof RADIO_GENRES[number]['id'];
 // COUNTRY DATA FOR LOCATION-BASED SEARCH
 // ============================================================================
 
+/** Normalize non-standard codes to ISO codes (for API compatibility) */
+const COUNTRY_CODE_ALIASES: Record<string, string> = {
+  UK: 'GB', // UK is commonly used but API uses GB
+};
+
 /** Map of ISO country codes to country names */
 const COUNTRY_CODE_MAP: Record<string, string> = {
   US: 'United States of America',
-  UK: 'United Kingdom',
+  UK: 'United Kingdom', // Keep for display name lookup
   GB: 'United Kingdom',
   DE: 'Germany',
   FR: 'France',
@@ -221,9 +226,11 @@ export function parseSearchQuery(query: string): ParsedSearchQuery {
     const word = words[i].toUpperCase();
     if (word.length === 2 && COUNTRY_CODE_MAP[word]) {
       const remainingWords = [...words.slice(0, i), ...words.slice(i + 1)];
+      // Normalize to ISO code (e.g., UK → GB)
+      const normalizedCode = COUNTRY_CODE_ALIASES[word] || word;
       return {
         name: remainingWords.join(' ').trim(),
-        countryCode: word,
+        countryCode: normalizedCode,
         countryName: COUNTRY_CODE_MAP[word],
       };
     }
