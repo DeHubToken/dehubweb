@@ -42,10 +42,10 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-white flex items-center gap-2">
-            <Play className="w-4 h-4 text-red-500" />
+            <Play className="w-4 h-4 text-white" />
             Shorts
           </h3>
-          <button className="text-red-400 text-sm hover:underline flex items-center gap-1">
+          <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1 transition-colors">
             See all <ChevronRight className="w-4 h-4" />
           </button>
         </div>
