@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2 } from 'lucide-react';
+import { UserPlus, Loader2, Sparkles, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,20 +13,24 @@ interface UniqueUser {
   avatarUrl?: string;
 }
 
-export function WhoToFollow() {
+interface WhoToFollowProps {
+  sortMode?: 'best' | 'new';
+}
+
+export function WhoToFollow({ sortMode = 'best' }: WhoToFollowProps) {
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['suggestions', 'recently-active'],
+    queryKey: ['suggestions', sortMode],
     queryFn: async () => {
-      // Fetch recent posts to find active users
+      // Fetch posts sorted by mode to find users
       const response = await searchNFTs({ 
-        sortMode: 'new', 
+        sortMode: sortMode === 'best' ? 'popular' : 'new',
         unit: 100,
         page: 0 
       });
       
-      // Extract unique users from recent posts
+      // Extract unique users from posts
       const seenAddresses = new Set<string>();
       const uniqueUsers: UniqueUser[] = [];
       

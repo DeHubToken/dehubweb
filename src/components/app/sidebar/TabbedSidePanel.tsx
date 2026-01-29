@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { SquareUserRound, Trophy, MessagesSquare } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';
 
 type TabType = 'follow' | 'leaderboard' | 'chat';
+type FollowSortMode = 'best' | 'new';
 
 const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
   { id: 'follow', icon: SquareUserRound },
@@ -14,6 +15,16 @@ const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
 
 export function TabbedSidePanel() {
   const [activeTab, setActiveTab] = useState<TabType>('follow');
+  const [followSortMode, setFollowSortMode] = useState<FollowSortMode>('best');
+
+  const handleTabClick = useCallback((tabId: TabType) => {
+    if (tabId === 'follow' && activeTab === 'follow') {
+      // Toggle between 'best' and 'new' when clicking already active follow tab
+      setFollowSortMode(prev => prev === 'best' ? 'new' : 'best');
+    } else {
+      setActiveTab(tabId);
+    }
+  }, [activeTab]);
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -25,7 +36,7 @@ export function TabbedSidePanel() {
             <button
               type="button"
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
               className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
                 activeTab === tab.id
                   ? 'text-white'
@@ -43,7 +54,7 @@ export function TabbedSidePanel() {
 
       {/* Tab Content */}
       <div className="px-0 py-4 h-[400px]">
-        {activeTab === 'follow' && <WhoToFollow />}
+        {activeTab === 'follow' && <WhoToFollow sortMode={followSortMode} />}
         {activeTab === 'leaderboard' && <SidebarLeaderboard />}
         {activeTab === 'chat' && <SidebarChat />}
       </div>
