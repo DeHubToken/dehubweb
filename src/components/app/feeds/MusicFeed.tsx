@@ -49,7 +49,7 @@ interface MusicFeedProps {
 }
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
-  const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
+  const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('radio');
 
   const getEmptyLabel = () => {
     switch (activeSubTab) {
