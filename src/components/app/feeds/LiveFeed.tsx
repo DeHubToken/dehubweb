@@ -11,6 +11,29 @@ import { useEffect, useRef, useMemo } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+
+// Category images
+import apexCategory from '@/assets/apex-category.png';
+import codCategory from '@/assets/cod-category.png';
+import fortniteCategory from '@/assets/fortnite-category.png';
+import gtaCategory from '@/assets/gta-category.png';
+import valorantCategory from '@/assets/valorant-category.png';
+import leagueCategory from '@/assets/league-category.png';
+import minecraftCategory from '@/assets/minecraft-category.png';
+import justchattingCategory from '@/assets/justchatting-category.png';
+
+// Mock categories data
+const MOCK_CATEGORIES = [
+  { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, viewers: '421K' },
+  { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, viewers: '312K' },
+  { id: 'valorant', name: 'VALORANT', image: valorantCategory, viewers: '287K' },
+  { id: 'league', name: 'League of Legends', image: leagueCategory, viewers: '198K' },
+  { id: 'minecraft', name: 'Minecraft', image: minecraftCategory, viewers: '156K' },
+  { id: 'gta', name: 'Grand Theft Auto V', image: gtaCategory, viewers: '134K' },
+  { id: 'apex', name: 'Apex Legends', image: apexCategory, viewers: '98K' },
+  { id: 'cod', name: 'Call of Duty', image: codCategory, viewers: '87K' },
+];
 
 interface LiveFeedProps {
   isRefreshing?: boolean;
@@ -128,17 +151,35 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
         )}
       </div>
 
-      {/* Categories - Empty State */}
-      <div className="bg-zinc-900 rounded-2xl p-4">
-        <div className="flex items-center justify-between mb-3">
+      {/* Categories Carousel */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1">
           <h2 className="font-bold text-white">Categories</h2>
+          <button className="text-red-400 text-sm hover:underline">Browse</button>
         </div>
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-          <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
-            <RefreshCw className="w-6 h-6 text-zinc-500" />
+        
+        <SwipeableCarousel>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
+            {MOCK_CATEGORIES.map((category) => (
+              <button
+                key={category.id}
+                className="flex-shrink-0 group"
+              >
+                <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
+                  />
+                </div>
+                <div className="mt-1.5 text-left">
+                  <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
+                  <p className="text-zinc-500 text-xs">{category.viewers} viewers</p>
+                </div>
+              </button>
+            ))}
           </div>
-          <p className="text-zinc-400 text-sm">No categories available</p>
-        </div>
+        </SwipeableCarousel>
       </div>
     </div>
   );
