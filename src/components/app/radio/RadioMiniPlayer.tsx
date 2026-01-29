@@ -10,7 +10,7 @@
 import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useRadioPlayer } from '@/hooks/use-radio-player';
+import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
 import { getCountryFlag } from '@/lib/api/radio-browser';
 import { useState } from 'react';
