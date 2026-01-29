@@ -7,7 +7,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause } from 'lucide-react';
+import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -201,7 +201,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-semibold text-sm lg:text-base truncate">@{currentShort.username}</p>
-                  <p className="text-white/60 text-xs lg:text-sm">{currentShort.likes} likes</p>
+                  <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {currentShort.views || '0'}
+                    </span>
+                    <span>•</span>
+                    <span>{currentShort.likes} likes</span>
+                  </div>
                 </div>
                 <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-full hover:bg-white/90 transition-colors flex-shrink-0">
                   Follow
@@ -306,7 +313,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="text-white text-sm font-medium">@{currentShort.username}</span>
-                    <span className="text-white/60 text-xs">{currentShort.likes} likes</span>
+                    <span className="text-white/60 text-xs flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {currentShort.views || '0'} • {currentShort.likes} likes
+                    </span>
                   </div>
                   <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-full">
                     Follow
@@ -372,6 +382,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 </div>
                 <span className="text-white text-xs">{currentShort.likes}</span>
               </button>
+
+              {/* View count */}
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-12 h-12 bg-zinc-800/80 rounded-full flex items-center justify-center">
+                  <Eye className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-white text-xs">{currentShort.views || '0'}</span>
+              </div>
 
               <button className="flex flex-col items-center gap-1">
                 <div className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center transition-colors">

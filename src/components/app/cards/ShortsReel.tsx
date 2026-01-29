@@ -2,6 +2,7 @@
  * Shorts Reel Component
  * =====================
  * Horizontal scrollable reel displaying short-form video previews.
+ * Uses real view counts from the API.
  * 
  * @example
  * ```tsx
@@ -15,13 +16,6 @@ import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
-
-// Generate random view count based on id
-const getViewCount = (id: string) => {
-  const seed = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const views = Math.floor((seed * 5678) % 500000) + 10000;
-  return views >= 1000 ? `${(views / 1000).toFixed(1)}K` : views.toString();
-};
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
@@ -64,6 +58,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   src={short.thumbnail}
                   alt=""
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
                 
@@ -82,11 +77,11 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   </div>
                 </div>
                 
-                {/* Stats at bottom */}
+                {/* Stats at bottom - using real views from API */}
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <Eye className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">{getViewCount(short.id)}</span>
+                    <span className="text-white text-xs font-medium">{short.views || '0'}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Heart className="w-3 h-3 text-white" />

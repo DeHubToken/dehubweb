@@ -164,6 +164,7 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 // Map NFT to ShortVideo format
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);
+  const viewCount = nft.views || nft.view_count || 0;
   
   return {
     id,
@@ -177,6 +178,7 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     sound: 'Original Sound',
     comments: formatCount(nft.commentCount || nft.comment_count || 0),
     shares: formatCount(Math.floor(Math.random() * 1000)),
+    views: formatCount(viewCount),
   };
 }
 
