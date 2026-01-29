@@ -14,6 +14,9 @@ import { Globe, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
+
+// Re-export for convenience
+export { LANGUAGE_NAMES };
 import { getCachedLanguage, cacheLanguage } from '@/lib/language-detection-cache';
 import { cn } from '@/lib/utils';
 
@@ -62,7 +65,7 @@ function isLatinText(text: string): boolean {
 }
 
 // Custom hook for translation logic (shared between components)
-function useTranslation(text: string) {
+export function useTranslation(text: string) {
   const { language: userLang } = useUserLanguage();
   const [isTranslated, setIsTranslated] = useState(false);
   const [translatedText, setTranslatedText] = useState('');
