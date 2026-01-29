@@ -62,7 +62,7 @@ export function RadioSection() {
   return (
     <div className="space-y-3">
       {/* Sticky Search & Genre Filter */}
-      <div className="sticky top-[5.5rem] lg:top-[3.5rem] z-10 pt-0.5 pb-3 space-y-3 bg-black">
+      <div className="sticky top-[5.5rem] lg:top-[3.5rem] z-10 pt-0.5 pb-2 space-y-2.5 bg-black">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -77,12 +77,10 @@ export function RadioSection() {
         
         {/* Genre Filter (hidden when searching) */}
         {!isSearching && (
-          <div className="mt-0.5">
-            <RadioGenreFilter 
-              activeGenre={activeGenre} 
-              onGenreChange={setActiveGenre} 
-            />
-          </div>
+          <RadioGenreFilter 
+            activeGenre={activeGenre} 
+            onGenreChange={setActiveGenre} 
+          />
         )}
         
         {/* Search Results Header */}
