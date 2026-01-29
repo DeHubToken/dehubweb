@@ -17,6 +17,7 @@ import { getCountryFlag, getPrimaryTags, formatBitrate } from '@/lib/api/radio-b
 import reyfmLogo from '@/assets/radio/reyfm-logo.png';
 import lofi247Logo from '@/assets/radio/lofi247-logo.png';
 import moewifiLogo from '@/assets/radio/moewifi-logo.png';
+import niaLofiLogo from '@/assets/radio/nia-lofi-logo.png';
 
 // Map station name patterns to custom logos
 const CUSTOM_LOGOS: Record<string, string> = {
@@ -27,6 +28,9 @@ const CUSTOM_LOGOS: Record<string, string> = {
   'lofi hip hop': lofi247Logo,
   'moe wifi': moewifiLogo,
   'moewifi': moewifiLogo,
+  'moe lofi': moewifiLogo,
+  'nia radio': niaLofiLogo,
+  'nia lofi': niaLofiLogo,
 };
 
 function getCustomLogo(stationName: string): string | null {
