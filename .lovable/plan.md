@@ -1,118 +1,141 @@
 
-# Performance Optimization Plan
+# Radio Section for Music Tab
 
-## Issues Identified
+## Overview
+Add a live radio streaming feature to the Music tab using the free **Radio Browser API** (https://api.radio-browser.info). This API provides access to 50,000+ radio stations worldwide with no API key required, no rate limits, and completely free to use.
 
-After reviewing the codebase and console logs, I found several performance bottlenecks:
+## What You'll Get
 
-### 1. Duplicate React Keys (High Priority)
-Console shows: `Warning: Encountered two children with the same key, "astronomy"`
+### Radio Tab in Music Page
+- A new "Radio" tab alongside existing Tracks, Videos, Podcasts, and Live tabs
+- Browse stations by genre (Pop, Rock, Jazz, Electronic, Hip-Hop, etc.)
+- Search for specific stations by name
+- See station info: name, country flag, current genre tags, bitrate quality
 
-This causes React to do extra work reconciling duplicates and can lead to visual glitches. The issue is in `VideosFeed.tsx` where videos with the same title or ID are being rendered.
+### Persistent Mini-Player
+- A floating audio player at the bottom of the screen when a station is playing
+- Shows station name, logo, play/pause control, and volume slider
+- Stays visible while browsing other content
+- Smooth animations when appearing/disappearing
 
-### 2. Multiple IntersectionObservers Per Card (High Priority)
-Every `ImageCard` and `VideoCard` creates its own `IntersectionObserver` for view tracking. With 20+ cards on screen, that's 20+ observers running simultaneously, checking visibility every frame.
-
-**Fix**: Use a single shared observer for all feed items.
-
-### 3. Language Detection on Every Card (Medium Priority)
-The `useTranslation` hook in `FeedDescription` runs language detection for every visible post. This triggers:
-- Regex tests on mount
-- Potential API calls to `detect-language` endpoint  
-- Caching logic that still runs even when cache hits
-
-**Fix**: Debounce detection and batch requests.
-
-### 4. Unnecessary Framer Motion Animations (Medium Priority)
-Many cards use `whileHover={{ scale: 1.1 }}` which triggers layout recalculations. On mobile, these hover animations never fire but the component still sets up listeners.
-
-**Fix**: Conditionally apply motion only on non-touch devices.
-
-### 5. QueryClient Without Optimized Settings (Low Priority)
-The QueryClient has no `staleTime` or `gcTime` configured, meaning every refetch is treated as fresh data needing full re-render.
+### Station Cards
+- Glass-morphism styled cards matching the app's liquid glass aesthetic
+- Station logo/favicon with fallback icon
+- Country flag and genre tags
+- Click to play, with visual "now playing" indicator
 
 ---
 
-## Implementation Changes
+## Technical Approach
 
-### File 1: `src/App.tsx`
-Add optimized QueryClient settings:
-- `staleTime: 2 * 60 * 1000` (2 minutes) - prevents refetching recently loaded data
-- `gcTime: 10 * 60 * 1000` (10 minutes) - keeps cached data longer
-- `refetchOnWindowFocus: false` - prevents refetch when switching tabs
+### New Files
 
-### File 2: `src/hooks/use-view-tracking.ts`
-Replace individual IntersectionObservers with a shared singleton pattern:
-- Create one observer that tracks all feed items
-- Use a Map to track element -> tokenId relationships
-- Reduces observer count from N to 1
+| File | Purpose |
+|------|---------|
+| `src/lib/api/radio-browser.ts` | API client for Radio Browser endpoints |
+| `src/hooks/use-radio-player.ts` | Global audio player state management |
+| `src/components/app/radio/RadioStationCard.tsx` | Individual station card component |
+| `src/components/app/radio/RadioGenreFilter.tsx` | Genre pill filter bar |
+| `src/components/app/radio/RadioMiniPlayer.tsx` | Persistent floating player |
+| `src/components/app/radio/RadioSection.tsx` | Main radio content section |
+| `src/components/app/radio/index.ts` | Barrel export |
 
-### File 3: `src/components/app/cards/ImageCard.tsx`
-Optimize the card:
-- Use CSS hover instead of `motion.button` for the AI sparkle icon
-- Add `loading="lazy"` to carousel images
-- Memoize the translation detection to avoid repeated regex runs
+### Modified Files
 
-### File 4: `src/hooks/use-dehub-feed.ts` and `src/hooks/use-unified-feed.ts`
-Add unique key generation to prevent React duplicate key warnings:
-- Append index to tokenId for uniqueness
-- Filter out actual duplicates before mapping
-
-### File 5: `src/components/app/TranslatableText.tsx`
-Optimize language detection:
-- Skip detection if text is very short (under 15 chars)
-- Use `useDeferredValue` for translation state to reduce re-renders
-- Add early exit for same-language content (e.g., English post for English user)
+| File | Change |
+|------|--------|
+| `src/pages/app/MusicPage.tsx` | Add "Radio" tab and render RadioSection |
+| `src/components/app/AppLayout.tsx` | Include RadioMiniPlayer in layout |
 
 ---
 
-## Expected Results
+## API Integration
 
-| Metric | Before | After |
-|--------|--------|-------|
-| IntersectionObservers | ~50 per page | 1 shared |
-| Duplicate key warnings | Yes | None |
-| Translation API calls | Per card | Batched/cached |
-| Query refetches | Every focus | Smart caching |
-| Hover animation setup | All devices | Desktop only |
+### Radio Browser API Endpoints (No API Key Required)
 
-These changes should make the app feel noticeably snappier, especially when scrolling through the feed.
-
----
-
-## Technical Details
-
-### Shared IntersectionObserver Pattern
-
-```text
-┌─────────────────────────────────────────┐
-│       SharedViewObserver (1 instance)   │
-├─────────────────────────────────────────┤
-│ - Single IntersectionObserver           │
-│ - Map<Element, tokenId>                 │
-│ - observe(element, tokenId)             │
-│ - unobserve(element)                    │
-└─────────────────────────────────────────┘
-          │ observes
-          ▼
-┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐
-│Card1│ │Card2│ │Card3│ │Card4│  ... N cards
-└─────┘ └─────┘ └─────┘ └─────┘
+```
+Base URL: https://de1.api.radio-browser.info/json
 ```
 
-### QueryClient Configuration
+| Endpoint | Purpose |
+|----------|---------|
+| `/stations/bytag/{tag}` | Get stations by genre tag |
+| `/stations/search?name={query}` | Search stations by name |
+| `/stations/topvote` | Get popular stations |
+| `/tags` | Get available genre tags |
 
+### Station Data Structure
 ```typescript
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 2 * 60 * 1000,     // 2 minutes
-      gcTime: 10 * 60 * 1000,       // 10 minutes  
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
+interface RadioStation {
+  stationuuid: string;
+  name: string;
+  url_resolved: string;  // Stream URL
+  favicon: string;       // Station logo
+  country: string;
+  countrycode: string;
+  tags: string;          // Comma-separated genres
+  bitrate: number;
+  votes: number;
+}
 ```
 
-This prevents the "wall of spinners" effect when navigating back to the home tab.
+---
+
+## User Experience Flow
+
+1. User navigates to Music → Radio tab
+2. Sees genre filter pills (Pop, Rock, Jazz, etc.) and search bar
+3. Scrolls through station cards with station info
+4. Taps a station → Mini-player appears, stream starts
+5. Can continue browsing while audio plays
+6. Tap mini-player pause to stop, or tap a new station to switch
+
+---
+
+## UI Design
+
+### Genre Filter Bar
+- Horizontal scrollable pill buttons
+- Active genre highlighted with `bg-zinc-800`
+- Icons for each genre (optional)
+
+### Station Card (Glass Style)
+```
+┌─────────────────────────────────────────┐
+│  [Logo]  Station Name            ▶ Play │
+│          🇺🇸 Pop, Top 40 • 128kbps      │
+└─────────────────────────────────────────┘
+```
+
+### Mini-Player (Fixed Bottom)
+```
+┌─────────────────────────────────────────┐
+│ [Logo] Now Playing: Station    ⏸ 🔊━━━━ │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## Implementation Details
+
+### Radio Player Hook
+- Uses `React.Context` for global state
+- Single `Audio` element for playback
+- Exposes: `play(station)`, `pause()`, `setVolume()`, `currentStation`, `isPlaying`
+- Handles stream errors gracefully with toast notifications
+
+### Error Handling
+- Fallback icon for missing station logos
+- "Stream unavailable" message if URL fails
+- Loading skeleton while fetching stations
+
+### Performance
+- `useQuery` with 5-minute stale time for station lists
+- Lazy load station images
+- Debounced search input
+
+---
+
+## Dependencies
+- No new packages needed
+- Uses existing: `@tanstack/react-query`, `lucide-react`, `framer-motion`
