@@ -2,7 +2,7 @@
  * Videos Feed Component
  * =====================
  * Displays a grid/list of video content with filtering options.
- * Fetches from DeHub API. Uses the shared VideoCard component.
+ * Uses the unified /api/feed endpoint for server-side filtering.
  * 
  * @module components/app/feeds/VideosFeed
  */
@@ -15,10 +15,11 @@ import { cn } from '@/lib/utils';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, applySorting, filterByDate, filterByContentType, getApiSortMode, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 // Category images
@@ -96,6 +97,46 @@ function parseDurationToSeconds(duration: string): number {
   if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2]; // HH:MM:SS
   if (parts.length === 2) return parts[0] * 60 + parts[1]; // MM:SS
   return parts[0] || 0;
+}
+
+// ============================================================================
+// API PARAMETER MAPPERS
+// ============================================================================
+
+/**
+ * Map UI sort value to unified feed API sortBy parameter
+ */
+function getUnifiedSortBy(sortValue: SortValue): UnifiedFeedParams['sortBy'] {
+  switch (sortValue) {
+    case 'most-viewed':
+      return 'views';
+    case 'most-liked':
+      return 'likes';
+    case 'most-comments':
+      return 'comments';
+    case 'latest':
+    default:
+      return 'createdAt';
+  }
+}
+
+/**
+ * Map UI date filter to unified feed API range parameter
+ */
+function getUnifiedRange(dateValue: DateFilterOption['value']): UnifiedFeedParams['range'] | undefined {
+  switch (dateValue) {
+    case 'today':
+      return 'day';
+    case 'week':
+      return 'week';
+    case 'month':
+      return 'month';
+    case 'year':
+      return 'year';
+    case 'all':
+    default:
+      return undefined;
+  }
 }
 
 // Parse timeAgo string to approximate Date (e.g., "2d ago" → Date 2 days ago)
@@ -323,6 +364,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return FALLBACK_CATEGORIES;
   }, [apiCategories]);
 
+  // Use unified feed with server-side PPV/Bounty/Locked filtering
   const {
     data: apiData,
     fetchNextPage,
@@ -331,14 +373,20 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     isLoading: isApiLoading,
     isError,
     refetch,
-  } = useDeHubVideos({
-    unit: 20,
-    sortMode: getApiSortMode(selectedSort.value),
-    category: selectedCategory || undefined,
+  } = useUnifiedFeed({
+    limit: 20,
+    postType: 'video',
+    sortBy: getUnifiedSortBy(selectedSort.value),
+    sortOrder: 'desc',
+    range: getUnifiedRange(selectedUploadDate.value),
     address: walletAddress || undefined,
+    isPPV: contentFilters.ppv || undefined,
+    hasBounty: contentFilters.w2e || undefined,
+    isLocked: contentFilters.locked || undefined,
+    status: 'minted',
   });
 
-  // Fetch shorts for the carousel
+  // Fetch shorts for the carousel (using original hook since it doesn't need content filtering)
   const { data: shortsData } = useDeHubVideos({
     unit: 10,
     address: walletAddress || undefined,
@@ -350,19 +398,16 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     }
   }, [refreshKey, refetch]);
 
-  // Get raw NFTs for sorting
-  const allRawNFTs = useMemo((): DeHubNFT[] => {
+  // Get all unified feed items
+  const allFeedItems = useMemo((): UnifiedFeedItem[] => {
     if (!apiData?.pages) return [];
-    return apiData.pages.flatMap(page => page.data || []);
+    return apiData.pages.flatMap(page => page.items || []);
   }, [apiData]);
 
-  // Apply date and content type filters on raw NFTs, then sort and map to video items
+  // Map unified feed items to video items (server-side filtering handles PPV/Bounty/Locked)
   const allVideos = useMemo(() => {
-    const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
-    const contentFiltered = filterByContentType(dateFiltered, contentFilters);
-    const sorted = applySorting(contentFiltered, selectedSort.value);
-    return sorted.map((nft, index) => mapNFTToVideoItem(nft, index));
-  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value, contentFilters]);
+    return allFeedItems.map((item, index) => mapToVideoItem(item, index));
+  }, [allFeedItems]);
 
   // Apply client-side duration filter
   const videos = useMemo((): VideoItem[] => {
