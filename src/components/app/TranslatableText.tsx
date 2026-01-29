@@ -64,6 +64,9 @@ function isLatinText(text: string): boolean {
   return totalChars > 0 && latinChars / totalChars > 0.7;
 }
 
+// Minimum length to even consider translation (skip very short text)
+const MIN_TEXT_LENGTH_FOR_TRANSLATION = 10;
+
 // Custom hook for translation logic (shared between components)
 export function useTranslation(text: string) {
   const { language: userLang } = useUserLanguage();
@@ -75,14 +78,21 @@ export function useTranslation(text: string) {
   const [detectedLang, setDetectedLang] = useState<string | null>(null);
   const [isDetecting, setIsDetecting] = useState(false);
 
-  const nonLatinLang = useMemo(() => detectNonLatinScript(text), [text]);
+  // Early exit for very short text - skip all detection
+  const isTooShort = text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION;
+
+  const nonLatinLang = useMemo(() => {
+    if (isTooShort) return null;
+    return detectNonLatinScript(text);
+  }, [text, isTooShort]);
   
   const needsAIDetection = useMemo(() => {
+    if (isTooShort) return false;
     if (nonLatinLang) return false;
     if (text.length < MIN_TEXT_LENGTH_FOR_DETECTION) return false;
     if (!isLatinText(text)) return false;
     return true;
-  }, [text, nonLatinLang]);
+  }, [text, nonLatinLang, isTooShort]);
 
   useEffect(() => {
     if (!needsAIDetection) {

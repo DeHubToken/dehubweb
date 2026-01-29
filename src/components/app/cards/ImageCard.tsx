@@ -126,6 +126,7 @@ function ImageCarousel({
                   src={img} 
                   alt="" 
                   className="w-full h-full object-cover"
+                  loading="lazy"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/placeholder.svg';
                   }}
@@ -347,15 +348,13 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           creatorUsername={post.creatorUsername}
         />
         <div className="flex items-center gap-1 pr-3">
-          <motion.button
+          <button
             onClick={() => setShowAIChat(true)}
-            className="text-zinc-400 hover:text-white transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
             aria-label="Ask AI about this post"
           >
             <Sparkles className="w-5 h-5" />
-          </motion.button>
+          </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
