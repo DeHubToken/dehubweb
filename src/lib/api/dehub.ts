@@ -59,6 +59,10 @@ export interface DeHubUser {
   receivedTips?: number;
   unlocked?: number[];
 
+  // Follow relationship (returned when address param is provided)
+  isFollowing?: boolean;   // Viewer follows this user
+  followsYou?: boolean;    // This user follows viewer
+
   // Balance data
   balanceData?: Array<{
     chainId: number;
@@ -429,8 +433,12 @@ export async function recordView(tokenId: string): Promise<void> {
 }
 
 // User functions
-export async function getAccountInfo(userId: string): Promise<DeHubUser> {
-  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(userId)}`);
+export async function getAccountInfo(userId: string, viewerAddress?: string): Promise<DeHubUser> {
+  const params: Record<string, string> = {};
+  if (viewerAddress) {
+    params.address = viewerAddress;
+  }
+  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(userId)}`, { params });
   // Handle wrapped response from API
   if (response && typeof response === "object" && "result" in response) {
     return response.result;
@@ -438,10 +446,14 @@ export async function getAccountInfo(userId: string): Promise<DeHubUser> {
   return response as DeHubUser;
 }
 
-export async function getAccountByUsername(username: string): Promise<DeHubUser> {
+export async function getAccountByUsername(username: string, viewerAddress?: string): Promise<DeHubUser> {
   // Remove @ prefix if present
   const cleanUsername = username.replace("@", "");
-  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(cleanUsername)}`);
+  const params: Record<string, string> = {};
+  if (viewerAddress) {
+    params.address = viewerAddress;
+  }
+  const response = await apiCall<{ result: DeHubUser } | DeHubUser>(`/api/account_info/${encodeURIComponent(cleanUsername)}`, { params });
   // Handle wrapped response from API
   if (response && typeof response === "object" && "result" in response) {
     return response.result;
@@ -549,18 +561,26 @@ export async function voteOnNFT(tokenId: string, vote: boolean): Promise<VoteRes
   });
 }
 
-export async function followUser(userId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>("/api/request_follow", {
-    method: "POST",
-    body: { user_id: userId },
+/**
+ * Follow a user
+ * Uses GET /api/request_follow?following={walletAddress}
+ */
+export async function followUser(walletAddress: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/request_follow", {
+    method: "GET",
+    params: { following: walletAddress },
     requiresAuth: true,
   });
 }
 
-export async function unfollowUser(userId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>("/api/request_unfollow", {
-    method: "POST",
-    body: { user_id: userId },
+/**
+ * Unfollow a user
+ * Uses GET /api/request_follow?following={walletAddress}&unFollowing=true
+ */
+export async function unfollowUser(walletAddress: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/request_follow", {
+    method: "GET",
+    params: { following: walletAddress, unFollowing: "true" },
     requiresAuth: true,
   });
 }

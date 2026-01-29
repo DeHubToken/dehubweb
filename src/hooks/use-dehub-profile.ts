@@ -6,7 +6,7 @@
  * @module hooks/use-dehub-profile
  */
 
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { getAccountInfo, getAccountByUsername, getUserNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
@@ -25,6 +25,10 @@ export interface ProfileData {
   followers: number;
   postsCount: number;
   walletAddress?: string;
+  /** Whether the current viewer follows this user */
+  isFollowing?: boolean;
+  /** Whether this user follows the current viewer */
+  followsYou?: boolean;
 }
 
 /**
@@ -67,6 +71,8 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followers: followerCount,
     postsCount: user.post_count || user.uploads || 0,
     walletAddress: user.address || user.wallet_address,
+    isFollowing: user.isFollowing,
+    followsYou: user.followsYou,
   };
 }
 
@@ -75,25 +81,30 @@ interface UseDeHubProfileOptions {
   userId?: string;
   /** Username for lookup (alternative to userId) */
   username?: string;
+  /** Current viewer's wallet address to get follow status */
+  viewerAddress?: string;
   enabled?: boolean;
 }
 
 /**
  * Hook to fetch user profile data
  * Supports both userId and username lookups
+ * Pass viewerAddress to get isFollowing/followsYou status
  */
-export function useDeHubProfile({ userId, username, enabled = true }: UseDeHubProfileOptions = {}) {
-  return useQuery({
-    queryKey: ['dehub-profile', userId || username],
+export function useDeHubProfile({ userId, username, viewerAddress, enabled = true }: UseDeHubProfileOptions = {}) {
+  const queryClient = useQueryClient();
+  
+  const query = useQuery({
+    queryKey: ['dehub-profile', userId || username, viewerAddress],
     queryFn: async () => {
       let user: DeHubUser;
       
       if (username) {
         // Use username-based lookup
-        user = await getAccountByUsername(username);
+        user = await getAccountByUsername(username, viewerAddress);
       } else if (userId) {
         // Use ID-based lookup
-        user = await getAccountInfo(userId);
+        user = await getAccountInfo(userId, viewerAddress);
       } else {
         throw new Error('Either userId or username is required');
       }
@@ -104,6 +115,23 @@ export function useDeHubProfile({ userId, username, enabled = true }: UseDeHubPr
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
   });
+
+  // Helper to update follow status optimistically
+  const setFollowStatus = (isFollowing: boolean) => {
+    queryClient.setQueryData(['dehub-profile', userId || username, viewerAddress], (old: ProfileData | undefined) => {
+      if (!old) return old;
+      return {
+        ...old,
+        isFollowing,
+        followers: isFollowing ? old.followers + 1 : Math.max(0, old.followers - 1),
+      };
+    });
+  };
+
+  return {
+    ...query,
+    setFollowStatus,
+  };
 }
 
 /**
