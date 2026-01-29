@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Loader2, RefreshCw, Play, Filter } from 'lucide-react';
+import { Loader2, RefreshCw, Play, Filter, Eye } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -93,6 +93,7 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSeconds: number; uploadedAgo: string } {
   const id = String(nft.tokenId || nft.id || nft.token_id);
   const durationStr = nft.duration || '0:30';
+  const viewCount = nft.views || nft.view_count || 0;
   
   return {
     id,
@@ -106,6 +107,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
     shares: '0',
+    views: formatLikes(viewCount),
     durationSeconds: parseDurationToSeconds(durationStr),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
   };
@@ -436,16 +438,23 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                   {/* Bottom Info */}
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <div className="flex items-center gap-1 mb-1">
-                      <span className="font-semibold text-white text-sm">@{short.username}</span>
-                      {short.verified && (
-                        <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                        </svg>
-                      )}
+                  <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+                    <div>
+                      <div className="flex items-center gap-1 mb-1">
+                        <span className="font-semibold text-white text-sm">@{short.username}</span>
+                        {short.verified && (
+                          <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                          </svg>
+                        )}
+                      </div>
+                      <p className="text-white text-xs">{short.likes} likes</p>
                     </div>
-                    <p className="text-white text-xs">{short.likes} likes</p>
+                    {/* View count - bottom right */}
+                    <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
+                      <Eye className="w-3 h-3 text-white" />
+                      <span className="text-white text-xs font-medium">{short.views || '0'}</span>
+                    </div>
                   </div>
 
                   {/* Play indicator on hover */}
