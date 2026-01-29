@@ -1,39 +1,77 @@
 
 
-# Fix: Bounty Amount Label - It's Per-User Reward, Not Total Pool
+# Fix: PPV and Locked Filters Crash Site
 
-## The Issue
-The bounty drawer currently displays:
-> "Total Reward Pool: 7,500 DHB"
+## Root Cause Identified
 
-But this is wrong! The API field `addBountyAmount` is the **reward each qualifying user receives**, not the total pool.
-
-## The Fix
-Change the label from "Total Reward Pool" to "Reward per User" or similar.
-
----
-
-## Implementation
-
-### File: `src/components/app/cards/VideoCard.tsx`
-
-**Line 515** - Change:
-```tsx
-<span className="text-zinc-300 text-sm">Total Reward Pool</span>
+When clicking PPV/Locked filters, the app crashes with:
+```
+TypeError: video.ppvPrice.toFixed is not a function
 ```
 
-To:
-```tsx
-<span className="text-zinc-300 text-sm">Reward per User</span>
+The API returns `payPerViewAmount` as **strings sometimes** (e.g., `"500"`) and **numbers other times** (e.g., `1`). The VideoCard component calls `.toFixed(2)` on this value, which crashes when it's a string.
+
+Evidence from API response:
+```json
+// Sometimes a number:
+"payPerViewAmount": 1
+
+// Sometimes a string:
+"payPerViewAmount": "500"
 ```
 
----
+## Solution
+
+### 1. Fix the Data Mapper (`src/hooks/use-unified-feed.ts`)
+
+**Line 183** - Convert to number when mapping:
+
+```typescript
+// Before:
+ppvPrice: item.streamInfo?.payPerViewAmount,
+
+// After:
+ppvPrice: Number(item.streamInfo?.payPerViewAmount) || undefined,
+```
+
+### 2. Add Defensive Check in VideoCard (`src/components/app/cards/VideoCard.tsx`)
+
+**Line 464** - Ensure we always call toFixed on a number:
+
+```typescript
+// Before:
+{video.ppvPrice.toFixed(2)} {video.ppvCurrency || 'USDC'}
+
+// After:
+{Number(video.ppvPrice).toFixed(2)} {video.ppvCurrency || 'USDC'}
+```
+
+### 3. Update Interface Types (`src/hooks/use-unified-feed.ts`)
+
+**Lines 65-67** - Reflect that API may return strings:
+
+```typescript
+streamInfo?: {
+  isLockContent: boolean;
+  lockContentAmount?: number | string;  // API returns string sometimes
+  isPayPerView: boolean;
+  payPerViewAmount?: number | string;   // API returns string sometimes
+  // ... rest unchanged
+};
+```
+
+## Summary of Changes
+
+| File | Line | Change |
+|------|------|--------|
+| `src/hooks/use-unified-feed.ts` | 65-67 | Update interface to `number \| string` for lock/ppv amounts |
+| `src/hooks/use-unified-feed.ts` | 183 | Add `Number()` wrapper for `payPerViewAmount` |
+| `src/components/app/cards/VideoCard.tsx` | 464 | Add `Number()` wrapper before `.toFixed()` |
 
 ## Result
-The bounty drawer will correctly display:
-- "First 15 views get rewarded"
-- "First 15 comments get rewarded"
-- **"Reward per User: 7,500 DHB"** ← Fixed!
 
-Each qualifying viewer/commenter receives 7,500 DHB individually.
+After this fix:
+- PPV filter works without crashing
+- Locked filter works without crashing
+- PPV badge displays correctly: "500.00 DHB" instead of crashing
 
