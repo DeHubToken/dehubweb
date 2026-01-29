@@ -13,6 +13,32 @@ import { useRadioPlayer } from '@/hooks';
 import type { RadioStation } from '@/lib/api/radio-browser';
 import { getCountryFlag, getPrimaryTags, formatBitrate } from '@/lib/api/radio-browser';
 
+// Custom station logos
+import reyfmLogo from '@/assets/radio/reyfm-logo.png';
+import lofi247Logo from '@/assets/radio/lofi247-logo.png';
+import moewifiLogo from '@/assets/radio/moewifi-logo.png';
+
+// Map station name patterns to custom logos
+const CUSTOM_LOGOS: Record<string, string> = {
+  'reyfm': reyfmLogo,
+  'rey fm': reyfmLogo,
+  'lofi 24': lofi247Logo,
+  'lofi girl': lofi247Logo,
+  'lofi hip hop': lofi247Logo,
+  'moe wifi': moewifiLogo,
+  'moewifi': moewifiLogo,
+};
+
+function getCustomLogo(stationName: string): string | null {
+  const nameLower = stationName.toLowerCase();
+  for (const [pattern, logo] of Object.entries(CUSTOM_LOGOS)) {
+    if (nameLower.includes(pattern)) {
+      return logo;
+    }
+  }
+  return null;
+}
+
 interface RadioStationCardProps {
   station: RadioStation;
 }
@@ -35,6 +61,8 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
   const tags = getPrimaryTags(station.tags);
   const bitrate = formatBitrate(station.bitrate);
   const countryFlag = getCountryFlag(station.countrycode);
+  const customLogo = getCustomLogo(station.name);
+  const logoSrc = customLogo || station.favicon;
   
   return (
     <button
@@ -48,9 +76,9 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
     >
       {/* Station Logo */}
       <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden flex-shrink-0 bg-zinc-800">
-        {station.favicon ? (
+        {logoSrc ? (
           <img 
-            src={station.favicon} 
+            src={logoSrc} 
             alt={station.name}
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -61,7 +89,7 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
         ) : null}
         <div className={cn(
           'absolute inset-0 flex items-center justify-center bg-zinc-800',
-          station.favicon && 'hidden'
+          logoSrc && 'hidden'
         )}>
           <Radio className="w-6 h-6 text-zinc-500" />
         </div>
