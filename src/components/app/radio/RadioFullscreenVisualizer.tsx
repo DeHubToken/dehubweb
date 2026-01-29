@@ -9,7 +9,7 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minimize2, Palette, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
 import { Slider } from '@/components/ui/slider';
@@ -32,7 +32,7 @@ import {
 interface RadioFullscreenVisualizerProps {
   isOpen: boolean;
   onClose: () => void;
-  audioElement: HTMLAudioElement | null;
+  getAnalyser: () => AnalyserNode | null;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -49,24 +49,19 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
 export function RadioFullscreenVisualizer({ 
   isOpen, 
   onClose,
-  audioElement 
+  getAnalyser 
 }: RadioFullscreenVisualizerProps) {
   const { currentStation, isPlaying } = useRadioPlayer();
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const animationRef = useRef<number | null>(null);
-  const isConnectedRef = useRef(false);
   
   const [style, setStyle] = useState<VisualizerStyle>('bars');
   const [styleIndex, setStyleIndex] = useState(0);
-  const [hue, setHue] = useState(260); // Purple by default for WMP vibe
+  const [hue, setHue] = useState(260);
   const [showControls, setShowControls] = useState(true);
   const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Cycle through styles
   const nextStyle = useCallback(() => {
     const newIndex = (styleIndex + 1) % STYLES.length;
     setStyleIndex(newIndex);
@@ -79,61 +74,30 @@ export function RadioFullscreenVisualizer({
     setStyle(STYLES[newIndex].value);
   }, [styleIndex]);
 
-  // Setup audio analyser
-  const setupAudio = useCallback(() => {
-    if (isConnectedRef.current || !audioElement) return;
-
-    try {
-      if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-      }
-
-      const ctx = audioContextRef.current;
-
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
-
-      analyserRef.current = ctx.createAnalyser();
-      analyserRef.current.fftSize = 256;
-      analyserRef.current.smoothingTimeConstant = 0.8;
-
-      // Check if already connected
-      try {
-        sourceRef.current = ctx.createMediaElementSource(audioElement);
-        sourceRef.current.connect(analyserRef.current);
-        analyserRef.current.connect(ctx.destination);
-      } catch (e) {
-        // Source already connected, just get the existing connection
-        console.log('Audio source already connected');
-      }
-
-      isConnectedRef.current = true;
-    } catch (err) {
-      console.error('Failed to setup audio visualizer:', err);
-    }
-  }, [audioElement]);
-
-  // Draw visualization
   const draw = useCallback(() => {
-    if (!canvasRef.current || !analyserRef.current) return;
+    if (!canvasRef.current) return;
+    
+    const analyser = getAnalyser();
+    if (!analyser) {
+      animationRef.current = requestAnimationFrame(draw);
+      return;
+    }
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size to fill screen
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
 
-    const frequencyData = new Uint8Array(analyserRef.current.frequencyBinCount);
-    const timeData = new Uint8Array(analyserRef.current.frequencyBinCount);
+    const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+    const timeData = new Uint8Array(analyser.frequencyBinCount);
 
-    analyserRef.current.getByteFrequencyData(frequencyData);
-    analyserRef.current.getByteTimeDomainData(timeData);
+    analyser.getByteFrequencyData(frequencyData);
+    analyser.getByteTimeDomainData(timeData);
 
     switch (style) {
       case 'bars':
@@ -163,12 +127,10 @@ export function RadioFullscreenVisualizer({
     }
 
     animationRef.current = requestAnimationFrame(draw);
-  }, [style, hue]);
+  }, [style, hue, getAnalyser]);
 
-  // Setup and start visualization when open
   useEffect(() => {
-    if (isOpen && audioElement && isPlaying) {
-      setupAudio();
+    if (isOpen && isPlaying) {
       draw();
     }
 
@@ -177,9 +139,8 @@ export function RadioFullscreenVisualizer({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isOpen, audioElement, isPlaying, setupAudio, draw]);
+  }, [isOpen, isPlaying, draw]);
 
-  // Auto-hide controls
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
     if (hideControlsTimeout.current) {
@@ -190,7 +151,6 @@ export function RadioFullscreenVisualizer({
     }, 3000);
   }, []);
 
-  // Handle mouse movement to show controls
   useEffect(() => {
     if (!isOpen) return;
 
@@ -216,7 +176,6 @@ export function RadioFullscreenVisualizer({
     };
   }, [isOpen, onClose, resetControlsTimer, nextStyle, prevStyle]);
 
-  // Reset visualizer states on style change
   useEffect(() => {
     resetSpectrum();
     resetRings();
@@ -224,7 +183,6 @@ export function RadioFullscreenVisualizer({
     resetTerrain();
   }, [style]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (animationRef.current) {
@@ -237,7 +195,6 @@ export function RadioFullscreenVisualizer({
     };
   }, []);
 
-  // Lock body scroll when open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -262,13 +219,11 @@ export function RadioFullscreenVisualizer({
           className="fixed inset-0 z-[100] bg-black"
           onClick={resetControlsTimer}
         >
-          {/* Fullscreen Canvas */}
           <canvas
             ref={canvasRef}
             className="absolute inset-0 w-full h-full"
           />
 
-          {/* Retro Grid Overlay - WMP 2009 vibe */}
           <div 
             className="absolute inset-0 pointer-events-none opacity-10"
             style={{
@@ -280,7 +235,6 @@ export function RadioFullscreenVisualizer({
             }}
           />
 
-          {/* Vignette Effect */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -288,7 +242,6 @@ export function RadioFullscreenVisualizer({
             }}
           />
 
-          {/* Controls Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: showControls ? 1 : 0 }}
@@ -298,11 +251,9 @@ export function RadioFullscreenVisualizer({
               showControls && 'pointer-events-auto'
             )}
           >
-            {/* Top Bar - Station Info */}
             <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-b from-black/80 to-transparent">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {/* Station Logo */}
                   <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0">
                     {currentStation.favicon ? (
                       <img 
@@ -335,7 +286,6 @@ export function RadioFullscreenVisualizer({
                   </div>
                 </div>
 
-                {/* Close Button */}
                 <button
                   onClick={onClose}
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors"
@@ -345,9 +295,7 @@ export function RadioFullscreenVisualizer({
               </div>
             </div>
 
-            {/* Bottom Bar - Controls */}
             <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-black/80 to-transparent">
-              {/* Style Navigation */}
               <div className="flex items-center justify-center gap-4 mb-4">
                 <button
                   onClick={prevStyle}
@@ -369,7 +317,6 @@ export function RadioFullscreenVisualizer({
                 </button>
               </div>
 
-              {/* Color Control */}
               <div className="flex items-center justify-center gap-3">
                 <Palette className="w-4 h-4 text-zinc-400" />
                 <div 
@@ -389,7 +336,6 @@ export function RadioFullscreenVisualizer({
                 </div>
               </div>
 
-              {/* Keyboard Hints */}
               <div className="flex items-center justify-center gap-4 mt-4 text-zinc-600 text-xs">
                 <span>← → Change Style</span>
                 <span>ESC Close</span>
