@@ -8,7 +8,8 @@
  */
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getAuthToken, getMediaUrl, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
+import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -140,58 +141,14 @@ function formatTimeAgo(dateString?: string): string {
 /**
  * Map unified feed item to VideoItem
  */
-/**
- * Extract file extension from API path
- * Preserves original extension including .octet-stream, .gif, .jpeg, etc.
- */
-function getExtension(path: string): string {
-  const match = path.match(/\.([a-zA-Z0-9-]+)$/);
-  if (!match) return 'jpg';
-  return match[1].toLowerCase();
-}
-
-/**
- * Build canonical image URL: cdn/images/{tokenId}.{ext}
- * API returns paths like "images/2008.jpg" or "nfts/images/61.jpeg"
- * We normalize to: https://dehubcdn.../images/{tokenId}.{ext}
- */
-function buildImageUrl(tokenId: number, apiImagePath: string | undefined): string {
-  if (!apiImagePath) return '';
-  if (apiImagePath.startsWith('http')) return apiImagePath;
-  const ext = getExtension(apiImagePath);
-  return `${DEHUB_CDN_BASE}images/${tokenId}.${ext}`;
-}
-
-/**
- * Build canonical avatar URL: cdn/avatars/{address}.{ext}
- * API returns paths like "avatars/xxx.jpg" or "statics/avatars/xxx.octet-stream"
- * We normalize to: https://dehubcdn.../avatars/{address}.{ext}
- */
-function buildAvatarUrl(address: string, apiAvatarPath: string | undefined): string {
-  if (!apiAvatarPath) return '';
-  if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
-  const ext = getExtension(apiAvatarPath);
-  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
-}
-
-/**
- * Build video URL: cdn/videos/{tokenId}.mp4
- */
-function buildVideoUrl(tokenId: number): string {
-  return `${DEHUB_CDN_BASE}videos/${tokenId}.mp4`;
-}
-
-/**
- * Map unified feed item to VideoItem
- */
 export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
   const id = String(item.tokenId);
   
-  // Build canonical URLs: cdn/images/{tokenId}.{ext} and cdn/avatars/{address}.{ext}
+  // Build canonical URLs using shared utilities
   const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
   const videoUrl = buildVideoUrl(item.tokenId);
   const channelAvatar = item.minterAvatarUrl 
-    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
+    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) || 'user'
     : 'user';
   
   // Determine PPV/W2E/Locked status from streamInfo
@@ -226,38 +183,20 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
 }
 
 /**
- * Build multi-image URLs: cdn/feed-images/{filename}
- * API returns array like ["feed-images/abc.jpg", "feed-images/def.png"]
- * We extract filename and build: https://dehubcdn.../feed-images/{filename}
- */
-function buildImageUrls(apiImageUrls: string[] | undefined): string[] | undefined {
-  if (!apiImageUrls || apiImageUrls.length === 0) return undefined;
-  
-  return apiImageUrls.map((imgUrl) => {
-    if (imgUrl.startsWith('http')) return imgUrl;
-    const filename = imgUrl.split('/').pop() || '';
-    if (filename) {
-      return `${DEHUB_CDN_BASE}feed-images/${filename}`;
-    }
-    return imgUrl;
-  });
-}
-
-/**
  * Map unified feed item to ImagePost
  */
 export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost {
   const id = String(item.tokenId);
   
-  // Build multi-image URLs if available
-  const imageUrls = buildImageUrls(item.imageUrls);
+  // Build multi-image URLs using shared utility
+  const imageUrls = buildFeedImageUrls(item.imageUrls);
   
   // Primary image: first from imageUrls array, or fallback to single imageUrl
   const image = imageUrls?.[0] || buildImageUrl(item.tokenId, item.imageUrl);
   
-  // Build avatar URL
+  // Build avatar URL using shared utility
   const avatar = item.minterAvatarUrl 
-    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
+    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) || 'user'
     : 'user';
   
   return {
@@ -287,9 +226,9 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
 export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
   const id = String(item.tokenId);
   
-  // Build canonical avatar URL: cdn/avatars/{address}.{ext}
+  // Build canonical avatar URL using shared utility
   const avatarUrl = item.minterAvatarUrl 
-    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) 
+    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) || item.minter
     : item.minter;
   
   return {
