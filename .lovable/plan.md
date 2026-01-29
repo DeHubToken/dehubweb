@@ -1,141 +1,76 @@
 
-# Radio Section for Music Tab
 
-## Overview
-Add a live radio streaming feature to the Music tab using the free **Radio Browser API** (https://api.radio-browser.info). This API provides access to 50,000+ radio stations worldwide with no API key required, no rate limits, and completely free to use.
+# Add Radio Section to Home Page Music Tab
 
-## What You'll Get
+## Problem
+The Radio feature was incorrectly placed in the separate Music page (`/app/music`) instead of the **Music tab on the Home page** (`/app`). You're on the correct page, but the MusicFeed component is just showing "No music content yet" with empty sub-tabs.
 
-### Radio Tab in Music Page
-- A new "Radio" tab alongside existing Tracks, Videos, Podcasts, and Live tabs
-- Browse stations by genre (Pop, Rock, Jazz, Electronic, Hip-Hop, etc.)
-- Search for specific stations by name
-- See station info: name, country flag, current genre tags, bitrate quality
-
-### Persistent Mini-Player
-- A floating audio player at the bottom of the screen when a station is playing
-- Shows station name, logo, play/pause control, and volume slider
-- Stays visible while browsing other content
-- Smooth animations when appearing/disappearing
-
-### Station Cards
-- Glass-morphism styled cards matching the app's liquid glass aesthetic
-- Station logo/favicon with fallback icon
-- Country flag and genre tags
-- Click to play, with visual "now playing" indicator
+## Solution
+Integrate the `RadioSection` component into the `MusicFeed` component, replacing the current "Live" sub-tab with "Radio" - so when you click the Music tab on the Home page and tap "Radio", you'll see the radio stations.
 
 ---
 
-## Technical Approach
+## Changes Required
 
-### New Files
+### 1. Update MusicFeed Component
+**File:** `src/components/app/feeds/MusicFeed.tsx`
 
-| File | Purpose |
-|------|---------|
-| `src/lib/api/radio-browser.ts` | API client for Radio Browser endpoints |
-| `src/hooks/use-radio-player.ts` | Global audio player state management |
-| `src/components/app/radio/RadioStationCard.tsx` | Individual station card component |
-| `src/components/app/radio/RadioGenreFilter.tsx` | Genre pill filter bar |
-| `src/components/app/radio/RadioMiniPlayer.tsx` | Persistent floating player |
-| `src/components/app/radio/RadioSection.tsx` | Main radio content section |
-| `src/components/app/radio/index.ts` | Barrel export |
+**Changes:**
+- Replace the "Live" sub-tab with "Radio" sub-tab using `Radio` icon from lucide-react
+- Import and render the `RadioSection` component when "radio" sub-tab is active
+- Keep the empty states for other sub-tabs (tracks, videos, podcasts) until they have real API data
 
-### Modified Files
+### Updated Sub-Tab Structure:
+| Tab | Icon | Content |
+|-----|------|---------|
+| All | Music | Empty state (future: all music content) |
+| Tracks | Disc3 | Empty state (future: audio tracks) |
+| Videos | Play | Empty state (future: music videos) |
+| Podcasts | Mic2 | Empty state (future: podcasts) |
+| **Radio** | Radio | **RadioSection with live streaming stations** |
+
+---
+
+## User Experience After Fix
+
+1. Navigate to Home page (`/app`)
+2. Tap the **Music** tab (play icon) in the tab bar
+3. Tap the tab again to show sub-tabs OR sub-tabs will be visible
+4. Select **Radio** sub-tab
+5. See the full radio experience: search bar, genre filters, station cards
+6. Tap any station to start streaming with persistent mini-player
+
+---
+
+## Technical Details
+
+```tsx
+// Updated sub-tabs in MusicFeed.tsx
+type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio';
+
+const MUSIC_SUB_TABS = [
+  { icon: Music, label: 'All', value: 'all' },
+  { icon: Disc3, label: 'Tracks', value: 'tracks' },
+  { icon: Play, label: 'Videos', value: 'videos' },
+  { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
+  { icon: Radio, label: 'Radio', value: 'radio' }, // Changed from 'live'
+];
+
+// Conditional render in MusicFeed
+{activeSubTab === 'radio' ? (
+  <RadioSection />
+) : (
+  <EmptyState type={getEmptyLabel()} />
+)}
+```
+
+---
+
+## Files to Modify
 
 | File | Change |
 |------|--------|
-| `src/pages/app/MusicPage.tsx` | Add "Radio" tab and render RadioSection |
-| `src/components/app/AppLayout.tsx` | Include RadioMiniPlayer in layout |
+| `src/components/app/feeds/MusicFeed.tsx` | Add Radio sub-tab and render RadioSection |
 
----
+No new files needed - the RadioSection component already exists and works.
 
-## API Integration
-
-### Radio Browser API Endpoints (No API Key Required)
-
-```
-Base URL: https://de1.api.radio-browser.info/json
-```
-
-| Endpoint | Purpose |
-|----------|---------|
-| `/stations/bytag/{tag}` | Get stations by genre tag |
-| `/stations/search?name={query}` | Search stations by name |
-| `/stations/topvote` | Get popular stations |
-| `/tags` | Get available genre tags |
-
-### Station Data Structure
-```typescript
-interface RadioStation {
-  stationuuid: string;
-  name: string;
-  url_resolved: string;  // Stream URL
-  favicon: string;       // Station logo
-  country: string;
-  countrycode: string;
-  tags: string;          // Comma-separated genres
-  bitrate: number;
-  votes: number;
-}
-```
-
----
-
-## User Experience Flow
-
-1. User navigates to Music → Radio tab
-2. Sees genre filter pills (Pop, Rock, Jazz, etc.) and search bar
-3. Scrolls through station cards with station info
-4. Taps a station → Mini-player appears, stream starts
-5. Can continue browsing while audio plays
-6. Tap mini-player pause to stop, or tap a new station to switch
-
----
-
-## UI Design
-
-### Genre Filter Bar
-- Horizontal scrollable pill buttons
-- Active genre highlighted with `bg-zinc-800`
-- Icons for each genre (optional)
-
-### Station Card (Glass Style)
-```
-┌─────────────────────────────────────────┐
-│  [Logo]  Station Name            ▶ Play │
-│          🇺🇸 Pop, Top 40 • 128kbps      │
-└─────────────────────────────────────────┘
-```
-
-### Mini-Player (Fixed Bottom)
-```
-┌─────────────────────────────────────────┐
-│ [Logo] Now Playing: Station    ⏸ 🔊━━━━ │
-└─────────────────────────────────────────┘
-```
-
----
-
-## Implementation Details
-
-### Radio Player Hook
-- Uses `React.Context` for global state
-- Single `Audio` element for playback
-- Exposes: `play(station)`, `pause()`, `setVolume()`, `currentStation`, `isPlaying`
-- Handles stream errors gracefully with toast notifications
-
-### Error Handling
-- Fallback icon for missing station logos
-- "Stream unavailable" message if URL fails
-- Loading skeleton while fetching stations
-
-### Performance
-- `useQuery` with 5-minute stale time for station lists
-- Lazy load station images
-- Debounced search input
-
----
-
-## Dependencies
-- No new packages needed
-- Uses existing: `@tanstack/react-query`, `lucide-react`, `framer-motion`
