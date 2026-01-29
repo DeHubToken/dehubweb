@@ -30,7 +30,6 @@ interface RadioPlayerState {
   isLoading: boolean;
   volume: number;
   error: string | null;
-  audioElement: HTMLAudioElement | null;
 }
 
 interface RadioPlayerContextValue extends RadioPlayerState {
@@ -40,6 +39,7 @@ interface RadioPlayerContextValue extends RadioPlayerState {
   stop: () => void;
   setVolume: (volume: number) => void;
   togglePlayPause: () => void;
+  getAnalyser: () => AnalyserNode | null;
 }
 
 // ============================================================================
@@ -63,18 +63,57 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     isLoading: false,
     volume: 0.8,
     error: null,
-    audioElement: null,
   });
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const isConnectedRef = useRef(false);
+  
+  // Setup audio analyser (once per audio element)
+  const setupAnalyser = useCallback(() => {
+    if (isConnectedRef.current || !audioRef.current) return;
+    
+    try {
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      
+      const ctx = audioContextRef.current;
+      
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+      
+      analyserRef.current = ctx.createAnalyser();
+      analyserRef.current.fftSize = 256;
+      analyserRef.current.smoothingTimeConstant = 0.8;
+      
+      sourceRef.current = ctx.createMediaElementSource(audioRef.current);
+      sourceRef.current.connect(analyserRef.current);
+      analyserRef.current.connect(ctx.destination);
+      
+      isConnectedRef.current = true;
+    } catch (err) {
+      console.error('Failed to setup audio analyser:', err);
+    }
+  }, []);
+  
+  // Get analyser for visualizer components
+  const getAnalyser = useCallback(() => {
+    // Setup on first request if not already done
+    if (!isConnectedRef.current) {
+      setupAnalyser();
+    }
+    return analyserRef.current;
+  }, [setupAnalyser]);
   
   // Initialize audio element
   useEffect(() => {
     audioRef.current = new Audio();
     audioRef.current.volume = state.volume;
-    
-    // Update state with audio element reference
-    setState(prev => ({ ...prev, audioElement: audioRef.current }));
+    audioRef.current.crossOrigin = 'anonymous'; // Required for CORS audio streams
     
     const audio = audioRef.current;
     
@@ -156,13 +195,16 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     
     audio.src = streamUrl;
     audio.load();
-    audio.play().catch(() => {
+    audio.play().then(() => {
+      // Setup analyser after play starts (user interaction required for AudioContext)
+      setupAnalyser();
+    }).catch(() => {
       // Error handled by event listener
     });
     
     // Register click for station analytics
     registerStationClick(station.stationuuid);
-  }, []);
+  }, [setupAnalyser]);
   
   const pause = useCallback(() => {
     audioRef.current?.pause();
@@ -210,6 +252,7 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     stop,
     setVolume,
     togglePlayPause,
+    getAnalyser,
   };
   
   return (

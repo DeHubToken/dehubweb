@@ -25,7 +25,7 @@ export function RadioMiniPlayer() {
     togglePlayPause, 
     stop, 
     setVolume,
-    audioElement
+    getAnalyser
   } = useRadioPlayer();
   
   const [showVolume, setShowVolume] = useState(false);
@@ -166,7 +166,7 @@ export function RadioMiniPlayer() {
       <RadioFullscreenVisualizer 
         isOpen={showVisualizer} 
         onClose={() => setShowVisualizer(false)}
-        audioElement={audioElement}
+        getAnalyser={getAnalyser}
       />
     </>
   );
