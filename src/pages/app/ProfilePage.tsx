@@ -198,13 +198,16 @@ export default function ProfilePage() {
   const lookupUserId = userId || (!routeUsername ? (currentUser?.address || currentWalletAddress || undefined) : undefined);
 
   // Fetch profile from API - supports both username and userId lookups
+  // Pass viewer's address to get follow status
   const { 
     data: apiProfile, 
     isLoading: isLoadingProfile, 
-    isError: isProfileError 
+    isError: isProfileError,
+    setFollowStatus,
   } = useDeHubProfile({ 
     userId: lookupUserId, 
     username: lookupUsername,
+    viewerAddress: currentWalletAddress || undefined,
     enabled: !!(lookupUserId || lookupUsername)
   });
   
@@ -221,6 +224,8 @@ export default function ProfilePage() {
   const profile = apiProfile;
   // Check if viewing own profile: no route username AND (no query ID OR query ID matches current user)
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
+  // Also check if profile wallet matches current user's wallet (for /{username} routes)
+  const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
   
   // Process API content - no mock fallback
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS } = useMemo(() => {
@@ -249,11 +254,13 @@ export default function ProfilePage() {
   
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
   const [isFollowLoading, setIsFollowLoading] = useState(false);
+  
+  // Use API's isFollowing status
+  const isFollowing = apiProfile?.isFollowing ?? false;
 
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.gg/${profile.handle.replace('@', '')}`);
@@ -293,17 +300,22 @@ export default function ProfilePage() {
       return;
     }
     
+    if (!profile?.walletAddress) {
+      toast.error('Cannot unfollow: user wallet address not found');
+      return;
+    }
+    
     setIsFollowLoading(true);
+    // Optimistic update
+    setFollowStatus(false);
+    
     try {
-      await unfollowUser(profile.id);
-      setIsFollowing(false);
-      setIsSubscribed(false);
+      await unfollowUser(profile.walletAddress);
       toast.success(`Unfollowed ${profile.name}`);
     } catch (error) {
-      // Fallback for demo
-      setIsFollowing(false);
-      setIsSubscribed(false);
-      toast.success(`Unfollowed ${profile.name}`);
+      // Revert on error
+      setFollowStatus(true);
+      toast.error('Failed to unfollow. Please try again.');
     } finally {
       setIsFollowLoading(false);
       setShareSheetOpen(false);
@@ -313,20 +325,25 @@ export default function ProfilePage() {
   const handleFollow = async () => {
     if (!isAuthenticated) {
       toast.error('Please connect your wallet first');
-      setIsFollowing(true); // Demo mode
-      toast.success(`Following ${profile.name}`);
+      return;
+    }
+    
+    if (!profile?.walletAddress) {
+      toast.error('Cannot follow: user wallet address not found');
       return;
     }
     
     setIsFollowLoading(true);
+    // Optimistic update
+    setFollowStatus(true);
+    
     try {
-      await followUser(profile.id);
-      setIsFollowing(true);
+      await followUser(profile.walletAddress);
       toast.success(`Following ${profile.name}`);
     } catch (error) {
-      // Fallback for demo
-      setIsFollowing(true);
-      toast.success(`Following ${profile.name}`);
+      // Revert on error
+      setFollowStatus(false);
+      toast.error('Failed to follow. Please try again.');
     } finally {
       setIsFollowLoading(false);
     }
@@ -710,47 +727,68 @@ export default function ProfilePage() {
               <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
             </div>
 
-            {/* Action Buttons - separate row */}
+            {/* Action Buttons - separate row (hide follow on own profile) */}
             <div className="flex items-center gap-2 mb-4">
-              {!isFollowing ? (
-                <Button 
-                  size="sm" 
-                  className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
-                  onClick={handleFollow}
-                  disabled={isFollowLoading}
-                >
-                  {isFollowLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+              {!isViewingOwnProfile && (
+                <>
+                  {!isFollowing ? (
+                    <Button 
+                      size="sm" 
+                      className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
+                      onClick={handleFollow}
+                      disabled={isFollowLoading}
+                    >
+                      {isFollowLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <UserPlus className="w-4 h-4" />
+                      )}
+                      Follow
+                    </Button>
                   ) : (
-                    <UserPlus className="w-4 h-4" />
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                      onClick={handleUnfollow}
+                      disabled={isFollowLoading}
+                    >
+                      {isFollowLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <UserMinus className="w-4 h-4" />
+                      )}
+                      Following
+                    </Button>
                   )}
-                  Follow
-                </Button>
-              ) : !isSubscribed ? (
-                <Button 
-                  size="sm" 
-                  className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                  onClick={() => {
-                    setIsSubscribed(true);
-                    toast.success(`Subscribed to ${profile.name}!`);
-                  }}
-                >
-                  <Star className="w-4 h-4" />
-                  Subscribe
-                </Button>
-              ) : (
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
-                  onClick={() => {
-                    setIsSubscribed(false);
-                    toast.success(`Unsubscribed from ${profile.name}`);
-                  }}
-                >
-                  <Star className="w-4 h-4" />
-                  Unsubscribe
-                </Button>
+                  {isFollowing && !isSubscribed && (
+                    <Button 
+                      size="sm" 
+                      className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
+                      onClick={() => {
+                        setIsSubscribed(true);
+                        toast.success(`Subscribed to ${profile.name}!`);
+                      }}
+                    >
+                      <Star className="w-4 h-4" />
+                      Subscribe
+                    </Button>
+                  )}
+                  {isFollowing && isSubscribed && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
+                      onClick={() => {
+                        setIsSubscribed(false);
+                        toast.success(`Unsubscribed from ${profile.name}`);
+                      }}
+                    >
+                      <Star className="w-4 h-4" />
+                      Unsubscribe
+                    </Button>
+                  )}
+                </>
               )}
               <Button
                 variant="outline" 
@@ -807,7 +845,15 @@ export default function ProfilePage() {
                 </button>
               </div>
               
-              <p className="text-zinc-500 text-sm mt-2">No mutuals</p>
+              {!isViewingOwnProfile && (
+                <p className="text-zinc-500 text-sm mt-2">
+                  {profile.followsYou ? (
+                    <span className="text-primary">Follows you</span>
+                  ) : (
+                    'Doesn\'t follow you'
+                  )}
+                </p>
+              )}
             </div>
           </div>
         </div>
