@@ -207,7 +207,7 @@ export default function ProfilePage() {
   } = useDeHubProfile({ 
     userId: lookupUserId, 
     username: lookupUsername,
-    viewerAddress: currentWalletAddress || undefined,
+    address: currentWalletAddress || undefined,
     enabled: !!(lookupUserId || lookupUsername)
   });
   

@@ -82,29 +82,29 @@ interface UseDeHubProfileOptions {
   /** Username for lookup (alternative to userId) */
   username?: string;
   /** Current viewer's wallet address to get follow status */
-  viewerAddress?: string;
+  address?: string;
   enabled?: boolean;
 }
 
 /**
  * Hook to fetch user profile data
  * Supports both userId and username lookups
- * Pass viewerAddress to get isFollowing/followsYou status
+ * Pass address to get isFollowing/followsYou status
  */
-export function useDeHubProfile({ userId, username, viewerAddress, enabled = true }: UseDeHubProfileOptions = {}) {
+export function useDeHubProfile({ userId, username, address, enabled = true }: UseDeHubProfileOptions = {}) {
   const queryClient = useQueryClient();
   
   const query = useQuery({
-    queryKey: ['dehub-profile', userId || username, viewerAddress],
+    queryKey: ['dehub-profile', userId || username, address],
     queryFn: async () => {
       let user: DeHubUser;
       
       if (username) {
         // Use username-based lookup
-        user = await getAccountByUsername(username, viewerAddress);
+        user = await getAccountByUsername(username, address);
       } else if (userId) {
         // Use ID-based lookup
-        user = await getAccountInfo(userId, viewerAddress);
+        user = await getAccountInfo(userId, address);
       } else {
         throw new Error('Either userId or username is required');
       }
@@ -118,7 +118,7 @@ export function useDeHubProfile({ userId, username, viewerAddress, enabled = tru
 
   // Helper to update follow status optimistically
   const setFollowStatus = (isFollowing: boolean) => {
-    queryClient.setQueryData(['dehub-profile', userId || username, viewerAddress], (old: ProfileData | undefined) => {
+    queryClient.setQueryData(['dehub-profile', userId || username, address], (old: ProfileData | undefined) => {
       if (!old) return old;
       return {
         ...old,
