@@ -66,10 +66,11 @@ export interface UnifiedFeedItem {
     isPayPerView: boolean;
     payPerViewAmount?: number;
     isAddBounty: boolean;
-    bountyViews?: number;
-    bountyComments?: number;
-    bountyAmount?: number;
-    bountyCurrency?: string;
+    addBountyFirstXViewers?: number | string;
+    addBountyFirstXComments?: number | string;
+    addBountyAmount?: number;
+    addBountyTokenSymbol?: string;
+    addBountyChainId?: number;
   };
   plansDetails?: Array<{
     id: number;
@@ -183,10 +184,10 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     ppvCurrency: 'DHB',
     isW2E,
     isLocked,
-    bountyViews: item.streamInfo?.bountyViews,
-    bountyComments: item.streamInfo?.bountyComments,
-    bountyAmount: item.streamInfo?.bountyAmount,
-    bountyCurrency: item.streamInfo?.bountyCurrency || 'DHB',
+    bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
+    bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
+    bountyAmount: item.streamInfo?.addBountyAmount,
+    bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
   };
 }
 
