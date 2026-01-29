@@ -61,33 +61,36 @@ export function RadioSection() {
   
   return (
     <div className="space-y-3">
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-        <Input
-          type="text"
-          placeholder="Search radio stations..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
-        />
-      </div>
-      
-      {/* Genre Filter (hidden when searching) */}
-      {!isSearching && (
-        <RadioGenreFilter 
-          activeGenre={activeGenre} 
-          onGenreChange={setActiveGenre} 
-        />
-      )}
-      
-      {/* Search Results Header */}
-      {isSearching && (
-        <div className="flex items-center gap-2 text-sm text-zinc-400">
-          <span>Results for "{debouncedSearch}"</span>
-          {!isLoading && <span>({stations.length} stations)</span>}
+      {/* Sticky Search & Genre Filter */}
+      <div className="sticky top-0 z-20 bg-background pb-3 space-y-3">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            type="text"
+            placeholder="Search radio stations..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
+          />
         </div>
-      )}
+        
+        {/* Genre Filter (hidden when searching) */}
+        {!isSearching && (
+          <RadioGenreFilter 
+            activeGenre={activeGenre} 
+            onGenreChange={setActiveGenre} 
+          />
+        )}
+        
+        {/* Search Results Header */}
+        {isSearching && (
+          <div className="flex items-center gap-2 text-sm text-zinc-400">
+            <span>Results for "{debouncedSearch}"</span>
+            {!isLoading && <span>({stations.length} stations)</span>}
+          </div>
+        )}
+      </div>
       
       {/* Loading State */}
       {isLoading && (
