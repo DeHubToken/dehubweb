@@ -77,10 +77,12 @@ export function RadioSection() {
         
         {/* Genre Filter (hidden when searching) */}
         {!isSearching && (
-          <RadioGenreFilter 
-            activeGenre={activeGenre} 
-            onGenreChange={setActiveGenre} 
-          />
+          <div className="mt-0.5">
+            <RadioGenreFilter 
+              activeGenre={activeGenre} 
+              onGenreChange={setActiveGenre} 
+            />
+          </div>
         )}
         
         {/* Search Results Header */}
