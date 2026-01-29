@@ -10,19 +10,20 @@
 import { useState } from 'react';
 import { Play, Music, Mic2, Radio, Disc3, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { RadioSection } from '@/components/app/radio';
 
 // ============================================================================
 // COMPONENTS
 // ============================================================================
 
-type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'live';
+type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio';
 
 const MUSIC_SUB_TABS: { icon: typeof Music; label: string; value: MusicSubTab }[] = [
   { icon: Music, label: 'All', value: 'all' },
   { icon: Disc3, label: 'Tracks', value: 'tracks' },
   { icon: Play, label: 'Videos', value: 'videos' },
   { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
-  { icon: Radio, label: 'Live', value: 'live' },
+  { icon: Radio, label: 'Radio', value: 'radio' },
 ];
 
 function EmptyState({ type }: { type: string }) {
@@ -55,7 +56,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       case 'tracks': return 'tracks';
       case 'videos': return 'music videos';
       case 'podcasts': return 'podcasts';
-      case 'live': return 'live streams';
       default: return 'music content';
     }
   };
@@ -91,8 +91,12 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
         </div>
       )}
 
-      {/* Empty State */}
-      <EmptyState type={getEmptyLabel()} />
+      {/* Content */}
+      {activeSubTab === 'radio' ? (
+        <RadioSection />
+      ) : (
+        <EmptyState type={getEmptyLabel()} />
+      )}
     </div>
   );
 }
