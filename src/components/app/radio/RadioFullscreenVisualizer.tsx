@@ -342,10 +342,6 @@ export function RadioFullscreenVisualizer({
                 </div>
               </div>
 
-              <div className="flex items-center justify-center gap-4 mt-4 text-zinc-600 text-xs">
-                <span>← → Change Style</span>
-                <span>ESC Close</span>
-              </div>
             </div>
           </motion.div>
         </motion.div>
