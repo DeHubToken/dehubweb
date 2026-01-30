@@ -1,186 +1,116 @@
 
-# Direct Messages Implementation Plan
 
-## Overview
-This plan implements real Direct Messages functionality using the DeHub API to replace the current mock data in `MessagesPage.tsx`. The implementation will support fetching conversations, viewing message threads, sending messages (text, images, GIFs), and real-time updates.
+# Fix DeHub DM API Endpoints
 
-## Current State Analysis
-- `MessagesPage.tsx` uses hardcoded mock conversations
-- `PublicChat.tsx` has a working chat UI with mock messages
-- Existing `ChatInput.tsx` supports text, images, GIFs, and AI enhancement
-- `DeHubUser` interface already includes `dmSettings` for DM preferences
-- No messaging API functions exist in `src/lib/api/dehub.ts`
+## Problem Identified
+The messaging feature is broken because the API endpoints were incorrectly guessed. The current code uses `/api/conversations` but the actual DeHub API uses `/api/dm/` prefix.
 
-## Implementation Approach
+## Correct Endpoint Mapping
 
-### Phase 1: Add DeHub Messaging API Functions
+Based on the API documentation screenshot:
 
-Create new API endpoints in `src/lib/api/dehub.ts`:
+| Feature | Current (Wrong) | Correct Endpoint |
+|---------|----------------|------------------|
+| List/Search DMs | `/api/conversations` | `GET /api/dm/search` |
+| Get conversation | `/api/conversations/{id}` | `GET /api/dm/{id}` |
+| Get messages | `/api/conversations/{id}/messages` | `GET /api/dm/messages/{id}` |
+| Send message | `POST /api/conversations/{id}/messages` | `POST /api/dm/tnx` |
+| Create conversation | `POST /api/conversations` | `POST /api/dm/tnx` (with new recipient) |
+| Delete messages | `DELETE /api/conversations/{id}` | `POST /api/dm/delete-messages` |
+| User contacts | `/api/users/search` | `GET /api/dm/contacts/{address}` |
+| Mark as read | `PUT /api/conversations/{id}/read` | `PUT /api/dm/tnx` |
+| User status | N/A | `GET /api/dm/user-status/{address}` |
 
-**Conversations Endpoints:**
-- `getConversations()` - Fetch list of user's conversations
-- `getConversation(conversationId)` - Get single conversation details
-- `createConversation(recipientAddress)` - Start new DM thread
-- `deleteConversation(conversationId)` - Remove a conversation
+## Implementation Changes
 
-**Messages Endpoints:**
-- `getMessages(conversationId, page, limit)` - Fetch messages in a thread
-- `sendMessage(conversationId, content, type, mediaUrl?)` - Send a message
-- `markAsRead(conversationId)` - Mark conversation as read
+### 1. Update `src/lib/api/dehub.ts`
 
-**New TypeScript Interfaces:**
-```text
-DeHubConversation {
-  id: string
-  participants: DeHubUser[]
-  lastMessage?: DeHubMessage
-  unreadCount: number
-  createdAt: string
-  updatedAt: string
+Update all messaging API functions to use correct endpoints:
+
+```typescript
+// List conversations - use /api/dm/search
+export async function getConversations(page: number = 0, limit: number = 20) {
+  return apiCall("/api/dm/search", {
+    params: { page, limit },
+    requiresAuth: true,
+  });
 }
 
-DeHubMessage {
-  id: string
-  conversationId: string
-  sender: DeHubUser
-  content: string
-  type: 'text' | 'image' | 'gif'
-  mediaUrl?: string
-  createdAt: string
-  readAt?: string
+// Get single conversation - use /api/dm/{id}
+export async function getConversation(conversationId: string) {
+  return apiCall(`/api/dm/${conversationId}`, { requiresAuth: true });
+}
+
+// Get messages - use /api/dm/messages/{id}
+export async function getMessages(conversationId: string, page: number = 0, limit: number = 30) {
+  return apiCall(`/api/dm/messages/${conversationId}`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+}
+
+// Send message - use /api/dm/tnx
+export async function sendMessage(conversationId: string, content: string, type = 'text', mediaUrl?: string) {
+  return apiCall("/api/dm/tnx", {
+    method: "POST",
+    body: { conversationId, content, type, mediaUrl },
+    requiresAuth: true,
+  });
+}
+
+// Get contacts for DM - use /api/dm/contacts/{address}
+export async function searchUsersForDM(query: string, page: number = 0, limit: number = 10) {
+  return apiCall(`/api/dm/contacts/${query}`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+}
+
+// Delete messages - use /api/dm/delete-messages
+export async function deleteConversation(conversationId: string) {
+  return apiCall("/api/dm/delete-messages", {
+    method: "POST",
+    body: { conversationId },
+    requiresAuth: true,
+  });
+}
+
+// Update/mark read - use PUT /api/dm/tnx
+export async function markConversationAsRead(conversationId: string) {
+  return apiCall("/api/dm/tnx", {
+    method: "PUT",
+    body: { conversationId, read: true },
+    requiresAuth: true,
+  });
 }
 ```
 
-### Phase 2: Create Messages Hook
+### 2. Update Response Handling
 
-New file: `src/hooks/use-messages.ts`
+The API response structure may differ from assumptions. Will need to:
+- Inspect actual response format from `/api/dm/search`
+- Adjust interface types if needed (e.g., field names like `result` vs direct data)
+- Handle any differences in conversation/message object structure
 
-**Features:**
-- `useConversations()` - Fetch and cache conversation list
-- `useMessages(conversationId)` - Fetch messages for a thread with pagination
-- `useSendMessage()` - Mutation for sending messages
-- `useMarkAsRead()` - Mutation to mark messages read
-- Client-side search filtering
-- Optimistic updates for sent messages
+### 3. Update User Search for New Conversation
 
-### Phase 3: Build DM Chat Component
+The `NewConversationModal` uses `searchUsersForDM` which currently calls `/api/users/search`. Options:
+- Use `/api/dm/contacts/{address}` if it supports search
+- Use the existing `searchUsers` function from the main API if available
+- Fallback to the general user search endpoint
 
-New file: `src/components/app/chat/DirectMessageChat.tsx`
+## Files to Change
 
-**Features:**
-- Full-screen chat view (similar to PublicChat)
-- Header with recipient info and back button
-- Message list with infinite scroll (load older messages)
-- Reuse existing `ChatInput` component
-- Message bubbles differentiated by sender (left/right alignment)
-- Timestamp grouping (Today, Yesterday, dates)
-- Read receipts indicator
-- Online status indicator
+| File | Changes |
+|------|---------|
+| `src/lib/api/dehub.ts` | Update all 7 messaging functions to use correct `/api/dm/*` endpoints |
+| `src/hooks/use-messages.ts` | May need minor adjustments if response structure differs |
+| `src/components/app/chat/NewConversationModal.tsx` | Update user search if endpoint changes |
 
-### Phase 4: Update MessagesPage
+## Technical Notes
 
-Modify `src/pages/app/MessagesPage.tsx`:
+- All endpoints require authentication (`requiresAuth: true`)
+- The `tnx` endpoint appears to be used for both sending messages (POST) and updating read status (PUT)
+- May need to test actual API responses to confirm exact field names
+- Upload media uses separate `/api/dm/upload` endpoint for images/files
 
-**Conversation List:**
-- Replace mock data with `useConversations()` hook
-- Real-time unread counts
-- Search conversations by name/username
-- New conversation button (opens user search modal)
-- Pull-to-refresh support
-
-**Conversation View States:**
-- No conversations → Empty state with CTA
-- Loading → Skeleton loaders
-- Error → Error state with retry
-
-**Navigation:**
-- Click conversation → Open `DirectMessageChat`
-- Back button → Return to list
-
-### Phase 5: New Conversation Flow
-
-New file: `src/components/app/chat/NewConversationModal.tsx`
-
-**Features:**
-- User search input (reuse `useDeHubUserSearch`)
-- Display search results with avatars
-- Check DM settings before allowing
-- Create conversation on user selection
-
-## File Changes Summary
-
-| File | Action | Description |
-|------|--------|-------------|
-| `src/lib/api/dehub.ts` | Modify | Add messaging API functions and interfaces |
-| `src/hooks/use-messages.ts` | Create | React Query hooks for messaging |
-| `src/hooks/index.ts` | Modify | Export new messaging hooks |
-| `src/components/app/chat/DirectMessageChat.tsx` | Create | DM chat view component |
-| `src/components/app/chat/NewConversationModal.tsx` | Create | Start new conversation modal |
-| `src/components/app/chat/index.ts` | Modify | Export new components |
-| `src/pages/app/MessagesPage.tsx` | Modify | Replace mock data with real API |
-
-## Technical Details
-
-### API Endpoint Patterns
-Based on existing DeHub API patterns, messaging endpoints likely follow:
-- `GET /api/conversations` - List conversations
-- `GET /api/conversations/{id}/messages` - Get messages
-- `POST /api/conversations/{id}/messages` - Send message
-- `POST /api/conversations` - Create conversation
-- `PUT /api/conversations/{id}/read` - Mark as read
-
-### Data Flow
-```text
-User opens Messages
-    ↓
-useConversations() fetches /api/conversations
-    ↓
-Display conversation list with last message preview
-    ↓
-User selects conversation
-    ↓
-useMessages(id) fetches /api/conversations/{id}/messages
-    ↓
-Display messages in DirectMessageChat
-    ↓
-User sends message → useSendMessage() → optimistic update → API call
-```
-
-### Error Handling
-- Network errors: Show retry button
-- DM disabled: Show appropriate message based on `dmSettings`
-- Rate limiting: Queue messages with retry logic
-
-### Caching Strategy
-- Conversations list: 30 second stale time
-- Individual messages: 1 minute stale time
-- Invalidate on send/receive
-
-## UI/UX Considerations
-
-**Mobile Experience:**
-- Full-screen chat view
-- Bottom-aligned input (same as PublicChat)
-- Swipe back gesture support
-
-**Desktop Experience:**
-- Split panel possible (list + chat side by side)
-- Keyboard shortcuts (Enter to send)
-
-**Accessibility:**
-- Proper ARIA labels
-- Focus management when navigating
-- Screen reader announcements for new messages
-
-## Dependencies
-No new dependencies required. Uses existing:
-- React Query for data fetching
-- Existing UI components (Avatar, Input, Button)
-- Existing chat components (ChatInput, ChatMessage pattern)
-
-## Testing Considerations
-- Test with no conversations (empty state)
-- Test pagination (many messages)
-- Test with images and GIFs
-- Test DM settings restrictions
-- Test offline/error states
