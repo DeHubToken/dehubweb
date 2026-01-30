@@ -71,7 +71,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0">
       {/* Sub-tab Navigation - Always visible and sticky */}
-      <div className="sticky top-[2.75rem] lg:top-0 z-30 -mx-2 px-2 sm:-mx-3 sm:px-3 pb-3 bg-black">
+      <div className="sticky top-[2.75rem] lg:top-0 z-30 -mx-2 px-2 sm:-mx-3 sm:px-3 pb-2 bg-black">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {MUSIC_SUB_TABS.map((tab) => (
