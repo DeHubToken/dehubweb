@@ -24,168 +24,10 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileData } from '@/hooks/use-dehub-profile';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
-import { MOCK_POSTS, SAMPLE_IMAGES, SAMPLE_VIDEOS } from '@/data/mock-feed.data';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
 
-// Fallback mock profile
-const MOCK_PROFILE: ProfileData = {
-  id: 'mock-user',
-  name: 'Alice Cooper',
-  handle: '@alice_cooper',
-  verified: false,
-  bio: 'Tech enthusiast & startup founder 🚀 Building the future one line of code at a time. Always exploring new technologies!',
-  joinedDate: 'January 2024',
-  following: 416,
-  followers: 1825,
-  postsCount: 142,
-};
-
-// Filter/modify mock data to appear as if from the profile user
-const createProfilePosts = (profile: ProfileData): TextPost[] => 
-  MOCK_POSTS.slice(0, 10).map(post => ({
-    ...post,
-    author: {
-      id: profile.id,
-      name: profile.name,
-      handle: profile.handle,
-      verified: profile.verified,
-    },
-  }));
-
-const createProfileImages = (profile: ProfileData): ImagePost[] => 
-  SAMPLE_IMAGES.slice(0, 10).map(img => ({
-    ...img,
-    username: profile.name,
-    avatar: profile.avatarUrl || profile.handle,
-    verified: profile.verified,
-  }));
-
-const createProfileVideos = (profile: ProfileData): VideoItem[] => {
-  const baseVideos = SAMPLE_VIDEOS.slice(0, 8).map((vid, i) => ({
-    ...vid,
-    id: `profile-video-${i}`,
-    channel: profile.name,
-    channelAvatar: profile.avatarUrl || profile.handle,
-    verified: profile.verified,
-  }));
-  
-  const extraVideos = SAMPLE_VIDEOS.slice(0, 2).map((vid, i) => ({
-    ...vid,
-    id: `profile-video-extra-${i}`,
-    channel: profile.name,
-    channelAvatar: profile.avatarUrl || profile.handle,
-    verified: profile.verified,
-    title: i === 0 ? 'Behind the Scenes - Day in My Life' : 'Q&A Session with Followers',
-  }));
-  
-  return [...baseVideos, ...extraVideos];
-};
-
-// Realistic reply threads - original posts that Alice replied to
-const REPLY_THREADS = [
-  {
-    id: 'reply-1',
-    originalPost: {
-      author: { id: 'user-1', name: 'Marcus Chen', handle: '@marcusdev', verified: false },
-      content: 'Just shipped our new AI feature and the response has been incredible! 🚀 Sometimes you just have to trust the process.',
-      stats: { comments: 89, reposts: 234, likes: 1205 },
-    },
-    reply: 'Congrats Marcus! The new AI integration looks amazing. Would love to chat about how you handled the edge cases - we\'re working on something similar.',
-  },
-  {
-    id: 'reply-2',
-    originalPost: {
-      author: { id: 'user-2', name: 'Sarah Williams', handle: '@sarahwrites', verified: false },
-      content: 'Hot take: Most startups fail not because of bad ideas, but because founders don\'t know when to pivot. Thoughts?',
-      stats: { comments: 156, reposts: 89, likes: 892 },
-    },
-    reply: 'This is so true! We almost went under in 2023 because I was too attached to our original vision. Best decision I ever made was listening to users and pivoting.',
-  },
-  {
-    id: 'reply-3',
-    originalPost: {
-      author: { id: 'user-3', name: 'TechCrunch', handle: '@techcrunch', verified: false },
-      content: 'Breaking: OpenAI announces new partnership with major enterprise clients. The AI arms race continues to heat up.',
-      stats: { comments: 423, reposts: 1567, likes: 4521 },
-    },
-    reply: 'This is going to change the game for smaller companies. We need to stay nimble and focus on what makes us unique. Exciting times!',
-  },
-  {
-    id: 'reply-4',
-    originalPost: {
-      author: { id: 'user-4', name: 'Dev Community', handle: '@devdotcom', verified: false },
-      content: 'What\'s the one piece of advice you\'d give to junior developers starting their career in 2024?',
-      stats: { comments: 892, reposts: 345, likes: 2103 },
-    },
-    reply: 'Learn to read code before you learn to write it. Spend time in open source repos, understand patterns, and don\'t be afraid to ask "why" about everything.',
-  },
-  {
-    id: 'reply-5',
-    originalPost: {
-      author: { id: 'user-5', name: 'James Rodriguez', handle: '@jamesbuilds', verified: false },
-      content: 'Finally hit 10k users on my side project! 🎉 Never thought a weekend hack would turn into this. Persistence pays off.',
-      stats: { comments: 67, reposts: 123, likes: 1456 },
-    },
-    reply: 'That\'s incredible James! 🙌 The jump from side project to real product is the hardest part. What\'s next on your roadmap?',
-  },
-  {
-    id: 'reply-6',
-    originalPost: {
-      author: { id: 'user-6', name: 'Elena Vasquez', handle: '@elenavtech', verified: false },
-      content: 'Reminder: Taking breaks isn\'t laziness, it\'s maintenance. Your brain needs downtime to process and create. Go touch grass sometimes.',
-      stats: { comments: 234, reposts: 567, likes: 3421 },
-    },
-    reply: 'Needed to hear this today. Been grinding on a feature for 12 hours straight. Time to step away and come back fresh tomorrow. Thanks Elena! 💚',
-  },
-  {
-    id: 'reply-7',
-    originalPost: {
-      author: { id: 'user-7', name: 'Startup Grind', handle: '@startupgrind', verified: false },
-      content: 'What\'s the biggest lesson you learned from a failed project?',
-      stats: { comments: 445, reposts: 234, likes: 1876 },
-    },
-    reply: 'Never fall in love with your solution, fall in love with the problem. My first startup failed because I built what I wanted, not what users needed.',
-  },
-  {
-    id: 'reply-8',
-    originalPost: {
-      author: { id: 'user-8', name: 'Nina Patel', handle: '@ninadesigns', verified: false },
-      content: 'Design systems are not about making things look the same. They\'re about making things work the same. Consistency > uniformity.',
-      stats: { comments: 89, reposts: 312, likes: 2134 },
-    },
-    reply: 'This distinction is so important! We spent 3 months building our design system and it\'s been worth every hour. Happy to share our approach if helpful.',
-  },
-  {
-    id: 'reply-9',
-    originalPost: {
-      author: { id: 'user-9', name: 'Product Hunt', handle: '@producthunt', verified: false },
-      content: 'What product would you build if you had unlimited resources and time?',
-      stats: { comments: 1234, reposts: 456, likes: 5678 },
-    },
-    reply: 'A truly private, decentralized social platform where users own their data and algorithms are transparent. The future of social needs to be rebuilt from the ground up.',
-  },
-  {
-    id: 'reply-10',
-    originalPost: {
-      author: { id: 'user-10', name: 'Alex Turner', handle: '@alexcodes', verified: false },
-      content: 'Just discovered that my "clever" solution from 6 months ago is now my biggest tech debt. Past me was not as smart as I thought. 😅',
-      stats: { comments: 156, reposts: 234, likes: 1876 },
-    },
-    reply: 'Haha this is the most relatable thing I\'ve seen all week. I have a folder called "what was I thinking" full of code I wrote at 2am. We\'ve all been there! 😂',
-  },
-];
-
 type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
-
-// Mock fractions holdings
-const MOCK_FRACTIONS = [
-  { id: 'frac-1', postId: 'image-1', thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop', author: '@gamer_pro', fractions: 150, totalValue: 0.45, currency: 'ETH' },
-  { id: 'frac-2', postId: 'video-3', thumbnail: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&h=100&fit=crop', author: '@esports_daily', fractions: 75, totalValue: 0.22, currency: 'ETH' },
-  { id: 'frac-3', postId: 'image-5', thumbnail: 'https://images.unsplash.com/photo-1493711662062-fa541f7f76ce?w=100&h=100&fit=crop', author: '@digital_art', fractions: 200, totalValue: 0.8, currency: 'ETH' },
-  { id: 'frac-4', postId: 'video-7', thumbnail: 'https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?w=100&h=100&fit=crop', author: '@streamking', fractions: 50, totalValue: 0.15, currency: 'ETH' },
-  { id: 'frac-5', postId: 'image-12', thumbnail: 'https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=100&h=100&fit=crop', author: '@nft_collector', fractions: 300, totalValue: 1.2, currency: 'ETH' },
-];
 
 export default function ProfilePage() {
   const [searchParams] = useSearchParams();
@@ -243,13 +85,13 @@ export default function ProfilePage() {
   
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
     { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
-    { icon: Star, label: 'Subs', value: 'subscribers', count: 10 },
-    { icon: MessageCircle, label: 'Replies', value: 'replies', count: 10 },
+    { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
+    { icon: MessageCircle, label: 'Replies', value: 'replies', count: 0 },
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
     { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
-    { icon: Play, label: 'Songs', value: 'songs', count: 10 },
-    { icon: Radio, label: 'Live', value: 'live', count: 10 },
-    { icon: PieChart, label: 'Fractions', value: 'fractions', count: MOCK_FRACTIONS.length },
+    { icon: Play, label: 'Songs', value: 'songs', count: 0 },
+    { icon: Radio, label: 'Live', value: 'live', count: 0 },
+    { icon: PieChart, label: 'Fractions', value: 'fractions', count: 0 },
   ];
   
   const [activeTab, setActiveTab] = useState<TabValue>('home');
@@ -359,7 +201,7 @@ export default function ProfilePage() {
       toast.error('Please enter a valid offer amount');
       return;
     }
-    toast.success(`Offer of ${offerAmount} DHB submitted for ${MOCK_PROFILE.handle}`);
+    toast.success(`Offer of ${offerAmount} DHB submitted for ${profile?.handle || 'user'}`);
     setOfferDrawerOpen(false);
     setOfferAmount('');
   };
@@ -468,68 +310,10 @@ export default function ProfilePage() {
         );
       case 'replies':
         return (
-          <div className="space-y-2 sm:space-y-3">
-            {REPLY_THREADS.map((thread) => (
-              <div key={thread.id} className="bg-zinc-900 rounded-2xl overflow-hidden">
-                {/* Original post (what Alice replied to) */}
-                <div className="p-3 sm:p-4 border-b border-zinc-800">
-                  <div className="flex items-start gap-3">
-                    <UserAvatar 
-                      name={thread.originalPost.author.name} 
-                      handle={thread.originalPost.author.handle} 
-                      size="md" 
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-semibold text-white truncate">
-                          {thread.originalPost.author.name}
-                        </span>
-                        {thread.originalPost.author.verified && <VerifiedBadge className="w-4 h-4" />}
-                        <span className="text-zinc-500 text-sm truncate">
-                          {thread.originalPost.author.handle}
-                        </span>
-                      </div>
-                      <p className="text-white/90 text-sm sm:text-base mt-1">
-                        {thread.originalPost.content}
-                      </p>
-                      <div className="flex items-center gap-4 mt-2 text-zinc-500 text-xs">
-                        <span>{thread.originalPost.stats.comments} replies</span>
-                        <span>{thread.originalPost.stats.reposts} reposts</span>
-                        <span>{thread.originalPost.stats.likes} likes</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Alice's reply */}
-                <div className="p-3 sm:p-4 bg-zinc-800/30">
-                  <div className="flex items-start gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="w-0.5 h-3 bg-zinc-700 -mt-4 mb-1" />
-                      <UserAvatar 
-                        name={profile.name} 
-                        handle={profile.handle} 
-                        size="md" 
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-semibold text-white truncate">
-                          {profile.name}
-                        </span>
-                        {profile.verified && <VerifiedBadge className="w-4 h-4" />}
-                        <span className="text-zinc-500 text-sm truncate">
-                          {profile.handle}
-                        </span>
-                        <span className="text-zinc-600 text-xs">· replying</span>
-                      </div>
-                      <p className="text-white/90 text-sm sm:text-base mt-1">
-                        {thread.reply}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <MessageCircle className="w-12 h-12 text-zinc-600 mb-3" />
+            <p className="text-zinc-400 text-lg font-medium">No replies yet</p>
+            <p className="text-zinc-500 text-sm mt-1">Replies to other posts will appear here</p>
           </div>
         );
       case 'subscribers':
@@ -606,44 +390,10 @@ export default function ProfilePage() {
         );
       case 'fractions':
         return (
-          <div className="space-y-2 sm:space-y-3">
-            {/* Holdings Summary */}
-            <div className="bg-zinc-900 rounded-2xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-white font-semibold">Your Holdings</h3>
-                <span className="text-white/60 text-sm">
-                  {MOCK_FRACTIONS.reduce((acc, f) => acc + f.fractions, 0)}/5000 total fractions
-                </span>
-              </div>
-              <div className="text-2xl font-bold text-white">
-                {MOCK_FRACTIONS.reduce((acc, f) => acc + f.totalValue, 0).toFixed(2)} ETH
-              </div>
-              <p className="text-white/40 text-sm mt-1">Estimated portfolio value</p>
-            </div>
-            
-            {/* Holdings List */}
-            {MOCK_FRACTIONS.map((holding) => (
-              <div 
-                key={holding.id}
-                className="bg-zinc-900 rounded-2xl p-4 flex items-center gap-4"
-              >
-                <img 
-                  src={holding.thumbnail} 
-                  alt="Post thumbnail"
-                  className="w-16 h-16 rounded-xl object-cover"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{holding.author}</p>
-                  <p className="text-white/60 text-sm">
-                    {holding.fractions}/1000 fractions
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-white font-semibold">{holding.totalValue} {holding.currency}</p>
-                  <p className="text-white/40 text-xs">Value</p>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <PieChart className="w-12 h-12 text-zinc-600 mb-3" />
+            <p className="text-zinc-400 text-lg font-medium">No fractions yet</p>
+            <p className="text-zinc-500 text-sm mt-1">Fraction holdings will appear here</p>
           </div>
         );
       default:
