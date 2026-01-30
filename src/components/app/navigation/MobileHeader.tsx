@@ -40,27 +40,6 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       </div>
       
       <div className="flex items-center gap-2">
-        {/* Authenticated User Avatar - icon only on mobile/tablet */}
-        {isAuthenticated && user && (
-          <button 
-            onClick={() => navigate('/app/profile')}
-            className="hover:opacity-80 transition-opacity"
-          >
-            <Avatar className="w-7 h-7">
-              {user.avatarImageUrl && user.address && (
-                <AvatarImage
-                  src={buildAvatarUrl(user.address, user.avatarImageUrl)}
-                  alt={`${user.displayName || user.username}'s avatar`}
-                  className="object-cover"
-                />
-              )}
-              <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-          </button>
-        )}
-        
         {/* Coin Balance */}
         <CoinBalanceMenu balance={coinBalance} variant="mobile" />
         
@@ -73,15 +52,35 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           <Bell className="w-5 h-5" />
         </button>
         
-        {/* Menu Button */}
+        {/* Menu Button - Avatar when authenticated, burger when not */}
         <Drawer open={isOpen} onOpenChange={onToggle}>
           <DrawerTrigger asChild>
-            <button
-              className="p-2 rounded-full transition-colors"
-              aria-label="Toggle menu"
-            >
-              <Menu className="w-6 h-6 text-zinc-400" />
-            </button>
+            {isAuthenticated && user ? (
+              <button
+                className="hover:opacity-80 transition-opacity"
+                aria-label="Toggle menu"
+              >
+                <Avatar className="w-8 h-8">
+                  {user.avatarImageUrl && user.address && (
+                    <AvatarImage
+                      src={buildAvatarUrl(user.address, user.avatarImageUrl)}
+                      alt={`${user.displayName || user.username}'s avatar`}
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                    {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            ) : (
+              <button
+                className="p-2 rounded-full transition-colors"
+                aria-label="Toggle menu"
+              >
+                <Menu className="w-6 h-6 text-zinc-400" />
+              </button>
+            )}
           </DrawerTrigger>
           <DrawerContent glass className="max-h-[85vh]">
             <div className="p-4 pb-8 overflow-y-auto">
