@@ -211,17 +211,6 @@ export default function ProfilePage() {
 
   const ShareOptions = () => (
     <div className="flex flex-col gap-1">
-      {isFollowing && (
-        <button
-          onClick={handleUnfollow}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
-        >
-          <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
-            <UserMinus className="w-4 h-4 text-red-400" />
-          </div>
-          <span className="text-red-400 font-medium">Unfollow</span>
-        </button>
-      )}
       <button
         onClick={handleCopyProfileUrl}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
@@ -290,6 +279,17 @@ export default function ProfilePage() {
             </div>
             <span className="text-white font-medium">Make Offer</span>
           </button>
+          {isFollowing && (
+            <button
+              onClick={handleUnfollow}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
+            >
+              <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
+                <UserMinus className="w-4 h-4 text-red-400" />
+              </div>
+              <span className="text-red-400 font-medium">Unfollow</span>
+            </button>
+          )}
         </>
       )}
     </div>
