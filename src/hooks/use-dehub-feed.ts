@@ -160,6 +160,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const ppvCurrency = nft.ppv_currency || 'USDC';
   const isW2E = nft.is_w2e ?? false;
   const isLocked = nft.is_locked ?? false;
+  const lockedPrice = nft.locked_price;
+  const lockedCurrency = nft.locked_currency || 'DHB';
   
   return {
     id,
@@ -185,6 +187,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ppvCurrency,
     isW2E,
     isLocked,
+    lockedPrice,
+    lockedCurrency,
   };
 }
 
