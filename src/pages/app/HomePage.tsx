@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -47,6 +48,11 @@ const GESTURE_LOCK_DURATION = 400;
 // ============================================================================
 
 export default function HomePage() {
+  const location = useLocation();
+  
+  // Extract pinned post ID from location state (when coming from /app/post/:postId)
+  const pinnedPostId = (location.state as { pinnedPostId?: string } | null)?.pinnedPostId;
+  
   // Tab state
   const [activeTab, setActiveTab] = useState('home');
   const [refreshKey, setRefreshKey] = useState(0);
@@ -336,7 +342,7 @@ export default function HomePage() {
       case 'music':
         return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       default:
-        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} />;
+        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />;
     }
   };
 
