@@ -13,7 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
-import { getNFTComments, postComment, getMediaUrl, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { CommentItem } from './CommentItem';
 import { CommentInput } from './CommentInput';
@@ -55,11 +56,14 @@ function formatTimeAgo(dateString: string): string {
 
 // Map API comment to local Comment type
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
+  const address = apiComment.address;
+  const rawAvatarPath = apiComment.writor?.avatarUrl;
+  
   return {
     id: String(apiComment.id),
-    address: apiComment.address,
+    address,
     username: apiComment.writor?.username || 'Anonymous',
-    avatarUrl: apiComment.writor?.avatarUrl,
+    avatarUrl: address && rawAvatarPath ? buildAvatarUrl(address, rawAvatarPath) : undefined,
     text: apiComment.content,
     timeAgo: formatTimeAgo(apiComment.createdAt),
     // Convert parentId to string for consistent comparison

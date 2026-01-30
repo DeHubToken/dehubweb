@@ -9,7 +9,7 @@ import { Send, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import type { Comment } from './types';
 
 interface CommentInputProps {
@@ -45,7 +45,9 @@ export function CommentInput({ replyTo, onClearReply, onSubmit, isSubmitting }: 
     }
   }, [handleSubmit]);
 
-  const avatarUrl = user?.avatarImageUrl || user?.avatarUrl;
+  const userAddress = user?.address || user?.wallet_address || '';
+  const userAvatarPath = user?.avatarImageUrl || user?.avatarUrl;
+  const avatarUrl = userAddress && userAvatarPath ? buildAvatarUrl(userAddress, userAvatarPath) : undefined;
 
   if (!isAuthenticated) {
     return (
@@ -84,7 +86,7 @@ export function CommentInput({ replyTo, onClearReply, onSubmit, isSubmitting }: 
       {/* Input area */}
       <div className="p-4 flex items-center gap-3">
         <Avatar className="w-8 h-8 flex-shrink-0">
-          <AvatarImage src={avatarUrl ? getMediaUrl(avatarUrl) : undefined} className="object-cover" />
+          <AvatarImage src={avatarUrl} className="object-cover" />
           <AvatarFallback className="bg-zinc-700 text-xs">
             {user?.username?.[0]?.toUpperCase() || '?'}
           </AvatarFallback>
