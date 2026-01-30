@@ -1,76 +1,81 @@
 
-# Fix: Profile Pictures Not Rendering in Comments
 
-## Problem
-Profile pictures (PFPs) in the comments section are showing fallback initials (e.g., "E") instead of the actual avatar images.
+# Fix: Profile Pictures in Comments - Root Cause Analysis
 
-## Root Cause
-The comments system is using `getMediaUrl()` to convert avatar paths to CDN URLs. However, the DeHub API can return avatar paths in various formats like:
-- `"avatars/xxx.jpg"`  
-- `"statics/avatars/xxx.octet-stream"`
+## Actual Problem Found
+There are **two separate comment systems** in the codebase with different implementations:
 
-The `getMediaUrl()` function simply prepends the CDN base URL to these paths, which doesn't work correctly for all avatar path formats.
+| Component | Used By | Comment Type | Avatar Field |
+|-----------|---------|--------------|--------------|
+| `CommentsSection.tsx` (inline) | PostCard, VideoCard, ImageCard | Local `Comment` interface | `avatar` |
+| `CommentsSheet.tsx` | LiveCard only | Shared `types.ts` | `avatarUrl` |
 
-The rest of the codebase uses `buildAvatarUrl(address, apiAvatarPath)` which constructs canonical URLs in the format:
-```
-https://dehubcdn.../avatars/{address}.{ext}
-```
+Previous fixes only updated:
+- `CommentsSheet.tsx` ✅
+- `CommentItem.tsx` (external) ✅
 
-This requires the user's wallet address (which IS available in the API response's `address` field) to build the correct URL.
+But **PostCard, VideoCard, and ImageCard** all use `CommentsSection.tsx`, which has its **own inline `CommentItem`** component that was never updated.
 
 ## Solution
-Update the comments system to use `buildAvatarUrl()` instead of `getMediaUrl()` for avatar URLs.
+The inline `CommentItem` in `CommentsSection.tsx` (lines 180-293) already correctly uses `comment.avatar`, and the `mapApiComment` function already maps to `avatar` field with `buildAvatarUrl`.
+
+However, checking the actual API response shows `writor.avatarUrl` returns **full HTTPS URLs** like:
+```
+https://api.dehub.io/avatars/0x4c4b6ff85878a936992f45a9b108bde7e332b7e5.jpg
+```
+
+The `buildAvatarUrl` function already handles this correctly (returns as-is when URL starts with `http`).
+
+**The real issue:** Need to verify the mapping is being applied correctly. Looking at line 106:
+```typescript
+avatar: address && rawAvatarPath ? buildAvatarUrl(address, rawAvatarPath) : undefined,
+```
+
+This could return `undefined` if either `address` or `rawAvatarPath` is falsy. But the API shows both are present.
+
+### Debug Steps
+1. Check if `CommentsSection.tsx` is actually passing the avatar URL to the inline `CommentItem`
+2. Verify the `CommentItem` is rendering with the correct `avatarUrl`
 
 ### Files to Update
 
-**1. `src/components/app/comments/CommentsSheet.tsx`**
-- Import `buildAvatarUrl` from `@/lib/media-url`
-- Update `mapApiComment()` to use `buildAvatarUrl(apiComment.address, apiComment.writor?.avatarUrl)`
+**`src/components/app/cards/CommentsSection.tsx`**
+- The inline `CommentItem` at line 184 reads `comment.avatar` - verify this matches the mapped field
+- The `mapApiComment` at line 106 sets `avatar` field - this looks correct
 
-**2. `src/components/app/comments/CommentItem.tsx`**
-- Import `buildAvatarUrl` from `@/lib/media-url`
-- Update avatar URL resolution to use `buildAvatarUrl(comment.address, comment.avatarUrl)`
-- Requires the `Comment` type to include the `address` field
-
-**3. `src/components/app/cards/CommentsSection.tsx`**
-- Import `buildAvatarUrl` from `@/lib/media-url`
-- Update `mapApiComment()` to build avatar URL using `buildAvatarUrl(apiComment.address, apiComment.writor?.avatarUrl)`
-- Store the resolved URL directly in the mapped comment
-
-**4. `src/components/app/comments/CommentInput.tsx`**
-- Import `buildAvatarUrl` from `@/lib/media-url`
-- Update the logged-in user's avatar to use `buildAvatarUrl(user.address, user.avatarImageUrl || user.avatarUrl)`
-
----
+The code appears correct. Let me verify by checking if there's any type mismatch or if the avatar field is being set to the wrong type.
 
 ## Technical Details
 
-### Current (Broken) Flow
+### Current Flow in CommentsSection
 ```
-API Response: { address: "0x123...", writor: { avatarUrl: "statics/avatars/xyz.octet-stream" } }
+API Response: writor.avatarUrl = "https://api.dehub.io/avatars/0x...jpg"
       ↓
-getMediaUrl() → "https://dehubcdn.../statics/avatars/xyz.octet-stream"
+mapApiComment():
+  - address = "0x..."
+  - rawAvatarPath = "https://api.dehub.io/avatars/0x...jpg" 
+  - buildAvatarUrl() returns the URL as-is (starts with http)
+  - avatar field set to full URL
       ↓
-❌ Image fails to load (incorrect URL format)
-```
-
-### Fixed Flow
-```
-API Response: { address: "0x123...", writor: { avatarUrl: "statics/avatars/xyz.octet-stream" } }
+CommentItem receives comment.avatar = "https://api.dehub.io/avatars/..."
       ↓
-buildAvatarUrl("0x123...", "statics/avatars/xyz.octet-stream")
-      ↓  
-"https://dehubcdn.../avatars/0x123....octet-stream"
-      ↓
-✅ Image loads correctly
+<AvatarImage src={avatarUrl} /> should render correctly
 ```
 
-### Code Changes Summary
+### Verification Needed
+The logic appears correct. To confirm the fix is working, I'll:
+1. Add console logging to trace the avatar URL through the mapping
+2. Check if there are edge cases where `writor` or `avatarUrl` is missing
 
-| File | Change |
-|------|--------|
-| `CommentsSheet.tsx` | Use `buildAvatarUrl` in `mapApiComment` |
-| `CommentItem.tsx` | Use `buildAvatarUrl` with comment's address |
-| `CommentsSection.tsx` | Use `buildAvatarUrl` in `mapApiComment` |
-| `CommentInput.tsx` | Use `buildAvatarUrl` for current user's avatar |
+### Proposed Changes
+If avatars still aren't rendering, the issue might be:
+1. The `avatar` field in the local `Comment` type is typed as `string` (not `string | undefined`), which could cause issues if undefined is assigned
+2. A caching issue from stale query data
+
+**Fix:** Update the inline `Comment` interface in `CommentsSection.tsx` to match reality:
+```typescript
+avatar: string;  // Change to: avatar?: string;
+```
+
+And ensure defensive handling in the `CommentItem` render.
 
