@@ -1,91 +1,62 @@
 
-# Plan: Non-Portrait Video Detection with Liquid Glass Borders
+# Fix AI Action Buttons and Toggle Styling
 
 ## Overview
-Enhance the ShortsViewer to detect landscape or square videos and display them at their correct aspect ratio, with liquid glass styling filling the empty space above and below the video.
+This plan addresses two styling inconsistencies where elements are too circular:
+1. The AI Assistant action buttons ("What's new?", "Generate an image", etc.) use fully circular pill-shape styling
+2. The toggle switches have rounded styling that doesn't match the rest of the UI
 
-## How It Will Work
-When you open a Short that isn't filmed in portrait orientation (9:16), the viewer will:
-1. Detect the video's actual dimensions when it loads
-2. Display the video at its correct aspect ratio (instead of stretching/cropping)
-3. Fill the top and bottom gaps with a stylish frosted glass effect that matches the app's design
+## Changes to Make
 
-## Technical Implementation
+### 1. AI Assistant Action Buttons
+**File:** `src/pages/app/AssistantPage.tsx` (lines 1586-1623)
 
-### 1. Add Video Dimension State
-Track the video's natural width/height in the ShortsViewer component:
+Change all four quick action buttons from `rounded-full` to `rounded-xl`:
+- "What's new?" button (line 1590)
+- "Generate an image" button (line 1601)
+- "Edit an image" button (line 1609)
+- "Generate a video" button (line 1620)
+
+**Before:**
 ```tsx
-const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
-const [videoDimensions, setVideoDimensions] = useState({ width: 0, height: 0 });
+className="px-3 py-1.5 text-xs rounded-full bg-white/10 ..."
 ```
 
-### 2. Detect Aspect Ratio on Load
-Use the video element's `onLoadedMetadata` event to capture dimensions:
+**After:**
 ```tsx
-const handleLoadedMetadata = () => {
-  if (videoRef.current) {
-    const { videoWidth, videoHeight } = videoRef.current;
-    setVideoDimensions({ width: videoWidth, height: videoHeight });
-    
-    const ratio = videoWidth / videoHeight;
-    if (ratio > 1.1) {
-      setVideoAspect('landscape'); // Wider than tall
-    } else if (ratio < 0.9) {
-      setVideoAspect('portrait');  // Taller than wide (normal shorts)
-    } else {
-      setVideoAspect('square');    // Roughly square
-    }
-  }
-};
+className="px-3 py-1.5 text-xs rounded-xl bg-white/10 ..."
 ```
 
-### 3. Update Video Styling
-Change from `object-cover` (crop to fill) to `object-contain` (fit within container) for non-portrait videos:
+### 2. Toggle Switch Styling
+**File:** `src/components/ui/switch.tsx`
+
+The toggle currently has:
+- Track: `rounded-xl` (good for the track)
+- Thumb: `rounded-xl` (on a 20x20px element, this is almost circular)
+
+Change to use `rounded-lg` for a more squared-off look that matches the app's bento aesthetic:
+- Track: Keep `rounded-xl` for the outer container
+- Thumb: Change to `rounded-lg` for a less circular appearance
+
+**Before:**
 ```tsx
-<video
-  className={`w-full h-full ${videoAspect === 'portrait' ? 'object-cover' : 'object-contain'}`}
-  // ... other props
-/>
+// Thumb
+"... h-5 w-5 rounded-xl bg-zinc-900 ..."
 ```
 
-### 4. Add Liquid Glass Background Layers
-Add frosted glass panels behind the video for non-portrait content:
+**After:**
 ```tsx
-{videoAspect !== 'portrait' && (
-  <>
-    {/* Blurred thumbnail background */}
-    <div 
-      className="absolute inset-0 z-0"
-      style={{
-        backgroundImage: `url(${currentShort.thumbnail})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        filter: 'blur(40px) saturate(150%)',
-        transform: 'scale(1.1)', // Prevent blur edge artifacts
-      }}
-    />
-    {/* Liquid glass overlay */}
-    <div className="absolute inset-0 z-[1] bg-black/40 backdrop-blur-[24px] saturate-[180%]" />
-  </>
-)}
+// Thumb
+"... h-5 w-5 rounded-lg bg-zinc-900 ..."
 ```
 
-### 5. Reset State on Video Change
-Clear the aspect ratio state when navigating between shorts to prevent flicker:
-```tsx
-useEffect(() => {
-  setVideoAspect('portrait'); // Reset to default
-  setVideoDimensions({ width: 0, height: 0 });
-  // ... existing video reset logic
-}, [currentIndex]);
-```
-
-## Files to Modify
-- `src/components/app/cards/ShortsViewer.tsx` - Add dimension detection and liquid glass styling
+## Summary of Files to Edit
+| File | Change |
+|------|--------|
+| `src/pages/app/AssistantPage.tsx` | Replace 4 instances of `rounded-full` with `rounded-xl` on lines 1590, 1601, 1609, 1620 |
+| `src/components/ui/switch.tsx` | Change thumb from `rounded-xl` to `rounded-lg` on line 20 |
 
 ## Visual Result
-- **Portrait videos (9:16)**: No change - displayed full-screen as before
-- **Landscape videos (16:9)**: Centered vertically with liquid glass bands top and bottom
-- **Square videos (1:1)**: Centered with smaller liquid glass bands top and bottom
-
-The liquid glass effect will use a blurred version of the video thumbnail as the base layer, creating a visually cohesive look that doesn't feel like empty space.
+- Action buttons will have subtle rounded corners instead of fully pill-shaped ends
+- Toggle switches will have a squared-off thumb that matches the track's rounded edge style
+- Both changes maintain the liquid glass aesthetic while feeling less circular
