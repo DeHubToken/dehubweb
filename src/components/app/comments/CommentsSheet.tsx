@@ -308,10 +308,10 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* Comments list with fade gradients */}
         <div className="flex-1 relative">
-          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-10" />
-          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
           
-          <div className="h-[calc(70vh-280px)] overflow-y-auto pt-2 pb-2">
+          <div className="h-[calc(70vh-280px)] overflow-y-auto pt-2 pb-2 divide-y divide-zinc-800">
             {/* Replies Tab */}
             {activeTab === 'replies' && (
               <>
