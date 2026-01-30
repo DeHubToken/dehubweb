@@ -69,9 +69,9 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   }
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0">
-      {/* Sub-tab Navigation - Always visible and sticky, stacks below main nav */}
-      <div className="sticky top-[5.75rem] lg:top-[3.25rem] z-30 -mx-2 px-2 sm:-mx-3 sm:px-3 pb-2 bg-black before:absolute before:inset-x-0 before:-top-2 before:h-2 before:bg-black">
+    <div className="flex flex-col h-[calc(100vh-2.75rem)] lg:h-[calc(100vh-0rem)]">
+      {/* Sub-tab Navigation - Fixed at top */}
+      <div className="flex-shrink-0 px-2 sm:px-3 pb-2 bg-black">
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {MUSIC_SUB_TABS.map((tab) => (
@@ -91,12 +91,14 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
         </div>
       </div>
 
-      {/* Content */}
-      {activeSubTab === 'radio' ? (
-        <RadioSection showFilters={showFilters} />
-      ) : (
-        <EmptyState type={getEmptyLabel()} />
-      )}
+      {/* Content - Scrollable */}
+      <div className="flex-1 overflow-y-auto px-2 sm:px-3">
+        {activeSubTab === 'radio' ? (
+          <RadioSection showFilters={showFilters} />
+        ) : (
+          <EmptyState type={getEmptyLabel()} />
+        )}
+      </div>
     </div>
   );
 }
