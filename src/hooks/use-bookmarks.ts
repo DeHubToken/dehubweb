@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getSavedPosts, getLikedPosts, savePost, unsavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { getSavedPosts, getLikedPosts, toggleSavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -153,25 +153,18 @@ export function useBookmarkPost(tokenId: string | number) {
     (nft) => String(nft.tokenId) === String(tokenId)
   ) ?? false;
 
-  const saveMutation = useMutation({
-    mutationFn: () => savePost(String(tokenId)),
-    onSuccess: () => {
+  const toggleMutation = useMutation({
+    mutationFn: () => toggleSavePost(tokenId),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
-      toast.success('Saved to bookmarks');
+      if (data.saved) {
+        toast.success('Saved to bookmarks');
+      } else {
+        toast.success('Removed from bookmarks');
+      }
     },
     onError: () => {
-      toast.error('Failed to save post');
-    },
-  });
-
-  const unsaveMutation = useMutation({
-    mutationFn: () => unsavePost(String(tokenId)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
-      toast.success('Removed from bookmarks');
-    },
-    onError: () => {
-      toast.error('Failed to remove bookmark');
+      toast.error('Failed to update bookmark');
     },
   });
 
@@ -181,16 +174,12 @@ export function useBookmarkPost(tokenId: string | number) {
       return;
     }
     
-    if (isBookmarked) {
-      unsaveMutation.mutate();
-    } else {
-      saveMutation.mutate();
-    }
+    toggleMutation.mutate();
   };
 
   return {
     isBookmarked,
-    isLoading: saveMutation.isPending || unsaveMutation.isPending,
+    isLoading: toggleMutation.isPending,
     toggleBookmark,
   };
 }
