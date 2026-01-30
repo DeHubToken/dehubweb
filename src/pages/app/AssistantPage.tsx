@@ -1312,7 +1312,7 @@ export default function AssistantPage() {
                               download="dehub-video.mp4"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1324,7 +1324,7 @@ export default function AssistantPage() {
                             {/* Post button */}
                             <button
                               onClick={() => handlePostVideo(message.videoUrl!)}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1396,7 +1396,7 @@ export default function AssistantPage() {
                                 inputRef.current?.focus();
                                 toast.success('Image attached - describe your edits');
                               }}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1419,7 +1419,7 @@ export default function AssistantPage() {
                                   toast.error('Failed to copy image');
                                 }
                               }}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
@@ -1431,7 +1431,7 @@ export default function AssistantPage() {
                             {/* Post button */}
                             <button
                               onClick={() => handlePostImage(message.imageUrl!)}
-                              className="flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300 hover:scale-110 active:scale-95
+                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
                                 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
