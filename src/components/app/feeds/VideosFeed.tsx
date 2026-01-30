@@ -18,6 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
@@ -165,12 +166,15 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);
   const viewCount = nft.views || nft.view_count || 0;
+  const minterAddress = nft.minter || nft.creator?.address || '';
+  const avatarPath = nft.minterAvatarImg || nft.creator?.avatarImg || nft.avatarImg;
   
   return {
     id,
     type: 'short',
     username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
+    avatar: buildAvatarUrl(minterAddress, avatarPath) || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
     likes: formatCount(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',

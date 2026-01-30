@@ -31,6 +31,7 @@ import {
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
 import { getMediaUrl } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
@@ -67,12 +68,15 @@ function formatCount(count: number): string {
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);
   const viewCount = nft.views || nft.view_count || nft.nft?.views || nft.nft?.view_count || 0;
+  const minterAddress = nft.minter || nft.creator?.address || '';
+  const avatarPath = nft.minterAvatarImg || nft.creator?.avatarImg || nft.avatarImg;
   
   return {
     id,
     type: 'short',
     username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
+    avatar: buildAvatarUrl(minterAddress, avatarPath) || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
     likes: formatCount(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
