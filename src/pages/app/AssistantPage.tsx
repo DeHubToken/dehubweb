@@ -1050,7 +1050,7 @@ export default function AssistantPage() {
             variant="outline"
             size="sm"
             onClick={() => setShowCommandCentre(!showCommandCentre)}
-            className={`rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8 transition-colors ${
+            className={`rounded-xl border-white/20 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8 transition-colors ${
               showCommandCentre ? 'bg-white/20' : 'bg-white/5'
             }`}
           >
@@ -1063,7 +1063,7 @@ export default function AssistantPage() {
             variant="outline"
             size="sm"
             onClick={() => setSettingsSheetOpen(true)}
-            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+            className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
           >
             <Settings className="w-3.5 h-3.5 text-white/70" />
             <span className="hidden sm:inline text-xs">Settings</span>
@@ -1074,7 +1074,7 @@ export default function AssistantPage() {
             variant="outline"
             size="sm"
             onClick={() => setStyleSheetOpen(true)}
-            className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
+            className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-2 px-3 h-8"
           >
             <span>{currentStyle.emoji}</span>
             <span className="hidden sm:inline">{currentStyle.label}</span>
@@ -1247,12 +1247,12 @@ export default function AssistantPage() {
                   <button
                     type="button"
                     onClick={() => setAlwaysSpeakReplies(!alwaysSpeakReplies)}
-                    className={`relative w-11 h-6 rounded-full transition-colors ${
+                    className={`relative w-11 h-6 rounded-lg transition-colors ${
                       alwaysSpeakReplies ? 'bg-white/50' : 'bg-white/20'
                     }`}
                   >
                     <span
-                      className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
+                      className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-lg bg-white transition-transform ${
                         alwaysSpeakReplies ? 'translate-x-5' : 'translate-x-0'
                       }`}
                     />
