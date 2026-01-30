@@ -596,11 +596,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const renderFeedItem = (item: FeedItemType, index: number) => {
     switch (item.type) {
       case 'post':
-        return <PostCard key={`post-${item.data.id}-${index}`} post={item.data} />;
+        return <PostCard key={`post-${item.data.id}`} post={item.data} />;
       case 'video':
-        return <VideoCard key={`video-${item.data.id}-${index}`} video={item.data} />;
+        return <VideoCard key={`video-${item.data.id}`} video={item.data} />;
       case 'image':
-        return <ImageCard key={`image-${item.data.id}-${index}`} post={item.data} />;
+        return <ImageCard key={`image-${item.data.id}`} post={item.data} />;
       case 'shorts':
         return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
       default:
