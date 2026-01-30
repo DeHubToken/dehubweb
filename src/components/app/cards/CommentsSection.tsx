@@ -185,7 +185,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex gap-3 px-5 py-3", isReply && "ml-8")}
+      className={cn("flex gap-3 py-3", isReply && "ml-8")}
     >
       <Avatar className="w-8 h-8 flex-shrink-0">
         <AvatarImage src={comment.avatar} className="object-cover" />
@@ -618,7 +618,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
       {/* Search Input - shown only on search tab */}
       {activeTab === 'search' && (
-        <div className="px-5 mb-3">
+        <div className="mb-3">
           <Input
             placeholder="Search comments & quotes..."
             value={searchQuery}
@@ -745,7 +745,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       )}
 
         {/* New Comment Input - at the bottom */}
-        <div className="mt-3 pt-3 px-5">
+        <div className="mt-3 pt-3">
           {/* Reply indicator */}
           {replyTo && (
             <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
