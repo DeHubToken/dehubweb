@@ -1,21 +1,14 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
-import { PenSquare, Sparkles, LogOut, ChevronUp, LogIn } from 'lucide-react';
+import { PenSquare, Sparkles, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
-import { UserAvatar } from '../UserAvatar';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { cn } from '@/lib/utils';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { toast } from 'sonner';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -24,9 +17,8 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, walletAddress, disconnect, connect, isConnecting, needsSignature } = useAuth();
+  const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
@@ -67,24 +59,13 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     return true;
   };
 
-
-  const handleLogout = async () => {
-    try {
-      await disconnect();
-      setShowUserMenu(false);
-      toast.success('Logged out successfully');
-    } catch (error) {
-      toast.error('Failed to logout');
-    }
-  };
-
   // Filter out Assistant item - we'll render it specially as a NavLink
   const navItemsWithoutAI = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
   const isAIActive = location.pathname === '/app/assistant';
 
-  // Get user display info
+  // Get user display info for avatar
   const displayName = user?.displayName || user?.username || 'Anonymous';
-  const username = user?.username || (walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : '');
+  const userAvatarUrl = user?.avatar_url || null;
 
   return (
     <>
@@ -119,6 +100,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   currentPath={location.pathname}
                   variant="desktop"
                   onClick={isProfileItem ? handleProfileClick : undefined}
+                  // Show user avatar for Profile item when authenticated
+                  avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
+                  avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
                 />
                 {isAfterMessages && (
                   <NavLink
@@ -174,45 +158,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             )}
           </Button>
         </div>
-
-        {/* Spacer to push auth section to bottom */}
-        <div className="flex-1" />
-
-        {/* Auth/Profile Section at bottom - only show when authenticated */}
-        {isAuthenticated && (
-          <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
-            <Popover open={showUserMenu} onOpenChange={setShowUserMenu}>
-              <PopoverTrigger asChild>
-                <button className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-zinc-800/50 transition-colors text-left">
-                  <UserAvatar
-                    name={displayName}
-                    handle={username}
-                    size="sm"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-[13px] font-medium truncate">{displayName}</p>
-                    <p className="text-zinc-400 text-[11px] truncate">@{username}</p>
-                  </div>
-                  <ChevronUp className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent 
-                className="w-[195px] p-2 bg-zinc-900 border-zinc-800" 
-                align="start" 
-                side="top"
-                sideOffset={8}
-              >
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-white hover:bg-zinc-800 transition-colors text-[13px]"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Log out</span>
-                </button>
-              </PopoverContent>
-            </Popover>
-          </div>
-        )}
       </aside>
 
       {/* Auth Prompt Dialog */}
