@@ -23,6 +23,7 @@ import SettingsPage from "./pages/app/SettingsPage";
 import CommandCentrePage from "./pages/app/CommandCentrePage";
 import MusicPage from "./pages/app/MusicPage";
 import PostInfoPage from "./pages/app/PostInfoPage";
+import PostPage from "./pages/app/PostPage";
 import AssistantPage from "./pages/app/AssistantPage";
 
 const queryClient = new QueryClient({
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="settings" element={<SettingsPage />} />
               <Route path="command-centre" element={<CommandCentrePage />} />
               <Route path="music" element={<MusicPage />} />
+              <Route path="post/:postId" element={<PostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />
             </Route>
             
