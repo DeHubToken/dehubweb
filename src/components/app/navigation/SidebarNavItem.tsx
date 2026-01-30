@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types/app.types';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface SidebarNavItemProps {
   item: NavItem;
@@ -10,6 +11,8 @@ interface SidebarNavItemProps {
   onNavigate?: () => void;
   onClick?: (e: React.MouseEvent) => void;
   variant?: 'mobile' | 'desktop';
+  avatarUrl?: string | null;
+  avatarFallback?: string;
 }
 
 export function SidebarNavItem({ 
@@ -19,7 +22,9 @@ export function SidebarNavItem({
   currentPath, 
   onNavigate,
   onClick,
-  variant = 'desktop' 
+  variant = 'desktop',
+  avatarUrl,
+  avatarFallback,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   
@@ -40,6 +45,9 @@ export function SidebarNavItem({
 
   // Desktop variant uses smaller sizing (10% reduction)
   const isDesktop = variant === 'desktop';
+
+  // Check if we should render avatar instead of icon
+  const showAvatar = avatarUrl !== undefined;
 
   if (item.external) {
     return (
@@ -87,13 +95,27 @@ export function SidebarNavItem({
             : 'hover:bg-zinc-800/50'
       )}
     >
-      <div className={cn(
-        "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-        isDesktop ? "w-9 h-9" : "w-10 h-10",
-        isActive ? "bg-zinc-700" : "bg-zinc-800"
-      )}>
-        <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
-      </div>
+      {showAvatar ? (
+        <Avatar className={cn(
+          "flex-shrink-0",
+          isDesktop ? "w-9 h-9" : "w-10 h-10"
+        )}>
+          {avatarUrl && (
+            <AvatarImage src={avatarUrl} alt="Profile" className="object-cover" />
+          )}
+          <AvatarFallback className="bg-zinc-700 text-white font-medium text-sm">
+            {avatarFallback || 'U'}
+          </AvatarFallback>
+        </Avatar>
+      ) : (
+        <div className={cn(
+          "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+          isDesktop ? "w-9 h-9" : "w-10 h-10",
+          isActive ? "bg-zinc-700" : "bg-zinc-800"
+        )}>
+          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
+        </div>
+      )}
       <span className="truncate">{item.label}</span>
     </NavLink>
   );
