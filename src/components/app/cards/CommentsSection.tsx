@@ -18,7 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MessageCircle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -185,7 +185,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex gap-3 py-3", isReply && "ml-8")}
+      className={cn("flex gap-3 px-5 py-3", isReply && "ml-8")}
     >
       <Avatar className="w-8 h-8 flex-shrink-0">
         <AvatarImage src={comment.avatar} className="object-cover" />
@@ -575,90 +575,101 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </DropdownMenu>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'replies' | 'quotes')}>
-        <TabsList className="w-full bg-zinc-800 p-1 rounded-lg mb-3">
-          <TabsTrigger
-            value="replies"
-            className="flex-1 data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 rounded-md py-1.5 text-sm gap-1.5"
-          >
-            <MessageSquare className="w-3.5 h-3.5" />
-            Replies
-            <span className="text-xs text-zinc-500 ml-1">({allComments.length})</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value="quotes"
-            className="flex-1 data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 rounded-md py-1.5 text-sm gap-1.5"
-          >
-            <Quote className="w-3.5 h-3.5" />
-            Quotes
-            <span className="text-xs text-zinc-500 ml-1">(0)</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Tab Switcher - Icon Only */}
+      <div className="flex mb-3">
+        <button
+          type="button"
+          onClick={() => setActiveTab('replies')}
+          className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+            activeTab === 'replies'
+              ? 'text-white'
+              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+          }`}
+        >
+          {activeTab === 'replies' && (
+            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+          )}
+          <MessageCircle className="w-5 h-5 relative z-10" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('quotes')}
+          className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+            activeTab === 'quotes'
+              ? 'text-white'
+              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+          }`}
+        >
+          {activeTab === 'quotes' && (
+            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+          )}
+          <Repeat2 className="w-5 h-5 relative z-10" />
+        </button>
+      </div>
 
-        {/* Comments List */}
-        <TabsContent value="replies" className="mt-0">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-              </div>
-            ) : error ? (
-              <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
-            ) : (
-              <AnimatePresence mode="popLayout">
-                {filteredGroupedComments.length > 0 ? (
-                  filteredGroupedComments.map(({ comment, replies }) => (
-                    <div key={comment.id}>
+      {/* Comments List */}
+      {activeTab === 'replies' && (
+        <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+            </div>
+          ) : error ? (
+            <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {filteredGroupedComments.length > 0 ? (
+                filteredGroupedComments.map(({ comment, replies }) => (
+                  <div key={comment.id}>
+                    <CommentItem 
+                      comment={comment} 
+                      onLike={handleLike} 
+                      onDislike={handleDislike} 
+                      onReply={handleReply} 
+                      onShare={() => {}} 
+                      onBookmark={() => {}}
+                      onUserPress={handleUserPress}
+                    />
+                    {replies.map(reply => (
                       <CommentItem 
-                        comment={comment} 
+                        key={reply.id}
+                        comment={reply} 
                         onLike={handleLike} 
                         onDislike={handleDislike} 
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
                         onUserPress={handleUserPress}
+                        isReply
                       />
-                      {replies.map(reply => (
-                        <CommentItem 
-                          key={reply.id}
-                          comment={reply} 
-                          onLike={handleLike} 
-                          onDislike={handleDislike} 
-                          onReply={handleReply} 
-                          onShare={() => {}} 
-                          onBookmark={() => {}}
-                          onUserPress={handleUserPress}
-                          isReply
-                        />
-                      ))}
-                    </div>
-                  ))
-                ) : (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-zinc-500 text-sm py-6 text-center"
-                  >
-                    {searchQuery ? 'No replies found' : 'No replies yet. Be the first!'}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            )}
-          </div>
-        </TabsContent>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-zinc-500 text-sm py-6 text-center"
+                >
+                  {searchQuery ? 'No replies found' : 'No replies yet. Be the first!'}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          )}
+        </div>
+      )}
 
-        <TabsContent value="quotes" className="mt-0">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-zinc-500 text-sm py-6 text-center"
-            >
-              No quotes yet. Be the first!
-            </motion.p>
-          </div>
-        </TabsContent>
+      {activeTab === 'quotes' && (
+        <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-zinc-500 text-sm py-6 text-center"
+          >
+            No quotes yet. Be the first!
+          </motion.p>
+        </div>
+      )}
 
         {/* New Comment Input - at the bottom */}
         <div className="mt-3 pt-3 border-t border-zinc-800">
@@ -769,7 +780,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             </div>
           </div>
         </div>
-      </Tabs>
     </motion.div>
   );
 }
