@@ -345,16 +345,17 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       };
     },
     getNextPageParam: (lastPage) => {
-      // Use pagination.hasMore if available
-      if (lastPage.pagination?.hasMore !== undefined) {
-        return lastPage.pagination.hasMore ? lastPage.page + 1 : undefined;
-      }
-      // Fallback: if we got a full page of items, assume there's more
-      const itemCount = lastPage.items?.length || 0;
-      if (itemCount >= limit) {
+      // Strictly use pagination.hasMore if available
+      if (lastPage.pagination?.hasMore === true) {
         return lastPage.page + 1;
       }
-      return undefined;
+      if (lastPage.pagination?.hasMore === false) {
+        return undefined;
+      }
+      // Fallback only if pagination info is completely missing
+      // AND we got a full page of items
+      const itemCount = lastPage.items?.length || 0;
+      return itemCount >= limit ? lastPage.page + 1 : undefined;
     },
     initialPageParam: 1,
     enabled,

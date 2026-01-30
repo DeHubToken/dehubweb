@@ -571,13 +571,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return mappedItems;
   }, [feedData, pinnedPostId, randomSeed, shuffleKey, selectedSort.value]);
 
-  // Infinite scroll observer
+  // Infinite scroll observer - only fetch next page when user scrolls to bottom
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage) return;
+    if (!loaderRef.current || !hasNextPage || isFetchingNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
+        // Only fetch if visible AND not already fetching
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
