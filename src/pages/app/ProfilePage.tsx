@@ -376,40 +376,42 @@ export default function ProfilePage() {
         return (
           <div className="space-y-2 sm:space-y-3">
             {!isSubscribed ? (
-              <>
-                {/* Blurred content with subscribe prompt */}
-                <div className="relative">
-                  <div className="blur-lg pointer-events-none select-none">
-                    {(PROFILE_IMAGES.length > 0 ? PROFILE_IMAGES.slice(0, 2) : ALL_PROFILE_VIDEOS.slice(0, 2)).map((item, i) => (
-                      <div key={`sub-blur-${item.id}`} className="mb-2">
-                        {'image' in item ? <ImageCard post={item as ImagePost} /> : <VideoCard video={item as VideoItem} />}
-                      </div>
-                    ))}
-                  </div>
-                  {/* Subscribe overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm rounded-2xl">
-                    <div className="text-center p-6">
-                      <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
-                        <Lock className="w-8 h-8 text-white" />
-                      </div>
-                      <h3 className="text-white font-bold text-xl mb-2">Subscribers Only</h3>
-                      <p className="text-zinc-400 text-sm mb-4 max-w-xs">
-                        Subscribe to {profile.name} to unlock exclusive content
-                      </p>
-                      <Button 
-                        onClick={() => {
-                          setIsSubscribed(true);
-                          toast.success(`Subscribed to ${profile.name}!`);
-                        }}
-                        className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                      >
-                        <CreditCard className="w-4 h-4" />
-                        Subscribe for $4.99/mo
-                      </Button>
+              <div className="relative min-h-[300px] rounded-2xl overflow-hidden">
+                {/* Blurred content preview */}
+                <div className="blur-lg pointer-events-none select-none">
+                  {(PROFILE_IMAGES.length > 0 ? PROFILE_IMAGES.slice(0, 2) : ALL_PROFILE_VIDEOS.slice(0, 2)).map((item) => (
+                    <div key={`sub-blur-${item.id}`} className="mb-2">
+                      {'image' in item ? <ImageCard post={item as ImagePost} /> : <VideoCard video={item as VideoItem} />}
                     </div>
+                  ))}
+                  {/* Fallback if no content to blur */}
+                  {PROFILE_IMAGES.length === 0 && ALL_PROFILE_VIDEOS.length === 0 && (
+                    <div className="h-[300px] bg-zinc-800/50" />
+                  )}
+                </div>
+                {/* Subscribe overlay - positioned within container */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                  <div className="text-center p-6">
+                    <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
+                      <Lock className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-white font-bold text-xl mb-2">Subscribers Only</h3>
+                    <p className="text-zinc-400 text-sm mb-4 max-w-xs">
+                      Subscribe to {profile?.name || 'this creator'} to unlock exclusive content
+                    </p>
+                    <Button 
+                      onClick={() => {
+                        setIsSubscribed(true);
+                        toast.success(`Subscribed to ${profile?.name || 'creator'}!`);
+                      }}
+                      className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      Subscribe for $4.99/mo
+                    </Button>
                   </div>
                 </div>
-              </>
+              </div>
             ) : (
               <>
                 {PROFILE_IMAGES.slice(0, 5).map((image) => (
