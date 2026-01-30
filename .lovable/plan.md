@@ -1,72 +1,47 @@
 
-# Plan: Integrate DeHub API for User Profile Posts
+# Modernize CommentsSection Tab Switcher
 
 ## Overview
-Update the profile page to show each user's actual posts by fixing the API integration. The current implementation has issues with both the API endpoint and content type detection.
+The home page videos and images use a different comment component (`CommentsSection.tsx`) than the one I've been updating (`CommentsSheet.tsx`). This plan will update `CommentsSection` to match the icon-only tab switcher design you showed.
 
-## Current Issues Found
-1. **API Endpoint**: The `getUserNFTs` function calls `/api/user/{userId}/nfts` which may not be returning data correctly
-2. **Content Detection**: The `separateUserContent` function only checks `nft.media_type` but the DeHub API primarily uses `postType` field
-3. **Empty Content**: Profile tabs show "0" counts because content isn't being fetched/categorized properly
+## Changes Required
 
-## Solution Approach
+### 1. Update Tab Switcher in CommentsSection.tsx
+Replace the current shadcn `Tabs` component with a custom icon-only tab bar matching the side panel style:
 
-### Step 1: Update `useDeHubUserContent` Hook
-Instead of using the less reliable `/api/user/{userId}/nfts` endpoint, leverage the proven `searchNFTs` function with the `creator_id` parameter to filter posts by creator.
+**Current (lines ~298-304):**
+- Uses `<Tabs>`, `<TabsList>`, `<TabsTrigger>` components
+- Has text labels "Replies" and "Quotes"
 
-**Changes to `src/hooks/use-dehub-profile.ts`:**
-- Import `searchNFTs` from the API module
-- Replace `getUserNFTs` call with `searchNFTs({ creator_id: userId, ... })`
-- This uses the same API that successfully powers the home feed
+**New Design:**
+- Remove shadcn Tabs dependency for the switcher
+- Two equal-width buttons with icons only (MessageCircle + Repeat2)
+- Active state: gradient background from `zinc-800/60` to transparent
+- Icon size: `w-5 h-5`
+- No text labels, no bottom border
+- Matches exactly what's in the screenshot
 
-### Step 2: Fix Content Type Detection
-Update `separateUserContent` to check both `postType` (primary) and `media_type` (fallback) fields from the API response.
-
-**Changes to `src/hooks/use-dehub-profile.ts`:**
-```text
-Current logic:
-  - Only checks nft.media_type
-
-Updated logic:
-  - Check nft.postType first (primary API field)
-  - Fall back to nft.media_type
-  - Use the getContentType helper from use-dehub-feed.ts
-```
-
-### Step 3: Handle Loading States
-Add loading indicator for content while it's being fetched separately from the profile.
-
-**Changes to `src/pages/app/ProfilePage.tsx`:**
-- Show skeleton or spinner in tab content area while `isLoadingContent` is true
-- Display appropriate empty states when content loads but is empty
+### 2. Add Padding to Comments
+- Increase horizontal padding in the comment items for better spacing
+- Ensure avatars and bookmarks aren't stuck to edges
 
 ## Technical Details
 
-### API Integration
-The `searchNFTs` function already supports these parameters:
-- `creator_id`: Filter by creator's wallet address
-- `page`/`unit`: Pagination
-- `sortMode`: Sort by new/popular/trending
-- `postType`: Filter by content type (undefined for all, "feed-images" for images only)
+**File: `src/components/app/cards/CommentsSection.tsx`**
 
-### Data Flow
-```text
-User visits /{username}
-    ↓
-useDeHubProfile fetches user data → gets walletAddress
-    ↓
-useDeHubUserContent fetches posts → searchNFTs({ creator_id: walletAddress })
-    ↓
-separateUserContent categorizes → checks postType || media_type
-    ↓
-ProfilePage renders tabs with real data
+- Remove `Tabs, TabsList, TabsTrigger, TabsContent` from shadcn imports
+- Add `MessageCircle, Repeat2` icons (already imported)
+- Replace the entire `<Tabs>` block with custom button-based tab bar
+- Use the same `activeTab` state pattern already in the file (line 297)
+- Render content conditionally based on `activeTab` instead of using `TabsContent`
+- Update comment item padding from `py-3` to include `px-5`
+
+The styling will exactly match:
 ```
-
-## Files to Modify
-1. `src/hooks/use-dehub-profile.ts` - Fix API call and content type detection
-2. `src/pages/app/ProfilePage.tsx` - Add loading state for content area
-
-## Expected Outcome
-- Profile pages will show actual posts from each user
-- Tab counts (All, Images, Videos) will reflect real content
-- Content will display using the same cards as the main feeds
+flex container with two flex-1 buttons
+└── Button 1: MessageCircle icon (replies)
+    └── Active: gradient overlay + white icon
+    └── Inactive: zinc-500 icon, hover zinc-300 with bg-zinc-800/30
+└── Button 2: Repeat2 icon (quotes)
+    └── Same active/inactive states
+```
