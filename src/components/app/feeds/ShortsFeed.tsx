@@ -449,16 +449,35 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
                   {/* Bottom Info */}
                   <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
-                    <div>
-                      <div className="flex items-center gap-1 mb-1">
-                        <span className="font-semibold text-white text-sm">@{short.username}</span>
-                        {short.verified && (
-                          <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                          </svg>
-                        )}
+                    <div className="flex items-center gap-2">
+                      {/* Creator Avatar */}
+                      <div className="w-7 h-7 rounded-full bg-zinc-700 border border-white/30 flex-shrink-0 overflow-hidden">
+                        {short.avatar ? (
+                          <img 
+                            src={short.avatar} 
+                            alt="" 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <span className={`w-full h-full flex items-center justify-center text-white text-[10px] font-medium ${short.avatar ? 'hidden' : ''}`}>
+                          {short.username?.[0]?.toUpperCase()}
+                        </span>
                       </div>
-                      <p className="text-white text-xs">{short.likes} likes</p>
+                      <div>
+                        <div className="flex items-center gap-1">
+                          <span className="font-semibold text-white text-sm">@{short.username}</span>
+                          {short.verified && (
+                            <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                          )}
+                        </div>
+                        <p className="text-white text-xs">{short.likes} likes</p>
+                      </div>
                     </div>
                     {/* View count - bottom right */}
                     <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
