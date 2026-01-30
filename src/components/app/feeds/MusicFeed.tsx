@@ -69,7 +69,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   }
 
   return (
-    <div className="p-2 sm:p-3">
+    <div className="p-2 sm:p-3 space-y-3">
       {/* Sub-tab Navigation (only shown when filters toggled) */}
       {showFilters && (
         <div className="sticky top-[2.75rem] lg:top-0 z-30 -mx-2 px-2 sm:-mx-3 sm:px-3 pt-2 pb-3 bg-black">
