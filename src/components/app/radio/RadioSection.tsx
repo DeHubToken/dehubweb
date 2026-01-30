@@ -8,6 +8,7 @@
 
 import { useState } from 'react';
 import { Search, Radio, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,7 +23,11 @@ import {
 } from '@/lib/api/radio-browser';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
-export function RadioSection() {
+interface RadioSectionProps {
+  showFilters?: boolean;
+}
+
+export function RadioSection({ showFilters = false }: RadioSectionProps) {
   const [activeGenre, setActiveGenre] = useState<RadioGenreId>('top');
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
@@ -70,7 +75,12 @@ export function RadioSection() {
   return (
     <div className="space-y-3">
       {/* Sticky Search & Genre Filter */}
-      <div className="sticky top-[6.5rem] lg:top-[4.5rem] z-20 pt-3 pb-3 -mt-3 -mx-2 px-2 sm:-mx-3 sm:px-3 space-y-2.5 bg-black before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-black">
+      <div className={cn(
+        "sticky z-20 pt-3 pb-3 -mt-3 -mx-2 px-2 sm:-mx-3 sm:px-3 space-y-2.5 bg-black before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-black",
+        showFilters 
+          ? "top-[7rem] lg:top-[4.5rem]" 
+          : "top-[6.5rem] lg:top-[4.5rem]"
+      )}>
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
