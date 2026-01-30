@@ -193,6 +193,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     ppvCurrency: 'DHB',
     isW2E,
     isLocked,
+    lockedPrice: item.streamInfo?.lockAmount,
+    lockedCurrency: 'DHB',
     bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
     bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
     bountyAmount: item.streamInfo?.addBountyAmount,
