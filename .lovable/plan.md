@@ -1,47 +1,56 @@
 
-# Modernize CommentsSection Tab Switcher
 
-## Overview
-The home page videos and images use a different comment component (`CommentsSection.tsx`) than the one I've been updating (`CommentsSheet.tsx`). This plan will update `CommentsSection` to match the icon-only tab switcher design you showed.
+# Unify Comment Sections Across All Post Types
+
+## Problem
+The comment sections are inconsistent across post types:
+- **VideoCard**: Uses `CommentsSection` (inline, with icon tab switcher, fade effects) - the one we just perfected
+- **ImageCard**: Uses `CommentsSection` (same component)
+- **PostCard**: Uses `CommentsSheet` (a liquid glass drawer overlay that pops up over the content)
+
+## Solution
+Update `PostCard` to use the inline `CommentsSection` component instead of `CommentsSheet`, matching the video and image post experience.
 
 ## Changes Required
 
-### 1. Update Tab Switcher in CommentsSection.tsx
-Replace the current shadcn `Tabs` component with a custom icon-only tab bar matching the side panel style:
+### 1. Update PostCard Component
+**File: `src/components/app/cards/PostCard.tsx`**
 
-**Current (lines ~298-304):**
-- Uses `<Tabs>`, `<TabsList>`, `<TabsTrigger>` components
-- Has text labels "Replies" and "Quotes"
+- Change import from `CommentsSheet` to `CommentsSection`
+- Wrap the comments in `AnimatePresence` for smooth enter/exit animations (matching ImageCard)
+- Use `CommentsSection` with the same props pattern as ImageCard/VideoCard
 
-**New Design:**
-- Remove shadcn Tabs dependency for the switcher
-- Two equal-width buttons with icons only (MessageCircle + Repeat2)
-- Active state: gradient background from `zinc-800/60` to transparent
-- Icon size: `w-5 h-5`
-- No text labels, no bottom border
-- Matches exactly what's in the screenshot
-
-### 2. Add Padding to Comments
-- Increase horizontal padding in the comment items for better spacing
-- Ensure avatars and bookmarks aren't stuck to edges
-
-## Technical Details
-
-**File: `src/components/app/cards/CommentsSection.tsx`**
-
-- Remove `Tabs, TabsList, TabsTrigger, TabsContent` from shadcn imports
-- Add `MessageCircle, Repeat2` icons (already imported)
-- Replace the entire `<Tabs>` block with custom button-based tab bar
-- Use the same `activeTab` state pattern already in the file (line 297)
-- Render content conditionally based on `activeTab` instead of using `TabsContent`
-- Update comment item padding from `py-3` to include `px-5`
-
-The styling will exactly match:
+**Before:**
+```tsx
+import { CommentsSheet } from '../comments';
+...
+{showComments && (
+  <CommentsSheet
+    tokenId={post.id}
+    onClose={() => setShowComments(false)}
+  />
+)}
 ```
-flex container with two flex-1 buttons
-└── Button 1: MessageCircle icon (replies)
-    └── Active: gradient overlay + white icon
-    └── Inactive: zinc-500 icon, hover zinc-300 with bg-zinc-800/30
-└── Button 2: Repeat2 icon (quotes)
-    └── Same active/inactive states
+
+**After:**
+```tsx
+import { CommentsSection } from './CommentsSection';
+import { AnimatePresence } from 'framer-motion';
+...
+<AnimatePresence>
+  {showComments && (
+    <CommentsSection
+      tokenId={post.id}
+      onClose={() => setShowComments(false)}
+    />
+  )}
+</AnimatePresence>
 ```
+
+## Result
+All three post types (Video, Image, Text) will use the same inline `CommentsSection` with:
+- Icon-only tab switcher (Replies, Quotes, Search, Sort)
+- Smooth transparency fade effects at top and bottom
+- Consistent spacing and input styling
+- Embedded within the bento card rather than overlaying as a drawer
+
