@@ -10,7 +10,8 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import { CardHeader } from './CardHeader';
@@ -362,6 +363,16 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuItem 
+                onClick={() => {
+                  const url = `${window.location.origin}/app/post/${post.id}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Post URL copied to clipboard');
+                }}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Link2 className="w-4 h-4" /> Copy Post URL
+              </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Download className="w-4 h-4" /> Download
               </DropdownMenuItem>

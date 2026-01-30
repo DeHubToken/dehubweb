@@ -10,7 +10,8 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2 } from 'lucide-react';
+import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -392,6 +393,16 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                 <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
               </DrawerHeader>
               <div className="flex flex-col gap-1">
+                <button 
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/post/${video.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success('Post URL copied to clipboard');
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Link2 className="w-5 h-5" /> Copy Post URL
+                </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
                 </button>
