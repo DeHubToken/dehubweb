@@ -51,15 +51,31 @@ export function usePullToRefresh({
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   const isHoveringContainer = useRef<boolean>(false);
 
-  // Helper to check if we're truly at the top
+  // Helper to check if we're truly at the top (both window AND container)
   const isAtTop = useCallback(() => {
-    const scrollTop = Math.max(
+    // Check window/document scroll
+    const windowScrollTop = Math.max(
       window.scrollY,
       document.documentElement.scrollTop,
       document.body.scrollTop
     );
-    return scrollTop <= 2;
-  }, []);
+    if (windowScrollTop > 2) return false;
+    
+    // If there's a container ref, also check its scroll position
+    // This handles nested scrollable containers like MusicFeed
+    if (containerRef?.current) {
+      const containerScrollTop = containerRef.current.scrollTop;
+      if (containerScrollTop > 2) return false;
+      
+      // Also check for any scrollable child elements within the container
+      const scrollableChildren = containerRef.current.querySelectorAll('[class*="overflow-y-auto"], [class*="overflow-auto"]');
+      for (const child of scrollableChildren) {
+        if ((child as HTMLElement).scrollTop > 2) return false;
+      }
+    }
+    
+    return true;
+  }, [containerRef]);
 
   // Trigger the refresh
   const triggerRefresh = useCallback(() => {
