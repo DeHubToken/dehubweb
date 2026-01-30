@@ -4,3 +4,5 @@ export { ChatInput } from './ChatInput';
 export { EmojiPicker } from './EmojiPicker';
 export { GifPicker } from './GifPicker';
 export { GeneralAIChat } from './GeneralAIChat';
+export { DirectMessageChat } from './DirectMessageChat';
+export { NewConversationModal } from './NewConversationModal';

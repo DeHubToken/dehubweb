@@ -754,3 +754,176 @@ export async function getLeaderboard(
   
   return apiCall<LeaderboardResponse>("/api/leaderboard", { params });
 }
+
+// ============================================
+// DIRECT MESSAGING API
+// ============================================
+
+/**
+ * Conversation interface for DMs
+ */
+export interface DeHubConversation {
+  id: string;
+  participants: DeHubUser[];
+  lastMessage?: DeHubDMMessage;
+  unreadCount: number;
+  createdAt: string;
+  updatedAt: string;
+  /** The other participant (convenience field for 1:1 chats) */
+  otherUser?: DeHubUser;
+}
+
+/**
+ * Direct message interface
+ */
+export interface DeHubDMMessage {
+  id: string;
+  conversationId: string;
+  sender: DeHubUser;
+  content: string;
+  type: 'text' | 'image' | 'gif';
+  mediaUrl?: string;
+  createdAt: string;
+  readAt?: string;
+}
+
+/**
+ * Conversations list response from API
+ */
+interface ConversationsApiResponse {
+  result: {
+    items: DeHubConversation[];
+    totalCount: number;
+    hasMore: boolean;
+  };
+}
+
+/**
+ * Messages list response from API
+ */
+interface MessagesApiResponse {
+  result: {
+    items: DeHubDMMessage[];
+    totalCount: number;
+    hasMore: boolean;
+  };
+}
+
+/**
+ * Fetch list of user's conversations
+ * @param page - Page number (0-indexed)
+ * @param limit - Items per page
+ */
+export async function getConversations(
+  page: number = 0,
+  limit: number = 20
+): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
+  const response = await apiCall<ConversationsApiResponse>("/api/conversations", {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+  return response.result || { items: [], totalCount: 0, hasMore: false };
+}
+
+/**
+ * Get a single conversation by ID
+ * @param conversationId - The conversation ID
+ */
+export async function getConversation(conversationId: string): Promise<DeHubConversation> {
+  const response = await apiCall<{ result: DeHubConversation }>(`/api/conversations/${conversationId}`, {
+    requiresAuth: true,
+  });
+  return response.result;
+}
+
+/**
+ * Create a new conversation with a user
+ * @param recipientAddress - Wallet address of the recipient
+ */
+export async function createConversation(recipientAddress: string): Promise<DeHubConversation> {
+  const response = await apiCall<{ result: DeHubConversation }>("/api/conversations", {
+    method: "POST",
+    body: { recipientAddress },
+    requiresAuth: true,
+  });
+  return response.result;
+}
+
+/**
+ * Delete a conversation
+ * @param conversationId - The conversation ID to delete
+ */
+export async function deleteConversation(conversationId: string): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>(`/api/conversations/${conversationId}`, {
+    method: "DELETE",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Fetch messages in a conversation
+ * @param conversationId - The conversation ID
+ * @param page - Page number (0-indexed)
+ * @param limit - Items per page
+ */
+export async function getMessages(
+  conversationId: string,
+  page: number = 0,
+  limit: number = 30
+): Promise<{ items: DeHubDMMessage[]; totalCount: number; hasMore: boolean }> {
+  const response = await apiCall<MessagesApiResponse>(`/api/conversations/${conversationId}/messages`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+  return response.result || { items: [], totalCount: 0, hasMore: false };
+}
+
+/**
+ * Send a message in a conversation
+ * @param conversationId - The conversation ID
+ * @param content - Message content
+ * @param type - Message type (text, image, gif)
+ * @param mediaUrl - Optional media URL for images/gifs
+ */
+export async function sendMessage(
+  conversationId: string,
+  content: string,
+  type: 'text' | 'image' | 'gif' = 'text',
+  mediaUrl?: string
+): Promise<DeHubDMMessage> {
+  const response = await apiCall<{ result: DeHubDMMessage }>(`/api/conversations/${conversationId}/messages`, {
+    method: "POST",
+    body: { content, type, mediaUrl },
+    requiresAuth: true,
+  });
+  return response.result;
+}
+
+/**
+ * Mark all messages in a conversation as read
+ * @param conversationId - The conversation ID
+ */
+export async function markConversationAsRead(conversationId: string): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>(`/api/conversations/${conversationId}/read`, {
+    method: "PUT",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Search users for starting a new conversation
+ * @param query - Search query (username or display name)
+ * @param page - Page number
+ * @param limit - Items per page
+ */
+export async function searchUsersForDM(
+  query: string,
+  page: number = 0,
+  limit: number = 10
+): Promise<{ items: DeHubUser[]; hasMore: boolean }> {
+  const response = await apiCall<{ result: { items: DeHubUser[]; hasMore: boolean } }>("/api/users/search", {
+    params: { q: query, page, limit },
+    requiresAuth: true,
+  });
+  return response.result || { items: [], hasMore: false };
+}
