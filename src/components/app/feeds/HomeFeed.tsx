@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { Loader2, RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, POST_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type PostTypeFilterValue } from '@/lib/feed-utils';
@@ -32,8 +32,11 @@ import {
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
+import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
@@ -48,7 +51,8 @@ type FeedItemType =
   | { type: 'shorts'; data: ShortVideo[] };
 
 const PAGE_SIZE = 20;
-const SHORTS_INSERT_INTERVAL = 6;
+const SHORTS_INSERT_INTERVAL = 5;
+const RADIO_INSERT_AFTER = 15;
 
 interface HomeFeedProps {
   shuffleKey: number;
@@ -369,6 +373,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     address: walletAddress || undefined,
   });
 
+  // Fetch radio stations for carousel
+  const { data: radioStations = [] } = useQuery({
+    queryKey: ['radio-stations-home'],
+    queryFn: () => getStationsByGenre('top', 20),
+    staleTime: 5 * 60 * 1000,
+  });
+
   // Fetch pinned post if provided
   const { data: pinnedPost, isLoading: isPinnedLoading } = useQuery({
     queryKey: ['pinned-post', pinnedPostId],
@@ -546,24 +557,63 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
   };
 
-  // Render feed items with shorts carousel inserted after every N posts
+  // Radio carousel component for home feed
+  const RadioCarouselSection = () => {
+    if (radioStations.length === 0) return null;
+    
+    return (
+      <div className="bg-zinc-900 rounded-2xl p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-white flex items-center gap-2">
+            <Radio className="w-5 h-5" />
+            Radio Stations
+            <span className="text-zinc-500 font-normal text-sm">(50K)</span>
+          </h3>
+          <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1">
+            See all <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="relative">
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+            {radioStations.slice(0, 10).map((station) => (
+              <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
+                <RadioStationCard station={station} />
+              </div>
+            ))}
+          </SwipeableCarousel>
+        </div>
+      </div>
+    );
+  };
+
+  // Render feed items with shorts and radio carousels inserted
   const renderFeedWithShorts = () => {
     const elements: React.ReactNode[] = [];
     let shortsInserted = false;
+    let radioInserted = false;
 
     items.forEach((item, index) => {
       elements.push(renderFeedItem(item, index));
 
-      // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts
-      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0) {
+      // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts (5)
+      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
         elements.push(
           <ShortsReel key={`shorts-carousel-${index}`} shorts={shorts} />
         );
         shortsInserted = true;
       }
+
+      // Insert radio carousel after RADIO_INSERT_AFTER posts (15)
+      if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
+        elements.push(
+          <RadioCarouselSection key={`radio-carousel-${index}`} />
+        );
+        radioInserted = true;
+      }
     });
 
-    // If we have items but haven't inserted shorts yet (less than 6 items), add at the end
+    // If we have items but haven't inserted shorts yet (less than 5 items), add at the end
     if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
       elements.push(
         <ShortsReel key="shorts-carousel-end" shorts={shorts} />
