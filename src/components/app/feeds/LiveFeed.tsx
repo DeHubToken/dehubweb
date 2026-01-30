@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef, useMemo, useState } from 'react';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { Loader2, RefreshCw, Radio, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
@@ -28,15 +28,15 @@ import lcsCategory from '@/assets/lcs-category.png';
 
 // Mock categories data
 const MOCK_CATEGORIES = [
-  { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, viewers: '421K' },
-  { id: 'lcs', name: 'Last Chad Standing', image: lcsCategory, viewers: '356K' },
-  { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, viewers: '312K' },
-  { id: 'valorant', name: 'VALORANT', image: valorantCategory, viewers: '287K' },
-  { id: 'league', name: 'League of Legends', image: leagueCategory, viewers: '198K' },
-  { id: 'minecraft', name: 'Minecraft', image: minecraftCategory, viewers: '156K' },
-  { id: 'gta', name: 'Grand Theft Auto V', image: gtaCategory, viewers: '134K' },
-  { id: 'apex', name: 'Apex Legends', image: apexCategory, viewers: '98K' },
-  { id: 'cod', name: 'Call of Duty', image: codCategory, viewers: '87K' },
+  { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, streams: 0, viewers: 0 },
+  { id: 'lcs', name: 'Last Chad Standing', image: lcsCategory, streams: 0, viewers: 0 },
+  { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, streams: 0, viewers: 0 },
+  { id: 'valorant', name: 'VALORANT', image: valorantCategory, streams: 0, viewers: 0 },
+  { id: 'league', name: 'League of Legends', image: leagueCategory, streams: 0, viewers: 0 },
+  { id: 'minecraft', name: 'Minecraft', image: minecraftCategory, streams: 0, viewers: 0 },
+  { id: 'gta', name: 'Grand Theft Auto V', image: gtaCategory, streams: 0, viewers: 0 },
+  { id: 'apex', name: 'Apex Legends', image: apexCategory, streams: 0, viewers: 0 },
+  { id: 'cod', name: 'Call of Duty', image: codCategory, streams: 0, viewers: 0 },
 ];
 
 // Sub-tab options
@@ -212,7 +212,16 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
                         </div>
                         <div className="mt-1.5 text-left">
                           <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
-                          <p className="text-zinc-500 text-xs">{category.viewers} viewers</p>
+                          <div className="flex items-center gap-2 text-zinc-500 text-xs">
+                            <span className="flex items-center gap-0.5">
+                              <Radio className="w-3 h-3" />
+                              {category.streams}
+                            </span>
+                            <span className="flex items-center gap-0.5">
+                              <Eye className="w-3 h-3" />
+                              {category.viewers}
+                            </span>
+                          </div>
                         </div>
                       </button>
                     ))}
