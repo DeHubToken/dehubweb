@@ -114,7 +114,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
   );
 
   return (
-    <div className="p-2 sm:p-3 space-y-4">
+    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-4">
       {/* Sub-tab Navigation */}
       <div className="flex gap-2 px-1">
         <button

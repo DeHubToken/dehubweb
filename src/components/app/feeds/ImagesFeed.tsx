@@ -36,7 +36,7 @@ function CollageView({ posts }: { posts: ImagePost[] }) {
   // Using CSS grid-auto-flow: dense ensures gaps are filled
   
   return (
-    <div className="p-1 sm:p-2">
+    <div className="p-1 sm:p-2 pt-0 sm:pt-0">
       <div 
         className="grid grid-cols-3 gap-0.5 sm:gap-1"
         style={{ gridAutoFlow: 'dense' }}
@@ -89,7 +89,7 @@ function EndlessScrollView({
   hasNextPage: boolean;
 }) {
   return (
-    <div className="p-2 sm:p-3 space-y-3">
+    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
       {posts.map((post) => (
         <ImageCard key={post.id} post={post} />
       ))}
@@ -197,7 +197,7 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
 
   if (isLoading) {
     return (
-      <div className="p-2 sm:p-3">
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <div className="flex items-center justify-center py-32">
           <Loader2 className="w-10 h-10 text-white animate-spin" />
         </div>
