@@ -157,7 +157,9 @@ export function useBookmarkPost(tokenId: string | number) {
     mutationFn: () => toggleSavePost(tokenId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
-      if (data.saved) {
+      // API returns message: "Feed saved" or "Feed unsaved"
+      const wasSaved = data.message?.toLowerCase().includes('unsaved') === false;
+      if (wasSaved) {
         toast.success('Saved to bookmarks');
       } else {
         toast.success('Removed from bookmarks');

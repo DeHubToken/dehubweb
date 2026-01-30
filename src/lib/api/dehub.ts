@@ -609,8 +609,8 @@ export async function postComment(tokenId: string, content: string, replyToId?: 
 
 // Bookmark/Saved functions
 export interface SavePostResponse {
-  status: boolean;
-  saved: boolean; // true = now saved, false = now unsaved
+  status: string; // "success"
+  message: string; // "Feed saved" or "Feed unsaved"
 }
 
 /**
