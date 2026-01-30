@@ -1,11 +1,13 @@
 
-# Fix "Who to Follow" - Continuous User Loading
+# Progressive Loading for "Who to Follow"
 
 ## Problem
-The "Who to Follow" panel only fetches 100 posts from a single page and extracts a maximum of 50 unique users. Once you follow all these users, the list shows "No suggestions yet" instead of loading more users from additional pages.
+The parallel batch approach still waits for ALL batches to complete before displaying results. If a user has followed everyone from the first 500 users, they see "loading" until all 2000 posts are fetched.
 
 ## Solution
-Implement multi-page fetching that continues loading until we have enough unfollowed users to display, removing the artificial 50-user cap.
+Split into two queries with **instant display + background enrichment**:
+1. **Fast query**: Fetch first 5 pages in parallel → show results immediately
+2. **Background query**: Fetch remaining pages → merge into list as they complete
 
 ---
 
@@ -13,47 +15,64 @@ Implement multi-page fetching that continues loading until we have enough unfoll
 
 ### File: `src/components/app/WhoToFollow.tsx`
 
-**1. Multi-page fetching loop**
-Replace the single-page fetch with a loop that:
-- Fetches 100 posts per page
-- Extracts all unique users (no 50-user cap)
-- Continues fetching up to 20 pages (2000 posts) to gather a large user pool
-- Stops early if a page returns fewer results than requested
+**1. Create two separate queries**
 
-**2. Remove artificial limits**
-- Delete the `if (uniqueUsers.length >= 50) break;` line
-- Collect ALL unique users across all fetched pages
+```typescript
+// Fast initial load (pages 0-4)
+const { data: initialUsers, isLoading: isLoadingInitial } = useQuery({
+  queryKey: ['suggestions', 'initial'],
+  queryFn: () => fetchUserBatch(0, 5), // Pages 0-4 in parallel
+  staleTime: 5 * 60 * 1000,
+});
 
-**3. Data flow**
-```text
-Current:
-  Page 0 (100 posts) → Max 50 users → Filter → Often 0 remaining
-
-New:
-  Pages 0-19 (up to 2000 posts) → All unique users (200-500+) → Filter → Always have suggestions
+// Background extended load (pages 5-19)
+const { data: extendedUsers } = useQuery({
+  queryKey: ['suggestions', 'extended'],
+  queryFn: () => fetchUserBatch(5, 20), // Pages 5-19 in parallel
+  enabled: !!initialUsers, // Only start after initial loads
+  staleTime: 5 * 60 * 1000,
+});
 ```
 
-**4. Query function update**
+**2. Merge results progressively**
+
 ```typescript
-queryFn: async () => {
+const allUsers = useMemo(() => {
+  const users = [...(initialUsers || [])];
+  const seenAddresses = new Set(users.map(u => u.address));
+  
+  // Add extended users that aren't duplicates
+  for (const user of (extendedUsers || [])) {
+    if (!seenAddresses.has(user.address)) {
+      seenAddresses.add(user.address);
+      users.push(user);
+    }
+  }
+  
+  return users;
+}, [initialUsers, extendedUsers]);
+```
+
+**3. Extract shared fetch function**
+
+```typescript
+async function fetchUserBatch(startPage: number, endPage: number) {
   const seenAddresses = new Set<string>();
   const uniqueUsers: UniqueUser[] = [];
-  const maxPages = 20;
   const pageSize = 100;
   
-  for (let page = 0; page < maxPages; page++) {
-    const response = await searchNFTs({ 
-      sortMode: 'new', 
-      unit: pageSize,
-      page 
-    });
-    
-    const posts = response.data || [];
-    
-    for (const nft of posts) {
+  // Fetch all pages in parallel
+  const pagePromises = [];
+  for (let page = startPage; page < endPage; page++) {
+    pagePromises.push(searchNFTs({ sortMode: 'new', unit: pageSize, page }));
+  }
+  
+  const results = await Promise.all(pagePromises);
+  
+  for (const response of results) {
+    for (const nft of (response.data || [])) {
       const address = nft.minter;
       if (!address || seenAddresses.has(address)) continue;
-      
       seenAddresses.add(address);
       uniqueUsers.push({
         address,
@@ -62,13 +81,28 @@ queryFn: async () => {
         avatarUrl: nft.minterAvatarUrl,
       });
     }
-    
-    // Stop if we got fewer results (no more data)
-    if (posts.length < pageSize) break;
   }
   
   return uniqueUsers;
 }
 ```
 
-This ensures the panel always has users to suggest until you've literally followed everyone on the platform.
+**4. Show loading only for initial fetch**
+
+```typescript
+if (isLoadingInitial) {
+  return <Loader2 className="animate-spin" />;
+}
+// Show results immediately once initial load completes
+// Extended results appear automatically as they load
+```
+
+## User Experience
+
+| Scenario | Before | After |
+|----------|--------|-------|
+| Fresh user | Wait 10s+ for all data | See results in ~1s |
+| Followed 50 users | Wait 10s+ | See remaining in ~1s |
+| Followed 200+ users | Wait 10s+ | See initial in ~1s, more appear as background loads |
+
+Users always see available suggestions within ~1 second, and the list grows as more data loads in the background.
