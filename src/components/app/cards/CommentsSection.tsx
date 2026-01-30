@@ -540,7 +540,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     >
 
       {/* Search & Sort - moved above tabs */}
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-2 mb-3 px-5">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
@@ -672,7 +672,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       )}
 
         {/* New Comment Input - at the bottom */}
-        <div className="mt-3 pt-3 border-t border-zinc-800">
+        <div className="mt-3 pt-3 border-t border-zinc-800 px-5">
           {/* Reply indicator */}
           {replyTo && (
             <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
