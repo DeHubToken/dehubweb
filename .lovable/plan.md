@@ -1,45 +1,64 @@
 
-# Fix Profile Pictures Not Rendering in Comment Sections
+# Plan: Change Message to Edit Profile on Own Profile
 
-## Problem Identified
+## Summary
+When viewing your own profile, the "Message" button should display "Edit Profile" instead, since you can't message yourself but you can edit your profile.
 
-After analyzing the code, I found the issue in `CommentsSection.tsx`. The avatar URLs from the DeHub API are **relative paths** (like `avatars/xxx.jpg`), but they're being used directly in the `<AvatarImage src={comment.avatar}>` without converting them to full CDN URLs.
+## What I Found
 
-The `CommentsSheet.tsx` component handles this correctly by calling `getMediaUrl(comment.avatarUrl)`, but `CommentsSection.tsx` does not.
+The profile page at `src/pages/app/ProfilePage.tsx` has:
+- A "Message" button at lines 598-605 that currently shows for all profiles
+- An existing `isViewingOwnProfile` variable (line 70) that correctly detects when viewing your own profile
+- The button currently renders unconditionally
 
-## Root Cause
+## Changes Required
 
-In `src/components/app/cards/CommentsSection.tsx`:
-- Line 191: `<AvatarImage src={comment.avatar} className="object-cover" />`
-- The `comment.avatar` contains a relative path like `avatars/user123.jpg`
-- This needs to be converted to `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/user123.jpg`
+### File: `src/pages/app/ProfilePage.tsx`
 
-## Solution
+**1. Add Pencil icon import**
+Add `Pencil` to the existing lucide-react import on line 4-6.
 
-Update the `CommentItem` component inside `CommentsSection.tsx` to call `getMediaUrl()` on the avatar before using it:
+**2. Update the Message/Edit Profile button logic**
+Replace the static "Message" button with a conditional that shows:
+- **"Edit Profile"** with Pencil icon when `isViewingOwnProfile` is true
+- **"Message"** with MessageCircle icon when viewing someone else's profile
 
-### Changes to `src/components/app/cards/CommentsSection.tsx`
+The button will navigate to `/app/settings` when on your own profile (where profile editing options are located).
 
-1. Import `getMediaUrl` (already imported on line 31)
-2. Update the `CommentItem` component to convert the avatar URL
+### Code Change
 
 ```tsx
-// Inside CommentItem component, before the return statement:
-const avatarUrl = comment.avatar ? getMediaUrl(comment.avatar) : undefined;
+// Before (always shows Message)
+<Button variant="outline" size="sm" className="...">
+  <MessageCircle className="w-4 h-4" />
+  Message
+</Button>
 
-// Then use avatarUrl instead of comment.avatar:
-<AvatarImage src={avatarUrl} className="object-cover" />
+// After (conditional based on profile ownership)
+{isViewingOwnProfile ? (
+  <Button 
+    variant="outline" 
+    size="sm" 
+    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+    onClick={() => navigate('/app/settings')}
+  >
+    <Pencil className="w-4 h-4" />
+    Edit Profile
+  </Button>
+) : (
+  <Button
+    variant="outline" 
+    size="sm" 
+    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+  >
+    <MessageCircle className="w-4 h-4" />
+    Message
+  </Button>
+)}
 ```
 
----
+## Summary of Changes
 
-## Technical Details
-
-The `getMediaUrl` function from `src/lib/api/dehub.ts` handles this conversion:
-- If the path is already an absolute URL (starts with `http://` or `https://`), it returns it unchanged
-- Otherwise, it prepends the CDN base URL: `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/`
-
-This is the same pattern already used successfully in:
-- `CommentsSheet.tsx` via `CommentItem.tsx`
-- `LeaderboardUserAvatar.tsx`
-- Profile page components
+| File | Change |
+|------|--------|
+| `src/pages/app/ProfilePage.tsx` | Add `Pencil` import, update button to conditionally show "Edit Profile" or "Message" |
