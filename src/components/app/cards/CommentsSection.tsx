@@ -606,37 +606,15 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           )}
           <Search className="w-5 h-5 relative z-10" />
         </button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
-                sortBy !== 'recent'
-                  ? 'text-white'
-                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
-              }`}
-            >
-              {sortBy !== 'recent' && (
-                <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
-              )}
-              <ArrowUpDown className="w-5 h-5 relative z-10" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
-            {SORT_OPTIONS.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setSortBy(option.value as 'recent' | 'liked')}
-                className={cn(
-                  "text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white",
-                  sortBy === option.value && "text-white"
-                )}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <button
+          type="button"
+          onClick={() => setSortBy(prev => prev === 'recent' ? 'liked' : 'recent')}
+          className="relative flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-500 hover:text-white hover:bg-zinc-800/30"
+          title={sortBy === 'recent' ? 'Sorted by Most Recent' : 'Sorted by Most Liked'}
+        >
+          <ArrowUpDown className="w-5 h-5" />
+          <span className="text-xs">{sortBy === 'recent' ? 'Recent' : 'Liked'}</span>
+        </button>
       </div>
 
       {/* Search Input - shown only on search tab */}
