@@ -125,7 +125,7 @@ export function MobileBottomNav() {
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center"
             >
               <div 
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300"
+                className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all duration-300"
                 style={{ 
                   backgroundColor: `rgba(255, 255, 255, ${buttonOpacity})`,
                 }}
