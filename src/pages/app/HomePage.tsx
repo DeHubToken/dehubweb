@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -48,10 +48,10 @@ const GESTURE_LOCK_DURATION = 400;
 // ============================================================================
 
 export default function HomePage() {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   
-  // Extract pinned post ID from location state (when coming from /app/post/:postId)
-  const pinnedPostId = (location.state as { pinnedPostId?: string } | null)?.pinnedPostId;
+  // Extract pinned post ID from URL params (persists on refresh)
+  const pinnedPostId = searchParams.get('post') || undefined;
   
   // Tab state
   const [activeTab, setActiveTab] = useState('home');

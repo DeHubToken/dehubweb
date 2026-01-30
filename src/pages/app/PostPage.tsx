@@ -2,8 +2,7 @@
  * Post Page Redirect
  * ==================
  * Redirects /app/post/:postId to home with the post pinned at top.
- * This provides a seamless experience where shared posts appear
- * as the first item in the feed.
+ * Uses URL search params so the pinned post persists after refresh.
  * 
  * @module pages/app/PostPage
  */
@@ -18,12 +17,8 @@ export default function PostPage() {
 
   useEffect(() => {
     if (postId) {
-      // Navigate to home with the postId in state
-      // This will cause HomePage to render that post first
-      navigate('/app', { 
-        state: { pinnedPostId: postId },
-        replace: true // Replace history entry so back button works naturally
-      });
+      // Navigate to home with postId as URL param (persists on refresh)
+      navigate(`/app?post=${postId}`, { replace: true });
     }
   }, [postId, navigate]);
 
