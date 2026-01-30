@@ -416,36 +416,18 @@ export function ImagesFeed({
       </AnimatePresence>
 
       {/* Content */}
-      <AnimatePresence mode="wait">
-        {showFeedView ? (
-          <motion.div
-            key={`endless-${refreshKey}-${selectedPostId}`}
-            initial={shouldAnimate ? { opacity: 0, scale: 1.15 } : false}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <EndlessScrollView 
-              posts={imagePosts} 
-              loaderRef={loaderRef}
-              isFetchingNextPage={isFetchingNextPage}
-              hasNextPage={hasNextPage ?? false}
-              startFromId={selectedPostId}
-              onBackToCollage={onBackToCollage}
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            key={`collage-${refreshKey}`}
-            initial={shouldAnimate ? { opacity: 0, scale: 0.9 } : false}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.15 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <CollageView posts={imagePosts} onImageClick={handleImageClick} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {showFeedView ? (
+        <EndlessScrollView 
+          posts={imagePosts} 
+          loaderRef={loaderRef}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage ?? false}
+          startFromId={selectedPostId}
+          onBackToCollage={onBackToCollage}
+        />
+      ) : (
+        <CollageView posts={imagePosts} onImageClick={handleImageClick} />
+      )}
     </div>
   );
 }
