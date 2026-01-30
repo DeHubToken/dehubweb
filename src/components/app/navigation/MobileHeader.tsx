@@ -4,6 +4,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
+import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 interface MobileHeaderProps {
@@ -46,15 +47,15 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
             className="hover:opacity-80 transition-opacity"
           >
             <Avatar className="w-7 h-7">
-              {user.avatar_url && (
+              {user.avatarImageUrl && user.address && (
                 <AvatarImage
-                  src={user.avatar_url}
-                  alt={`${user.display_name || user.username}'s avatar`}
+                  src={buildAvatarUrl(user.address, user.avatarImageUrl)}
+                  alt={`${user.displayName || user.username}'s avatar`}
                   className="object-cover"
                 />
               )}
               <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                {(user.display_name || user.username)?.charAt(0).toUpperCase() || 'U'}
+                {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
           </button>
