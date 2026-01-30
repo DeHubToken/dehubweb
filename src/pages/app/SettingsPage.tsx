@@ -83,7 +83,7 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center">
             <SettingsIcon className="w-6 h-6 text-zinc-400" />
           </div>
           <div>
@@ -142,7 +142,7 @@ function ProfileSettings() {
           <Avatar className="w-20 h-20">
             <AvatarFallback className="bg-zinc-700 text-white text-xl font-medium">U</AvatarFallback>
           </Avatar>
-          <button className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center hover:bg-zinc-600 transition-colors">
+          <button className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-xl flex items-center justify-center hover:bg-zinc-600 transition-colors">
             <Camera className="w-4 h-4 text-white" />
           </button>
         </div>

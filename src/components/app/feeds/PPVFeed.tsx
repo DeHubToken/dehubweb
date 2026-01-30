@@ -4,7 +4,7 @@ export function PPVFeed() {
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
+        <div className="w-16 h-16 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4">
           <Coins className="w-8 h-8 text-emerald-400" />
         </div>
         <h3 className="text-xl font-semibold text-white mb-2">Pay-Per-View Content</h3>

@@ -56,7 +56,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+              <button className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                 <MoreVertical className="w-5 h-5" />
               </button>
             </DropdownMenuTrigger>

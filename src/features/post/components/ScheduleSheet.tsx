@@ -268,7 +268,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 px-0">
           <div className="flex items-center justify-between">
-            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors">
+            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-xl transition-colors">
               <X className="w-5 h-5 text-zinc-400" />
             </button>
             <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
@@ -278,7 +278,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
               onClick={handleConfirm}
               disabled={!selectedDate}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all",
                 selectedDate
                   ? "bg-white/10 text-white border border-white/20 hover:bg-white/20"
                   : "bg-white/5 text-zinc-500 border border-white/10 cursor-not-allowed"
@@ -295,7 +295,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           <div className="flex items-center justify-between px-2">
             <button
               onClick={handlePrevMonth}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
             >
               <ChevronLeft className="w-5 h-5 text-white" />
             </button>
@@ -304,7 +304,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             </h3>
             <button
               onClick={handleNextMonth}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
             >
               <ChevronRight className="w-5 h-5 text-white" />
             </button>
