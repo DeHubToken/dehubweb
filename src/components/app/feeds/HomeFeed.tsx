@@ -544,7 +544,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       : allItems;
     
     const mappedItems = filteredItems.map((item, index): FeedItemType => {
-      switch (item.postType) {
+      // Infer post type if not explicitly set by API
+      const inferredType = item.postType || (
+        item.videoUrl ? 'video' :
+        (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
+        'feed-simple'
+      );
+      
+      switch (inferredType) {
         case 'feed-images':
           return { type: 'image', data: mapToImagePost(item, index) };
         case 'feed-simple':
