@@ -10,14 +10,21 @@
  */
 
 import { useState, memo } from 'react';
-import { Eye, Sparkles } from 'lucide-react';
+import { Eye, Sparkles, MoreVertical, Link2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSheet } from '../comments';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { TextPost } from '@/types/feed.types';
 
 interface PostCardProps {
@@ -43,15 +50,37 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       />
 
       {/* AI Button for text posts - positioned in header area */}
-      <motion.button
-        onClick={() => setShowAIChat(true)}
-        className="absolute top-3 right-3 z-10 text-zinc-400 hover:text-white transition-colors"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label="Ask AI about this post"
-      >
-        <Sparkles className="w-5 h-5" />
-      </motion.button>
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+        <motion.button
+          onClick={() => setShowAIChat(true)}
+          className="text-zinc-400 hover:text-white transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Ask AI about this post"
+        >
+          <Sparkles className="w-5 h-5" />
+        </motion.button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="text-zinc-400 hover:text-white transition-colors">
+              <MoreVertical className="w-5 h-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+            <DropdownMenuItem 
+              onClick={() => {
+                const url = `${window.location.origin}/app/post/${post.id}`;
+                navigator.clipboard.writeText(url);
+                toast.success('Post URL copied to clipboard');
+              }}
+              className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+            >
+              <Link2 className="w-4 h-4" /> Copy Post URL
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       {/* Content */}
       <div className="px-3 pb-3">

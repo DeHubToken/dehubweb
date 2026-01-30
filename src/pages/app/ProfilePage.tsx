@@ -263,7 +263,7 @@ export default function ProfilePage() {
   const isFollowing = apiProfile?.isFollowing ?? false;
 
   const handleCopyProfileUrl = () => {
-    navigator.clipboard.writeText(`https://dehub.gg/${profile.handle.replace('@', '')}`);
+    navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
     toast.success('Profile URL copied to clipboard');
     setShareSheetOpen(false);
   };
