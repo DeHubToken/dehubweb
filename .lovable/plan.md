@@ -1,64 +1,74 @@
 
-# Plan: Change Message to Edit Profile on Own Profile
+# Fix "Who to Follow" - Continuous User Loading
 
-## Summary
-When viewing your own profile, the "Message" button should display "Edit Profile" instead, since you can't message yourself but you can edit your profile.
+## Problem
+The "Who to Follow" panel only fetches 100 posts from a single page and extracts a maximum of 50 unique users. Once you follow all these users, the list shows "No suggestions yet" instead of loading more users from additional pages.
 
-## What I Found
+## Solution
+Implement multi-page fetching that continues loading until we have enough unfollowed users to display, removing the artificial 50-user cap.
 
-The profile page at `src/pages/app/ProfilePage.tsx` has:
-- A "Message" button at lines 598-605 that currently shows for all profiles
-- An existing `isViewingOwnProfile` variable (line 70) that correctly detects when viewing your own profile
-- The button currently renders unconditionally
+---
 
-## Changes Required
+## Technical Changes
 
-### File: `src/pages/app/ProfilePage.tsx`
+### File: `src/components/app/WhoToFollow.tsx`
 
-**1. Add Pencil icon import**
-Add `Pencil` to the existing lucide-react import on line 4-6.
+**1. Multi-page fetching loop**
+Replace the single-page fetch with a loop that:
+- Fetches 100 posts per page
+- Extracts all unique users (no 50-user cap)
+- Continues fetching up to 20 pages (2000 posts) to gather a large user pool
+- Stops early if a page returns fewer results than requested
 
-**2. Update the Message/Edit Profile button logic**
-Replace the static "Message" button with a conditional that shows:
-- **"Edit Profile"** with Pencil icon when `isViewingOwnProfile` is true
-- **"Message"** with MessageCircle icon when viewing someone else's profile
+**2. Remove artificial limits**
+- Delete the `if (uniqueUsers.length >= 50) break;` line
+- Collect ALL unique users across all fetched pages
 
-The button will navigate to `/app/settings` when on your own profile (where profile editing options are located).
+**3. Data flow**
+```text
+Current:
+  Page 0 (100 posts) → Max 50 users → Filter → Often 0 remaining
 
-### Code Change
-
-```tsx
-// Before (always shows Message)
-<Button variant="outline" size="sm" className="...">
-  <MessageCircle className="w-4 h-4" />
-  Message
-</Button>
-
-// After (conditional based on profile ownership)
-{isViewingOwnProfile ? (
-  <Button 
-    variant="outline" 
-    size="sm" 
-    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-    onClick={() => navigate('/app/settings')}
-  >
-    <Pencil className="w-4 h-4" />
-    Edit Profile
-  </Button>
-) : (
-  <Button
-    variant="outline" 
-    size="sm" 
-    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-  >
-    <MessageCircle className="w-4 h-4" />
-    Message
-  </Button>
-)}
+New:
+  Pages 0-19 (up to 2000 posts) → All unique users (200-500+) → Filter → Always have suggestions
 ```
 
-## Summary of Changes
+**4. Query function update**
+```typescript
+queryFn: async () => {
+  const seenAddresses = new Set<string>();
+  const uniqueUsers: UniqueUser[] = [];
+  const maxPages = 20;
+  const pageSize = 100;
+  
+  for (let page = 0; page < maxPages; page++) {
+    const response = await searchNFTs({ 
+      sortMode: 'new', 
+      unit: pageSize,
+      page 
+    });
+    
+    const posts = response.data || [];
+    
+    for (const nft of posts) {
+      const address = nft.minter;
+      if (!address || seenAddresses.has(address)) continue;
+      
+      seenAddresses.add(address);
+      uniqueUsers.push({
+        address,
+        username: nft.mintername,
+        displayName: nft.minterDisplayName,
+        avatarUrl: nft.minterAvatarUrl,
+      });
+    }
+    
+    // Stop if we got fewer results (no more data)
+    if (posts.length < pageSize) break;
+  }
+  
+  return uniqueUsers;
+}
+```
 
-| File | Change |
-|------|--------|
-| `src/pages/app/ProfilePage.tsx` | Add `Pencil` import, update button to conditionally show "Edit Profile" or "Message" |
+This ensures the panel always has users to suggest until you've literally followed everyone on the platform.
