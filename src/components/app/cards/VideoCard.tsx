@@ -472,7 +472,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
               <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
                 <DollarSign className="w-3 h-3 text-white" />
                 <span className="text-white text-xs font-medium">
-                  {video.ppvPrice.toFixed(2)} {video.ppvCurrency || 'USDC'}
+                  {Number(video.ppvPrice).toFixed(2)} {video.ppvCurrency || 'USDC'}
                 </span>
               </div>
             ) : video.isW2E ? (
