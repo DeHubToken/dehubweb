@@ -228,8 +228,8 @@ function AllSection({
 }) {
   return (
     <div className="space-y-4 pb-32">
-      <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <MusicVideosCarousel videos={musicVideos} onSeeAll={onGoToVideos} />
+      <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <TracksCarousel />
       <PodcastsCarousel />
     </div>
