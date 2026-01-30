@@ -608,26 +608,20 @@ export async function postComment(tokenId: string, content: string, replyToId?: 
 }
 
 // Bookmark/Saved functions
-/**
- * Save a post to user's bookmarks
- * Uses GET /api/request_save?streamTokenId={tokenId}
- */
-export async function savePost(tokenId: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/request_save", {
-    method: "GET",
-    params: { streamTokenId: tokenId },
-    requiresAuth: true,
-  });
+export interface SavePostResponse {
+  status: boolean;
+  saved: boolean; // true = now saved, false = now unsaved
 }
 
 /**
- * Unsave/remove a post from user's bookmarks
- * Uses GET /api/request_save?streamTokenId={tokenId}&unSave=true
+ * Toggle save/bookmark status for a post
+ * Uses POST /api/savePost with body { tokenId: number }
+ * This is a toggle endpoint - calling it toggles the saved state
  */
-export async function unsavePost(tokenId: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/request_save", {
-    method: "GET",
-    params: { streamTokenId: tokenId, unSave: "true" },
+export async function toggleSavePost(tokenId: string | number): Promise<SavePostResponse> {
+  return apiCall<SavePostResponse>("/api/savePost", {
+    method: "POST",
+    body: { tokenId: Number(tokenId) },
     requiresAuth: true,
   });
 }
