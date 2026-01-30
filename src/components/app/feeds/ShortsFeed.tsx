@@ -95,15 +95,16 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
   const id = String(nft.tokenId || nft.id || nft.token_id);
   const durationStr = nft.duration || '0:30';
   const viewCount = nft.views || nft.view_count || 0;
-  const minterAddress = nft.minter || nft.creator?.address || '';
-  const avatarPath = nft.minterAvatarImg || nft.creator?.avatarImg || nft.avatarImg;
+  const minterAddress = nft.minter || nft.creator?.id || '';
+  const avatarUrl = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
+                    buildAvatarUrl(minterAddress, nft.creator?.avatar_url);
   
   return {
     id,
     type: 'short',
     username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
-    avatar: buildAvatarUrl(minterAddress, avatarPath) || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
+    avatar: avatarUrl || undefined,
     likes: formatLikes(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
