@@ -549,83 +549,81 @@ export default function ProfilePage() {
                 </div>
                 <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
               </div>
-              {isViewingOwnProfile ? (
-                <Button
-                  variant="outline" 
-                  size="sm" 
-                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-                  onClick={() => navigate('/app/settings')}
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit Profile
-                </Button>
-              ) : (
-                <div className="flex items-center gap-2">
-                  {!isFollowing && (
-                    <Button 
-                      size="sm" 
-                      className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
-                      onClick={handleFollow}
-                      disabled={isFollowLoading}
-                    >
-                      {isFollowLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <UserPlus className="w-4 h-4" />
-                      )}
-                      Follow
-                    </Button>
-                  )}
-                  {isFollowing && !isSubscribed && (
-                    <Button 
-                      size="sm" 
-                      className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                      onClick={() => {
-                        setIsSubscribed(true);
-                        toast.success(`Subscribed to ${profile.name}!`);
-                      }}
-                    >
-                      <Star className="w-4 h-4" />
-                      Subscribe
-                    </Button>
-                  )}
-                  {isFollowing && isSubscribed && (
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
-                      onClick={() => {
-                        setIsSubscribed(false);
-                        toast.success(`Unsubscribed from ${profile.name}`);
-                      }}
-                    >
-                      <Star className="w-4 h-4" />
-                      Unsubscribe
-                    </Button>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Action Buttons - just the options menu now */}
-            <div className="flex items-center gap-2 mb-4">
-              <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
-                <DrawerTrigger asChild>
-                  <Button 
+              <div className="flex items-center gap-2">
+                {isViewingOwnProfile ? (
+                  <Button
                     variant="outline" 
-                    size="icon" 
-                    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+                    size="sm" 
+                    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                    onClick={() => navigate('/app/settings')}
                   >
-                    <Plus className="w-4 h-4" />
+                    <Pencil className="w-4 h-4" />
+                    Edit Profile
                   </Button>
-                </DrawerTrigger>
-                <DrawerContent glass className="px-4 pb-8">
-                  <DrawerHeader className="sr-only">
-                    <DrawerTitle>Profile Options</DrawerTitle>
-                  </DrawerHeader>
-                  <ShareOptions />
-                </DrawerContent>
-              </Drawer>
+                ) : (
+                  <>
+                    {!isFollowing && (
+                      <Button 
+                        size="sm" 
+                        className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
+                        onClick={handleFollow}
+                        disabled={isFollowLoading}
+                      >
+                        {isFollowLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <UserPlus className="w-4 h-4" />
+                        )}
+                        Follow
+                      </Button>
+                    )}
+                    {isFollowing && !isSubscribed && (
+                      <Button 
+                        size="sm" 
+                        className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
+                        onClick={() => {
+                          setIsSubscribed(true);
+                          toast.success(`Subscribed to ${profile.name}!`);
+                        }}
+                      >
+                        <Star className="w-4 h-4" />
+                        Subscribe
+                      </Button>
+                    )}
+                    {isFollowing && isSubscribed && (
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
+                        onClick={() => {
+                          setIsSubscribed(false);
+                          toast.success(`Unsubscribed from ${profile.name}`);
+                        }}
+                      >
+                        <Star className="w-4 h-4" />
+                        Unsubscribe
+                      </Button>
+                    )}
+                  </>
+                )}
+                <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
+                  <DrawerTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent glass className="px-4 pb-8">
+                    <DrawerHeader className="sr-only">
+                      <DrawerTitle>Profile Options</DrawerTitle>
+                    </DrawerHeader>
+                    <ShareOptions />
+                  </DrawerContent>
+                </Drawer>
+              </div>
             </div>
 
             {/* Profile Info */}
