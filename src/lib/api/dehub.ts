@@ -814,13 +814,15 @@ interface MessagesApiResponse {
  * Uses /api/dm/search endpoint
  * @param page - Page number (0-indexed)
  * @param limit - Items per page
+ * @param searchQuery - Optional search query (required by API, defaults to empty string)
  */
 export async function getConversations(
   page: number = 0,
-  limit: number = 20
+  limit: number = 20,
+  searchQuery: string = ""
 ): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
   const response = await apiCall<ConversationsApiResponse>("/api/dm/search", {
-    params: { page, limit },
+    params: { query: searchQuery, page, limit },
     requiresAuth: true,
   });
   return response.result || { items: [], totalCount: 0, hasMore: false };
