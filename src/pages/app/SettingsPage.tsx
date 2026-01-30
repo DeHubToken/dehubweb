@@ -35,6 +35,7 @@ import {
   UserPlus,
   X,
   Check,
+  Download,
   Copy
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -424,6 +425,28 @@ function PrivacySettings() {
               Enable
             </Button>
           </div>
+        </div>
+      </div>
+
+      {/* Extract Data */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Your Data</h3>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Download className="w-5 h-5 text-zinc-500" />
+            <div>
+              <p className="text-white font-medium">Extract Data</p>
+              <p className="text-zinc-500 text-sm">Download a copy of all your data</p>
+            </div>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md"
+            onClick={() => toast.success('Data export request submitted. You will receive an email when your data is ready.')}
+          >
+            Download
+          </Button>
         </div>
       </div>
 
