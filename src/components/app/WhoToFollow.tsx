@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2 } from 'lucide-react';
+import { UserPlus, Loader2, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { searchNFTs } from '@/lib/api/dehub';
+import { searchNFTs, followUser } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 interface UniqueUser {
   address: string;
@@ -15,6 +18,9 @@ interface UniqueUser {
 
 export function WhoToFollow() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+  const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
 
   const { data, isLoading } = useQuery({
     queryKey: ['suggestions', 'recently-active'],
@@ -76,10 +82,34 @@ export function WhoToFollow() {
     }
   };
 
-  const handleFollow = (e: React.MouseEvent, user: UniqueUser) => {
+  const handleFollow = async (e: React.MouseEvent, user: UniqueUser) => {
     e.stopPropagation();
-    // TODO: Implement follow API call
-    console.log('Follow user:', user.address);
+    
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to follow users');
+      return;
+    }
+
+    if (loadingUsers.has(user.address) || followedUsers.has(user.address)) {
+      return;
+    }
+
+    setLoadingUsers(prev => new Set(prev).add(user.address));
+
+    try {
+      await followUser(user.address);
+      setFollowedUsers(prev => new Set(prev).add(user.address));
+      toast.success(`Following ${getDisplayName(user)}!`);
+    } catch (error) {
+      console.error('Failed to follow user:', error);
+      toast.error('Failed to follow user');
+    } finally {
+      setLoadingUsers(prev => {
+        const next = new Set(prev);
+        next.delete(user.address);
+        return next;
+      });
+    }
   };
 
   if (isLoading) {
@@ -121,14 +151,31 @@ export function WhoToFollow() {
               <span className="font-semibold text-white text-sm truncate block">{getDisplayName(user)}</span>
               <span className="text-zinc-500 text-xs">{getHandle(user)}</span>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={(e) => handleFollow(e, user)}
-              className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-            >
-              Follow
-            </Button>
+            {followedUsers.has(user.address) ? (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled
+                className="h-8 px-4 text-xs font-semibold rounded-xl border-green-500/50 text-green-400 bg-transparent"
+              >
+                <Check className="w-3 h-3 mr-1" />
+                Following
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={(e) => handleFollow(e, user)}
+                disabled={loadingUsers.has(user.address)}
+                className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+              >
+                {loadingUsers.has(user.address) ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  'Follow'
+                )}
+              </Button>
+            )}
           </div>
         ))}
       </div>
