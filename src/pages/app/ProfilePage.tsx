@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -277,8 +277,29 @@ export default function ProfilePage() {
   );
 
   const renderTabContent = () => {
+    // Show loading state for content tabs
+    if (isLoadingContent && ['home', 'images', 'videos'].includes(activeTab)) {
+      return (
+        <div className="flex flex-col items-center justify-center py-16">
+          <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
+          <p className="text-zinc-500 text-sm">Loading content...</p>
+        </div>
+      );
+    }
+    
+    const hasNoContent = PROFILE_POSTS.length === 0 && PROFILE_IMAGES.length === 0 && ALL_PROFILE_VIDEOS.length === 0;
+    
     switch (activeTab) {
       case 'home':
+        if (hasNoContent) {
+          return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Home className="w-12 h-12 text-zinc-600 mb-3" />
+              <p className="text-zinc-400 text-lg font-medium">No posts yet</p>
+              <p className="text-zinc-500 text-sm mt-1">Content will appear here when posted</p>
+            </div>
+          );
+        }
         return (
           <div className="space-y-2 sm:space-y-3">
             {PROFILE_POSTS.map((post) => (
@@ -293,6 +314,15 @@ export default function ProfilePage() {
           </div>
         );
       case 'images':
+        if (PROFILE_IMAGES.length === 0) {
+          return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Image className="w-12 h-12 text-zinc-600 mb-3" />
+              <p className="text-zinc-400 text-lg font-medium">No images yet</p>
+              <p className="text-zinc-500 text-sm mt-1">Image posts will appear here</p>
+            </div>
+          );
+        }
         return (
           <div className="space-y-2 sm:space-y-3">
             {PROFILE_IMAGES.map((image) => (
@@ -301,6 +331,15 @@ export default function ProfilePage() {
           </div>
         );
       case 'videos':
+        if (ALL_PROFILE_VIDEOS.length === 0) {
+          return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Film className="w-12 h-12 text-zinc-600 mb-3" />
+              <p className="text-zinc-400 text-lg font-medium">No videos yet</p>
+              <p className="text-zinc-500 text-sm mt-1">Video posts will appear here</p>
+            </div>
+          );
+        }
         return (
           <div className="space-y-2 sm:space-y-3">
             {ALL_PROFILE_VIDEOS.map((video) => (
@@ -324,9 +363,9 @@ export default function ProfilePage() {
                 {/* Blurred content with subscribe prompt */}
                 <div className="relative">
                   <div className="blur-lg pointer-events-none select-none">
-                    {PROFILE_POSTS.slice(0, 2).map((post) => (
-                      <div key={`sub-blur-${post.id}`} className="mb-2">
-                        <PostCard post={post} />
+                    {(PROFILE_IMAGES.length > 0 ? PROFILE_IMAGES.slice(0, 2) : ALL_PROFILE_VIDEOS.slice(0, 2)).map((item, i) => (
+                      <div key={`sub-blur-${item.id}`} className="mb-2">
+                        {'image' in item ? <ImageCard post={item as ImagePost} /> : <VideoCard video={item as VideoItem} />}
                       </div>
                     ))}
                   </div>
@@ -356,11 +395,11 @@ export default function ProfilePage() {
               </>
             ) : (
               <>
-                {PROFILE_POSTS.slice(0, 5).map((post) => (
-                  <PostCard key={`sub-${post.id}`} post={post} />
-                ))}
                 {PROFILE_IMAGES.slice(0, 5).map((image) => (
                   <ImageCard key={`sub-${image.id}`} post={image} />
+                ))}
+                {ALL_PROFILE_VIDEOS.slice(0, 5).map((video) => (
+                  <VideoCard key={`sub-${video.id}`} video={video} />
                 ))}
               </>
             )}
@@ -368,24 +407,18 @@ export default function ProfilePage() {
         );
       case 'songs':
         return (
-          <div className="space-y-2 sm:space-y-3">
-            {PROFILE_POSTS.slice(0, 10).map((post, i) => (
-              <PostCard key={`song-${post.id}-${i}`} post={{
-                ...post,
-                content: `🎵 Now playing: Track ${i + 1} - ${post.content.slice(0, 30)}...`,
-              }} />
-            ))}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Play className="w-12 h-12 text-zinc-600 mb-3" />
+            <p className="text-zinc-400 text-lg font-medium">No songs yet</p>
+            <p className="text-zinc-500 text-sm mt-1">Audio tracks will appear here</p>
           </div>
         );
       case 'live':
         return (
-          <div className="space-y-2 sm:space-y-3">
-            {ALL_PROFILE_VIDEOS.slice(0, 10).map((video, i) => (
-              <VideoCard key={`live-${video.id}-${i}`} video={{
-                ...video,
-                title: `Live Stream #${i + 1} - ${video.title}`,
-              }} />
-            ))}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Radio className="w-12 h-12 text-zinc-600 mb-3" />
+            <p className="text-zinc-400 text-lg font-medium">No live streams yet</p>
+            <p className="text-zinc-500 text-sm mt-1">Live content will appear here</p>
           </div>
         );
       case 'fractions':
