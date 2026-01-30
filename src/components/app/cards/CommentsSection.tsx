@@ -694,21 +694,13 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </div>
       )}
 
-      {/* Search Tab - searches both comments and quotes */}
+      {/* Search Tab - shows all comments/quotes, filtered by search query */}
       {activeTab === 'search' && (
         <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
             </div>
-          ) : !searchQuery.trim() ? (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-zinc-500 text-sm py-6 text-center"
-            >
-              Type to search comments & quotes
-            </motion.p>
           ) : (
             <AnimatePresence mode="popLayout">
               {filteredGroupedComments.length > 0 ? (
@@ -744,7 +736,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   animate={{ opacity: 1 }}
                   className="text-zinc-500 text-sm py-6 text-center"
                 >
-                  No results found
+                  {searchQuery ? 'No results found' : 'No comments or quotes yet'}
                 </motion.p>
               )}
             </AnimatePresence>
