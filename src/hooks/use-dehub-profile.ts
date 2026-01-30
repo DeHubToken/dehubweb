@@ -7,10 +7,12 @@
  */
 
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { getAccountInfo, getAccountByUsername, searchNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername, getAuthToken, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
-import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from './use-dehub-feed';
+import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+
+const DEHUB_API_BASE = "https://api.dehub.io";
 
 export interface ProfileData {
   id: string;
@@ -149,27 +151,44 @@ interface UseDeHubUserContentOptions {
 
 /**
  * Hook to fetch user's NFT content (videos/images)
- * Uses searchNFTs with creator_id filter for reliable content fetching
+ * Uses the /api/feed endpoint with minter filter for reliable content fetching
  */
 export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseDeHubUserContentOptions = {}) {
   return useInfiniteQuery({
     queryKey: ['dehub-user-content', userId],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam = 1 }) => {
       if (!userId) throw new Error('User ID (wallet address) is required');
       
-      // Use searchNFTs with creator_id filter - same API that powers the home feed
-      const result = await searchNFTs({
-        creator_id: userId,
-        page: pageParam,
-        unit: limit,
-        sortMode: 'new',
-      });
+      // Use /api/feed with minter parameter - the same API that powers the home feed
+      const url = new URL('/api/feed', DEHUB_API_BASE);
+      url.searchParams.set('page', String(pageParam));
+      url.searchParams.set('limit', String(limit));
+      url.searchParams.set('minter', userId);
+      url.searchParams.set('sortBy', 'createdAt');
+      url.searchParams.set('sortOrder', 'desc');
+      
+      const token = getAuthToken();
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch(url.toString(), { headers });
+      
+      if (!response.ok) {
+        throw new Error(`Feed API error: ${response.status}`);
+      }
+      
+      const json = await response.json();
       
       return {
-        data: result.data || [],
+        data: json.result || [],
         page: pageParam,
-        has_more: result.has_more,
-        total: result.total,
+        has_more: json.pagination?.hasMore ?? false,
+        total: json.pagination?.totalCount ?? 0,
       };
     },
     getNextPageParam: (lastPage) => {
@@ -178,7 +197,7 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseD
       }
       return undefined;
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
     enabled: enabled && !!userId,
     staleTime: 1000 * 60 * 5,
     retry: 2,
@@ -186,10 +205,10 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseD
 }
 
 /**
- * Separate user content into videos and images
- * Uses getContentType helper to check both postType (primary) and media_type (fallback)
+ * Separate user content into videos, images, and text posts
+ * Uses postType from the unified feed API
  */
-export function separateUserContent(nfts: DeHubNFT[]): {
+export function separateUserContent(items: UnifiedFeedItem[]): {
   videos: VideoItem[];
   images: ImagePost[];
   posts: TextPost[];
@@ -198,13 +217,13 @@ export function separateUserContent(nfts: DeHubNFT[]): {
   const images: ImagePost[] = [];
   const posts: TextPost[] = [];
 
-  nfts.forEach((nft, index) => {
-    const contentType = getContentType(nft);
-    
-    if (contentType === 'video' || contentType === 'audio') {
-      videos.push(mapNFTToVideoItem(nft, index));
-    } else if (contentType === 'image') {
-      images.push(mapNFTToImagePost(nft, index));
+  items.forEach((item, index) => {
+    if (item.postType === 'video') {
+      videos.push(mapToVideoItem(item, index));
+    } else if (item.postType === 'feed-images') {
+      images.push(mapToImagePost(item, index));
+    } else if (item.postType === 'feed-simple') {
+      posts.push(mapToTextPost(item, index));
     }
   });
 
