@@ -36,7 +36,7 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
           </div>
         </div>
       )}
-      <div className="mt-[5px] space-y-4">
+      <div className="mt-[9px] space-y-4">
         <TabbedSidePanel />
         <WhatsHappening />
       </div>
