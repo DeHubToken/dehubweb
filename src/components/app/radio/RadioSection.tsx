@@ -74,8 +74,8 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
   
   return (
     <div className="space-y-3">
-      {/* Sticky Search & Genre Filter - stacks below sub-tabs */}
-      <div className="sticky top-[6.5rem] lg:top-[3.5rem] z-20 -mt-1 -mx-2 px-2 sm:-mx-3 sm:px-3 pt-1 pb-2 space-y-2.5 bg-black before:absolute before:inset-x-0 before:-top-2 before:h-2 before:bg-black">
+      {/* Sticky Search & Genre Filter - stacks below music sub-tabs */}
+      <div className="sticky top-[9.25rem] lg:top-[6.5rem] z-20 -mx-2 px-2 sm:-mx-3 sm:px-3 pt-1 pb-2 space-y-2.5 bg-black before:absolute before:inset-x-0 before:-top-2 before:h-2 before:bg-black">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
