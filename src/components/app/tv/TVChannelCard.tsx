@@ -74,6 +74,16 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         enableWorker: true,
         lowLatencyMode: true,
         backBufferLength: 90,
+        xhrSetup: (xhr) => {
+          // Some streams require a referrer header to play
+          if (channel.referrer) {
+            try {
+              xhr.setRequestHeader('Referer', channel.referrer);
+            } catch {
+              // Browser may block setting Referer header
+            }
+          }
+        },
       });
       
       hls.loadSource(channel.streamUrl);
