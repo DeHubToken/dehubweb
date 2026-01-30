@@ -811,6 +811,7 @@ interface MessagesApiResponse {
 
 /**
  * Fetch list of user's conversations
+ * Uses /api/dm/search endpoint
  * @param page - Page number (0-indexed)
  * @param limit - Items per page
  */
@@ -818,7 +819,7 @@ export async function getConversations(
   page: number = 0,
   limit: number = 20
 ): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
-  const response = await apiCall<ConversationsApiResponse>("/api/conversations", {
+  const response = await apiCall<ConversationsApiResponse>("/api/dm/search", {
     params: { page, limit },
     requiresAuth: true,
   });
@@ -827,10 +828,11 @@ export async function getConversations(
 
 /**
  * Get a single conversation by ID
+ * Uses /api/dm/{id} endpoint
  * @param conversationId - The conversation ID
  */
 export async function getConversation(conversationId: string): Promise<DeHubConversation> {
-  const response = await apiCall<{ result: DeHubConversation }>(`/api/conversations/${conversationId}`, {
+  const response = await apiCall<{ result: DeHubConversation }>(`/api/dm/${conversationId}`, {
     requiresAuth: true,
   });
   return response.result;
@@ -838,30 +840,34 @@ export async function getConversation(conversationId: string): Promise<DeHubConv
 
 /**
  * Create a new conversation with a user
+ * Uses /api/dm/tnx endpoint with recipient info
  * @param recipientAddress - Wallet address of the recipient
  */
 export async function createConversation(recipientAddress: string): Promise<DeHubConversation> {
-  const response = await apiCall<{ result: DeHubConversation }>("/api/conversations", {
+  const response = await apiCall<{ result: DeHubConversation }>("/api/dm/tnx", {
     method: "POST",
-    body: { recipientAddress },
+    body: { recipientAddress, type: "new" },
     requiresAuth: true,
   });
   return response.result;
 }
 
 /**
- * Delete a conversation
+ * Delete a conversation / messages
+ * Uses /api/dm/delete-messages endpoint
  * @param conversationId - The conversation ID to delete
  */
 export async function deleteConversation(conversationId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>(`/api/conversations/${conversationId}`, {
-    method: "DELETE",
+  return apiCall<{ success: boolean }>("/api/dm/delete-messages", {
+    method: "POST",
+    body: { conversationId },
     requiresAuth: true,
   });
 }
 
 /**
  * Fetch messages in a conversation
+ * Uses /api/dm/messages/{id} endpoint
  * @param conversationId - The conversation ID
  * @param page - Page number (0-indexed)
  * @param limit - Items per page
@@ -871,7 +877,7 @@ export async function getMessages(
   page: number = 0,
   limit: number = 30
 ): Promise<{ items: DeHubDMMessage[]; totalCount: number; hasMore: boolean }> {
-  const response = await apiCall<MessagesApiResponse>(`/api/conversations/${conversationId}/messages`, {
+  const response = await apiCall<MessagesApiResponse>(`/api/dm/messages/${conversationId}`, {
     params: { page, limit },
     requiresAuth: true,
   });
@@ -880,6 +886,7 @@ export async function getMessages(
 
 /**
  * Send a message in a conversation
+ * Uses /api/dm/tnx endpoint
  * @param conversationId - The conversation ID
  * @param content - Message content
  * @param type - Message type (text, image, gif)
@@ -891,9 +898,9 @@ export async function sendMessage(
   type: 'text' | 'image' | 'gif' = 'text',
   mediaUrl?: string
 ): Promise<DeHubDMMessage> {
-  const response = await apiCall<{ result: DeHubDMMessage }>(`/api/conversations/${conversationId}/messages`, {
+  const response = await apiCall<{ result: DeHubDMMessage }>("/api/dm/tnx", {
     method: "POST",
-    body: { content, type, mediaUrl },
+    body: { conversationId, content, type, mediaUrl },
     requiresAuth: true,
   });
   return response.result;
@@ -901,17 +908,51 @@ export async function sendMessage(
 
 /**
  * Mark all messages in a conversation as read
+ * Uses PUT /api/dm/tnx endpoint
  * @param conversationId - The conversation ID
  */
 export async function markConversationAsRead(conversationId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>(`/api/conversations/${conversationId}/read`, {
+  return apiCall<{ success: boolean }>("/api/dm/tnx", {
     method: "PUT",
+    body: { conversationId, read: true },
     requiresAuth: true,
   });
 }
 
 /**
+ * Get user's DM contacts
+ * Uses /api/dm/contacts/{address} endpoint
+ * @param address - User wallet address
+ * @param page - Page number
+ * @param limit - Items per page
+ */
+export async function getDMContacts(
+  address: string,
+  page: number = 0,
+  limit: number = 10
+): Promise<{ items: DeHubUser[]; hasMore: boolean }> {
+  const response = await apiCall<{ result: { items: DeHubUser[]; hasMore: boolean } }>(`/api/dm/contacts/${address}`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+  return response.result || { items: [], hasMore: false };
+}
+
+/**
+ * Get user's online status for DM
+ * Uses /api/dm/user-status/{address} endpoint
+ * @param address - User wallet address
+ */
+export async function getDMUserStatus(address: string): Promise<{ online: boolean; lastSeen?: string }> {
+  const response = await apiCall<{ result: { online: boolean; lastSeen?: string } }>(`/api/dm/user-status/${address}`, {
+    requiresAuth: true,
+  });
+  return response.result || { online: false };
+}
+
+/**
  * Search users for starting a new conversation
+ * Uses /api/search_users endpoint
  * @param query - Search query (username or display name)
  * @param page - Page number
  * @param limit - Items per page
@@ -921,9 +962,18 @@ export async function searchUsersForDM(
   page: number = 0,
   limit: number = 10
 ): Promise<{ items: DeHubUser[]; hasMore: boolean }> {
-  const response = await apiCall<{ result: { items: DeHubUser[]; hasMore: boolean } }>("/api/users/search", {
+  const response = await apiCall<{ result: { items: DeHubUser[]; hasMore: boolean } | DeHubUser[] }>("/api/search_users", {
     params: { q: query, page, limit },
     requiresAuth: true,
   });
+  
+  // Handle both array and object response formats
+  if (Array.isArray(response.result)) {
+    return { 
+      items: response.result, 
+      hasMore: response.result.length >= limit 
+    };
+  }
+  
   return response.result || { items: [], hasMore: false };
 }
