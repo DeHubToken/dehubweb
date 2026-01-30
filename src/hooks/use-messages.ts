@@ -35,9 +35,10 @@ export function useConversations(searchQuery: string = '') {
   const { isAuthenticated } = useAuth();
   
   const query = useQuery({
-    queryKey: messagesKeys.conversations(),
+    queryKey: [...messagesKeys.conversations(), searchQuery],
     queryFn: async () => {
-      const response = await getConversations(0, 50);
+      // Pass searchQuery to API - empty string fetches all conversations
+      const response = await getConversations(0, 50, searchQuery);
       return response.items || [];
     },
     enabled: isAuthenticated,
@@ -45,25 +46,9 @@ export function useConversations(searchQuery: string = '') {
     refetchInterval: 30 * 1000, // Poll every 30s for new messages
   });
 
-  // Client-side search filtering
-  const filteredConversations = query.data?.filter((conv) => {
-    if (!searchQuery.trim()) return true;
-    const searchLower = searchQuery.toLowerCase();
-    
-    // Search by other participant's name/username
-    const otherUser = conv.otherUser || conv.participants?.[0];
-    if (otherUser) {
-      const displayName = otherUser.displayName || otherUser.display_name || '';
-      const username = otherUser.username || '';
-      if (displayName.toLowerCase().includes(searchLower)) return true;
-      if (username.toLowerCase().includes(searchLower)) return true;
-    }
-    
-    // Search by last message content
-    if (conv.lastMessage?.content?.toLowerCase().includes(searchLower)) return true;
-    
-    return false;
-  }) || [];
+  // Server-side search is now used via the query parameter
+  // No need for client-side filtering anymore
+  const filteredConversations = query.data || [];
 
   return {
     conversations: filteredConversations,
