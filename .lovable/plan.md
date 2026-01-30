@@ -1,116 +1,112 @@
 
 
-# Fix DeHub DM API Endpoints
+# Fix DeHub DM API - Correct Parameter Usage
 
-## Problem Identified
-The messaging feature is broken because the API endpoints were incorrectly guessed. The current code uses `/api/conversations` but the actual DeHub API uses `/api/dm/` prefix.
+## Problem Summary
 
-## Correct Endpoint Mapping
+The DM feature is broken due to two API issues:
 
-Based on the API documentation screenshot:
+1. **Conversations not loading**: The `/api/dm/search` endpoint returns a 500 error with `"$regex has to be a string"` because the `query` parameter is missing
+2. **User search not working**: The search function may not be calling the correct endpoint
 
-| Feature | Current (Wrong) | Correct Endpoint |
-|---------|----------------|------------------|
-| List/Search DMs | `/api/conversations` | `GET /api/dm/search` |
-| Get conversation | `/api/conversations/{id}` | `GET /api/dm/{id}` |
-| Get messages | `/api/conversations/{id}/messages` | `GET /api/dm/messages/{id}` |
-| Send message | `POST /api/conversations/{id}/messages` | `POST /api/dm/tnx` |
-| Create conversation | `POST /api/conversations` | `POST /api/dm/tnx` (with new recipient) |
-| Delete messages | `DELETE /api/conversations/{id}` | `POST /api/dm/delete-messages` |
-| User contacts | `/api/users/search` | `GET /api/dm/contacts/{address}` |
-| Mark as read | `PUT /api/conversations/{id}/read` | `PUT /api/dm/tnx` |
-| User status | N/A | `GET /api/dm/user-status/{address}` |
+## Root Cause
 
-## Implementation Changes
+The API error response:
+```json
+{"message":"Failed to fetch users","error":"$regex has to be a string"}
+```
 
-### 1. Update `src/lib/api/dehub.ts`
+This indicates `/api/dm/search` requires a `query` parameter for the regex search to work. Currently the code only sends `page` and `limit`.
 
-Update all messaging API functions to use correct endpoints:
+## Solution
+
+### 1. Fix `getConversations` Function
+
+The `/api/dm/search` endpoint needs a `query` parameter. For listing all conversations, we should pass an empty string:
+
+**Current code (broken):**
+```typescript
+return apiCall("/api/dm/search", {
+  params: { page, limit },
+  requiresAuth: true,
+});
+```
+
+**Fixed code:**
+```typescript
+return apiCall("/api/dm/search", {
+  params: { query: "", page, limit },  // Add query parameter
+  requiresAuth: true,
+});
+```
+
+### 2. Add Search Parameter Support
+
+Update the function to optionally accept a search query:
 
 ```typescript
-// List conversations - use /api/dm/search
-export async function getConversations(page: number = 0, limit: number = 20) {
-  return apiCall("/api/dm/search", {
-    params: { page, limit },
+export async function getConversations(
+  page: number = 0,
+  limit: number = 20,
+  searchQuery: string = ""  // Add search query parameter
+): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
+  const response = await apiCall<ConversationsApiResponse>("/api/dm/search", {
+    params: { query: searchQuery, page, limit },
     requiresAuth: true,
   });
-}
-
-// Get single conversation - use /api/dm/{id}
-export async function getConversation(conversationId: string) {
-  return apiCall(`/api/dm/${conversationId}`, { requiresAuth: true });
-}
-
-// Get messages - use /api/dm/messages/{id}
-export async function getMessages(conversationId: string, page: number = 0, limit: number = 30) {
-  return apiCall(`/api/dm/messages/${conversationId}`, {
-    params: { page, limit },
-    requiresAuth: true,
-  });
-}
-
-// Send message - use /api/dm/tnx
-export async function sendMessage(conversationId: string, content: string, type = 'text', mediaUrl?: string) {
-  return apiCall("/api/dm/tnx", {
-    method: "POST",
-    body: { conversationId, content, type, mediaUrl },
-    requiresAuth: true,
-  });
-}
-
-// Get contacts for DM - use /api/dm/contacts/{address}
-export async function searchUsersForDM(query: string, page: number = 0, limit: number = 10) {
-  return apiCall(`/api/dm/contacts/${query}`, {
-    params: { page, limit },
-    requiresAuth: true,
-  });
-}
-
-// Delete messages - use /api/dm/delete-messages
-export async function deleteConversation(conversationId: string) {
-  return apiCall("/api/dm/delete-messages", {
-    method: "POST",
-    body: { conversationId },
-    requiresAuth: true,
-  });
-}
-
-// Update/mark read - use PUT /api/dm/tnx
-export async function markConversationAsRead(conversationId: string) {
-  return apiCall("/api/dm/tnx", {
-    method: "PUT",
-    body: { conversationId, read: true },
-    requiresAuth: true,
-  });
+  return response.result || { items: [], totalCount: 0, hasMore: false };
 }
 ```
 
-### 2. Update Response Handling
+### 3. Fix User Search for New Conversations
 
-The API response structure may differ from assumptions. Will need to:
-- Inspect actual response format from `/api/dm/search`
-- Adjust interface types if needed (e.g., field names like `result` vs direct data)
-- Handle any differences in conversation/message object structure
+The current `searchUsersForDM` uses `/api/search_users`. We should verify this endpoint works, or use the existing `searchUsers` function that's used elsewhere in the app.
 
-### 3. Update User Search for New Conversation
+Looking at the API docs, the options are:
+- `/api/search_users?q={query}` - General user search
+- `/api/dm/contacts/{address}` - Get contacts for a specific user (not for searching)
 
-The `NewConversationModal` uses `searchUsersForDM` which currently calls `/api/users/search`. Options:
-- Use `/api/dm/contacts/{address}` if it supports search
-- Use the existing `searchUsers` function from the main API if available
-- Fallback to the general user search endpoint
+We should use `/api/search_users` with proper parameters.
+
+### 4. Update the Hooks
+
+The `useConversations` hook should pass the search query to the API instead of doing client-side filtering:
+
+**Current approach (client-side filter):**
+```typescript
+const filteredConversations = query.data?.filter((conv) => {
+  // Client-side search
+});
+```
+
+**Better approach (server-side search):**
+```typescript
+const query = useQuery({
+  queryFn: async () => {
+    const response = await getConversations(0, 50, searchQuery);
+    return response.items || [];
+  },
+});
+```
 
 ## Files to Change
 
-| File | Changes |
-|------|---------|
-| `src/lib/api/dehub.ts` | Update all 7 messaging functions to use correct `/api/dm/*` endpoints |
-| `src/hooks/use-messages.ts` | May need minor adjustments if response structure differs |
-| `src/components/app/chat/NewConversationModal.tsx` | Update user search if endpoint changes |
+| File | Change |
+|------|--------|
+| `src/lib/api/dehub.ts` | Add `query` param to `getConversations`, fix param names |
+| `src/hooks/use-messages.ts` | Update `useConversations` to pass search to API |
 
 ## Technical Notes
 
-- All endpoints require authentication (`requiresAuth: true`)
-- The `tnx` endpoint appears to be used for both sending messages (POST) and updating read status (PUT)
-- May need to test actual API responses to confirm exact field names
-- Upload media uses separate `/api/dm/upload` endpoint for images/files
+- The `query` parameter must be a string (even empty `""`) for the regex to work
+- The API uses MongoDB's `$regex` operator internally
+- All other DM endpoints (`/api/dm/messages/{id}`, `/api/dm/tnx`) should work once we can load conversations
+
+## Expected Outcome
+
+After this fix:
+1. Conversations will load when you open the Messages page
+2. Searching conversations will work server-side
+3. User search for new conversations will return results
+4. You'll be able to select a user and start a DM
 
