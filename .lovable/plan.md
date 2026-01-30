@@ -1,173 +1,148 @@
 
 
-# Live TV Feature Implementation Plan (Updated)
+# Fix Live TV Streams - Implementation Plan
 
-## Overview
-Add a Live TV feature to the **Live tab** that streams legally free IPTV channels using the **iptv-org** project's curated, publicly available streams. The TV channels will appear alongside the existing live streaming content.
+## Problem Identified
 
-## Data Source
+The TV channels show "Stream unavailable" because the current implementation incorrectly matches streams to channels.
 
-### Primary: iptv-org/iptv (111k+ GitHub stars)
-- **Main playlist**: `https://iptv-org.github.io/iptv/index.m3u`
-- **By category**: `https://iptv-org.github.io/iptv/categories/<category>.m3u`
-  - `news.m3u`, `entertainment.m3u`, `sports.m3u`, `music.m3u`, `movies.m3u`, etc.
-- **Channel database (JSON)**: `https://iptv-org.github.io/api/channels.json` - metadata with logos, categories, languages
+### Root Cause
+The `streams.json` API has two types of entries:
+1. **Linked streams** - Have `channel: "ChannelID.cc"` that matches entries in `channels.json`
+2. **Orphan streams** - Have `channel: null` but include `title` and `url` directly
 
-All channels in this repository are publicly accessible streams - no piracy involved.
+The current code only creates `TVChannel` objects from `channels.json` entries that have matching streams. However, streams with `channel: null` (orphan streams) are ignored entirely, and the linking between streams with valid `channel` IDs and the `channels.json` may not be working as expected.
 
-## Implementation Architecture
+## Solution
 
-### New Files to Create
+Update `src/lib/api/live-tv.ts` to:
 
-| File | Purpose |
-|------|---------|
-| `src/lib/api/live-tv.ts` | API client for fetching and parsing M3U playlists + channel metadata |
-| `src/components/app/tv/LiveTVSection.tsx` | Main TV section (mirrors RadioSection structure) |
-| `src/components/app/tv/TVChannelCard.tsx` | Individual channel card with HLS player |
-| `src/components/app/tv/TVCategoryFilter.tsx` | Horizontal scrollable category pills |
-| `src/components/app/tv/index.ts` | Barrel export |
-| `src/hooks/use-tv-player.tsx` | TV player context (similar to use-radio-player) |
+1. **Support orphan streams** - Create `TVChannel` objects directly from stream entries that have `channel: null`
+2. **Improve stream matching** - Build channels from streams first, then enrich with metadata from `channels.json` when available
+3. **Update the API interface** - Handle the new `referrer` and `user_agent` fields for streams that require them
 
-### Files to Modify
+## Technical Changes
 
-| File | Changes |
-|------|---------|
-| `src/components/app/feeds/LiveFeed.tsx` | Add sub-tabs for "Streams" and "TV", integrate LiveTVSection |
-| `src/hooks/index.ts` | Export `useTVPlayer` hook |
-| `src/lib/video-playback-manager.ts` | Add TV stream support to single-stream enforcement |
+### File: `src/lib/api/live-tv.ts`
 
-## Technical Details
-
-### 1. M3U Playlist Parsing (`src/lib/api/live-tv.ts`)
-
-```text
-M3U Format:
-#EXTM3U
-#EXTINF:-1 tvg-id="CNN.us" tvg-logo="https://..." group-title="News",CNN
-https://stream.url/playlist.m3u8
+**Update `IPTVStream` interface to match actual API:**
+```typescript
+interface IPTVStream {
+  channel: string | null;  // Can be null!
+  feed: string | null;
+  title: string;           // Always present
+  url: string;
+  referrer: string | null; // Renamed from http_referrer
+  user_agent: string | null;
+  quality: string | null;
+}
 ```
 
-Parse into structured data:
-- `id`: Unique channel identifier  
-- `name`: Channel display name
-- `logo`: Channel logo URL
-- `category`: Group title (News, Sports, etc.)
-- `streamUrl`: HLS stream URL (.m3u8)
-- `country`: Country code (extracted from tvg-id or file source)
-
-### 2. Category Configuration
-
-| Category | Label | Description |
-|----------|-------|-------------|
-| `top` | Popular | Most-watched channels |
-| `news` | News | CNN, BBC, Al Jazeera, etc. |
-| `sports` | Sports | ESPN variants, sports networks |
-| `entertainment` | Entertainment | General entertainment |
-| `music` | Music | Music TV channels |
-| `movies` | Movies | Movie channels |
-| `kids` | Kids | Children's programming |
-| `documentary` | Documentary | Documentary channels |
-
-### 3. HLS Playback
-
-The streams are HLS format (.m3u8). Modern browsers handle this natively in most cases:
-- **Safari/iOS**: Native HLS support
-- **Chrome/Firefox/Edge**: Use native `<video>` element with HLS.js fallback if needed
-
-Initially implement with native `<video>` element - add HLS.js polyfill only if needed for broader compatibility.
-
-### 4. TV Player Context (`use-tv-player.tsx`)
-
-Similar to radio player but for video:
-- `currentChannel`: Currently playing channel
-- `isPlaying`: Playback state
-- `isLoading`: Buffering state
-- `play(channel)`: Start playing a channel
-- `stop()`: Stop playback
-- Integration with `VideoPlaybackManager` for single-stream enforcement
-
-### 5. UI Components
-
-**LiveTVSection** layout:
-1. Search bar ("Search 1,000+ live TV channels...")
-2. Category filter pills (horizontal scroll)
-3. Channel grid/list
-
-**TVChannelCard** features:
-- Channel logo with fallback (TV icon)
-- Channel name
-- Category badge
-- Country flag
-- Play/Stop button
-- Live indicator dot
-- Glass-morphism styling (matches RadioStationCard)
-
-### 6. LiveFeed Sub-tabs
-
-Add sub-tab navigation to LiveFeed similar to MusicFeed:
-
-```text
-Current LiveFeed: Shows live streams + categories carousel
-Updated LiveFeed: 
-├── Sub-tabs: [Streams] [TV]
-├── Streams tab: Existing live streams + categories
-└── TV tab: LiveTVSection with IPTV channels
+**Add fields to `TVChannel` for playback headers:**
+```typescript
+export interface TVChannel {
+  id: string;
+  name: string;
+  logo: string | null;
+  category: string;
+  streamUrl: string;
+  country: string;
+  languages: string[];
+  referrer?: string | null;   // For streams requiring referrer
+  userAgent?: string | null;  // For streams requiring user-agent
+}
 ```
 
-## User Flow
+**Rewrite `getTVChannelsByCategory()` logic:**
 
-```text
-User Journey:
-1. User navigates to Live tab from main feed navigation
-2. Sees sub-tabs: "Streams" (default) and "TV"
-3. Clicks "TV" sub-tab
-4. Sees popular live TV channels by default
-5. Can filter by category (News, Sports, etc.)
-6. Can search for specific channels
-7. Clicks channel card to start watching
-8. Video plays inline with controls
-9. Only one stream plays at a time (radio, TV, or video)
+Instead of:
+1. Fetch channels → Fetch streams → Match channels to streams
+
+Do:
+1. Fetch streams → Build channel map from `channels.json` → Create TVChannel from each stream (using channel metadata when available, falling back to stream title for orphans)
+
+This ensures ALL streams with valid URLs are included, not just those that match the channel database.
+
+**New matching strategy:**
+```typescript
+// Start from streams (source of truth for playable content)
+for (const stream of streams) {
+  // Skip if no valid URL
+  if (!stream.url) continue;
+  
+  let tvChannel: TVChannel;
+  
+  if (stream.channel && channelMap.has(stream.channel)) {
+    // Linked stream - use channel metadata
+    const channelMeta = channelMap.get(stream.channel)!;
+    tvChannel = {
+      id: channelMeta.id,
+      name: channelMeta.name,
+      logo: channelMeta.logo,
+      category: channelMeta.categories[0] || 'general',
+      streamUrl: stream.url,
+      country: channelMeta.country,
+      languages: channelMeta.languages,
+      referrer: stream.referrer,
+      userAgent: stream.user_agent,
+    };
+  } else {
+    // Orphan stream - create from stream data
+    tvChannel = {
+      id: `orphan-${generateId(stream.url)}`,
+      name: stream.title,
+      logo: null,
+      category: 'general',  // No category info available
+      streamUrl: stream.url,
+      country: 'INT',  // International
+      languages: [],
+      referrer: stream.referrer,
+      userAgent: stream.user_agent,
+    };
+  }
+  
+  channels.push(tvChannel);
+}
 ```
 
-## Integration Points
+### File: `src/components/app/tv/TVChannelCard.tsx`
 
-### Single-Stream Enforcement
-When a TV channel starts playing:
-1. Stop any currently playing radio station
-2. Stop any currently playing video
-3. Register with VideoPlaybackManager
+**Add referrer/user-agent support for HLS.js:**
+```typescript
+if (Hls.isSupported()) {
+  const hls = new Hls({
+    enableWorker: true,
+    lowLatencyMode: true,
+    backBufferLength: 90,
+    xhrSetup: (xhr) => {
+      if (channel.referrer) {
+        xhr.setRequestHeader('Referer', channel.referrer);
+      }
+      // Note: User-Agent cannot be set via XHR in browsers
+    },
+  });
+  // ...
+}
+```
 
-When radio starts playing:
-1. Stop any currently playing TV channel
+## Additional Improvements
 
-## Edge Cases Handled
+1. **Filter by quality** - Prefer higher quality streams (720p, 1080p) when multiple are available for the same channel
+2. **Deduplicate channels** - If multiple streams exist for the same channel ID, pick the best quality one
+3. **Better error handling** - Show specific error messages based on stream failure type
 
-1. **Stream unavailable**: Show error toast, allow retry
-2. **Slow connection**: Show loading spinner, buffer indicator
-3. **HLS not supported**: Fall back to error message with explanation
-4. **CORS issues**: Most iptv-org streams are CORS-enabled; handle exceptions gracefully
-5. **Logo missing**: Show TV icon placeholder with channel initial
+## Summary of Changes
 
-## Implementation Phases
+| File | Change |
+|------|--------|
+| `src/lib/api/live-tv.ts` | Fix stream-to-channel matching, support orphan streams, add referrer/user-agent fields |
+| `src/components/app/tv/TVChannelCard.tsx` | Pass referrer header to HLS.js xhr setup |
 
-### Phase 1: Core Infrastructure
-- Create `live-tv.ts` API client with M3U parsing
-- Create `use-tv-player.tsx` context
-- Add TV categories configuration
+## Expected Outcome
 
-### Phase 2: UI Components  
-- Build `TVChannelCard` component
-- Build `TVCategoryFilter` component
-- Build `LiveTVSection` main component
-
-### Phase 3: Integration
-- Update LiveFeed with sub-tabs (Streams | TV)
-- Integrate with VideoPlaybackManager
-- Ensure radio/TV mutual exclusion
-
-### Phase 4: Polish
-- Add search functionality
-- Add country filtering
-- Optimize loading states
-- Add mini-player support (optional)
+After these changes:
+- Hundreds of TV channels will be available and playable
+- Orphan streams (those without linked channel metadata) will appear with their title as the channel name
+- Streams requiring referrer headers will work correctly
+- Category filtering will work for linked channels, orphan streams will appear under "All"
 
