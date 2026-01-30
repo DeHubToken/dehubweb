@@ -19,7 +19,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'pan-x pan-y', overscrollBehavior: 'none' }}>
+    <div className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
       <div className="flex max-w-7xl mx-auto w-full relative min-h-screen">
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
