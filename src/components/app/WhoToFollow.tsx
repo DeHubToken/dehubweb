@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,11 +16,15 @@ interface UniqueUser {
   avatarUrl?: string;
 }
 
+const PAGE_SIZE = 20;
+
 export function WhoToFollow() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Fetch current user's following list
   const { data: currentUserData } = useQuery({
@@ -30,7 +34,7 @@ export function WhoToFollow() {
       return getAccountInfo(walletAddress);
     },
     enabled: !!walletAddress,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
@@ -41,20 +45,26 @@ export function WhoToFollow() {
     return new Set(followings.map(addr => addr.toLowerCase()));
   }, [currentUserData?.followings]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['suggestions', 'recently-active'],
-    queryFn: async () => {
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['suggestions', 'recently-active-paginated'],
+    queryFn: async ({ pageParam = 0 }) => {
       const seenAddresses = new Set<string>();
       const uniqueUsers: UniqueUser[] = [];
-      const maxPages = 20;
-      const pageSize = 100;
+      let currentPage = pageParam;
+      const maxPagesToFetch = 10; // Fetch up to 10 API pages per batch to find enough unique users
       
-      // Fetch multiple pages to gather a large pool of unique users
-      for (let page = 0; page < maxPages; page++) {
+      // Keep fetching until we have PAGE_SIZE unique users or run out of data
+      for (let i = 0; i < maxPagesToFetch && uniqueUsers.length < PAGE_SIZE; i++) {
         const response = await searchNFTs({ 
           sortMode: 'new', 
-          unit: pageSize,
-          page 
+          unit: 100,
+          page: currentPage + i 
         });
         
         const posts = response.data || [];
@@ -70,21 +80,35 @@ export function WhoToFollow() {
             displayName: nft.minterDisplayName,
             avatarUrl: nft.minterAvatarUrl,
           });
+          
+          if (uniqueUsers.length >= PAGE_SIZE) break;
         }
         
-        // Stop if we got fewer results (no more data available)
-        if (posts.length < pageSize) break;
+        // No more data available
+        if (posts.length < 100) {
+          return { users: uniqueUsers, nextPage: null };
+        }
       }
       
-      return uniqueUsers;
+      return { 
+        users: uniqueUsers, 
+        nextPage: currentPage + maxPagesToFetch 
+      };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes cache
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
+
+  // Flatten all pages into a single array
+  const allUsers = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.users);
+  }, [data?.pages]);
 
   // Filter out users that are already followed, the current user, and newly followed users
   const suggestions = useMemo(() => {
-    const allUsers = data || [];
     return allUsers.filter(user => {
       const addressLower = user.address.toLowerCase();
       // Exclude current user
@@ -95,7 +119,32 @@ export function WhoToFollow() {
       if (followedUsers.has(user.address)) return false;
       return true;
     });
-  }, [data, walletAddress, followingSet, followedUsers]);
+  }, [allUsers, walletAddress, followingSet, followedUsers]);
+
+  // Auto-fetch next page when suggestions run low
+  useEffect(() => {
+    if (suggestions.length < 3 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [suggestions.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Intersection observer for scroll-based loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const getAvatarUrl = (user: UniqueUser) => {
     if (user.avatarUrl && user.address) {
@@ -157,7 +206,7 @@ export function WhoToFollow() {
     );
   }
 
-  if (suggestions.length === 0) {
+  if (suggestions.length === 0 && !hasNextPage && !isFetchingNextPage) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
@@ -171,7 +220,10 @@ export function WhoToFollow() {
   return (
     <div className="flex flex-col h-full">
       {/* Scrollable list */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+      <div 
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
+      >
         {suggestions.map((user) => (
           <div
             key={user.address}
@@ -203,6 +255,15 @@ export function WhoToFollow() {
             </Button>
           </div>
         ))}
+        
+        {/* Load more trigger */}
+        <div ref={loadMoreRef} className="py-2">
+          {isFetchingNextPage && (
+            <div className="flex justify-center">
+              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Bottom fade gradient */}
