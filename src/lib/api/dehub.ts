@@ -807,11 +807,39 @@ export async function getNotifications(
   limit: number = 20,
   type?: string
 ): Promise<{ items: DeHubNotification[]; totalCount: number; hasMore: boolean }> {
-  const response = await apiCall<NotificationsApiResponse>("/api/notification", {
+  const response = await apiCall<NotificationsApiResponse | { result: DeHubNotification[] } | DeHubNotification[]>("/api/notification", {
     params: { page, limit, ...(type && type !== 'all' ? { type } : {}) },
     requiresAuth: true,
   });
-  return response.result || { items: [], totalCount: 0, hasMore: false };
+  
+  // Handle different response formats
+  // Format 1: { result: { items: [...], totalCount, hasMore } }
+  if (response && typeof response === 'object' && 'result' in response) {
+    const result = response.result;
+    // Format 1a: result is already the paginated object
+    if (result && typeof result === 'object' && 'items' in result && Array.isArray(result.items)) {
+      return result;
+    }
+    // Format 1b: result is directly an array
+    if (Array.isArray(result)) {
+      return { 
+        items: result.filter(item => item && item.id), 
+        totalCount: result.length, 
+        hasMore: result.length >= limit 
+      };
+    }
+  }
+  
+  // Format 2: Direct array response
+  if (Array.isArray(response)) {
+    return { 
+      items: response.filter(item => item && item.id), 
+      totalCount: response.length, 
+      hasMore: response.length >= limit 
+    };
+  }
+  
+  return { items: [], totalCount: 0, hasMore: false };
 }
 
 /**

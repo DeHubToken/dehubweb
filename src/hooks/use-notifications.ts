@@ -44,8 +44,10 @@ export function useNotifications(type: string = 'all') {
     refetchInterval: 60 * 1000, // Poll every minute
   });
 
-  // Flatten pages into single array
-  const notifications = query.data?.pages.flatMap((page) => page.items) || [];
+  // Flatten pages into single array, filtering out any undefined items
+  const notifications = query.data?.pages
+    .flatMap((page) => page?.items || [])
+    .filter((item): item is DeHubNotification => Boolean(item && item.id)) || [];
 
   return {
     notifications,

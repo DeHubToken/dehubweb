@@ -267,7 +267,7 @@ export default function NotificationsPage() {
             </div>
           ) : (
             <div className="divide-y divide-zinc-800">
-              {notifications.map((notification) => (
+              {notifications.filter(n => n && n.id).map((notification) => (
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
