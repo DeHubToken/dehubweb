@@ -344,15 +344,14 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         page: pageParam,
       };
     },
-    getNextPageParam: (lastPage, allPages) => {
-      // Use pagination.hasMore if available, otherwise infer from result count
+    getNextPageParam: (lastPage) => {
+      // Use pagination.hasMore if available
       if (lastPage.pagination?.hasMore !== undefined) {
         return lastPage.pagination.hasMore ? lastPage.page + 1 : undefined;
       }
       // Fallback: if we got a full page of items, assume there's more
       const itemCount = lastPage.items?.length || 0;
-      const pageLimit = options.limit || 20;
-      if (itemCount >= pageLimit) {
+      if (itemCount >= limit) {
         return lastPage.page + 1;
       }
       return undefined;
