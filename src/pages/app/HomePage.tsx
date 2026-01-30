@@ -48,10 +48,18 @@ const GESTURE_LOCK_DURATION = 400;
 // ============================================================================
 
 export default function HomePage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   
-  // Extract pinned post ID from URL params (persists on refresh)
+  // Extract pinned post ID from URL params (one-time view)
   const pinnedPostId = searchParams.get('post') || undefined;
+  
+  // Clear the post param from URL after initial render (so refresh shows normal feed)
+  useEffect(() => {
+    if (pinnedPostId) {
+      // Use replace to avoid adding to browser history
+      setSearchParams({}, { replace: true });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   
   // Tab state
   const [activeTab, setActiveTab] = useState('home');
