@@ -19,6 +19,8 @@ export interface TVChannel {
   streamUrl: string;
   country: string;
   languages: string[];
+  referrer?: string | null;
+  userAgent?: string | null;
 }
 
 export type TVCategoryId = 
@@ -60,7 +62,6 @@ export interface TVCategory {
 // ============================================================================
 
 const IPTV_API_BASE = 'https://iptv-org.github.io/api';
-const IPTV_STREAMS_BASE = 'https://iptv-org.github.io/iptv';
 
 export const TV_CATEGORIES: TVCategory[] = [
   { id: 'all', label: 'All' },
@@ -105,10 +106,13 @@ interface IPTVChannel {
 }
 
 interface IPTVStream {
-  channel: string;
+  channel: string | null;
+  feed: string | null;
+  title: string;
   url: string;
-  http_referrer: string | null;
+  referrer: string | null;
   user_agent: string | null;
+  quality: string | null;
 }
 
 // ============================================================================
@@ -119,6 +123,32 @@ let channelsCache: IPTVChannel[] | null = null;
 let streamsCache: IPTVStream[] | null = null;
 let cacheTimestamp: number = 0;
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+/**
+ * Generate a simple hash ID from a URL for orphan streams
+ */
+function generateIdFromUrl(url: string): string {
+  let hash = 0;
+  for (let i = 0; i < url.length; i++) {
+    const char = url.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return `orphan-${Math.abs(hash).toString(36)}`;
+}
+
+/**
+ * Parse quality string to numeric value for sorting
+ */
+function parseQuality(quality: string | null): number {
+  if (!quality) return 0;
+  const match = quality.match(/(\d+)p?/i);
+  return match ? parseInt(match[1], 10) : 0;
+}
 
 // ============================================================================
 // API FUNCTIONS
@@ -162,22 +192,44 @@ async function fetchStreams(): Promise<IPTVStream[]> {
 }
 
 /**
- * Map IPTV channel + stream to our TVChannel type
+ * Build TVChannel from stream + optional channel metadata
  */
-function mapToTVChannel(channel: IPTVChannel, streamUrl: string): TVChannel {
+function buildTVChannel(
+  stream: IPTVStream,
+  channelMeta: IPTVChannel | null
+): TVChannel {
+  if (channelMeta) {
+    // Linked stream with full metadata
+    return {
+      id: channelMeta.id,
+      name: channelMeta.name,
+      logo: channelMeta.logo || null,
+      category: channelMeta.categories[0] || 'general',
+      streamUrl: stream.url,
+      country: channelMeta.country,
+      languages: channelMeta.languages,
+      referrer: stream.referrer,
+      userAgent: stream.user_agent,
+    };
+  }
+  
+  // Orphan stream - create from stream data
   return {
-    id: channel.id,
-    name: channel.name,
-    logo: channel.logo || null,
-    category: channel.categories[0] || 'general',
-    streamUrl,
-    country: channel.country,
-    languages: channel.languages,
+    id: generateIdFromUrl(stream.url),
+    name: stream.title || 'Unknown Channel',
+    logo: null,
+    category: 'general',
+    streamUrl: stream.url,
+    country: 'INT',
+    languages: [],
+    referrer: stream.referrer,
+    userAgent: stream.user_agent,
   };
 }
 
 /**
  * Get TV channels by category with active streams
+ * Now streams-first approach: iterate streams and enrich with channel metadata
  */
 export async function getTVChannelsByCategory(
   category: TVCategoryId,
@@ -188,44 +240,60 @@ export async function getTVChannelsByCategory(
     fetchStreams(),
   ]);
   
-  // Create a map of channel ID to stream URL
-  const streamMap = new Map<string, string>();
+  // Build channel metadata map by ID
+  const channelMap = new Map<string, IPTVChannel>();
+  for (const ch of channels) {
+    channelMap.set(ch.id, ch);
+  }
+  
+  // Track best stream per channel (prefer higher quality)
+  const bestStreams = new Map<string, { stream: IPTVStream; quality: number; channelMeta: IPTVChannel | null }>();
+  
   for (const stream of streams) {
-    if (!streamMap.has(stream.channel)) {
-      streamMap.set(stream.channel, stream.url);
+    // Skip invalid URLs
+    if (!stream.url) continue;
+    
+    const channelMeta = stream.channel ? channelMap.get(stream.channel) || null : null;
+    
+    // Filter out NSFW and closed channels
+    if (channelMeta?.is_nsfw || channelMeta?.closed) continue;
+    
+    // For category filtering, only linked channels can be filtered
+    if (category !== 'all' && channelMeta) {
+      const hasCategory = channelMeta.categories.some(
+        (cat) => cat.toLowerCase() === category.toLowerCase()
+      );
+      if (!hasCategory) continue;
+    }
+    
+    // For orphan streams, only include in 'all' category
+    if (category !== 'all' && !channelMeta) continue;
+    
+    // Use channel ID or URL as unique key
+    const uniqueKey = stream.channel || stream.url;
+    const quality = parseQuality(stream.quality);
+    
+    const existing = bestStreams.get(uniqueKey);
+    if (!existing || quality > existing.quality) {
+      bestStreams.set(uniqueKey, { stream, quality, channelMeta });
     }
   }
   
-  // Filter channels that have streams and match category
-  let filtered = channels.filter((ch) => {
-    // Must have a stream
-    if (!streamMap.has(ch.id)) return false;
-    
-    // Filter out NSFW content
-    if (ch.is_nsfw) return false;
-    
-    // Filter out closed channels
-    if (ch.closed) return false;
-    
-    // Filter by category
-    if (category !== 'all') {
-      const hasCategory = ch.categories.some(
-        (cat) => cat.toLowerCase() === category.toLowerCase()
-      );
-      if (!hasCategory) return false;
-    }
-    
-    return true;
+  // Build TVChannel array
+  const result: TVChannel[] = [];
+  for (const { stream, channelMeta } of bestStreams.values()) {
+    result.push(buildTVChannel(stream, channelMeta));
+  }
+  
+  // Sort: channels with logos first, then by name
+  result.sort((a, b) => {
+    if (a.logo && !b.logo) return -1;
+    if (!a.logo && b.logo) return 1;
+    return a.name.localeCompare(b.name);
   });
   
-  // Sort by name for consistency
-  filtered.sort((a, b) => a.name.localeCompare(b.name));
-  
   // Limit results
-  filtered = filtered.slice(0, limit);
-  
-  // Map to our format
-  return filtered.map((ch) => mapToTVChannel(ch, streamMap.get(ch.id)!));
+  return result.slice(0, limit);
 }
 
 /**
@@ -244,39 +312,47 @@ export async function searchTVChannels(
     fetchStreams(),
   ]);
   
-  // Create a map of channel ID to stream URL
-  const streamMap = new Map<string, string>();
-  for (const stream of streams) {
-    if (!streamMap.has(stream.channel)) {
-      streamMap.set(stream.channel, stream.url);
-    }
+  // Build channel metadata map by ID
+  const channelMap = new Map<string, IPTVChannel>();
+  for (const ch of channels) {
+    channelMap.set(ch.id, ch);
   }
   
   const queryLower = query.toLowerCase();
+  const results: TVChannel[] = [];
+  const seenUrls = new Set<string>();
   
-  // Filter channels that match search and have streams
-  let filtered = channels.filter((ch) => {
-    // Must have a stream
-    if (!streamMap.has(ch.id)) return false;
+  for (const stream of streams) {
+    // Skip invalid or duplicate URLs
+    if (!stream.url || seenUrls.has(stream.url)) continue;
+    seenUrls.add(stream.url);
     
-    // Filter out NSFW content
-    if (ch.is_nsfw) return false;
+    const channelMeta = stream.channel ? channelMap.get(stream.channel) || null : null;
     
-    // Filter out closed channels
-    if (ch.closed) return false;
+    // Filter out NSFW and closed channels
+    if (channelMeta?.is_nsfw || channelMeta?.closed) continue;
     
-    // Match by name or alt names
-    const nameMatch = ch.name.toLowerCase().includes(queryLower);
-    const altMatch = ch.alt_names.some((alt) => 
-      alt.toLowerCase().includes(queryLower)
-    );
-    const networkMatch = ch.network?.toLowerCase().includes(queryLower) || false;
+    // Search match logic
+    let matches = false;
     
-    return nameMatch || altMatch || networkMatch;
-  });
+    if (channelMeta) {
+      const nameMatch = channelMeta.name.toLowerCase().includes(queryLower);
+      const altMatch = channelMeta.alt_names.some((alt) => 
+        alt.toLowerCase().includes(queryLower)
+      );
+      const networkMatch = channelMeta.network?.toLowerCase().includes(queryLower) || false;
+      matches = nameMatch || altMatch || networkMatch;
+    } else if (stream.title) {
+      matches = stream.title.toLowerCase().includes(queryLower);
+    }
+    
+    if (matches) {
+      results.push(buildTVChannel(stream, channelMeta));
+    }
+  }
   
-  // Sort by relevance (exact matches first)
-  filtered.sort((a, b) => {
+  // Sort by relevance (exact matches first, then starts with, then logos)
+  results.sort((a, b) => {
     const aExact = a.name.toLowerCase() === queryLower;
     const bExact = b.name.toLowerCase() === queryLower;
     if (aExact && !bExact) return -1;
@@ -287,14 +363,13 @@ export async function searchTVChannels(
     if (aStarts && !bStarts) return -1;
     if (!aStarts && bStarts) return 1;
     
+    if (a.logo && !b.logo) return -1;
+    if (!a.logo && b.logo) return 1;
+    
     return a.name.localeCompare(b.name);
   });
   
-  // Limit results
-  filtered = filtered.slice(0, limit);
-  
-  // Map to our format
-  return filtered.map((ch) => mapToTVChannel(ch, streamMap.get(ch.id)!));
+  return results.slice(0, limit);
 }
 
 /**
@@ -306,11 +381,23 @@ export async function getTVChannelCount(): Promise<number> {
     fetchStreams(),
   ]);
   
-  const streamChannelIds = new Set(streams.map((s) => s.channel));
+  const channelMap = new Map<string, IPTVChannel>();
+  for (const ch of channels) {
+    channelMap.set(ch.id, ch);
+  }
   
-  return channels.filter((ch) => 
-    streamChannelIds.has(ch.id) && !ch.is_nsfw && !ch.closed
-  ).length;
+  const uniqueChannels = new Set<string>();
+  
+  for (const stream of streams) {
+    if (!stream.url) continue;
+    
+    const channelMeta = stream.channel ? channelMap.get(stream.channel) || null : null;
+    if (channelMeta?.is_nsfw || channelMeta?.closed) continue;
+    
+    uniqueChannels.add(stream.channel || stream.url);
+  }
+  
+  return uniqueChannels.size;
 }
 
 /**
