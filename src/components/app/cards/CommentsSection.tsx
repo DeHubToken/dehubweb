@@ -536,9 +536,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
     try {
       await postComment(tokenId, newComment, replyTarget?.id);
-      // Clear optimistic comment before refetching to avoid duplicates
+      // Wait for refetch to complete BEFORE clearing optimistic comment
+      // This prevents the flash where comment disappears between clear and refetch
+      await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
-      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       toast.error('Failed to post comment');
