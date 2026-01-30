@@ -75,13 +75,14 @@ function formatTimeAgo(dateString?: string): string {
   const diffMonths = Math.floor(diffDays / 30);
   const diffYears = Math.floor(diffDays / 365);
   
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m`;
-  if (diffHours < 24) return `${diffHours}h`;
-  if (diffDays < 7) return `${diffDays}d`;
-  if (diffWeeks < 4) return `${diffWeeks}w`;
-  if (diffYears < 1) return `${diffMonths}mo`;
-  return `${diffYears}y`;
+  // Always use the largest non-zero unit, never show 0 of anything
+  if (diffYears >= 1) return `${diffYears}y`;
+  if (diffMonths >= 1) return `${diffMonths}mo`;
+  if (diffWeeks >= 1) return `${diffWeeks}w`;
+  if (diffDays >= 1) return `${diffDays}d`;
+  if (diffHours >= 1) return `${diffHours}h`;
+  if (diffMins >= 1) return `${diffMins}m`;
+  return 'Just now';
 }
 
 /**
