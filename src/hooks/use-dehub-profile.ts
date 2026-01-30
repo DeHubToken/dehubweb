@@ -7,9 +7,9 @@
  */
 
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { getAccountInfo, getAccountByUsername, getUserNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
+import { getAccountInfo, getAccountByUsername, searchNFTs, type DeHubUser, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
-import { mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
+import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from './use-dehub-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
 export interface ProfileData {
@@ -149,14 +149,28 @@ interface UseDeHubUserContentOptions {
 
 /**
  * Hook to fetch user's NFT content (videos/images)
+ * Uses searchNFTs with creator_id filter for reliable content fetching
  */
-export function useDeHubUserContent({ userId, enabled = true, limit = 20 }: UseDeHubUserContentOptions = {}) {
+export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseDeHubUserContentOptions = {}) {
   return useInfiniteQuery({
     queryKey: ['dehub-user-content', userId],
-    queryFn: async ({ pageParam = 1 }) => {
-      if (!userId) throw new Error('User ID is required');
-      const result = await getUserNFTs(userId, pageParam, limit);
-      return result;
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!userId) throw new Error('User ID (wallet address) is required');
+      
+      // Use searchNFTs with creator_id filter - same API that powers the home feed
+      const result = await searchNFTs({
+        creator_id: userId,
+        page: pageParam,
+        unit: limit,
+        sortMode: 'new',
+      });
+      
+      return {
+        data: result.data || [],
+        page: pageParam,
+        has_more: result.has_more,
+        total: result.total,
+      };
     },
     getNextPageParam: (lastPage) => {
       if (lastPage.has_more) {
@@ -164,21 +178,16 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 20 }: UseD
       }
       return undefined;
     },
-    initialPageParam: 1,
+    initialPageParam: 0,
     enabled: enabled && !!userId,
     staleTime: 1000 * 60 * 5,
-    retry: (failureCount, error) => {
-      // Don't retry on 404 - user might not have any content
-      if (error?.message?.includes('404') || error?.message?.includes('Not Found')) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    retry: 2,
   });
 }
 
 /**
  * Separate user content into videos and images
+ * Uses getContentType helper to check both postType (primary) and media_type (fallback)
  */
 export function separateUserContent(nfts: DeHubNFT[]): {
   videos: VideoItem[];
@@ -190,9 +199,11 @@ export function separateUserContent(nfts: DeHubNFT[]): {
   const posts: TextPost[] = [];
 
   nfts.forEach((nft, index) => {
-    if (nft.media_type === 'video' || nft.media_type === 'audio') {
+    const contentType = getContentType(nft);
+    
+    if (contentType === 'video' || contentType === 'audio') {
       videos.push(mapNFTToVideoItem(nft, index));
-    } else if (nft.media_type === 'image') {
+    } else if (contentType === 'image') {
       images.push(mapNFTToImagePost(nft, index));
     }
   });
