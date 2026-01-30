@@ -18,6 +18,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
+import { ReportModal } from '../modals/ReportModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import {
   DropdownMenu,
@@ -34,6 +35,7 @@ interface PostCardProps {
 export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -68,7 +70,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+            <DropdownMenuItem 
+              onClick={() => setShowReportModal(true)}
+              className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+            >
               <Flag className="w-4 h-4" /> Report
             </DropdownMenuItem>
             <DropdownMenuItem 
@@ -128,6 +133,14 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           author: post.author.name,
           caption: post.content
         }}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        open={showReportModal}
+        onOpenChange={setShowReportModal}
+        tokenId={post.id}
+        contentType="post"
       />
     </div>
   );

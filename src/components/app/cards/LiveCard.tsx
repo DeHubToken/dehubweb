@@ -16,6 +16,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSheet } from '../comments';
 import { PostAIChat } from './PostAIChat';
+import { ReportModal } from '../modals/ReportModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +32,7 @@ interface LiveCardProps {
 export function LiveCard({ stream }: LiveCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -64,7 +66,10 @@ export function LiveCard({ stream }: LiveCardProps) {
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Bell className="w-4 h-4" /> Notify When Live
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <DropdownMenuItem 
+                onClick={() => setShowReportModal(true)}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
                 <Flag className="w-4 h-4" /> Report
               </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
@@ -116,6 +121,14 @@ export function LiveCard({ stream }: LiveCardProps) {
           caption: `Playing ${stream.game} with ${stream.viewers} viewers`,
           imageUrl: stream.thumbnail
         }}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        open={showReportModal}
+        onOpenChange={setShowReportModal}
+        tokenId={stream.id}
+        contentType="video"
       />
     </div>
   );
