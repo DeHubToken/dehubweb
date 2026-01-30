@@ -526,14 +526,14 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   if (isRefreshing || isApiLoading) {
     return (
-      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0 flex items-center justify-center py-32">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="p-2 sm:p-3">
+    <div className="p-2 sm:p-3 pt-0 sm:pt-0">
       {/* Filters */}
       <AnimatePresence>
         {showFilters && (
