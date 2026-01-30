@@ -97,13 +97,13 @@ export function SidebarNavItem({
     >
       {showAvatar ? (
         <Avatar className={cn(
-          "flex-shrink-0",
+          "flex-shrink-0 rounded-xl",
           isDesktop ? "w-9 h-9" : "w-10 h-10"
         )}>
           {avatarUrl && (
-            <AvatarImage src={avatarUrl} alt="Profile" className="object-cover" />
+            <AvatarImage src={avatarUrl} alt="Profile" className="object-cover rounded-xl" />
           )}
-          <AvatarFallback className="bg-zinc-700 text-white font-medium text-sm">
+          <AvatarFallback className="bg-zinc-700 text-white font-medium text-sm rounded-xl">
             {avatarFallback || 'U'}
           </AvatarFallback>
         </Avatar>

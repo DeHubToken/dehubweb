@@ -214,7 +214,7 @@ export default function ProfilePage() {
           onClick={handleUnfollow}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
         >
-          <div className="w-8 h-8 rounded-full bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
             <UserMinus className="w-4 h-4 text-red-400" />
           </div>
           <span className="text-red-400 font-medium">Unfollow</span>
@@ -224,7 +224,7 @@ export default function ProfilePage() {
         onClick={handleCopyProfileUrl}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Copy className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Copy profile URL</span>
@@ -233,7 +233,7 @@ export default function ProfilePage() {
         onClick={handleCopyUsername}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <AtSign className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Copy username</span>
@@ -242,7 +242,7 @@ export default function ProfilePage() {
         onClick={handleCopyAddress}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Wallet className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Copy address</span>
@@ -256,7 +256,7 @@ export default function ProfilePage() {
             }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
           >
-            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <MessageCircle className="w-4 h-4 text-white" />
             </div>
             <span className="text-white font-medium">Message</span>
@@ -265,7 +265,7 @@ export default function ProfilePage() {
             onClick={handleSendCoins}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
           >
-            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <Send className="w-4 h-4 text-white" />
             </div>
             <span className="text-white font-medium">Send coins</span>
@@ -274,7 +274,7 @@ export default function ProfilePage() {
             onClick={handleToggleNotifications}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
           >
-            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <Bell className="w-4 h-4 text-white" />
             </div>
             <span className="text-white font-medium">Notify</span>
@@ -283,7 +283,7 @@ export default function ProfilePage() {
             onClick={handleMakeOffer}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
           >
-            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <Handshake className="w-4 h-4 text-white" />
             </div>
             <span className="text-white font-medium">Make Offer</span>
@@ -510,7 +510,7 @@ export default function ProfilePage() {
               variant="ghost"
               size="sm"
               onClick={handleLogout}
-              className="absolute top-3 right-3 z-10 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 text-white gap-2 px-3"
+              className="absolute top-3 right-3 z-10 rounded-xl bg-black/40 backdrop-blur-sm hover:bg-black/60 text-white gap-2 px-3"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Log out</span>
@@ -554,7 +554,7 @@ export default function ProfilePage() {
                   <Button
                     variant="outline" 
                     size="sm" 
-                    className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                    className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
                     onClick={() => navigate('/app/settings')}
                   >
                     <Pencil className="w-4 h-4" />
@@ -565,7 +565,7 @@ export default function ProfilePage() {
                     {!isFollowing && (
                       <Button 
                         size="sm" 
-                        className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
+                        className="rounded-xl bg-white text-black hover:bg-zinc-200 gap-2"
                         onClick={handleFollow}
                         disabled={isFollowLoading}
                       >
@@ -580,7 +580,7 @@ export default function ProfilePage() {
                     {isFollowing && !isSubscribed && (
                       <Button 
                         size="sm" 
-                        className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
+                        className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
                         onClick={() => {
                           setIsSubscribed(true);
                           toast.success(`Subscribed to ${profile.name}!`);
@@ -594,7 +594,7 @@ export default function ProfilePage() {
                       <Button 
                         size="sm" 
                         variant="outline"
-                        className="rounded-full border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
+                        className="rounded-xl border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
                         onClick={() => {
                           setIsSubscribed(false);
                           toast.success(`Unsubscribed from ${profile.name}`);
@@ -611,7 +611,7 @@ export default function ProfilePage() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+                      className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
                     >
                       <Plus className="w-4 h-4" />
                     </Button>
