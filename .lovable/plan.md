@@ -1,36 +1,72 @@
 
-
-# Post URL Sharing - Pinned Post Approach
+# Plan: Integrate DeHub API for User Profile Posts
 
 ## Overview
-Instead of a dedicated post page, the `/app/post/:postId` URL redirects to the home feed with that specific post pinned at the top. This provides a seamless experience where users land in the natural app flow and can continue scrolling after viewing the shared content.
+Update the profile page to show each user's actual posts by fixing the API integration. The current implementation has issues with both the API endpoint and content type detection.
 
-## Flow
-1. User visits `/app/post/2530`
-2. `PostPage.tsx` redirects to `/app` with `state: { pinnedPostId: "2530" }`
-3. `HomePage` reads the state and passes it to `HomeFeed`
-4. `HomeFeed` fetches that specific post and renders it first
-5. User sees the shared post at top, then normal feed below
-6. They can scroll down and continue using the app naturally
+## Current Issues Found
+1. **API Endpoint**: The `getUserNFTs` function calls `/api/user/{userId}/nfts` which may not be returning data correctly
+2. **Content Detection**: The `separateUserContent` function only checks `nft.media_type` but the DeHub API primarily uses `postType` field
+3. **Empty Content**: Profile tabs show "0" counts because content isn't being fetched/categorized properly
 
-## Technical Implementation
+## Solution Approach
 
-### File: `src/pages/app/PostPage.tsx`
-Simple redirect component that captures postId and navigates to home with state.
+### Step 1: Update `useDeHubUserContent` Hook
+Instead of using the less reliable `/api/user/{userId}/nfts` endpoint, leverage the proven `searchNFTs` function with the `creator_id` parameter to filter posts by creator.
 
-### File: `src/pages/app/HomePage.tsx`
-- Reads `pinnedPostId` from `location.state`
-- Passes it to `HomeFeed` component
+**Changes to `src/hooks/use-dehub-profile.ts`:**
+- Import `searchNFTs` from the API module
+- Replace `getUserNFTs` call with `searchNFTs({ creator_id: userId, ... })`
+- This uses the same API that successfully powers the home feed
 
-### File: `src/components/app/feeds/HomeFeed.tsx`
-- Accepts optional `pinnedPostId` prop
-- Fetches pinned post using `getNFTInfo(pinnedPostId)`
-- Converts it to feed item format (VideoItem, ImagePost, or TextPost)
-- Filters it from the main feed to avoid duplicates
-- Renders pinned post first, then rest of feed
+### Step 2: Fix Content Type Detection
+Update `separateUserContent` to check both `postType` (primary) and `media_type` (fallback) fields from the API response.
 
-## Benefits
-- Seamless user experience - no separate page to navigate away from
-- Users naturally discover more content after viewing shared post
-- Maintains app context and navigation state
-- Back button works naturally (returns to previous page, not stuck in post view)
+**Changes to `src/hooks/use-dehub-profile.ts`:**
+```text
+Current logic:
+  - Only checks nft.media_type
+
+Updated logic:
+  - Check nft.postType first (primary API field)
+  - Fall back to nft.media_type
+  - Use the getContentType helper from use-dehub-feed.ts
+```
+
+### Step 3: Handle Loading States
+Add loading indicator for content while it's being fetched separately from the profile.
+
+**Changes to `src/pages/app/ProfilePage.tsx`:**
+- Show skeleton or spinner in tab content area while `isLoadingContent` is true
+- Display appropriate empty states when content loads but is empty
+
+## Technical Details
+
+### API Integration
+The `searchNFTs` function already supports these parameters:
+- `creator_id`: Filter by creator's wallet address
+- `page`/`unit`: Pagination
+- `sortMode`: Sort by new/popular/trending
+- `postType`: Filter by content type (undefined for all, "feed-images" for images only)
+
+### Data Flow
+```text
+User visits /{username}
+    ↓
+useDeHubProfile fetches user data → gets walletAddress
+    ↓
+useDeHubUserContent fetches posts → searchNFTs({ creator_id: walletAddress })
+    ↓
+separateUserContent categorizes → checks postType || media_type
+    ↓
+ProfilePage renders tabs with real data
+```
+
+## Files to Modify
+1. `src/hooks/use-dehub-profile.ts` - Fix API call and content type detection
+2. `src/pages/app/ProfilePage.tsx` - Add loading state for content area
+
+## Expected Outcome
+- Profile pages will show actual posts from each user
+- Tab counts (All, Images, Videos) will reflect real content
+- Content will display using the same cards as the main feeds
