@@ -16,6 +16,37 @@ interface UniqueUser {
   avatarUrl?: string;
 }
 
+// Fetch a batch of pages in parallel and extract unique users
+async function fetchUserBatch(startPage: number, endPage: number): Promise<UniqueUser[]> {
+  const seenAddresses = new Set<string>();
+  const uniqueUsers: UniqueUser[] = [];
+  const pageSize = 100;
+
+  // Fetch all pages in parallel
+  const pagePromises = [];
+  for (let page = startPage; page < endPage; page++) {
+    pagePromises.push(searchNFTs({ sortMode: 'new', unit: pageSize, page }));
+  }
+
+  const results = await Promise.all(pagePromises);
+
+  for (const response of results) {
+    for (const nft of (response.data || [])) {
+      const address = nft.minter;
+      if (!address || seenAddresses.has(address)) continue;
+      seenAddresses.add(address);
+      uniqueUsers.push({
+        address,
+        username: nft.mintername,
+        displayName: nft.minterDisplayName,
+        avatarUrl: nft.minterAvatarUrl,
+      });
+    }
+  }
+
+  return uniqueUsers;
+}
+
 export function WhoToFollow() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -30,7 +61,7 @@ export function WhoToFollow() {
       return getAccountInfo(walletAddress);
     },
     enabled: !!walletAddress,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
@@ -41,67 +72,54 @@ export function WhoToFollow() {
     return new Set(followings.map(addr => addr.toLowerCase()));
   }, [currentUserData?.followings]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['suggestions', 'recently-active'],
-    queryFn: async () => {
-      const seenAddresses = new Set<string>();
-      const uniqueUsers: UniqueUser[] = [];
-      const maxPages = 20;
-      const pageSize = 100;
-      
-      // Fetch multiple pages to gather a large pool of unique users
-      for (let page = 0; page < maxPages; page++) {
-        const response = await searchNFTs({ 
-          sortMode: 'new', 
-          unit: pageSize,
-          page 
-        });
-        
-        const posts = response.data || [];
-        
-        for (const nft of posts) {
-          const address = nft.minter;
-          if (!address || seenAddresses.has(address)) continue;
-          
-          seenAddresses.add(address);
-          uniqueUsers.push({
-            address,
-            username: nft.mintername,
-            displayName: nft.minterDisplayName,
-            avatarUrl: nft.minterAvatarUrl,
-          });
-        }
-        
-        // Stop if we got fewer results (no more data available)
-        if (posts.length < pageSize) break;
-      }
-      
-      return uniqueUsers;
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes cache
+  // Fast initial load (pages 0-4) - shows results within ~1 second
+  const { data: initialUsers, isLoading: isLoadingInitial } = useQuery({
+    queryKey: ['suggestions', 'initial'],
+    queryFn: () => fetchUserBatch(0, 5),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
+
+  // Background extended load (pages 5-19) - enriches the list
+  const { data: extendedUsers } = useQuery({
+    queryKey: ['suggestions', 'extended'],
+    queryFn: () => fetchUserBatch(5, 20),
+    enabled: !!initialUsers,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  // Merge initial and extended users, removing duplicates
+  const allUsers = useMemo(() => {
+    const users = [...(initialUsers || [])];
+    const seenAddresses = new Set(users.map(u => u.address));
+
+    for (const user of (extendedUsers || [])) {
+      if (!seenAddresses.has(user.address)) {
+        seenAddresses.add(user.address);
+        users.push(user);
+      }
+    }
+
+    return users;
+  }, [initialUsers, extendedUsers]);
 
   // Filter out users that are already followed, the current user, and newly followed users
   const suggestions = useMemo(() => {
-    const allUsers = data || [];
     return allUsers.filter(user => {
       const addressLower = user.address.toLowerCase();
-      // Exclude current user
       if (walletAddress && addressLower === walletAddress.toLowerCase()) return false;
-      // Exclude already-followed users from API data
       if (followingSet.has(addressLower)) return false;
-      // Exclude users just followed in this session
       if (followedUsers.has(user.address)) return false;
       return true;
     });
-  }, [data, walletAddress, followingSet, followedUsers]);
+  }, [allUsers, walletAddress, followingSet, followedUsers]);
 
   const getAvatarUrl = (user: UniqueUser) => {
     if (user.avatarUrl && user.address) {
       return buildAvatarUrl(user.address, user.avatarUrl);
     }
-    return undefined; // No fallback image - use initial instead
+    return undefined;
   };
 
   const getDisplayName = (user: UniqueUser) => {
@@ -121,7 +139,7 @@ export function WhoToFollow() {
 
   const handleFollow = async (e: React.MouseEvent, user: UniqueUser) => {
     e.stopPropagation();
-    
+
     if (!isAuthenticated) {
       toast.error('Please connect your wallet to follow users');
       return;
@@ -149,7 +167,7 @@ export function WhoToFollow() {
     }
   };
 
-  if (isLoading) {
+  if (isLoadingInitial) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
@@ -170,7 +188,6 @@ export function WhoToFollow() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Scrollable list */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
         {suggestions.map((user) => (
           <div
@@ -205,7 +222,6 @@ export function WhoToFollow() {
         ))}
       </div>
 
-      {/* Bottom fade gradient */}
       <div className="relative">
         <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
       </div>
