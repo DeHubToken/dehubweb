@@ -10,7 +10,7 @@
  */
 
 import { useState, memo } from 'react';
-import { Eye, Sparkles, MoreVertical, Link2 } from 'lucide-react';
+import { Eye, Sparkles, MoreVertical, Link2, Flag, Ban } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -68,6 +68,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <Flag className="w-4 h-4" /> Report
+            </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={() => {
                 const url = `${window.location.origin}/app/post/${post.id}`;
@@ -77,6 +80,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
               className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
             >
               <Link2 className="w-4 h-4" /> Copy Post URL
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <Ban className="w-4 h-4" /> Block Creator
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
