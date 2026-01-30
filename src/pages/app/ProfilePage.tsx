@@ -554,7 +554,7 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2 mb-4">
               {!isViewingOwnProfile && (
                 <>
-                  {!isFollowing ? (
+                  {!isFollowing && (
                     <Button 
                       size="sm" 
                       className="rounded-full bg-white text-black hover:bg-zinc-200 gap-2"
@@ -567,21 +567,6 @@ export default function ProfilePage() {
                         <UserPlus className="w-4 h-4" />
                       )}
                       Follow
-                    </Button>
-                  ) : (
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-                      onClick={handleUnfollow}
-                      disabled={isFollowLoading}
-                    >
-                      {isFollowLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <UserMinus className="w-4 h-4" />
-                      )}
-                      Following
                     </Button>
                   )}
                   {isFollowing && !isSubscribed && (
