@@ -517,24 +517,37 @@ export default function ProfilePage() {
           {/* Profile Content */}
           <div className="px-4 sm:px-6 pb-4">
             {/* Avatar - positioned to overlap banner */}
-            <div className="relative -mt-12 sm:-mt-14 mb-4">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1">
-                {profile.avatarUrl ? (
-                  <img 
-                    src={profile.avatarUrl} 
-                    alt={profile.name} 
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  <UserAvatar 
-                    name={profile.name} 
-                    handle={profile.handle} 
-                    size="lg" 
-                    className="w-full h-full rounded-full"
-                  />
-                )}
+            <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
+              <div className="relative">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1">
+                  {profile.avatarUrl ? (
+                    <img 
+                      src={profile.avatarUrl} 
+                      alt={profile.name} 
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <UserAvatar 
+                      name={profile.name} 
+                      handle={profile.handle} 
+                      size="lg" 
+                      className="w-full h-full rounded-full"
+                    />
+                  )}
+                </div>
+                <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
               </div>
-              <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
+              {isViewingOwnProfile && (
+                <Button
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                  onClick={() => navigate('/app/settings')}
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Profile
+                </Button>
+              )}
             </div>
 
             {/* Action Buttons - separate row (hide follow on own profile) */}
@@ -600,17 +613,7 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
-              {isViewingOwnProfile ? (
-                <Button
-                  variant="outline" 
-                  size="sm" 
-                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-                  onClick={() => navigate('/app/settings')}
-                >
-                  <Pencil className="w-4 h-4" />
-                  Edit Profile
-                </Button>
-              ) : (
+              {!isViewingOwnProfile && (
                 <Button
                   variant="outline" 
                   size="sm" 
