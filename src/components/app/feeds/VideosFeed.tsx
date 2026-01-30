@@ -9,6 +9,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { Loader2, RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -358,6 +359,8 @@ function ContentTypeFilterSection({
 // ============================================================================
 
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
+  const navigate = useNavigate();
+  
   // Sort is now client-side
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
   // Duration and upload date are client-side filters
@@ -597,16 +600,24 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           {/* Desktop/Tablet: 3 thumbnails in a row */}
           <div className="hidden sm:grid grid-cols-3 gap-2">
             {videos.slice(0, 3).map((video) => (
-              <div 
+              <button 
                 key={`featured-${video.id}`}
-                className="relative aspect-video rounded-xl overflow-hidden"
+                onClick={() => navigate(`/app/post/${video.id}`)}
+                className="relative aspect-video rounded-xl overflow-hidden group cursor-pointer text-left"
               >
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                
+                {/* Play button overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Play className="w-6 h-6 text-white fill-white" />
+                  </div>
+                </div>
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
@@ -635,7 +646,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 <div className="absolute bottom-2 left-2 right-12">
                   <p className="text-white text-xs font-medium line-clamp-1">{video.title}</p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
           
@@ -644,9 +655,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
             <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
               {videos.slice(0, 3).map((video) => (
-                <div 
+                <button 
                   key={`featured-mobile-${video.id}`}
-                  className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden"
+                  onClick={() => navigate(`/app/post/${video.id}`)}
+                  className="relative flex-shrink-0 w-[70%] aspect-video rounded-xl overflow-hidden group cursor-pointer text-left"
                 >
                   <img
                     src={video.thumbnail}
@@ -654,6 +666,13 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                  
+                  {/* Play button overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                      <Play className="w-5 h-5 text-white fill-white" />
+                    </div>
+                  </div>
                   
                   {/* Creator info at top */}
                   <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
@@ -682,7 +701,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute bottom-2 left-2 right-12">
                     <p className="text-white text-xs font-medium line-clamp-1">{video.title}</p>
                   </div>
-                </div>
+                </button>
               ))}
             </SwipeableCarousel>
           </div>
