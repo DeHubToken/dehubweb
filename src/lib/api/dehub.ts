@@ -756,6 +756,99 @@ export async function getLeaderboard(
 }
 
 // ============================================
+// NOTIFICATIONS API
+// ============================================
+
+/**
+ * Notification interface
+ */
+export interface DeHubNotification {
+  id: string;
+  type: 'like' | 'comment' | 'share' | 'tip' | 'subscribe' | 'follow' | 'mention' | 'system';
+  content?: string;
+  read: boolean;
+  createdAt: string;
+  // Related entities
+  actor?: DeHubUser;
+  post?: DeHubNFT;
+  amount?: number;
+  currency?: string;
+}
+
+/**
+ * Notifications list response from API
+ */
+interface NotificationsApiResponse {
+  result: {
+    items: DeHubNotification[];
+    totalCount: number;
+    hasMore: boolean;
+  };
+}
+
+/**
+ * Unread count response from API
+ */
+interface UnreadCountApiResponse {
+  result: {
+    count: number;
+  };
+}
+
+/**
+ * Fetch user notifications
+ * Uses GET /api/notification endpoint
+ * @param page - Page number (0-indexed)
+ * @param limit - Items per page
+ * @param type - Optional notification type filter
+ */
+export async function getNotifications(
+  page: number = 0,
+  limit: number = 20,
+  type?: string
+): Promise<{ items: DeHubNotification[]; totalCount: number; hasMore: boolean }> {
+  const response = await apiCall<NotificationsApiResponse>("/api/notification", {
+    params: { page, limit, ...(type && type !== 'all' ? { type } : {}) },
+    requiresAuth: true,
+  });
+  return response.result || { items: [], totalCount: 0, hasMore: false };
+}
+
+/**
+ * Get unread notification count
+ * Uses GET /api/notification/unread-count endpoint
+ */
+export async function getUnreadNotificationCount(): Promise<number> {
+  const response = await apiCall<UnreadCountApiResponse>("/api/notification/unread-count", {
+    requiresAuth: true,
+  });
+  return response.result?.count || 0;
+}
+
+/**
+ * Mark a single notification as read
+ * Uses PATCH /api/notification/{notificationId} endpoint
+ * @param notificationId - The notification ID
+ */
+export async function markNotificationAsRead(notificationId: string): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>(`/api/notification/${notificationId}`, {
+    method: "PATCH",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Mark all notifications as read
+ * Uses POST /api/notification/mark-all-read endpoint
+ */
+export async function markAllNotificationsAsRead(): Promise<{ success: boolean }> {
+  return apiCall<{ success: boolean }>("/api/notification/mark-all-read", {
+    method: "POST",
+    requiresAuth: true,
+  });
+}
+
+// ============================================
 // DIRECT MESSAGING API
 // ============================================
 
