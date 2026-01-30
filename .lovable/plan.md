@@ -1,108 +1,51 @@
 
-# Progressive Loading for "Who to Follow"
+
+# Fix: Standardize Assistant Text Size in Sidebar
 
 ## Problem
-The parallel batch approach still waits for ALL batches to complete before displaying results. If a user has followed everyone from the first 500 users, they see "loading" until all 2000 posts are fetched.
+The "Assistant" menu item uses `text-[13.5px]` while all other sidebar navigation items use `text-[15px]`, creating an inconsistent appearance.
 
-## Solution
-Split into two queries with **instant display + background enrichment**:
-1. **Fast query**: Fetch first 5 pages in parallel → show results immediately
-2. **Background query**: Fetch remaining pages → merge into list as they complete
+## Root Cause
+The Assistant link is rendered directly in `DesktopSidebar.tsx` instead of using the shared `SidebarNavItem` component, and it was given a smaller font size.
 
 ---
 
-## Technical Changes
+## Solution
 
-### File: `src/components/app/WhoToFollow.tsx`
+### File: `src/components/app/navigation/DesktopSidebar.tsx`
 
-**1. Create two separate queries**
+Change the Assistant NavLink text size from `13.5px` to `15px` to match all other navigation items.
 
-```typescript
-// Fast initial load (pages 0-4)
-const { data: initialUsers, isLoading: isLoadingInitial } = useQuery({
-  queryKey: ['suggestions', 'initial'],
-  queryFn: () => fetchUserBatch(0, 5), // Pages 0-4 in parallel
-  staleTime: 5 * 60 * 1000,
-});
+**Line 111 - Update text size:**
+```tsx
+// Before
+className={cn(
+  'flex items-center gap-3 w-full px-2.5 py-2.5 rounded-xl text-left transition-colors text-[13.5px]',
+  ...
+)}
 
-// Background extended load (pages 5-19)
-const { data: extendedUsers } = useQuery({
-  queryKey: ['suggestions', 'extended'],
-  queryFn: () => fetchUserBatch(5, 20), // Pages 5-19 in parallel
-  enabled: !!initialUsers, // Only start after initial loads
-  staleTime: 5 * 60 * 1000,
-});
+// After  
+className={cn(
+  'flex items-center gap-3 w-full px-2.5 py-2.5 rounded-xl text-left transition-colors text-[15px]',
+  ...
+)}
 ```
 
-**2. Merge results progressively**
+---
 
-```typescript
-const allUsers = useMemo(() => {
-  const users = [...(initialUsers || [])];
-  const seenAddresses = new Set(users.map(u => u.address));
-  
-  // Add extended users that aren't duplicates
-  for (const user of (extendedUsers || [])) {
-    if (!seenAddresses.has(user.address)) {
-      seenAddresses.add(user.address);
-      users.push(user);
-    }
-  }
-  
-  return users;
-}, [initialUsers, extendedUsers]);
-```
+## Summary
 
-**3. Extract shared fetch function**
+| Item | Current Size | After Fix |
+|------|--------------|-----------|
+| Profile | 15px | 15px |
+| Explore | 15px | 15px |
+| Notifications | 15px | 15px |
+| Messages | 15px | 15px |
+| **Assistant** | **13.5px** | **15px** |
+| Leaderboard | 15px | 15px |
+| Bookmarks | 15px | 15px |
+| Settings | 15px | 15px |
+| Blog | 15px | 15px |
 
-```typescript
-async function fetchUserBatch(startPage: number, endPage: number) {
-  const seenAddresses = new Set<string>();
-  const uniqueUsers: UniqueUser[] = [];
-  const pageSize = 100;
-  
-  // Fetch all pages in parallel
-  const pagePromises = [];
-  for (let page = startPage; page < endPage; page++) {
-    pagePromises.push(searchNFTs({ sortMode: 'new', unit: pageSize, page }));
-  }
-  
-  const results = await Promise.all(pagePromises);
-  
-  for (const response of results) {
-    for (const nft of (response.data || [])) {
-      const address = nft.minter;
-      if (!address || seenAddresses.has(address)) continue;
-      seenAddresses.add(address);
-      uniqueUsers.push({
-        address,
-        username: nft.mintername,
-        displayName: nft.minterDisplayName,
-        avatarUrl: nft.minterAvatarUrl,
-      });
-    }
-  }
-  
-  return uniqueUsers;
-}
-```
+This is a one-line fix that ensures visual consistency across all sidebar navigation items.
 
-**4. Show loading only for initial fetch**
-
-```typescript
-if (isLoadingInitial) {
-  return <Loader2 className="animate-spin" />;
-}
-// Show results immediately once initial load completes
-// Extended results appear automatically as they load
-```
-
-## User Experience
-
-| Scenario | Before | After |
-|----------|--------|-------|
-| Fresh user | Wait 10s+ for all data | See results in ~1s |
-| Followed 50 users | Wait 10s+ | See remaining in ~1s |
-| Followed 200+ users | Wait 10s+ | See initial in ~1s, more appear as background loads |
-
-Users always see available suggestions within ~1 second, and the list grows as more data loads in the background.
