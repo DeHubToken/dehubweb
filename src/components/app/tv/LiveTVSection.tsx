@@ -26,7 +26,7 @@ interface LiveTVSectionProps {
 }
 
 export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
-  const [activeCategory, setActiveCategory] = useState<TVCategoryId>('news');
+  const [activeCategory, setActiveCategory] = useState<TVCategoryId>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
   
@@ -72,7 +72,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             type="text"
-            placeholder="Search 1,000+ live TV channels..."
+            placeholder="Search 700+ live TV channels..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
