@@ -783,7 +783,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             </div>
           )}
 
-          <div className="flex gap-2 pb-4">
+          <div className="flex gap-2 pb-3">
             <Avatar className="w-8 h-8 flex-shrink-0">
               {(user?.avatarImageUrl || user?.avatarUrl) && (
                 <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl} />
