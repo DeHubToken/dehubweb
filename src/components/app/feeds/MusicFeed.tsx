@@ -77,9 +77,10 @@ function formatTimeAgo(dateString?: string): string {
 function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const minterAddress = nft.minter || nft.creator?.id || '';
   const rawAvatarUrl = nft.minterAvatarUrl || nft.creator?.avatar_url;
-  const avatarUrl = rawAvatarUrl?.startsWith('http') 
-    ? rawAvatarUrl 
-    : buildAvatarUrl(minterAddress, rawAvatarUrl);
+  // Always use buildAvatarUrl - it handles all URL formats including api.dehub.io → CDN conversion
+  const avatarUrl = minterAddress && rawAvatarUrl 
+    ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
+    : undefined;
 
   return {
     id: String(nft.tokenId || nft.id || nft.token_id || index),

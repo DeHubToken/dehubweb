@@ -172,9 +172,10 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
   // Try all possible avatar fields - same pattern as leaderboard/profile
   const rawAvatarUrl = nft.minterAvatarUrl || nft.minterAvatarImg || nft.avatarUrl || nft.avatarImg ||
                        nft.creator?.avatar_url || nft.creator?.avatarImg || nft.creator?.avatarUrl;
-  const avatarUrl = rawAvatarUrl?.startsWith('http') 
-    ? rawAvatarUrl 
-    : buildAvatarUrl(minterAddress, rawAvatarUrl);
+  // Always use buildAvatarUrl - it handles all URL formats including api.dehub.io → CDN conversion
+  const avatarUrl = minterAddress && rawAvatarUrl 
+    ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
+    : undefined;
   
   return {
     id,
