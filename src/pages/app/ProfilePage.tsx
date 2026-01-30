@@ -250,6 +250,18 @@ export default function ProfilePage() {
       {!isViewingOwnProfile && (
         <>
           <button
+            onClick={() => {
+              toast.info('Messages coming soon');
+              setShareSheetOpen(false);
+            }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+          >
+            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+              <MessageCircle className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-white font-medium">Message</span>
+          </button>
+          <button
             onClick={handleSendCoins}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
           >
@@ -537,7 +549,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
               </div>
-              {isViewingOwnProfile && (
+              {isViewingOwnProfile ? (
                 <Button
                   variant="outline" 
                   size="sm" 
@@ -547,13 +559,8 @@ export default function ProfilePage() {
                   <Pencil className="w-4 h-4" />
                   Edit Profile
                 </Button>
-              )}
-            </div>
-
-            {/* Action Buttons - separate row (hide follow on own profile) */}
-            <div className="flex items-center gap-2 mb-4">
-              {!isViewingOwnProfile && (
-                <>
+              ) : (
+                <div className="flex items-center gap-2">
                   {!isFollowing && (
                     <Button 
                       size="sm" 
@@ -596,18 +603,12 @@ export default function ProfilePage() {
                       Unsubscribe
                     </Button>
                   )}
-                </>
+                </div>
               )}
-              {!isViewingOwnProfile && (
-                <Button
-                  variant="outline" 
-                  size="sm" 
-                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Message
-                </Button>
-              )}
+            </div>
+
+            {/* Action Buttons - just the options menu now */}
+            <div className="flex items-center gap-2 mb-4">
               <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
                 <DrawerTrigger asChild>
                   <Button 
