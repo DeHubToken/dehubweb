@@ -45,8 +45,9 @@ export function CommentInput({ replyTo, onClearReply, onSubmit, isSubmitting }: 
     }
   }, [handleSubmit]);
 
-  const userAddress = user?.address || user?.wallet_address || '';
-  const userAvatarPath = user?.avatarImageUrl || user?.avatarUrl;
+  // Handle all possible field names from API
+  const userAddress = user?.address || (user as Record<string, unknown>)?.wallet_address as string || '';
+  const userAvatarPath = user?.avatarImageUrl || (user as Record<string, unknown>)?.avatarUrl as string || (user as Record<string, unknown>)?.avatar_url as string;
   const avatarUrl = userAddress && userAvatarPath ? buildAvatarUrl(userAddress, userAvatarPath) : undefined;
 
   if (!isAuthenticated) {
