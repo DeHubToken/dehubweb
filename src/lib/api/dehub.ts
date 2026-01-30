@@ -1014,16 +1014,62 @@ interface MessagesApiResponse {
 
 /**
  * Fetch list of user's conversations
- * Uses /api/dm/search endpoint
+ * - When no search query: Uses /api/dm/contacts/{address} to list all conversations
+ * - With search query: Uses /api/dm/search endpoint
  * @param page - Page number (0-indexed)
  * @param limit - Items per page
- * @param searchQuery - Optional search query (required by API, defaults to empty string)
+ * @param searchQuery - Optional search query
  */
 export async function getConversations(
   page: number = 0,
   limit: number = 20,
-  searchQuery: string = ""
+  searchQuery?: string
 ): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
+  // If no search query, use the contacts endpoint to list all conversations
+  if (!searchQuery) {
+    const token = getAuthToken();
+    if (!token) return { items: [], totalCount: 0, hasMore: false };
+    
+    try {
+      // Parse user address from JWT token
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userAddress = payload.address;
+      
+      if (!userAddress) {
+        return { items: [], totalCount: 0, hasMore: false };
+      }
+      
+      // Use contacts endpoint which returns conversations for the user
+      const response = await apiCall<{ result: DeHubConversation[] | { items: DeHubConversation[]; hasMore: boolean } }>(
+        `/api/dm/contacts/${userAddress}`,
+        {
+          params: { page, limit },
+          requiresAuth: true,
+        }
+      );
+      
+      // Handle both array and paginated response formats
+      if (Array.isArray(response.result)) {
+        return { 
+          items: response.result, 
+          totalCount: response.result.length, 
+          hasMore: response.result.length >= limit 
+        };
+      }
+      
+      const items = response.result?.items || [];
+      return { 
+        items, 
+        totalCount: items.length, 
+        hasMore: response.result?.hasMore ?? items.length >= limit 
+      };
+    } catch (error) {
+      console.warn("Failed to parse JWT or fetch contacts:", error);
+      return { items: [], totalCount: 0, hasMore: false };
+    }
+  }
+  
+  // With search query, use the search endpoint
   const response = await apiCall<ConversationsApiResponse>("/api/dm/search", {
     params: { query: searchQuery, page, limit },
     requiresAuth: true,
@@ -1158,7 +1204,7 @@ export async function getDMUserStatus(address: string): Promise<{ online: boolea
 /**
  * Search users for starting a new conversation
  * Uses /api/search_users endpoint
- * @param query - Search query (username or display name)
+ * @param query - Search query (username or display name) - must be at least 2 characters
  * @param page - Page number
  * @param limit - Items per page
  */
@@ -1167,8 +1213,14 @@ export async function searchUsersForDM(
   page: number = 0,
   limit: number = 10
 ): Promise<{ items: DeHubUser[]; hasMore: boolean }> {
+  // Guard: API requires a non-empty query for regex matching
+  const trimmedQuery = query?.trim();
+  if (!trimmedQuery || trimmedQuery.length < 2) {
+    return { items: [], hasMore: false };
+  }
+  
   const response = await apiCall<{ result: { items: DeHubUser[]; hasMore: boolean } | DeHubUser[] }>("/api/search_users", {
-    params: { q: query, page, limit },
+    params: { q: trimmedQuery, page, limit },
     requiresAuth: true,
   });
   

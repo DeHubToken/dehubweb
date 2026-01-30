@@ -37,13 +37,14 @@ export function useConversations(searchQuery: string = '') {
   const query = useQuery({
     queryKey: [...messagesKeys.conversations(), searchQuery],
     queryFn: async () => {
-      // Pass searchQuery to API - empty string fetches all conversations
-      const response = await getConversations(0, 50, searchQuery);
+      // Pass undefined for empty search to use contacts endpoint instead of broken search
+      const response = await getConversations(0, 50, searchQuery || undefined);
       return response.items || [];
     },
     enabled: isAuthenticated,
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 30 * 1000, // Poll every 30s for new messages
+    retry: 1, // Don't retry too many times on API errors
   });
 
   // Server-side search is now used via the query parameter
