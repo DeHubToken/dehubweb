@@ -812,12 +812,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           )}
 
           <div className="flex gap-2 pb-1.5">
-            <Avatar className="w-8 h-8 flex-shrink-0">
-              {(user?.avatarImageUrl || user?.avatarUrl) && (
-                <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl} />
-              )}
-              <AvatarFallback className="bg-zinc-700 text-white font-medium">{user?.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
-            </Avatar>
             <div className="flex-1 flex gap-2">
               {isRecording ? (
                 /* Recording indicator inside input area */
