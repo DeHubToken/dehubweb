@@ -1,105 +1,117 @@
 
-# Fix: Profile Pictures in Comments (Final)
 
-## Root Cause Confirmed
+# Fix: Home Feed Infinite Scroll Loading Loop
 
-The `buildAvatarUrl` utility was correctly updated to convert `api.dehub.io` URLs to CDN URLs. However, `CommentsSection.tsx` (and other files) have **inline logic that bypasses the utility entirely** when the URL starts with `http`:
+## The Problem
 
-```typescript
-// BROKEN CODE IN CommentsSection.tsx (lines 106-110)
-if (rawAvatarPath) {
-  resolvedAvatar = rawAvatarPath.startsWith('http') 
-    ? rawAvatarPath  // <-- BYPASSES buildAvatarUrl!
-    : (address ? buildAvatarUrl(address, rawAvatarPath) : undefined);
-}
-```
+When scrolling down on the Home tab, the infinite scroll triggers an endless loading loop where multiple pages are fetched simultaneously (page 5, 6, 7, 8... all at once), causing:
+- Network request spam
+- Duplicate content
+- Frozen/janky UI
+- Poor user experience
 
-This short-circuits the fix because `api.dehub.io` URLs start with `http`, so they never get converted to CDN URLs.
+## Root Cause Analysis
 
-Meanwhile, the **working sidebar components** (`SidebarLeaderboard.tsx`, `WhoToFollow.tsx`) call `buildAvatarUrl` directly without any pre-checks:
+The issue is a **React closure stale state problem** with the IntersectionObserver:
 
-```typescript
-// WORKING CODE IN sidebar components
-return buildAvatarUrl(entry.account, entry.avatarUrl);
-```
+1. When the observer callback fires, it reads `isFetchingNextPage` from a **stale closure**
+2. Multiple callbacks fire before React re-renders with the updated state
+3. Each callback sees `isFetchingNextPage = false` and calls `fetchNextPage()`
+4. Result: Multiple pages load simultaneously
+
+### Why Videos Works But Home Doesn't
+The Videos feed uses `postType: 'video'` which returns fewer results, so there's less content and the loader element stays off-screen longer. The Home feed has more diverse content, causing the loader to remain visible and fire repeatedly.
 
 ---
 
 ## Solution
 
-Remove the inline `startsWith('http')` check and always pass through `buildAvatarUrl`. The utility already handles all URL formats correctly.
+Use a **ref-based guard** to synchronously track fetch state, preventing race conditions. This is the standard React pattern for IntersectionObserver + async state.
 
 ---
 
-## Files to Update
+## Technical Implementation
 
-### 1. `src/components/app/cards/CommentsSection.tsx`
+### File: `src/components/app/feeds/HomeFeed.tsx`
 
-Replace lines 105-110:
+**1. Add a ref to track fetch state:**
 ```typescript
-// Before (broken)
-let resolvedAvatar: string | undefined;
-if (rawAvatarPath) {
-  resolvedAvatar = rawAvatarPath.startsWith('http') 
-    ? rawAvatarPath 
-    : (address ? buildAvatarUrl(address, rawAvatarPath) : undefined);
-}
-
-// After (fixed)
-const resolvedAvatar = address && rawAvatarPath 
-  ? buildAvatarUrl(address, rawAvatarPath) 
-  : undefined;
+const isFetchingRef = useRef(false);
 ```
 
-### 2. `src/components/app/feeds/MusicFeed.tsx`
-
-Replace lines 80-82:
+**2. Update the IntersectionObserver useEffect:**
 ```typescript
-// Before (broken)
-const avatarUrl = rawAvatarUrl?.startsWith('http') 
-  ? rawAvatarUrl 
-  : buildAvatarUrl(minterAddress, rawAvatarUrl);
+useEffect(() => {
+  if (!loaderRef.current || !hasNextPage) return;
 
-// After (fixed)
-const avatarUrl = minterAddress && rawAvatarUrl 
-  ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
-  : undefined;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      // Use ref for synchronous check - prevents race conditions
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+        isFetchingRef.current = true;
+        fetchNextPage().finally(() => {
+          isFetchingRef.current = false;
+        });
+      }
+    },
+    { threshold: 0.1, rootMargin: '100px' }
+  );
+
+  observer.observe(loaderRef.current);
+  return () => observer.disconnect();
+}, [hasNextPage, fetchNextPage]);
 ```
 
-### 3. `src/components/app/feeds/VideosFeed.tsx`
+**3. Remove `isFetchingNextPage` from the callback closure** since the ref handles it synchronously.
 
-Replace lines 175-177:
+---
+
+### File: `src/components/app/feeds/VideosFeed.tsx`
+
+Apply the same fix for consistency:
+
 ```typescript
-// Before (broken)
-const avatarUrl = rawAvatarUrl?.startsWith('http') 
-  ? rawAvatarUrl 
-  : buildAvatarUrl(minterAddress, rawAvatarUrl);
+const isFetchingRef = useRef(false);
 
-// After (fixed)
-const avatarUrl = minterAddress && rawAvatarUrl 
-  ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
-  : undefined;
+useEffect(() => {
+  if (!loaderRef.current || !hasNextPage) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !isFetchingRef.current) {
+        isFetchingRef.current = true;
+        fetchNextPage().finally(() => {
+          isFetchingRef.current = false;
+        });
+      }
+    },
+    { threshold: 0.1, rootMargin: '100px' }
+  );
+
+  observer.observe(loaderRef.current);
+  return () => observer.disconnect();
+}, [hasNextPage, fetchNextPage]);
 ```
 
 ---
 
 ## Why This Works
 
-The `buildAvatarUrl` utility already handles ALL cases:
-
-| Input Type | `buildAvatarUrl` Behavior |
-|------------|---------------------------|
-| `https://dehubcdn...` | Returns as-is |
-| `https://api.dehub.io/avatars/...` | Converts to CDN URL |
-| `avatars/xxx.jpg` | Builds CDN URL |
-| Other `http://...` URLs | Returns as-is |
-
-By always calling `buildAvatarUrl`, we leverage the central fix and ensure consistency across all components.
+| Before (Broken) | After (Fixed) |
+|-----------------|---------------|
+| `isFetchingNextPage` is React state | `isFetchingRef.current` is a mutable ref |
+| Updates async after re-render | Updates synchronously on set |
+| Multiple callbacks read stale `false` | First callback sets to `true`, others blocked |
+| Race condition on rapid scroll | No race condition possible |
 
 ---
 
-## Technical Details
+## Summary of Changes
 
-This is the same pattern used by the **working** sidebar components. The fix is minimal: remove the redundant `startsWith('http')` check that was incorrectly bypassing the utility function.
+| File | Change |
+|------|--------|
+| `src/components/app/feeds/HomeFeed.tsx` | Add `isFetchingRef` ref, update observer to use ref guard |
+| `src/components/app/feeds/VideosFeed.tsx` | Same fix for consistency |
 
-After this fix, all components will correctly route through `buildAvatarUrl`, which handles the `api.dehub.io` → CDN conversion.
+This is a one-line ref addition and a minor observer callback update per file.
+
