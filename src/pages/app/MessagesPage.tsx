@@ -165,7 +165,7 @@ export default function MessagesPage() {
               <Button 
                 size="icon" 
                 onClick={() => setShowNewConversation(true)}
-                className="absolute right-1.5 w-7 h-7 rounded-lg bg-zinc-700 hover:bg-zinc-600"
+                className="absolute right-1.5 w-7 h-7 rounded-xl bg-zinc-800 hover:bg-zinc-700 border-0"
               >
                 <Plus className="w-4 h-4 text-white" />
               </Button>
