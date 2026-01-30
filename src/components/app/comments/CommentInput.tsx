@@ -7,9 +7,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { buildAvatarUrl } from '@/lib/media-url';
 import type { Comment } from './types';
 
 interface CommentInputProps {
@@ -45,10 +43,6 @@ export function CommentInput({ replyTo, onClearReply, onSubmit, isSubmitting }: 
     }
   }, [handleSubmit]);
 
-  // Handle all possible field names from API
-  const userAddress = user?.address || (user as Record<string, unknown>)?.wallet_address as string || '';
-  const userAvatarPath = user?.avatarImageUrl || (user as Record<string, unknown>)?.avatarUrl as string || (user as Record<string, unknown>)?.avatar_url as string;
-  const avatarUrl = userAddress && userAvatarPath ? buildAvatarUrl(userAddress, userAvatarPath) : undefined;
 
   if (!isAuthenticated) {
     return (
@@ -86,13 +80,6 @@ export function CommentInput({ replyTo, onClearReply, onSubmit, isSubmitting }: 
 
       {/* Input area */}
       <div className="p-4 flex items-center gap-3">
-        <Avatar className="w-8 h-8 flex-shrink-0">
-          <AvatarImage src={avatarUrl} className="object-cover" />
-          <AvatarFallback className="bg-zinc-700 text-xs">
-            {user?.username?.[0]?.toUpperCase() || '?'}
-          </AvatarFallback>
-        </Avatar>
-
         <div className="flex-1 flex items-center gap-2 bg-zinc-800 rounded-full px-4 py-2">
           <input
             ref={inputRef}
