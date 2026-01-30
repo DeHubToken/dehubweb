@@ -62,7 +62,8 @@ export interface UnifiedFeedItem {
   minterStaked?: number;
   streamInfo?: {
     isLockContent: boolean;
-    lockAmount?: number;
+    lockContentAmount?: number;
+    lockContentTokenSymbol?: string;
     isPayPerView: boolean;
     payPerViewAmount?: number;
     isAddBounty: boolean;
@@ -193,8 +194,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     ppvCurrency: 'DHB',
     isW2E,
     isLocked,
-    lockedPrice: item.streamInfo?.lockAmount,
-    lockedCurrency: 'DHB',
+    lockedPrice: item.streamInfo?.lockContentAmount,
+    lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
     bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
     bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
     bountyAmount: item.streamInfo?.addBountyAmount,
