@@ -408,7 +408,7 @@ export function PostContentArea({
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-medium"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/20 text-amber-400 text-xs lg:text-sm font-medium"
             >
               <Clock className="w-3 h-3" />
               {format(scheduledDate, 'MMM d, h:mm a')}
@@ -430,13 +430,13 @@ export function PostContentArea({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center transition-all",
+                  "w-9 h-9 lg:w-6 lg:h-6 rounded-xl flex items-center justify-center transition-all",
                   "bg-white/10 backdrop-blur-xl border border-white/20",
                   "hover:bg-white/20 hover:border-white/40",
                   scheduledDate && "bg-amber-500/20 border-amber-500/40"
                 )}
               >
-                <Calendar className="w-4 h-4 text-white" />
+                <Calendar className="w-4 h-4 lg:w-3 lg:h-3 text-white" />
               </motion.button>
             </TooltipTrigger>
             <TooltipContent>
@@ -452,14 +452,14 @@ export function PostContentArea({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center transition-all relative",
+                  "w-9 h-9 lg:w-6 lg:h-6 rounded-xl flex items-center justify-center transition-all relative",
                   "bg-white/10 backdrop-blur-xl border border-white/20",
                   "hover:bg-white/20 hover:border-white/40"
                 )}
               >
-                <Save className="w-4 h-4 text-white" />
+                <Save className="w-4 h-4 lg:w-3 lg:h-3 text-white" />
                 {drafts.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 lg:w-3 lg:h-3 rounded-full bg-white text-black text-[10px] lg:text-[8px] font-bold flex items-center justify-center">
                     {drafts.length}
                   </span>
                 )}
