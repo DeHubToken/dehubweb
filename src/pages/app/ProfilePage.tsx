@@ -12,6 +12,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { AppLayout } from '@/components/app/AppLayout';
+import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -101,6 +102,7 @@ export default function ProfilePage() {
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
   const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   
   // Use API's isFollowing status
   const isFollowing = apiProfile?.isFollowing ?? false;
@@ -519,21 +521,28 @@ export default function ProfilePage() {
             </Button>
           )}
           
-          {/* Cover Photo */}
+          {/* Cover Photo - clickable for fullscreen */}
           {profile.coverUrl ? (
-            <div className="aspect-[3/1] bg-zinc-800">
+            <button 
+              className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer hover:opacity-95 transition-opacity"
+              onClick={() => setFullscreenImage(profile.coverUrl!)}
+            >
               <img src={profile.coverUrl} alt="Cover" className="w-full h-full object-cover" />
-            </div>
+            </button>
           ) : (
             <div className="aspect-[3/1] bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
           )}
           
           {/* Profile Content */}
           <div className="px-4 sm:px-6 pb-4">
-            {/* Avatar - positioned to overlap banner */}
+            {/* Avatar - positioned to overlap banner, clickable for fullscreen */}
             <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1">
+                <button 
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
+                  onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
+                  disabled={!profile.avatarUrl}
+                >
                   {profile.avatarUrl ? (
                     <img 
                       src={profile.avatarUrl} 
@@ -548,7 +557,7 @@ export default function ProfilePage() {
                       className="w-full h-full rounded-full"
                     />
                   )}
-                </div>
+                </button>
                 <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
               </div>
               <div className="flex items-center gap-2">
@@ -745,6 +754,14 @@ export default function ProfilePage() {
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Fullscreen image viewer for avatar/banner */}
+      <FullscreenImageViewer
+        images={fullscreenImage ? [fullscreenImage] : []}
+        initialIndex={0}
+        isOpen={!!fullscreenImage}
+        onClose={() => setFullscreenImage(null)}
+      />
     </div>
   );
 
