@@ -159,6 +159,8 @@ export interface DeHubNFT {
   ppv_currency?: string;
   is_w2e?: boolean;
   is_locked?: boolean;
+  locked_price?: number;
+  locked_currency?: string;
 
   // User interaction state (returned when address param is provided)
   isLiked?: boolean;
