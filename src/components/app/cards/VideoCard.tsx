@@ -483,7 +483,11 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Gift className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">Bounty</span>
+                    <span className="text-white text-xs font-medium">
+                      {video.bountyAmount && video.bountyAmount > 0 
+                        ? `${video.bountyAmount} ${video.bountyCurrency || 'DHB'}` 
+                        : 'Bounty'}
+                    </span>
                   </button>
                 </DrawerTrigger>
                 <DrawerContent glass className="px-4 pb-6">
