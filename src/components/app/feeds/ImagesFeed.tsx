@@ -215,7 +215,7 @@ function EndlessScrollView({
       {onBackToCollage && (
         <button
           onClick={onBackToCollage}
-          className="fixed bottom-[72px] lg:bottom-8 left-1/2 -translate-x-1/2 lg:-translate-x-[calc(50%+160px)] z-20 p-3 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 shadow-lg hover:bg-black/60 transition-colors"
+          className="fixed bottom-[72px] lg:bottom-8 left-1/2 -translate-x-1/2 lg:-translate-x-[calc(50%+30px)] z-20 p-3 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 shadow-lg hover:bg-black/60 transition-colors"
           aria-label="Back to grid view"
         >
           <Grid3x3 className="w-5 h-5 text-white" />
