@@ -26,7 +26,20 @@ export function getExtension(path: string): string {
  */
 export function buildAvatarUrl(address: string, apiAvatarPath: string | undefined | null): string | undefined {
   if (!apiAvatarPath) return undefined;
+  
+  // If it's already a dehubcdn URL, return as-is
+  if (apiAvatarPath.startsWith('https://dehubcdn')) return apiAvatarPath;
+  
+  // If it's an api.dehub.io avatar URL, extract extension and rebuild with CDN
+  if (apiAvatarPath.includes('api.dehub.io/avatars/')) {
+    const ext = getExtension(apiAvatarPath);
+    return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+  }
+  
+  // Other full URLs (dicebear, etc.) - return as-is
   if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
+  
+  // Relative path - build CDN URL
   const ext = getExtension(apiAvatarPath);
   return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
 }
