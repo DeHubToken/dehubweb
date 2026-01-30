@@ -7,7 +7,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2, RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -326,6 +326,7 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   // Default to Random (first option)
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
@@ -571,15 +572,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return mappedItems;
   }, [feedData, pinnedPostId, randomSeed, shuffleKey, selectedSort.value]);
 
-  // Infinite scroll observer - only fetch next page when user scrolls to bottom
+  // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Only fetch if visible AND not already fetching
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+        // Use ref for synchronous check - prevents multiple fetches from stale closures
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -587,7 +591,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage]);
 
   const renderFeedItem = (item: FeedItemType, index: number) => {
     switch (item.type) {
