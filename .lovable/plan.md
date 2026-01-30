@@ -1,55 +1,68 @@
 
 
-# Fix DeHub DM API - Correct Parameter Usage
+# Fix DeHub DM API - Corrected Endpoint Usage
 
-## Problem Summary
+## Problem Analysis
 
-The DM feature is broken due to two API issues:
-
-1. **Conversations not loading**: The `/api/dm/search` endpoint returns a 500 error with `"$regex has to be a string"` because the `query` parameter is missing
-2. **User search not working**: The search function may not be calling the correct endpoint
-
-## Root Cause
-
-The API error response:
+Based on the network logs, the `/api/dm/search` endpoint is returning a **500 Internal Server Error**:
 ```json
 {"message":"Failed to fetch users","error":"$regex has to be a string"}
 ```
 
-This indicates `/api/dm/search` requires a `query` parameter for the regex search to work. Currently the code only sends `page` and `limit`.
+This error occurs even when passing `query=""` (empty string) as a URL parameter (`?query=&page=0&limit=50`). The issue is that the API's MongoDB backend receives empty query params as `null`/`undefined`, breaking the `$regex` operator.
+
+## Root Causes
+
+1. **Wrong endpoint for listing conversations**: The `/api/dm/search` endpoint is designed for **searching** conversations by query, not listing all conversations. We need to use a different endpoint to get the conversation list.
+
+2. **User search endpoint may need adjustment**: The `/api/search_users` endpoint parameters need verification.
 
 ## Solution
 
-### 1. Fix `getConversations` Function
+### 1. Use Different Endpoint Strategy
 
-The `/api/dm/search` endpoint needs a `query` parameter. For listing all conversations, we should pass an empty string:
+Based on the API documentation screenshot, here's the corrected approach:
 
-**Current code (broken):**
-```typescript
-return apiCall("/api/dm/search", {
-  params: { page, limit },
-  requiresAuth: true,
-});
-```
+| Purpose | Current (Broken) | Correct Approach |
+|---------|------------------|------------------|
+| List all DMs | `GET /api/dm/search?query=` | `GET /api/dm/search` with minimum query OR different endpoint |
+| Search DMs | `GET /api/dm/search?query=xyz` | Same, but only when user provides a search term |
+| Search users | `GET /api/search_users?q=` | Needs non-empty query |
 
-**Fixed code:**
-```typescript
-return apiCall("/api/dm/search", {
-  params: { query: "", page, limit },  // Add query parameter
-  requiresAuth: true,
-});
-```
+### 2. Code Changes for `src/lib/api/dehub.ts`
 
-### 2. Add Search Parameter Support
+**Fix `getConversations` function to handle the API quirk:**
 
-Update the function to optionally accept a search query:
+The API requires a **non-empty** query parameter for regex. We have two options:
 
+**Option A**: Only call `/api/dm/search` when there's a search term, and use a different approach for listing:
 ```typescript
 export async function getConversations(
   page: number = 0,
   limit: number = 20,
-  searchQuery: string = ""  // Add search query parameter
+  searchQuery?: string
 ): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
+  // If no search query, we can't use /api/dm/search - try alternative
+  // Option: Use /api/dm/contacts/{address} with current user's address
+  if (!searchQuery) {
+    // Try to get from contacts endpoint or return empty for now
+    const token = getAuthToken();
+    if (!token) return { items: [], totalCount: 0, hasMore: false };
+    
+    // Parse user address from JWT token
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userAddress = payload.address;
+    
+    const response = await apiCall<{ result: DeHubConversation[] }>(`/api/dm/contacts/${userAddress}`, {
+      params: { page, limit },
+      requiresAuth: true,
+    });
+    
+    const items = Array.isArray(response.result) ? response.result : [];
+    return { items, totalCount: items.length, hasMore: items.length >= limit };
+  }
+  
+  // With search query, use search endpoint
   const response = await apiCall<ConversationsApiResponse>("/api/dm/search", {
     params: { query: searchQuery, page, limit },
     requiresAuth: true,
@@ -58,55 +71,88 @@ export async function getConversations(
 }
 ```
 
-### 3. Fix User Search for New Conversations
-
-The current `searchUsersForDM` uses `/api/search_users`. We should verify this endpoint works, or use the existing `searchUsers` function that's used elsewhere in the app.
-
-Looking at the API docs, the options are:
-- `/api/search_users?q={query}` - General user search
-- `/api/dm/contacts/{address}` - Get contacts for a specific user (not for searching)
-
-We should use `/api/search_users` with proper parameters.
-
-### 4. Update the Hooks
-
-The `useConversations` hook should pass the search query to the API instead of doing client-side filtering:
-
-**Current approach (client-side filter):**
+**Option B**: Pass a wildcard or special character as query:
 ```typescript
-const filteredConversations = query.data?.filter((conv) => {
-  // Client-side search
-});
+// Some MongoDB implementations accept ".*" as a "match all" regex
+params: { query: searchQuery || ".*", page, limit }
 ```
 
-**Better approach (server-side search):**
+### 3. Fix `searchUsersForDM` function
+
+The `/api/search_users` endpoint requires a non-empty query. The hook already guards against calling with less than 2 characters, but we should also handle the response format better:
+
 ```typescript
-const query = useQuery({
-  queryFn: async () => {
-    const response = await getConversations(0, 50, searchQuery);
-    return response.items || [];
-  },
-});
+export async function searchUsersForDM(
+  query: string,
+  page: number = 0,
+  limit: number = 10
+): Promise<{ items: DeHubUser[]; hasMore: boolean }> {
+  if (!query || query.length < 2) {
+    return { items: [], hasMore: false };
+  }
+  
+  const response = await apiCall<{ result: DeHubUser[] | { items: DeHubUser[]; hasMore: boolean } }>(
+    "/api/search_users",
+    {
+      params: { q: query, page, limit },
+      requiresAuth: true,
+    }
+  );
+  
+  // Handle both response formats
+  if (Array.isArray(response.result)) {
+    return { 
+      items: response.result, 
+      hasMore: response.result.length >= limit 
+    };
+  }
+  
+  return response.result || { items: [], hasMore: false };
+}
+```
+
+### 4. Update `src/hooks/use-messages.ts`
+
+Update the hook to handle the case where no conversations exist yet:
+
+```typescript
+export function useConversations(searchQuery: string = '') {
+  const { isAuthenticated } = useAuth();
+  
+  const query = useQuery({
+    queryKey: [...messagesKeys.conversations(), searchQuery],
+    queryFn: async () => {
+      const response = await getConversations(0, 50, searchQuery || undefined);
+      return response.items || [];
+    },
+    enabled: isAuthenticated,
+    staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
+    retry: 1, // Don't retry too many times on API errors
+  });
+  // ...
+}
 ```
 
 ## Files to Change
 
 | File | Change |
 |------|--------|
-| `src/lib/api/dehub.ts` | Add `query` param to `getConversations`, fix param names |
-| `src/hooks/use-messages.ts` | Update `useConversations` to pass search to API |
+| `src/lib/api/dehub.ts` | Update `getConversations` to use `/api/dm/contacts/{address}` for listing, only use `/api/dm/search` when there's an actual query |
+| `src/lib/api/dehub.ts` | Update `searchUsersForDM` to guard against empty queries |
+| `src/hooks/use-messages.ts` | Pass `undefined` instead of empty string, add retry limit |
 
 ## Technical Notes
 
-- The `query` parameter must be a string (even empty `""`) for the regex to work
-- The API uses MongoDB's `$regex` operator internally
-- All other DM endpoints (`/api/dm/messages/{id}`, `/api/dm/tnx`) should work once we can load conversations
+- The `/api/dm/search` endpoint is meant for **searching** conversations, not listing them
+- The `/api/dm/contacts/{address}` endpoint returns contacts/conversations for a user
+- We need to extract the user's address from the JWT token to call the contacts endpoint
+- Empty string URL parameters get coerced to `null` by the API, breaking MongoDB's `$regex`
 
 ## Expected Outcome
 
 After this fix:
-1. Conversations will load when you open the Messages page
-2. Searching conversations will work server-side
-3. User search for new conversations will return results
-4. You'll be able to select a user and start a DM
+1. Conversations will load correctly when opening Messages page
+2. Search will only call the search endpoint when the user types something
+3. User search for new conversations will work properly
 
