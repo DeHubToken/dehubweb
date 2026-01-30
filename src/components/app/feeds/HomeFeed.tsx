@@ -66,6 +66,29 @@ interface HomeFeedProps {
 // HELPERS
 // ============================================================================
 
+/**
+ * Seeded random number generator for consistent shuffling
+ */
+function seededRandom(seed: number): () => number {
+  return () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+}
+
+/**
+ * Fisher-Yates shuffle with seeded random
+ */
+function shuffleArray<T>(array: T[], seed: number): T[] {
+  const result = [...array];
+  const random = seededRandom(seed);
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 function formatCount(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
@@ -303,8 +326,8 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  // API default is now "most liked"
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[2]); // Most Liked
+  // Default to Latest for randomization base
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Latest
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
@@ -312,6 +335,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     w2e: false,
     locked: false,
   });
+  
+  // Random seed for shuffling - changes on mount and refresh
+  const [randomSeed] = useState(() => Math.random());
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -512,7 +538,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
       : allItems;
     
-    return filteredItems.map((item, index): FeedItemType => {
+    const mappedItems = filteredItems.map((item, index): FeedItemType => {
       switch (item.postType) {
         case 'feed-images':
           return { type: 'image', data: mapToImagePost(item, index) };
@@ -523,7 +549,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return { type: 'video', data: mapToVideoItem(item, index) };
       }
     });
-  }, [feedData, pinnedPostId]);
+    
+    // Randomize the feed order using shuffleKey + randomSeed
+    const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
+    return shuffleArray(mappedItems, shuffleSeed);
+  }, [feedData, pinnedPostId, randomSeed, shuffleKey]);
 
   // Infinite scroll observer
   useEffect(() => {
