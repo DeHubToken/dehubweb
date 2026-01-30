@@ -128,7 +128,7 @@ function CollageView({ posts, onImageClick }: CollageViewProps) {
   return (
     <div className="p-1 sm:p-2 pt-0 sm:pt-0">
       <div 
-        className="grid grid-cols-3 gap-0.5 sm:gap-1"
+        className="grid grid-cols-3 gap-0.5 sm:gap-1 overflow-hidden rounded-t-2xl"
         style={{ gridAutoFlow: 'dense' }}
       >
         {posts.map((post, index) => {
