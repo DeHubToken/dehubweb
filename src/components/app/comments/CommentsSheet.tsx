@@ -176,12 +176,12 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
           </button>
         </div>
 
-        {/* Tab Switcher - matching TabbedSidePanel style */}
-        <div className="flex border-b border-white/10">
+        {/* Tab Switcher - icon-only matching TabbedSidePanel style */}
+        <div className="flex">
           <button
             type="button"
             onClick={() => setActiveTab('replies')}
-            className={`relative flex-1 py-3 flex items-center justify-center gap-2 transition-colors ${
+            className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
               activeTab === 'replies'
                 ? 'text-white'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
@@ -190,13 +190,12 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
             {activeTab === 'replies' && (
               <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
             )}
-            <MessageCircle className="w-4 h-4 relative z-10" />
-            <span className="text-sm font-medium relative z-10">Replies</span>
+            <MessageCircle className="w-5 h-5 relative z-10" />
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('quotes')}
-            className={`relative flex-1 py-3 flex items-center justify-center gap-2 transition-colors ${
+            className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
               activeTab === 'quotes'
                 ? 'text-white'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
@@ -205,8 +204,7 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
             {activeTab === 'quotes' && (
               <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
             )}
-            <Repeat2 className="w-4 h-4 relative z-10" />
-            <span className="text-sm font-medium relative z-10">Quotes</span>
+            <Repeat2 className="w-5 h-5 relative z-10" />
           </button>
         </div>
 
