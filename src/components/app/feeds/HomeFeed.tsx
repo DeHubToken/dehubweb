@@ -66,6 +66,7 @@ function formatCount(count: number): string {
 
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);
+  const viewCount = nft.views || nft.view_count || nft.nft?.views || nft.nft?.view_count || 0;
   
   return {
     id,
@@ -79,6 +80,7 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     sound: 'Original Sound',
     comments: formatCount(nft.commentCount || nft.comment_count || 0),
     shares: formatCount(Math.floor(Math.random() * 1000)),
+    views: formatCount(viewCount),
   };
 }
 
