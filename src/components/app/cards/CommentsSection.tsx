@@ -631,116 +631,125 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
       {/* Replies Tab */}
       {activeTab === 'replies' && (
-        <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-            </div>
-          ) : error ? (
-            <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
-          ) : (
-            <AnimatePresence mode="popLayout">
-              {filteredGroupedComments.length > 0 ? (
-                filteredGroupedComments.map(({ comment, replies }) => (
-                  <div key={comment.id}>
-                    <CommentItem 
-                      comment={comment} 
-                      onLike={handleLike} 
-                      onDislike={handleDislike} 
-                      onReply={handleReply} 
-                      onShare={() => {}} 
-                      onBookmark={() => {}}
-                      onUserPress={handleUserPress}
-                    />
-                    {replies.map(reply => (
+        <div className="relative">
+          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : error ? (
+              <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {filteredGroupedComments.length > 0 ? (
+                  filteredGroupedComments.map(({ comment, replies }) => (
+                    <div key={comment.id}>
                       <CommentItem 
-                        key={reply.id}
-                        comment={reply} 
+                        comment={comment} 
                         onLike={handleLike} 
                         onDislike={handleDislike} 
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
                         onUserPress={handleUserPress}
-                        isReply
                       />
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-zinc-500 text-sm py-6 text-center"
-                >
-                  No replies yet. Be the first!
-                </motion.p>
-              )}
-            </AnimatePresence>
-          )}
+                      {replies.map(reply => (
+                        <CommentItem 
+                          key={reply.id}
+                          comment={reply} 
+                          onLike={handleLike} 
+                          onDislike={handleDislike} 
+                          onReply={handleReply} 
+                          onShare={() => {}} 
+                          onBookmark={() => {}}
+                          onUserPress={handleUserPress}
+                          isReply
+                        />
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-zinc-500 text-sm py-6 text-center"
+                  >
+                    No replies yet. Be the first!
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            )}
+          </div>
         </div>
       )}
 
       {/* Quotes Tab */}
       {activeTab === 'quotes' && (
-        <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-zinc-500 text-sm py-6 text-center"
-          >
-            No quotes yet. Be the first!
-          </motion.p>
+        <div className="relative">
+          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-zinc-500 text-sm py-6 text-center"
+            >
+              No quotes yet. Be the first!
+            </motion.p>
+          </div>
         </div>
       )}
 
       {/* Search Tab - shows all comments/quotes, filtered by search query */}
       {activeTab === 'search' && (
-        <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-            </div>
-          ) : (
-            <AnimatePresence mode="popLayout">
-              {filteredGroupedComments.length > 0 ? (
-                filteredGroupedComments.map(({ comment, replies }) => (
-                  <div key={comment.id}>
-                    <CommentItem 
-                      comment={comment} 
-                      onLike={handleLike} 
-                      onDislike={handleDislike} 
-                      onReply={handleReply} 
-                      onShare={() => {}} 
-                      onBookmark={() => {}}
-                      onUserPress={handleUserPress}
-                    />
-                    {replies.map(reply => (
+        <div className="relative">
+          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {filteredGroupedComments.length > 0 ? (
+                  filteredGroupedComments.map(({ comment, replies }) => (
+                    <div key={comment.id}>
                       <CommentItem 
-                        key={reply.id}
-                        comment={reply} 
+                        comment={comment} 
                         onLike={handleLike} 
                         onDislike={handleDislike} 
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
                         onUserPress={handleUserPress}
-                        isReply
                       />
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-zinc-500 text-sm py-6 text-center"
-                >
-                  {searchQuery ? 'No results found' : 'No comments or quotes yet'}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          )}
+                      {replies.map(reply => (
+                        <CommentItem 
+                          key={reply.id}
+                          comment={reply} 
+                          onLike={handleLike} 
+                          onDislike={handleDislike} 
+                          onReply={handleReply} 
+                          onShare={() => {}} 
+                          onBookmark={() => {}}
+                          onUserPress={handleUserPress}
+                          isReply
+                        />
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-zinc-500 text-sm py-6 text-center"
+                  >
+                    {searchQuery ? 'No results found' : 'No comments or quotes yet'}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            )}
+          </div>
         </div>
       )}
 
