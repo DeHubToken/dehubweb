@@ -326,7 +326,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const recordingTimeRef = useRef(0);
   const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const MAX_VOICE_DURATION = 30;
 
@@ -835,20 +835,29 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 </div>
               ) : (
                 <>
-                  <Input
+                  <textarea
                     ref={inputRef}
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+                    className="flex-1 bg-zinc-800 border border-zinc-700 text-white text-sm rounded-md px-3 py-2 min-h-[36px] max-h-[120px] resize-none focus:outline-none focus:ring-0"
+                    rows={1}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        // Enter without Shift = submit
                         e.preventDefault();
-                        handlePostComment();
+                        if (canPost) handlePostComment();
                       } else if (e.key === 'Escape') {
                         handleClearReply();
-                        inputRef.current?.blur();
+                        (e.target as HTMLTextAreaElement).blur();
                       }
+                      // Shift+Enter = default behavior (new line)
+                    }}
+                    onInput={(e) => {
+                      // Auto-resize textarea
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = 'auto';
+                      target.style.height = Math.min(target.scrollHeight, 120) + 'px';
                     }}
                     onFocus={(e) => {
                       setTimeout(() => {
