@@ -119,17 +119,17 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
         <h3 className="font-semibold text-white truncate text-sm sm:text-base">
           {station.name}
         </h3>
-        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-          <span className="text-base">{countryFlag}</span>
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <span className="text-base flex-shrink-0">{countryFlag}</span>
           {tags.length > 0 && (
-            <span className="text-zinc-400 text-xs sm:text-sm truncate">
+            <span className="text-zinc-400 text-xs sm:text-sm truncate flex-1 min-w-0">
               {tags.join(', ')}
             </span>
           )}
           {bitrate && (
             <>
-              <span className="text-zinc-600 text-xs">•</span>
-              <span className="text-zinc-500 text-xs">{bitrate}</span>
+              <span className="text-zinc-600 text-xs flex-shrink-0">•</span>
+              <span className="text-zinc-500 text-xs flex-shrink-0">{bitrate}</span>
             </>
           )}
         </div>
