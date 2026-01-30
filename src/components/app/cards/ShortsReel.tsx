@@ -50,7 +50,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
             <div
               key={short.id}
               onClick={() => handleShortClick(index)}
-              className="flex-shrink-0 w-[120px] cursor-pointer group"
+              className="flex-shrink-0 w-[120px] md:w-[180px] cursor-pointer group"
             >
               {/* Thumbnail */}
               <div className="relative aspect-[9/16] rounded-xl overflow-hidden">
