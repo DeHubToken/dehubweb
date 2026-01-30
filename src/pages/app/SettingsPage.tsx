@@ -59,6 +59,7 @@ import { Search } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
+import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -133,7 +134,7 @@ export default function SettingsPage() {
 }
 
 function ProfileSettings() {
-  const { user: authUser } = useAuth();
+  const { user: authUser, refreshUser } = useAuthContext();
   const queryClient = useQueryClient();
   
   // Form state
@@ -213,11 +214,13 @@ function ProfileSettings() {
     mutationFn: async (data: UpdateProfileData) => {
       return updateProfile(data);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Profile updated successfully');
       setHasChanges(false);
       setAvatarFile(undefined);
       setCoverFile(undefined);
+      // Refresh AuthContext user to update sidebar avatar
+      await refreshUser();
       // Invalidate profile queries to refresh data everywhere
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
@@ -303,8 +306,8 @@ function ProfileSettings() {
         </Button>
       </div>
 
-      {/* Cover Image */}
-      <div className="relative h-32 bg-zinc-800 rounded-xl overflow-hidden group">
+      {/* Cover Image - same aspect ratio as Profile page */}
+      <div className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group">
         {coverPreview && (
           <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
         )}

@@ -65,7 +65,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   // Get user display info for avatar
   const displayName = user?.displayName || user?.username || 'Anonymous';
-  const userAvatarUrl = user?.avatar_url || null;
+  const userAvatarUrl = user?.avatarImageUrl || null;
 
   return (
     <>
