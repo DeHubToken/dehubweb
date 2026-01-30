@@ -21,7 +21,7 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
   };
 
   return (
-    <aside className="hidden xl:block w-80 h-screen sticky top-0 p-4 space-y-4 overflow-y-auto scrollbar-invisible">
+    <aside className="hidden xl:block w-80 h-screen sticky top-0 p-4 overflow-y-auto scrollbar-invisible">
       {showSearch && (
         <div className="bg-zinc-900 rounded-2xl p-2 -mt-[5px]">
           <div className="relative">
@@ -36,7 +36,7 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
           </div>
         </div>
       )}
-      <div className="-mt-[10px] space-y-4">
+      <div className="mt-[6px] space-y-4">
         <TabbedSidePanel />
         <WhatsHappening />
       </div>
