@@ -9,7 +9,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, RefreshCw, Video, Play, ChevronRight, Filter } from 'lucide-react';
+import { Loader2, RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -73,14 +73,14 @@ const LIVE_CATEGORIES_INSERT_AFTER = 5;
 const SHORTS_INSERT_AFTER = 9;
 
 const LIVE_CATEGORIES = [
-  { name: 'Just Chatting', viewers: '412K', image: justchattingCategory },
-  { name: 'Fortnite', viewers: '189K', image: fortniteCategory },
-  { name: 'Valorant', viewers: '156K', image: valorantCategory },
-  { name: 'Minecraft', viewers: '134K', image: minecraftCategory },
-  { name: 'League of Legends', viewers: '298K', image: leagueCategory },
-  { name: 'Call of Duty', viewers: '167K', image: codCategory },
-  { name: 'GTA V', viewers: '145K', image: gtaCategory },
-  { name: 'Apex Legends', viewers: '112K', image: apexCategory },
+  { name: 'Just Chatting', streams: 0, viewers: 0, image: justchattingCategory },
+  { name: 'Fortnite', streams: 0, viewers: 0, image: fortniteCategory },
+  { name: 'Valorant', streams: 0, viewers: 0, image: valorantCategory },
+  { name: 'Minecraft', streams: 0, viewers: 0, image: minecraftCategory },
+  { name: 'League of Legends', streams: 0, viewers: 0, image: leagueCategory },
+  { name: 'Call of Duty', streams: 0, viewers: 0, image: codCategory },
+  { name: 'GTA V', streams: 0, viewers: 0, image: gtaCategory },
+  { name: 'Apex Legends', streams: 0, viewers: 0, image: apexCategory },
 ];
 
 // Helper to format counts
@@ -186,7 +186,7 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
 // SUB-COMPONENTS
 // ============================================================================
 
-// Live Categories Carousel
+// Live Categories Carousel - consistent format with LiveFeed
 function LiveCategoriesCarousel() {
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
@@ -203,14 +203,31 @@ function LiveCategoriesCarousel() {
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
           {LIVE_CATEGORIES.map((cat) => (
-            <div key={cat.name} className="flex-shrink-0 cursor-pointer group">
-              <div className="w-[90px] aspect-[3/4] rounded-lg overflow-hidden mb-2 relative">
-                <img src={cat.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <button
+              key={cat.name}
+              className="flex-shrink-0 group"
+            >
+              <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+                <img 
+                  src={cat.image} 
+                  alt={cat.name}
+                  className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
+                />
               </div>
-              <p className="text-white text-sm font-medium truncate w-[90px]">{cat.name}</p>
-              <p className="text-zinc-500 text-xs">{cat.viewers} viewers</p>
-            </div>
+              <div className="mt-1.5 text-left">
+                <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{cat.name}</p>
+                <div className="flex items-center gap-2 text-zinc-500 text-xs">
+                  <span className="flex items-center gap-0.5">
+                    <Radio className="w-3 h-3" />
+                    {cat.streams}
+                  </span>
+                  <span className="flex items-center gap-0.5">
+                    <Eye className="w-3 h-3" />
+                    {cat.viewers}
+                  </span>
+                </div>
+              </div>
+            </button>
           ))}
         </SwipeableCarousel>
       </div>

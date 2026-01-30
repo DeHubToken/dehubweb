@@ -26,17 +26,17 @@ import minecraftCategory from '@/assets/minecraft-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
 import lcsCategory from '@/assets/lcs-category.png';
 
-// Categories data - streams/viewers placeholder until API integration
+// Categories data - all zeroed until API integration
 const MOCK_CATEGORIES = [
-  { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, streams: 12, viewers: 3420 },
-  { id: 'lcs', name: 'Last Chad Standing', image: lcsCategory, streams: 8, viewers: 2150 },
-  { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, streams: 45, viewers: 28500 },
-  { id: 'valorant', name: 'VALORANT', image: valorantCategory, streams: 38, viewers: 19200 },
-  { id: 'league', name: 'League of Legends', image: leagueCategory, streams: 52, viewers: 35600 },
-  { id: 'minecraft', name: 'Minecraft', image: minecraftCategory, streams: 31, viewers: 14800 },
-  { id: 'gta', name: 'Grand Theft Auto V', image: gtaCategory, streams: 28, viewers: 12400 },
-  { id: 'apex', name: 'Apex Legends', image: apexCategory, streams: 22, viewers: 9800 },
-  { id: 'cod', name: 'Call of Duty', image: codCategory, streams: 19, viewers: 8600 },
+  { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, streams: 0, viewers: 0 },
+  { id: 'lcs', name: 'Last Chad Standing', image: lcsCategory, streams: 0, viewers: 0 },
+  { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, streams: 0, viewers: 0 },
+  { id: 'valorant', name: 'VALORANT', image: valorantCategory, streams: 0, viewers: 0 },
+  { id: 'league', name: 'League of Legends', image: leagueCategory, streams: 0, viewers: 0 },
+  { id: 'minecraft', name: 'Minecraft', image: minecraftCategory, streams: 0, viewers: 0 },
+  { id: 'gta', name: 'Grand Theft Auto V', image: gtaCategory, streams: 0, viewers: 0 },
+  { id: 'apex', name: 'Apex Legends', image: apexCategory, streams: 0, viewers: 0 },
+  { id: 'cod', name: 'Call of Duty', image: codCategory, streams: 0, viewers: 0 },
 ];
 
 // Sub-tab options
