@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2, Check } from 'lucide-react';
+import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { searchNFTs, followUser } from '@/lib/api/dehub';
+import { searchNFTs, followUser, getAccountInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -18,9 +18,28 @@ interface UniqueUser {
 
 export function WhoToFollow() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+
+  // Fetch current user's following list
+  const { data: currentUserData } = useQuery({
+    queryKey: ['current-user-followings', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return null;
+      return getAccountInfo(walletAddress);
+    },
+    enabled: !!walletAddress,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 10 * 60 * 1000,
+  });
+
+  // Get following list as a Set for O(1) lookups
+  const followingSet = useMemo(() => {
+    const followings = currentUserData?.followings;
+    if (!followings || !Array.isArray(followings)) return new Set<string>();
+    return new Set(followings.map(addr => addr.toLowerCase()));
+  }, [currentUserData?.followings]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['suggestions', 'recently-active'],
@@ -58,7 +77,20 @@ export function WhoToFollow() {
     gcTime: 30 * 60 * 1000, // 30 minutes cache
   });
 
-  const suggestions = data || [];
+  // Filter out users that are already followed, the current user, and newly followed users
+  const suggestions = useMemo(() => {
+    const allUsers = data || [];
+    return allUsers.filter(user => {
+      const addressLower = user.address.toLowerCase();
+      // Exclude current user
+      if (walletAddress && addressLower === walletAddress.toLowerCase()) return false;
+      // Exclude already-followed users from API data
+      if (followingSet.has(addressLower)) return false;
+      // Exclude users just followed in this session
+      if (followedUsers.has(user.address)) return false;
+      return true;
+    });
+  }, [data, walletAddress, followingSet, followedUsers]);
 
   const getAvatarUrl = (user: UniqueUser) => {
     if (user.avatarUrl && user.address) {
@@ -151,31 +183,19 @@ export function WhoToFollow() {
               <span className="font-semibold text-white text-sm truncate block">{getDisplayName(user)}</span>
               <span className="text-zinc-500 text-xs">{getHandle(user)}</span>
             </div>
-            {followedUsers.has(user.address) ? (
-              <Button
-                size="sm"
-                variant="outline"
-                disabled
-                className="h-8 px-4 text-xs font-semibold rounded-xl border-green-500/50 text-green-400 bg-transparent"
-              >
-                <Check className="w-3 h-3 mr-1" />
-                Following
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={(e) => handleFollow(e, user)}
-                disabled={loadingUsers.has(user.address)}
-                className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-              >
-                {loadingUsers.has(user.address) ? (
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                ) : (
-                  'Follow'
-                )}
-              </Button>
-            )}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={(e) => handleFollow(e, user)}
+              disabled={loadingUsers.has(user.address)}
+              className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+            >
+              {loadingUsers.has(user.address) ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                'Follow'
+              )}
+            </Button>
           </div>
         ))}
       </div>
