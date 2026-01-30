@@ -393,16 +393,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                 <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
               </DrawerHeader>
               <div className="flex flex-col gap-1">
-                <button 
-                  onClick={() => {
-                    const url = `${window.location.origin}/app/post/${video.id}`;
-                    navigator.clipboard.writeText(url);
-                    toast.success('Post URL copied to clipboard');
-                  }}
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Link2 className="w-5 h-5" /> Copy Post URL
-                </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
                 </button>
@@ -417,6 +407,16 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <Download className="w-5 h-5" /> Download
+                </button>
+                <button 
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/post/${video.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success('Post URL copied to clipboard');
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Link2 className="w-5 h-5" /> Copy Post URL
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <Ban className="w-5 h-5" /> Block Creator
