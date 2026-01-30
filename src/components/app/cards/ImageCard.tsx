@@ -423,17 +423,17 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
             <span className="leading-none">{post.views || '0'}</span>
           </span>
         </div>
-      </div>
 
-      {/* Inline Comments Section */}
-      <AnimatePresence>
-        {showComments && (
-          <CommentsSection
-            tokenId={post.id}
-            onClose={() => setShowComments(false)}
-          />
-        )}
-      </AnimatePresence>
+        {/* Inline Comments Section - inside padded container to match VideoCard */}
+        <AnimatePresence>
+          {showComments && (
+            <CommentsSection
+              tokenId={post.id}
+              onClose={() => setShowComments(false)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* AI Chat */}
       <PostAIChat

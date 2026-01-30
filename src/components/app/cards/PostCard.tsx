@@ -89,34 +89,35 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       </div>
 
       {/* Content */}
-      <div className="px-3 pb-3">
+      <div className="p-3 space-y-2">
         <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
-        <div className="flex items-center gap-3 mt-2">
+        <div className="flex items-center gap-3">
           <span className="text-zinc-500 text-xs">{post.createdAt}</span>
           <span className="flex items-center gap-1 text-zinc-500 text-xs">
             <Eye className="w-3 h-3" />
             {post.views || '0'}
           </span>
         </div>
+
+        <ActionBar 
+          postId={post.id} 
+          className="p-0"
+          onComment={() => setShowComments(true)}
+          likeCount={post.stats.likes}
+          commentCount={post.stats.comments}
+          hideDislike
+        />
+
+        {/* Inline Comments Section - inside padded container to match VideoCard */}
+        <AnimatePresence>
+          {showComments && (
+            <CommentsSection
+              tokenId={post.id}
+              onClose={() => setShowComments(false)}
+            />
+          )}
+        </AnimatePresence>
       </div>
-
-      <ActionBar 
-        postId={post.id} 
-        onComment={() => setShowComments(true)}
-        likeCount={post.stats.likes}
-        commentCount={post.stats.comments}
-        hideDislike
-      />
-
-      {/* Comments Section */}
-      <AnimatePresence>
-        {showComments && (
-          <CommentsSection
-            tokenId={post.id}
-            onClose={() => setShowComments(false)}
-          />
-        )}
-      </AnimatePresence>
 
       {/* AI Chat */}
       <PostAIChat
