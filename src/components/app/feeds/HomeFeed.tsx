@@ -89,6 +89,54 @@ function shuffleArray<T>(array: T[], seed: number): T[] {
   return result;
 }
 
+/**
+ * Balanced shuffle: ensures ~3 text posts for every 9 media posts
+ * Interleaves text posts throughout the feed at regular intervals
+ */
+function balancedShuffle<T extends { type: string }>(
+  items: T[], 
+  seed: number
+): T[] {
+  const random = seededRandom(seed);
+  
+  // Separate text posts from media posts
+  const textPosts = items.filter(item => item.type === 'post');
+  const mediaPosts = items.filter(item => item.type !== 'post');
+  
+  // Shuffle both arrays independently
+  const shuffledText = [...textPosts];
+  const shuffledMedia = [...mediaPosts];
+  
+  for (let i = shuffledText.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffledText[i], shuffledText[j]] = [shuffledText[j], shuffledText[i]];
+  }
+  
+  for (let i = shuffledMedia.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffledMedia[i], shuffledMedia[j]] = [shuffledMedia[j], shuffledMedia[i]];
+  }
+  
+  // Interleave: insert 1 text post after every 3 media posts
+  const result: T[] = [];
+  let textIndex = 0;
+  let mediaIndex = 0;
+  
+  while (mediaIndex < shuffledMedia.length || textIndex < shuffledText.length) {
+    // Add up to 3 media posts
+    for (let i = 0; i < 3 && mediaIndex < shuffledMedia.length; i++) {
+      result.push(shuffledMedia[mediaIndex++]);
+    }
+    
+    // Add 1 text post if available
+    if (textIndex < shuffledText.length) {
+      result.push(shuffledText[textIndex++]);
+    }
+  }
+  
+  return result;
+}
+
 function formatCount(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
@@ -338,7 +386,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
   
   // Random seed for shuffling - changes on mount and refresh
-  const [randomSeed, setRandomSeed] = useState(() => Math.random());
+  // Generate new seed on every mount for true randomness
+  const [randomSeed, setRandomSeed] = useState(() => Date.now());
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -563,10 +612,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     });
     
-    // Only shuffle when "random" is selected
+    // Only shuffle when "random" is selected - use balanced shuffle for 3:9 ratio
     if (selectedSort.value === 'random') {
       const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
-      return shuffleArray(mappedItems, shuffleSeed);
+      return balancedShuffle(mappedItems, shuffleSeed);
     }
     
     return mappedItems;
