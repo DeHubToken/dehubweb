@@ -206,6 +206,15 @@ export default function HomePage() {
   };
 
   /**
+   * Handle returning from feed view back to collage view.
+   */
+  const handleBackToCollage = () => {
+    setSelectedImageId(null);
+    setShowImagesCollage(true);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  /**
    * Reset scroll position when tab changes.
    */
   useEffect(() => {
@@ -364,6 +373,7 @@ export default function HomePage() {
             refreshKey={refreshKey}
             selectedPostId={selectedImageId}
             onPostSelected={handleImageSelected}
+            onBackToCollage={handleBackToCollage}
           />
         );
       case 'videos':
