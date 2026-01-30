@@ -420,10 +420,10 @@ export function ImagesFeed({
         {showFeedView ? (
           <motion.div
             key={`endless-${refreshKey}-${selectedPostId}`}
-            initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
+            initial={shouldAnimate ? { opacity: 0, scale: 1.15 } : false}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
             <EndlessScrollView 
               posts={imagePosts} 
@@ -437,10 +437,10 @@ export function ImagesFeed({
         ) : (
           <motion.div
             key={`collage-${refreshKey}`}
-            initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
+            initial={shouldAnimate ? { opacity: 0, scale: 0.9 } : false}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 1.15 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
             <CollageView posts={imagePosts} onImageClick={handleImageClick} />
           </motion.div>
