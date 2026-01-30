@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useRef, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -30,8 +31,8 @@ import {
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
-import { getMediaUrl } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
@@ -53,6 +54,8 @@ interface HomeFeedProps {
   shuffleKey: number;
   isRefreshing: boolean;
   showFilters?: boolean;
+  /** Optional post ID to pin at the top of the feed */
+  pinnedPostId?: string;
 }
 
 // ============================================================================
@@ -63,6 +66,52 @@ function formatCount(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
   return count.toString();
+}
+
+function formatViews(count?: number): string {
+  if (!count) return '0';
+  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return count.toString();
+}
+
+function formatDuration(seconds?: number): string {
+  if (!seconds) return '0:00';
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+function formatTimeAgo(dateString?: string): string {
+  if (!dateString) return 'Just now';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Just now';
+  
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  if (diffMs < 0) return 'Just now';
+  
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m`;
+  
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h`;
+  
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) return `${diffDays}d`;
+  
+  const diffWeeks = Math.floor(diffDays / 7);
+  if (diffWeeks < 4) return `${diffWeeks}w`;
+  
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths < 12) return `${diffMonths}mo`;
+  
+  return `${Math.floor(diffDays / 365)}y`;
 }
 
 function mapNFTToShortVideo(nft: any): ShortVideo {
@@ -248,7 +297,7 @@ function SortFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: HomeFeedProps) {
+export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
   // API default is now "most liked"
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[2]); // Most Liked
@@ -320,6 +369,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     address: walletAddress || undefined,
   });
 
+  // Fetch pinned post if provided
+  const { data: pinnedPost, isLoading: isPinnedLoading } = useQuery({
+    queryKey: ['pinned-post', pinnedPostId],
+    queryFn: () => getNFTInfo(pinnedPostId!),
+    enabled: !!pinnedPostId,
+    staleTime: 5 * 60 * 1000,
+  });
+
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
@@ -334,13 +391,117 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
-  // Map unified feed items to component-ready data
+  // Convert pinned post (DeHubNFT) to feed item format
+  const pinnedItem = useMemo((): FeedItemType | null => {
+    if (!pinnedPost) return null;
+    
+    const id = String(pinnedPost.tokenId);
+    const views = pinnedPost.views || pinnedPost.view_count || 0;
+    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
+    
+    // Determine post type - DeHubNFT uses "video" | "image" | "audio"
+    const nftPostType = pinnedPost.postType || 'video';
+    
+    if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
+      // Image post
+      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
+      const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const avatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const imagePost: ImagePost = {
+        id,
+        type: 'image',
+        username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
+        verified: false,
+        avatar,
+        image,
+        imageUrls,
+        title: pinnedPost.name,
+        description: pinnedPost.description,
+        likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        caption: pinnedPost.description || pinnedPost.name || '',
+        comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        views: formatViews(views),
+        timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        isLiked: pinnedPost.isLiked ?? false,
+      };
+      return { type: 'image', data: imagePost };
+    } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
+      // Video post
+      const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const videoUrl = buildVideoUrl(pinnedPost.tokenId);
+      const channelAvatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const videoItem: VideoItem = {
+        id,
+        type: 'video',
+        thumbnail,
+        videoUrl,
+        duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
+        title: pinnedPost.name || 'Untitled',
+        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
+        channelAvatar,
+        verified: false,
+        views: formatViews(views),
+        uploadedAgo: timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        isLiked: pinnedPost.isLiked ?? false,
+        likeCount: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        dislikeCount: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
+        commentCount: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        isPPV: pinnedPost.is_ppv ?? false,
+        isW2E: pinnedPost.is_w2e ?? false,
+        isLocked: pinnedPost.is_locked ?? false,
+      };
+      return { type: 'video', data: videoItem };
+    } else {
+      // Text post
+      const avatarUrl = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || pinnedPost.minter
+        : pinnedPost.minter;
+      
+      const textPost: TextPost = {
+        id,
+        type: 'post',
+        author: {
+          id: pinnedPost.minter,
+          name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
+          handle: pinnedPost.mintername || pinnedPost.minter,
+          avatarSeed: avatarUrl,
+          verified: false,
+        },
+        content: pinnedPost.description || pinnedPost.name || '',
+        createdAt: timeAgo,
+        views: formatViews(views),
+        stats: {
+          comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+          reposts: 0,
+          likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        },
+      };
+      return { type: 'post', data: textPost };
+    }
+  }, [pinnedPost]);
+
+  // Map unified feed items to component-ready data (excluding pinned post)
   const items = useMemo((): FeedItemType[] => {
     if (!feedData?.pages) return [];
     
     const allItems = feedData.pages.flatMap(page => page.items || []);
     
-    return allItems.map((item, index): FeedItemType => {
+    // Filter out the pinned post from regular feed to avoid duplicate
+    const filteredItems = pinnedPostId 
+      ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
+      : allItems;
+    
+    return filteredItems.map((item, index): FeedItemType => {
       switch (item.postType) {
         case 'feed-images':
           return { type: 'image', data: mapToImagePost(item, index) };
@@ -351,7 +512,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
           return { type: 'video', data: mapToVideoItem(item, index) };
       }
     });
-  }, [feedData]);
+  }, [feedData, pinnedPostId]);
 
   // Infinite scroll observer
   useEffect(() => {
@@ -412,7 +573,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
     return elements;
   };
 
-  const isLoadingState = isLoading || isRefreshing;
+  const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading);
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -472,10 +633,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
             <StoriesBar users={storyUsers} />
           </div>
           
-          {items.length === 0 ? (
+          {items.length === 0 && !pinnedItem ? (
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
+              {/* Render pinned post first if available */}
+              {pinnedItem && renderFeedItem(pinnedItem, -1)}
+              
+              {/* Rest of the feed */}
               {renderFeedWithShorts()}
               
               {/* Infinite scroll loader */}
