@@ -206,7 +206,7 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseD
 
 /**
  * Separate user content into videos, images, and text posts
- * Uses postType from the unified feed API
+ * Uses postType from the unified feed API, with fallback detection for older posts
  */
 export function separateUserContent(items: UnifiedFeedItem[]): {
   videos: VideoItem[];
@@ -218,11 +218,28 @@ export function separateUserContent(items: UnifiedFeedItem[]): {
   const posts: TextPost[] = [];
 
   items.forEach((item, index) => {
+    // Determine content type - some older posts don't have postType set
+    let contentType: 'video' | 'image' | 'text' = 'image'; // default
+    
     if (item.postType === 'video') {
-      videos.push(mapToVideoItem(item, index));
+      contentType = 'video';
     } else if (item.postType === 'feed-images') {
-      images.push(mapToImagePost(item, index));
+      contentType = 'image';
     } else if (item.postType === 'feed-simple') {
+      contentType = 'text';
+    } else if (item.videoUrl) {
+      // Fallback: if no postType but has videoUrl, it's a video
+      contentType = 'video';
+    } else if (item.imageUrl || item.imageUrls?.length) {
+      // Fallback: if no postType but has images, it's an image post
+      contentType = 'image';
+    }
+    
+    if (contentType === 'video') {
+      videos.push(mapToVideoItem(item, index));
+    } else if (contentType === 'image') {
+      images.push(mapToImagePost(item, index));
+    } else if (contentType === 'text') {
       posts.push(mapToTextPost(item, index));
     }
   });
