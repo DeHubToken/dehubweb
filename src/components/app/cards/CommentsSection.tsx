@@ -13,7 +13,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, ChevronDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -295,6 +295,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const { user, isAuthenticated } = useAuth();
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes'>('replies');
+  const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'liked'>('recent');
   const [newComment, setNewComment] = useState('');
@@ -528,7 +529,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   const canPost = (newComment.trim() || voiceNote) && !isSubmitting;
 
-  const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
+  
 
   return (
     <motion.div
@@ -539,43 +540,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       className="mt-3 pt-3 border-t border-zinc-800"
     >
 
-      {/* Search & Sort - moved above tabs */}
-      <div className="flex gap-2 mb-3 px-5">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder="Search comments..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-zinc-800 border-zinc-700 text-white text-sm h-9"
-          />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-1.5 px-3 py-2 bg-zinc-800 rounded-lg text-sm text-zinc-300 hover:bg-zinc-700 transition-colors">
-              <ArrowUpDown className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{currentSortLabel}</span>
-              <ChevronDown className="w-3 h-3" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
-            {SORT_OPTIONS.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setSortBy(option.value as 'recent' | 'liked')}
-                className={cn(
-                  "text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white",
-                  sortBy === option.value && "text-white"
-                )}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Tab Switcher - Icon Only */}
+      {/* Tab Switcher - 4 Icons: Replies, Quotes, Search, Sort */}
       <div className="flex mb-3">
         <button
           type="button"
@@ -603,9 +568,67 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           {activeTab === 'quotes' && (
             <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
           )}
-          <Repeat2 className="w-5 h-5 relative z-10" />
+          <Quote className="w-5 h-5 relative z-10" />
         </button>
+        <button
+          type="button"
+          onClick={() => setShowSearch(!showSearch)}
+          className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+            showSearch
+              ? 'text-white'
+              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+          }`}
+        >
+          {showSearch && (
+            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+          )}
+          <Search className="w-5 h-5 relative z-10" />
+        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+                sortBy !== 'recent'
+                  ? 'text-white'
+                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+              }`}
+            >
+              {sortBy !== 'recent' && (
+                <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+              )}
+              <ArrowUpDown className="w-5 h-5 relative z-10" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-zinc-900 border border-zinc-800 rounded-xl p-1">
+            {SORT_OPTIONS.map((option) => (
+              <DropdownMenuItem
+                key={option.value}
+                onClick={() => setSortBy(option.value as 'recent' | 'liked')}
+                className={cn(
+                  "text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white",
+                  sortBy === option.value && "text-white"
+                )}
+              >
+                {option.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      {/* Search Input - shown when search icon is active */}
+      {showSearch && (
+        <div className="px-5 mb-3">
+          <Input
+            placeholder="Search comments..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+            autoFocus
+          />
+        </div>
+      )}
 
       {/* Comments List */}
       {activeTab === 'replies' && (
