@@ -24,10 +24,12 @@ import valorantCategory from '@/assets/valorant-category.png';
 import leagueCategory from '@/assets/league-category.png';
 import minecraftCategory from '@/assets/minecraft-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
+import lcsCategory from '@/assets/lcs-category.png';
 
 // Mock categories data
 const MOCK_CATEGORIES = [
   { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, viewers: '421K' },
+  { id: 'lcs', name: 'Last Chad Standing', image: lcsCategory, viewers: '356K' },
   { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, viewers: '312K' },
   { id: 'valorant', name: 'VALORANT', image: valorantCategory, viewers: '287K' },
   { id: 'league', name: 'League of Legends', image: leagueCategory, viewers: '198K' },
