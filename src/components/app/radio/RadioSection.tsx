@@ -73,9 +73,9 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
   const error = isSearching ? searchError : genreError;
   
   return (
-    <div className="space-y-3">
-      {/* Sticky Search & Genre Filter - stacks below music sub-tabs */}
-      <div className="sticky top-[9.25rem] lg:top-[6.5rem] z-20 -mx-2 px-2 sm:-mx-3 sm:px-3 pt-1 pb-2 space-y-2.5 bg-black before:absolute before:inset-x-0 before:-top-2 before:h-2 before:bg-black">
+    <div className="flex flex-col h-full">
+      {/* Fixed Search & Genre Filter */}
+      <div className="flex-shrink-0 pb-3 space-y-2.5 bg-black">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -108,56 +108,59 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         )}
       </div>
       
-      {/* Loading State */}
-      {isLoading && (
-        <div className="space-y-2">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex gap-4 p-4 bg-zinc-900/50 rounded-2xl">
-              <Skeleton className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
+      {/* Scrollable Station List */}
+      <div className="flex-1 overflow-y-auto space-y-2 pb-32">
+        {/* Loading State */}
+        {isLoading && (
+          <>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex gap-4 p-4 bg-zinc-900/50 rounded-2xl">
+                <Skeleton className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+                <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" />
               </div>
-              <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" />
-            </div>
-          ))}
-        </div>
-      )}
-      
-      {/* Error State */}
-      {error && !isLoading && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Radio className="w-12 h-12 text-zinc-600 mb-4" />
-          <h3 className="text-white font-semibold mb-2">Failed to load stations</h3>
-          <p className="text-zinc-500 text-sm max-w-[280px]">
-            Please check your connection and try again.
-          </p>
-        </div>
-      )}
-      
-      {/* Empty State */}
-      {!isLoading && !error && stations.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Radio className="w-12 h-12 text-zinc-600 mb-4" />
-          <h3 className="text-white font-semibold mb-2">
-            {isSearching ? 'No stations found' : 'No stations available'}
-          </h3>
-          <p className="text-zinc-500 text-sm max-w-[280px]">
-            {isSearching 
-              ? 'Try a different search term.'
-              : 'Try selecting a different genre.'}
-          </p>
-        </div>
-      )}
-      
-      {/* Station List */}
-      {!isLoading && !error && stations.length > 0 && (
-        <div className="space-y-2">
-          {stations.map((station) => (
-            <RadioStationCard key={station.stationuuid} station={station} />
-          ))}
-        </div>
-      )}
+            ))}
+          </>
+        )}
+        
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <Radio className="w-12 h-12 text-zinc-600 mb-4" />
+            <h3 className="text-white font-semibold mb-2">Failed to load stations</h3>
+            <p className="text-zinc-500 text-sm max-w-[280px]">
+              Please check your connection and try again.
+            </p>
+          </div>
+        )}
+        
+        {/* Empty State */}
+        {!isLoading && !error && stations.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <Radio className="w-12 h-12 text-zinc-600 mb-4" />
+            <h3 className="text-white font-semibold mb-2">
+              {isSearching ? 'No stations found' : 'No stations available'}
+            </h3>
+            <p className="text-zinc-500 text-sm max-w-[280px]">
+              {isSearching 
+                ? 'Try a different search term.'
+                : 'Try selecting a different genre.'}
+            </p>
+          </div>
+        )}
+        
+        {/* Station List */}
+        {!isLoading && !error && stations.length > 0 && (
+          <>
+            {stations.map((station) => (
+              <RadioStationCard key={station.stationuuid} station={station} />
+            ))}
+          </>
+        )}
+      </div>
     </div>
   );
 }
