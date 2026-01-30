@@ -1587,7 +1587,7 @@ export default function AssistantPage() {
                     onClick={() => {
                       handleSend("What's happening in the news today?");
                     }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
                     📰 What's new?
                   </button>
@@ -1598,7 +1598,7 @@ export default function AssistantPage() {
                       setInputGlow(true);
                       setTimeout(() => setInputGlow(false), 2000);
                     }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
                     🎨 Generate an image
                   </button>
@@ -1606,7 +1606,7 @@ export default function AssistantPage() {
                     onClick={() => {
                       fileInputRef.current?.click();
                     }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
                     🖼️ Edit an image
                   </button>
@@ -1617,7 +1617,7 @@ export default function AssistantPage() {
                       setInputGlow(true);
                       setTimeout(() => setInputGlow(false), 2000);
                     }}
-                    className="px-3 py-1.5 text-xs rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
                     🎬 Generate a video
                   </button>
