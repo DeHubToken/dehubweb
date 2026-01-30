@@ -12,6 +12,7 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -175,6 +176,9 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
 
 function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  
+  // Convert relative avatar path to full CDN URL
+  const avatarUrl = comment.avatar ? getMediaUrl(comment.avatar) : undefined;
 
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked);
@@ -188,7 +192,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
       className={cn("flex gap-3 py-3", isReply && "ml-8")}
     >
       <Avatar className="w-8 h-8 flex-shrink-0">
-        <AvatarImage src={comment.avatar} className="object-cover" />
+        <AvatarImage src={avatarUrl} className="object-cover" />
         <AvatarFallback className="bg-zinc-700">{comment.username[0].toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
