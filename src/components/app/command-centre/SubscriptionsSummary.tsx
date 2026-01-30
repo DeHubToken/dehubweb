@@ -15,17 +15,17 @@ export function SubscriptionsSummary() {
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-semibold">Subscriptions</h3>
-        <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 hover:text-white text-xs h-8 rounded-full bg-transparent">
+        <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 hover:text-white text-xs h-8 rounded-xl bg-transparent">
           View Details
         </Button>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-4">
-        <button className="bg-zinc-800 text-white text-xs px-3 py-1.5 rounded-full">
+        <button className="bg-zinc-800 text-white text-xs px-3 py-1.5 rounded-xl">
           Your subscribers
         </button>
-        <button className="text-zinc-500 text-xs px-3 py-1.5 rounded-full hover:text-white">
+        <button className="text-zinc-500 text-xs px-3 py-1.5 rounded-xl hover:text-white">
           Your subscriptions
         </button>
       </div>

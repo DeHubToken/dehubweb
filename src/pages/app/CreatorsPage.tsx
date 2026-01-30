@@ -106,7 +106,7 @@ export default function CreatorsPage() {
             variant="ghost"
             size="icon"
             onClick={() => navigate('/')}
-            className="rounded-full hover:bg-zinc-800 absolute left-4 top-8 text-white"
+            className="rounded-xl hover:bg-zinc-800 absolute left-4 top-8 text-white"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

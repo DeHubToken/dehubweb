@@ -40,10 +40,10 @@ export function TransactionsTab() {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Transactions</h2>
         <div className="flex gap-2">
-          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm h-9 px-4 rounded-full">
+          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm h-9 px-4 rounded-xl">
             Add funds
           </Button>
-          <Button variant="outline" className="border-zinc-700 text-white text-sm h-9 px-4 rounded-full bg-transparent hover:bg-zinc-800">
+          <Button variant="outline" className="border-zinc-700 text-white text-sm h-9 px-4 rounded-xl bg-transparent hover:bg-zinc-800">
             Withdraw
           </Button>
         </div>
@@ -81,12 +81,12 @@ export function TransactionsTab() {
           <p className="text-zinc-400 text-sm mb-2">Income vs. Expenditure</p>
 
           {/* Time Filters */}
-          <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-full p-1 w-fit">
+          <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit">
             {timeFilters.map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
                   activeFilter === filter
                     ? 'bg-emerald-600 text-white'
                     : 'text-zinc-400 hover:text-white'
@@ -180,12 +180,12 @@ export function TransactionsTab() {
           </div>
 
           {/* Time Filters */}
-          <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-full p-1 w-fit ml-auto">
+          <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit ml-auto">
             {timeFilters.map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
                   activeFilter === filter
                     ? 'bg-emerald-600 text-white'
                     : 'text-zinc-400 hover:text-white'
@@ -244,10 +244,10 @@ export function TransactionsTab() {
         <div className="flex items-center justify-between mb-4">
           <span className="text-white font-semibold">Transaction list</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-full bg-transparent">
+            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-xl bg-transparent">
               Filter ▼
             </Button>
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-full bg-transparent">
+            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-xl bg-transparent">
               Export CSV
             </Button>
           </div>
@@ -276,7 +276,7 @@ export function TransactionsTab() {
                   <td className="py-4">{tx.method}</td>
                   <td className="py-4 text-emerald-400">{tx.status}</td>
                   <td className="py-4">
-                    <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-7 rounded-full bg-transparent">
+                    <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-7 rounded-xl bg-transparent">
                       View transaction
                     </Button>
                   </td>

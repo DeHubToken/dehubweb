@@ -43,7 +43,7 @@ export function RecentTransactions() {
     <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-semibold">Recent transactions</h3>
-        <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 hover:text-white text-xs h-8 rounded-full bg-transparent">
+        <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 hover:text-white text-xs h-8 rounded-xl bg-transparent">
           View all
         </Button>
       </div>
