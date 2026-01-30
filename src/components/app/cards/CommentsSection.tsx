@@ -536,7 +536,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.2 }}
-      className="mt-3 pt-3 border-t border-zinc-800"
+      className="mt-3 pt-3"
     >
 
       {/* Tab Switcher - 4 Icons: Replies, Quotes, Search, Sort */}
