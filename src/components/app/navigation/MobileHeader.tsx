@@ -36,12 +36,14 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         <button onClick={handleLogoClick} className="block cursor-pointer">
           <img src={dehubLogo} alt="dehub" className="h-6 md:h-7 w-auto" />
         </button>
-        
-        {/* Authenticated User Avatar & Name */}
+      </div>
+      
+      <div className="flex items-center gap-2">
+        {/* Authenticated User Avatar - icon only on mobile/tablet */}
         {isAuthenticated && user && (
           <button 
             onClick={() => navigate('/app/profile')}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 transition-opacity"
           >
             <Avatar className="w-7 h-7">
               {user.avatar_url && (
@@ -55,14 +57,9 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
                 {(user.display_name || user.username)?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm text-white font-medium truncate max-w-[80px]">
-              {user.display_name || user.username || 'User'}
-            </span>
           </button>
         )}
-      </div>
-      
-      <div className="flex items-center gap-2">
+        
         {/* Coin Balance */}
         <CoinBalanceMenu balance={coinBalance} variant="mobile" />
         
