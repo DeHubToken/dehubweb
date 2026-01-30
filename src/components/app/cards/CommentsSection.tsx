@@ -201,10 +201,12 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
       animate={{ opacity: 1, y: 0 }}
       className={cn("flex gap-3 py-3", isReply && "ml-8")}
     >
-      <Avatar className="w-8 h-8 flex-shrink-0">
-        {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
-        <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
-      </Avatar>
+      <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
+        <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
+          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
+          <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+        </Avatar>
+      </button>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <button 
