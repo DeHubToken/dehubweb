@@ -7,7 +7,7 @@
  * @module components/app/feeds/VideosFeed
  */
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye } from 'lucide-react';
@@ -374,6 +374,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     locked: false,
   });
   const loaderRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -465,13 +466,18 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   // Check if any client-side filters are active
   const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
 
+  // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
-          fetchNextPage();
+        // Use ref for synchronous check - prevents multiple fetches from stale closures
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -479,7 +485,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage]);
 
   // Reset client-side filters
   const clearFilters = () => {
