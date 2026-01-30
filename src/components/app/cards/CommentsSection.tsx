@@ -12,7 +12,7 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -97,16 +97,19 @@ function formatTimeAgo(dateString: string): string {
 }
 
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
+  const address = apiComment.address;
+  const rawAvatarPath = apiComment.writor?.avatarUrl;
+  
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
-    avatar: apiComment.writor?.avatarUrl || undefined, // No fallback - use initial
+    avatar: address && rawAvatarPath ? buildAvatarUrl(address, rawAvatarPath) : undefined,
     text: apiComment.content,
     likes: 0,
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
-    address: apiComment.address,
+    address,
   };
 }
 
@@ -177,8 +180,8 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
 function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   
-  // Convert relative avatar path to full CDN URL
-  const avatarUrl = comment.avatar ? getMediaUrl(comment.avatar) : undefined;
+  // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
+  const avatarUrl = comment.avatar;
 
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked);

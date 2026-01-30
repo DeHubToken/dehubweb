@@ -7,7 +7,7 @@
 import { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import type { Comment } from './types';
 
 interface CommentItemProps {
@@ -31,7 +31,9 @@ export const CommentItem = memo(function CommentItem({
     onReplyPress?.(comment);
   }, [comment, onReplyPress]);
 
-  const avatarUrl = comment.avatarUrl ? getMediaUrl(comment.avatarUrl) : undefined;
+  const avatarUrl = comment.avatarUrl && comment.address 
+    ? buildAvatarUrl(comment.address, comment.avatarUrl) 
+    : undefined;
 
   return (
     <motion.div
