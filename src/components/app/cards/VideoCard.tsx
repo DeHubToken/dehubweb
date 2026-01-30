@@ -465,17 +465,21 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           />
         )}
         
-        {/* Content Type Badge - PPV/Bounty/Locked */}
+        {/* Content Type Badges - PPV/Bounty/Locked - show all that apply */}
         {(video.isPPV || video.isW2E || video.isLocked) && (
-          <div className="absolute top-2 left-2 z-10">
-            {video.isPPV && video.ppvPrice ? (
+          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
+            {/* PPV Badge */}
+            {video.isPPV && video.ppvPrice && (
               <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
                 <DollarSign className="w-3 h-3 text-white" />
                 <span className="text-white text-xs font-medium">
                   {Number(video.ppvPrice).toFixed(2)} {video.ppvCurrency || 'USDC'}
                 </span>
               </div>
-            ) : video.isW2E ? (
+            )}
+            
+            {/* Bounty Badge */}
+            {video.isW2E && (
               <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
                 <DrawerTrigger asChild>
                   <button 
@@ -502,7 +506,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                     <div className="space-y-3">
                       {video.bountyViews && video.bountyViews > 0 && (
                         <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                          <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center">
                             <Eye className="w-4 h-4 text-emerald-400" />
                           </div>
                           <div>
@@ -513,7 +517,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                       )}
                       {video.bountyComments && video.bountyComments > 0 && (
                         <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center">
                             <MessageCircle className="w-4 h-4 text-blue-400" />
                           </div>
                           <div>
@@ -542,12 +546,15 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                   </div>
                 </DrawerContent>
               </Drawer>
-            ) : video.isLocked ? (
+            )}
+            
+            {/* Locked Badge */}
+            {video.isLocked && (
               <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
                 <Lock className="w-3 h-3 text-white" />
                 <span className="text-white text-xs font-medium">Locked</span>
               </div>
-            ) : null}
+            )}
           </div>
         )}
         
