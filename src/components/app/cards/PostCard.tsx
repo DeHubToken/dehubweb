@@ -107,7 +107,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         <ActionBar 
           postId={post.id} 
           className="p-0"
-          onComment={() => setShowComments(true)}
+          onComment={() => setShowComments(prev => !prev)}
           likeCount={post.stats.likes}
           commentCount={post.stats.comments}
           hideDislike
