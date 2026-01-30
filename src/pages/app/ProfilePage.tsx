@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
@@ -36,6 +36,13 @@ export default function ProfilePage() {
   const { username: routeUsername } = useParams<{ username: string }>();
   const userId = searchParams.get('id');
   const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading, disconnect } = useAuth();
+  
+  // Reset scroll position on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [routeUsername, userId]);
   
   // Determine lookup method: route param username > query param id > current user
   const lookupUsername = routeUsername;
