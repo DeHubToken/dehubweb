@@ -1,117 +1,91 @@
 
-# Adding "Back to Collage" Navigation for Images Feed
+# Plan: Non-Portrait Video Detection with Liquid Glass Borders
 
-## Current Behavior
-When users click an image in the collage view, they enter an endless scroll feed view starting from that image. Currently, there's no way to return to the collage view without switching tabs.
+## Overview
+Enhance the ShortsViewer to detect landscape or square videos and display them at their correct aspect ratio, with liquid glass styling filling the empty space above and below the video.
 
-## Recommended Options
+## How It Will Work
+When you open a Short that isn't filmed in portrait orientation (9:16), the viewer will:
+1. Detect the video's actual dimensions when it loads
+2. Display the video at its correct aspect ratio (instead of stretching/cropping)
+3. Fill the top and bottom gaps with a stylish frosted glass effect that matches the app's design
 
-### Option A: Floating "Grid" Button (Recommended)
-Add a floating action button in the top-left corner of the feed view that allows users to return to collage mode. This follows common gallery app patterns (like Instagram's grid icon).
+## Technical Implementation
 
-**Pros:**
-- Always visible and accessible while scrolling
-- Clear visual indication of the action
-- Doesn't interfere with content
-
-**Implementation:**
-- Add a `Grid3x3` icon button positioned `fixed` or `sticky` at the top of the `EndlessScrollView`
-- When clicked, calls `onBackToCollage?.()` which sets `selectedImageId` to `null` and `showImagesCollage` to `true`
-
----
-
-### Option B: Header Bar with Back Arrow
-Add a compact header bar when in feed mode that includes a back arrow and optional title like "Back to Grid".
-
-**Pros:**
-- Very clear navigation pattern
-- Familiar UX for going "back"
-
-**Cons:**
-- Takes up vertical space
-- Adds visual clutter
-
----
-
-### Option C: Double-Tap Images Tab to Return
-Since double-tapping the Images tab already toggles filters, we could add logic to also return to collage when in feed mode.
-
-**Pros:**
-- No additional UI elements
-- Consistent with existing behavior
-
-**Cons:**
-- Not discoverable
-- Users might not know this exists
-
----
-
-## Recommended Solution: Option A (Floating Grid Button)
-
-### Files to Modify
-- `src/components/app/feeds/ImagesFeed.tsx`
-- `src/pages/app/HomePage.tsx`
-
-### Implementation Details
-
-#### 1. Add `onBackToCollage` prop to `ImagesFeed`
+### 1. Add Video Dimension State
+Track the video's natural width/height in the ShortsViewer component:
 ```tsx
-interface ImagesFeedProps {
-  // ... existing props
-  onBackToCollage?: () => void;
-}
+const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
+const [videoDimensions, setVideoDimensions] = useState({ width: 0, height: 0 });
 ```
 
-#### 2. Update `EndlessScrollView` to show a "Back to Grid" button
-Add a floating button at the top of the endless scroll view:
+### 2. Detect Aspect Ratio on Load
+Use the video element's `onLoadedMetadata` event to capture dimensions:
 ```tsx
-<button
-  onClick={onBackToCollage}
-  className="fixed top-24 left-4 z-20 p-2.5 bg-zinc-900/90 backdrop-blur-sm rounded-xl border border-zinc-700 shadow-lg hover:bg-zinc-800 transition-colors"
-  aria-label="Back to grid view"
->
-  <Grid3x3 className="w-5 h-5 text-white" />
-</button>
-```
-
-#### 3. Update `HomePage` to handle back navigation
-Add a handler function that resets both states:
-```tsx
-const handleBackToCollage = () => {
-  setSelectedImageId(null);
-  setShowImagesCollage(true);
-  window.scrollTo({ top: 0, behavior: 'instant' });
+const handleLoadedMetadata = () => {
+  if (videoRef.current) {
+    const { videoWidth, videoHeight } = videoRef.current;
+    setVideoDimensions({ width: videoWidth, height: videoHeight });
+    
+    const ratio = videoWidth / videoHeight;
+    if (ratio > 1.1) {
+      setVideoAspect('landscape'); // Wider than tall
+    } else if (ratio < 0.9) {
+      setVideoAspect('portrait');  // Taller than wide (normal shorts)
+    } else {
+      setVideoAspect('square');    // Roughly square
+    }
+  }
 };
 ```
 
-Pass this to `ImagesFeed`:
+### 3. Update Video Styling
+Change from `object-cover` (crop to fill) to `object-contain` (fit within container) for non-portrait videos:
 ```tsx
-<ImagesFeed 
-  // ... existing props
-  onBackToCollage={handleBackToCollage}
+<video
+  className={`w-full h-full ${videoAspect === 'portrait' ? 'object-cover' : 'object-contain'}`}
+  // ... other props
 />
 ```
 
----
-
-## Visual Representation
-
+### 4. Add Liquid Glass Background Layers
+Add frosted glass panels behind the video for non-portrait content:
+```tsx
+{videoAspect !== 'portrait' && (
+  <>
+    {/* Blurred thumbnail background */}
+    <div 
+      className="absolute inset-0 z-0"
+      style={{
+        backgroundImage: `url(${currentShort.thumbnail})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: 'blur(40px) saturate(150%)',
+        transform: 'scale(1.1)', // Prevent blur edge artifacts
+      }}
+    />
+    {/* Liquid glass overlay */}
+    <div className="absolute inset-0 z-[1] bg-black/40 backdrop-blur-[24px] saturate-[180%]" />
+  </>
+)}
 ```
-┌─────────────────────────────────┐
-│  [⊞] ← Floating grid button    │
-│                                 │
-│  ┌─────────────────────────┐   │
-│  │                         │   │
-│  │     Image Card 1        │   │
-│  │                         │   │
-│  └─────────────────────────┘   │
-│                                 │
-│  ┌─────────────────────────┐   │
-│  │     Image Card 2        │   │
-│  └─────────────────────────┘   │
-│           ...                   │
-└─────────────────────────────────┘
+
+### 5. Reset State on Video Change
+Clear the aspect ratio state when navigating between shorts to prevent flicker:
+```tsx
+useEffect(() => {
+  setVideoAspect('portrait'); // Reset to default
+  setVideoDimensions({ width: 0, height: 0 });
+  // ... existing video reset logic
+}, [currentIndex]);
 ```
 
-## Summary
-This adds a simple, discoverable way for users to return to the collage grid view from the endless scroll feed. The floating button stays visible as users scroll and follows familiar mobile app patterns.
+## Files to Modify
+- `src/components/app/cards/ShortsViewer.tsx` - Add dimension detection and liquid glass styling
+
+## Visual Result
+- **Portrait videos (9:16)**: No change - displayed full-screen as before
+- **Landscape videos (16:9)**: Centered vertically with liquid glass bands top and bottom
+- **Square videos (1:1)**: Centered with smaller liquid glass bands top and bottom
+
+The liquid glass effect will use a blurred version of the video thumbnail as the base layer, creating a visually cohesive look that doesn't feel like empty space.
