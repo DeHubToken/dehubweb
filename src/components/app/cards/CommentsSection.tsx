@@ -294,8 +294,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const queryClient = useQueryClient();
   const { user, isAuthenticated } = useAuth();
   
-  const [activeTab, setActiveTab] = useState<'replies' | 'quotes'>('replies');
-  const [showSearch, setShowSearch] = useState(false);
+  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'liked'>('recent');
   const [newComment, setNewComment] = useState('');
@@ -572,14 +571,14 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </button>
         <button
           type="button"
-          onClick={() => setShowSearch(!showSearch)}
+          onClick={() => setActiveTab('search')}
           className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
-            showSearch
+            activeTab === 'search'
               ? 'text-white'
               : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
           }`}
         >
-          {showSearch && (
+          {activeTab === 'search' && (
             <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
           )}
           <Search className="w-5 h-5 relative z-10" />
@@ -617,11 +616,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </DropdownMenu>
       </div>
 
-      {/* Search Input - shown when search icon is active */}
-      {showSearch && (
+      {/* Search Input - shown only on search tab */}
+      {activeTab === 'search' && (
         <div className="px-5 mb-3">
           <Input
-            placeholder="Search comments..."
+            placeholder="Search comments & quotes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
@@ -630,7 +629,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </div>
       )}
 
-      {/* Comments List */}
+      {/* Replies Tab */}
       {activeTab === 'replies' && (
         <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
           {isLoading ? (
@@ -674,7 +673,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   animate={{ opacity: 1 }}
                   className="text-zinc-500 text-sm py-6 text-center"
                 >
-                  {searchQuery ? 'No replies found' : 'No replies yet. Be the first!'}
+                  No replies yet. Be the first!
                 </motion.p>
               )}
             </AnimatePresence>
@@ -682,6 +681,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </div>
       )}
 
+      {/* Quotes Tab */}
       {activeTab === 'quotes' && (
         <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
           <motion.p
@@ -691,6 +691,64 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           >
             No quotes yet. Be the first!
           </motion.p>
+        </div>
+      )}
+
+      {/* Search Tab - searches both comments and quotes */}
+      {activeTab === 'search' && (
+        <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+            </div>
+          ) : !searchQuery.trim() ? (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-zinc-500 text-sm py-6 text-center"
+            >
+              Type to search comments & quotes
+            </motion.p>
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {filteredGroupedComments.length > 0 ? (
+                filteredGroupedComments.map(({ comment, replies }) => (
+                  <div key={comment.id}>
+                    <CommentItem 
+                      comment={comment} 
+                      onLike={handleLike} 
+                      onDislike={handleDislike} 
+                      onReply={handleReply} 
+                      onShare={() => {}} 
+                      onBookmark={() => {}}
+                      onUserPress={handleUserPress}
+                    />
+                    {replies.map(reply => (
+                      <CommentItem 
+                        key={reply.id}
+                        comment={reply} 
+                        onLike={handleLike} 
+                        onDislike={handleDislike} 
+                        onReply={handleReply} 
+                        onShare={() => {}} 
+                        onBookmark={() => {}}
+                        onUserPress={handleUserPress}
+                        isReply
+                      />
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-zinc-500 text-sm py-6 text-center"
+                >
+                  No results found
+                </motion.p>
+              )}
+            </AnimatePresence>
+          )}
         </div>
       )}
 
