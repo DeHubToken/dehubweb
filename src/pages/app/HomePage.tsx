@@ -36,7 +36,7 @@ import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
 
 /** Minimum swipe distance to trigger tab change */
 const SWIPE_THRESHOLD = 50;
-const PULL_THRESHOLD = 120;
+const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
 const TRACKPAD_THRESHOLD = 60;
 /** Lock duration after gesture trigger - covers trackpad inertia */
