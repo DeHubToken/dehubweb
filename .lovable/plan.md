@@ -1,81 +1,65 @@
 
 
-# Fix: Profile Pictures in Comments - Root Cause Analysis
+# Fix: Profile Pictures in Comments
 
-## Actual Problem Found
-There are **two separate comment systems** in the codebase with different implementations:
+## Root Cause Found
 
-| Component | Used By | Comment Type | Avatar Field |
-|-----------|---------|--------------|--------------|
-| `CommentsSection.tsx` (inline) | PostCard, VideoCard, ImageCard | Local `Comment` interface | `avatar` |
-| `CommentsSheet.tsx` | LiveCard only | Shared `types.ts` | `avatarUrl` |
+The API returns avatar URLs from `https://api.dehub.io/avatars/...` but the actual images are served from the CDN at `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/...`.
 
-Previous fixes only updated:
-- `CommentsSheet.tsx` ✅
-- `CommentItem.tsx` (external) ✅
-
-But **PostCard, VideoCard, and ImageCard** all use `CommentsSection.tsx`, which has its **own inline `CommentItem`** component that was never updated.
+The current `buildAvatarUrl` function bypasses CDN conversion when it sees a full HTTP URL - which is correct for most cases, but incorrect when the API returns the wrong domain.
 
 ## Solution
-The inline `CommentItem` in `CommentsSection.tsx` (lines 180-293) already correctly uses `comment.avatar`, and the `mapApiComment` function already maps to `avatar` field with `buildAvatarUrl`.
 
-However, checking the actual API response shows `writor.avatarUrl` returns **full HTTPS URLs** like:
-```
-https://api.dehub.io/avatars/0x4c4b6ff85878a936992f45a9b108bde7e332b7e5.jpg
-```
+Update `buildAvatarUrl` in `src/lib/media-url.ts` to detect `api.dehub.io` avatar URLs and convert them to CDN URLs.
 
-The `buildAvatarUrl` function already handles this correctly (returns as-is when URL starts with `http`).
+---
 
-**The real issue:** Need to verify the mapping is being applied correctly. Looking at line 106:
+### File Changes
+
+**`src/lib/media-url.ts`**
+
+Update `buildAvatarUrl` to handle `api.dehub.io` URLs:
+
 ```typescript
-avatar: address && rawAvatarPath ? buildAvatarUrl(address, rawAvatarPath) : undefined,
+export function buildAvatarUrl(address: string, apiAvatarPath: string | undefined | null): string | undefined {
+  if (!apiAvatarPath) return undefined;
+  
+  // If it's already a dehubcdn URL, return as-is
+  if (apiAvatarPath.startsWith('https://dehubcdn')) return apiAvatarPath;
+  
+  // If it's an api.dehub.io avatar URL, extract extension and rebuild with CDN
+  if (apiAvatarPath.includes('api.dehub.io/avatars/')) {
+    const ext = getExtension(apiAvatarPath);
+    return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+  }
+  
+  // Other full URLs (dicebear, etc.) - return as-is
+  if (apiAvatarPath.startsWith('http')) return apiAvatarPath;
+  
+  // Relative path - build CDN URL
+  const ext = getExtension(apiAvatarPath);
+  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+}
 ```
 
-This could return `undefined` if either `address` or `rawAvatarPath` is falsy. But the API shows both are present.
+---
 
-### Debug Steps
-1. Check if `CommentsSection.tsx` is actually passing the avatar URL to the inline `CommentItem`
-2. Verify the `CommentItem` is rendering with the correct `avatarUrl`
+### Why This Works
 
-### Files to Update
+| API Returns | Current Behavior | Fixed Behavior |
+|-------------|------------------|----------------|
+| `https://api.dehub.io/avatars/0x123.jpg` | Returns as-is (broken) | Converts to `https://dehubcdn.../avatars/0x123.jpg` |
+| `https://dehubcdn.../avatars/0x123.jpg` | Returns as-is (works) | Returns as-is (works) |
+| `avatars/0x123.jpg` | Builds CDN URL (works) | Builds CDN URL (works) |
+| `statics/avatars/xxx.octet-stream` | Builds CDN URL (works) | Builds CDN URL (works) |
 
-**`src/components/app/cards/CommentsSection.tsx`**
-- The inline `CommentItem` at line 184 reads `comment.avatar` - verify this matches the mapped field
-- The `mapApiComment` at line 106 sets `avatar` field - this looks correct
+---
 
-The code appears correct. Let me verify by checking if there's any type mismatch or if the avatar field is being set to the wrong type.
+### Technical Details
 
-## Technical Details
-
-### Current Flow in CommentsSection
-```
-API Response: writor.avatarUrl = "https://api.dehub.io/avatars/0x...jpg"
-      ↓
-mapApiComment():
-  - address = "0x..."
-  - rawAvatarPath = "https://api.dehub.io/avatars/0x...jpg" 
-  - buildAvatarUrl() returns the URL as-is (starts with http)
-  - avatar field set to full URL
-      ↓
-CommentItem receives comment.avatar = "https://api.dehub.io/avatars/..."
-      ↓
-<AvatarImage src={avatarUrl} /> should render correctly
-```
-
-### Verification Needed
-The logic appears correct. To confirm the fix is working, I'll:
-1. Add console logging to trace the avatar URL through the mapping
-2. Check if there are edge cases where `writor` or `avatarUrl` is missing
-
-### Proposed Changes
-If avatars still aren't rendering, the issue might be:
-1. The `avatar` field in the local `Comment` type is typed as `string` (not `string | undefined`), which could cause issues if undefined is assigned
-2. A caching issue from stale query data
-
-**Fix:** Update the inline `Comment` interface in `CommentsSection.tsx` to match reality:
-```typescript
-avatar: string;  // Change to: avatar?: string;
-```
-
-And ensure defensive handling in the `CommentItem` render.
+The fix is minimal and surgical - only changing the `buildAvatarUrl` function in one file. This will automatically fix:
+- `CommentsSection.tsx` (PostCard, VideoCard, ImageCard comments)
+- `CommentsSheet.tsx` (LiveCard comments)  
+- `CommentItem.tsx` (external component)
+- All other places using `buildAvatarUrl`
 
