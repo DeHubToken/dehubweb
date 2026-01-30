@@ -44,7 +44,7 @@ export interface VoiceNote {
 export interface Comment {
   id: string;
   username: string;
-  avatar: string;
+  avatar?: string;
   text: string;
   likes: number;
   dislikes: number;
@@ -100,10 +100,19 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
   const address = apiComment.address;
   const rawAvatarPath = apiComment.writor?.avatarUrl;
   
+  // Build avatar URL - use buildAvatarUrl for proper CDN path resolution
+  // If writor.avatarUrl is already a full URL, it passes through unchanged
+  let resolvedAvatar: string | undefined;
+  if (rawAvatarPath) {
+    resolvedAvatar = rawAvatarPath.startsWith('http') 
+      ? rawAvatarPath 
+      : (address ? buildAvatarUrl(address, rawAvatarPath) : undefined);
+  }
+  
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
-    avatar: address && rawAvatarPath ? buildAvatarUrl(address, rawAvatarPath) : undefined,
+    avatar: resolvedAvatar,
     text: apiComment.content,
     likes: 0,
     dislikes: 0,
@@ -195,8 +204,8 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
       className={cn("flex gap-3 py-3", isReply && "ml-8")}
     >
       <Avatar className="w-8 h-8 flex-shrink-0">
-        <AvatarImage src={avatarUrl} className="object-cover" />
-        <AvatarFallback className="bg-zinc-700">{comment.username[0].toUpperCase()}</AvatarFallback>
+        {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
+        <AvatarFallback className="bg-zinc-700">{comment.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
