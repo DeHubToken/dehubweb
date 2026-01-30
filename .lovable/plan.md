@@ -1,61 +1,76 @@
 
-# Fix Sidebar Profile Picture Not Showing
+# Fix: Profile Pictures Not Rendering in Comments
 
 ## Problem
+Profile pictures (PFPs) in the comments section are showing fallback initials (e.g., "E") instead of the actual avatar images.
 
-The sidebar shows "E" (initial letter fallback) instead of Erwin's profile picture because the `avatarImageUrl` from AuthContext is a **relative path** (e.g., `avatars/0x123...abc.jpg`) that the browser can't load.
+## Root Cause
+The comments system is using `getMediaUrl()` to convert avatar paths to CDN URLs. However, the DeHub API can return avatar paths in various formats like:
+- `"avatars/xxx.jpg"`  
+- `"statics/avatars/xxx.octet-stream"`
 
-## Root Cause Analysis
+The `getMediaUrl()` function simply prepends the CDN base URL to these paths, which doesn't work correctly for all avatar path formats.
 
-| Component | What it does | URL Type |
-|-----------|--------------|----------|
-| **AuthContext** | Stores raw API response | Relative path (`avatars/xxx.jpg`) |
-| **DesktopSidebar** | Reads `user?.avatarImageUrl` directly | Relative path (broken) |
-| **ProfilePage** | Uses `buildAvatarUrl()` utility | Full CDN URL (works) |
-
-The ProfilePage correctly processes the raw avatar path through `buildAvatarUrl()`, but the sidebar skips this step.
-
-## Solution
-
-Import `buildAvatarUrl` in DesktopSidebar and use it to convert the relative path to a full CDN URL:
-
-```typescript
-// Before (broken)
-const userAvatarUrl = user?.avatarImageUrl || null;
-
-// After (fixed)
-const userAvatarUrl = user?.avatarImageUrl && user?.address 
-  ? buildAvatarUrl(user.address, user.avatarImageUrl) 
-  : null;
+The rest of the codebase uses `buildAvatarUrl(address, apiAvatarPath)` which constructs canonical URLs in the format:
+```
+https://dehubcdn.../avatars/{address}.{ext}
 ```
 
-## Changes Required
+This requires the user's wallet address (which IS available in the API response's `address` field) to build the correct URL.
 
-### File: `src/components/app/navigation/DesktopSidebar.tsx`
+## Solution
+Update the comments system to use `buildAvatarUrl()` instead of `getMediaUrl()` for avatar URLs.
 
-1. **Add import** for `buildAvatarUrl`:
-   ```typescript
-   import { buildAvatarUrl } from '@/lib/media-url';
-   ```
+### Files to Update
 
-2. **Update line 68** to process the avatar URL:
-   ```typescript
-   // Before
-   const userAvatarUrl = user?.avatarImageUrl || null;
-   
-   // After
-   const userAvatarUrl = user?.avatarImageUrl && user?.address
-     ? buildAvatarUrl(user.address, user.avatarImageUrl)
-     : null;
-   ```
+**1. `src/components/app/comments/CommentsSheet.tsx`**
+- Import `buildAvatarUrl` from `@/lib/media-url`
+- Update `mapApiComment()` to use `buildAvatarUrl(apiComment.address, apiComment.writor?.avatarUrl)`
+
+**2. `src/components/app/comments/CommentItem.tsx`**
+- Import `buildAvatarUrl` from `@/lib/media-url`
+- Update avatar URL resolution to use `buildAvatarUrl(comment.address, comment.avatarUrl)`
+- Requires the `Comment` type to include the `address` field
+
+**3. `src/components/app/cards/CommentsSection.tsx`**
+- Import `buildAvatarUrl` from `@/lib/media-url`
+- Update `mapApiComment()` to build avatar URL using `buildAvatarUrl(apiComment.address, apiComment.writor?.avatarUrl)`
+- Store the resolved URL directly in the mapped comment
+
+**4. `src/components/app/comments/CommentInput.tsx`**
+- Import `buildAvatarUrl` from `@/lib/media-url`
+- Update the logged-in user's avatar to use `buildAvatarUrl(user.address, user.avatarImageUrl || user.avatarUrl)`
+
+---
 
 ## Technical Details
 
-The `buildAvatarUrl()` function:
-- Takes the user's wallet address and the raw avatar path
-- Returns a full CDN URL: `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/{address}.{ext}`
-- Already handles edge cases (null input, already-absolute URLs)
+### Current (Broken) Flow
+```
+API Response: { address: "0x123...", writor: { avatarUrl: "statics/avatars/xyz.octet-stream" } }
+      ↓
+getMediaUrl() → "https://dehubcdn.../statics/avatars/xyz.octet-stream"
+      ↓
+❌ Image fails to load (incorrect URL format)
+```
 
-## Expected Result
+### Fixed Flow
+```
+API Response: { address: "0x123...", writor: { avatarUrl: "statics/avatars/xyz.octet-stream" } }
+      ↓
+buildAvatarUrl("0x123...", "statics/avatars/xyz.octet-stream")
+      ↓  
+"https://dehubcdn.../avatars/0x123....octet-stream"
+      ↓
+✅ Image loads correctly
+```
 
-After this fix, the sidebar Profile nav item will show Erwin's actual profile picture instead of the "E" fallback letter.
+### Code Changes Summary
+
+| File | Change |
+|------|--------|
+| `CommentsSheet.tsx` | Use `buildAvatarUrl` in `mapApiComment` |
+| `CommentItem.tsx` | Use `buildAvatarUrl` with comment's address |
+| `CommentsSection.tsx` | Use `buildAvatarUrl` in `mapApiComment` |
+| `CommentInput.tsx` | Use `buildAvatarUrl` for current user's avatar |
+
