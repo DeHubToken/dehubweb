@@ -95,16 +95,21 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
   const id = String(nft.tokenId || nft.id || nft.token_id);
   const durationStr = nft.duration || '0:30';
   const viewCount = nft.views || nft.view_count || 0;
-  const minterAddress = nft.minter || nft.creator?.id || '';
-  const avatarUrl = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
-                    buildAvatarUrl(minterAddress, nft.creator?.avatar_url);
+  const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
+  
+  // Try all possible avatar fields - same pattern as leaderboard/profile
+  const rawAvatarUrl = nft.minterAvatarUrl || nft.minterAvatarImg || nft.avatarUrl || nft.avatarImg ||
+                       nft.creator?.avatar_url || nft.creator?.avatarImg || nft.creator?.avatarUrl;
+  const avatarUrl = rawAvatarUrl?.startsWith('http') 
+    ? rawAvatarUrl 
+    : buildAvatarUrl(minterAddress, rawAvatarUrl);
   
   return {
     id,
     type: 'short',
     username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
-    avatar: avatarUrl || undefined,
+    avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
     likes: formatLikes(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
