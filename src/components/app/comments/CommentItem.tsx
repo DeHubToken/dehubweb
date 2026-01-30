@@ -37,7 +37,7 @@ export const CommentItem = memo(function CommentItem({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`flex items-start gap-3 px-4 py-3 ${isReply ? 'pl-12' : ''}`}
+      className={`flex items-start gap-3 px-5 py-3 ${isReply ? 'pl-14' : ''}`}
     >
       <Avatar 
         className="w-7 h-7 flex-shrink-0 cursor-pointer" 
