@@ -508,17 +508,23 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     }
 
     const tempId = `temp-${Date.now()}`;
+    const userAddress = user.address || user.wallet_address || '';
+    const rawAvatarPath = user.avatarImageUrl || user.avatarUrl;
+    const resolvedAvatar = userAddress && rawAvatarPath 
+      ? buildAvatarUrl(userAddress, rawAvatarPath) 
+      : undefined;
+
     const tempComment: Comment = {
       id: tempId,
       username: user.username || 'you',
-      avatar: user.avatarImageUrl || user.avatarUrl || undefined,
+      avatar: resolvedAvatar,
       text: newComment,
       likes: 0,
       dislikes: 0,
       timeAgo: 'Just now',
       voiceNote: voiceNote || undefined,
       replyToId: replyTo?.id,
-      address: user.address || user.wallet_address || '',
+      address: userAddress,
     };
 
     setOptimisticComments(prev => [tempComment, ...prev]);
