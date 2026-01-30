@@ -30,6 +30,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [isScrolling, setIsScrolling] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
+  const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -62,6 +63,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   }, []);
 
   useEffect(() => {
+    // Reset aspect ratio state when changing videos
+    setVideoAspect('portrait');
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch(() => {});
@@ -69,6 +72,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     setIsLiked(false);
     setIsPlaying(true);
   }, [currentIndex]);
+
+  // Handle video metadata load to detect aspect ratio
+  const handleLoadedMetadata = useCallback(() => {
+    if (videoRef.current) {
+      const { videoWidth, videoHeight } = videoRef.current;
+      if (videoWidth && videoHeight) {
+        const ratio = videoWidth / videoHeight;
+        if (ratio > 1.1) {
+          setVideoAspect('landscape');
+        } else if (ratio < 0.9) {
+          setVideoAspect('portrait');
+        } else {
+          setVideoAspect('square');
+        }
+      }
+    }
+  }, []);
 
   const goToNext = () => {
     if (currentIndex < shorts.length - 1) {
@@ -250,8 +270,27 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
 
         {/* Video Container */}
         <div className={`relative ${isMobile ? 'w-full h-full' : 'w-[360px] h-[calc(100vh-80px)] max-h-[640px]'} bg-zinc-900 rounded-none md:rounded-2xl overflow-hidden`}>
+          {/* Liquid glass background for non-portrait videos */}
+          {videoAspect !== 'portrait' && currentShort.thumbnail && (
+            <>
+              {/* Blurred thumbnail background */}
+              <div 
+                className="absolute inset-0 z-0"
+                style={{
+                  backgroundImage: `url(${currentShort.thumbnail})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'blur(40px) saturate(150%)',
+                  transform: 'scale(1.1)',
+                }}
+              />
+              {/* Liquid glass overlay */}
+              <div className="absolute inset-0 z-[1] bg-black/40 backdrop-blur-[24px] saturate-[180%]" />
+            </>
+          )}
+          
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 z-[2]"
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.2}
@@ -262,13 +301,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               <video
                 ref={videoRef}
                 src={currentShort.videoUrl}
-                className="w-full h-full object-cover"
+                className={`w-full h-full ${videoAspect === 'portrait' ? 'object-cover' : 'object-contain'}`}
                 loop
                 playsInline
                 autoPlay
                 muted={isMuted}
                 poster={currentShort.thumbnail}
                 onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
                 onError={() => console.error('Video load error:', currentShort.videoUrl)}
               />
             ) : (
