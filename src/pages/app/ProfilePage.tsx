@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, LogOut
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, LogOut, Pencil
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
   const userId = searchParams.get('id');
@@ -595,14 +596,26 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
-              <Button
-                variant="outline" 
-                size="sm" 
-                className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
-              >
-                <MessageCircle className="w-4 h-4" />
-                Message
-              </Button>
+              {isViewingOwnProfile ? (
+                <Button
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                  onClick={() => navigate('/app/settings')}
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Profile
+                </Button>
+              ) : (
+                <Button
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Message
+                </Button>
+              )}
               <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
                 <DrawerTrigger asChild>
                   <Button 
