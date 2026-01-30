@@ -102,12 +102,10 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
   
   // Build avatar URL - use buildAvatarUrl for proper CDN path resolution
   // If writor.avatarUrl is already a full URL, it passes through unchanged
-  let resolvedAvatar: string | undefined;
-  if (rawAvatarPath) {
-    resolvedAvatar = rawAvatarPath.startsWith('http') 
-      ? rawAvatarPath 
-      : (address ? buildAvatarUrl(address, rawAvatarPath) : undefined);
-  }
+  // Always use buildAvatarUrl - it handles all URL formats including api.dehub.io → CDN conversion
+  const resolvedAvatar = address && rawAvatarPath 
+    ? buildAvatarUrl(address, rawAvatarPath) 
+    : undefined;
   
   return {
     id: String(apiComment.id),
