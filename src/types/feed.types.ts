@@ -157,6 +157,8 @@ export interface ShortVideo extends BaseFeedItem {
   type: 'short';
   username: string;
   verified: boolean;
+  /** Creator's avatar URL */
+  avatar?: string;
   likes: string;
   thumbnail: string;
   videoUrl: string;

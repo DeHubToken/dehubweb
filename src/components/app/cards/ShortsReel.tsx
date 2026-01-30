@@ -64,8 +64,21 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-full bg-zinc-700 border border-white/30 flex-shrink-0 flex items-center justify-center">
-                    <span className="text-white text-[8px] font-medium">{short.username?.[0]?.toUpperCase()}</span>
+                  <div className="w-5 h-5 rounded-full bg-zinc-700 border border-white/30 flex-shrink-0 overflow-hidden">
+                    {short.avatar ? (
+                      <img 
+                        src={short.avatar} 
+                        alt="" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                          (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    <span className={`w-full h-full flex items-center justify-center text-white text-[8px] font-medium ${short.avatar ? 'hidden' : ''}`}>
+                      {short.username?.[0]?.toUpperCase()}
+                    </span>
                   </div>
                   <span className="text-white text-[10px] font-medium truncate">{short.username}</span>
                 </div>
