@@ -1,133 +1,74 @@
 
-# Fix: True Random Shuffle with Balanced Content Ratio
 
-## Current Problems
+# Fix Desktop Pinch-Zoom Panning Issue
 
-1. **Not truly random on page refresh**: The `randomSeed` is initialized once on component mount and only changes when pull-to-refresh is triggered. Browser refresh re-mounts the component with a new seed, but navigating away and back may reuse the same seed.
+## Problem Identified
 
-2. **No content ratio enforcement**: The shuffle treats all content equally - there's no guarantee of getting text posts mixed in with image/video posts.
+After removing the viewport restrictions (`maximum-scale=1.0, user-scalable=no`), pinch-zoom now works in some areas, but panning after zooming is still blocked. This is because of `touch-action: pan-x pan-y` applied in multiple places:
+
+1. **`src/index.css`** - Lines 169 and 178 on `html` and `body`
+2. **`src/components/app/AppLayout.tsx`** - Inline style on line 22
+
+The `pan-x pan-y` value explicitly excludes the `pinch-zoom` gesture, which also affects desktop trackpad behavior in some browsers.
 
 ## Solution
 
-### 1. True Randomization on Every Render
+Change `touch-action: pan-x pan-y` to `touch-action: manipulation` in both locations.
 
-Replace the seeded shuffle with `Date.now()` as the seed, ensuring every page load/refresh produces a completely different order.
+**Why `manipulation`?**
+- Allows panning (scrolling) and pinch-zoom
+- Disables double-tap-to-zoom (prevents the 300ms click delay)
+- Standard approach for touch-friendly web apps that still allow zoom
 
-### 2. Balanced Content Distribution Algorithm
+## Files to Modify
 
-Implement a "ratio shuffle" that:
-1. Separates items into **text posts** and **media posts** (images/videos)
-2. Enforces a **3:9 ratio** (1 text post for every 3 media posts)
-3. Interleaves them randomly while maintaining the ratio
+### 1. `src/index.css`
 
-## Technical Implementation
+Update the `html, body` rule and the `body` rule:
 
-### File: `src/components/app/feeds/HomeFeed.tsx`
+```css
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  touch-action: manipulation;  /* Changed from pan-x pan-y */
+  -webkit-overflow-scrolling: touch;
+}
 
-**Step 1: New helper function for balanced shuffle**
-
-```typescript
-/**
- * Balanced shuffle: ensures ~3 text posts for every 9 media posts
- * Interleaves text posts throughout the feed at regular intervals
- */
-function balancedShuffle<T extends { type: string }>(
-  items: T[], 
-  seed: number
-): T[] {
-  const random = seededRandom(seed);
-  
-  // Separate text posts from media posts
-  const textPosts = items.filter(item => item.type === 'post');
-  const mediaPosts = items.filter(item => item.type !== 'post');
-  
-  // Shuffle both arrays independently
-  const shuffledText = [...textPosts];
-  const shuffledMedia = [...mediaPosts];
-  
-  for (let i = shuffledText.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [shuffledText[i], shuffledText[j]] = [shuffledText[j], shuffledText[i]];
-  }
-  
-  for (let i = shuffledMedia.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [shuffledMedia[i], shuffledMedia[j]] = [shuffledMedia[j], shuffledMedia[i]];
-  }
-  
-  // Interleave: insert 1 text post after every 3 media posts
-  const result: T[] = [];
-  let textIndex = 0;
-  let mediaIndex = 0;
-  
-  while (mediaIndex < shuffledMedia.length || textIndex < shuffledText.length) {
-    // Add up to 3 media posts
-    for (let i = 0; i < 3 && mediaIndex < shuffledMedia.length; i++) {
-      result.push(shuffledMedia[mediaIndex++]);
-    }
-    
-    // Add 1 text post if available
-    if (textIndex < shuffledText.length) {
-      result.push(shuffledText[textIndex++]);
-    }
-  }
-  
-  return result;
+body {
+  background-color: black;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  touch-action: manipulation;  /* Changed from pan-x pan-y */
 }
 ```
 
-**Step 2: Update random seed generation**
+### 2. `src/components/app/AppLayout.tsx`
 
-Change line 341 from:
-```typescript
-const [randomSeed, setRandomSeed] = useState(() => Math.random());
+Update the inline style on the main container:
+
+```tsx
+<div 
+  className="min-h-screen bg-black text-white overflow-x-clip" 
+  style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}
+>
 ```
 
-To:
-```typescript
-// Generate new seed on every mount for true randomness
-const [randomSeed, setRandomSeed] = useState(() => Date.now());
-```
+## Risk Assessment
 
-**Step 3: Update the items useMemo to use balanced shuffle**
+| Risk | Likelihood | Mitigation |
+|------|------------|------------|
+| Mobile swipe gestures affected | Low | `manipulation` still allows panning; existing `SwipeableCarousel` isolation will continue to work |
+| Accidental zoom on mobile | Low | Double-tap-to-zoom is disabled by `manipulation`, which is actually a benefit |
+| Tab switching conflicts | None | The gesture isolation logic (`SwipeableCarousel`, `gesture-state.ts`) operates at a higher level and is unaffected |
 
-Change lines 567-570 from:
-```typescript
-if (selectedSort.value === 'random') {
-  const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
-  return shuffleArray(mappedItems, shuffleSeed);
-}
-```
+## Expected Result
 
-To:
-```typescript
-if (selectedSort.value === 'random') {
-  const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
-  return balancedShuffle(mappedItems, shuffleSeed);
-}
-```
+After this change:
+- Desktop trackpad pinch-zoom will work fully (zoom in + pan around)
+- Mobile touch gestures (swipe tabs, scroll, carousel navigation) will remain functional
+- Pull-to-refresh will continue to work
+- No accidental double-tap zooming
 
-## How the Ratio Works
-
-| Media Posts | Text Posts | Result Pattern |
-|-------------|------------|----------------|
-| 3 | 1 | M M M T M M M T M M M T ... |
-| 9 | 3 | Every 4th post is text (3:1 media-to-text) |
-| 12 | 4 | 12 media + 4 text = 16 posts total |
-
-If there are more or fewer text posts than the ratio requires:
-- **More text posts**: Extra text posts get appended at the end
-- **Fewer text posts**: Media posts continue without text inserts
-
-## Summary of Changes
-
-| Location | Change |
-|----------|--------|
-| Lines 72-90 | Add new `balancedShuffle()` helper function |
-| Line 341 | Change `Math.random()` to `Date.now()` for true randomness |
-| Lines 567-570 | Replace `shuffleArray` with `balancedShuffle` |
-
-This ensures:
-1. Every page load produces a truly different order
-2. Text posts are evenly distributed throughout the feed (1 per 3 media posts)
-3. Users always see a mix of content types
