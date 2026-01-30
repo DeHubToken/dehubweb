@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.get-rpc-endpoints]
 verify_jwt = false
+
+[functions.proxy-stream]
+verify_jwt = false
