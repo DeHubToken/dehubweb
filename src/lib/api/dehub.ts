@@ -607,18 +607,38 @@ export async function postComment(tokenId: string, content: string, replyToId?: 
   });
 }
 
-// Bookmark functions
-export async function savePost(tokenId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>("/api/savePost", {
-    method: "POST",
-    body: { token_id: tokenId },
+// Bookmark/Saved functions
+/**
+ * Save a post to user's bookmarks
+ * Uses GET /api/request_save?streamTokenId={tokenId}
+ */
+export async function savePost(tokenId: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/request_save", {
+    method: "GET",
+    params: { streamTokenId: tokenId },
     requiresAuth: true,
   });
 }
 
-export async function getSavedPosts(page: number = 1, limit: number = 20): Promise<PaginatedResponse<DeHubNFT>> {
-  return apiCall<PaginatedResponse<DeHubNFT>>("/api/savedPosts", {
-    params: { page, limit },
+/**
+ * Unsave/remove a post from user's bookmarks
+ * Uses GET /api/request_save?streamTokenId={tokenId}&unSave=true
+ */
+export async function unsavePost(tokenId: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/request_save", {
+    method: "GET",
+    params: { streamTokenId: tokenId, unSave: "true" },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Get user's saved/bookmarked posts
+ * Uses GET /api/savedPosts with unit (items per page) and page (0-based)
+ */
+export async function getSavedPosts(page: number = 0, unit: number = 20): Promise<{ result: DeHubNFT[] }> {
+  return apiCall<{ result: DeHubNFT[] }>("/api/savedPosts", {
+    params: { page, unit },
     requiresAuth: true,
   });
 }
