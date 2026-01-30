@@ -1,142 +1,46 @@
 
+# Clear Pinned Post URL Parameter on Page Load
 
-# Unify Comment Section Placement Across All Post Types
+## Current Behavior
+When you visit `/app/post/2530`, it redirects to `/app?post=2530` and shows the pinned post at the top. The `?post=2530` stays in the URL, so when you refresh, the pinned post reappears.
 
-## Problem
-The comments appear visually different between post types because they are placed at different levels in the component hierarchy:
-
-**VideoCard (correct)**
-```
-<div className="p-3">
-  <ActionBar />
-  <Title />
-  <Metadata />
-  <AnimatePresence>
-    {showComments && <CommentsSection />}  ← Inside the padded content
-  </AnimatePresence>
-</div>
-```
-
-**ImageCard & PostCard (incorrect)**
-```
-<div className="p-3">
-  <ActionBar />
-  <Title />
-  <Metadata />
-</div>
-<AnimatePresence>
-  {showComments && <CommentsSection />}  ← Outside the padded content
-</AnimatePresence>
-```
-
-This causes the comments section to render at the root level of the card without proper padding context.
-
----
+## Desired Behavior
+After the pinned post is shown once, clear the URL parameter so a refresh shows the normal feed without the pinned post.
 
 ## Solution
-Move the `CommentsSection` inside the padded content container for both ImageCard and PostCard to match VideoCard's structure.
-
----
-
-## Changes Required
-
-### 1. Update ImageCard
-**File: `src/components/app/cards/ImageCard.tsx`**
-
-Move the `AnimatePresence` block from after the closing `</div>` of the info section (line 426) to inside the `<div className="p-3 space-y-2">` container.
-
-**Current structure (lines 399-436):**
-```tsx
-<div className="p-3 space-y-2">
-  <ActionBar ... />
-  <FeedDescription ... />
-  <div className="flex items-center gap-3">...</div>
-</div>
-
-{/* Comments outside */}
-<AnimatePresence>
-  {showComments && <CommentsSection ... />}
-</AnimatePresence>
-```
-
-**New structure:**
-```tsx
-<div className="p-3 space-y-2">
-  <ActionBar ... />
-  <FeedDescription ... />
-  <div className="flex items-center gap-3">...</div>
-
-  {/* Comments inside - matching VideoCard */}
-  <AnimatePresence>
-    {showComments && <CommentsSection ... />}
-  </AnimatePresence>
-</div>
-```
-
-### 2. Update PostCard  
-**File: `src/components/app/cards/PostCard.tsx`**
-
-Move the `AnimatePresence` block inside a content wrapper that matches VideoCard's `p-3` structure.
-
-**Current structure (lines 91-119):**
-```tsx
-<div className="px-3 pb-3">
-  <TranslatableText ... />
-  <div className="flex items-center gap-3 mt-2">...</div>
-</div>
-
-<ActionBar ... />
-
-{/* Comments outside */}
-<AnimatePresence>
-  {showComments && <CommentsSection ... />}
-</AnimatePresence>
-```
-
-**New structure:**
-Wrap the ActionBar and comments inside a container to match VideoCard's layout:
-```tsx
-<div className="px-3 pb-3">
-  <TranslatableText ... />
-  <div className="flex items-center gap-3 mt-2">...</div>
-</div>
-
-<div className="px-3 pb-3">
-  <ActionBar className="p-0 mb-0" ... />
-
-  {/* Comments inside - matching VideoCard */}
-  <AnimatePresence>
-    {showComments && <CommentsSection ... />}
-  </AnimatePresence>
-</div>
-```
-
-Or alternatively, restructure to match VideoCard more closely by having a single content section.
-
----
+Add a `useEffect` in `HomePage.tsx` that clears the `?post=` parameter from the URL after the component mounts. This creates a "one-time view" experience where:
+1. User clicks a post link
+2. Post appears pinned at top
+3. URL is silently cleared (no page reload)
+4. Refreshing shows the normal feed
 
 ## Technical Details
 
-The key fix is ensuring all three card types follow this pattern:
+### Changes to `src/pages/app/HomePage.tsx`
+
+Add a `useEffect` that runs once after mount to clear the post parameter from the URL without triggering a navigation:
+
 ```tsx
-<div className="p-3"> // or px-3 pb-3
-  {/* Other content */}
-  <AnimatePresence>
-    {showComments && <CommentsSection tokenId={id} onClose={...} />}
-  </AnimatePresence>
-</div>
+const [searchParams, setSearchParams] = useSearchParams();
+
+// Extract pinned post ID from URL params (one-time view)
+const pinnedPostId = searchParams.get('post') || undefined;
+
+// Clear the post param from URL after initial render (so refresh shows normal feed)
+useEffect(() => {
+  if (pinnedPostId) {
+    // Use replace to avoid adding to browser history
+    setSearchParams({}, { replace: true });
+  }
+}, []); // Empty deps = run once on mount
 ```
 
-This ensures:
-- Consistent padding/margins around the comments
-- Smooth animations work identically
-- The visual appearance matches across all post types
-
----
+This uses React Router's `setSearchParams` with `replace: true` to silently update the URL without:
+- Causing a page reload
+- Adding a new history entry
+- Losing the `pinnedPostId` value (since we captured it before clearing)
 
 ## Result
-All three post types (Video, Image, Text) will have:
-- CommentsSection rendered inside the same padded content container
-- Identical visual styling and spacing
-- Matching the perfected VideoCard implementation
-
+- First visit to `/app?post=2530`: Pinned post shows, URL immediately becomes `/app`
+- Refresh: Normal feed without pinned post
+- Back button still works correctly (navigates to previous page, not the cleared URL)
