@@ -29,7 +29,7 @@ import {
 } from '@/components/app/feeds';
 
 // Modal components
-import { FeedSettingsModal, type FeedFilters } from '@/components/app/modals';
+
 
 // ============================================================================
 // CONSTANTS
@@ -75,14 +75,6 @@ export default function HomePage() {
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   
-  // Settings modal
-  const [showFeedSettings, setShowFeedSettings] = useState(false);
-  const [feedFilters, setFeedFilters] = useState<FeedFilters>({
-    followed: true,
-    subscribed: true,
-    trending: true,
-    latest: false,
-  });
   
   // Mobile touch gesture refs
   const touchStartX = useRef<number | null>(null);
@@ -417,9 +409,9 @@ export default function HomePage() {
               );
             })}
             
-            {/* Settings Button */}
+            {/* Settings Button - toggles current tab's filters */}
             <button
-              onClick={() => setShowFeedSettings(true)}
+              onClick={() => handleTabClick(activeTab)}
               className="flex items-center justify-center px-3 py-2 rounded-xl text-white hover:bg-white/5"
               aria-label="Feed settings"
             >
@@ -444,13 +436,6 @@ export default function HomePage() {
         {renderFeed()}
       </div>
 
-      {/* Settings Modal */}
-      <FeedSettingsModal
-        open={showFeedSettings}
-        onOpenChange={setShowFeedSettings}
-        filters={feedFilters}
-        onFiltersChange={setFeedFilters}
-      />
     </div>
   );
 }
