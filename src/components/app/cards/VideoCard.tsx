@@ -308,6 +308,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Format numbers with abbreviations (1K, 1M, etc.) - no decimals
+  const formatCompact = (num: number): string => {
+    if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
+    if (num >= 1000) return `${Math.floor(num / 1000)}K`;
+    return String(Math.floor(num));
+  };
+
   // Keyboard shortcuts
   useEffect(() => {
     if (!isFocused || !isPlaying) return;
@@ -473,7 +480,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
               <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
                 <DollarSign className="w-3 h-3 text-white" />
                 <span className="text-white text-xs font-medium">
-                  {Number(video.ppvPrice).toFixed(2)} {video.ppvCurrency || 'USDC'}
+                  {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
                 </span>
               </div>
             )}
@@ -489,7 +496,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                     <Gift className="w-3 h-3 text-white" />
                     <span className="text-white text-xs font-medium">
                       {video.bountyAmount && video.bountyAmount > 0 
-                        ? `${video.bountyAmount} ${video.bountyCurrency || 'DHB'}` 
+                        ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}` 
                         : 'Bounty'}
                     </span>
                   </button>
@@ -554,7 +561,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                 <Lock className="w-3 h-3 text-white" />
                 <span className="text-white text-xs font-medium">
                   {video.lockedPrice && video.lockedPrice > 0 
-                    ? `${Number(video.lockedPrice).toFixed(2)} ${video.lockedCurrency || 'DHB'}` 
+                    ? `${formatCompact(video.lockedPrice)} ${video.lockedCurrency || 'DHB'}` 
                     : ''}
                 </span>
               </div>
