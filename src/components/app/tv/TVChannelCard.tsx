@@ -7,8 +7,8 @@
  * @module components/app/tv/TVChannelCard
  */
 
-import { useRef, useEffect, useState } from 'react';
-import { Play, Pause, Tv, Loader2, Volume2, VolumeX } from 'lucide-react';
+import { useRef, useEffect, useState, useCallback } from 'react';
+import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
@@ -18,6 +18,8 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 interface TVChannelCardProps {
   channel: TVChannel;
 }
+
+const MAX_RETRIES = 2;
 
 export function TVChannelCard({ channel }: TVChannelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,6 +31,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const [isMuted, setIsMuted] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   
   // Register with VideoPlaybackManager
   useEffect(() => {
@@ -44,7 +47,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     };
   }, [cardId]);
   
-  const stopPlayback = () => {
+  const stopPlayback = useCallback(() => {
     if (hlsRef.current) {
       hlsRef.current.destroy();
       hlsRef.current = null;
@@ -56,9 +59,9 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     setIsPlaying(false);
     setShowVideo(false);
     setIsLoading(false);
-  };
+  }, []);
   
-  const startPlayback = () => {
+  const startPlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     
@@ -74,6 +77,9 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         enableWorker: true,
         lowLatencyMode: true,
         backBufferLength: 90,
+        fragLoadingTimeOut: 10000,
+        manifestLoadingTimeOut: 10000,
+        levelLoadingTimeOut: 10000,
       });
       
       hls.loadSource(channel.streamUrl);
@@ -104,13 +110,30 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       setHasError(true);
       setIsLoading(false);
     }
-  };
+  }, [cardId, channel.streamUrl]);
   
   const handleClick = () => {
+    if (hasError) {
+      handleRetry();
+      return;
+    }
     if (isPlaying) {
       stopPlayback();
     } else {
       startPlayback();
+    }
+  };
+  
+  const handleRetry = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (retryCount < MAX_RETRIES) {
+      setRetryCount(prev => prev + 1);
+      setHasError(false);
+      stopPlayback();
+      // Small delay before retry
+      setTimeout(() => {
+        startPlayback();
+      }, 500);
     }
   };
   
@@ -130,6 +153,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     const handlePlaying = () => {
       setIsPlaying(true);
       setIsLoading(false);
+      // Reset retry count on successful playback
+      setRetryCount(0);
     };
     
     const handlePause = () => {
@@ -166,6 +191,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   }, []);
   
   const countryFlag = getCountryFlag(channel.country);
+  const canRetry = retryCount < MAX_RETRIES;
   
   return (
     <div
@@ -220,7 +246,16 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {hasError && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
             <Tv className="w-8 h-8 text-zinc-500 mb-2" />
-            <p className="text-zinc-400 text-sm">Stream unavailable</p>
+            <p className="text-zinc-400 text-sm mb-3">Stream unavailable</p>
+            {canRetry && (
+              <button
+                onClick={handleRetry}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Retry ({MAX_RETRIES - retryCount} left)
+              </button>
+            )}
           </div>
         )}
         

@@ -119,15 +119,28 @@ function mapCountryToCategory(groupTitle: string): TVCategoryId {
 }
 
 /**
- * Check if URL is a direct stream (not YouTube/Twitch)
+ * Check if URL is a valid, playable stream
+ * Filters out problematic stream types
  */
-function isDirectStream(url: string): boolean {
+function isValidStream(url: string, name: string): boolean {
   const lowerUrl = url.toLowerCase();
-  // Skip YouTube and Twitch streams
+  
+  // Skip non-HLS formats (DASH not supported by HLS.js)
+  if (lowerUrl.includes('.mpd')) return false;
+  
+  // Skip YouTube/Twitch/Dailymotion (require special handling)
   if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) return false;
   if (lowerUrl.includes('twitch.tv')) return false;
-  // Only allow HLS streams or direct video URLs
-  return lowerUrl.includes('.m3u8') || lowerUrl.includes('.ts') || lowerUrl.includes('.mp4');
+  if (lowerUrl.includes('dailymotion.com')) return false;
+  
+  // Skip HTTP streams (mixed content issues in HTTPS pages)
+  if (url.startsWith('http://')) return false;
+  
+  // Skip geo-restricted channels (marked with Ⓖ in Free-TV)
+  if (name.includes('Ⓖ')) return false;
+  
+  // Only allow HLS streams for reliable playback
+  return lowerUrl.includes('.m3u8');
 }
 
 /**
@@ -158,13 +171,15 @@ function parseM3U8Playlist(content: string): TVChannel[] {
         }
       }
       
+      const name = nameMatch?.[1] || titleMatch?.[1] || 'Unknown Channel';
+      
       // Validate stream URL
       if (!streamUrl || seenUrls.has(streamUrl)) continue;
-      if (!isDirectStream(streamUrl)) continue;
+      if (!isValidStream(streamUrl, name)) continue;
       
       seenUrls.add(streamUrl);
       
-      const name = nameMatch?.[1] || titleMatch?.[1] || 'Unknown Channel';
+      // name already extracted above
       const groupTitle = groupMatch?.[1] || 'Other';
       
       channels.push({
@@ -191,11 +206,13 @@ function parseM3U8Playlist(content: string): TVChannel[] {
  */
 async function fetchAllChannels(): Promise<TVChannel[]> {
   const now = Date.now();
-  if (channelsCache && now - cacheTimestamp < CACHE_TTL) {
+  // Check cache (but force refresh if cache is from old session)
+  if (channelsCache && channelsCache.length > 0 && now - cacheTimestamp < CACHE_TTL) {
     return channelsCache;
   }
   
-  const response = await fetch(FREE_TV_PLAYLIST_URL);
+  // Add cache-bust to force fresh playlist data
+  const response = await fetch(`${FREE_TV_PLAYLIST_URL}?_=${now}`);
   if (!response.ok) {
     throw new Error('Failed to fetch TV channels');
   }
