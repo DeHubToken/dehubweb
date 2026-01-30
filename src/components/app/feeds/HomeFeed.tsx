@@ -468,7 +468,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false }: Home
             )}
           </AnimatePresence>
 
-          <StoriesBar users={storyUsers} />
+          <div className="pt-2">
+            <StoriesBar users={storyUsers} />
+          </div>
           
           {items.length === 0 ? (
             <EmptyState />
