@@ -9,6 +9,7 @@ import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { cn } from '@/lib/utils';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -65,7 +66,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   // Get user display info for avatar
   const displayName = user?.displayName || user?.username || 'Anonymous';
-  const userAvatarUrl = user?.avatarImageUrl || null;
+  const userAvatarUrl = user?.avatarImageUrl && user?.address
+    ? buildAvatarUrl(user.address, user.avatarImageUrl)
+    : null;
 
   return (
     <>
