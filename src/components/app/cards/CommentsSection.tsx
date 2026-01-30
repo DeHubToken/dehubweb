@@ -633,7 +633,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {activeTab === 'replies' && (
         <div className="relative">
           <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2">
+          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -688,7 +689,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {activeTab === 'quotes' && (
         <div className="relative">
           <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2">
+          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -704,7 +706,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {activeTab === 'search' && (
         <div className="relative">
           <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2">
+          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -792,7 +795,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             </div>
           )}
 
-          <div className="flex gap-2 pb-2.5">
+          <div className="flex gap-2 pb-2">
             <Avatar className="w-8 h-8 flex-shrink-0">
               {(user?.avatarImageUrl || user?.avatarUrl) && (
                 <AvatarImage src={user?.avatarImageUrl || user?.avatarUrl} />
