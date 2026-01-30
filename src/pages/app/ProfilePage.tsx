@@ -392,7 +392,7 @@ export default function ProfilePage() {
                 {/* Subscribe overlay - positioned within container */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                   <div className="text-center p-6">
-                    <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
+                    <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
                       <Lock className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-white font-bold text-xl mb-2">Subscribers Only</h3>
@@ -404,10 +404,10 @@ export default function ProfilePage() {
                         setIsSubscribed(true);
                         toast.success(`Subscribed to ${profile?.name || 'creator'}!`);
                       }}
-                      className="rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
+                      className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
                     >
                       <CreditCard className="w-4 h-4" />
-                      Subscribe for $4.99/mo
+                      Subscribe
                     </Button>
                   </div>
                 </div>

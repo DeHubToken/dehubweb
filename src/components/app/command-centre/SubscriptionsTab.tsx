@@ -34,10 +34,10 @@ export function SubscriptionsTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-white">Your subscriptions</h2>
-        <div className="flex gap-2 bg-zinc-900 rounded-full p-1 border border-zinc-800">
+        <div className="flex gap-2 bg-zinc-900 rounded-xl p-1 border border-zinc-800">
           <button 
             onClick={() => setActiveSubTab('subscribers')}
-            className={`px-4 py-1.5 text-sm rounded-full transition-colors ${
+            className={`px-4 py-1.5 text-sm rounded-lg transition-colors ${
               activeSubTab === 'subscribers' ? 'bg-zinc-800 text-white' : 'text-zinc-400'
             }`}
           >
@@ -45,7 +45,7 @@ export function SubscriptionsTab() {
           </button>
           <button 
             onClick={() => setActiveSubTab('subscriptions')}
-            className={`px-4 py-1.5 text-sm rounded-full transition-colors ${
+            className={`px-4 py-1.5 text-sm rounded-lg transition-colors ${
               activeSubTab === 'subscriptions' ? 'bg-zinc-800 text-white' : 'text-zinc-400'
             }`}
           >
@@ -175,10 +175,10 @@ export function SubscriptionsTab() {
         <div className="flex items-center justify-between mb-4">
           <span className="text-white font-semibold">Subscription list</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-full bg-transparent">
+            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-xl bg-transparent">
               Sort ▼
             </Button>
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-full bg-transparent">
+            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-xl bg-transparent">
               Export CSV
             </Button>
           </div>
@@ -224,7 +224,7 @@ export function SubscriptionsTab() {
                   </td>
                   <td className="py-4 text-emerald-400">{sub.status}</td>
                   <td className="py-4">
-                    <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-7 rounded-full bg-transparent">
+                    <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-7 rounded-xl bg-transparent">
                       Edit
                     </Button>
                   </td>

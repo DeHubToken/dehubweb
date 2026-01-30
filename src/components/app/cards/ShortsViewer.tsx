@@ -231,7 +231,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                     <span>{currentShort.likes} likes</span>
                   </div>
                 </div>
-                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-full hover:bg-white/90 transition-colors flex-shrink-0">
+                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0">
                   Follow
                 </button>
               </div>
@@ -255,7 +255,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                     placeholder="Add a comment..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    className="flex-1 bg-zinc-800 text-white placeholder-white/40 text-sm rounded-full px-4 py-2 border border-white/10 focus:outline-none focus:border-white/30"
+                    className="flex-1 bg-zinc-800 text-white placeholder-white/40 text-sm rounded-xl px-4 py-2 border border-white/10 focus:outline-none focus:border-white/30"
                   />
                   {comment && (
                     <button className="text-primary">
@@ -348,7 +348,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             <>
               {/* Creator Info */}
               <div className="absolute top-4 left-4 z-10">
-                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
+                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
                   <Avatar className="w-8 h-8 border border-white/20" key={currentShort.avatar || currentShort.id}>
                     <AvatarImage src={currentShort.avatar} alt={currentShort.username} />
                     <AvatarFallback className="bg-zinc-700 text-white font-medium">{currentShort.username[0]?.toUpperCase()}</AvatarFallback>
@@ -360,7 +360,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                       {currentShort.views || '0'} • {currentShort.likes} likes
                     </span>
                   </div>
-                  <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-full">
+                  <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl">
                     Follow
                   </button>
                 </div>
@@ -378,7 +378,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                       placeholder="Add Comment..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      className="w-full bg-zinc-800/70 backdrop-blur-sm text-white placeholder-white/40 text-sm rounded-full px-4 py-2.5 pr-10 border border-white/10 focus:outline-none focus:border-white/30"
+                      className="w-full bg-zinc-800/70 backdrop-blur-sm text-white placeholder-white/40 text-sm rounded-xl px-4 py-2.5 pr-10 border border-white/10 focus:outline-none focus:border-white/30"
                     />
                     {comment && (
                       <button className="absolute right-2 top-1/2 -translate-y-1/2 text-primary">
@@ -388,11 +388,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                   </div>
                   <button
                     onClick={() => setIsLiked(!isLiked)}
-                    className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center"
+                    className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
                   >
                     <Heart className={`w-5 h-5 ${isLiked ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                   </button>
-                  <button className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <button className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     <Share2 className="w-5 h-5 text-white" />
                   </button>
                 </div>
