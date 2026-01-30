@@ -108,7 +108,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   <NavLink
                     to="/app/assistant"
                     className={cn(
-                      'flex items-center gap-3 w-full px-2.5 py-2.5 rounded-xl text-left transition-colors text-[13.5px]',
+                      'flex items-center gap-3 w-full px-2.5 py-2.5 rounded-xl text-left transition-colors text-[15px]',
                       isAIActive
                         ? 'bg-zinc-800 font-semibold text-white'
                         : 'text-white hover:bg-zinc-800/50'
