@@ -44,31 +44,36 @@ export function WhoToFollow() {
   const { data, isLoading } = useQuery({
     queryKey: ['suggestions', 'recently-active'],
     queryFn: async () => {
-      // Fetch recent posts to find active users
-      const response = await searchNFTs({ 
-        sortMode: 'new', 
-        unit: 100,
-        page: 0 
-      });
-      
-      // Extract unique users from recent posts
       const seenAddresses = new Set<string>();
       const uniqueUsers: UniqueUser[] = [];
+      const maxPages = 20;
+      const pageSize = 100;
       
-      for (const nft of response.data || []) {
-        const address = nft.minter;
-        if (!address || seenAddresses.has(address)) continue;
-        
-        seenAddresses.add(address);
-        uniqueUsers.push({
-          address,
-          username: nft.mintername,
-          displayName: nft.minterDisplayName,
-          avatarUrl: nft.minterAvatarUrl,
+      // Fetch multiple pages to gather a large pool of unique users
+      for (let page = 0; page < maxPages; page++) {
+        const response = await searchNFTs({ 
+          sortMode: 'new', 
+          unit: pageSize,
+          page 
         });
         
-        // Stop after 50 unique users
-        if (uniqueUsers.length >= 50) break;
+        const posts = response.data || [];
+        
+        for (const nft of posts) {
+          const address = nft.minter;
+          if (!address || seenAddresses.has(address)) continue;
+          
+          seenAddresses.add(address);
+          uniqueUsers.push({
+            address,
+            username: nft.mintername,
+            displayName: nft.minterDisplayName,
+            avatarUrl: nft.minterAvatarUrl,
+          });
+        }
+        
+        // Stop if we got fewer results (no more data available)
+        if (posts.length < pageSize) break;
       }
       
       return uniqueUsers;
