@@ -7,12 +7,13 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ImageCard } from '@/components/app/cards';
 import { useAuth } from '@/contexts/AuthContext';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import type { ImagePost } from '@/types/feed.types';
@@ -23,18 +24,107 @@ import type { ImagePost } from '@/types/feed.types';
 
 interface ImagesFeedProps {
   showCollage?: boolean;
+  showFilters?: boolean;
   isRefreshing?: boolean;
   refreshKey?: number;
+  /** When set, switches to feed mode starting from this post */
+  selectedPostId?: string | null;
+  /** Callback to clear selected post and switch modes */
+  onPostSelected?: (postId: string | null) => void;
+}
+
+// ============================================================================
+// FILTER COMPONENTS
+// ============================================================================
+
+function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {SORT_OPTIONS.map((option) => (
+          <button
+            key={option.label}
+            onClick={() => onSelect(option)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              selected.label === option.label
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterOption; onSelect: (o: DateFilterOption) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {DATE_FILTER_OPTIONS.map((option) => (
+          <button
+            key={option.label}
+            onClick={() => onSelect(option)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              selected.label === option.label
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ContentTypeFilterSection({ 
+  filters, 
+  onToggle 
+}: { 
+  filters: ContentTypeFilters; 
+  onToggle: (filter: keyof ContentTypeFilters) => void 
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {CONTENT_TYPE_FILTERS.map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => onToggle(filter.value)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+              filters[filter.value]
+                ? 'bg-white text-black'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+            )}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 // ============================================================================
 // SUB-COMPONENTS
 // ============================================================================
 
-function CollageView({ posts }: { posts: ImagePost[] }) {
-  // Create a masonry-style layout that never leaves top corners blank
-  // Using CSS grid-auto-flow: dense ensures gaps are filled
-  
+interface CollageViewProps {
+  posts: ImagePost[];
+  onImageClick: (postId: string) => void;
+}
+
+function CollageView({ posts, onImageClick }: CollageViewProps) {
   return (
     <div className="p-1 sm:p-2 pt-0 sm:pt-0">
       <div 
@@ -43,12 +133,12 @@ function CollageView({ posts }: { posts: ImagePost[] }) {
       >
         {posts.map((post, index) => {
           // Make every 4th item (starting from 0) a large tile: 0, 4, 8, 12...
-          // This creates a balanced pattern with dense packing
           const isLargeTile = index % 4 === 0;
           
           return (
             <div
               key={post.id}
+              onClick={() => onImageClick(post.id)}
               className={cn(
                 'relative aspect-square bg-zinc-800 overflow-hidden group cursor-pointer',
                 isLargeTile && 'col-span-2 row-span-2'
@@ -77,20 +167,48 @@ function CollageView({ posts }: { posts: ImagePost[] }) {
   );
 }
 
-function EndlessScrollView({ 
-  posts, 
-  loaderRef, 
-  isFetchingNextPage, 
-  hasNextPage 
-}: { 
+interface EndlessScrollViewProps {
   posts: ImagePost[];
   loaderRef: React.RefObject<HTMLDivElement>;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
-}) {
+  startFromId?: string | null;
+}
+
+function EndlessScrollView({ 
+  posts, 
+  loaderRef, 
+  isFetchingNextPage, 
+  hasNextPage,
+  startFromId,
+}: EndlessScrollViewProps) {
+  const scrollTargetRef = useRef<HTMLDivElement>(null);
+  
+  // Reorder posts to start from selected image
+  const orderedPosts = useMemo(() => {
+    if (!startFromId) return posts;
+    
+    const selectedIndex = posts.findIndex(p => p.id === startFromId);
+    if (selectedIndex <= 0) return posts;
+    
+    // Move selected post to the top, keep rest in order after it
+    return [
+      ...posts.slice(selectedIndex),
+      ...posts.slice(0, selectedIndex),
+    ];
+  }, [posts, startFromId]);
+  
+  // Scroll to top when entering feed view from collage
+  useEffect(() => {
+    if (startFromId) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [startFromId]);
+
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-      {posts.map((post) => (
+      <div ref={scrollTargetRef} />
+      {orderedPosts.map((post) => (
         <ImageCard key={post.id} post={post} />
       ))}
       
@@ -114,9 +232,29 @@ function EndlessScrollView({
 // MAIN COMPONENT
 // ============================================================================
 
-export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshKey = 0 }: ImagesFeedProps) {
+export function ImagesFeed({ 
+  showCollage = true, 
+  showFilters = false,
+  isRefreshing = false, 
+  refreshKey = 0,
+  selectedPostId = null,
+  onPostSelected,
+}: ImagesFeedProps) {
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
+  
+  // Filter states
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
+  const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
+  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
+    ppv: false,
+    w2e: false,
+    locked: false,
+  });
+  
+  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
+    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+  };
   
   // Get wallet address for authenticated requests
   const { walletAddress } = useAuth();
@@ -132,7 +270,7 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
     refetch,
   } = useDeHubImages({
     unit: 15,
-    sortMode: 'new',
+    sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new',
     address: walletAddress || undefined,
   });
 
@@ -147,12 +285,30 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
   const imagePosts = useMemo(() => {
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
-    return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
-  }, [apiData]);
+    let posts = allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
+    
+    // Apply client-side sorting for random
+    if (selectedSort.value === 'random') {
+      // Shuffle with a seed based on refreshKey for consistency during session
+      const seed = refreshKey + 1;
+      posts = [...posts].sort(() => {
+        const x = Math.sin(seed * posts.length) * 10000;
+        return x - Math.floor(x) - 0.5;
+      });
+    }
+    
+    return posts;
+  }, [apiData, selectedSort.value, refreshKey]);
+
+  // Handle image click in collage - switch to feed view
+  const handleImageClick = (postId: string) => {
+    onPostSelected?.(postId);
+  };
 
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage || showCollage) return;
+    // Don't observe in collage mode
+    if (!loaderRef.current || !hasNextPage || (showCollage && !selectedPostId)) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -165,13 +321,17 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, showCollage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, showCollage, selectedPostId]);
   
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
   hasAnimated.current = true;
 
   const isLoading = isApiLoading || isRefreshing;
+  
+  // Determine if we should show collage or feed
+  // Show feed if: collage is off, OR user clicked an image from collage
+  const showFeedView = !showCollage || selectedPostId;
 
   // Empty state component
   const EmptyState = () => (
@@ -210,33 +370,65 @@ export function ImagesFeed({ showCollage = false, isRefreshing = false, refreshK
   }
 
   return (
-    <AnimatePresence mode="wait">
-      {showCollage ? (
-        <motion.div
-          key={`collage-${refreshKey}`}
-          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-        >
-          <CollageView posts={imagePosts} />
-        </motion.div>
-      ) : (
-        <motion.div
-          key={`endless-${refreshKey}`}
-          initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-        >
-          <EndlessScrollView 
-            posts={imagePosts} 
-            loaderRef={loaderRef}
-            isFetchingNextPage={isFetchingNextPage}
-            hasNextPage={hasNextPage ?? false}
-          />
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div>
+      {/* Filter Section */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="p-3 sm:p-4 space-y-4 bg-zinc-900 mx-2 sm:mx-3 rounded-2xl mb-2">
+              <SortFilterSection 
+                selected={selectedSort} 
+                onSelect={setSelectedSort} 
+              />
+              <UploadDateFilterSection 
+                selected={selectedUploadDate} 
+                onSelect={setSelectedUploadDate} 
+              />
+              <ContentTypeFilterSection 
+                filters={contentFilters} 
+                onToggle={toggleContentFilter} 
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        {showFeedView ? (
+          <motion.div
+            key={`endless-${refreshKey}-${selectedPostId}`}
+            initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            <EndlessScrollView 
+              posts={imagePosts} 
+              loaderRef={loaderRef}
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage ?? false}
+              startFromId={selectedPostId}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={`collage-${refreshKey}`}
+            initial={shouldAnimate ? { opacity: 0, scale: 0.95 } : false}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            <CollageView posts={imagePosts} onImageClick={handleImageClick} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

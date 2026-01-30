@@ -69,7 +69,9 @@ export default function HomePage() {
   // Filter states for each feed type
   const [showHomeFilters, setShowHomeFilters] = useState(false);
   const [showShortsFilters, setShowShortsFilters] = useState(false);
-  const [showImagesCollage, setShowImagesCollage] = useState(false);
+  const [showImagesCollage, setShowImagesCollage] = useState(true); // Default to collage
+  const [showImagesFilters, setShowImagesFilters] = useState(false);
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   
@@ -154,7 +156,9 @@ export default function HomePage() {
   const resetFilters = () => {
     setShowHomeFilters(false);
     setShowShortsFilters(false);
-    setShowImagesCollage(false);
+    setShowImagesCollage(true); // Reset to collage view
+    setShowImagesFilters(false);
+    setSelectedImageId(null);
     setShowVideosFilters(false);
     setShowMusicFilters(false);
   };
@@ -176,8 +180,8 @@ export default function HomePage() {
       } else if (tabValue === 'shorts') {
         setShowShortsFilters(prev => !prev);
       } else if (tabValue === 'images') {
-        setShowImagesCollage(prev => !prev);
-        triggerRefresh();
+        // Double-tap on images toggles filters (like other tabs)
+        setShowImagesFilters(prev => !prev);
       } else if (tabValue === 'videos') {
         setShowVideosFilters(prev => !prev);
       } else if (tabValue === 'music') {
@@ -186,6 +190,18 @@ export default function HomePage() {
     } else {
       setActiveTab(tabValue);
       resetFilters();
+    }
+  };
+
+  /**
+   * Handle when user selects an image from collage view.
+   * Switches to feed view starting from that image.
+   */
+  const handleImageSelected = (postId: string | null) => {
+    setSelectedImageId(postId);
+    if (postId) {
+      // When an image is selected, switch out of collage mode
+      setShowImagesCollage(false);
     }
   };
 
@@ -340,7 +356,16 @@ export default function HomePage() {
       case 'w2e':
         return <W2EFeed />;
       case 'images':
-        return <ImagesFeed showCollage={showImagesCollage} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
+        return (
+          <ImagesFeed 
+            showCollage={showImagesCollage} 
+            showFilters={showImagesFilters}
+            isRefreshing={isRefreshing} 
+            refreshKey={refreshKey}
+            selectedPostId={selectedImageId}
+            onPostSelected={handleImageSelected}
+          />
+        );
       case 'videos':
         return <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       case 'shorts':
