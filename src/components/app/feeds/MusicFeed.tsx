@@ -7,6 +7,7 @@
  */
 
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, Loader2, ChevronRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -155,7 +156,8 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
 
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
-      <SectionHeader icon={Radio} title="Radio Stations" count={stations.length} onSeeAll={onSeeAll} />
+      {/* Show 50,000+ as the count since that's the radio browser database size */}
+      <SectionHeader icon={Radio} title="Radio Stations" count={50000} onSeeAll={onSeeAll} />
       <div className="relative">
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
@@ -171,6 +173,8 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
 }
 
 function MusicVideosCarousel({ videos, onSeeAll }: { videos: VideoItem[]; onSeeAll: () => void }) {
+  const navigate = useNavigate();
+  
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <SectionHeader icon={Play} title="Music Videos" count={videos.length} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
@@ -181,13 +185,23 @@ function MusicVideosCarousel({ videos, onSeeAll }: { videos: VideoItem[]; onSeeA
           <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
             {videos.slice(0, 10).map((video) => (
-              <div key={video.id} className="flex-shrink-0 w-[280px]">
-                <div className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2">
-                  <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
+              <button 
+                key={video.id} 
+                onClick={() => navigate(`/app/post/${video.id}`)}
+                className="flex-shrink-0 w-[280px] text-left group cursor-pointer"
+              >
+                <div className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative">
+                  <img src={video.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {/* Play button overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white fill-white" />
+                    </div>
+                  </div>
                 </div>
                 <p className="text-white text-sm font-medium truncate">{video.title}</p>
                 <p className="text-zinc-500 text-xs">{video.channel}</p>
-              </div>
+              </button>
             ))}
           </SwipeableCarousel>
         </div>
