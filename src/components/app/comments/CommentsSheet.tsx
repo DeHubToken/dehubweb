@@ -7,7 +7,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, MessageCircle, Repeat2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
@@ -18,6 +18,8 @@ import { toast } from 'sonner';
 import { CommentItem } from './CommentItem';
 import { CommentInput } from './CommentInput';
 import type { Comment, CommentsSectionProps } from './types';
+
+type CommentTab = 'replies' | 'quotes';
 
 // Format time ago from ISO string
 function formatTimeAgo(dateString: string): string {
@@ -67,6 +69,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
 
 export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<CommentTab>('replies');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
@@ -160,8 +163,8 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
         hideHandle
         className="h-[70vh] p-0"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+        {/* Header with close button */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/10">
           <h2 className="text-white font-semibold">
             Comments {comments.length > 0 && `(${comments.length})`}
           </h2>
@@ -173,42 +176,86 @@ export function CommentsSheet({ tokenId, onClose }: CommentsSectionProps) {
           </button>
         </div>
 
+        {/* Tab Switcher - matching TabbedSidePanel style */}
+        <div className="flex border-b border-white/10">
+          <button
+            type="button"
+            onClick={() => setActiveTab('replies')}
+            className={`relative flex-1 py-3 flex items-center justify-center gap-2 transition-colors ${
+              activeTab === 'replies'
+                ? 'text-white'
+                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+            }`}
+          >
+            {activeTab === 'replies' && (
+              <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+            )}
+            <MessageCircle className="w-4 h-4 relative z-10" />
+            <span className="text-sm font-medium relative z-10">Replies</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('quotes')}
+            className={`relative flex-1 py-3 flex items-center justify-center gap-2 transition-colors ${
+              activeTab === 'quotes'
+                ? 'text-white'
+                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+            }`}
+          >
+            {activeTab === 'quotes' && (
+              <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+            )}
+            <Repeat2 className="w-4 h-4 relative z-10" />
+            <span className="text-sm font-medium relative z-10">Quotes</span>
+          </button>
+        </div>
+
         {/* Comments list */}
-        <ScrollArea className="flex-1 h-[calc(70vh-130px)]">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
-            </div>
-          ) : error ? (
-            <div className="flex items-center justify-center py-12">
-              <p className="text-zinc-500 text-sm">Failed to load comments</p>
-            </div>
-          ) : comments.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <p className="text-zinc-500 text-sm">No comments yet</p>
-              <p className="text-zinc-600 text-xs mt-1">Be the first to comment!</p>
-            </div>
-          ) : (
-            <div className="py-2">
-              <AnimatePresence mode="popLayout">
-                {groupedComments.map(({ comment, replies }) => (
-                  <div key={comment.id}>
-                    <CommentItem
-                      comment={comment}
-                      onReplyPress={handleReply}
-                      onUserPress={handleUserPress}
-                    />
-                    {replies.map(reply => (
-                      <CommentItem
-                        key={reply.id}
-                        comment={reply}
-                        onUserPress={handleUserPress}
-                        isReply
-                      />
+        <ScrollArea className="flex-1 h-[calc(70vh-180px)]">
+          {activeTab === 'replies' ? (
+            <>
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+                </div>
+              ) : error ? (
+                <div className="flex items-center justify-center py-12">
+                  <p className="text-zinc-500 text-sm">Failed to load comments</p>
+                </div>
+              ) : comments.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <p className="text-zinc-500 text-sm">No comments yet</p>
+                  <p className="text-zinc-600 text-xs mt-1">Be the first to comment!</p>
+                </div>
+              ) : (
+                <div className="py-3">
+                  <AnimatePresence mode="popLayout">
+                    {groupedComments.map(({ comment, replies }) => (
+                      <div key={comment.id}>
+                        <CommentItem
+                          comment={comment}
+                          onReplyPress={handleReply}
+                          onUserPress={handleUserPress}
+                        />
+                        {replies.map(reply => (
+                          <CommentItem
+                            key={reply.id}
+                            comment={reply}
+                            onUserPress={handleUserPress}
+                            isReply
+                          />
+                        ))}
+                      </div>
                     ))}
-                  </div>
-                ))}
-              </AnimatePresence>
+                  </AnimatePresence>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12">
+              <Repeat2 className="w-8 h-8 text-zinc-600 mb-3" />
+              <p className="text-zinc-500 text-sm">No quotes yet</p>
+              <p className="text-zinc-600 text-xs mt-1">Quotes of this post will appear here</p>
             </div>
           )}
         </ScrollArea>
