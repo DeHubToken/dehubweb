@@ -1,46 +1,45 @@
 
-# Clear Pinned Post URL Parameter on Page Load
+# Fix Profile Pictures Not Rendering in Comment Sections
 
-## Current Behavior
-When you visit `/app/post/2530`, it redirects to `/app?post=2530` and shows the pinned post at the top. The `?post=2530` stays in the URL, so when you refresh, the pinned post reappears.
+## Problem Identified
 
-## Desired Behavior
-After the pinned post is shown once, clear the URL parameter so a refresh shows the normal feed without the pinned post.
+After analyzing the code, I found the issue in `CommentsSection.tsx`. The avatar URLs from the DeHub API are **relative paths** (like `avatars/xxx.jpg`), but they're being used directly in the `<AvatarImage src={comment.avatar}>` without converting them to full CDN URLs.
+
+The `CommentsSheet.tsx` component handles this correctly by calling `getMediaUrl(comment.avatarUrl)`, but `CommentsSection.tsx` does not.
+
+## Root Cause
+
+In `src/components/app/cards/CommentsSection.tsx`:
+- Line 191: `<AvatarImage src={comment.avatar} className="object-cover" />`
+- The `comment.avatar` contains a relative path like `avatars/user123.jpg`
+- This needs to be converted to `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/user123.jpg`
 
 ## Solution
-Add a `useEffect` in `HomePage.tsx` that clears the `?post=` parameter from the URL after the component mounts. This creates a "one-time view" experience where:
-1. User clicks a post link
-2. Post appears pinned at top
-3. URL is silently cleared (no page reload)
-4. Refreshing shows the normal feed
+
+Update the `CommentItem` component inside `CommentsSection.tsx` to call `getMediaUrl()` on the avatar before using it:
+
+### Changes to `src/components/app/cards/CommentsSection.tsx`
+
+1. Import `getMediaUrl` (already imported on line 31)
+2. Update the `CommentItem` component to convert the avatar URL
+
+```tsx
+// Inside CommentItem component, before the return statement:
+const avatarUrl = comment.avatar ? getMediaUrl(comment.avatar) : undefined;
+
+// Then use avatarUrl instead of comment.avatar:
+<AvatarImage src={avatarUrl} className="object-cover" />
+```
+
+---
 
 ## Technical Details
 
-### Changes to `src/pages/app/HomePage.tsx`
+The `getMediaUrl` function from `src/lib/api/dehub.ts` handles this conversion:
+- If the path is already an absolute URL (starts with `http://` or `https://`), it returns it unchanged
+- Otherwise, it prepends the CDN base URL: `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/`
 
-Add a `useEffect` that runs once after mount to clear the post parameter from the URL without triggering a navigation:
-
-```tsx
-const [searchParams, setSearchParams] = useSearchParams();
-
-// Extract pinned post ID from URL params (one-time view)
-const pinnedPostId = searchParams.get('post') || undefined;
-
-// Clear the post param from URL after initial render (so refresh shows normal feed)
-useEffect(() => {
-  if (pinnedPostId) {
-    // Use replace to avoid adding to browser history
-    setSearchParams({}, { replace: true });
-  }
-}, []); // Empty deps = run once on mount
-```
-
-This uses React Router's `setSearchParams` with `replace: true` to silently update the URL without:
-- Causing a page reload
-- Adding a new history entry
-- Losing the `pinnedPostId` value (since we captured it before clearing)
-
-## Result
-- First visit to `/app?post=2530`: Pinned post shows, URL immediately becomes `/app`
-- Refresh: Normal feed without pinned post
-- Back button still works correctly (navigates to previous page, not the cleared URL)
+This is the same pattern already used successfully in:
+- `CommentsSheet.tsx` via `CommentItem.tsx`
+- `LeaderboardUserAvatar.tsx`
+- Profile page components
