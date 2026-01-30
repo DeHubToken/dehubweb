@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -36,7 +36,8 @@ import {
   X,
   Check,
   Download,
-  Copy
+  Copy,
+  Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -55,6 +56,9 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
+import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -129,29 +133,222 @@ export default function SettingsPage() {
 }
 
 function ProfileSettings() {
+  const { user: authUser } = useAuth();
+  const queryClient = useQueryClient();
+  
+  // Form state
+  const [displayName, setDisplayName] = useState('');
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [twitterLink, setTwitterLink] = useState('');
+  const [discordLink, setDiscordLink] = useState('');
+  const [instagramLink, setInstagramLink] = useState('');
+  const [tiktokLink, setTiktokLink] = useState('');
+  const [youtubeLink, setYoutubeLink] = useState('');
+  const [telegramLink, setTelegramLink] = useState('');
+  const [facebookLink, setFacebookLink] = useState('');
+  
+  // Image state
+  const [avatarPreview, setAvatarPreview] = useState<string | undefined>();
+  const [coverPreview, setCoverPreview] = useState<string | undefined>();
+  const [avatarFile, setAvatarFile] = useState<File | undefined>();
+  const [coverFile, setCoverFile] = useState<File | undefined>();
+  
+  // Loading state
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasChanges, setHasChanges] = useState(false);
+  
+  // Refs for file inputs
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  
+  // Fetch current profile data
+  useEffect(() => {
+    async function loadProfile() {
+      if (!authUser?.address) return;
+      
+      try {
+        setIsLoading(true);
+        const userData = await getAccountInfo(authUser.address);
+        
+        // Populate form fields
+        setDisplayName(userData.displayName || userData.display_name || '');
+        setUsername(userData.username || '');
+        setBio(userData.aboutMe || userData.bio || '');
+        
+        // Social links from customs or direct fields
+        const customs = userData.customs as Record<string, string> | undefined;
+        setTwitterLink(customs?.twitterLink || '');
+        setDiscordLink(customs?.discordLink || '');
+        setInstagramLink(customs?.instagramLink || '');
+        setTiktokLink(customs?.tiktokLink || '');
+        setYoutubeLink(customs?.youtubeLink || '');
+        setTelegramLink(customs?.telegramLink || '');
+        setFacebookLink(customs?.facebookLink || '');
+        
+        // Set avatar/cover preview from existing URLs
+        const address = userData.address || userData.wallet_address || '';
+        const rawAvatarUrl = userData.avatarImageUrl || userData.avatarUrl || userData.avatar_url;
+        const rawCoverUrl = userData.coverImageUrl || userData.coverUrl || userData.cover_url;
+        setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl));
+        setCoverPreview(buildCoverUrl(address, rawCoverUrl));
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+        toast.error('Failed to load profile data');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadProfile();
+  }, [authUser?.address]);
+  
+  // Track changes
+  useEffect(() => {
+    setHasChanges(true);
+  }, [displayName, username, bio, twitterLink, discordLink, instagramLink, tiktokLink, youtubeLink, telegramLink, facebookLink, avatarFile, coverFile]);
+  
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: async (data: UpdateProfileData) => {
+      return updateProfile(data);
+    },
+    onSuccess: () => {
+      toast.success('Profile updated successfully');
+      setHasChanges(false);
+      setAvatarFile(undefined);
+      setCoverFile(undefined);
+      // Invalidate profile queries to refresh data everywhere
+      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update profile');
+    },
+  });
+  
+  // Handle avatar upload
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image must be less than 5MB');
+        return;
+      }
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+  
+  // Handle cover upload
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('Image must be less than 10MB');
+        return;
+      }
+      setCoverFile(file);
+      setCoverPreview(URL.createObjectURL(file));
+    }
+  };
+  
+  // Handle save
+  const handleSave = () => {
+    const data: UpdateProfileData = {};
+    
+    // Only include changed fields
+    if (displayName) data.displayName = displayName;
+    if (username) data.username = username;
+    if (bio) data.aboutMe = bio;
+    if (twitterLink) data.twitterLink = twitterLink;
+    if (discordLink) data.discordLink = discordLink;
+    if (instagramLink) data.instagramLink = instagramLink;
+    if (tiktokLink) data.tiktokLink = tiktokLink;
+    if (telegramLink) data.telegramLink = telegramLink;
+    if (youtubeLink) data.youtubeLink = youtubeLink;
+    if (facebookLink) data.facebookLink = facebookLink;
+    if (avatarFile) data.avatarImg = avatarFile;
+    if (coverFile) data.coverImg = coverFile;
+    
+    updateMutation.mutate(data);
+  };
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <User className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Profile Settings</h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <User className="w-5 h-5 text-zinc-400" />
+          <h2 className="text-lg font-semibold text-white">Profile Settings</h2>
+        </div>
+        <Button
+          onClick={handleSave}
+          disabled={updateMutation.isPending}
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          {updateMutation.isPending ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Save className="w-4 h-4 mr-2" />
+          )}
+          Save Changes
+        </Button>
+      </div>
+
+      {/* Cover Image */}
+      <div className="relative h-32 bg-zinc-800 rounded-xl overflow-hidden group">
+        {coverPreview && (
+          <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
+        )}
+        <button
+          onClick={() => coverInputRef.current?.click()}
+          className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+        >
+          <Camera className="w-6 h-6 text-white" />
+        </button>
+        <input
+          ref={coverInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleCoverChange}
+        />
       </div>
 
       {/* Profile Picture */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 -mt-10 ml-4">
         <div className="relative">
-          <Avatar className="w-20 h-20">
-            <AvatarFallback className="bg-zinc-700 text-white text-xl font-medium">U</AvatarFallback>
+          <Avatar className="w-20 h-20 border-4 border-zinc-900">
+            <AvatarImage src={avatarPreview} />
+            <AvatarFallback className="bg-zinc-700 text-white text-xl font-medium">
+              {displayName?.[0]?.toUpperCase() || username?.[0]?.toUpperCase() || 'U'}
+            </AvatarFallback>
           </Avatar>
-          <button className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-xl flex items-center justify-center hover:bg-zinc-600 transition-colors">
+          <button
+            onClick={() => avatarInputRef.current?.click()}
+            className="absolute bottom-0 right-0 w-8 h-8 bg-zinc-700 rounded-xl flex items-center justify-center hover:bg-zinc-600 transition-colors"
+          >
             <Camera className="w-4 h-4 text-white" />
           </button>
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
         </div>
         <div>
           <h3 className="font-medium text-white">Profile Picture</h3>
-          <p className="text-zinc-500 text-sm mb-2">Upload a profile picture to personalize your account</p>
-          <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
-            Upload Image
-          </Button>
+          <p className="text-zinc-500 text-sm">Click the camera icon to upload</p>
         </div>
       </div>
 
@@ -160,16 +357,21 @@ function ProfileSettings() {
         <div>
           <label className="block text-sm font-medium text-white mb-2">Display Name</label>
           <Input 
-            placeholder="Enter your display name" 
+            placeholder="Enter your display name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-white mb-2">Username</label>
           <Input 
-            placeholder="@username" 
+            placeholder="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
           />
+          <p className="text-zinc-500 text-xs mt-1">3-30 characters, letters, numbers, underscores only</p>
         </div>
       </div>
 
@@ -177,7 +379,9 @@ function ProfileSettings() {
       <div>
         <label className="block text-sm font-medium text-white mb-2">Bio</label>
         <Textarea 
-          placeholder="Tell us about yourself..." 
+          placeholder="Tell us about yourself..."
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
           className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 min-h-[100px]"
         />
       </div>
@@ -187,13 +391,10 @@ function ProfileSettings() {
         <h3 className="font-medium text-white mb-4">Social Links</h3>
         <div className="space-y-3">
           <SocialLinkInput 
-            label="Website" 
-            placeholder="https://yourwebsite.com"
-            icon={<Link2 className="w-4 h-4 text-zinc-500" />}
-          />
-          <SocialLinkInput 
             label="X (Twitter)" 
             placeholder="https://x.com/username"
+            value={twitterLink}
+            onChange={setTwitterLink}
             icon={
               <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -203,6 +404,8 @@ function ProfileSettings() {
           <SocialLinkInput 
             label="Instagram" 
             placeholder="https://instagram.com/username"
+            value={instagramLink}
+            onChange={setInstagramLink}
             icon={
               <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
@@ -212,6 +415,8 @@ function ProfileSettings() {
           <SocialLinkInput 
             label="TikTok" 
             placeholder="https://tiktok.com/@username"
+            value={tiktokLink}
+            onChange={setTiktokLink}
             icon={
               <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
@@ -221,6 +426,8 @@ function ProfileSettings() {
           <SocialLinkInput 
             label="YouTube" 
             placeholder="https://youtube.com/@channel"
+            value={youtubeLink}
+            onChange={setYoutubeLink}
             icon={
               <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -229,7 +436,9 @@ function ProfileSettings() {
           />
           <SocialLinkInput 
             label="Discord" 
-            placeholder="https://discord.gg/invite"
+            placeholder="discord_username"
+            value={discordLink}
+            onChange={setDiscordLink}
             icon={
               <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
@@ -239,27 +448,11 @@ function ProfileSettings() {
           <SocialLinkInput 
             label="Telegram" 
             placeholder="https://t.me/username"
+            value={telegramLink}
+            onChange={setTelegramLink}
             icon={
               <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-              </svg>
-            }
-          />
-          <SocialLinkInput 
-            label="LinkedIn" 
-            placeholder="https://linkedin.com/in/username"
-            icon={
-              <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-            }
-          />
-          <SocialLinkInput 
-            label="GitHub" 
-            placeholder="https://github.com/username"
-            icon={
-              <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
               </svg>
             }
           />
@@ -676,11 +869,15 @@ function SettingToggle({
 function SocialLinkInput({ 
   label, 
   placeholder, 
-  icon 
+  icon,
+  value,
+  onChange
 }: { 
   label: string; 
   placeholder: string; 
   icon: React.ReactNode;
+  value?: string;
+  onChange?: (value: string) => void;
 }) {
   return (
     <div>
@@ -688,7 +885,9 @@ function SocialLinkInput({
       <div className="flex items-center gap-2">
         {icon}
         <Input 
-          placeholder={placeholder} 
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
           className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
         />
       </div>
