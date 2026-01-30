@@ -8,7 +8,7 @@
  */
 
 import { useRef, useMemo, useEffect, useState } from 'react';
-import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon } from 'lucide-react';
+import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon, Grid3x3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ImageCard } from '@/components/app/cards';
@@ -31,6 +31,8 @@ interface ImagesFeedProps {
   selectedPostId?: string | null;
   /** Callback to clear selected post and switch modes */
   onPostSelected?: (postId: string | null) => void;
+  /** Callback to return to collage view from feed */
+  onBackToCollage?: () => void;
 }
 
 // ============================================================================
@@ -173,6 +175,7 @@ interface EndlessScrollViewProps {
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   startFromId?: string | null;
+  onBackToCollage?: () => void;
 }
 
 function EndlessScrollView({ 
@@ -181,6 +184,7 @@ function EndlessScrollView({
   isFetchingNextPage, 
   hasNextPage,
   startFromId,
+  onBackToCollage,
 }: EndlessScrollViewProps) {
   const scrollTargetRef = useRef<HTMLDivElement>(null);
   
@@ -206,7 +210,18 @@ function EndlessScrollView({
   }, [startFromId]);
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
+    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
+      {/* Back to Grid Button */}
+      {onBackToCollage && (
+        <button
+          onClick={onBackToCollage}
+          className="fixed top-28 left-4 lg:left-[280px] z-20 p-2.5 bg-zinc-900/90 backdrop-blur-sm rounded-xl border border-zinc-700 shadow-lg hover:bg-zinc-800 transition-colors"
+          aria-label="Back to grid view"
+        >
+          <Grid3x3 className="w-5 h-5 text-white" />
+        </button>
+      )}
+      
       <div ref={scrollTargetRef} />
       {orderedPosts.map((post) => (
         <ImageCard key={post.id} post={post} />
@@ -239,6 +254,7 @@ export function ImagesFeed({
   refreshKey = 0,
   selectedPostId = null,
   onPostSelected,
+  onBackToCollage,
 }: ImagesFeedProps) {
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -415,6 +431,7 @@ export function ImagesFeed({
               isFetchingNextPage={isFetchingNextPage}
               hasNextPage={hasNextPage ?? false}
               startFromId={selectedPostId}
+              onBackToCollage={onBackToCollage}
             />
           </motion.div>
         ) : (
