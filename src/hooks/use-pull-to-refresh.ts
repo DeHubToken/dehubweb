@@ -2,15 +2,22 @@
  * Pull-to-Refresh Hook
  * ====================
  * Reusable hook for implementing pull-to-refresh functionality.
- * Supports touch, mouse, and wheel gestures.
- * Only triggers when interacting within the specified container.
+ * Supports touch and mouse-drag gestures only (wheel/trackpad disabled).
+ * Requires deliberate intent: user must pause at top before pulling.
  * 
  * @module hooks/use-pull-to-refresh
  */
 
-import { useState, useRef, useEffect, useCallback, RefObject } from 'react';
+import { useState, useRef, useCallback, RefObject } from 'react';
 
-const DEFAULT_PULL_THRESHOLD = 80;
+/** Distance required to trigger refresh */
+const DEFAULT_PULL_THRESHOLD = 120;
+
+/** Time user must stay at top before pull activates (ms) */
+const SETTLE_DELAY = 200;
+
+/** Cooldown between refreshes (ms) */
+const REFRESH_COOLDOWN = 3000;
 
 interface UsePullToRefreshOptions {
   /** Distance required to trigger refresh */
@@ -47,9 +54,13 @@ export function usePullToRefresh({
   const [isPulling, setIsPulling] = useState(false);
   const pullStartY = useRef<number | null>(null);
   const wasAtTopOnStart = useRef<boolean>(false);
-  const wheelAccumulator = useRef<number>(0);
-  const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
-  const isHoveringContainer = useRef<boolean>(false);
+  
+  // Settle time tracking - user must pause at top before pull activates
+  const topSettleTime = useRef<number | null>(null);
+  const isSettledAtTop = useRef<boolean>(false);
+  
+  // Cooldown between refreshes
+  const lastRefreshTime = useRef<number>(0);
 
   // Helper to check if we're truly at the top (both window AND container)
   const isAtTop = useCallback(() => {
@@ -62,7 +73,6 @@ export function usePullToRefresh({
     if (windowScrollTop > 2) return false;
     
     // If there's a container ref, also check its scroll position
-    // This handles nested scrollable containers like MusicFeed
     if (containerRef?.current) {
       const containerScrollTop = containerRef.current.scrollTop;
       if (containerScrollTop > 2) return false;
@@ -77,29 +87,76 @@ export function usePullToRefresh({
     return true;
   }, [containerRef]);
 
-  // Trigger the refresh
+  // Check if user has settled at top long enough
+  const checkSettled = useCallback(() => {
+    if (!isAtTop()) {
+      topSettleTime.current = null;
+      isSettledAtTop.current = false;
+      return false;
+    }
+    
+    const now = Date.now();
+    
+    if (topSettleTime.current === null) {
+      // Just arrived at top, start the timer
+      topSettleTime.current = now;
+      isSettledAtTop.current = false;
+      return false;
+    }
+    
+    // Check if enough time has passed
+    if (now - topSettleTime.current >= SETTLE_DELAY) {
+      isSettledAtTop.current = true;
+      return true;
+    }
+    
+    return false;
+  }, [isAtTop]);
+
+  // Trigger the refresh with cooldown check
   const triggerRefresh = useCallback(() => {
+    const now = Date.now();
+    
+    // Check cooldown
+    if (now - lastRefreshTime.current < REFRESH_COOLDOWN) {
+      return;
+    }
+    
     if (!isRefreshing) {
+      lastRefreshTime.current = now;
       onRefresh();
     }
   }, [isRefreshing, onRefresh]);
 
   // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    // Only allow pull-to-refresh if we're at the very top when touch starts
-    wasAtTopOnStart.current = isAtTop();
-    if (wasAtTopOnStart.current) {
+    // Reset settle state on new touch
+    const atTop = isAtTop();
+    wasAtTopOnStart.current = atTop;
+    
+    if (atTop) {
+      // Start or continue settle timer
+      if (topSettleTime.current === null) {
+        topSettleTime.current = Date.now();
+      }
       pullStartY.current = e.touches[0].clientY;
+    } else {
+      topSettleTime.current = null;
+      isSettledAtTop.current = false;
     }
   }, [isAtTop]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    // Only process if we started at the top AND we're still at the top
+    // Only process if we started at the top
     if (!wasAtTopOnStart.current || pullStartY.current === null) return;
+    
+    // Check if we're still at top
     if (!isAtTop()) {
       // User scrolled away from top, cancel pull
       pullStartY.current = null;
       wasAtTopOnStart.current = false;
+      topSettleTime.current = null;
+      isSettledAtTop.current = false;
       setPullDistance(0);
       setIsPulling(false);
       return;
@@ -108,20 +165,20 @@ export function usePullToRefresh({
     const currentY = e.touches[0].clientY;
     const distance = currentY - pullStartY.current;
     
-    // Only start pulling if moving downward
-    if (distance > 0) {
+    // Only show pull indicator if user has settled at top AND is pulling down
+    if (distance > 0 && checkSettled()) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
-    } else {
+    } else if (distance <= 0) {
       // Moving up while at top, don't show indicator
       setPullDistance(0);
       setIsPulling(false);
     }
-  }, [isAtTop, pullThreshold]);
+  }, [isAtTop, pullThreshold, checkSettled]);
 
   const handleTouchEnd = useCallback(() => {
-    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
+    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current && isSettledAtTop.current) {
       triggerRefresh();
     }
     
@@ -129,39 +186,51 @@ export function usePullToRefresh({
     setIsPulling(false);
     pullStartY.current = null;
     wasAtTopOnStart.current = false;
+    // Don't reset settle time here - keep it for quick consecutive pulls
   }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
 
-  // Mouse handlers for desktop
+  // Mouse handlers for desktop (drag gesture only, not scroll wheel)
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    wasAtTopOnStart.current = isAtTop();
-    if (wasAtTopOnStart.current) {
+    const atTop = isAtTop();
+    wasAtTopOnStart.current = atTop;
+    
+    if (atTop) {
+      if (topSettleTime.current === null) {
+        topSettleTime.current = Date.now();
+      }
       pullStartY.current = e.clientY;
+    } else {
+      topSettleTime.current = null;
+      isSettledAtTop.current = false;
     }
   }, [isAtTop]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!wasAtTopOnStart.current || pullStartY.current === null) return;
+    
     if (!isAtTop()) {
       pullStartY.current = null;
       wasAtTopOnStart.current = false;
+      topSettleTime.current = null;
+      isSettledAtTop.current = false;
       setPullDistance(0);
       setIsPulling(false);
       return;
     }
 
     const distance = e.clientY - pullStartY.current;
-    if (distance > 0) {
+    if (distance > 0 && checkSettled()) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
-    } else {
+    } else if (distance <= 0) {
       setPullDistance(0);
       setIsPulling(false);
     }
-  }, [isAtTop, pullThreshold]);
+  }, [isAtTop, pullThreshold, checkSettled]);
 
   const handleMouseUp = useCallback(() => {
-    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
+    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current && isSettledAtTop.current) {
       triggerRefresh();
     }
     
@@ -180,83 +249,9 @@ export function usePullToRefresh({
     }
   }, [isPulling]);
 
-  // Track hover state over container for wheel events
-  useEffect(() => {
-    const container = containerRef?.current;
-    if (!container) return;
-
-    const handleMouseEnter = () => {
-      isHoveringContainer.current = true;
-    };
-
-    const handleMouseLeaveContainer = () => {
-      isHoveringContainer.current = false;
-    };
-
-    container.addEventListener('mouseenter', handleMouseEnter);
-    container.addEventListener('mouseleave', handleMouseLeaveContainer);
-
-    return () => {
-      container.removeEventListener('mouseenter', handleMouseEnter);
-      container.removeEventListener('mouseleave', handleMouseLeaveContainer);
-    };
-  }, [containerRef]);
-
-  // Wheel handler for desktop pull-to-refresh - only when hovering over container
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      if (isRefreshing) return;
-      
-      // Only trigger if hovering over the feed container (or no container specified)
-      if (containerRef && !isHoveringContainer.current) {
-        return;
-      }
-      
-      const atTop = isAtTop();
-      
-      // Only trigger on scroll up (deltaY < 0) when already at top
-      if (atTop && e.deltaY < 0) {
-        e.preventDefault();
-        
-        wheelAccumulator.current += Math.abs(e.deltaY);
-        const resistedDistance = Math.min(wheelAccumulator.current * 0.3, pullThreshold * 1.5);
-        setPullDistance(resistedDistance);
-        setIsPulling(true);
-        
-        if (wheelTimeout.current) {
-          clearTimeout(wheelTimeout.current);
-        }
-        
-        if (resistedDistance >= pullThreshold) {
-          triggerRefresh();
-          wheelAccumulator.current = 0;
-          setPullDistance(0);
-          setIsPulling(false);
-        } else {
-          wheelTimeout.current = setTimeout(() => {
-            wheelAccumulator.current = 0;
-            setPullDistance(0);
-            setIsPulling(false);
-          }, 300);
-        }
-      } else {
-        // Not at top or scrolling down - reset
-        wheelAccumulator.current = 0;
-        if (isPulling && !isRefreshing) {
-          setPullDistance(0);
-          setIsPulling(false);
-        }
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      if (wheelTimeout.current) {
-        clearTimeout(wheelTimeout.current);
-      }
-    };
-  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop, containerRef]);
+  // NOTE: Wheel/trackpad refresh is intentionally removed
+  // Scrolling up at the top should just stop, not trigger refresh
+  // This matches standard mobile app behavior (Twitter, Instagram, etc.)
 
   return {
     pullDistance,
