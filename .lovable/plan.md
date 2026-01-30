@@ -1,109 +1,47 @@
 
-# Plan: Synchronize Image Page Comments with Video/Home Page Comments
+# Modernize CommentsSection Tab Switcher
 
-## Problem Analysis
+## Overview
+The home page videos and images use a different comment component (`CommentsSection.tsx`) than the one I've been updating (`CommentsSheet.tsx`). This plan will update `CommentsSection` to match the icon-only tab switcher design you showed.
 
-The `CommentsSheet` (used for image posts) looks "ugly" compared to `CommentsSection` (used for video/home feed) because:
+## Changes Required
 
-1. **Different CommentItem components** - The sheet uses a simplified CommentItem with only a Reply button, while the video section has Like, Dislike, Reply, Share dropdown, and Bookmark buttons
-2. **Missing voice note functionality** - The sheet lacks voice recording capability
-3. **Different fade gradient colors** - Sheet uses `from-black/60` vs `from-zinc-900`
-4. **Different container structure** - Sheet is a modal drawer vs inline expandable section
+### 1. Update Tab Switcher in CommentsSection.tsx
+Replace the current shadcn `Tabs` component with a custom icon-only tab bar matching the side panel style:
 
-## Solution
+**Current (lines ~298-304):**
+- Uses `<Tabs>`, `<TabsList>`, `<TabsTrigger>` components
+- Has text labels "Replies" and "Quotes"
 
-Replace the `CommentsSheet` drawer-based implementation with the exact same UI patterns from `CommentsSection`, adapting only what's necessary for the modal context.
+**New Design:**
+- Remove shadcn Tabs dependency for the switcher
+- Two equal-width buttons with icons only (MessageCircle + Repeat2)
+- Active state: gradient background from `zinc-800/60` to transparent
+- Icon size: `w-5 h-5`
+- No text labels, no bottom border
+- Matches exactly what's in the screenshot
 
----
-
-## Implementation Steps
-
-### Step 1: Update CommentItem in CommentsSheet
-
-Migrate the full-featured `CommentItem` from `CommentsSection` into `CommentsSheet`:
-
-- Add Like/Dislike buttons with ThumbsUp/ThumbsDown icons
-- Add Share dropdown with Repost and Copy Text options
-- Add Bookmark toggle button
-- Add TranslatableText support for comment text
-- Add VoiceNotePlayer support
-
-### Step 2: Add Voice Note Recording
-
-Port the voice recording functionality from `CommentsSection`:
-
-- Add recording state management (isRecording, recordingTime, voiceNote)
-- Add MediaRecorder refs and logic
-- Add AudioVisualizer for voice note preview
-- Add recording indicator UI in input area
-- Add mic button and stop recording controls
-
-### Step 3: Fix Fade Gradient Colors
-
-Update the gradients to match:
-
-- Change `from-black/60` to `from-zinc-900` for both top and bottom fades
-- This ensures visual consistency with the home/video page
-
-### Step 4: Standardize Comment List Styling
-
-Match the divide styling and spacing:
-
-- Add `divide-y divide-zinc-800` to comment list container
-- Match `pt-2 pb-2` padding on scroll container
-
----
+### 2. Add Padding to Comments
+- Increase horizontal padding in the comment items for better spacing
+- Ensure avatars and bookmarks aren't stuck to edges
 
 ## Technical Details
 
-### Files to Modify
+**File: `src/components/app/cards/CommentsSection.tsx`**
 
-| File | Changes |
-|------|---------|
-| `src/components/app/comments/CommentsSheet.tsx` | Full rewrite of CommentItem section, add voice recording, fix gradients |
+- Remove `Tabs, TabsList, TabsTrigger, TabsContent` from shadcn imports
+- Add `MessageCircle, Repeat2` icons (already imported)
+- Replace the entire `<Tabs>` block with custom button-based tab bar
+- Use the same `activeTab` state pattern already in the file (line 297)
+- Render content conditionally based on `activeTab` instead of using `TabsContent`
+- Update comment item padding from `py-3` to include `px-5`
 
-### New Imports Needed
-
-```typescript
-import { ThumbsUp, ThumbsDown, Share2, Bookmark, Repeat2, Link, Mic, Square, Play, Pause, Trash2 } from 'lucide-react';
-import { TranslatableText } from '../TranslatableText';
-import { AudioVisualizer } from '../audio';
+The styling will exactly match:
 ```
-
-### State Variables to Add
-
-```typescript
-// Voice note recording state
-const [isRecording, setIsRecording] = useState(false);
-const [recordingTime, setRecordingTime] = useState(0);
-const [voiceNote, setVoiceNote] = useState<VoiceNote | null>(null);
-const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-const chunksRef = useRef<Blob[]>([]);
-const timerRef = useRef<NodeJS.Timeout | null>(null);
-const recordingTimeRef = useRef(0);
-const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
-const [isPlayingPreview, setIsPlayingPreview] = useState(false);
-const MAX_VOICE_DURATION = 30;
+flex container with two flex-1 buttons
+└── Button 1: MessageCircle icon (replies)
+    └── Active: gradient overlay + white icon
+    └── Inactive: zinc-500 icon, hover zinc-300 with bg-zinc-800/30
+└── Button 2: Repeat2 icon (quotes)
+    └── Same active/inactive states
 ```
-
-### VoiceNote Type to Add
-
-```typescript
-interface VoiceNote {
-  url: string;
-  duration: number;
-}
-```
-
----
-
-## Summary
-
-After these changes, the image page comments will have:
-- Like/Dislike buttons on each comment
-- Share dropdown with Repost and Copy Text
-- Bookmark button
-- Voice note recording capability
-- Voice note playback with visualizer
-- Matching fade gradients (zinc-900)
-- Consistent visual styling with video/home pages
