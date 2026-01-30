@@ -152,8 +152,11 @@ export function ActionBar({
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Link copied to clipboard');
+    const url = postId 
+      ? `${window.location.origin}/app/post/${postId}`
+      : window.location.href;
+    navigator.clipboard.writeText(url);
+    toast.success('Post URL copied to clipboard');
     setSheetOpen(false);
   };
 
