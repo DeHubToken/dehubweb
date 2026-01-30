@@ -11,11 +11,11 @@
 
 import { useState, memo } from 'react';
 import { Eye, Sparkles, MoreVertical, Link2, Flag, Ban } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSheet } from '../comments';
+import { CommentsSection } from './CommentsSection';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
@@ -108,13 +108,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         hideDislike
       />
 
-      {/* Comments Sheet */}
-      {showComments && (
-        <CommentsSheet
-          tokenId={post.id}
-          onClose={() => setShowComments(false)}
-        />
-      )}
+      {/* Comments Section */}
+      <AnimatePresence>
+        {showComments && (
+          <CommentsSection
+            tokenId={post.id}
+            onClose={() => setShowComments(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* AI Chat */}
       <PostAIChat
