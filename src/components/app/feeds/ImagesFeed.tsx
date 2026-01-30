@@ -211,15 +211,17 @@ function EndlessScrollView({
 
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
-      {/* Back to Grid Button - Bottom center, above mobile nav */}
+      {/* Back to Grid Button - Bottom center of feed area, above mobile nav */}
       {onBackToCollage && (
-        <button
-          onClick={onBackToCollage}
-          className="fixed bottom-[72px] lg:bottom-8 left-1/2 -translate-x-1/2 z-20 p-3 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 shadow-lg hover:bg-black/60 transition-colors"
-          aria-label="Back to grid view"
-        >
-          <Grid3x3 className="w-5 h-5 text-white" />
-        </button>
+        <div className="sticky bottom-[72px] lg:bottom-8 z-20 flex justify-center pointer-events-none">
+          <button
+            onClick={onBackToCollage}
+            className="pointer-events-auto p-3 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 shadow-lg hover:bg-black/60 transition-colors"
+            aria-label="Back to grid view"
+          >
+            <Grid3x3 className="w-5 h-5 text-white" />
+          </button>
+        </div>
       )}
       
       <div ref={scrollTargetRef} />
