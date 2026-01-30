@@ -520,6 +520,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
     try {
       await postComment(tokenId, newComment, replyTarget?.id);
+      // Clear optimistic comment before refetching to avoid duplicates
+      setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
