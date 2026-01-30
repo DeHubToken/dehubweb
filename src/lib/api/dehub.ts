@@ -643,7 +643,20 @@ export async function getSavedPosts(page: number = 0, unit: number = 20): Promis
   });
 }
 
-// Category functions
+/**
+ * Get user's liked posts
+ * Uses GET /api/liked_videos with contentType, limit, page (1-based)
+ */
+export async function getLikedPosts(
+  page: number = 1, 
+  limit: number = 20, 
+  contentType: 'video' | 'post' | 'all' = 'all'
+): Promise<{ result: { items: DeHubNFT[]; totalCount: number } }> {
+  return apiCall<{ result: { items: DeHubNFT[]; totalCount: number } }>("/api/liked_videos", {
+    params: { page, limit, contentType },
+    requiresAuth: true,
+  });
+}
 export async function getCategories(): Promise<DeHubCategory[]> {
   const response = await apiCall<string[] | DeHubCategory[]>("/api/get_categories");
   

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, Play, Eye, Heart, RefreshCw } from 'lucide-react';
+import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, Play, Eye, Heart, RefreshCw, ThumbsUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -10,6 +10,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 const tabs = [
   { label: 'All', value: 'all' as BookmarkType, icon: LayoutGrid },
+  { label: 'Liked', value: 'liked' as BookmarkType, icon: ThumbsUp },
   { label: 'Recent', value: 'recent' as BookmarkType, icon: Clock },
   { label: 'Images', value: 'images' as BookmarkType, icon: Image },
   { label: 'Videos', value: 'videos' as BookmarkType, icon: Video },

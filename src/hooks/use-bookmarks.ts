@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getSavedPosts, savePost, unsavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { getSavedPosts, getLikedPosts, savePost, unsavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
-export type BookmarkType = 'all' | 'recent' | 'images' | 'videos' | 'text';
+export type BookmarkType = 'all' | 'liked' | 'recent' | 'images' | 'videos' | 'text';
 
 export interface BookmarkItem {
   id: string;
@@ -54,6 +54,9 @@ function filterByType(bookmarks: BookmarkItem[], type: BookmarkType): BookmarkIt
       return [...bookmarks].sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
+    case 'liked':
+      // Liked posts are fetched separately, so return as-is
+      return bookmarks;
     default:
       return bookmarks;
   }
@@ -75,30 +78,56 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
-  const query = useQuery({
-    queryKey: ['bookmarks'],
+  // Saved posts query (for all, recent, images, videos, text)
+  const savedQuery = useQuery({
+    queryKey: ['bookmarks', 'saved'],
     queryFn: async () => {
       const response = await getSavedPosts(0, 100);
-      // API returns { result: DeHubNFT[] }
       const data = response.result || [];
       return data.map(mapNFTToBookmark);
     },
-    enabled: isAuthenticated,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    enabled: isAuthenticated && type !== 'liked',
+    staleTime: 2 * 60 * 1000,
   });
 
+  // Liked posts query (for liked tab only)
+  const likedQuery = useQuery({
+    queryKey: ['bookmarks', 'liked'],
+    queryFn: async () => {
+      const response = await getLikedPosts(1, 100, 'all');
+      const items = response.result?.items || [];
+      return items.map(mapNFTToBookmark);
+    },
+    enabled: isAuthenticated && type === 'liked',
+    staleTime: 2 * 60 * 1000,
+  });
+
+  // Use the appropriate data based on type
+  const baseData = type === 'liked' ? likedQuery.data : savedQuery.data;
+  const isLoading = type === 'liked' ? likedQuery.isLoading : savedQuery.isLoading;
+  const isError = type === 'liked' ? likedQuery.isError : savedQuery.isError;
+  const error = type === 'liked' ? likedQuery.error : savedQuery.error;
+
   // Apply client-side filtering
-  const filteredBookmarks = query.data 
-    ? filterBySearch(filterByType(query.data, type), searchQuery)
+  const filteredBookmarks = baseData 
+    ? filterBySearch(filterByType(baseData, type), searchQuery)
     : [];
+
+  const refetch = () => {
+    if (type === 'liked') {
+      likedQuery.refetch();
+    } else {
+      savedQuery.refetch();
+    }
+  };
 
   return {
     bookmarks: filteredBookmarks,
-    totalCount: query.data?.length || 0,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error,
-    refetch: query.refetch,
+    totalCount: baseData?.length || 0,
+    isLoading,
+    isError,
+    error,
+    refetch,
   };
 }
 
@@ -111,7 +140,7 @@ export function useBookmarkPost(tokenId: string | number) {
   
   // Check if this post is in the bookmarks
   const { data: bookmarks } = useQuery({
-    queryKey: ['bookmarks'],
+    queryKey: ['bookmarks', 'saved'],
     queryFn: async () => {
       const response = await getSavedPosts(0, 100);
       return response.result || [];
