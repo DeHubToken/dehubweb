@@ -877,6 +877,88 @@ export async function markAllNotificationsAsRead(): Promise<{ success: boolean }
 }
 
 // ============================================
+// REPORTS API
+// ============================================
+
+/**
+ * Report interface
+ */
+export interface DeHubReport {
+  id: string;
+  tokenId: number;
+  reporterId: string;
+  reason: string;
+  description?: string;
+  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
+  createdAt: string;
+  updatedAt?: string;
+}
+
+/**
+ * Report submission data
+ */
+export interface ReportSubmission {
+  tokenId: number;
+  reason: string;
+  description?: string;
+}
+
+/**
+ * Get all reports (admin only)
+ * Uses GET /api/nft/reports endpoint
+ */
+export async function getAllReports(): Promise<DeHubReport[]> {
+  const response = await apiCall<{ result: DeHubReport[] } | DeHubReport[]>("/api/nft/reports", {
+    requiresAuth: true,
+  });
+  
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  if (Array.isArray(response)) {
+    return response;
+  }
+  return [];
+}
+
+/**
+ * Get reports for a specific NFT
+ * Uses GET /api/reports/{tokenId} endpoint
+ * @param tokenId - The NFT token ID
+ */
+export async function getReportsForNFT(tokenId: number | string): Promise<DeHubReport[]> {
+  const response = await apiCall<{ result: DeHubReport[] } | DeHubReport[]>(`/api/reports/${tokenId}`, {
+    requiresAuth: true,
+  });
+  
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  if (Array.isArray(response)) {
+    return response;
+  }
+  return [];
+}
+
+/**
+ * Submit a report for an NFT
+ * Uses POST /api/nft/reports endpoint
+ * @param data - Report submission data
+ */
+export async function submitReport(data: ReportSubmission): Promise<{ success: boolean; reportId?: string }> {
+  const response = await apiCall<{ success: boolean; result?: { id: string } }>("/api/nft/reports", {
+    method: "POST",
+    body: data as unknown as Record<string, unknown>,
+    requiresAuth: true,
+  });
+  
+  return { 
+    success: response?.success !== false, 
+    reportId: response?.result?.id 
+  };
+}
+
+// ============================================
 // DIRECT MESSAGING API
 // ============================================
 

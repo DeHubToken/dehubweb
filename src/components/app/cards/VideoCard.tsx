@@ -19,6 +19,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
+import { ReportModal } from '../modals/ReportModal';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
@@ -42,6 +43,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
@@ -409,7 +411,10 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <Clock className="w-5 h-5" /> Watch List
                 </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <button 
+                  onClick={() => setShowReportModal(true)}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
                   <Flag className="w-5 h-5" /> Report
                 </button>
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
@@ -746,6 +751,14 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           title: video.title,
           imageUrl: video.thumbnail
         }}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        open={showReportModal}
+        onOpenChange={setShowReportModal}
+        tokenId={video.id}
+        contentType="video"
       />
     </div>
   );

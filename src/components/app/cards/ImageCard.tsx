@@ -19,6 +19,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
+import { ReportModal } from '../modals/ReportModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
@@ -322,6 +323,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
+  const [showReportModal, setShowReportModal] = useState(false);
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -366,7 +368,10 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Download className="w-4 h-4" /> Download
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
+              <DropdownMenuItem 
+                onClick={() => setShowReportModal(true)}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
                 <Flag className="w-4 h-4" /> Report
               </DropdownMenuItem>
               <DropdownMenuItem 
@@ -453,6 +458,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
+      />
+
+      {/* Report Modal */}
+      <ReportModal
+        open={showReportModal}
+        onOpenChange={setShowReportModal}
+        tokenId={post.id}
+        contentType="image"
       />
     </div>
   );
