@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { getSavedPosts, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getSavedPosts, savePost, unsavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 export type BookmarkType = 'all' | 'recent' | 'images' | 'videos' | 'text';
 
@@ -72,14 +73,14 @@ function filterBySearch(bookmarks: BookmarkItem[], query: string): BookmarkItem[
 
 export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '') {
   const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: ['bookmarks'],
     queryFn: async () => {
-      const response = await getSavedPosts(1, 100);
-      
-      // Handle the API response - may be wrapped in result
-      const data = (response as { result?: DeHubNFT[] }).result || response.data || [];
+      const response = await getSavedPosts(0, 100);
+      // API returns { result: DeHubNFT[] }
+      const data = response.result || [];
       return data.map(mapNFTToBookmark);
     },
     enabled: isAuthenticated,
@@ -98,5 +99,69 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     isError: query.isError,
     error: query.error,
     refetch: query.refetch,
+  };
+}
+
+/**
+ * Hook to manage bookmark state for a single post
+ */
+export function useBookmarkPost(tokenId: string | number) {
+  const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
+  
+  // Check if this post is in the bookmarks
+  const { data: bookmarks } = useQuery({
+    queryKey: ['bookmarks'],
+    queryFn: async () => {
+      const response = await getSavedPosts(0, 100);
+      return response.result || [];
+    },
+    enabled: isAuthenticated,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const isBookmarked = bookmarks?.some(
+    (nft) => String(nft.tokenId) === String(tokenId)
+  ) ?? false;
+
+  const saveMutation = useMutation({
+    mutationFn: () => savePost(String(tokenId)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      toast.success('Saved to bookmarks');
+    },
+    onError: () => {
+      toast.error('Failed to save post');
+    },
+  });
+
+  const unsaveMutation = useMutation({
+    mutationFn: () => unsavePost(String(tokenId)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+      toast.success('Removed from bookmarks');
+    },
+    onError: () => {
+      toast.error('Failed to remove bookmark');
+    },
+  });
+
+  const toggleBookmark = () => {
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to bookmark');
+      return;
+    }
+    
+    if (isBookmarked) {
+      unsaveMutation.mutate();
+    } else {
+      saveMutation.mutate();
+    }
+  };
+
+  return {
+    isBookmarked,
+    isLoading: saveMutation.isPending || unsaveMutation.isPending,
+    toggleBookmark,
   };
 }

@@ -7,7 +7,7 @@
  * @example
  * ```tsx
  * <ActionBar 
- *   onLike={() => handleLike()}
+ *   postId="123"
  *   onComment={() => openComments()}
  * />
  * ```
@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { voteOnNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
+import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import {
   Drawer,
   DrawerContent,
@@ -39,8 +40,6 @@ interface ActionBarProps {
   onRepost?: () => void;
   /** Handler for quote action */
   onQuote?: () => void;
-  /** Handler for bookmark action */
-  onBookmark?: () => void;
   /** Additional CSS classes */
   className?: string;
   /** Whether to show border on top */
@@ -75,7 +74,6 @@ export function ActionBar({
   onShare,
   onRepost,
   onQuote,
-  onBookmark,
   className,
   showBorder = false,
   isLiked: initialIsLiked = false,
@@ -93,6 +91,10 @@ export function ActionBar({
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  
+  // Bookmark state from hook
+  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
+  
   const handleVote = useCallback(async (vote: boolean) => {
     if (!postId || isVoting || isLiked || isDisliked) return;
     
@@ -271,13 +273,20 @@ export function ActionBar({
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          <button 
-            onClick={onBookmark}
-            className="text-white hover:text-zinc-400 transition-colors"
-            aria-label="Bookmark"
+          <motion.button 
+            onClick={toggleBookmark}
+            className={cn(
+              "transition-colors",
+              isBookmarked ? "text-yellow-500" : "text-white hover:text-zinc-400",
+              isBookmarkLoading && "opacity-50"
+            )}
+            aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+            disabled={isBookmarkLoading}
+            animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            <Bookmark className="w-5 h-5" />
-          </button>
+            <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
+          </motion.button>
           <button 
             onClick={handleInfoClick}
             className="text-white hover:text-zinc-400 transition-colors"
