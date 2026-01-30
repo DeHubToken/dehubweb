@@ -29,7 +29,7 @@ export default function NotificationsPage() {
         <div className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <h1 className="font-bold text-white text-lg">Notifications</h1>
-            <button className="p-2 rounded-full hover:bg-zinc-800 transition-colors">
+            <button className="p-2 rounded-xl hover:bg-zinc-800 transition-colors">
               <Settings className="w-5 h-5 text-zinc-400" />
             </button>
           </div>

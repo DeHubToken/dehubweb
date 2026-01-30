@@ -60,7 +60,7 @@ export function SubscriptionsTab() {
         <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-zinc-400 text-sm">Projected monthly expenditures</span>
-            <span className="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="bg-red-500/20 text-red-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
               <TrendingDown className="w-3 h-3" />
               Decreased by 30%
             </span>
@@ -79,10 +79,10 @@ export function SubscriptionsTab() {
               <span className="text-zinc-400 text-sm">Top subscriptions</span>
               <div className="flex items-center gap-2">
                 <span className="text-zinc-500 text-xs">01 of 02</span>
-                <button className="p-1 rounded-full border border-zinc-700 text-zinc-400 hover:text-white">
+                <button className="p-1 rounded-xl border border-zinc-700 text-zinc-400 hover:text-white">
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <button className="p-1 rounded-full border border-zinc-700 bg-white text-black">
+                <button className="p-1 rounded-xl border border-zinc-700 bg-white text-black">
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
@@ -124,10 +124,10 @@ export function SubscriptionsTab() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-zinc-500 text-xs">01 of 03</span>
-              <button className="p-1 rounded-full border border-zinc-700 text-zinc-400 hover:text-white">
+              <button className="p-1 rounded-xl border border-zinc-700 text-zinc-400 hover:text-white">
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <button className="p-1 rounded-full border border-zinc-700 bg-white text-black">
+              <button className="p-1 rounded-xl border border-zinc-700 bg-white text-black">
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>

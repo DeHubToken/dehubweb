@@ -35,7 +35,7 @@ export function SubscriptionsSummary() {
         <div className="flex items-center justify-between mb-2">
           <span className="text-zinc-400 text-sm">Projected monthly revenue</span>
           <div className="flex items-center gap-2">
-            <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               Increased by 17%
             </span>

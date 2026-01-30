@@ -279,7 +279,7 @@ export function VideoTrimmer({
           <span className="text-white font-semibold">Trim Video</span>
           <button
             onClick={handleApply}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-medium transition-all duration-300 hover:scale-105
               bg-white/10 backdrop-blur-xl border border-white/20
               hover:bg-white/20 hover:border-white/40"
           >
@@ -295,7 +295,7 @@ export function VideoTrimmer({
             <div className="flex items-center gap-2 mb-4 p-3 rounded-xl
               bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent
               border border-white/10">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
                 <Film className="w-4 h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
@@ -371,7 +371,7 @@ export function VideoTrimmer({
             <span className="text-zinc-400">
               Select trim range
             </span>
-            <span className="font-medium px-2 py-0.5 rounded-full text-xs bg-white/10 text-white border border-white/20">
+            <span className="font-medium px-2 py-0.5 rounded-xl text-xs bg-white/10 text-white border border-white/20">
               {formatTime(selectionDuration)} selected
             </span>
           </div>
