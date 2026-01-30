@@ -326,8 +326,8 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  // Default to Latest for randomization base
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Latest
+  // Default to Random (first option)
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
@@ -337,7 +337,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
   
   // Random seed for shuffling - changes on mount and refresh
-  const [randomSeed] = useState(() => Math.random());
+  const [randomSeed, setRandomSeed] = useState(() => Math.random());
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -349,7 +349,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { storyUsers } = useDeHubStoryUsers(10);
 
   // Build API params from filters
-  // API default is now 'likes' (most liked)
+  // For 'random', we fetch latest and shuffle client-side
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
       case 'most-liked':
@@ -358,6 +358,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         return 'views' as const;
       case 'most-comments':
         return 'comments' as const;
+      case 'random':
+        // Fetch latest, shuffle client-side
+        return 'createdAt' as const;
       case 'latest':
       default:
         return 'createdAt' as const;
@@ -417,6 +420,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
+      // Regenerate random seed on refresh
+      setRandomSeed(Math.random());
       refetch();
     }
   }, [shuffleKey, refetch]);
@@ -550,10 +555,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     });
     
-    // Randomize the feed order using shuffleKey + randomSeed
-    const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
-    return shuffleArray(mappedItems, shuffleSeed);
-  }, [feedData, pinnedPostId, randomSeed, shuffleKey]);
+    // Only shuffle when "random" is selected
+    if (selectedSort.value === 'random') {
+      const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
+      return shuffleArray(mappedItems, shuffleSeed);
+    }
+    
+    return mappedItems;
+  }, [feedData, pinnedPostId, randomSeed, shuffleKey, selectedSort.value]);
 
   // Infinite scroll observer
   useEffect(() => {

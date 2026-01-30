@@ -13,6 +13,7 @@ import type { DeHubNFT } from '@/lib/api/dehub';
 // ============================================================================
 
 export const SORT_OPTIONS = [
+  { label: 'Random', value: 'random' as const },
   { label: 'Latest', value: 'latest' as const },
   { label: 'Most Viewed', value: 'most-viewed' as const },
   { label: 'Most Liked', value: 'most-liked' as const },
@@ -42,6 +43,9 @@ export function getApiSortMode(sortValue: SortValue): ApiSortMode {
     case 'most-comments':
       // API doesn't support comment sorting, use popular as fallback
       return 'popular';
+    case 'random':
+      // For random, fetch latest and shuffle client-side
+      return 'new';
     case 'latest':
     default:
       return 'new';
@@ -117,11 +121,15 @@ export function sortByMostComments<T extends DeHubNFT>(items: T[]): T[] {
 
 /**
  * Apply sorting based on sort value
+ * Note: For 'random', use shuffleArray separately with a seed
  */
-export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValue): T[] {
+export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValue, randomSeed?: number): T[] {
   if (items.length === 0) return items;
   
   switch (sortValue) {
+    case 'random':
+      // Shuffle with provided seed or a random one
+      return shuffleArray(items, randomSeed ?? Math.random() * 1000000);
     case 'most-viewed':
       return sortByMostViewed(items);
     case 'most-liked':
