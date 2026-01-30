@@ -1,117 +1,133 @@
 
+# Fix: True Random Shuffle with Balanced Content Ratio
 
-# Fix: Home Feed Infinite Scroll Loading Loop
+## Current Problems
 
-## The Problem
+1. **Not truly random on page refresh**: The `randomSeed` is initialized once on component mount and only changes when pull-to-refresh is triggered. Browser refresh re-mounts the component with a new seed, but navigating away and back may reuse the same seed.
 
-When scrolling down on the Home tab, the infinite scroll triggers an endless loading loop where multiple pages are fetched simultaneously (page 5, 6, 7, 8... all at once), causing:
-- Network request spam
-- Duplicate content
-- Frozen/janky UI
-- Poor user experience
-
-## Root Cause Analysis
-
-The issue is a **React closure stale state problem** with the IntersectionObserver:
-
-1. When the observer callback fires, it reads `isFetchingNextPage` from a **stale closure**
-2. Multiple callbacks fire before React re-renders with the updated state
-3. Each callback sees `isFetchingNextPage = false` and calls `fetchNextPage()`
-4. Result: Multiple pages load simultaneously
-
-### Why Videos Works But Home Doesn't
-The Videos feed uses `postType: 'video'` which returns fewer results, so there's less content and the loader element stays off-screen longer. The Home feed has more diverse content, causing the loader to remain visible and fire repeatedly.
-
----
+2. **No content ratio enforcement**: The shuffle treats all content equally - there's no guarantee of getting text posts mixed in with image/video posts.
 
 ## Solution
 
-Use a **ref-based guard** to synchronously track fetch state, preventing race conditions. This is the standard React pattern for IntersectionObserver + async state.
+### 1. True Randomization on Every Render
 
----
+Replace the seeded shuffle with `Date.now()` as the seed, ensuring every page load/refresh produces a completely different order.
+
+### 2. Balanced Content Distribution Algorithm
+
+Implement a "ratio shuffle" that:
+1. Separates items into **text posts** and **media posts** (images/videos)
+2. Enforces a **3:9 ratio** (1 text post for every 3 media posts)
+3. Interleaves them randomly while maintaining the ratio
 
 ## Technical Implementation
 
 ### File: `src/components/app/feeds/HomeFeed.tsx`
 
-**1. Add a ref to track fetch state:**
-```typescript
-const isFetchingRef = useRef(false);
-```
-
-**2. Update the IntersectionObserver useEffect:**
-```typescript
-useEffect(() => {
-  if (!loaderRef.current || !hasNextPage) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      // Use ref for synchronous check - prevents race conditions
-      if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
-        isFetchingRef.current = true;
-        fetchNextPage().finally(() => {
-          isFetchingRef.current = false;
-        });
-      }
-    },
-    { threshold: 0.1, rootMargin: '100px' }
-  );
-
-  observer.observe(loaderRef.current);
-  return () => observer.disconnect();
-}, [hasNextPage, fetchNextPage]);
-```
-
-**3. Remove `isFetchingNextPage` from the callback closure** since the ref handles it synchronously.
-
----
-
-### File: `src/components/app/feeds/VideosFeed.tsx`
-
-Apply the same fix for consistency:
+**Step 1: New helper function for balanced shuffle**
 
 ```typescript
-const isFetchingRef = useRef(false);
-
-useEffect(() => {
-  if (!loaderRef.current || !hasNextPage) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting && !isFetchingRef.current) {
-        isFetchingRef.current = true;
-        fetchNextPage().finally(() => {
-          isFetchingRef.current = false;
-        });
-      }
-    },
-    { threshold: 0.1, rootMargin: '100px' }
-  );
-
-  observer.observe(loaderRef.current);
-  return () => observer.disconnect();
-}, [hasNextPage, fetchNextPage]);
+/**
+ * Balanced shuffle: ensures ~3 text posts for every 9 media posts
+ * Interleaves text posts throughout the feed at regular intervals
+ */
+function balancedShuffle<T extends { type: string }>(
+  items: T[], 
+  seed: number
+): T[] {
+  const random = seededRandom(seed);
+  
+  // Separate text posts from media posts
+  const textPosts = items.filter(item => item.type === 'post');
+  const mediaPosts = items.filter(item => item.type !== 'post');
+  
+  // Shuffle both arrays independently
+  const shuffledText = [...textPosts];
+  const shuffledMedia = [...mediaPosts];
+  
+  for (let i = shuffledText.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffledText[i], shuffledText[j]] = [shuffledText[j], shuffledText[i]];
+  }
+  
+  for (let i = shuffledMedia.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffledMedia[i], shuffledMedia[j]] = [shuffledMedia[j], shuffledMedia[i]];
+  }
+  
+  // Interleave: insert 1 text post after every 3 media posts
+  const result: T[] = [];
+  let textIndex = 0;
+  let mediaIndex = 0;
+  
+  while (mediaIndex < shuffledMedia.length || textIndex < shuffledText.length) {
+    // Add up to 3 media posts
+    for (let i = 0; i < 3 && mediaIndex < shuffledMedia.length; i++) {
+      result.push(shuffledMedia[mediaIndex++]);
+    }
+    
+    // Add 1 text post if available
+    if (textIndex < shuffledText.length) {
+      result.push(shuffledText[textIndex++]);
+    }
+  }
+  
+  return result;
+}
 ```
 
----
+**Step 2: Update random seed generation**
 
-## Why This Works
+Change line 341 from:
+```typescript
+const [randomSeed, setRandomSeed] = useState(() => Math.random());
+```
 
-| Before (Broken) | After (Fixed) |
-|-----------------|---------------|
-| `isFetchingNextPage` is React state | `isFetchingRef.current` is a mutable ref |
-| Updates async after re-render | Updates synchronously on set |
-| Multiple callbacks read stale `false` | First callback sets to `true`, others blocked |
-| Race condition on rapid scroll | No race condition possible |
+To:
+```typescript
+// Generate new seed on every mount for true randomness
+const [randomSeed, setRandomSeed] = useState(() => Date.now());
+```
 
----
+**Step 3: Update the items useMemo to use balanced shuffle**
+
+Change lines 567-570 from:
+```typescript
+if (selectedSort.value === 'random') {
+  const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
+  return shuffleArray(mappedItems, shuffleSeed);
+}
+```
+
+To:
+```typescript
+if (selectedSort.value === 'random') {
+  const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
+  return balancedShuffle(mappedItems, shuffleSeed);
+}
+```
+
+## How the Ratio Works
+
+| Media Posts | Text Posts | Result Pattern |
+|-------------|------------|----------------|
+| 3 | 1 | M M M T M M M T M M M T ... |
+| 9 | 3 | Every 4th post is text (3:1 media-to-text) |
+| 12 | 4 | 12 media + 4 text = 16 posts total |
+
+If there are more or fewer text posts than the ratio requires:
+- **More text posts**: Extra text posts get appended at the end
+- **Fewer text posts**: Media posts continue without text inserts
 
 ## Summary of Changes
 
-| File | Change |
-|------|--------|
-| `src/components/app/feeds/HomeFeed.tsx` | Add `isFetchingRef` ref, update observer to use ref guard |
-| `src/components/app/feeds/VideosFeed.tsx` | Same fix for consistency |
+| Location | Change |
+|----------|--------|
+| Lines 72-90 | Add new `balancedShuffle()` helper function |
+| Line 341 | Change `Math.random()` to `Date.now()` for true randomness |
+| Lines 567-570 | Replace `shuffleArray` with `balancedShuffle` |
 
-This is a one-line ref addition and a minor observer callback update per file.
-
+This ensures:
+1. Every page load produces a truly different order
+2. Text posts are evenly distributed throughout the feed (1 per 3 media posts)
+3. Users always see a mix of content types
