@@ -558,7 +558,6 @@ export default function ProfilePage() {
                     />
                   )}
                 </button>
-                <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-zinc-900" />
               </div>
               <div className="flex items-center gap-2">
                 {isViewingOwnProfile ? (
