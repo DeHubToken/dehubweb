@@ -35,3 +35,4 @@ export { useUserLanguage } from './use-user-language';
 export { useVideoViewTracking, useFeedViewTracking, useFeedViewTrackingCallback } from './use-view-tracking';
 export { useVoiceChat } from './use-voice-chat';
 export { RadioPlayerProvider, useRadioPlayer } from './use-radio-player';
+export { TVPlayerProvider, useTVPlayer } from './use-tv-player';

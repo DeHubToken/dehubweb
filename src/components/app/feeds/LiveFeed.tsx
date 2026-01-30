@@ -1,17 +1,19 @@
 /**
  * Live Feed Component
  * ===================
- * Displays live streams using the universal LiveCard component.
- * Fetches content from DeHub API.
+ * Displays live streams and TV channels with sub-tab navigation.
+ * Fetches content from DeHub API and iptv-org.
  * 
  * @module components/app/feeds/LiveFeed
  */
 
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { LiveTVSection } from '@/components/app/tv';
 
 // Category images
 import apexCategory from '@/assets/apex-category.png';
@@ -35,12 +37,16 @@ const MOCK_CATEGORIES = [
   { id: 'cod', name: 'Call of Duty', image: codCategory, viewers: '87K' },
 ];
 
+// Sub-tab options
+type LiveSubTab = 'streams' | 'tv';
+
 interface LiveFeedProps {
   isRefreshing?: boolean;
 }
 
 export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
+  const [activeSubTab, setActiveSubTab] = useState<LiveSubTab>('streams');
 
   // Fetch live content from DeHub API
   const {
@@ -67,7 +73,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
 
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage) return;
+    if (!loaderRef.current || !hasNextPage || activeSubTab !== 'streams') return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -80,7 +86,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, activeSubTab]);
 
   const isLoading = isApiLoading || isRefreshing;
 
@@ -105,82 +111,116 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
     </div>
   );
 
-  if (isLoading) {
-    return (
-      <div className="p-2 sm:p-3">
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-2 sm:p-3 space-y-4">
-      {/* Live Channels */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="font-bold text-white flex items-center gap-2">
-            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-            Live Channels
-          </h2>
-          <button className="text-red-400 text-sm hover:underline">Show All</button>
-        </div>
+      {/* Sub-tab Navigation */}
+      <div className="flex gap-2 px-1">
+        <button
+          onClick={() => setActiveSubTab('streams')}
+          className={cn(
+            'px-4 py-2 rounded-xl text-sm font-medium transition-colors',
+            activeSubTab === 'streams'
+              ? 'bg-white text-black'
+              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+          )}
+        >
+          Streams
+        </button>
+        <button
+          onClick={() => setActiveSubTab('tv')}
+          className={cn(
+            'px-4 py-2 rounded-xl text-sm font-medium transition-colors',
+            activeSubTab === 'tv'
+              ? 'bg-white text-black'
+              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+          )}
+        >
+          TV
+        </button>
+      </div>
 
-        {streams.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <>
-            {streams.map((stream) => (
-              <LiveCard key={stream.id} stream={stream} />
-            ))}
-            
-            {/* Infinite scroll loader */}
-            <div ref={loaderRef} className="py-4 flex justify-center">
-              {isFetchingNextPage && (
-                <div className="flex items-center gap-2 text-zinc-400">
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="text-sm">Loading more...</span>
-                </div>
-              )}
-              {!hasNextPage && streams.length > 0 && (
-                <p className="text-zinc-500 text-sm">No more streams</p>
-              )}
+      {/* TV Sub-tab Content */}
+      {activeSubTab === 'tv' && (
+        <LiveTVSection />
+      )}
+
+      {/* Streams Sub-tab Content */}
+      {activeSubTab === 'streams' && (
+        <>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-32">
+              <Loader2 className="w-10 h-10 text-white animate-spin" />
             </div>
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              {/* Live Channels */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-1">
+                  <h2 className="font-bold text-white flex items-center gap-2">
+                    <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                    Live Channels
+                  </h2>
+                  <button className="text-red-400 text-sm hover:underline">Show All</button>
+                </div>
 
-      {/* Categories Carousel */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="font-bold text-white">Categories</h2>
-          <button className="text-red-400 text-sm hover:underline">Browse</button>
-        </div>
-        
-        <SwipeableCarousel>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
-            {MOCK_CATEGORIES.map((category) => (
-              <button
-                key={category.id}
-                className="flex-shrink-0 group"
-              >
-                <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
-                  <img 
-                    src={category.image} 
-                    alt={category.name}
-                    className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
-                  />
+                {streams.length === 0 ? (
+                  <EmptyState />
+                ) : (
+                  <>
+                    {streams.map((stream) => (
+                      <LiveCard key={stream.id} stream={stream} />
+                    ))}
+                    
+                    {/* Infinite scroll loader */}
+                    <div ref={loaderRef} className="py-4 flex justify-center">
+                      {isFetchingNextPage && (
+                        <div className="flex items-center gap-2 text-zinc-400">
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span className="text-sm">Loading more...</span>
+                        </div>
+                      )}
+                      {!hasNextPage && streams.length > 0 && (
+                        <p className="text-zinc-500 text-sm">No more streams</p>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Categories Carousel */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-1">
+                  <h2 className="font-bold text-white">Categories</h2>
+                  <button className="text-red-400 text-sm hover:underline">Browse</button>
                 </div>
-                <div className="mt-1.5 text-left">
-                  <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
-                  <p className="text-zinc-500 text-xs">{category.viewers} viewers</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </SwipeableCarousel>
-      </div>
+                
+                <SwipeableCarousel>
+                  <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
+                    {MOCK_CATEGORIES.map((category) => (
+                      <button
+                        key={category.id}
+                        className="flex-shrink-0 group"
+                      >
+                        <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+                          <img 
+                            src={category.image} 
+                            alt={category.name}
+                            className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
+                          />
+                        </div>
+                        <div className="mt-1.5 text-left">
+                          <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
+                          <p className="text-zinc-500 text-xs">{category.viewers} viewers</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </SwipeableCarousel>
+              </div>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }
