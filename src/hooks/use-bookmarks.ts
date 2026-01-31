@@ -1,12 +1,12 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getSavedPosts, getLikedPosts, toggleSavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
+import { getSavedPosts, getLikedPosts, getWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
-export type BookmarkType = 'all' | 'liked' | 'recent' | 'images' | 'videos' | 'text';
+export type BookmarkType = 'all' | 'liked' | 'history' | 'recent' | 'images' | 'videos' | 'text';
 
 const PAGE_SIZE = 20;
 
@@ -138,7 +138,7 @@ function mapNFTToFeedItem(nft: DeHubNFT): FeedItem {
 // ============================================================================
 
 export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '') {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
   // Saved posts query with infinite scroll
@@ -154,7 +154,24 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
-    enabled: isAuthenticated && type !== 'liked',
+    enabled: isAuthenticated && type !== 'liked' && type !== 'history',
+    staleTime: 2 * 60 * 1000,
+  });
+
+  // Watch history query with infinite scroll
+  const historyQuery = useInfiniteQuery({
+    queryKey: ['bookmarks', 'history'],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getWatchHistory(pageParam, PAGE_SIZE, walletAddress || undefined);
+      const data = response.result || [];
+      return {
+        items: data,
+        nextPage: data.length >= PAGE_SIZE ? pageParam + 1 : undefined,
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
+    enabled: isAuthenticated && type === 'history',
     staleTime: 2 * 60 * 1000,
   });
 
@@ -179,7 +196,7 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   });
 
   // Use the appropriate query based on type
-  const activeQuery = type === 'liked' ? likedQuery : savedQuery;
+  const activeQuery = type === 'liked' ? likedQuery : type === 'history' ? historyQuery : savedQuery;
   
   // Flatten all pages into a single array
   const allNFTs = activeQuery.data?.pages.flatMap(page => page.items) || [];
