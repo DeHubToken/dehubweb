@@ -10,7 +10,7 @@
  */
 
 import { useState, memo, useEffect } from 'react';
-import { Eye, Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -66,11 +66,14 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     <div ref={viewRef} className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       <CardHeader
         username={post.author.name}
+        handle={post.author.handle}
         avatarSeed={post.author.avatarSeed}
         verified={post.author.verified}
         contentType="post"
         creatorId={post.author.id}
         creatorUsername={post.author.handle}
+        timestamp={post.createdAt}
+        viewCount={post.views}
       />
 
       {/* AI Button for text posts - positioned in header area */}
@@ -127,15 +130,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           commentCount={post.stats.comments}
           hideDislike
         />
-
-        {/* Timestamp and views at bottom */}
-        <div className="flex items-center gap-3 pt-1">
-          <span className="text-zinc-500 text-xs">{post.createdAt}</span>
-          <span className="flex items-center gap-1 text-zinc-500 text-xs">
-            <Eye className="w-3 h-3" />
-            {post.views || '0'}
-          </span>
-        </div>
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (

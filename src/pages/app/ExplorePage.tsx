@@ -199,22 +199,30 @@ const FilterDropdown = ({
 const UserResultCard = ({ user }: { user: SearchCreator }) => {
   const navigate = useNavigate();
   
+  // Build proper avatar URL using same logic as WhoToFollow
+  const avatarUrl = useMemo(() => {
+    if (user.avatar && user.id) {
+      return buildAvatarUrl(user.id, user.avatar);
+    }
+    return undefined;
+  }, [user.avatar, user.id]);
+  
   return (
     <div 
       className="flex items-center justify-between cursor-pointer hover:bg-zinc-800/50 rounded-lg p-2 -mx-2 transition-colors"
-      onClick={() => navigate(`/app/profile/${user.handle.replace('@', '')}`)}
+      onClick={() => navigate(`/${user.handle.replace('@', '')}`)}
     >
       <div className="flex items-center gap-3">
-        <Avatar className="w-10 h-10">
-          <AvatarImage src={user.avatar} className="object-cover" />
-          <AvatarFallback className="bg-zinc-700">{user.name[0]}</AvatarFallback>
+        <Avatar className="w-10 h-10 rounded-xl">
+          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover rounded-xl" />}
+          <AvatarFallback className="bg-zinc-700 rounded-xl">{user.name[0]}</AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-white font-medium flex items-center gap-1">
+          <p className="text-white font-medium flex items-center gap-1.5">
             {user.name}
             {user.verified && <VerifiedBadge className="w-3.5 h-3.5" />}
+            <span className="text-zinc-500 font-normal">{user.handle}</span>
           </p>
-          <p className="text-zinc-500 text-sm">{user.handle}</p>
           {user.bio && (
             <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5">{user.bio}</p>
           )}
