@@ -163,7 +163,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
-  const creatorUsername = nft.creator?.username || nft.mintername;
+  const creatorUsername = nft.mintername || nft.creator?.username;
   
   // Get stats
   const likeCount = nft.totalVotes?.for || nft.like_count || 0;
@@ -247,7 +247,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
-  const creatorUsername = nft.creator?.username || nft.mintername;
+  const creatorUsername = nft.mintername || nft.creator?.username;
   
   // Get title and description
   const title = nft.name || nft.title || '';
@@ -304,7 +304,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
   
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
-  const creatorUsername = nft.creator?.username || nft.mintername;
+  const creatorUsername = nft.mintername || nft.creator?.username;
   
   return {
     id,
