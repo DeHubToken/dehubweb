@@ -1,68 +1,87 @@
 
-# Fix Video Play Button Centering in Post Modal
+# Fix Minting Flow - Signature Verification Issue
 
-## Problem
-The play button in the video thumbnail preview is not centered on the visible video area. As shown in the screenshot, the play button appears near the bottom of the video instead of the center. This happens because the overlay container follows the video's intrinsic dimensions rather than the visible cropped area.
+## Problem Summary
+The on-chain mint is failing with "signer should sign tokenId" because the signature verification in the StreamCollection contract is not passing. This typically means the message being signed doesn't match what the contract expects.
 
-## Root Cause Analysis
-The video preview section has multiple nested `relative` containers without proper height constraints:
-1. The outer container at line 310-315 has `aspect-video` but the inner wrappers don't inherit this properly
-2. The wrapper at line 506 is just `relative` without height/width constraints
-3. The play button overlay at line 568 uses `absolute inset-0` but the parent's dimensions aren't constrained to the visible video area
+## Technical Analysis
 
-## Solution
+### Current Flow
+1. Call `/api/user_mint` → receives `v`, `r`, `s`, `createdTokenId`, `timestamp`
+2. Call `StreamCollection.mint()` with those parameters → **FAILS**
 
-### File: `src/features/post/components/PostMediaPreview.tsx`
+### Contract Verification Logic
+The contract's `mint` function uses `ecrecover` to verify the signature. Based on the contract code pattern, it likely hashes a message containing:
+- Token ID
+- Timestamp
+- Possibly the caller's address (minter)
+- Possibly the supply and URI
 
-1. **Fix the video section wrapper** (around line 506)
-   - Change from `<div className="relative">` to `<div className="relative w-full h-full">`
-   - This ensures the container fills the aspect-video parent properly
+### Likely Issue
+The backend signature may be created for a message that includes the **minter's address**, but we're not including it in the on-chain call verification, OR the message encoding doesn't match.
 
-2. **Fix the inner video container** (around line 551)  
-   - The container already has `relative w-full h-full` but we need to ensure the video itself doesn't overflow
-   - The video should use `max-h-full` to constrain within the container
+## Proposed Solutions
 
-3. **Ensure the play button overlay is positioned relative to the constrained container**
-   - The overlay already uses `absolute inset-0 flex items-center justify-center` which should work once the parent container dimensions are fixed
+### Option A: Update Signature Message Verification (Preferred)
+Check with DeHub documentation or team what exact message format the backend signs. The signature message likely needs to match exactly:
 
-### Key Changes
-
-```tsx
-// Line ~506: Update the outer video wrapper
-<div className="relative w-full h-full">
-  {/* Processing overlay */}
-  ...
-  
-  {/* Video content */}
-  {m.thumbnail ? (
-    // Thumbnail case - update container to fill parent
-    <div className="relative w-full h-full">
-      <img 
-        src={m.thumbnail} 
-        alt="Video thumbnail" 
-        className="w-full h-full object-cover rounded-2xl"
-        ...
-      />
-      {/* Play overlay - already uses inset-0 which will now center properly */}
-    </div>
-  ) : (
-    // Video case - ensure container fills available space
-    <div className="relative w-full h-full">
-      <video 
-        className="w-full h-full object-cover rounded-2xl pointer-events-none"
-        ...
-      />
-      {/* Play/Pause overlay - already uses inset-0 */}
-    </div>
-  )}
+```solidity
+// Example of what the contract might be verifying:
+bytes32 message = keccak256(abi.encodePacked(id, timestamp, msg.sender));
 ```
 
-## Summary of Changes
+### Option B: Use `mintFromController` Instead
+If the direct `mint` function isn't intended for user calls, we may need to:
+1. Have the backend return additional signature data
+2. Use a different minting endpoint
 
-| Location | Current | Updated |
-|----------|---------|---------|
-| Line ~506 wrapper | `relative` | `relative w-full h-full` |
-| Line ~521 thumbnail wrapper | `relative` | `relative w-full h-full` |
-| Line ~525 thumbnail img | `max-h-80 object-cover` | `h-full object-cover` |
+### Option C: Backend API Configuration
+The DeHub backend may need configuration to generate signatures compatible with the user's wallet address. This would require coordination with the DeHub team.
 
-This ensures all containers properly fill the `aspect-video` parent, and the `inset-0` overlay will correctly center the play button within the visible video area.
+## Recommended Next Steps
+
+1. **Verify API response format**: Log the exact `mintResponse` from the API to confirm all required fields are present
+2. **Check message encoding**: Determine if the signature should include the minter's address by reviewing contract source
+3. **Test with contract simulation**: Use a read-only call to `getecrecover()` to verify what address the signature recovers to
+4. **Consult DeHub documentation**: Clarify the expected minting flow for Web3Auth social login users
+
+## Code Changes Required
+
+### 1. Add Debug Logging
+Enhance `mintOnChain` to log the recovered signer:
+
+```typescript
+// Before calling mint, verify the signature
+const recoveredSigner = await contract.getecrecover(tokenId, v, r, s);
+console.log('[StreamCollection] Recovered signer:', recoveredSigner);
+```
+
+### 2. Verify Backend Response
+Add validation in `usePostForm.ts` to ensure all required fields exist:
+
+```typescript
+if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
+  throw new Error('Invalid signature data from backend');
+}
+console.log('[Mint] Full API response:', JSON.stringify(mintResponse, null, 2));
+```
+
+### 3. Potential Message Format Fix
+If the backend expects the minter address in the signature, update the call accordingly:
+
+```typescript
+// Check if backend returns expected minter address
+const expectedMinter = mintResponse.minter || mintResponse.creator;
+```
+
+## Questions for Clarification
+
+1. Does the DeHub `/api/user_mint` endpoint expect Social Login (Smart Account) users or only EOA wallets?
+2. Is there documentation for the exact message format being signed by the backend?
+3. Should Web3Auth users be using a different minting flow?
+
+## Next Actions
+1. Add debug logging to capture the exact API response
+2. Call `getecrecover()` to see what address the signature recovers to
+3. Compare recovered address against contract's authorized signers
+4. Adjust the minting flow based on findings
