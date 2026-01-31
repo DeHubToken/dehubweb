@@ -119,6 +119,8 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ppvCurrency: nft.ppv_currency,
     isW2E: nft.is_w2e,
     isLocked: nft.is_locked,
+    creatorUsername: nft.creator?.username,
+    creatorId: minterAddress,
   };
 }
 
@@ -225,8 +227,8 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
 
   const handleProfileClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Navigate to user profile using channel name
-    const username = video.channel?.replace('@', '') || '';
+    // Navigate to user profile using the actual username from API
+    const username = video.creatorUsername?.replace('@', '') || video.channel?.replace('@', '') || '';
     if (username && username !== 'Anonymous') {
       navigate(`/${username}`);
     }
