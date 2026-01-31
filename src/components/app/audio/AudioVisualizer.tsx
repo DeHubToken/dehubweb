@@ -55,6 +55,12 @@ export function AudioVisualizer({
   const [hue, setHue] = useState(0); // Default to left side (red)
   const [isInitialized, setIsInitialized] = useState(false);
 
+  // Store onPlayPause in a ref to avoid dependency issues
+  const onPlayPauseRef = useRef(onPlayPause);
+  useEffect(() => {
+    onPlayPauseRef.current = onPlayPause;
+  }, [onPlayPause]);
+
   const setupAudio = useCallback(() => {
     if (isConnectedRef.current) return;
 
@@ -62,6 +68,11 @@ export function AudioVisualizer({
       if (!audioRef.current) {
         audioRef.current = new Audio(audioUrl);
         audioRef.current.crossOrigin = 'anonymous';
+        
+        // Attach ended listener immediately when creating audio
+        audioRef.current.addEventListener('ended', () => {
+          onPlayPauseRef.current();
+        });
       }
 
       if (!audioContextRef.current) {
@@ -138,17 +149,23 @@ export function AudioVisualizer({
     }
   }, [isPlaying, isInitialized, setupAudio]);
 
+  // Separate effect for playback control - no dependency on draw
   useEffect(() => {
     if (!audioRef.current) return;
 
     if (isPlaying) {
       audioRef.current.play().catch(console.error);
-      draw();
     } else {
       audioRef.current.pause();
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+    }
+  }, [isPlaying]);
+
+  // Separate effect for animation
+  useEffect(() => {
+    if (isPlaying && analyserRef.current) {
+      draw();
+    } else if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
     }
   }, [isPlaying, draw]);
 
@@ -178,18 +195,7 @@ export function AudioVisualizer({
     };
   }, []);
 
-  // Handle audio end
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleEnded = () => {
-      onPlayPause();
-    };
-
-    audio.addEventListener('ended', handleEnded);
-    return () => audio.removeEventListener('ended', handleEnded);
-  }, [onPlayPause, isInitialized]);
+  // ended listener is now attached in setupAudio
 
   return (
     <div className={`relative ${className}`}>

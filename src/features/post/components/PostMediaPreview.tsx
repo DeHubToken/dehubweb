@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
 import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -471,13 +471,9 @@ export function PostMediaPreview({
                   <AudioVisualizer
                     audioUrl={m.preview}
                     isPlaying={playingIndex === index}
-                    onPlayPause={() => {
-                      if (playingIndex === index) {
-                        setPlayingIndex(null);
-                      } else {
-                        setPlayingIndex(index);
-                      }
-                    }}
+                    onPlayPause={useCallback(() => {
+                      setPlayingIndex(prev => prev === index ? null : index);
+                    }, [index])}
                     className="h-full w-auto min-w-[200px] aspect-[2/1]"
                     showStylePicker={true}
                   />
