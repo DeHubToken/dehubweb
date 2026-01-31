@@ -591,21 +591,19 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </button>
       </div>
 
-      {/* Search Input - shown only on search tab */}
-      {activeTab === 'search' && (
-        <div className="mb-3">
-          <Input
-            placeholder="Search comments & quotes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
-            autoFocus
-          />
-        </div>
-      )}
+      {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
+      <div className={`mb-3 ${activeTab === 'search' ? 'visible' : 'invisible h-0 mb-0 overflow-hidden'}`}>
+        <Input
+          placeholder="Search comments & quotes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-zinc-800 border-zinc-700 text-white text-sm h-9"
+          autoFocus={activeTab === 'search'}
+        />
+      </div>
 
       {/* Content Area - fixed height to prevent drawer resizing */}
-      <div className="h-80 relative">
+      <div className={`relative ${activeTab === 'search' ? 'h-[272px]' : 'h-80'}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
           <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
