@@ -12,7 +12,7 @@
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
@@ -67,11 +67,10 @@ interface CommentsSectionProps {
 
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
   const address = apiComment.address;
-  const rawAvatarPath = apiComment.writor?.avatarUrl;
+  // Use centralized utility for avatar field extraction
+  const rawAvatarPath = extractAvatarPath(apiComment.writor);
   
   // Build avatar URL - use buildAvatarUrl for proper CDN path resolution
-  // If writor.avatarUrl is already a full URL, it passes through unchanged
-  // Always use buildAvatarUrl - it handles all URL formats including api.dehub.io → CDN conversion
   const resolvedAvatar = address && rawAvatarPath 
     ? buildAvatarUrl(address, rawAvatarPath) 
     : undefined;
@@ -491,7 +490,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
     const tempId = `temp-${Date.now()}`;
     const userAddress = user.address || user.wallet_address || '';
-    const rawAvatarPath = user.avatarImageUrl || user.avatarUrl;
+    const rawAvatarPath = extractAvatarPath(user);
     const resolvedAvatar = userAddress && rawAvatarPath 
       ? buildAvatarUrl(userAddress, rawAvatarPath) 
       : undefined;

@@ -10,6 +10,16 @@
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
 /**
+ * Extract avatar path from any API object.
+ * Handles all known field variations: avatarImageUrl, avatarUrl, avatar_url, minterAvatarUrl
+ * Use this as the single source of truth before calling buildAvatarUrl.
+ */
+export function extractAvatarPath(obj: Record<string, any> | null | undefined): string | undefined {
+  if (!obj) return undefined;
+  return obj.avatarImageUrl || obj.avatarUrl || obj.avatar_url || obj.minterAvatarUrl || undefined;
+}
+
+/**
  * Extract file extension from API path
  * Preserves original extension including .octet-stream, .gif, .jpeg, etc.
  */

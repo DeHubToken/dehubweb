@@ -9,7 +9,7 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
@@ -133,8 +133,9 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
   // Build canonical URLs using shared utilities
   const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
   const videoUrl = buildVideoUrl(item.tokenId);
-  const channelAvatar = item.minterAvatarUrl 
-    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) || 'user'
+  const rawAvatarPath = extractAvatarPath(item);
+  const channelAvatar = rawAvatarPath 
+    ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'
     : 'user';
   
   // Determine PPV/W2E/Locked status from streamInfo
@@ -187,8 +188,9 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
   const image = imageUrls?.[0] || buildImageUrl(item.tokenId, item.imageUrl);
   
   // Build avatar URL using shared utility
-  const avatar = item.minterAvatarUrl 
-    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) || 'user'
+  const rawAvatarPath = extractAvatarPath(item);
+  const avatar = rawAvatarPath 
+    ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'
     : 'user';
   
   return {
@@ -219,8 +221,9 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
   const id = String(item.tokenId);
   
   // Build canonical avatar URL using shared utility
-  const avatarUrl = item.minterAvatarUrl 
-    ? buildAvatarUrl(item.minter, item.minterAvatarUrl) || item.minter
+  const rawAvatarPath = extractAvatarPath(item);
+  const avatarUrl = rawAvatarPath 
+    ? buildAvatarUrl(item.minter, rawAvatarPath) || item.minter
     : item.minter;
   
   return {
