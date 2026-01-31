@@ -114,7 +114,10 @@ export function ImageTranslationSheet({
               {/* Original Text (Collapsible) */}
               <div className="space-y-2">
                 <button
-                  onClick={() => setShowOriginal(!showOriginal)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowOriginal(!showOriginal);
+                  }}
                   className="flex items-center gap-2 text-zinc-500 hover:text-zinc-400 transition-colors"
                 >
                   <span className="text-xs font-medium uppercase tracking-wide">
