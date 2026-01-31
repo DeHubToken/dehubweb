@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, Coins
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +27,7 @@ import { useDeHubProfile, useDeHubUserContent, separateUserContent, type Profile
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 
 type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
 
@@ -105,6 +106,7 @@ export default function ProfilePage() {
   
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [walletDrawerOpen, setWalletDrawerOpen] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
@@ -218,19 +220,19 @@ export default function ProfilePage() {
 
   const ShareOptions = () => (
     <div className="flex flex-col gap-1">
-      {/* Coin Balance - only on own profile */}
+      {/* Wallet - only on own profile */}
       {isViewingOwnProfile && (
         <button
           onClick={() => {
-            toast.info('Coin balance feature coming soon');
             setShareSheetOpen(false);
+            setWalletDrawerOpen(true);
           }}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
         >
           <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-            <Coins className="w-4 h-4 text-white" />
+            <img src={dehubCoin} alt="Wallet" className="w-5 h-5" />
           </div>
-          <span className="text-white font-medium">Coin Balance</span>
+          <span className="text-white font-medium">Wallet</span>
         </button>
       )}
       <button
@@ -753,6 +755,16 @@ export default function ProfilePage() {
               Submit Offer
             </Button>
           </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Wallet Drawer */}
+      <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>
+        <DrawerContent glass className="px-4 pb-8">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Wallet</DrawerTitle>
+          </DrawerHeader>
+          <WalletMenuContent balance={0} onClose={() => setWalletDrawerOpen(false)} />
         </DrawerContent>
       </Drawer>
 
