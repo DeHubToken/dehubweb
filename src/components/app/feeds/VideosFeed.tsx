@@ -191,7 +191,7 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     comments: formatCount(nft.commentCount || nft.comment_count || 0),
     shares: formatCount(Math.floor(Math.random() * 1000)),
     views: formatCount(viewCount),
-    creatorUsername: nft.minterUsername || nft.creator?.username || 'user',
+    creatorUsername: nft.mintername || nft.creator?.username || 'user',
   };
 }
 
