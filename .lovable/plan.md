@@ -1,141 +1,135 @@
 
+# Fix Phantom and Rabby Wallet Button Bug
 
-# Fix Login Flow Bug: Modal Freezes After Cancelled OAuth
+## Problem
+Clicking **Phantom** or **Rabby** wallet buttons in the login modal incorrectly triggers MetaMask connection. This is due to a copy-paste error where both buttons call `handleWalletConnect('metamask')` instead of their own wallet types.
 
 ## Root Cause Analysis
 
-After deep investigation, the issue is that when a user cancels a login attempt (e.g., closes the Google OAuth popup), the Web3Auth SDK enters an inconsistent internal state. The current error recovery doesn't properly clean up because:
-
-1. **Incomplete error message detection**: Web3Auth throws various error messages when OAuth is cancelled that aren't being caught (e.g., "popup_closed_by_user", "popup closed", "Failed to connect with wallet")
-
-2. **Fire-and-forget logout**: `resetWeb3AuthState()` only calls `logout()` if `connected === true`, but when OAuth fails mid-flow, the instance isn't "connected" yet - leaving internal state, iframes, and promises dangling
-
-3. **No forced cleanup**: The SDK may have open iframes, modal overlays, or pending event listeners that block subsequent connection attempts
-
-## Solution
-
-### Part 1: Expand Error Message Detection
-
-Update the catch block patterns to detect more cancellation scenarios:
+Looking at `LoginModal.tsx` lines 344-368:
 
 ```typescript
-const isCancellation = 
-  errorMessage.includes('user rejected') ||
-  errorMessage.includes('User rejected') ||
-  errorMessage.includes('User denied') ||
-  errorMessage.includes('User closed') ||
-  errorMessage.includes('cancelled') ||
-  errorMessage.includes('popup_closed') ||
-  errorMessage.includes('popup closed') ||
-  errorMessage.includes('closed by user') ||
-  errorMessage.includes('user canceled') ||
-  errorMessage.includes('window closed');
+// Line 345 - Phantom button (BUG!)
+onClick={() => handleWalletConnect('metamask')}  
+
+// Line 358 - Rabby button (BUG!)
+onClick={() => handleWalletConnect('metamask')}  
 ```
 
-### Part 2: Forceful Web3Auth Cleanup
+Both call `'metamask'` instead of their respective wallet identifiers.
 
-Create a more aggressive reset function that cleans up regardless of connection state:
+## Solution Overview
+
+### How Web3Auth Handles Wallets
+Web3Auth uses EIP-6963 for wallet discovery. The `WALLET_CONNECTORS.METAMASK` connector connects to the **injected provider** (window.ethereum). When multiple wallets are installed:
+- All EIP-6963 compatible wallets (MetaMask, Phantom, Rabby) inject themselves
+- The connector uses whichever one is the active/default injected provider
+
+### The Fix
+Since Phantom and Rabby are **injected wallets** (like MetaMask), they all use the same underlying connector. The cleanest solution is to:
+
+1. **Consolidate injected wallets** into a single "Browser Wallet" option that triggers EIP-6963 selection
+2. **Keep WalletConnect and Coinbase** as separate options (they have their own connectors)
+
+Alternatively, if users expect to see Phantom/Rabby buttons:
+- Keep all buttons visible
+- All injected wallets (MetaMask, Phantom, Rabby) will use the same connector
+- The user's default browser wallet will be triggered
+
+---
+
+## Implementation Plan
+
+### File: `src/components/app/LoginModal.tsx`
+
+**Option A: Consolidate to "Browser Wallet" (Recommended)**
+
+Replace the 4 injected wallet buttons with 1:
 
 ```typescript
-export async function forceCleanupWeb3Auth(): Promise<void> {
-  console.log("[Web3Auth] Force cleanup after error...");
-  
-  // Try to logout regardless of connection state
-  if (web3authInstance) {
-    try {
-      // Try logout even if not connected - clears internal state
-      await web3authInstance.logout();
-    } catch (e) {
-      // Expected to fail if not connected, that's fine
-    }
-  }
-  
-  // Clean up any leftover Web3Auth iframes/modals from the DOM
-  document.querySelectorAll('iframe[title*="web3auth"], iframe[id*="web3auth"]').forEach(el => el.remove());
-  document.querySelectorAll('[class*="w3a-modal"], [class*="web3auth"]').forEach(el => el.remove());
-  
-  // Reset module variables
-  web3authInstance = null;
-  isInitializing = false;
-  initPromise = null;
-  
-  console.log("[Web3Auth] ✓ Force cleanup complete");
-}
+const renderWalletsStep = () => (
+  <div className="space-y-3">
+    {/* Browser Wallet - uses EIP-6963 to detect installed wallets */}
+    <Button
+      onClick={() => handleWalletConnect('metamask')}
+      disabled={isConnecting}
+      className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+    >
+      {activeProvider === 'metamask' ? (
+        <Loader2 className="w-5 h-5 animate-spin" />
+      ) : (
+        <Wallet className="w-5 h-5" />
+      )}
+      <span>Browser Wallet</span>
+    </Button>
+
+    <Button
+      onClick={() => handleWalletConnect('walletconnect')}
+      ...
+    </Button>
+
+    <Button
+      onClick={() => handleWalletConnect('coinbase')}
+      ...
+    </Button>
+  </div>
+);
 ```
 
-### Part 3: Update AuthContext Error Handlers
+**Option B: Keep Individual Buttons (Visual preference only)**
 
-Replace `safeResetAfterError()` calls with `forceCleanupWeb3Auth()` in all error handlers:
-
-**File: src/contexts/AuthContext.tsx**
-
-In each connect method (`connectWithProvider`, `connectWithEmail`, `connectWithSMS`, `connectWithWallet`), update the catch block:
+If you want to keep the visual appearance of separate wallets, fix the `activeProvider` display but keep all using the injected connector:
 
 ```typescript
-} catch (error: unknown) {
-  const errorMessage = error instanceof Error ? error.message.toLowerCase() : '';
-  
-  // Expanded cancellation detection
-  const isCancellation = 
-    errorMessage.includes('user rejected') ||
-    errorMessage.includes('user denied') ||
-    errorMessage.includes('user closed') ||
-    errorMessage.includes('cancelled') ||
-    errorMessage.includes('canceled') ||
-    errorMessage.includes('popup_closed') ||
-    errorMessage.includes('popup closed') ||
-    errorMessage.includes('closed by user') ||
-    errorMessage.includes('window closed') ||
-    errorMessage.includes('aborted');
-  
-  // Always force cleanup after any error
-  try {
-    await forceCleanupWeb3Auth();
-  } catch (e) {
-    console.warn('[Auth] Cleanup failed:', e);
-  }
-  
-  if (isCancellation) {
-    toast.error('Log in was cancelled');
-    return; // Don't throw, just return silently
-  }
-  
-  // For non-cancellation errors, show error toast but don't throw
-  // (throwing prevents finally block from resetting isConnecting properly)
-  handleConnectionError(error);
-}
+// Line 344-355: Fix Phantom button
+<Button
+  onClick={() => {
+    setActiveProvider('phantom');
+    handleWalletConnect('metamask'); // Still uses injected connector
+  }}
+  disabled={isConnecting}
+  ...
+>
+  {activeProvider === 'phantom' ? (
+    <Loader2 className="w-5 h-5 animate-spin" />
+  ) : (
+    <PhantomIcon />
+  )}
+  <span>Phantom</span>
+</Button>
+
+// Line 357-368: Fix Rabby button  
+<Button
+  onClick={() => {
+    setActiveProvider('rabby');
+    handleWalletConnect('metamask'); // Still uses injected connector
+  }}
+  disabled={isConnecting}
+  ...
+>
+  {activeProvider === 'rabby' ? (
+    <Loader2 className="w-5 h-5 animate-spin" />
+  ) : (
+    <RabbyIcon />
+  )}
+  <span>Rabby</span>
+</Button>
 ```
 
-### Part 4: Prevent Error Re-throwing
+---
 
-The `handleConnectionError` function currently throws, which can cause issues. Change it to NOT throw:
+## Technical Details
 
-```typescript
-const handleConnectionError = (error: unknown) => {
-  console.error('[Auth] Connection failed:', error);
-  
-  const errorMessage = error instanceof Error ? error.message : 'Connection failed';
-  let userFriendlyMessage = 'Connection failed. Please try again.';
-  
-  // ... existing message mapping logic ...
-  
-  toast.error(userFriendlyMessage);
-  // Remove: throw new Error(userFriendlyMessage);
-};
-```
+| Change | File | Description |
+|--------|------|-------------|
+| Fix Phantom button | `LoginModal.tsx` | Update onClick to properly set activeProvider |
+| Fix Rabby button | `LoginModal.tsx` | Update onClick to properly set activeProvider |
+| Update handleWalletConnect | `LoginModal.tsx` | Accept provider param for loading state tracking |
 
-## Files to Modify
+## Important Note
+All injected browser wallets (MetaMask, Phantom, Rabby) share the same `window.ethereum` interface. Web3Auth's `WALLET_CONNECTORS.METAMASK` connects to whichever wallet is the **active injected provider** in the browser. 
 
-| File | Changes |
-|------|---------|
-| `src/lib/web3auth.ts` | Add `forceCleanupWeb3Auth()` function with DOM cleanup |
-| `src/contexts/AuthContext.tsx` | Expand error detection, use force cleanup, remove throw from handleConnectionError |
+If a user clicks "Phantom" but MetaMask is their default, MetaMask will open. This is a browser limitation, not a code bug. The "Browser Wallet" consolidation (Option A) is more honest UX.
 
-## Testing Checklist
-
-1. Click "Continue with Google" → Close the popup → Try clicking "Continue with X" → Should work
-2. Click "Connect Wallet" → "MetaMask" → Reject signature → Click Google → Should work
-3. Click Google → Cancel → Click Email → Enter email → Should work
-4. Repeat cancellations multiple times → Modal should remain responsive
-5. Successfully complete login after previous cancellations → Should work
-
+## Recommendation
+I recommend **Option A** (consolidate to "Browser Wallet") for honest UX, but can implement **Option B** if you prefer keeping the individual wallet icons for branding purposes.
