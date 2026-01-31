@@ -226,7 +226,7 @@ export default function MessagesPage() {
                   className="bg-zinc-800 hover:bg-zinc-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  New Message
+                  Create
                 </Button>
               </div>
             )}
