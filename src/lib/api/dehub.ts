@@ -1425,37 +1425,44 @@ export async function getConversation(conversationId: string): Promise<DeHubConv
 }
 
 /**
- * Create or get a conversation with a user
- * Uses GET /api/dm/{address} to fetch/create conversation by recipient address
+ * Create a new conversation with a user by sending an initial message
+ * Uses POST /api/dm/tnx endpoint with recipient address
+ * If no content is provided, returns a "virtual" conversation object for UI navigation
  * @param recipientAddress - Wallet address of the recipient
+ * @param recipientUser - Optional user data for constructing virtual conversation
  */
-export async function createConversation(recipientAddress: string): Promise<DeHubConversation> {
-  console.log('[DM API] createConversation called', { recipientAddress });
-  try {
-    // Try to get/create conversation via the /api/dm/{address} endpoint
-    const response = await apiCall<any>(`/api/dm/${recipientAddress}`, {
-      requiresAuth: true,
-    });
-    console.log('[DM API] createConversation response:', response);
-    
-    // Handle various response formats
-    if (response?.result) {
-      return response.result;
-    }
-    // If the response itself is the conversation
-    if (response?._id || response?.id) {
-      // Normalize the conversation object
-      return {
-        ...response,
-        id: response._id || response.id,
-      };
-    }
-    
-    throw new Error('Invalid response format from createConversation');
-  } catch (error) {
-    console.error('[DM API] createConversation failed:', error);
-    throw error;
-  }
+export async function createConversation(
+  recipientAddress: string,
+  recipientUser?: Partial<DeHubUser>
+): Promise<DeHubConversation> {
+  console.log('[DM API] createConversation called', { recipientAddress, recipientUser });
+  
+  // Return a virtual/placeholder conversation for UI navigation
+  // The actual conversation is created when the first message is sent
+  const otherUser: DeHubUser = recipientUser ? {
+    _id: recipientUser._id || recipientAddress,
+    address: recipientAddress,
+    username: recipientUser.username,
+    displayName: recipientUser.displayName || recipientUser.display_name,
+    avatarImageUrl: recipientUser.avatarImageUrl || recipientUser.avatarUrl,
+    isVerified: recipientUser.isVerified || recipientUser.is_verified,
+  } : {
+    _id: recipientAddress,
+    address: recipientAddress,
+  };
+  
+  const virtualConversation: DeHubConversation = {
+    id: `new_${recipientAddress}`,
+    participants: [otherUser],
+    otherUser,
+    lastMessage: undefined,
+    unreadCount: 0,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  
+  console.log('[DM API] Created virtual conversation:', virtualConversation);
+  return virtualConversation;
 }
 
 /**
@@ -1527,7 +1534,7 @@ export async function getMessages(
 /**
  * Send a message in a conversation
  * Uses /api/dm/tnx endpoint
- * @param conversationId - The conversation ID
+ * @param conversationId - The conversation ID (or 'new_{address}' for new conversations)
  * @param content - Message content
  * @param type - Message type (text, image, gif)
  * @param mediaUrl - Optional media URL for images/gifs
@@ -1539,10 +1546,28 @@ export async function sendMessage(
   mediaUrl?: string
 ): Promise<DeHubDMMessage> {
   console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
+  
+  // Check if this is a new/virtual conversation
+  const isNewConversation = conversationId.startsWith('new_');
+  const recipientAddress = isNewConversation ? conversationId.replace('new_', '') : undefined;
+  
   try {
+    // Build request body - use recipientAddress for new conversations
+    const body: Record<string, any> = { content, type };
+    if (mediaUrl) body.mediaUrl = mediaUrl;
+    
+    if (isNewConversation && recipientAddress) {
+      // For new conversations, send to recipient address
+      body.recipientAddress = recipientAddress;
+      console.log('[DM API] Sending to new conversation with recipient:', recipientAddress);
+    } else {
+      // For existing conversations, use conversationId
+      body.conversationId = conversationId;
+    }
+    
     const response = await apiCall<any>("/api/dm/tnx", {
       method: "POST",
-      body: { conversationId, content, type, mediaUrl },
+      body,
       requiresAuth: true,
     });
     console.log('[DM API] sendMessage response:', response);
@@ -1554,6 +1579,10 @@ export async function sendMessage(
     // If the response itself is the message
     if (response?.id && response?.content) {
       return response;
+    }
+    // Handle response with message object
+    if (response?.message) {
+      return response.message;
     }
     
     console.warn('[DM API] Unknown response format for sendMessage:', response);
