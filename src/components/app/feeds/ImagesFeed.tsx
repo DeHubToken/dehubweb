@@ -7,7 +7,7 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo, useEffect, useState } from 'react';
+import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon, Grid3x3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +17,9 @@ import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOptio
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import type { ImagePost } from '@/types/feed.types';
+
+/** Number of pages to pre-fetch for random mode cross-page shuffling */
+const RANDOM_PREFETCH_PAGES = 5;
 
 // ============================================================================
 // TYPES
@@ -258,6 +261,7 @@ export function ImagesFeed({
 }: ImagesFeedProps) {
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
   // Filter states
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
@@ -267,6 +271,10 @@ export function ImagesFeed({
     w2e: false,
     locked: false,
   });
+  
+  // State for random mode pre-fetch
+  const [hasPreFetched, setHasPreFetched] = useState(false);
+  const [shuffleTrigger, setShuffleTrigger] = useState(0);
   
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -293,43 +301,70 @@ export function ImagesFeed({
   // Refetch when refreshKey changes
   useEffect(() => {
     if (refreshKey > 0) {
+      setShuffleTrigger(prev => prev + 1);
+      setHasPreFetched(false);
       refetch();
     }
   }, [refreshKey, refetch]);
+  
+  // Pre-fetch multiple pages for random mode to enable cross-page shuffling
+  useEffect(() => {
+    if (selectedSort.value !== 'random') {
+      setHasPreFetched(true); // Non-random modes don't need pre-fetch
+      return;
+    }
+    
+    const currentPageCount = apiData?.pages?.length || 0;
+    
+    // If we have less than RANDOM_PREFETCH_PAGES and more are available, fetch next
+    if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
+      fetchNextPage();
+    } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
+      setHasPreFetched(true);
+    }
+  }, [selectedSort.value, apiData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
   // Map API data to ImagePost array
   const imagePosts = useMemo(() => {
+    // Don't compute until pre-fetch is complete for random mode
+    if (selectedSort.value === 'random' && !hasPreFetched) {
+      return [];
+    }
+    
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     let posts = allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
     
-    // Apply client-side sorting for random
+    // Apply shuffle for random mode - true Fisher-Yates shuffle
     if (selectedSort.value === 'random') {
-      // Shuffle with a seed based on refreshKey for consistency during session
-      const seed = refreshKey + 1;
-      posts = [...posts].sort(() => {
-        const x = Math.sin(seed * posts.length) * 10000;
-        return x - Math.floor(x) - 0.5;
-      });
+      void shuffleTrigger; // Reference to trigger re-shuffle on refresh
+      for (let i = posts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [posts[i], posts[j]] = [posts[j], posts[i]];
+      }
     }
     
     return posts;
-  }, [apiData, selectedSort.value, refreshKey]);
+  }, [apiData, selectedSort.value, hasPreFetched, shuffleTrigger]);
 
   // Handle image click in collage - switch to feed view
   const handleImageClick = (postId: string) => {
     onPostSelected?.(postId);
   };
 
-  // Infinite scroll observer
+  // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
     // Don't observe in collage mode
     if (!loaderRef.current || !hasNextPage || (showCollage && !selectedPostId)) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
-          fetchNextPage();
+        // Use ref for synchronous check - prevents multiple fetches from stale closures
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -343,7 +378,8 @@ export function ImagesFeed({
   const shouldAnimate = hasAnimated.current;
   hasAnimated.current = true;
 
-  const isLoading = isApiLoading || isRefreshing;
+  // Show loading during initial load OR during random mode pre-fetch
+  const isLoading = isApiLoading || isRefreshing || (selectedSort.value === 'random' && !hasPreFetched);
   
   // Determine if we should show collage or feed
   // Show feed if: collage is off, OR user clicked an image from collage

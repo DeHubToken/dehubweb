@@ -73,6 +73,8 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
 
 const LIVE_CATEGORIES_INSERT_AFTER = 5;
 const SHORTS_INSERT_AFTER = 9;
+/** Number of pages to pre-fetch for random mode cross-page shuffling */
+const RANDOM_PREFETCH_PAGES = 5;
 
 const LIVE_CATEGORIES = [
   { name: 'Just Chatting', streams: 0, viewers: 0, image: justchattingCategory },
@@ -376,6 +378,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   });
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
+  
+  // State for random mode pre-fetch
+  const [hasPreFetched, setHasPreFetched] = useState(false);
+  const [shuffleTrigger, setShuffleTrigger] = useState(0);
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -429,9 +435,28 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   useEffect(() => {
     if (refreshKey > 0) {
+      setShuffleTrigger(prev => prev + 1);
+      setHasPreFetched(false);
       refetch();
     }
   }, [refreshKey, refetch]);
+  
+  // Pre-fetch multiple pages for random mode to enable cross-page shuffling
+  useEffect(() => {
+    if (selectedSort.value !== 'random') {
+      setHasPreFetched(true); // Non-random modes don't need pre-fetch
+      return;
+    }
+    
+    const currentPageCount = apiData?.pages?.length || 0;
+    
+    // If we have less than RANDOM_PREFETCH_PAGES and more are available, fetch next
+    if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
+      fetchNextPage();
+    } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
+      setHasPreFetched(true);
+    }
+  }, [selectedSort.value, apiData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
   // Get all unified feed items
   const allFeedItems = useMemo((): UnifiedFeedItem[] => {
@@ -441,8 +466,25 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Map unified feed items to video items (server-side filtering handles PPV/Bounty/Locked)
   const allVideos = useMemo(() => {
-    return allFeedItems.map((item, index) => mapToVideoItem(item, index));
-  }, [allFeedItems]);
+    // Don't compute until pre-fetch is complete for random mode
+    if (selectedSort.value === 'random' && !hasPreFetched) {
+      return [];
+    }
+    
+    let mapped = allFeedItems.map((item, index) => mapToVideoItem(item, index));
+    
+    // Apply shuffle for random mode
+    if (selectedSort.value === 'random') {
+      void shuffleTrigger; // Reference to trigger re-shuffle on refresh
+      // Fisher-Yates shuffle
+      for (let i = mapped.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [mapped[i], mapped[j]] = [mapped[j], mapped[i]];
+      }
+    }
+    
+    return mapped;
+  }, [allFeedItems, selectedSort.value, hasPreFetched, shuffleTrigger]);
 
   // Apply client-side duration filter
   const videos = useMemo((): VideoItem[] => {
@@ -535,7 +577,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     </div>
   );
 
-  if (isRefreshing || isApiLoading) {
+  // Show loading during initial load OR during random mode pre-fetch
+  if (isRefreshing || isApiLoading || (selectedSort.value === 'random' && !hasPreFetched)) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0 flex items-center justify-center py-32">
         <Loader2 className="w-10 h-10 text-white animate-spin" />
