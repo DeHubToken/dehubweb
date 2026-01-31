@@ -14,6 +14,7 @@ import {
   WEB3AUTH_NETWORK,
   WALLET_CONNECTORS,
   AUTH_CONNECTION,
+  CONFIRMATION_STRATEGY,
 } from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -139,6 +140,13 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           mode: "dark",
           defaultLanguage: "en",
         },
+        // Hide the default wallet widget - we have our own wallet system
+        walletServicesConfig: {
+          confirmationStrategy: CONFIRMATION_STRATEGY.MODAL,
+          whiteLabel: {
+            showWidgetButton: false,
+          },
+        } as unknown as import("@web3auth/modal").Web3AuthOptions["walletServicesConfig"],
       });
       console.log("[Web3Auth] ✓ Instance created with Account Abstraction");
 
