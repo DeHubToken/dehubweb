@@ -95,6 +95,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
 
 const SORT_OPTIONS = [
   { value: 'recent', label: 'Most Recent' },
+  { value: 'oldest', label: 'Oldest' },
   { value: 'liked', label: 'Most Liked' },
 ];
 
@@ -285,7 +286,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'recent' | 'liked'>('recent');
+  const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -441,6 +442,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         // Sort by likes (most liked first)
         return b.comment.likes - a.comment.likes;
       }
+      if (sortBy === 'oldest') {
+        // Sort by oldest first
+        return a.comment.createdAt.getTime() - b.comment.createdAt.getTime();
+      }
       // Default: sort by most recent (newest first)
       return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
     });
@@ -577,12 +582,12 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </button>
         <button
           type="button"
-          onClick={() => setSortBy(prev => prev === 'recent' ? 'liked' : 'recent')}
+          onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
           className="flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-400 hover:text-white"
-          title={sortBy === 'recent' ? 'Sorted by Most Recent' : 'Sorted by Most Liked'}
+          title={sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}
         >
           <ArrowUpDown className="w-5 h-5" />
-          <span className="text-xs">{sortBy === 'recent' ? 'Recent' : 'Liked'}</span>
+          <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
         </button>
       </div>
 
