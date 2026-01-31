@@ -391,11 +391,14 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
       <div className="flex items-center justify-between">
         <CardHeader
           username={video.channel}
+          handle={video.creatorUsername}
           avatarSeed={video.channelAvatar}
           verified={video.verified}
           contentType="video"
           creatorId={video.creatorId}
           creatorUsername={video.creatorUsername}
+          timestamp={video.uploadedAgo}
+          viewCount={video.views?.replace(' views', '') || getViewCount(video.id)}
         />
         <div className="flex items-center gap-1 pr-3">
           <motion.button
@@ -738,13 +741,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           commentCount={video.commentCount}
         />
         <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
-        <div className="flex items-center gap-3 mt-1">
-          <span className="text-zinc-500 text-xs">{video.uploadedAgo}</span>
-          <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
-            <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
-            <span className="leading-none">{video.views?.replace(' views', '') || getViewCount(video.id)}</span>
-          </span>
-        </div>
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (
