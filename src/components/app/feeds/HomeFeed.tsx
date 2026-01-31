@@ -53,6 +53,8 @@ type FeedItemType =
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 15;
+/** Number of pages to pre-fetch for random mode cross-page shuffling */
+const RANDOM_PREFETCH_PAGES = 5;
 
 interface HomeFeedProps {
   shuffleKey: number;
@@ -67,55 +69,31 @@ interface HomeFeedProps {
 // ============================================================================
 
 /**
- * Seeded random number generator for consistent shuffling
+ * Fisher-Yates shuffle using true Math.random() for genuine randomness
+ * This is called fresh on every render/refresh for unique ordering
  */
-function seededRandom(seed: number): () => number {
-  return () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
-}
-
-/**
- * Fisher-Yates shuffle with seeded random
- */
-function shuffleArray<T>(array: T[], seed: number): T[] {
+function shuffleArray<T>(array: T[]): T[] {
   const result = [...array];
-  const random = seededRandom(seed);
   for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
+    const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
   return result;
 }
 
 /**
- * Balanced shuffle: ensures ~3 text posts for every 9 media posts
- * Interleaves text posts throughout the feed at regular intervals
+ * Balanced shuffle: ensures ~1 text post for every 3 media posts
+ * Uses true Math.random() for genuine randomness on every call.
+ * Interleaves text posts throughout the feed at regular intervals.
  */
-function balancedShuffle<T extends { type: string }>(
-  items: T[], 
-  seed: number
-): T[] {
-  const random = seededRandom(seed);
-  
+function balancedShuffle<T extends { type: string }>(items: T[]): T[] {
   // Separate text posts from media posts
   const textPosts = items.filter(item => item.type === 'post');
   const mediaPosts = items.filter(item => item.type !== 'post');
   
-  // Shuffle both arrays independently
-  const shuffledText = [...textPosts];
-  const shuffledMedia = [...mediaPosts];
-  
-  for (let i = shuffledText.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [shuffledText[i], shuffledText[j]] = [shuffledText[j], shuffledText[i]];
-  }
-  
-  for (let i = shuffledMedia.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [shuffledMedia[i], shuffledMedia[j]] = [shuffledMedia[j], shuffledMedia[i]];
-  }
+  // Shuffle both arrays with true randomness
+  const shuffledText = shuffleArray(textPosts);
+  const shuffledMedia = shuffleArray(mediaPosts);
   
   // Interleave: insert 1 text post after every 3 media posts
   const result: T[] = [];
@@ -336,9 +314,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     locked: false,
   });
   
-  // Random seed for shuffling - changes on mount and refresh
-  // Generate new seed on every mount for true randomness
-  const [randomSeed, setRandomSeed] = useState(() => Date.now());
+  // State to trigger re-shuffle on pull-to-refresh
+  const [shuffleTrigger, setShuffleTrigger] = useState(0);
+  // Track if we've pre-fetched enough pages for random mode
+  const [hasPreFetched, setHasPreFetched] = useState(false);
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -421,11 +400,29 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
-      // Regenerate random seed on refresh
-      setRandomSeed(Math.random());
+      // Trigger new shuffle and reset pre-fetch state
+      setShuffleTrigger(prev => prev + 1);
+      setHasPreFetched(false);
       refetch();
     }
   }, [shuffleKey, refetch]);
+
+  // Pre-fetch multiple pages for random mode to enable cross-page shuffling
+  useEffect(() => {
+    if (selectedSort.value !== 'random') {
+      setHasPreFetched(true); // Non-random modes don't need pre-fetch
+      return;
+    }
+    
+    const currentPageCount = feedData?.pages?.length || 0;
+    
+    // If we have less than RANDOM_PREFETCH_PAGES and more are available, fetch next
+    if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
+      fetchNextPage();
+    } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
+      setHasPreFetched(true);
+    }
+  }, [selectedSort.value, feedData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -563,14 +560,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     });
     
-    // Only shuffle when "random" is selected - use balanced shuffle for 3:9 ratio
+    // Only shuffle when "random" is selected - use balanced shuffle for true randomness
+    // The shuffleTrigger changes on refresh, causing useMemo to re-run and produce new order
     if (selectedSort.value === 'random') {
-      const shuffleSeed = Math.floor((randomSeed + shuffleKey) * 10000);
-      return balancedShuffle(mappedItems, shuffleSeed);
+      // shuffleTrigger is included in deps to force new shuffle on refresh
+      void shuffleTrigger; // Reference to satisfy linter but signal intent
+      return balancedShuffle(mappedItems);
     }
     
     return mappedItems;
-  }, [feedData, pinnedPostId, randomSeed, shuffleKey, selectedSort.value]);
+  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value]);
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
@@ -674,7 +673,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return elements;
   };
 
-  const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading);
+  // Show loading while pre-fetching pages for random mode
+  const isPreFetchingRandom = selectedSort.value === 'random' && !hasPreFetched && isFetchingNextPage;
+  const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading) || isPreFetchingRandom;
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
