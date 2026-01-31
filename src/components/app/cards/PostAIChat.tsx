@@ -161,32 +161,16 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
                     message.role === 'user'
-                      ? 'relative group'
-                      : ''
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-white/10 text-white'
                   }`}
                 >
-                  {message.role === 'user' ? (
-                    /* User message with liquid glass bubble */
-                    <div className="relative px-4 py-2.5 rounded-2xl rounded-br-md overflow-hidden
-                      bg-gradient-to-br from-white/20 via-white/10 to-white/5
-                      backdrop-blur-xl border border-white/30
-                      shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]
-                      before:absolute before:inset-0 before:rounded-2xl before:rounded-br-md
-                      before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-transparent
-                      before:pointer-events-none
-                      after:absolute after:inset-[1px] after:rounded-2xl after:rounded-br-md
-                      after:bg-gradient-to-b after:from-white/5 after:to-transparent
-                      after:pointer-events-none"
-                    >
-                      <p className="text-sm whitespace-pre-wrap text-white relative z-10">{message.content}</p>
-                    </div>
+                  {message.role === 'assistant' ? (
+                    <MarkdownText content={message.content} className="text-sm" />
                   ) : (
-                    /* Assistant message */
-                    <div className="bg-white/10 rounded-2xl px-4 py-2.5">
-                      <MarkdownText content={message.content} className="text-sm" />
-                    </div>
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   )}
                 </div>
               </motion.div>
