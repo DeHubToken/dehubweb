@@ -8,6 +8,7 @@ import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
+import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -22,6 +23,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
   const { stickToBanner } = useCoinPlacement();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const { data: unreadCount } = useUnreadNotificationCount();
 
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
@@ -96,6 +98,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
+            const isNotificationsItem = item.label === 'Notifications';
             
             // Insert AI link after Messages
             const isAfterMessages = item.label === 'Messages';
@@ -112,6 +115,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   // Show user avatar for Profile item when authenticated
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
+                  notificationCount={isNotificationsItem ? unreadCount?.total : undefined}
                 />
                 {isAfterMessages && (
                   <NavLink

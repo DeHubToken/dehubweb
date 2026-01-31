@@ -5,6 +5,7 @@ import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
+import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
@@ -19,6 +20,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const { stickToBanner } = useCoinPlacement();
+  const { data: unreadCount } = useUnreadNotificationCount();
 
   // Coin balance
   const coinBalance = 0; // TODO: Get from user wallet
@@ -45,10 +47,15 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         {/* Notifications Button */}
         <button
           onClick={() => navigate('/app/notifications')}
-          className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'text-zinc-400'}`}
+          className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
           aria-label="Notifications"
         >
-          <Bell className="w-[32px] h-[32px]" />
+          <Bell className="w-6 h-6" />
+          {unreadCount?.total !== undefined && unreadCount.total > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full">
+              {unreadCount.total > 99 ? '99+' : unreadCount.total}
+            </span>
+          )}
         </button>
         
         {/* Coin Balance (when stickToBanner is enabled) */}

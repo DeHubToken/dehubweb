@@ -13,6 +13,7 @@ interface SidebarNavItemProps {
   variant?: 'mobile' | 'desktop';
   avatarUrl?: string | null;
   avatarFallback?: string;
+  notificationCount?: number;
 }
 
 export function SidebarNavItem({ 
@@ -25,6 +26,7 @@ export function SidebarNavItem({
   variant = 'desktop',
   avatarUrl,
   avatarFallback,
+  notificationCount,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   
@@ -109,11 +111,16 @@ export function SidebarNavItem({
         </Avatar>
       ) : (
         <div className={cn(
-          "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+          "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isActive ? "bg-zinc-700" : "bg-zinc-800"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
+          {notificationCount !== undefined && notificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full">
+              {notificationCount > 99 ? '99+' : notificationCount}
+            </span>
+          )}
         </div>
       )}
       <span className="truncate">{item.label}</span>
