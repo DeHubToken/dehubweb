@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,22 +16,30 @@ interface UniqueUser {
   avatarUrl?: string;
 }
 
-// Fetch a batch of pages in parallel and extract unique users
-async function fetchUserBatch(startPage: number, endPage: number): Promise<UniqueUser[]> {
+const PAGE_SIZE = 100;
+const PAGES_PER_BATCH = 5; // Fetch 5 pages at a time for efficiency
+
+// Fetch a batch of pages and extract unique users
+async function fetchUserBatch(batchIndex: number): Promise<{ users: UniqueUser[]; hasMore: boolean }> {
+  const startPage = batchIndex * PAGES_PER_BATCH;
+  const endPage = startPage + PAGES_PER_BATCH;
+  
   const seenAddresses = new Set<string>();
   const uniqueUsers: UniqueUser[] = [];
-  const pageSize = 100;
 
-  // Fetch all pages in parallel
+  // Fetch all pages in the batch in parallel
   const pagePromises = [];
   for (let page = startPage; page < endPage; page++) {
-    pagePromises.push(searchNFTs({ sortMode: 'new', unit: pageSize, page }));
+    pagePromises.push(searchNFTs({ sortMode: 'new', unit: PAGE_SIZE, page }));
   }
 
   const results = await Promise.all(pagePromises);
 
+  let totalItems = 0;
   for (const response of results) {
-    for (const nft of (response.data || [])) {
+    const items = response.data || [];
+    totalItems += items.length;
+    for (const nft of items) {
       const address = nft.minter;
       if (!address || seenAddresses.has(address)) continue;
       seenAddresses.add(address);
@@ -44,7 +52,10 @@ async function fetchUserBatch(startPage: number, endPage: number): Promise<Uniqu
     }
   }
 
-  return uniqueUsers;
+  // If we got less than expected, there's no more data
+  const hasMore = totalItems >= PAGES_PER_BATCH * PAGE_SIZE * 0.5;
+
+  return { users: uniqueUsers, hasMore };
 }
 
 export function WhoToFollow() {
@@ -52,6 +63,8 @@ export function WhoToFollow() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+  const loaderRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false);
 
   // Fetch current user's following list
   const { data: currentUserData } = useQuery({
@@ -72,37 +85,42 @@ export function WhoToFollow() {
     return new Set(followings.map(addr => addr.toLowerCase()));
   }, [currentUserData?.followings]);
 
-  // Fast initial load (pages 0-4) - shows results within ~1 second
-  const { data: initialUsers, isLoading: isLoadingInitial } = useQuery({
-    queryKey: ['suggestions', 'initial'],
-    queryFn: () => fetchUserBatch(0, 5),
+  // Infinite query for user suggestions
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingInitial,
+  } = useInfiniteQuery({
+    queryKey: ['suggestions-infinite'],
+    queryFn: ({ pageParam = 0 }) => fetchUserBatch(pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined;
+      return allPages.length;
+    },
+    initialPageParam: 0,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
 
-  // Background extended load (pages 5-19) - enriches the list
-  const { data: extendedUsers } = useQuery({
-    queryKey: ['suggestions', 'extended'],
-    queryFn: () => fetchUserBatch(5, 20),
-    enabled: !!initialUsers,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-  });
-
-  // Merge initial and extended users, removing duplicates
+  // Accumulate all unique users across pages
   const allUsers = useMemo(() => {
-    const users = [...(initialUsers || [])];
-    const seenAddresses = new Set(users.map(u => u.address));
+    if (!data?.pages) return [];
+    const seenAddresses = new Set<string>();
+    const users: UniqueUser[] = [];
 
-    for (const user of (extendedUsers || [])) {
-      if (!seenAddresses.has(user.address)) {
-        seenAddresses.add(user.address);
-        users.push(user);
+    for (const page of data.pages) {
+      for (const user of page.users) {
+        if (!seenAddresses.has(user.address)) {
+          seenAddresses.add(user.address);
+          users.push(user);
+        }
       }
     }
 
     return users;
-  }, [initialUsers, extendedUsers]);
+  }, [data?.pages]);
 
   // Filter out users that are already followed, the current user, and newly followed users
   const suggestions = useMemo(() => {
@@ -114,6 +132,31 @@ export function WhoToFollow() {
       return true;
     });
   }, [allUsers, walletAddress, followingSet, followedUsers]);
+
+  // Intersection observer for infinite scroll
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries;
+    if (entry.isIntersecting && hasNextPage && !isFetchingRef.current) {
+      isFetchingRef.current = true;
+      fetchNextPage().finally(() => {
+        isFetchingRef.current = false;
+      });
+    }
+  }, [hasNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const loader = loaderRef.current;
+    if (!loader) return;
+
+    const observer = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0,
+    });
+
+    observer.observe(loader);
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   const getAvatarUrl = (user: UniqueUser) => {
     if (user.avatarUrl && user.address) {
@@ -220,6 +263,13 @@ export function WhoToFollow() {
             </Button>
           </div>
         ))}
+        
+        {/* Infinite scroll loader sentinel */}
+        <div ref={loaderRef} className="flex justify-center py-4">
+          {isFetchingNextPage && (
+            <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+          )}
+        </div>
       </div>
 
       <div className="relative">
