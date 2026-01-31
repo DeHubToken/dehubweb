@@ -37,7 +37,7 @@ const MUSIC_SUB_TABS: { icon: typeof Music; label: string; value: MusicSubTab }[
 
 const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
 const CAROUSEL_LOAD_MORE = 6; // Load more items when scrolling
-const VIDEOS_PAGE_SIZE = 20; // Page size for videos tab
+const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initial load
 
 // ============================================================================
 // HELPERS
