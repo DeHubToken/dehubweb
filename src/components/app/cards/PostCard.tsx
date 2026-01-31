@@ -118,13 +118,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       {/* Content */}
       <div className="p-3 space-y-2">
         <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
-        <div className="flex items-center gap-3">
-          <span className="text-zinc-500 text-xs">{post.createdAt}</span>
-          <span className="flex items-center gap-1 text-zinc-500 text-xs">
-            <Eye className="w-3 h-3" />
-            {post.views || '0'}
-          </span>
-        </div>
 
         <ActionBar 
           postId={post.id} 
@@ -134,6 +127,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           commentCount={post.stats.comments}
           hideDislike
         />
+
+        {/* Timestamp and views at bottom */}
+        <div className="flex items-center gap-3 pt-1">
+          <span className="text-zinc-500 text-xs">{post.createdAt}</span>
+          <span className="flex items-center gap-1 text-zinc-500 text-xs">
+            <Eye className="w-3 h-3" />
+            {post.views || '0'}
+          </span>
+        </div>
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (
