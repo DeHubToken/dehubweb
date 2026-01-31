@@ -532,6 +532,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Map unified feed items to component-ready data (excluding pinned post)
   const items = useMemo((): FeedItemType[] => {
+    // Don't compute until pre-fetch is complete for random mode
+    // This prevents multiple visual re-renders during sequential page fetches
+    if (selectedSort.value === 'random' && !hasPreFetched) {
+      return [];
+    }
+    
     if (!feedData?.pages) return [];
     
     const allItems = feedData.pages.flatMap(page => page.items || []);
@@ -569,7 +575,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
     
     return mappedItems;
-  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value]);
+  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, hasPreFetched]);
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
@@ -674,7 +680,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   };
 
   // Show loading while pre-fetching pages for random mode
-  const isPreFetchingRandom = selectedSort.value === 'random' && !hasPreFetched && isFetchingNextPage;
+  // Check !hasPreFetched directly to cover all fetch states (not just during active fetch)
+  const isPreFetchingRandom = selectedSort.value === 'random' && !hasPreFetched;
   const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading) || isPreFetchingRandom;
 
   const EmptyState = () => (
