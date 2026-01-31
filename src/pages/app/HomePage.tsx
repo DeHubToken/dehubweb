@@ -89,6 +89,10 @@ export default function HomePage() {
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Debounce guard for home-refresh events to prevent rapid succession
+  const lastRefreshTime = useRef<number>(0);
+  const REFRESH_DEBOUNCE_MS = 1000;
 
   // --------------------------------------------------------------------------
   // REFRESH HANDLER
@@ -96,6 +100,11 @@ export default function HomePage() {
 
   const triggerRefresh = useCallback(() => {
     if (isRefreshing) return;
+    
+    // Debounce rapid refresh calls (e.g., multiple home-refresh events)
+    const now = Date.now();
+    if (now - lastRefreshTime.current < REFRESH_DEBOUNCE_MS) return;
+    lastRefreshTime.current = now;
     
     setIsRefreshing(true);
     
