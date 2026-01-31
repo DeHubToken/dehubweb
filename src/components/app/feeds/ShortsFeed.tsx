@@ -120,7 +120,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     views: formatLikes(viewCount),
     durationSeconds: parseDurationToSeconds(durationStr),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
-    creatorUsername: nft.minterUsername || nft.creator?.username || 'user',
+    creatorUsername: nft.mintername || nft.creator?.username || 'user',
   };
 }
 
