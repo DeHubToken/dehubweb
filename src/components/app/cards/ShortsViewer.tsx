@@ -242,12 +242,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   }, [currentIndex, isPlaying]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
-    // Swipe right to close (like Instagram stories)
-    if (info.offset.x > 100) {
-      onClose();
-      return;
-    }
-    // Vertical swipe for navigation
+    // Vertical swipe for navigation only - removed horizontal swipe to close
     if (info.offset.y < -100) goToNext();
     else if (info.offset.y > 100) goToPrev();
   };
@@ -334,7 +329,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className={cn(
-        "w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center transition-colors",
+        "w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors",
         active && activeColor
       )}>
         <Icon className={cn("w-6 h-6", active ? activeColor : "text-white", active && "fill-current")} />
@@ -358,49 +353,87 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       {/* Desktop Layout with Side Panels */}
       <div className={`relative flex items-center justify-center h-full ${isMobile ? 'w-full' : 'gap-4 px-4'}`}>
         
-        {/* Left Side Panel - Desktop Only */}
+        {/* Left Side Panel - Desktop/iPad Only: Action buttons */}
         {!isMobile && (
-          <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
-            {/* Creator Info - Top */}
-            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
-              <div className="flex items-center gap-2 lg:gap-3">
-                <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0" key={currentShort.avatar || currentShort.id}>
-                  <AvatarImage src={currentShort.avatar} alt={currentShort.username} />
-                  <AvatarFallback className="bg-zinc-700 text-white font-medium">{currentShort.username[0]?.toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold text-sm lg:text-base truncate">@{currentShort.username}</p>
-                  <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {currentShort.views || '0'}
-                    </span>
-                    <span>•</span>
-                    <span>{formatCount(localLikeCount)} likes</span>
-                  </div>
+          <div className="w-[80px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-6">
+            {/* Navigation */}
+            <button
+              onClick={goToPrev}
+              disabled={currentIndex === 0}
+              className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
+            >
+              <ChevronUp className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Action buttons - synced with API */}
+            <div className="flex flex-col items-center gap-4">
+              <ActionButton
+                icon={ThumbsUp}
+                count={localLikeCount}
+                onClick={() => handleVote(true)}
+                active={isLiked}
+                activeColor="text-white"
+                disabled={hasVoted || isVoting}
+                animate={justVoted === 'like'}
+              />
+              
+              <ActionButton
+                icon={ThumbsDown}
+                count={localDislikeCount}
+                onClick={() => handleVote(false)}
+                active={isDisliked}
+                activeColor="text-white"
+                disabled={hasVoted || isVoting}
+                animate={justVoted === 'dislike'}
+              />
+
+              <ActionButton
+                icon={MessageSquare}
+                count={currentShort.comments || 0}
+                onClick={() => setShowComments(true)}
+              />
+
+              {/* View count */}
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-12 h-12 bg-zinc-800/80 rounded-xl flex items-center justify-center">
+                  <Eye className="w-6 h-6 text-white" />
                 </div>
-                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0">
-                  Follow
-                </button>
+                <span className="text-white text-xs">{currentShort.views || '0'}</span>
               </div>
-              {currentShort.description && (
-                <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
-              )}
+
+              <ActionButton
+                icon={Share2}
+                onClick={() => setShareSheetOpen(true)}
+              />
+              
+              <ActionButton
+                icon={Bookmark}
+                onClick={toggleBookmark}
+                active={isBookmarked}
+                activeColor="text-yellow-500"
+                disabled={isBookmarkLoading}
+                animate={isBookmarked}
+              />
+
+              <button
+                onClick={toggleMute}
+                className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
+              >
+                {isMuted ? (
+                  <VolumeX className="w-6 h-6 text-white" />
+                ) : (
+                  <Volume2 className="w-6 h-6 text-white" />
+                )}
+              </button>
             </div>
 
-            {/* Desktop: Open comments in sheet when clicked */}
-            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-4 flex flex-col min-h-0">
-              <button 
-                onClick={() => setShowComments(true)}
-                className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0 hover:text-white transition-colors"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>View Comments</span>
-              </button>
-              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 flex items-center justify-center">
-                <p className="text-white/40 text-sm">Tap to view comments</p>
-              </div>
-            </div>
+            <button
+              onClick={goToNext}
+              disabled={currentIndex === shorts.length - 1}
+              className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
+            >
+              <ChevronDown className="w-5 h-5 text-white" />
+            </button>
           </div>
         )}
 
@@ -483,20 +516,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
           {isMobile && (
             <>
               {/* Creator Info */}
-              <div className="absolute top-4 left-4 z-10">
-                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
-                  <Avatar className="w-8 h-8 border border-white/20" key={currentShort.avatar || currentShort.id}>
-                    <AvatarImage src={currentShort.avatar} alt={currentShort.username} />
-                    <AvatarFallback className="bg-zinc-700 text-white font-medium">{currentShort.username[0]?.toUpperCase()}</AvatarFallback>
+              <div className="absolute top-4 left-4 z-10 max-w-[calc(100%-100px)]">
+                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1 max-w-full">
+                  <Avatar className="w-8 h-8 border border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                    <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-white text-sm font-medium">@{currentShort.username}</span>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-white text-sm font-medium truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                     <span className="text-white/60 text-xs flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
+                      <Eye className="w-3 h-3 flex-shrink-0" />
                       {currentShort.views || '0'} • {formatCount(localLikeCount)} likes
                     </span>
                   </div>
-                  <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl">
+                  <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl flex-shrink-0">
                     Follow
                   </button>
                 </div>
@@ -574,92 +607,65 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                     <Bookmark className={cn("w-5 h-5", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
                   </motion.button>
                 </div>
+                
+                {/* Mobile Comments Preview - tap to expand */}
+                <button
+                  onClick={() => setShowComments(true)}
+                  className="mt-3 w-full bg-zinc-900/60 backdrop-blur-sm rounded-xl p-3 text-left"
+                >
+                  <div className="flex items-center gap-2 text-white/60 text-sm">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Tap to view comments</span>
+                  </div>
+                </button>
               </div>
             </>
           )}
         </div>
 
-        {/* Right Side Panel - Desktop Only */}
+        {/* Right Side Panel - Desktop/iPad Only: Creator info and comments */}
         {!isMobile && (
-          <div className="w-[80px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-6">
-            {/* Navigation */}
-            <button
-              onClick={goToPrev}
-              disabled={currentIndex === 0}
-              className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
-            >
-              <ChevronUp className="w-5 h-5 text-white" />
-            </button>
-
-            {/* Action buttons - synced with API */}
-            <div className="flex flex-col items-center gap-4">
-              <ActionButton
-                icon={ThumbsUp}
-                count={localLikeCount}
-                onClick={() => handleVote(true)}
-                active={isLiked}
-                activeColor="text-white"
-                disabled={hasVoted || isVoting}
-                animate={justVoted === 'like'}
-              />
-              
-              <ActionButton
-                icon={ThumbsDown}
-                count={localDislikeCount}
-                onClick={() => handleVote(false)}
-                active={isDisliked}
-                activeColor="text-white"
-                disabled={hasVoted || isVoting}
-                animate={justVoted === 'dislike'}
-              />
-
-              <ActionButton
-                icon={MessageSquare}
-                count={currentShort.comments || 0}
-                onClick={() => setShowComments(true)}
-              />
-
-              {/* View count */}
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 bg-zinc-800/80 rounded-full flex items-center justify-center">
-                  <Eye className="w-6 h-6 text-white" />
+          <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
+            {/* Creator Info - Top */}
+            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
+              <div className="flex items-center gap-2 lg:gap-3">
+                <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                  <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                  <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-semibold text-sm lg:text-base truncate">@{currentShort.creatorUsername || currentShort.username}</p>
+                  <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {currentShort.views || '0'}
+                    </span>
+                    <span>•</span>
+                    <span>{formatCount(localLikeCount)} likes</span>
+                  </div>
                 </div>
-                <span className="text-white text-xs">{currentShort.views || '0'}</span>
+                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0 max-w-[80px]">
+                  Follow
+                </button>
               </div>
-
-              <ActionButton
-                icon={Share2}
-                onClick={() => setShareSheetOpen(true)}
-              />
-              
-              <ActionButton
-                icon={Bookmark}
-                onClick={toggleBookmark}
-                active={isBookmarked}
-                activeColor="text-yellow-500"
-                disabled={isBookmarkLoading}
-                animate={isBookmarked}
-              />
-
-              <button
-                onClick={toggleMute}
-                className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center transition-colors"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-6 h-6 text-white" />
-                ) : (
-                  <Volume2 className="w-6 h-6 text-white" />
-                )}
-              </button>
+              {currentShort.description && (
+                <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
+              )}
             </div>
 
-            <button
-              onClick={goToNext}
-              disabled={currentIndex === shorts.length - 1}
-              className="w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
-            >
-              <ChevronDown className="w-5 h-5 text-white" />
-            </button>
+            {/* Desktop: Open comments in sheet when clicked */}
+            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-4 flex flex-col min-h-0">
+              <button 
+                onClick={() => setShowComments(true)}
+                className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0 hover:text-white transition-colors"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>View Comments</span>
+              </button>
+              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 flex items-center justify-center">
+                <p className="text-white/40 text-sm">Tap to view comments</p>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -667,7 +673,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       {/* Close button - always visible */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 w-8 h-8 lg:w-10 lg:h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center z-20 transition-colors"
+        className="absolute top-4 right-4 w-8 h-8 lg:w-10 lg:h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center z-20 transition-colors"
       >
         <X className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
       </button>
@@ -676,7 +682,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       {isMobile && (
         <button
           onClick={toggleMute}
-          className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-full flex items-center justify-center z-20"
+          className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-xl flex items-center justify-center z-20"
         >
           {isMuted ? (
             <VolumeX className="w-4 h-4 text-white" />
@@ -686,12 +692,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         </button>
       )}
 
-      {/* Mobile swipe hint */}
-      {isMobile && (
-        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 text-white/40 text-xs animate-pulse z-10">
-          Swipe up for next
-        </div>
-      )}
 
       {/* Share Drawer - same style as ActionBar */}
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
