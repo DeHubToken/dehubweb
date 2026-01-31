@@ -83,8 +83,10 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
 
   return (
     <div 
-      className="relative overflow-hidden"
+      className="relative overflow-hidden pointer-events-auto"
       style={{ height: containerHeight }}
+      onPointerDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
     >
       {/* Selection highlight bar - subtle transparent */}
       <div 
@@ -98,12 +100,13 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
       {/* Scrollable area */}
       <div
         ref={containerRef}
-        className="h-full overflow-y-auto scrollbar-hide snap-y snap-mandatory"
+        className="h-full overflow-y-auto scrollbar-hide snap-y snap-mandatory touch-pan-y"
         style={{ 
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           paddingTop: centerOffset * itemHeight,
           paddingBottom: centerOffset * itemHeight,
+          WebkitOverflowScrolling: 'touch',
         }}
         onScroll={handleScroll}
       >
@@ -116,13 +119,14 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
           return (
             <div
               key={index}
-              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-200"
+              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-200 pointer-events-auto"
               style={{ 
                 height: itemHeight,
                 opacity,
                 transform: `scale(${scale})`,
               }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 onSelect(index);
                 if (containerRef.current) {
                   containerRef.current.scrollTo({
@@ -382,8 +386,11 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           {/* Clear button */}
           {scheduledDate && (
             <button
-              onClick={handleClear}
-              className="w-full py-3 text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClear();
+              }}
+              className="w-full py-3 text-red-400 hover:text-red-300 text-sm font-medium transition-colors pointer-events-auto"
             >
               Remove Schedule
             </button>
