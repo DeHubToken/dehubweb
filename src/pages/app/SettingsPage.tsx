@@ -972,10 +972,6 @@ function AssetsSettings() {
 
       {/* Wallet Address */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
-          <Wallet className="w-4 h-4" />
-          Wallet Address
-        </h3>
         <button
           onClick={handleCopyWallet}
           disabled={!walletAddress}
@@ -993,10 +989,6 @@ function AssetsSettings() {
 
       {/* DHB Balance */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-          DHB Balance
-        </h3>
         <button
           onClick={() => setWalletDrawerOpen(true)}
           className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
