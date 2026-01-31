@@ -15,7 +15,7 @@ import {
   type SearchLivestream,
   type UniversalSearchResponse 
 } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
 
 export interface SearchCreator {
@@ -94,8 +94,8 @@ export function getPostTypeForTab(tab: string): string | undefined {
  * Convert SearchAccount to SearchCreator format
  */
 export function mapAccountToCreator(account: SearchAccount): SearchCreator {
-  // Check both field names - API returns avatarImageUrl
-  const rawAvatarPath = account.avatarImageUrl || account.avatarUrl;
+  // Use centralized utility - handles all avatar field variations
+  const rawAvatarPath = extractAvatarPath(account);
   
   return {
     id: account.address || account.id,
@@ -129,7 +129,7 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
       id: minterId,
       name: nft.minterDisplayName || nft.mintername || 'User',
       handle: `@${nft.mintername || minterId.slice(0, 8)}`,
-      avatar: buildAvatarUrl(minterId, nft.minterAvatarUrl),
+      avatar: buildAvatarUrl(minterId, extractAvatarPath(nft)),
       verified: false, // API doesn't return verification on NFT objects
       bio: undefined,
     });

@@ -16,7 +16,7 @@ import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
@@ -62,8 +62,8 @@ function isBlockedCreator(nft: DeHubNFT): boolean {
 // Helper functions (formatDuration, formatViews, formatTimeAgo) are now imported from @/lib/feed-utils
 function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const minterAddress = nft.minter || nft.creator?.id || '';
-  const rawAvatarUrl = nft.minterAvatarUrl || nft.creator?.avatar_url;
-  // Always use buildAvatarUrl - it handles all URL formats including api.dehub.io → CDN conversion
+  // Use centralized utility for avatar extraction
+  const rawAvatarUrl = extractAvatarPath(nft) || extractAvatarPath(nft.creator);
   const avatarUrl = minterAddress && rawAvatarUrl 
     ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
     : undefined;
