@@ -1,164 +1,123 @@
 
+# Fix Login Flow Bug: Connection State Stuck After Rejection
 
-# Fix: Login Modal Should Always Be Closable
+## Problem Summary
+When a user clicks a login method (MetaMask, Google, etc.) and then rejects the sign request or cancels, the login modal becomes unresponsive. All buttons remain disabled and clicking other login options doesn't work until the page is refreshed.
 
-## Problem
+## Root Cause Analysis
 
-The login modal occasionally becomes "corrupted" and unclosable due to Web3Auth's wallet iframe overlay:
+### Issue 1: Web3Auth State Not Reset After Rejection
+When a user rejects a signature or cancels the login flow, Web3Auth's internal state may remain in a "connected" status. Subsequent `connectTo()` calls fail because Web3Auth thinks it's already connected.
 
-- Web3Auth creates a fullscreen iframe with `z-index: 99999`
-- This iframe can get stuck in an active state after failed/cancelled authentication
-- The iframe blocks clicks on the modal's close button
-- The `handleClose` function currently prevents closing while `isConnecting` is true
+### Issue 2: Missing State Cleanup in Error Handlers
+In `AuthContext.tsx`, the error handling for user rejections:
+- Sets `needsSignature` to `true` and returns early
+- Does NOT disconnect/reset Web3Auth
+- The modal remains open but Web3Auth is in a broken state
+
+### Issue 3: `activeProvider` State Stuck in LoginModal
+When an error occurs, `activeProvider` is set to `null`, but this doesn't help if `isConnecting` remains true from the AuthContext.
 
 ## Solution
 
-Make the modal always closable regardless of connection state, and add cleanup for stuck Web3Auth states.
+### 1. Add Web3Auth Disconnect on User Rejection (AuthContext.tsx)
+When the user rejects a signature, we need to:
+- Disconnect from Web3Auth to reset its internal state
+- Reset `isConnecting` to `false`
+- Allow the user to try again with any method
 
----
+### 2. Reset Web3Auth State More Aggressively
+After any rejection or cancellation, call `disconnectWeb3Auth()` to ensure the SDK is in a clean state for the next attempt.
 
-## Changes
+### 3. Update Error Handlers in All Connect Methods
+Modify `connectWithProvider`, `connectWithEmail`, `connectWithSMS`, and `connectWithWallet` to:
+- Disconnect Web3Auth on any error that leaves it in a connected state
+- Properly reset all local state
 
-### 1. LoginModal.tsx - Always Allow Close
+## Technical Implementation
 
-**File:** `src/components/app/LoginModal.tsx`
+### File: `src/contexts/AuthContext.tsx`
 
-Remove the `isConnecting` guard from `handleClose`:
-
+**Changes to `connectWithProvider` function (around lines 337-350):**
 ```typescript
-// BEFORE (line 51-61)
-const handleClose = () => {
-  if (!isConnecting) {  // ← This blocks closing
-    setStep('main');
-    // ...
-    onOpenChange(false);
-  }
-};
-
-// AFTER
-const handleClose = () => {
-  // Always allow closing - user should never be trapped
-  setStep('main');
-  setEmail('');
-  setPhone('');
-  setEmailError('');
-  setPhoneError('');
-  setActiveProvider(null);
-  onOpenChange(false);
-};
-```
-
-Also remove `disabled={isConnecting}` from the close button (line 366):
-
-```typescript
-// BEFORE
-<button
-  onClick={handleClose}
-  disabled={isConnecting}  // ← Remove this
-  className="..."
->
-
-// AFTER  
-<button
-  onClick={handleClose}
-  className="..."
->
-```
-
-### 2. AuthContext.tsx - Cancel Connection on Modal Close
-
-**File:** `src/contexts/AuthContext.tsx`
-
-Add a flag to abort in-progress connections when modal closes:
-
-```typescript
-// Add ref to track if connection should be aborted
-const connectionAbortedRef = useRef(false);
-
-// Update closeLoginModal to signal abort
-const closeLoginModal = useCallback(() => {
-  connectionAbortedRef.current = true;
-  setIsConnecting(false);
-  setIsLoginModalOpen(false);
-}, []);
-
-// In connection methods, check abort flag before completing
-const connectWithProvider = useCallback(async (provider: SocialProvider) => {
-  connectionAbortedRef.current = false;
-  setIsConnecting(true);
+} catch (error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : '';
   
-  try {
-    // ... connection logic ...
-    
-    // Check if user closed modal during connection
-    if (connectionAbortedRef.current) {
-      console.log('[Auth] Connection aborted by user');
-      return;
-    }
-    
-    await completeDeHubAuth(web3authProvider);
-    // ...
-  } catch (error) {
-    // ... error handling ...
-  } finally {
-    setIsConnecting(false);
-  }
-}, [closeLoginModal]);
-```
-
-### 3. Add Web3Auth Cleanup on Close
-
-**File:** `src/contexts/AuthContext.tsx`
-
-When the modal is force-closed, cleanup any stuck Web3Auth state:
-
-```typescript
-import { resetWeb3AuthState } from '@/lib/web3auth';
-
-const closeLoginModal = useCallback(() => {
-  connectionAbortedRef.current = true;
-  setIsConnecting(false);
-  setIsLoginModalOpen(false);
-  
-  // If we were connecting, reset Web3Auth to clear stuck iframes
-  if (isConnecting) {
-    console.log('[Auth] Force closing - resetting Web3Auth state');
-    // Small delay to let state update first
-    setTimeout(() => {
+  // Check if user rejected the signature
+  if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied') || errorMessage.includes('User closed')) {
+    // Reset Web3Auth state so user can try again
+    try {
+      await disconnectWeb3Auth();
       resetWeb3AuthState();
-    }, 100);
+    } catch (e) {
+      console.warn('[Auth] Cleanup after rejection failed:', e);
+    }
+    toast.error('Log in was cancelled');
+    return;
   }
-}, [isConnecting]);
+  
+  // For other errors, also clean up
+  try {
+    await disconnectWeb3Auth();
+    resetWeb3AuthState();
+  } catch (e) {
+    console.warn('[Auth] Cleanup after error failed:', e);
+  }
+  
+  handleConnectionError(error);
+}
 ```
 
-### 4. Ensure Close Button Has Higher z-index
+**Apply same pattern to:**
+- `connectWithEmail` (lines 375-384)
+- `connectWithSMS` (lines 412-421)
+- `connectWithWallet` (lines 447-456)
 
-**File:** `src/components/app/LoginModal.tsx`
+### File: `src/lib/web3auth.ts`
 
-Add explicit z-index to the close button to ensure it's above any overlays:
-
+**Update `disconnectWeb3Auth` to be more robust (lines 289-295):**
 ```typescript
-<button
-  onClick={handleClose}
-  className="absolute right-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white z-[100000]"
->
-  <X className="w-5 h-5" />
-</button>
+export async function disconnectWeb3Auth(): Promise<void> {
+  console.log("[Web3Auth] disconnectWeb3Auth() called");
+  try {
+    if (web3authInstance?.connected) {
+      await web3authInstance.logout();
+      console.log("[Web3Auth] ✓ Logged out");
+    }
+  } catch (e) {
+    console.warn("[Web3Auth] Logout error (continuing cleanup):", e);
+  }
+  // Always reset the instance status tracking
+  // This ensures next connection attempt starts fresh
+}
 ```
 
----
+**Add a safe reset function that can be called after errors:**
+```typescript
+export async function safeResetAfterError(): Promise<void> {
+  console.log("[Web3Auth] Safe reset after error...");
+  try {
+    if (web3authInstance?.connected) {
+      await web3authInstance.logout();
+    }
+  } catch (e) {
+    // Ignore logout errors during reset
+  }
+  // Reset module state to allow fresh initialization
+  resetWeb3AuthState();
+}
+```
 
 ## Summary of Changes
 
 | File | Change |
 |------|--------|
-| `src/components/app/LoginModal.tsx` | Remove `isConnecting` guard from close, add high z-index to close button |
-| `src/contexts/AuthContext.tsx` | Add abort mechanism, cleanup Web3Auth on force close |
+| `src/contexts/AuthContext.tsx` | Add Web3Auth disconnect/reset in all error handlers for connect methods |
+| `src/lib/web3auth.ts` | Add `safeResetAfterError()` function for clean recovery from failed connections |
 
-## Result
-
-- User can **always** close the login modal with the X button
-- Closing during auth will abort the connection attempt
-- Stuck Web3Auth iframes are cleaned up
-- Close button has z-index higher than Web3Auth's overlay (100000 > 99999)
-
+## Testing Steps
+1. Open login modal
+2. Click "Continue with Google" → Cancel/reject → Verify other buttons still work
+3. Click "Connect Wallet" → "MetaMask" → Reject signature → Verify can click other wallets
+4. Try switching between Email, SMS, Social, and Wallet options after cancellations
+5. Verify successful login still works after multiple cancellations
