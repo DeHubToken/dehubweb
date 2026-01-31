@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Plus, MessageCircle, RefreshCw, Loader2 } from 'lucide-react';
+import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { useConversations } from '@/hooks/use-messages';
 import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 
 function ConversationsSkeleton() {
   return (
@@ -114,7 +115,6 @@ export default function MessagesPage() {
         <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
           <PublicChat 
             onBack={() => setShowPublicChat(false)} 
-            liveCount="2.3k"
           />
         </div>
       </div>
@@ -180,11 +180,11 @@ export default function MessagesPage() {
               className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left border-b border-zinc-800"
             >
               <div className="relative">
-                <Avatar className="w-12 h-12">
-                  <AvatarFallback className="bg-gradient-to-br from-red-500 to-orange-500 text-white font-medium">
-                    🌐
-                  </AvatarFallback>
-                </Avatar>
+                <img 
+                  src={chatBubbleIcon} 
+                  alt="Public Chat" 
+                  className="w-12 h-12 object-contain"
+                />
                 <div className="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-[10px]">📌</span>
                 </div>
@@ -193,7 +193,6 @@ export default function MessagesPage() {
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-white truncate">Public Chat</span>
                   <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
-                  <span className="text-zinc-500 text-sm">2.3k</span>
                 </div>
                 <p className="text-zinc-500 text-sm truncate">Join the community conversation</p>
               </div>
@@ -225,7 +224,7 @@ export default function MessagesPage() {
                 <p className="text-zinc-500 text-sm mb-4">Start a new message to connect with others</p>
                 <Button 
                   onClick={() => setShowNewConversation(true)}
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-zinc-800 hover:bg-zinc-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   New Message

@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Users, Settings, MoreVertical, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 
 interface PublicChatProps {
   onBack: () => void;
-  liveCount?: string;
 }
 
-export function PublicChat({ onBack, liveCount = '0' }: PublicChatProps) {
+export function PublicChat({ onBack }: PublicChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -53,10 +52,6 @@ export function PublicChat({ onBack, liveCount = '0' }: PublicChatProps) {
             <div className="flex items-center gap-2">
               <h2 className="font-bold text-white">Public Chat</h2>
               <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
-            </div>
-            <div className="flex items-center gap-1 text-zinc-500 text-xs">
-              <Users className="w-3 h-3" />
-              <span>{liveCount} online</span>
             </div>
           </div>
         </div>
