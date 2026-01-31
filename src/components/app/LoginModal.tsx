@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-
+import phantomLogo from '@/assets/icons/phantom-logo.png';
 // Social provider icons as SVG components
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -55,16 +55,7 @@ const WalletConnectIcon = () => (
 );
 
 const PhantomIcon = () => (
-  <svg viewBox="0 0 128 128" className="w-5 h-5">
-    <circle cx="64" cy="64" r="64" fill="url(#phantom-gradient)"/>
-    <path fill="#fff" d="M110.6 57.4c-1.6 16.5-15 29.2-32 29.2H46.1c-2.4 0-4.3-2.1-4.3-4.6V37.2c0-2.5 1.9-4.6 4.3-4.6h31c18.5 0 33.6 11 35.5 24.8zm-52-14.8c-2.4 0-4.3 2.1-4.3 4.6v35.2c0 2.5 1.9 4.6 4.3 4.6H78c14 0 25.4-11.5 25.4-25.8S92 35.4 78 35.4H58.6v7.2zm11 17.6c0 3.5-2.8 6.4-6.2 6.4s-6.2-2.9-6.2-6.4 2.8-6.4 6.2-6.4 6.2 2.9 6.2 6.4zm18.4 0c0 3.5-2.8 6.4-6.2 6.4s-6.2-2.9-6.2-6.4 2.8-6.4 6.2-6.4 6.2 2.9 6.2 6.4z"/>
-    <defs>
-      <linearGradient id="phantom-gradient" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#534BB1"/>
-        <stop offset="1" stopColor="#551BF9"/>
-      </linearGradient>
-    </defs>
-  </svg>
+  <img src={phantomLogo} alt="Phantom" className="w-5 h-5 rounded-md" />
 );
 
 const RabbyIcon = () => (
