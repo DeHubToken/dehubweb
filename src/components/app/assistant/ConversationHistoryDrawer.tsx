@@ -2,6 +2,7 @@
  * Conversation History Drawer
  * ============================
  * Displays past AI conversations for logged-in users.
+ * Uses wallet address for identification (Web3Auth).
  */
 
 import { useState, useEffect } from 'react';
@@ -9,6 +10,7 @@ import { History, Trash2, Loader2, MessageCircle, ChevronRight } from 'lucide-re
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
@@ -36,20 +38,24 @@ export function ConversationHistoryDrawer({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { walletAddress, isAuthenticated } = useAuth();
 
   // Fetch conversations when drawer opens
   useEffect(() => {
-    if (open) {
+    if (open && walletAddress && isAuthenticated) {
       fetchConversations();
     }
-  }, [open]);
+  }, [open, walletAddress, isAuthenticated]);
 
   const fetchConversations = async () => {
+    if (!walletAddress) return;
+    
     setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from('ai_conversations')
         .select('*')
+        .eq('wallet_address', walletAddress.toLowerCase())
         .order('updated_at', { ascending: false })
         .limit(50);
 
@@ -123,7 +129,12 @@ export function ConversationHistoryDrawer({
         </DrawerHeader>
         
         <ScrollArea className="h-[70vh]">
-          {isLoading ? (
+          {!isAuthenticated ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+              <MessageCircle className="w-12 h-12 text-white/20 mb-3" />
+              <p className="text-white/60">Log in to see your conversation history</p>
+            </div>
+          ) : isLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-6 h-6 animate-spin text-white/60" />
             </div>
