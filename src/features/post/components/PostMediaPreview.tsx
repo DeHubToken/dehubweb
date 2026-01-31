@@ -503,7 +503,7 @@ export function PostMediaPreview({
                   </div>
                 </div>
               ) : (
-                <div className="relative">
+                <div className="relative w-full h-full">
                   {/* Processing overlay */}
                   {processingVideos.has(index) && (
                     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
@@ -518,11 +518,11 @@ export function PostMediaPreview({
                   
                   {/* Show thumbnail if set, otherwise show video */}
                   {m.thumbnail ? (
-                    <div className="relative">
+                    <div className="relative w-full h-full">
                       <img 
                         src={m.thumbnail} 
                         alt="Video thumbnail" 
-                        className="w-full h-auto max-h-80 object-cover rounded-2xl"
+                        className="w-full h-full object-cover rounded-2xl"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
