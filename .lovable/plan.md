@@ -1,87 +1,131 @@
 
-# Fix Minting Flow - Signature Verification Issue
+# Fix: Include Wallet Address in Mint Request
 
-## Problem Summary
-The on-chain mint is failing with "signer should sign tokenId" because the signature verification in the StreamCollection contract is not passing. This typically means the message being signed doesn't match what the contract expects.
+## Problem Identified
 
-## Technical Analysis
+The on-chain minting is failing with "signer should sign tokenId" because the signature verification in the StreamCollection contract likely includes the **minter's address (msg.sender)** in the signed message hash.
 
-### Current Flow
-1. Call `/api/user_mint` → receives `v`, `r`, `s`, `createdTokenId`, `timestamp`
-2. Call `StreamCollection.mint()` with those parameters → **FAILS**
+Currently, the `/api/user_mint` request sends:
+- `name`, `description`, `postType`, `chainId`, `category`, `streamInfo`, `files`
 
-### Contract Verification Logic
-The contract's `mint` function uses `ecrecover` to verify the signature. Based on the contract code pattern, it likely hashes a message containing:
-- Token ID
-- Timestamp
-- Possibly the caller's address (minter)
-- Possibly the supply and URI
+But it does NOT send:
+- **The user's wallet address** that will call the `mint()` function
 
-### Likely Issue
-The backend signature may be created for a message that includes the **minter's address**, but we're not including it in the on-chain call verification, OR the message encoding doesn't match.
+Without the minter address, the backend cannot generate a signature that will pass `ecrecover` verification on-chain.
 
-## Proposed Solutions
+## Evidence
 
-### Option A: Update Signature Message Verification (Preferred)
-Check with DeHub documentation or team what exact message format the backend signs. The signature message likely needs to match exactly:
-
+From the contract ABI:
 ```solidity
-// Example of what the contract might be verifying:
+function mint(
+  uint256 id,
+  uint256 timestamp,
+  uint8 v, bytes32 r, bytes32 s,  // signature components
+  Fee[] fees,
+  uint256 supply,
+  string uri
+)
+```
+
+The signature verification likely hashes:
+```solidity
+bytes32 message = keccak256(abi.encodePacked(id, msg.sender));
+// OR with timestamp:
 bytes32 message = keccak256(abi.encodePacked(id, timestamp, msg.sender));
 ```
 
-### Option B: Use `mintFromController` Instead
-If the direct `mint` function isn't intended for user calls, we may need to:
-1. Have the backend return additional signature data
-2. Use a different minting endpoint
+## Solution
 
-### Option C: Backend API Configuration
-The DeHub backend may need configuration to generate signatures compatible with the user's wallet address. This would require coordination with the DeHub team.
+### Step 1: Get User's Wallet Address Before API Call
 
-## Recommended Next Steps
-
-1. **Verify API response format**: Log the exact `mintResponse` from the API to confirm all required fields are present
-2. **Check message encoding**: Determine if the signature should include the minter's address by reviewing contract source
-3. **Test with contract simulation**: Use a read-only call to `getecrecover()` to verify what address the signature recovers to
-4. **Consult DeHub documentation**: Clarify the expected minting flow for Web3Auth social login users
-
-## Code Changes Required
-
-### 1. Add Debug Logging
-Enhance `mintOnChain` to log the recovered signer:
+In `usePostForm.ts`, retrieve the signer address before calling the mint API:
 
 ```typescript
-// Before calling mint, verify the signature
-const recoveredSigner = await contract.getecrecover(tokenId, v, r, s);
-console.log('[StreamCollection] Recovered signer:', recoveredSigner);
+import { getWeb3AuthSigner } from '@/lib/contracts/stream-collection';
+
+// Before calling mintPost()
+const signer = await getWeb3AuthSigner();
+const minterAddress = await signer.getAddress();
 ```
 
-### 2. Verify Backend Response
-Add validation in `usePostForm.ts` to ensure all required fields exist:
+### Step 2: Include Address in API Request
+
+Add the `minter` or `creator` field to the FormData:
 
 ```typescript
-if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
-  throw new Error('Invalid signature data from backend');
+formData.append('minter', minterAddress);
+// OR depending on DeHub API expectations:
+formData.append('creator', minterAddress);
+```
+
+### Step 3: Update mintPost Function
+
+Modify the `mintPost` function in `src/lib/api/dehub.ts` to accept and include the minter address parameter.
+
+## Technical Details
+
+### Files to Modify
+
+1. **src/features/post/hooks/usePostForm.ts**
+   - Import `getWeb3AuthSigner` 
+   - Get wallet address before API call
+   - Pass address to `mintPost`
+
+2. **src/lib/api/dehub.ts**
+   - Update `mintPost` function signature to accept `minterAddress`
+   - Append `minter` field to FormData
+
+### Code Changes
+
+**usePostForm.ts**
+```typescript
+// Before calling API
+const signer = await getWeb3AuthSigner();
+const minterAddress = await signer.getAddress();
+console.log('[Mint] User wallet address:', minterAddress);
+
+// Pass to API
+const mintResponse = await mintPost({
+  ...params,
+  minterAddress,
+});
+```
+
+**dehub.ts - mintPost function**
+```typescript
+export async function mintPost(params: {
+  name: string;
+  description?: string;
+  // ... other params
+  minterAddress: string;  // Add this
+}) {
+  const formData = new FormData();
+  // ... existing fields
+  formData.append('minter', params.minterAddress);
+  
+  // API call
 }
-console.log('[Mint] Full API response:', JSON.stringify(mintResponse, null, 2));
 ```
 
-### 3. Potential Message Format Fix
-If the backend expects the minter address in the signature, update the call accordingly:
+## Alternative: Check DeHub API Documentation
 
-```typescript
-// Check if backend returns expected minter address
-const expectedMinter = mintResponse.minter || mintResponse.creator;
-```
+If the backend doesn't accept a `minter` field, the API might:
+1. Extract the address from the JWT token (already authenticated)
+2. Use a different parameter name (`creator`, `address`, `wallet`)
+3. Require a different endpoint for Web3Auth/Smart Account users
 
-## Questions for Clarification
+The JWT already contains the address (`0x742371a7cce6b068f3c6222016bf009d570d7d15`), so the backend might already know the minter. In that case, the issue could be:
+- The contract's authorized signer list doesn't include the DeHub backend signer
+- The message format uses a different encoding (e.g., with or without timestamp)
 
-1. Does the DeHub `/api/user_mint` endpoint expect Social Login (Smart Account) users or only EOA wallets?
-2. Is there documentation for the exact message format being signed by the backend?
-3. Should Web3Auth users be using a different minting flow?
+## Testing Plan
 
-## Next Actions
-1. Add debug logging to capture the exact API response
-2. Call `getecrecover()` to see what address the signature recovers to
-3. Compare recovered address against contract's authorized signers
-4. Adjust the minting flow based on findings
+1. Add the minter address to the API request
+2. Retry the mint flow
+3. Check console logs for recovered signer address
+4. Compare recovered address against contract's authorized signers
+
+If this doesn't work, we'll need to contact DeHub team to clarify:
+1. Exact message format being signed
+2. Whether Smart Account addresses are supported
+3. If a different flow is needed for gasless transactions
