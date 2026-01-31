@@ -176,7 +176,7 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       {/* Show 50,000+ as the count since that's the radio browser database size */}
-      <SectionHeader icon={Radio} title="Radio Stations" count={50000} onSeeAll={onSeeAll} />
+      <SectionHeader icon={Radio} title="Radio Stations" onSeeAll={onSeeAll} />
       <div className="relative">
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
@@ -346,7 +346,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
-      <SectionHeader icon={Play} title="Music Videos" count={totalCount} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
+      <SectionHeader icon={Play} title="Music Videos" onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
       {isLoading ? (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-6 h-6 text-white animate-spin" />
