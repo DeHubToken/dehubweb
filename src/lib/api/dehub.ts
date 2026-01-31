@@ -1346,3 +1346,111 @@ export async function searchUsersForDM(
   
   return response.result || { items: [], hasMore: false };
 }
+
+// ============================================================
+// MINT/POST API
+// ============================================================
+
+export interface StreamInfo {
+  isLockContent?: boolean;
+  lockContentContractAddress?: string;
+  lockContentTokenSymbol?: string;
+  lockContentAmount?: number;
+  lockContentChainIds?: number[];
+  isPayPerView?: boolean;
+  payPerViewContractAddress?: string;
+  payPerViewTokenSymbol?: string;
+  payPerViewAmount?: number;
+  payPerViewChainIds?: number[];
+  isAddBounty?: boolean;
+  addBountyTokenSymbol?: string;
+  addBountyFirstXViewers?: number;
+  addBountyFirstXComments?: number;
+  addBountyAmount?: number;
+  addBountyChainId?: number;
+}
+
+export interface MintPostParams {
+  name: string;
+  description: string;
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live';
+  chainId: number;
+  category: string[];
+  streamInfo?: StreamInfo;
+  plans?: string[];
+  files?: File[];
+  thumbnail?: Blob;
+}
+
+export interface MintResponse {
+  r: string;
+  s: string;
+  v: number;
+  createdTokenId: string;
+  timestamp: number;
+}
+
+/**
+ * Mint/upload a new post to DeHub
+ * Step 1 of the 2-step minting process
+ */
+export async function mintPost(params: MintPostParams): Promise<MintResponse> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("Authentication required");
+  }
+
+  const formData = new FormData();
+  formData.append('name', params.name);
+  formData.append('description', params.description);
+  formData.append('postType', params.postType);
+  formData.append('chainId', String(params.chainId));
+  formData.append('category', JSON.stringify(params.category));
+  
+  // Add streamInfo for monetization settings
+  const streamInfo: StreamInfo = params.streamInfo || {
+    isLockContent: false,
+    isPayPerView: false,
+    isAddBounty: false,
+  };
+  formData.append('streamInfo', JSON.stringify(streamInfo));
+  
+  // Add plans if provided (for gated content)
+  if (params.plans && params.plans.length > 0) {
+    formData.append('plans', JSON.stringify(params.plans));
+  }
+
+  // Add media files
+  if (params.files && params.files.length > 0) {
+    params.files.forEach((file) => {
+      formData.append('file', file);
+    });
+  }
+
+  // Add thumbnail for videos
+  if (params.thumbnail) {
+    formData.append('file', params.thumbnail, 'thumbnail.jpg');
+  }
+
+  const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.error || `Mint failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+  
+  // Handle wrapped response
+  if (data.result) {
+    return data.result;
+  }
+  
+  return data;
+}

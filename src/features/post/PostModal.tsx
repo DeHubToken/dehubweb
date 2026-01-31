@@ -35,6 +35,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
       <PostContentArea
         text={state.text}
         setText={actions.setText}
+        description={state.description}
+        setDescription={actions.setDescription}
+        showDescription={state.showDescription}
+        setShowDescription={actions.setShowDescription}
         editorRef={refs.editorRef}
         media={state.media}
         onRemoveMedia={actions.removeMedia}
@@ -108,6 +112,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         onPost={actions.handlePost}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
+        isPosting={state.isPosting}
         hasText={!!state.text.trim()}
         hasImage={computed.hasImage}
         hasVideo={computed.hasVideo}
