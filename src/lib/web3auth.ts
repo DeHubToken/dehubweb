@@ -43,6 +43,28 @@ let cachedClientId: string | null = null;
 let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
 
 /**
+ * Reset all Web3Auth module state - used for HMR and error recovery
+ */
+export function resetWeb3AuthState(): void {
+  console.log("[Web3Auth] Resetting module state...");
+  if (web3authInstance?.connected) {
+    web3authInstance.logout().catch(() => {});
+  }
+  web3authInstance = null;
+  isInitializing = false;
+  initPromise = null;
+  console.log("[Web3Auth] ✓ Module state reset");
+}
+
+// HMR cleanup - reset state when module is replaced during development
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    console.log("[Web3Auth] HMR dispose - cleaning up...");
+    resetWeb3AuthState();
+  });
+}
+
+/**
  * Check if URL contains Web3Auth redirect parameters
  */
 export function hasRedirectResult(): boolean {
