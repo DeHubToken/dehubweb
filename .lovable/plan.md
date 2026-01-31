@@ -1,69 +1,111 @@
 
-# Fix Multiple Home Page Refreshes
+
+# True Random Feed Implementation
 
 ## Problem Summary
 
-When the home page loads or refreshes, you see the content visually "refresh" 3-4 times in rapid succession. This is jarring and makes the app feel buggy.
+The current "Random" sort mode pre-fetches 5 pages of the **most recent** content (100 items from pages 1-5) and shuffles them. This means:
+- You only ever see the newest ~100 posts shuffled
+- Older high-quality content from the 2600+ total posts is never shown
+- It's not truly random across the entire database
 
-## Root Cause
+## Solution: Random Post ID Selection
 
-The home feed uses a "Random" sort mode by default that pre-fetches 5 pages of content to enable cross-page shuffling. The issue is:
+Since we know:
+1. Post IDs (tokenId) range from 1 to ~2600+
+2. We have `getNFTInfo(tokenId)` to fetch any single post by ID
+3. The `/api/feed` returns `pagination.totalCount` telling us the exact count
 
-1. **Sequential Fetching**: The pre-fetch logic triggers one page at a time, running the effect 5 times
-2. **Immediate Reshuffling**: Each time a new page arrives, the `balancedShuffle` function runs and reorders all content
-3. **Visual Updates on Each Fetch**: Users see the feed content reorganize after each of the 5 fetches
-
-## Solution
-
-Change the rendering logic to only display the shuffled content **after pre-fetching is complete**. This means:
-
-1. Show a loading state while pre-fetching is in progress
-2. Only render the final shuffled feed once all 5 pages are loaded
-3. This turns 5 visual refreshes into: loading spinner > final content
+We can implement **true randomness** by:
+1. Generate random post IDs within the valid range
+2. Fetch those specific posts directly by ID
+3. Display a genuinely random selection from the entire history
 
 ## Technical Changes
 
 ### File: `src/components/app/feeds/HomeFeed.tsx`
 
-**Change 1: Show skeleton/loading during pre-fetch (around line 640-660)**
+**New Approach for Random Mode:**
 
-Update the loading condition to include the pre-fetch state for random mode:
-
-```typescript
-// Current loading check
-if (isLoading || !feedData?.pages) {
-  return <LoadingSkeleton />;
-}
-
-// Updated loading check - also wait for pre-fetch in random mode
-const isPreFetching = selectedSort.value === 'random' && !hasPreFetched;
-if (isLoading || !feedData?.pages || isPreFetching) {
-  return <LoadingSkeleton />;
-}
-```
-
-**Change 2: Stabilize the shuffled items with useMemo dependency (around line 530-600)**
-
-Only recompute the shuffled feed when pre-fetching is complete, not on every page addition:
+1. **Get total count first** - Make one API call to get `totalCount` from pagination
+2. **Generate random IDs** - Pick N random numbers between 1 and totalCount
+3. **Batch fetch posts** - Use `Promise.all` with `getNFTInfo` for each ID
+4. **Handle missing posts** - Some IDs may not exist (deleted/failed mints), filter those out
 
 ```typescript
-const feedItems = useMemo(() => {
-  // Don't compute until pre-fetch is complete for random mode
-  if (selectedSort.value === 'random' && !hasPreFetched) {
-    return [];
+// Constants
+const RANDOM_BATCH_SIZE = 30; // Number of random posts to fetch
+
+// New state for random mode
+const [randomPosts, setRandomPosts] = useState<UnifiedFeedItem[]>([]);
+const [isLoadingRandom, setIsLoadingRandom] = useState(false);
+
+// Fetch random posts by ID
+async function fetchRandomPosts(totalCount: number): Promise<void> {
+  setIsLoadingRandom(true);
+  
+  // Generate unique random IDs
+  const randomIds = new Set<number>();
+  while (randomIds.size < RANDOM_BATCH_SIZE) {
+    const id = Math.floor(Math.random() * totalCount) + 1;
+    randomIds.add(id);
   }
   
-  // ... rest of existing mapping logic
-}, [feedData, selectedSort.value, hasPreFetched, shuffleTrigger, pinnedItem]);
+  // Fetch all posts in parallel
+  const results = await Promise.allSettled(
+    Array.from(randomIds).map(id => getNFTInfo(String(id)))
+  );
+  
+  // Filter successful fetches and map to feed format
+  const posts = results
+    .filter((r): r is PromiseFulfilledResult<DeHubNFT> => r.status === 'fulfilled')
+    .map(r => r.value)
+    .filter(post => post && post.status === 'minted'); // Only show minted posts
+  
+  setRandomPosts(posts);
+  setIsLoadingRandom(false);
+}
 ```
 
-## Expected Result
+**Integration with existing feed:**
 
-- The home page will show a loading state during initial load
-- Once all 5 pages are pre-fetched, the feed appears with a single, stable shuffle
-- No more "flickering" or multiple visual refreshes
-- Pull-to-refresh will show loading > refreshed content (one transition)
+When `selectedSort.value === 'random'`:
+- Skip the standard `useUnifiedFeed` pagination approach
+- Use the random ID fetching instead
+- On pull-to-refresh, generate new random IDs
 
-## Trade-off
+### File: `src/hooks/use-unified-feed.ts`
 
-The initial load may take slightly longer to show content (waiting for 5 pages instead of 1), but the experience will be much smoother. Users currently wait anyway while watching content reshuffle repeatedly.
+**Add helper to get total count:**
+
+```typescript
+export async function getFeedTotalCount(): Promise<number> {
+  const response = await fetchUnifiedFeed({ page: 1, limit: 1 });
+  return response.pagination?.totalCount || 2600; // Fallback
+}
+```
+
+## Advantages
+
+1. **True randomness** - Content from any time period can appear
+2. **Better content discovery** - Old high-engagement posts surface again
+3. **Single loading state** - No more sequential page fetching causing reflows
+4. **Fresh every time** - Each refresh generates completely new random IDs
+
+## Trade-offs
+
+- Slightly slower initial load (30 parallel API calls vs 1 paginated call)
+- Some random IDs may not exist, reducing actual items shown
+- Network usage is higher but still reasonable
+
+## Alternative: Random Page Offsets
+
+If individual ID fetching is too slow, we could instead:
+- Fetch 5 random page numbers (e.g., pages 7, 23, 45, 89, 112 instead of 1-5)
+- This gives variety from different time periods
+- Simpler to implement, less API calls
+
+Let me know which approach you prefer:
+1. **Random IDs** (truly random, more API calls)
+2. **Random Pages** (varied but not true random, fewer API calls)
+
