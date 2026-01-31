@@ -1624,7 +1624,7 @@ export async function getDMUserStatus(address: string): Promise<{ online: boolea
 
 /**
  * Search users for starting a new conversation
- * Uses /api/search_users endpoint
+ * Uses /api/search endpoint with type=accounts
  * @param query - Search query (username or display name) - must be at least 2 characters
  * @param page - Page number
  * @param limit - Items per page
@@ -1640,20 +1640,62 @@ export async function searchUsersForDM(
     return { items: [], hasMore: false };
   }
   
-  const response = await apiCall<{ result: { items: DeHubUser[]; hasMore: boolean } | DeHubUser[] }>("/api/search_users", {
-    params: { q: trimmedQuery, page, limit },
-    requiresAuth: true,
-  });
+  console.log('[DM API] searchUsersForDM called', { query: trimmedQuery, page, limit });
   
-  // Handle both array and object response formats
-  if (Array.isArray(response.result)) {
+  try {
+    // Use /api/search with type=accounts to search for users
+    const response = await apiCall<any>("/api/search", {
+      params: { q: trimmedQuery, type: 'accounts', page, unit: limit },
+      requiresAuth: true,
+    });
+    
+    console.log('[DM API] searchUsersForDM response:', response);
+    
+    // Handle various response formats
+    let accounts: DeHubUser[] = [];
+    
+    // Format 1: { result: { accounts: [...] } }
+    if (response?.result?.accounts && Array.isArray(response.result.accounts)) {
+      accounts = response.result.accounts;
+    }
+    // Format 2: { accounts: [...] }
+    else if (response?.accounts && Array.isArray(response.accounts)) {
+      accounts = response.accounts;
+    }
+    // Format 3: { result: [...] }
+    else if (response?.result && Array.isArray(response.result)) {
+      accounts = response.result;
+    }
+    // Format 4: Direct array
+    else if (Array.isArray(response)) {
+      accounts = response;
+    }
+    
+    // Map accounts to DeHubUser format if needed
+    const items: DeHubUser[] = accounts.map((acc: any) => ({
+      _id: acc._id || acc.id,
+      id: acc.id || acc._id,
+      address: acc.address,
+      username: acc.username,
+      displayName: acc.displayName || acc.display_name,
+      display_name: acc.display_name || acc.displayName,
+      avatarImageUrl: acc.avatarImageUrl || acc.avatarUrl,
+      avatarUrl: acc.avatarUrl || acc.avatarImageUrl,
+      isVerified: acc.isVerified || acc.verified,
+      is_verified: acc.is_verified || acc.verified,
+      bio: acc.bio,
+      dmSettings: acc.dmSettings,
+    }));
+    
+    console.log('[DM API] searchUsersForDM returning', { count: items.length });
     return { 
-      items: response.result, 
-      hasMore: response.result.length >= limit 
+      items, 
+      hasMore: items.length >= limit 
     };
+  } catch (error) {
+    console.error('[DM API] searchUsersForDM failed:', error);
+    return { items: [], hasMore: false };
   }
-  
-  return response.result || { items: [], hasMore: false };
 }
 
 // ============================================================
