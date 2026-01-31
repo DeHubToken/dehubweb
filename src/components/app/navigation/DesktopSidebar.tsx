@@ -74,7 +74,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     <>
       <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible">
         {/* Logo & Coin Balance */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 mt-[10px] flex items-center justify-between">
           <button onClick={handleLogoClick} className="block cursor-pointer">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto" />
           </button>
