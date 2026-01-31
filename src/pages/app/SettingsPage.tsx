@@ -63,6 +63,8 @@ import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser }
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
+import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -944,6 +946,10 @@ function SocialLinkInput({
 
 function AssetsSettings() {
   const { walletAddress } = useAuthContext();
+  const [walletDrawerOpen, setWalletDrawerOpen] = useState(false);
+
+  // TODO: Get real balance from wallet
+  const coinBalance = 0;
 
   // Format wallet address for display
   const truncatedAddress = walletAddress 
@@ -984,6 +990,36 @@ function AssetsSettings() {
           <Copy className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
         </button>
       </div>
+
+      {/* DHB Balance */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
+          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+          DHB Balance
+        </h3>
+        <button
+          onClick={() => setWalletDrawerOpen(true)}
+          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
+              <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
+            </div>
+            <span className="text-white font-semibold">{coinBalance.toLocaleString()} DHB</span>
+          </div>
+          <span className="text-zinc-500 group-hover:text-white transition-colors text-sm">Manage →</span>
+        </button>
+      </div>
+
+      {/* Wallet Drawer */}
+      <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>
+        <DrawerContent glass className="px-4 pb-8">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Wallet</DrawerTitle>
+          </DrawerHeader>
+          <WalletMenuContent balance={coinBalance} onClose={() => setWalletDrawerOpen(false)} />
+        </DrawerContent>
+      </Drawer>
 
       {/* Fractions */}
       <div>
