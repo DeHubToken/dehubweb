@@ -1454,3 +1454,50 @@ export async function mintPost(params: MintPostParams): Promise<MintResponse> {
   
   return data;
 }
+
+// Token visibility types
+export type TokenVisibility = 'public' | 'private' | 'unlisted';
+
+export interface TokenVisibilityResponse {
+  status: boolean;
+  message?: string;
+  result?: {
+    tokenId: number;
+    visibility: TokenVisibility;
+  };
+}
+
+/**
+ * Update the visibility of a token/post
+ * @param tokenId - The token ID to update
+ * @param visibility - The new visibility setting: 'public', 'private', or 'unlisted'
+ */
+export async function updateTokenVisibility(
+  tokenId: number | string,
+  visibility: TokenVisibility
+): Promise<TokenVisibilityResponse> {
+  const token = getAuthToken();
+  
+  if (!token) {
+    throw new Error("Authentication required");
+  }
+
+  const response = await fetch(`${DEHUB_API_BASE}/api/token_visibility`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      tokenId: Number(tokenId),
+      visibility,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.error || `Failed to update visibility: ${response.status}`);
+  }
+
+  return response.json();
+}

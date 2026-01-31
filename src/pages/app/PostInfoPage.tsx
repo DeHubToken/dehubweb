@@ -11,10 +11,10 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
-import { getNFTInfo, DeHubNFT } from '@/lib/api/dehub';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
@@ -22,9 +22,17 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+
+// Visibility options configuration
+const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
+  { value: 'public', label: 'Public', icon: <Globe className="w-4 h-4" />, description: 'Anyone can see this post' },
+  { value: 'unlisted', label: 'Unlisted', icon: <EyeOff className="w-4 h-4" />, description: 'Only people with the link can see' },
+  { value: 'private', label: 'Private', icon: <Lock className="w-4 h-4" />, description: 'Only you can see this post' },
+];
 
 // Types for listings and offers (data will come from API)
 interface Listing {
@@ -177,6 +185,8 @@ const getChainInfo = (chainId: number) => {
 export default function PostInfoPage() {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
+  const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   
   // Fetch NFT info with React Query
   const { 
@@ -203,6 +213,30 @@ export default function PostInfoPage() {
     gcTime: 30 * 60 * 1000, // 30 minutes in cache
   });
   
+  // Check if current user is the owner/minter
+  const isOwner = walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase();
+  
+  // Current visibility state (default to 'public' if not set)
+  const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
+  
+  // Visibility mutation
+  const visibilityMutation = useMutation({
+    mutationFn: (newVisibility: TokenVisibility) => 
+      updateTokenVisibility(nftInfo!.tokenId, newVisibility),
+    onSuccess: (_, newVisibility) => {
+      toast.success(`Visibility updated to ${newVisibility}`);
+      // Invalidate the NFT info query to refetch
+      queryClient.invalidateQueries({ queryKey: ['nft-info', postId] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update visibility');
+    },
+  });
+  
+  const handleVisibilityChange = (newVisibility: TokenVisibility) => {
+    if (!nftInfo?.tokenId) return;
+    visibilityMutation.mutate(newVisibility);
+  };
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast.success(`${label} copied to clipboard`);
@@ -394,6 +428,45 @@ export default function PostInfoPage() {
               </button>
             </div>
           </section>
+
+          {/* Visibility Settings - Only shown to owner */}
+          {isOwner && (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h2 className="text-sm font-medium text-white/60 mb-3">Visibility</h2>
+              <Select 
+                value={currentVisibility} 
+                onValueChange={(value: TokenVisibility) => handleVisibilityChange(value)}
+                disabled={visibilityMutation.isPending}
+              >
+                <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
+                  <SelectValue>
+                    <div className="flex items-center gap-2">
+                      {VISIBILITY_OPTIONS.find(opt => opt.value === currentVisibility)?.icon}
+                      <span>{VISIBILITY_OPTIONS.find(opt => opt.value === currentVisibility)?.label}</span>
+                      {visibilityMutation.isPending && <Loader2 className="w-4 h-4 animate-spin ml-auto" />}
+                    </div>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="bg-zinc-900 border-white/10">
+                  {VISIBILITY_OPTIONS.map((option) => (
+                    <SelectItem 
+                      key={option.value} 
+                      value={option.value}
+                      className="text-white hover:bg-white/10 focus:bg-white/10"
+                    >
+                      <div className="flex items-center gap-3">
+                        {option.icon}
+                        <div>
+                          <p className="font-medium">{option.label}</p>
+                          <p className="text-xs text-white/60">{option.description}</p>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </section>
+          )}
 
           {/* Listings & Offers Tabs */}
           <FractionMarketplace 
