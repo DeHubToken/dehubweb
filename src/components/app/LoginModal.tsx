@@ -194,13 +194,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderEmailStep = () => (
     <div className="space-y-4">
-      <button
-        onClick={() => setStep('main')}
-        className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm"
-      >
-        <ChevronRight className="w-4 h-4 rotate-180" />
-        Back
-      </button>
 
       <form onSubmit={handleEmailSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -242,13 +235,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderSMSStep = () => (
     <div className="space-y-4">
-      <button
-        onClick={() => setStep('main')}
-        className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm"
-      >
-        <ChevronRight className="w-4 h-4 rotate-180" />
-        Back
-      </button>
 
       <form onSubmit={handleSMSSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -289,67 +275,91 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   );
 
   const renderWalletsStep = () => (
-    <div className="space-y-4">
-      <button
-        onClick={() => setStep('main')}
-        className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm"
+    <div className="space-y-3">
+      <Button
+        onClick={() => handleWalletConnect('metamask')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
       >
-        <ChevronRight className="w-4 h-4 rotate-180" />
-        Back
-      </button>
+        {activeProvider === 'metamask' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <img 
+            src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" 
+            alt="MetaMask" 
+            className="w-5 h-5"
+          />
+        )}
+        <span>MetaMask</span>
+      </Button>
 
-      <div className="space-y-3">
-        <Button
-          onClick={() => handleWalletConnect('metamask')}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-        >
-          {activeProvider === 'metamask' ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <img 
-              src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" 
-              alt="MetaMask" 
-              className="w-5 h-5"
-            />
-          )}
-          <span>MetaMask</span>
-        </Button>
+      <Button
+        onClick={() => handleWalletConnect('walletconnect')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+      >
+        {activeProvider === 'walletconnect' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <img 
+            src="https://walletconnect.com/static/favicon.ico" 
+            alt="WalletConnect" 
+            className="w-5 h-5"
+          />
+        )}
+        <span>WalletConnect</span>
+      </Button>
 
-        <Button
-          onClick={() => handleWalletConnect('walletconnect')}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-        >
-          {activeProvider === 'walletconnect' ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <img 
-              src="https://walletconnect.com/static/favicon.ico" 
-              alt="WalletConnect" 
-              className="w-5 h-5"
-            />
-          )}
-          <span>WalletConnect</span>
-        </Button>
+      <Button
+        onClick={() => handleWalletConnect('metamask')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+      >
+        {activeProvider === 'phantom' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <img 
+            src="https://phantom.com/favicon.ico" 
+            alt="Phantom" 
+            className="w-5 h-5"
+          />
+        )}
+        <span>Phantom</span>
+      </Button>
 
-        <Button
-          onClick={() => handleWalletConnect('coinbase')}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-        >
-          {activeProvider === 'coinbase' ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <img 
-              src="https://www.coinbase.com/favicon.ico" 
-              alt="Coinbase" 
-              className="w-5 h-5"
-            />
-          )}
-          <span>Coinbase Wallet</span>
-        </Button>
-      </div>
+      <Button
+        onClick={() => handleWalletConnect('metamask')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+      >
+        {activeProvider === 'rabby' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <img 
+            src="https://rabby.io/assets/images/logo.svg" 
+            alt="Rabby" 
+            className="w-5 h-5"
+          />
+        )}
+        <span>Rabby</span>
+      </Button>
+
+      <Button
+        onClick={() => handleWalletConnect('coinbase')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+      >
+        {activeProvider === 'coinbase' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <img 
+            src="https://www.coinbase.com/favicon.ico" 
+            alt="Coinbase" 
+            className="w-5 h-5"
+          />
+        )}
+        <span>Coinbase Wallet</span>
+      </Button>
     </div>
   );
 
@@ -359,6 +369,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
           <div className="flex items-center justify-center relative">
+            {step !== 'main' && (
+              <button
+                onClick={() => setStep('main')}
+                className="absolute left-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+              >
+                <ChevronRight className="w-5 h-5 rotate-180" />
+              </button>
+            )}
             <img src={dehubLogo} alt="DeHub" className="h-8" />
             <button
               onClick={handleClose}
