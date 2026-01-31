@@ -295,37 +295,37 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           </div>
         </DrawerHeader>
 
-        <div className="relative pt-4 space-y-4 sm:space-y-3">
+        <div className="relative pt-3 space-y-2 sm:space-y-2">
           {/* Calendar Header */}
           <div className="flex items-center justify-between px-2">
             <button
               onClick={handlePrevMonth}
-              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <ChevronLeft className="w-5 h-5 text-white" />
+              <ChevronLeft className="w-4 h-4 text-white" />
             </button>
-            <h3 className="text-white font-semibold">
+            <h3 className="text-white font-semibold text-sm">
               {format(currentMonth, 'MMMM yyyy')}
             </h3>
             <button
               onClick={handleNextMonth}
-              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-xl transition-colors"
             >
-              <ChevronRight className="w-5 h-5 text-white" />
+              <ChevronRight className="w-4 h-4 text-white" />
             </button>
           </div>
 
           {/* Day labels */}
-          <div className="grid grid-cols-7 gap-1 px-2">
+          <div className="grid grid-cols-7 gap-0.5 px-2">
             {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-              <div key={day} className="text-center text-xs text-zinc-500 py-2">
+              <div key={day} className="text-center text-xs text-zinc-500 py-1">
                 {day}
               </div>
             ))}
           </div>
 
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1 px-2">
+          <div className="grid grid-cols-7 gap-0.5 px-2">
             {paddedDays.map((day, i) => {
               if (!day) return <div key={`empty-${i}`} />;
               
@@ -340,7 +340,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
                   disabled={isPast}
                   whileTap={{ scale: 0.95 }}
                   className={cn(
-                    "aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-all",
+                    "aspect-square flex items-center justify-center rounded-full text-xs font-medium transition-all",
                     isPast && "text-zinc-600 cursor-not-allowed",
                     !isPast && !isSelected && "text-white hover:bg-white/10",
                     isToday && !isSelected && "ring-1 ring-white/30",
@@ -354,7 +354,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           </div>
 
           {/* iOS-style Time Wheel Picker */}
-          <div className="border-t border-white/10 pt-4">
+          <div className="border-t border-white/10 pt-2">
             <WheelTimePicker
               hour={selectedHour12}
               minute={selectedMinute}
@@ -370,10 +370,10 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mx-2 p-4 rounded-xl bg-white/5 border border-white/10"
+              className="mx-2 p-3 rounded-xl bg-white/5 border border-white/10"
             >
-              <p className="text-zinc-400 text-xs mb-1">Scheduled for</p>
-              <p className="text-white font-semibold">
+              <p className="text-zinc-400 text-xs mb-0.5">Scheduled for</p>
+              <p className="text-white font-semibold text-sm">
                 {format(selectedDate, 'EEEE, MMMM d, yyyy')} at {formatTimeDisplay()}
               </p>
             </motion.div>
