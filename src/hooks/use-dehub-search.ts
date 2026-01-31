@@ -94,12 +94,15 @@ export function getPostTypeForTab(tab: string): string | undefined {
  * Convert SearchAccount to SearchCreator format
  */
 export function mapAccountToCreator(account: SearchAccount): SearchCreator {
+  // Check both field names - API returns avatarImageUrl
+  const rawAvatarPath = account.avatarImageUrl || account.avatarUrl;
+  
   return {
     id: account.address || account.id,
     name: account.displayName || account.username || 'User',
     handle: `@${account.username || account.address?.slice(0, 8)}`,
-    avatar: account.avatarUrl 
-      ? buildAvatarUrl(account.address, account.avatarUrl) 
+    avatar: rawAvatarPath 
+      ? buildAvatarUrl(account.address, rawAvatarPath) 
       : undefined,
     verified: account.verified || false,
     bio: account.bio,

@@ -231,6 +231,7 @@ export interface SearchAccount {
   displayName?: string;
   bio?: string;
   avatarUrl?: string;
+  avatarImageUrl?: string;  // API returns this field
   verified?: boolean;
   followerCount?: number;
   followingCount?: number;
