@@ -427,6 +427,12 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3 space-y-2">
+        {/* Title & Description */}
+        <FeedDescription 
+          title={post.title} 
+          description={post.description} 
+        />
+        
         <ActionBar 
           postId={post.id} 
           className="p-0" 
@@ -435,14 +441,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           isDisliked={post.isDisliked}
           likeCount={post.likes}
           commentCount={post.comments}
-        />
-        
-        
-        
-        {/* Title & Description */}
-        <FeedDescription 
-          title={post.title} 
-          description={post.description} 
         />
         
 
