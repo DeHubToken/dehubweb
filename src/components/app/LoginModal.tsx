@@ -13,8 +13,6 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import phantomLogo from '@/assets/icons/phantom-logo.png';
-import rabbyLogo from '@/assets/icons/rabby-logo.png';
 
 // Social provider icons as SVG components
 const GoogleIcon = () => (
@@ -56,13 +54,6 @@ const WalletConnectIcon = () => (
   </svg>
 );
 
-const PhantomIcon = () => (
-  <img src={phantomLogo} alt="Phantom" className="w-5 h-5 rounded-md" />
-);
-
-const RabbyIcon = () => (
-  <img src={rabbyLogo} alt="Rabby" className="w-5 h-5 rounded-full" />
-);
 
 const CoinbaseIcon = () => (
   <svg viewBox="0 0 32 32" className="w-5 h-5">
@@ -315,6 +306,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderWalletsStep = () => (
     <div className="space-y-3">
+      {/* Browser Wallet - uses EIP-6963 to detect installed wallets (MetaMask, Phantom, Rabby, etc.) */}
       <Button
         onClick={() => handleWalletConnect('metamask')}
         disabled={isConnecting}
@@ -323,9 +315,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {activeProvider === 'metamask' ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <MetaMaskIcon />
+          <Wallet className="w-5 h-5" />
         )}
-        <span>MetaMask</span>
+        <span>Browser Wallet</span>
       </Button>
 
       <Button
@@ -339,32 +331,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <WalletConnectIcon />
         )}
         <span>WalletConnect</span>
-      </Button>
-
-      <Button
-        onClick={() => handleWalletConnect('metamask')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'phantom' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <PhantomIcon />
-        )}
-        <span>Phantom</span>
-      </Button>
-
-      <Button
-        onClick={() => handleWalletConnect('metamask')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'rabby' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <RabbyIcon />
-        )}
-        <span>Rabby</span>
       </Button>
 
       <Button
