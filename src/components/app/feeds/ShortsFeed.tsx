@@ -108,6 +108,8 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     id,
     type: 'short',
     username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
+    // Use mintername for the @handle, not display name
+    handle: nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
     avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
     likes: formatLikes(nft.totalVotes?.for || nft.like_count || 0),
@@ -121,7 +123,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     durationSeconds: parseDurationToSeconds(durationStr),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
     creatorUsername: nft.mintername || nft.creator?.username || 'user',
-  };
+  } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
 }
 
 // ============================================================================
@@ -470,7 +472,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                       </div>
                       <div>
                         <div className="flex items-center gap-1">
-                          <span className="font-semibold text-white text-sm">@{short.username}</span>
+                          <span className="font-semibold text-white text-sm">@{(short as any).handle || short.creatorUsername || short.username}</span>
                           {short.verified && (
                             <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
