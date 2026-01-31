@@ -537,49 +537,40 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         <button
           type="button"
           onClick={() => setActiveTab('replies')}
-          className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+          className={`flex-1 py-3 flex items-center justify-center transition-colors ${
             activeTab === 'replies'
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+              : 'text-zinc-500 hover:text-zinc-300'
           }`}
         >
-          {activeTab === 'replies' && (
-            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
-          )}
-          <MessageCircle className="w-5 h-5 relative z-10" />
+          <MessageCircle className="w-5 h-5" />
         </button>
         <button
           type="button"
           onClick={() => setActiveTab('quotes')}
-          className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+          className={`flex-1 py-3 flex items-center justify-center transition-colors ${
             activeTab === 'quotes'
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+              : 'text-zinc-500 hover:text-zinc-300'
           }`}
         >
-          {activeTab === 'quotes' && (
-            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
-          )}
-          <Quote className="w-5 h-5 relative z-10" />
+          <Quote className="w-5 h-5" />
         </button>
         <button
           type="button"
           onClick={() => setActiveTab('search')}
-          className={`relative flex-1 py-3 flex items-center justify-center transition-colors ${
+          className={`flex-1 py-3 flex items-center justify-center transition-colors ${
             activeTab === 'search'
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+              : 'text-zinc-500 hover:text-zinc-300'
           }`}
         >
-          {activeTab === 'search' && (
-            <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
-          )}
-          <Search className="w-5 h-5 relative z-10" />
+          <Search className="w-5 h-5" />
         </button>
         <button
           type="button"
           onClick={() => setSortBy(prev => prev === 'recent' ? 'liked' : 'recent')}
-          className="relative flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-500 hover:text-white hover:bg-zinc-800/30"
+          className="flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-500 hover:text-white"
           title={sortBy === 'recent' ? 'Sorted by Most Recent' : 'Sorted by Most Liked'}
         >
           <ArrowUpDown className="w-5 h-5" />
@@ -600,10 +591,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         </div>
       )}
 
-      {/* Replies Tab */}
-      {activeTab === 'replies' && (
-        <div className="relative">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
+      {/* Content Area - fixed height to prevent drawer resizing */}
+      <div className="h-80 relative">
+        {/* Replies Tab */}
+        {activeTab === 'replies' && (
+          <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -651,13 +643,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               </AnimatePresence>
             )}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Quotes Tab */}
-      {activeTab === 'quotes' && (
-        <div className="relative">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
+        {/* Quotes Tab */}
+        {activeTab === 'quotes' && (
+          <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -666,13 +656,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               No quotes yet. Be the first!
             </motion.p>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Search Tab - shows all comments/quotes, filtered by search query */}
-      {activeTab === 'search' && (
-        <div className="relative">
-          <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
+        {/* Search Tab */}
+        {activeTab === 'search' && (
+          <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -718,8 +706,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               </AnimatePresence>
             )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
         {/* New Comment Input - at the bottom */}
         <div className="mt-4 pt-4">
