@@ -730,9 +730,10 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
+        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-2" as="h3" />
         <ActionBar 
           postId={video.id} 
-          className="p-0 mb-2" 
+          className="p-0" 
           isLiked={video.isLiked} 
           isDisliked={video.isDisliked}
           onComment={() => setShowComments(!showComments)}
@@ -740,7 +741,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           dislikeCount={video.dislikeCount}
           commentCount={video.commentCount}
         />
-        <TranslatableText text={video.title} className="text-white text-sm font-medium" as="h3" />
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (
