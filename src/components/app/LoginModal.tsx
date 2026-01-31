@@ -286,7 +286,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
               <X className="w-5 h-5" />
             </button>
           </div>
-          <DialogTitle className="text-xl font-bold text-white mt-4 text-center">
+          <DialogTitle className="text-xl font-medium text-white mt-4 text-center">
             {step === 'main' && 'Log in'}
             {step === 'email' && 'Continue with Email'}
             {step === 'wallets' && 'Connect Wallet'}
