@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -39,6 +39,8 @@ import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
+import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
+import { useAIConversation } from '@/hooks/use-ai-conversation';
 
 // Simulation data for token transactions
 interface SimulationData {
@@ -338,6 +340,7 @@ export default function AssistantPage() {
   const [autoApproveMode, setAutoApproveMode] = useState(false); // Auto-approve transfers without confirmation
   const [showPinModal, setShowPinModal] = useState(false); // PIN setup modal
   const [pinInput, setPinInput] = useState(''); // PIN input value
+  const [historyDrawerOpen, setHistoryDrawerOpen] = useState(false); // History drawer state
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -347,6 +350,15 @@ export default function AssistantPage() {
 
   const { isAuthenticated } = useAuth();
   const isMobile = useIsMobile();
+  
+  // Conversation persistence hook
+  const { 
+    conversationId, 
+    isSaving, 
+    queueMessage, 
+    startNewConversation, 
+    loadConversation 
+  } = useAIConversation();
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
@@ -709,6 +721,9 @@ export default function AssistantPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    // Save user message to conversation
+    queueMessage(userMessage);
+    
     const currentInput = messageToSend;
     const currentAttachedImage = attachedImage;
     setInput('');
@@ -734,6 +749,7 @@ export default function AssistantPage() {
           imageUrl: ftvLogoSymbol
         };
         setMessages(prev => [...prev, assistantMessage]);
+        queueMessage(assistantMessage);
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
@@ -838,6 +854,7 @@ export default function AssistantPage() {
         };
 
         setMessages(prev => [...prev, assistantMessage]);
+        queueMessage(assistantMessage);
       } else {
         // Regular chat - use general-ai-chat endpoint
         const { data, error } = await supabase.functions.invoke('general-ai-chat', {
@@ -879,6 +896,7 @@ export default function AssistantPage() {
           };
 
           setMessages(prev => [...prev, assistantMessage]);
+          queueMessage(assistantMessage);
           
           // Auto-speak the response if always speak replies is enabled
           if (alwaysSpeakReplies) {
@@ -1039,6 +1057,23 @@ export default function AssistantPage() {
         <div className="flex items-center gap-3">
           <img src={aiStarIcon} alt="AI" className="w-8 h-8 object-contain" />
           <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
+          {/* New Chat Button */}
+          {messages.length > 1 && (
+            <button
+              onClick={() => {
+                startNewConversation();
+                setMessages([{
+                  id: 'initial',
+                  role: 'assistant',
+                  content: `Use the text box below or these action buttons to get started.`
+                }]);
+              }}
+              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors"
+              title="Start new conversation"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-4">
@@ -1050,6 +1085,14 @@ export default function AssistantPage() {
             }`}
           >
             <LayoutDashboard className="w-5 h-5" />
+          </button>
+
+          {/* History Button */}
+          <button
+            onClick={() => setHistoryDrawerOpen(true)}
+            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
+          >
+            <History className="w-5 h-5" />
           </button>
 
           {/* Settings Button */}
@@ -1829,6 +1872,17 @@ export default function AssistantPage() {
           isGenerating={isVideoLoading}
         />
       )}
+
+      {/* Conversation History Drawer */}
+      <ConversationHistoryDrawer
+        open={historyDrawerOpen}
+        onOpenChange={setHistoryDrawerOpen}
+        onLoadConversation={(id, loadedMessages) => {
+          loadConversation(id);
+          setMessages(loadedMessages);
+        }}
+        currentConversationId={conversationId}
+      />
 
       {/* Auth Prompt for transaction simulation */}
       <AuthPrompt 
