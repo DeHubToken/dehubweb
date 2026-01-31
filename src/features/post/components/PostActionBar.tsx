@@ -52,6 +52,7 @@ export function PostActionBar({
   hasVideo,
   isScheduled,
 }: PostActionBarProps) {
+  const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
@@ -195,7 +196,7 @@ export function PostActionBar({
 
         {/* Audio button with popover for upload/record options */}
         {!isLive && (
-          <Popover modal={true}>
+          <Popover open={audioPopoverOpen} onOpenChange={setAudioPopoverOpen} modal={true}>
             <PopoverTrigger asChild>
               <button 
                 type="button" 
@@ -209,15 +210,13 @@ export function PostActionBar({
               align="center"
               side="top"
               sideOffset={8}
-              onPointerDownOutside={(e) => e.preventDefault()}
-              onInteractOutside={(e) => e.preventDefault()}
             >
               <div className="flex flex-col items-center gap-1.5">
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={() => {
                     audioInputRef.current?.click();
+                    setAudioPopoverOpen(false);
                   }}
                   className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
                   title="Upload Audio"
@@ -226,9 +225,9 @@ export function PostActionBar({
                 </button>
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={() => {
                     onStartRecording();
+                    setAudioPopoverOpen(false);
                   }}
                   className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
                   title="Record Audio"
@@ -261,8 +260,6 @@ export function PostActionBar({
               align="center"
               side="top"
               sideOffset={8}
-              onPointerDownOutside={(e) => e.preventDefault()}
-              onInteractOutside={(e) => e.preventDefault()}
             >
               <div className="flex flex-col items-center gap-1.5">
                 <button
