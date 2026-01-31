@@ -6,6 +6,9 @@ verify_jwt = false
 [functions.translate-text]
 verify_jwt = false
 
+[functions.translate-image]
+verify_jwt = false
+
 [functions.general-ai-chat]
 verify_jwt = false
 

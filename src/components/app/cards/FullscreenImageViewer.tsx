@@ -8,8 +8,10 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
+import { ImageTranslationSheet } from './ImageTranslationSheet';
+import { useImageTranslation } from '@/hooks/use-image-translation';
 
 interface FullscreenImageViewerProps {
   images: string[];
@@ -31,12 +33,29 @@ export function FullscreenImageViewer({
     startIndex: initialIndex 
   });
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [showTranslationSheet, setShowTranslationSheet] = useState(false);
+  
+  // Image translation hook
+  const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
   
   // Drag state for swipe-down-to-close
   const [dragOffset, setDragOffset] = useState(0);
   const isDragging = useRef(false);
   const dragStartY = useRef(0);
   const dragStartX = useRef(0);
+  
+  const handleTranslateImage = useCallback(async () => {
+    const imageUrl = images[currentIndex];
+    if (!imageUrl) return;
+    
+    setShowTranslationSheet(true);
+    await translateImage(imageUrl);
+  }, [images, currentIndex, translateImage]);
+  
+  const handleCloseTranslation = useCallback(() => {
+    setShowTranslationSheet(false);
+    clearResult();
+  }, [clearResult]);
 
   // Sync carousel to initial index when opening
   useEffect(() => {
@@ -169,6 +188,18 @@ export function FullscreenImageViewer({
           >
             <X className="w-5 h-5" />
           </button>
+          
+          {/* Translate button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTranslateImage();
+            }}
+            className="absolute top-4 right-16 z-10 w-10 h-10 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+            aria-label="Translate image text"
+          >
+            <Languages className="w-5 h-5" />
+          </button>
 
           {/* Image counter */}
           {hasMultiple && (
@@ -264,6 +295,15 @@ export function FullscreenImageViewer({
               ))}
             </div>
           )}
+          
+          {/* Image Translation Sheet */}
+          <ImageTranslationSheet
+            isOpen={showTranslationSheet}
+            onClose={handleCloseTranslation}
+            isLoading={isTranslating}
+            error={translationError}
+            result={translationResult}
+          />
         </motion.div>
       )}
     </AnimatePresence>
