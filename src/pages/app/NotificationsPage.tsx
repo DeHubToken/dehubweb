@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2, MoreHorizontal, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -252,24 +252,40 @@ function NotificationItem({
         </Link>
       )}
 
-      {/* Mark as read button - only show for unread notifications */}
-      {!notification.read && (
+      {/* Action buttons */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Mark as read button - only show for unread notifications */}
+        {!notification.read && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onMarkAsRead(notification.id);
+            }}
+            disabled={isMarkingAsRead}
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+            title="Mark as read"
+          >
+            {isMarkingAsRead ? (
+              <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
+            ) : (
+              <MailOpen className="w-4 h-4 text-zinc-400" />
+            )}
+          </button>
+        )}
+        
+        {/* Delete/dismiss notification button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onMarkAsRead(notification.id);
+            // TODO: Implement delete single notification API
+            console.log('Delete notification:', notification.id);
           }}
-          disabled={isMarkingAsRead}
-          className="flex-shrink-0 p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
-          title="Mark as read"
+          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+          title="Remove notification"
         >
-          {isMarkingAsRead ? (
-            <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
-          ) : (
-            <MailOpen className="w-4 h-4 text-zinc-400" />
-          )}
+          <X className="w-4 h-4 text-zinc-400" />
         </button>
-      )}
+      </div>
     </div>
   );
 }
