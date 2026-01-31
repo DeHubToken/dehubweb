@@ -55,8 +55,6 @@ export function PostActionBar({
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
-  const [uploadTooltipOpen, setUploadTooltipOpen] = useState(false);
-  const [recordTooltipOpen, setRecordTooltipOpen] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
@@ -197,7 +195,7 @@ export function PostActionBar({
 
         {/* Audio button with popover for upload/record options */}
         {!isLive && (
-          <Popover>
+          <Popover modal={true}>
             <PopoverTrigger asChild>
               <button 
                 type="button" 
@@ -207,108 +205,78 @@ export function PostActionBar({
               </button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1 bg-transparent border-none shadow-none" 
+              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl" 
               align="center"
               side="top"
-              sideOffset={4}
-              onPointerDownOutside={(e) => {
-                // Prevent popover from closing when clicking on file input
-                const target = e.target as HTMLElement;
-                if (target.tagName === 'INPUT' && target.getAttribute('type') === 'file') {
-                  e.preventDefault();
-                }
-              }}
+              sideOffset={8}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <Tooltip open={uploadTooltipOpen}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        audioInputRef.current?.click();
-                      }}
-                      onMouseEnter={() => setUploadTooltipOpen(true)}
-                      onMouseLeave={() => setUploadTooltipOpen(false)}
-                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Upload className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Upload Audio</TooltipContent>
-                </Tooltip>
-                <Tooltip open={recordTooltipOpen}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={onStartRecording}
-                      onMouseEnter={() => setRecordTooltipOpen(true)}
-                      onMouseLeave={() => setRecordTooltipOpen(false)}
-                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Mic className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Record Audio</TooltipContent>
-                </Tooltip>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    audioInputRef.current?.click();
+                  }}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Upload Audio"
+                >
+                  <Upload className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onStartRecording();
+                  }}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Record Audio"
+                >
+                  <Mic className="w-5 h-5 text-white" />
+                </button>
               </div>
             </PopoverContent>
           </Popover>
         )}
         
         {!hasImage && (
-          <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
-                  <button 
-                    type="button" 
-                    onClick={() => {
-                      if (isLive) {
-                        setLiveMode(null);
-                      } else {
-                        setLivePopoverOpen(true);
-                      }
-                    }}
-                    className={cn("p-2 hover:bg-white/10 rounded-xl transition-colors", isLive && "bg-white/20")}
-                  >
-                    <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
-                  </button>
-                </PopoverTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Go live</TooltipContent>
-            </Tooltip>
+          <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen} modal={true}>
+            <PopoverTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => {
+                  if (isLive) {
+                    setLiveMode(null);
+                  }
+                }}
+                className={cn("p-2 hover:bg-white/10 rounded-xl transition-colors", isLive && "bg-white/20")}
+                title="Go live"
+              >
+                <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
+              </button>
+            </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1 bg-transparent border-none shadow-none" 
+              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl" 
               align="center"
               side="top"
-              sideOffset={4}
+              sideOffset={8}
             >
               <div className="flex flex-col items-center gap-1.5">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectLiveMode('video')}
-                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Video className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Live Video</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectLiveMode('townhall')}
-                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                      <Mic className="w-5 h-5 text-white" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Town Hall</TooltipContent>
-                </Tooltip>
+                <button
+                  type="button"
+                  onClick={() => handleSelectLiveMode('video')}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Live Video"
+                >
+                  <Video className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectLiveMode('townhall')}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
+                  title="Town Hall"
+                >
+                  <Mic className="w-5 h-5 text-white" />
+                </button>
               </div>
             </PopoverContent>
           </Popover>
