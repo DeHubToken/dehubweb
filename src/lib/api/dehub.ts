@@ -736,6 +736,21 @@ export async function getLikedPosts(
     requiresAuth: true,
   });
 }
+
+/**
+ * Get user's watch history
+ * Uses GET /api/my_watched_nfts with limit (items per page) and page (0-based)
+ */
+export async function getWatchHistory(
+  page: number = 0, 
+  limit: number = 20,
+  address?: string
+): Promise<{ result: DeHubNFT[] }> {
+  return apiCall<{ result: DeHubNFT[] }>("/api/my_watched_nfts", {
+    params: { page, limit, ...(address && { address }) },
+    requiresAuth: true,
+  });
+}
 export async function getCategories(): Promise<DeHubCategory[]> {
   const response = await apiCall<string[] | DeHubCategory[]>("/api/get_categories");
   
