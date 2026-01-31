@@ -1,133 +1,284 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSavedPosts, getLikedPosts, toggleSavePost, DeHubNFT, getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
 export type BookmarkType = 'all' | 'liked' | 'recent' | 'images' | 'videos' | 'text';
 
-export interface BookmarkItem {
-  id: string;
-  tokenId: number;
-  title: string;
-  description?: string;
-  thumbnailUrl?: string;
-  mediaUrl?: string;
-  type: 'image' | 'video' | 'text';
-  creatorUsername?: string;
-  creatorDisplayName?: string;
-  creatorAvatar?: string;
-  createdAt: string;
-  views?: number;
-  likes?: number;
+const PAGE_SIZE = 20;
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+function formatDuration(seconds?: number): string {
+  if (!seconds) return '0:00';
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
 
-function mapNFTToBookmark(nft: DeHubNFT): BookmarkItem {
-  const postType = nft.postType || nft.media_type || 'image';
+function formatViews(count?: number): string {
+  if (!count) return '0 views';
+  if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M views`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1)}K views`;
+  return `${count} views`;
+}
+
+function formatTimeAgo(dateString?: string): string {
+  if (!dateString) return 'Just now';
+  
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Just now';
+  
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  if (diffMs < 0) return 'Just now';
+  
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+  
+  if (diffYears >= 1) return `${diffYears}y`;
+  if (diffMonths >= 1) return `${diffMonths}mo`;
+  if (diffWeeks >= 1) return `${diffWeeks}w`;
+  if (diffDays >= 1) return `${diffDays}d`;
+  if (diffHours >= 1) return `${diffHours}h`;
+  if (diffMins >= 1) return `${diffMins}m`;
+  return 'Just now';
+}
+
+// ============================================================================
+// MAPPERS - Convert DeHubNFT to feed card types
+// ============================================================================
+
+function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
+  const postType = nft.postType || nft.media_type;
+  
+  if (postType === 'video' || nft.videoUrl) {
+    return 'video';
+  }
+  if (postType === 'image' || nft.imageUrl || nft.imageUrls?.length) {
+    return 'image';
+  }
+  return 'text';
+}
+
+function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
+  const id = String(nft.tokenId);
+  const thumbnail = buildImageUrl(nft.tokenId, nft.imageUrl || nft.thumbnail_url);
+  const videoUrl = buildVideoUrl(nft.tokenId);
+  const channelAvatar = nft.minterAvatarUrl 
+    ? buildAvatarUrl(nft.minter, nft.minterAvatarUrl) || 'user'
+    : 'user';
   
   return {
-    id: nft.id || String(nft.tokenId),
-    tokenId: nft.tokenId,
+    id,
+    type: 'video',
+    thumbnail,
+    videoUrl: videoUrl || nft.videoUrl,
+    duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || 'Untitled',
-    description: nft.description,
-    thumbnailUrl: getMediaUrl(nft.imageUrl || nft.thumbnail_url),
-    mediaUrl: getMediaUrl(nft.videoUrl || nft.media_url || nft.imageUrl),
-    type: postType === 'video' ? 'video' : postType === 'audio' ? 'video' : 'image',
-    creatorUsername: nft.mintername || nft.creator?.username || undefined,
-    creatorDisplayName: nft.minterDisplayName || nft.creator?.displayName || undefined,
-    creatorAvatar: getMediaUrl(nft.minterAvatarUrl || nft.creator?.avatarImageUrl || undefined),
-    createdAt: nft.createdAt || nft.created_at || new Date().toISOString(),
-    views: nft.views || nft.view_count,
-    likes: nft.totalVotes?.for || nft.like_count,
+    channel: nft.minterDisplayName || nft.mintername || 'Unknown Creator',
+    channelAvatar,
+    verified: false,
+    views: formatViews(nft.views || nft.view_count),
+    uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
+    creatorId: nft.minter,
+    creatorUsername: nft.mintername,
+    isLiked: nft.isLiked ?? false,
+    likeCount: nft.totalVotes?.for || nft.like_count || 0,
+    dislikeCount: nft.totalVotes?.against || 0,
+    commentCount: nft.commentCount || nft.comment_count || 0,
+    isPPV: nft.is_ppv ?? false,
+    ppvPrice: nft.ppv_price,
+    ppvCurrency: nft.ppv_currency || 'DHB',
+    isW2E: nft.is_w2e ?? false,
+    isLocked: nft.is_locked ?? false,
+    lockedPrice: nft.locked_price,
+    lockedCurrency: nft.locked_currency || 'DHB',
   };
 }
 
-function filterByType(bookmarks: BookmarkItem[], type: BookmarkType): BookmarkItem[] {
-  switch (type) {
-    case 'images':
-      return bookmarks.filter(b => b.type === 'image');
-    case 'videos':
-      return bookmarks.filter(b => b.type === 'video');
-    case 'text':
-      return bookmarks.filter(b => !b.mediaUrl && !b.thumbnailUrl);
-    case 'recent':
-      // Sort by date, most recent first (already sorted by API typically)
-      return [...bookmarks].sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    case 'liked':
-      // Liked posts are fetched separately, so return as-is
-      return bookmarks;
+function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
+  const id = String(nft.tokenId);
+  const imageUrls = buildFeedImageUrls(nft.imageUrls);
+  const image = imageUrls?.[0] || buildImageUrl(nft.tokenId, nft.imageUrl || nft.thumbnail_url);
+  const avatar = nft.minterAvatarUrl 
+    ? buildAvatarUrl(nft.minter, nft.minterAvatarUrl) || 'user'
+    : 'user';
+  
+  return {
+    id,
+    type: 'image',
+    username: nft.mintername || nft.minterDisplayName || 'unknown',
+    verified: false,
+    avatar,
+    image,
+    imageUrls,
+    title: nft.name || nft.title,
+    description: nft.description,
+    likes: nft.totalVotes?.for || nft.like_count || 0,
+    caption: nft.description || nft.name || '',
+    comments: nft.commentCount || nft.comment_count || 0,
+    views: formatViews(nft.views || nft.view_count).replace(' views', ''),
+    timeAgo: formatTimeAgo(nft.createdAt || nft.created_at),
+    creatorId: nft.minter,
+    creatorUsername: nft.mintername,
+    isLiked: nft.isLiked ?? false,
+  };
+}
+
+function mapNFTToTextPost(nft: DeHubNFT): TextPost {
+  const id = String(nft.tokenId);
+  const avatarUrl = nft.minterAvatarUrl 
+    ? buildAvatarUrl(nft.minter, nft.minterAvatarUrl) || nft.minter
+    : nft.minter;
+  
+  return {
+    id,
+    type: 'post',
+    author: {
+      id: nft.minter,
+      name: nft.minterDisplayName || nft.mintername || 'Unknown',
+      handle: nft.mintername || nft.minter,
+      avatarSeed: avatarUrl,
+      verified: false,
+    },
+    content: nft.description || nft.name || '',
+    createdAt: formatTimeAgo(nft.createdAt || nft.created_at),
+    views: formatViews(nft.views || nft.view_count).replace(' views', ''),
+    stats: {
+      comments: nft.commentCount || nft.comment_count || 0,
+      reposts: 0,
+      likes: nft.totalVotes?.for || nft.like_count || 0,
+    },
+  };
+}
+
+function mapNFTToFeedItem(nft: DeHubNFT): FeedItem {
+  const contentType = detectPostType(nft);
+  
+  switch (contentType) {
+    case 'video':
+      return mapNFTToVideoItem(nft);
+    case 'image':
+      return mapNFTToImagePost(nft);
     default:
-      return bookmarks;
+      return mapNFTToTextPost(nft);
   }
 }
 
-function filterBySearch(bookmarks: BookmarkItem[], query: string): BookmarkItem[] {
-  if (!query.trim()) return bookmarks;
-  
-  const lowerQuery = query.toLowerCase();
-  return bookmarks.filter(b => 
-    b.title.toLowerCase().includes(lowerQuery) ||
-    b.description?.toLowerCase().includes(lowerQuery) ||
-    b.creatorUsername?.toLowerCase().includes(lowerQuery) ||
-    b.creatorDisplayName?.toLowerCase().includes(lowerQuery)
-  );
-}
+// ============================================================================
+// MAIN HOOK
+// ============================================================================
 
 export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '') {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
-  // Saved posts query (for all, recent, images, videos, text)
-  const savedQuery = useQuery({
-    queryKey: ['bookmarks', 'saved'],
-    queryFn: async () => {
-      const response = await getSavedPosts(0, 100);
+  // Saved posts query with infinite scroll
+  const savedQuery = useInfiniteQuery({
+    queryKey: ['bookmarks', 'saved', type],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getSavedPosts(pageParam, PAGE_SIZE);
       const data = response.result || [];
-      return data.map(mapNFTToBookmark);
+      return {
+        items: data,
+        nextPage: data.length >= PAGE_SIZE ? pageParam + 1 : undefined,
+      };
     },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
     enabled: isAuthenticated && type !== 'liked',
     staleTime: 2 * 60 * 1000,
   });
 
-  // Liked posts query (for liked tab only)
-  const likedQuery = useQuery({
+  // Liked posts query with infinite scroll
+  const likedQuery = useInfiniteQuery({
     queryKey: ['bookmarks', 'liked'],
-    queryFn: async () => {
-      const response = await getLikedPosts(1, 100, 'all');
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getLikedPosts(pageParam, PAGE_SIZE, 'all');
       const items = response.result?.items || [];
-      return items.map(mapNFTToBookmark);
+      const totalCount = response.result?.totalCount || 0;
+      const hasMore = pageParam * PAGE_SIZE < totalCount;
+      return {
+        items,
+        nextPage: hasMore ? pageParam + 1 : undefined,
+        totalCount,
+      };
     },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1,
     enabled: isAuthenticated && type === 'liked',
     staleTime: 2 * 60 * 1000,
   });
 
-  // Use the appropriate data based on type
-  const baseData = type === 'liked' ? likedQuery.data : savedQuery.data;
-  const isLoading = type === 'liked' ? likedQuery.isLoading : savedQuery.isLoading;
-  const isError = type === 'liked' ? likedQuery.isError : savedQuery.isError;
-  const error = type === 'liked' ? likedQuery.error : savedQuery.error;
-
-  // Apply client-side filtering
-  const filteredBookmarks = baseData 
-    ? filterBySearch(filterByType(baseData, type), searchQuery)
-    : [];
-
-  const refetch = () => {
-    if (type === 'liked') {
-      likedQuery.refetch();
-    } else {
-      savedQuery.refetch();
-    }
-  };
+  // Use the appropriate query based on type
+  const activeQuery = type === 'liked' ? likedQuery : savedQuery;
+  
+  // Flatten all pages into a single array
+  const allNFTs = activeQuery.data?.pages.flatMap(page => page.items) || [];
+  
+  // Map to feed items
+  let feedItems = allNFTs.map(mapNFTToFeedItem);
+  
+  // Apply type filtering
+  if (type === 'images') {
+    feedItems = feedItems.filter(item => item.type === 'image');
+  } else if (type === 'videos') {
+    feedItems = feedItems.filter(item => item.type === 'video');
+  } else if (type === 'text') {
+    feedItems = feedItems.filter(item => item.type === 'post');
+  } else if (type === 'recent') {
+    // Sort by createdAt for recent
+    feedItems = [...feedItems].sort((a, b) => {
+      const dateA = 'createdAt' in a ? new Date(a.createdAt || 0).getTime() : 0;
+      const dateB = 'createdAt' in b ? new Date(b.createdAt || 0).getTime() : 0;
+      return dateB - dateA;
+    });
+  }
+  
+  // Apply search filter
+  if (searchQuery.trim()) {
+    const lowerQuery = searchQuery.toLowerCase();
+    feedItems = feedItems.filter(item => {
+      if (item.type === 'video') {
+        return item.title.toLowerCase().includes(lowerQuery) ||
+               item.channel.toLowerCase().includes(lowerQuery);
+      }
+      if (item.type === 'image') {
+        return item.title?.toLowerCase().includes(lowerQuery) ||
+               item.description?.toLowerCase().includes(lowerQuery) ||
+               item.username.toLowerCase().includes(lowerQuery);
+      }
+      if (item.type === 'post') {
+        return item.content.toLowerCase().includes(lowerQuery) ||
+               item.author.name.toLowerCase().includes(lowerQuery);
+      }
+      return false;
+    });
+  }
 
   return {
-    bookmarks: filteredBookmarks,
-    totalCount: baseData?.length || 0,
-    isLoading,
-    isError,
-    error,
-    refetch,
+    bookmarks: feedItems,
+    totalCount: allNFTs.length,
+    isLoading: activeQuery.isLoading,
+    isError: activeQuery.isError,
+    error: activeQuery.error,
+    refetch: activeQuery.refetch,
+    fetchNextPage: activeQuery.fetchNextPage,
+    hasNextPage: activeQuery.hasNextPage,
+    isFetchingNextPage: activeQuery.isFetchingNextPage,
   };
 }
 
@@ -139,19 +290,25 @@ export function useBookmarkPost(tokenId: string | number) {
   const queryClient = useQueryClient();
   
   // Check if this post is in the bookmarks
-  const { data: bookmarks } = useQuery({
-    queryKey: ['bookmarks', 'saved'],
-    queryFn: async () => {
-      const response = await getSavedPosts(0, 100);
-      return response.result || [];
+  const { data: savedPages } = useInfiniteQuery({
+    queryKey: ['bookmarks', 'saved', 'all'],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getSavedPosts(pageParam, PAGE_SIZE);
+      return {
+        items: response.result || [],
+        nextPage: (response.result?.length || 0) >= PAGE_SIZE ? pageParam + 1 : undefined,
+      };
     },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
   });
 
-  const isBookmarked = bookmarks?.some(
+  const allSaved = savedPages?.pages.flatMap(page => page.items) || [];
+  const isBookmarked = allSaved.some(
     (nft) => String(nft.tokenId) === String(tokenId)
-  ) ?? false;
+  );
 
   const toggleMutation = useMutation({
     mutationFn: () => toggleSavePost(tokenId),
