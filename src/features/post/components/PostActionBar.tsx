@@ -205,10 +205,12 @@ export function PostActionBar({
               </button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl" 
+              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl z-[150]" 
               align="center"
               side="top"
               sideOffset={8}
+              onPointerDownOutside={(e) => e.preventDefault()}
+              onInteractOutside={(e) => e.preventDefault()}
             >
               <div className="flex flex-col items-center gap-1.5">
                 <button
@@ -255,10 +257,12 @@ export function PostActionBar({
               </button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl" 
+              className="w-auto p-1 bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl z-[150]" 
               align="center"
               side="top"
               sideOffset={8}
+              onPointerDownOutside={(e) => e.preventDefault()}
+              onInteractOutside={(e) => e.preventDefault()}
             >
               <div className="flex flex-col items-center gap-1.5">
                 <button
