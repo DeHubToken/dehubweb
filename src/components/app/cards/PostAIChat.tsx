@@ -17,6 +17,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { toast } from 'sonner';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 
@@ -250,19 +251,15 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                     className="w-7 h-7 rounded-full shrink-0 mt-0.5"
                   />
                 )}
-                <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
-                    message.role === 'user'
-                      ? 'bg-white/20 text-white'
-                      : 'bg-white/10 text-white'
-                  }`}
-                >
-                  {message.role === 'assistant' ? (
+                {message.role === 'user' ? (
+                  <LiquidGlassBubble tail="right" className="max-w-[85%]">
+                    <p className="text-sm whitespace-pre-wrap text-white">{message.content}</p>
+                  </LiquidGlassBubble>
+                ) : (
+                  <div className="max-w-[85%] rounded-2xl px-4 py-2.5 bg-white/10 text-white">
                     <MarkdownText content={message.content} className="text-sm" />
-                  ) : (
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  )}
-                </div>
+                  </div>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
