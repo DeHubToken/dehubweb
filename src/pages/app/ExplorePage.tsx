@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import searchIcon from '@/assets/icons/search-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -732,7 +733,10 @@ export default function ExplorePage() {
             >
               {/* Recent Searches Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Recent Searches</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <img src={searchIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7" />
+                  Recent Searches
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   {RECENT_SEARCHES.map((term) => (
                     <button
