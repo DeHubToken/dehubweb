@@ -390,12 +390,13 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
   } = useInfiniteQuery({
     queryKey: ['music-videos-infinite', walletAddress],
     queryFn: async ({ pageParam = 1 }) => {
+      // Use 'new' sort for variety, shuffle client-side for randomness
       const response = await searchNFTs({
         category: 'Music',
         postType: 'video',
         unit: VIDEOS_PAGE_SIZE,
         page: pageParam,
-        sortMode: 'popular',
+        sortMode: 'new', // Use 'new' for variety instead of always 'popular'
         address: walletAddress || undefined,
       });
       return {
@@ -487,7 +488,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch music-categorized videos for carousel
+  // Fetch music-categorized videos for carousel - randomized
   const { data: carouselVideosData, isLoading: isLoadingCarouselVideos } = useQuery({
     queryKey: ['music-videos-carousel', walletAddress],
     queryFn: async () => {
@@ -503,10 +504,16 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Map to VideoItem for carousel
+  // Shuffle and map to VideoItem for carousel - randomized on each mount
   const carouselVideos = useMemo(() => {
     if (!carouselVideosData) return [];
-    return carouselVideosData.map((nft, index) => mapNFTToVideoItem(nft, index));
+    // Fisher-Yates shuffle
+    const shuffled = [...carouselVideosData];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.map((nft, index) => mapNFTToVideoItem(nft, index));
   }, [carouselVideosData]);
 
   const getEmptyLabel = () => {
