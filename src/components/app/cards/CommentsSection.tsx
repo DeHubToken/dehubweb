@@ -603,8 +603,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Replies Tab */}
       {activeTab === 'replies' && (
         <div className="relative">
-          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
           <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
@@ -659,8 +657,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Quotes Tab */}
       {activeTab === 'quotes' && (
         <div className="relative">
-          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
           <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
             <motion.p
               initial={{ opacity: 0 }}
@@ -676,8 +672,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       {/* Search Tab - shows all comments/quotes, filtered by search query */}
       {activeTab === 'search' && (
         <div className="relative">
-          <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
           <div className="divide-y divide-zinc-800 max-h-80 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
