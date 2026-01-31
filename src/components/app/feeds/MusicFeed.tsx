@@ -119,7 +119,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ppvCurrency: nft.ppv_currency,
     isW2E: nft.is_w2e,
     isLocked: nft.is_locked,
-    creatorUsername: nft.creator?.username,
+    creatorUsername: nft.mintername || nft.creator?.username,
     creatorId: minterAddress,
   };
 }
