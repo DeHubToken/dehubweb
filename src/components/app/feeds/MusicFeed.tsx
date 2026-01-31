@@ -44,6 +44,7 @@ const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initia
 /** Usernames/display names to filter out from feeds */
 const BLOCKED_CREATORS = [
   'monkey d luffy',
+  'monkey d. luffy',
   'monkeydluffy',
   'monkey_d_luffy',
 ];

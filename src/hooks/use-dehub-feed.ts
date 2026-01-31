@@ -24,6 +24,7 @@ const FALLBACK_THUMBNAILS = [
 /** Usernames/display names to filter out from feeds */
 const BLOCKED_CREATORS = [
   'monkey d luffy',
+  'monkey d. luffy',
   'monkeydluffy',
   'monkey_d_luffy',
 ];
