@@ -10,6 +10,7 @@ import { History, Trash2, Loader2, MessageCircle, ChevronRight } from 'lucide-re
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -52,12 +53,15 @@ export function ConversationHistoryDrawer({
     
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('ai_conversations')
-        .select('*')
-        .eq('wallet_address', walletAddress.toLowerCase())
-        .order('updated_at', { ascending: false })
-        .limit(50);
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('ai_conversations')
+          .select('*')
+          .eq('wallet_address', walletAddress.toLowerCase())
+          .order('updated_at', { ascending: false })
+          .limit(50),
+        walletAddress
+      );
 
       if (error) throw error;
       setConversations(data || []);
@@ -71,11 +75,14 @@ export function ConversationHistoryDrawer({
 
   const handleLoadConversation = async (conversationId: string) => {
     try {
-      const { data: messages, error } = await supabase
-        .from('ai_messages')
-        .select('*')
-        .eq('conversation_id', conversationId)
-        .order('created_at', { ascending: true });
+      const { data: messages, error } = await withWalletHeader(
+        supabase
+          .from('ai_messages')
+          .select('*')
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: true }),
+        walletAddress
+      );
 
       if (error) throw error;
 
@@ -101,10 +108,13 @@ export function ConversationHistoryDrawer({
     setDeletingId(conversationId);
     
     try {
-      const { error } = await supabase
-        .from('ai_conversations')
-        .delete()
-        .eq('id', conversationId);
+      const { error } = await withWalletHeader(
+        supabase
+          .from('ai_conversations')
+          .delete()
+          .eq('id', conversationId),
+        walletAddress
+      );
 
       if (error) throw error;
 
