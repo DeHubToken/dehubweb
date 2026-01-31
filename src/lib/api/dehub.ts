@@ -1380,6 +1380,8 @@ export interface MintPostParams {
   plans?: string[];
   files?: File[];
   thumbnail?: Blob;
+  /** Minter's wallet address - required for signature generation */
+  minterAddress: string;
 }
 
 export interface MintResponse {
@@ -1406,6 +1408,11 @@ export async function mintPost(params: MintPostParams): Promise<MintResponse> {
   formData.append('postType', params.postType);
   formData.append('chainId', String(params.chainId));
   formData.append('category', JSON.stringify(params.category));
+  
+  // Include minter address for signature generation
+  // The backend needs this to generate a signature that includes msg.sender
+  formData.append('minter', params.minterAddress);
+  console.log('[MintPost] Including minter address:', params.minterAddress);
   
   // Add streamInfo for monetization settings
   const streamInfo: StreamInfo = params.streamInfo || {
