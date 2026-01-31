@@ -14,6 +14,7 @@ import {
   WEB3AUTH_NETWORK,
   WALLET_CONNECTORS,
   AUTH_CONNECTION,
+  CONFIRMATION_STRATEGY,
 } from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -133,6 +134,14 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         // Use AA only for embedded wallets (social/email login)
         // External wallets like MetaMask will use their own accounts
         useAAWithExternalWallet: false,
+        // Auto-approve signatures for auth messages (bypasses blocking modal)
+        walletServicesConfig: {
+          confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
+          modalZIndex: 99999,
+          whiteLabel: {
+            showWidgetButton: false,
+          },
+        } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
         // Custom UI configuration - we use our own modal
         uiConfig: {
           appName: "DeHub",
