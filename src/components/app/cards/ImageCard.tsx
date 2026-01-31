@@ -366,11 +366,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       <div className="flex items-center justify-between">
         <CardHeader
           username={post.username}
+          handle={post.creatorUsername}
           avatarSeed={post.avatar}
           verified={post.verified}
           contentType="image"
           creatorId={post.creatorId}
           creatorUsername={post.creatorUsername}
+          timestamp={post.timeAgo}
+          viewCount={post.views || '0'}
         />
         <div className="flex items-center gap-1 pr-3">
           <button
@@ -443,13 +446,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           description={post.description} 
         />
         
-        <div className="flex items-center gap-3">
-          <span className="text-zinc-500 text-xs">{post.timeAgo}</span>
-          <span className="inline-flex items-center gap-1 text-zinc-500 text-xs leading-none">
-            <Eye className="w-3 h-3 shrink-0 translate-y-[0.5px]" />
-            <span className="leading-none">{post.views || '0'}</span>
-          </span>
-        </div>
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (
