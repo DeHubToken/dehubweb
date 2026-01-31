@@ -348,29 +348,29 @@ export default function NotificationsPage() {
                 </SheetTrigger>
                 <SheetContent 
                   side="bottom" 
-                  className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
+                  className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
                 >
                   <SheetHeader className="pb-4">
                     <SheetTitle className="text-white text-lg font-bold flex items-center gap-2">
-                      <Settings className="w-5 h-5" />
+                      <Settings className="w-5 h-5 text-white" />
                       Notification Settings
                     </SheetTitle>
                   </SheetHeader>
                   
                   {/* Actions Section */}
                   <div className="space-y-3 mb-6">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-medium">Actions</p>
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">Actions</p>
                     <button
                       onClick={handleMarkAllAsRead}
                       disabled={markAllAsRead.isPending || totalUnread === 0}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
                     >
                       <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                         <Check className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 text-left">
                         <p className="text-white font-medium">Mark all as read</p>
-                        <p className="text-zinc-500 text-sm">Clear all unread indicators</p>
+                        <p className="text-white/50 text-sm">Clear all unread indicators</p>
                       </div>
                     </button>
                     
@@ -379,31 +379,31 @@ export default function NotificationsPage() {
                         // TODO: Implement clear all notifications API
                         console.log('Clear all notifications');
                       }}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
-                        <Trash2 className="w-5 h-5 text-red-400" />
+                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                        <Trash2 className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 text-left">
-                        <p className="text-red-400 font-medium">Clear all notifications</p>
-                        <p className="text-zinc-500 text-sm">Remove all notification history</p>
+                        <p className="text-white font-medium">Clear all notifications</p>
+                        <p className="text-white/50 text-sm">Remove all notification history</p>
                       </div>
                     </button>
                   </div>
                   
                   {/* Notification Types Section */}
                   <div className="space-y-3">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-medium">Notification Types</p>
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">Notification Types</p>
                     
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
-                            <Heart className="w-5 h-5 text-pink-500" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <Heart className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">Likes</p>
-                            <p className="text-zinc-500 text-sm">When someone likes your content</p>
+                            <p className="text-white/50 text-sm">When someone likes your content</p>
                           </div>
                         </div>
                         <Switch 
@@ -412,14 +412,14 @@ export default function NotificationsPage() {
                         />
                       </div>
                       
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                            <MessageCircle className="w-5 h-5 text-blue-500" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <MessageCircle className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">Comments</p>
-                            <p className="text-zinc-500 text-sm">When someone comments or replies</p>
+                            <p className="text-white/50 text-sm">When someone comments or replies</p>
                           </div>
                         </div>
                         <Switch 
@@ -428,14 +428,14 @@ export default function NotificationsPage() {
                         />
                       </div>
                       
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
-                            <UserPlus className="w-5 h-5 text-cyan-500" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <UserPlus className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">Follows</p>
-                            <p className="text-zinc-500 text-sm">When someone follows you</p>
+                            <p className="text-white/50 text-sm">When someone follows you</p>
                           </div>
                         </div>
                         <Switch 
@@ -444,14 +444,14 @@ export default function NotificationsPage() {
                         />
                       </div>
                       
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
-                            <DollarSign className="w-5 h-5 text-yellow-500" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <DollarSign className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">Tips</p>
-                            <p className="text-zinc-500 text-sm">When someone tips your content</p>
+                            <p className="text-white/50 text-sm">When someone tips your content</p>
                           </div>
                         </div>
                         <Switch 
@@ -460,14 +460,14 @@ export default function NotificationsPage() {
                         />
                       </div>
                       
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                            <Users className="w-5 h-5 text-purple-500" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <Users className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">Subscriptions</p>
-                            <p className="text-zinc-500 text-sm">When someone subscribes to you</p>
+                            <p className="text-white/50 text-sm">When someone subscribes to you</p>
                           </div>
                         </div>
                         <Switch 
@@ -476,14 +476,14 @@ export default function NotificationsPage() {
                         />
                       </div>
                       
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/10">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
-                            <Zap className="w-5 h-5 text-red-500" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <Zap className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <p className="text-white font-medium">Livestreams</p>
-                            <p className="text-zinc-500 text-sm">When creators you follow go live</p>
+                            <p className="text-white/50 text-sm">When creators you follow go live</p>
                           </div>
                         </div>
                         <Switch 
