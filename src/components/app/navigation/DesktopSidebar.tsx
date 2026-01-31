@@ -72,23 +72,21 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-0 -mt-[10px] flex-col overflow-y-auto scrollbar-invisible">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible">
         {/* Logo & Coin Balance */}
         <div className="mb-6 flex items-center justify-between">
-          <button onClick={handleLogoClick} className="block cursor-pointer mt-[20px]">
+          <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto" />
           </button>
-          <div className="mt-[20px]">
-            <CoinBalanceMenu 
-              balance={coinBalance} 
-              variant="desktop" 
-              onAuthRequired={handleCoinClick}
-            />
-          </div>
+          <CoinBalanceMenu 
+            balance={coinBalance} 
+            variant="desktop" 
+            onAuthRequired={handleCoinClick}
+          />
         </div>
 
         {/* Navigation Bento - reduced padding */}
-        <div className="bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+        <div className="-mt-[10px] bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
