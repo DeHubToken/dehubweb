@@ -10,13 +10,8 @@
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildFeedImageUrls, hasValidMedia, isValidMediaUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
-
-// Blocked minters with known broken content
-const BLOCKED_MINTERS = [
-  '0x589c1562aa289ed82ffee79ad75a41523fbf2b94', // Monkey D. Luffy - broken images
-];
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -350,24 +345,13 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
       });
       
       // Handle both response formats: { result: [...] } or { data: [...] }
-      const rawData = (response as any).result || response.data || [];
+      const data = (response as any).result || response.data || [];
       const unit = searchParams.unit || 15;
-      
-      // Filter out blocked minters and content with broken media
-      const data = rawData.filter((nft: DeHubNFT) => {
-        // Filter blocked minters
-        if (BLOCKED_MINTERS.includes(nft.minter?.toLowerCase() || '')) return false;
-        
-        // Filter broken media
-        if (!hasValidMedia(nft)) return false;
-        
-        return true;
-      });
       
       return {
         data,
         page: pageParam,
-        has_more: rawData.length >= unit, // Use raw length for pagination
+        has_more: data.length >= unit,
         total: response.total || data.length,
         unit,
       };
