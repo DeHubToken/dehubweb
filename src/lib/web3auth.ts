@@ -137,6 +137,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] Creating Web3Auth instance with custom UI config...");
       web3authInstance = new Web3Auth({
         clientId,
+        chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
         // v10 Account Abstraction configuration
         accountAbstractionConfig: {
