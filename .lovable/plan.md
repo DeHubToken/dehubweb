@@ -1,56 +1,132 @@
 
+# Fix: Audio Preview Stopping After a Few Seconds
 
-# Fix: Audio and Live Popovers in Post Modal
+## Problem Identified
 
-## Problem Analysis
+After analyzing the code, I found the root cause of why audio stops after a few seconds in the post modal:
 
-After reviewing the code, session replay data, and researching this issue, I've identified the root cause:
+The `AudioVisualizer` component has a **race condition** in how it attaches the `ended` event listener to the audio element. The listener is added in a `useEffect` that depends on `[onPlayPause, isInitialized]`:
 
-**The Popover opens but immediately closes** because of a conflict between:
-1. The **Vaul Drawer** (used for the Post Modal) which has `modal={true}` by default
-2. The **Radix Popover** inside it, which renders its content in a **Portal** outside the drawer
+```javascript
+useEffect(() => {
+  const audio = audioRef.current;
+  if (!audio) return;
 
-When you click the Music or Live button, the popover opens, but when you try to interact with it (or even just after it opens), the drawer's overlay captures the "outside click" event and triggers the popover to close.
+  const handleEnded = () => {
+    onPlayPause();
+  };
 
-The `modal={true}` prop on the Popover was a good attempt, but it's not sufficient because the z-index layering and portal rendering create a conflict.
+  audio.addEventListener('ended', handleEnded);
+  return () => audio.removeEventListener('ended', handleEnded);
+}, [onPlayPause, isInitialized]);
+```
+
+**The issue:** When `onPlayPause` is passed from the parent component, it's recreated on each render because it's defined inline:
+
+```javascript
+onPlayPause={() => {
+  if (playingIndex === index) {
+    setPlayingIndex(null);
+  } else {
+    setPlayingIndex(index);
+  }
+}}
+```
+
+This causes the `useEffect` to run frequently, detaching and re-attaching the `ended` listener. If the audio happens to end during this transition, the event is missed - but more critically, **the frequent re-renders may cause the audio to be unintentionally paused**.
+
+Additionally, the playback effect at lines 141-153 has `draw` in its dependencies, which changes when `style` or `hue` changes. This can cause unwanted pause/play cycles.
 
 ---
 
 ## Solution
 
-### 1. Update the Popover component to support preventing outside clicks
+### 1. Stabilize the `onPlayPause` callback in PostMediaPreview
 
-Modify `src/components/ui/popover.tsx` to:
-- Add `onPointerDownOutside` handler that prevents closing when intended
-- Ensure the z-index is higher than the drawer overlay (z-index: 100+)
+Wrap the callback in `useCallback` to prevent unnecessary re-renders affecting the audio element.
 
-### 2. Update PostActionBar to properly configure the Audio and Live popovers
+### 2. Fix the AudioVisualizer event listener management
 
-In `src/features/post/components/PostActionBar.tsx`:
-- Add `onPointerDownOutside={(e) => e.preventDefault()}` to PopoverContent for both Audio and Live popovers
-- Increase z-index to ensure popovers render above the drawer
-- Keep `modal={true}` on the Popover component
+Move the `ended` event listener setup into the `setupAudio` function so it's attached immediately when the audio element is created, rather than in a separate effect that can be out of sync.
+
+### 3. Remove `draw` from the playback effect dependencies
+
+The playback effect should only depend on `isPlaying`, not on `draw`. The drawing is already triggered separately.
 
 ---
 
-## Technical Details
+## Technical Changes
 
-### File: `src/components/ui/popover.tsx`
-Update the PopoverContent z-index from `z-50` to `z-[150]` to ensure it renders above the drawer overlay (which is `z-[100]`).
+### File: `src/features/post/components/PostMediaPreview.tsx`
 
-### File: `src/features/post/components/PostActionBar.tsx`
-For both the Audio popover (lines 198-238) and Live popover (lines 241-283):
+Create a memoized callback for the audio play/pause toggle:
 
-```tsx
-<PopoverContent 
-  className="... z-[150]"
-  onPointerDownOutside={(e) => e.preventDefault()}
-  onInteractOutside={(e) => e.preventDefault()}
-  // ... rest of props
->
+```typescript
+// Add near the top of the component, around line 100
+const handleAudioVisualizerPlayPause = useCallback((index: number) => {
+  setPlayingIndex(prev => prev === index ? null : index);
+}, []);
 ```
 
-This prevents the popover from closing when clicking inside it, which is being incorrectly triggered by the drawer's modal overlay.
+Update the AudioVisualizer usage (around line 474):
+```typescript
+<AudioVisualizer
+  audioUrl={m.preview}
+  isPlaying={playingIndex === index}
+  onPlayPause={() => handleAudioVisualizerPlayPause(index)}
+  // ... rest of props
+/>
+```
+
+### File: `src/components/app/audio/AudioVisualizer.tsx`
+
+1. **Move the `ended` listener into `setupAudio`** (around line 58-90):
+
+```typescript
+const setupAudio = useCallback(() => {
+  if (isConnectedRef.current) return;
+
+  try {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.crossOrigin = 'anonymous';
+      
+      // Attach ended listener immediately when creating audio
+      audioRef.current.addEventListener('ended', () => {
+        onPlayPause();
+      });
+    }
+    // ... rest of setup
+  } catch (err) {
+    console.error('Failed to setup audio:', err);
+  }
+}, [audioUrl, onPlayPause]);
+```
+
+2. **Fix the playback effect** - remove `draw` from dependencies (lines 141-153):
+
+```typescript
+useEffect(() => {
+  if (!audioRef.current) return;
+
+  if (isPlaying) {
+    audioRef.current.play().catch(console.error);
+  } else {
+    audioRef.current.pause();
+  }
+}, [isPlaying]);
+
+// Separate effect for animation
+useEffect(() => {
+  if (isPlaying && analyserRef.current) {
+    draw();
+  } else if (animationRef.current) {
+    cancelAnimationFrame(animationRef.current);
+  }
+}, [isPlaying, draw]);
+```
+
+3. **Remove the separate ended listener effect** (lines 182-192) since it's now handled in `setupAudio`.
 
 ---
 
@@ -58,6 +134,5 @@ This prevents the popover from closing when clicking inside it, which is being i
 
 | File | Change |
 |------|--------|
-| `src/components/ui/popover.tsx` | Increase z-index to `z-[150]` |
-| `src/features/post/components/PostActionBar.tsx` | Add `onPointerDownOutside` and `onInteractOutside` handlers to both popover contents |
-
+| `src/components/app/audio/AudioVisualizer.tsx` | Fix event listener attachment and separate playback/animation effects |
+| `src/features/post/components/PostMediaPreview.tsx` | Memoize the play/pause callback to prevent unnecessary re-renders |
