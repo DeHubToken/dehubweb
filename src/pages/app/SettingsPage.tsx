@@ -65,6 +65,7 @@ import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import dehubCoin from '@/assets/dehub-coin.png';
+import settingsIcon from '@/assets/icons/settings-icon.png';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -103,9 +104,7 @@ export default function SettingsPage() {
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center">
-              <SettingsIcon className="w-6 h-6 text-zinc-400" />
-            </div>
+            <img src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">Settings</h1>
               <p className="text-zinc-500 text-sm">Manage your account and preferences</p>
