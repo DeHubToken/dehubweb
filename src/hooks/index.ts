@@ -14,7 +14,6 @@
 export { useDebouncedValue } from './use-debounced-value';
 export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 export { useUnifiedFeed, mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem, type UnifiedFeedParams } from './use-unified-feed';
-export { useRandomFeed, type UseRandomFeedOptions, type UseRandomFeedResult } from './use-random-feed';
 export { useDeHubProfile, useDeHubUserContent, separateUserContent, mapUserToProfile, type ProfileData } from './use-dehub-profile';
 export { 
   useDeHubSearch, 

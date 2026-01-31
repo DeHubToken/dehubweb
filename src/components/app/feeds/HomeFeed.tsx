@@ -23,19 +23,17 @@ import {
   StoriesBar 
 } from '@/components/app/cards';
 
-// Feed hooks
+// Unified feed hook
 import { 
   useUnifiedFeed, 
   mapToVideoItem, 
   mapToImagePost, 
   mapToTextPost,
-  type UnifiedFeedItem,
 } from '@/hooks/use-unified-feed';
-import { useRandomFeed } from '@/hooks/use-random-feed';
 import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
-import { getMediaUrl, getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
+import { getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -55,8 +53,8 @@ type FeedItemType =
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 15;
-/** Number of random posts to fetch per batch */
-const RANDOM_BATCH_SIZE = 30;
+/** Number of pages to pre-fetch for random mode cross-page shuffling */
+const RANDOM_PREFETCH_PAGES = 5;
 
 interface HomeFeedProps {
   shuffleKey: number;
@@ -318,9 +316,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   
   // State to trigger re-shuffle on pull-to-refresh
   const [shuffleTrigger, setShuffleTrigger] = useState(0);
-  
-  // Track if random feed has been initialized
-  const randomFeedInitializedRef = useRef(false);
+  // Track if we've pre-fetched enough pages for random mode
+  const [hasPreFetched, setHasPreFetched] = useState(false);
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -352,59 +349,32 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   const sortOrder = sortBy ? 'desc' : undefined;
   const range = getDateRange(selectedDate.value);
-  
-  // Check if we're in random mode
-  const isRandomMode = selectedSort.value === 'random';
 
-  // Fetch unified feed (disabled when in random mode)
+  // Fetch unified feed
   const {
     data: feedData,
     fetchNextPage,
-    hasNextPage: unifiedHasNextPage,
+    hasNextPage,
     isFetchingNextPage,
-    isLoading: isUnifiedLoading,
-    isError: isUnifiedError,
-    refetch: refetchUnified,
-    error: unifiedError,
+    isLoading,
+    isError,
+    refetch,
+    error,
   } = useUnifiedFeed({
     limit: PAGE_SIZE,
     sortBy,
     sortOrder,
     address: walletAddress || undefined,
     range,
+    // Only show minted content
     status: 'minted',
+    // Apply post type filter
     postType: selectedPostType === 'all' ? undefined : selectedPostType,
+    // Apply content type filters
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
     isLocked: contentFilters.locked ? true : undefined,
-    // Disable unified feed when in random mode
-    enabled: !isRandomMode,
   });
-
-  // Fetch truly random posts by ID (only in random mode)
-  const {
-    posts: randomPosts,
-    isLoading: isRandomLoading,
-    error: randomError,
-    refetch: refetchRandom,
-    loadMore: loadMoreRandom,
-    hasMore: randomHasMore,
-  } = useRandomFeed({
-    batchSize: RANDOM_BATCH_SIZE,
-    enabled: isRandomMode,
-  });
-
-  // Initialize random feed on mount or when switching to random mode
-  useEffect(() => {
-    if (isRandomMode && !randomFeedInitializedRef.current && !isRandomLoading && randomPosts.length === 0) {
-      randomFeedInitializedRef.current = true;
-      refetchRandom();
-    }
-    // Reset flag when leaving random mode
-    if (!isRandomMode) {
-      randomFeedInitializedRef.current = false;
-    }
-  }, [isRandomMode, isRandomLoading, randomPosts.length, refetchRandom]);
 
   // Fetch shorts separately for the carousel
   const { data: shortsData } = useDeHubVideos({
@@ -430,21 +400,29 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
+      // Trigger new shuffle and reset pre-fetch state
       setShuffleTrigger(prev => prev + 1);
-      if (isRandomMode) {
-        refetchRandom();
-      } else {
-        refetchUnified();
-      }
+      setHasPreFetched(false);
+      refetch();
     }
-  }, [shuffleKey, isRandomMode, refetchRandom, refetchUnified]);
+  }, [shuffleKey, refetch]);
 
-  // Unified loading/error/hasNext based on current mode
-  const isLoading = isRandomMode ? isRandomLoading : isUnifiedLoading;
-  const isError = isRandomMode ? !!randomError : isUnifiedError;
-  const error = isRandomMode ? randomError : unifiedError;
-  const hasNextPage = isRandomMode ? randomHasMore : unifiedHasNextPage;
-  const refetch = isRandomMode ? refetchRandom : refetchUnified;
+  // Pre-fetch multiple pages for random mode to enable cross-page shuffling
+  useEffect(() => {
+    if (selectedSort.value !== 'random') {
+      setHasPreFetched(true); // Non-random modes don't need pre-fetch
+      return;
+    }
+    
+    const currentPageCount = feedData?.pages?.length || 0;
+    
+    // If we have less than RANDOM_PREFETCH_PAGES and more are available, fetch next
+    if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
+      fetchNextPage();
+    } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
+      setHasPreFetched(true);
+    }
+  }, [selectedSort.value, feedData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -554,61 +532,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Map unified feed items to component-ready data (excluding pinned post)
   const items = useMemo((): FeedItemType[] => {
-    // Handle random mode - use random posts from the dedicated hook
-    if (isRandomMode) {
-      if (randomPosts.length === 0) return [];
-      
-      // Map DeHubNFT to feed item format
-      const mappedItems = randomPosts
-        .filter(post => String(post.tokenId) !== String(pinnedPostId)) // Exclude pinned
-        .map((nft, index): FeedItemType => {
-          // Convert DeHubNFT to UnifiedFeedItem format for mapping
-          const item: UnifiedFeedItem = {
-            tokenId: nft.tokenId,
-            name: nft.name,
-            description: nft.description,
-            imageUrl: nft.imageUrl,
-            imageUrls: nft.imageUrls,
-            videoUrl: nft.videoUrl,
-            minter: nft.minter,
-            postType: nft.postType === 'audio' ? 'feed-simple' : 
-                      nft.postType === 'image' ? 'feed-images' : 'video',
-            views: nft.views || 0,
-            totalVotes: nft.totalVotes ? {
-              for: nft.totalVotes.for ?? 0,
-              against: nft.totalVotes.against ?? 0,
-            } : { for: 0, against: 0 },
-            commentCount: nft.commentCount || 0,
-            videoDuration: nft.videoDuration,
-            minterUsername: nft.mintername,
-            minterDisplayName: nft.minterDisplayName,
-            minterAvatarUrl: nft.minterAvatarUrl,
-            isLiked: nft.isLiked,
-            createdAt: nft.createdAt,
-          };
-          
-          const inferredType = item.postType || (
-            item.videoUrl ? 'video' :
-            (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
-            'feed-simple'
-          );
-          
-          switch (inferredType) {
-            case 'feed-images':
-              return { type: 'image', data: mapToImagePost(item, index) };
-            case 'feed-simple':
-              return { type: 'post', data: mapToTextPost(item, index) };
-            case 'video':
-            default:
-              return { type: 'video', data: mapToVideoItem(item, index) };
-          }
-        });
-      
-      // Apply balanced shuffle for variety in display order
-      return balancedShuffle(mappedItems);
+    // Don't compute until pre-fetch is complete for random mode
+    // This prevents multiple visual re-renders during sequential page fetches
+    if (selectedSort.value === 'random' && !hasPreFetched) {
+      return [];
     }
     
-    // Non-random mode - use unified feed
     if (!feedData?.pages) return [];
     
     const allItems = feedData.pages.flatMap(page => page.items || []);
@@ -619,6 +548,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       : allItems;
     
     const mappedItems = filteredItems.map((item, index): FeedItemType => {
+      // Infer post type if not explicitly set by API
       const inferredType = item.postType || (
         item.videoUrl ? 'video' :
         (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
@@ -636,34 +566,29 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     });
     
-    return mappedItems;
-  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, isRandomMode, randomPosts]);
-
-  // Handle infinite scroll / load more
-  const handleLoadMore = useCallback(() => {
-    if (isFetchingRef.current) return;
-    
-    isFetchingRef.current = true;
-    
-    if (isRandomMode) {
-      loadMoreRandom().finally(() => {
-        isFetchingRef.current = false;
-      });
-    } else {
-      fetchNextPage().finally(() => {
-        isFetchingRef.current = false;
-      });
+    // Only shuffle when "random" is selected - use balanced shuffle for true randomness
+    // The shuffleTrigger changes on refresh, causing useMemo to re-run and produce new order
+    if (selectedSort.value === 'random') {
+      // shuffleTrigger is included in deps to force new shuffle on refresh
+      void shuffleTrigger; // Reference to satisfy linter but signal intent
+      return balancedShuffle(mappedItems);
     }
-  }, [isRandomMode, loadMoreRandom, fetchNextPage]);
+    
+    return mappedItems;
+  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, hasPreFetched]);
 
-  // Infinite scroll observer
+  // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
+        // Use ref for synchronous check - prevents multiple fetches from stale closures
         if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
-          handleLoadMore();
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -754,8 +679,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return elements;
   };
 
-  // Show loading state
-  const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading);
+  // Show loading while pre-fetching pages for random mode
+  // Check !hasPreFetched directly to cover all fetch states (not just during active fetch)
+  const isPreFetchingRandom = selectedSort.value === 'random' && !hasPreFetched;
+  const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading) || isPreFetchingRandom;
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
