@@ -69,10 +69,9 @@ export function PostAccessToggles({
         <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-white scale-75" />
       </div>
 
-      {/* PPV + Bounty Row - Desktop/Tablet: same line, Mobile: stacked */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-        {/* PPV */}
-        <div className="flex items-center justify-between py-0.5 flex-1">
+      {/* PPV */}
+      <div className="space-y-1">
+        <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-white" />
             <span className="text-sm text-white">PPV</span>
@@ -98,88 +97,97 @@ export function PostAccessToggles({
             <Switch checked={isPPV} onCheckedChange={setIsPPV} className="data-[state=checked]:bg-white scale-75" />
           </div>
         </div>
+      </div>
 
-        {/* Bounty */}
-        <div className="flex items-center justify-between py-0.5 flex-1">
+      {/* Bounty */}
+      <div className="space-y-1">
+        <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Bounty</span>
           </div>
-          <div className="flex items-center gap-2">
-            <AnimatePresence>
-              {isWatch2Earn && (
-                <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="flex items-center gap-1 overflow-hidden">
-                  <TooltipProvider delayDuration={300}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
-                          <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
-                            <Eye className="w-3 h-3 text-white/70" />
-                          </div>
-                          <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-8 h-full px-1 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="top">Views to reward</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <TooltipProvider delayDuration={300}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
-                          <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
-                            <MessageCircle className="w-3 h-3 text-white/70" />
-                          </div>
-                          <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-8 h-full px-1 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="top">Comments to reward</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-12 h-6 px-1.5 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                  <div className="flex h-6 rounded overflow-hidden border border-white/20">
-                    <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                    <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-white scale-75" />
-          </div>
+          <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-white scale-75" />
         </div>
+        <AnimatePresence>
+          {isWatch2Earn && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+              <div className="flex items-center gap-1.5 pl-6 pb-1">
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
+                        <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
+                          <Eye className="w-3 h-3 text-white/70" />
+                        </div>
+                        <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      Total number of viewers to reward
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
+                        <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
+                          <MessageCircle className="w-3 h-3 text-white/70" />
+                        </div>
+                        <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      Total number of commenters to reward
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex h-6 rounded overflow-hidden border border-white/20 cursor-help">
+                        <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
+                        <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      Currency for reward
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Token Gated - Desktop/Tablet: inline controls, Mobile: stacked with aligned inputs */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-0.5 gap-1 sm:gap-2">
-        <div className="flex items-center justify-between sm:justify-start sm:gap-2 flex-shrink-0">
+      {/* Token Gated */}
+      <div className="space-y-1">
+        <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
           </div>
-          <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-white scale-75 sm:order-last" />
+          <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-white scale-75" />
         </div>
         <AnimatePresence>
           {isTokenGated && (
-            <motion.div 
-              initial={{ opacity: 0, width: 0, height: 0 }} 
-              animate={{ opacity: 1, width: 'auto', height: 'auto' }} 
-              exit={{ opacity: 0, width: 0, height: 0 }} 
-              className="overflow-hidden sm:flex-1"
-            >
-              {/* Mobile: full width with proper alignment */}
-              <div className="flex items-center gap-1.5 sm:justify-end">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+              <div className="flex items-center gap-1.5 pl-6 pb-1">
                 <input
                   type="text"
                   value={tokenContract}
                   onChange={(e) => setTokenContract(e.target.value)}
                   placeholder="Contract address"
-                  className="flex-1 sm:flex-none sm:w-40 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
+                  className="flex-[0.85] h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
                 />
                 <input
                   type="number"
                   value={tokenAmount}
                   onChange={(e) => setTokenAmount(e.target.value)}
                   placeholder="Min"
-                  className="w-[60px] h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="flex-[0.15] min-w-[60px] h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
             </motion.div>
