@@ -150,13 +150,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         onClick={() => setStep('wallets')}
         disabled={isConnecting}
         variant="outline"
-        className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-between border-white/10"
+        className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10"
       >
-        <div className="flex items-center gap-3">
-          <Wallet className="w-5 h-5" />
-          <span>Connect Wallet</span>
-        </div>
-        <ChevronRight className="w-4 h-4 text-white/40" />
+        <Wallet className="w-5 h-5" />
+        <span>Connect Wallet</span>
       </Button>
     </div>
   );
@@ -290,15 +287,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             </button>
           </div>
           <DialogTitle className="text-xl font-bold text-white mt-4 text-center">
-            {step === 'main' && 'Log in to DeHub'}
+            {step === 'main' && 'Log in'}
             {step === 'email' && 'Continue with Email'}
             {step === 'wallets' && 'Connect Wallet'}
           </DialogTitle>
-          {step === 'main' && (
-            <p className="text-white/50 text-sm mt-1 text-center">
-              Choose how you want to connect
-            </p>
-          )}
         </DialogHeader>
 
         {/* Content */}
