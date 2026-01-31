@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { X, Mail, Wallet, Loader2, ChevronRight } from 'lucide-react';
+import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,20 +37,24 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type LoginStep = 'main' | 'email' | 'wallets';
+type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { connectWithProvider, connectWithEmail, connectWithWallet, isConnecting } = useAuth();
+  const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, isConnecting } = useAuth();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
 
   const handleClose = () => {
     if (!isConnecting) {
       setStep('main');
       setEmail('');
+      setPhone('');
       setEmailError('');
+      setPhoneError('');
       setActiveProvider(null);
       onOpenChange(false);
     }
@@ -88,6 +92,28 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
+  const handleSMSSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPhoneError('');
+    
+    // Basic phone validation (international format)
+    const phoneRegex = /^\+?[1-9]\d{6,14}$/;
+    const cleanedPhone = phone.replace(/[\s\-\(\)]/g, '');
+    if (!phoneRegex.test(cleanedPhone)) {
+      setPhoneError('Please enter a valid phone number with country code');
+      return;
+    }
+    
+    setActiveProvider('sms');
+    try {
+      await connectWithSMS(cleanedPhone);
+      handleClose();
+    } catch (error) {
+      console.error('SMS login failed:', error);
+      setActiveProvider(null);
+    }
+  };
+
   const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase') => {
     setActiveProvider(wallet);
     try {
@@ -110,6 +136,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         >
           <Mail className="w-5 h-5" />
           <span>Continue with Email</span>
+        </Button>
+
+        <Button
+          onClick={() => setStep('sms')}
+          disabled={isConnecting}
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+        >
+          <Smartphone className="w-5 h-5" />
+          <span>Continue with SMS</span>
         </Button>
 
         <Button
@@ -206,6 +241,54 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
 
+  const renderSMSStep = () => (
+    <div className="space-y-4">
+      <button
+        onClick={() => setStep('main')}
+        className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm"
+      >
+        <ChevronRight className="w-4 h-4 rotate-180" />
+        Back
+      </button>
+
+      <form onSubmit={handleSMSSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Input
+            type="tel"
+            placeholder="+1 234 567 8900"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            disabled={isConnecting}
+            className="h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
+            autoFocus
+          />
+          {phoneError && (
+            <p className="text-red-400 text-sm">{phoneError}</p>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          disabled={isConnecting || !phone}
+          className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+        >
+          {activeProvider === 'sms' ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Sending code...
+            </span>
+          ) : (
+            'Continue'
+          )}
+        </Button>
+
+        <p className="text-white/40 text-xs text-center">
+          We'll send you a verification code via SMS
+        </p>
+      </form>
+    </div>
+  );
+
   const renderWalletsStep = () => (
     <div className="space-y-4">
       <button
@@ -289,6 +372,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <DialogTitle className="text-xl font-medium text-white mt-4 text-center">
             {step === 'main' && 'Log in'}
             {step === 'email' && 'Continue with Email'}
+            {step === 'sms' && 'Continue with SMS'}
             {step === 'wallets' && 'Connect Wallet'}
           </DialogTitle>
         </DialogHeader>
@@ -297,6 +381,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <div className="px-6 pb-6">
           {step === 'main' && renderMainStep()}
           {step === 'email' && renderEmailStep()}
+          {step === 'sms' && renderSMSStep()}
           {step === 'wallets' && renderWalletsStep()}
         </div>
 
