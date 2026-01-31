@@ -17,7 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { voteOnNFT } from '@/lib/api/dehub';
 import { toast } from 'sonner';
-import { CommentsSheet } from '@/components/app/comments/CommentsSheet';
+import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -725,9 +725,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         </DrawerContent>
       </Drawer>
 
-      {/* Comments Sheet - same component as regular posts */}
+      {/* Comments Section - same component as regular posts */}
       {showComments && currentShort?.id && (
-        <CommentsSheet
+        <CommentsSection
           tokenId={currentShort.id}
           onClose={() => setShowComments(false)}
         />

@@ -3,59 +3,14 @@ import { getSavedPosts, getLikedPosts, toggleSavePost, DeHubNFT, getMediaUrl } f
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
 export type BookmarkType = 'all' | 'liked' | 'recent' | 'images' | 'videos' | 'text';
 
 const PAGE_SIZE = 20;
 
-// ============================================================================
-// HELPERS
-// ============================================================================
-
-function formatDuration(seconds?: number): string {
-  if (!seconds) return '0:00';
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }
-  return `${minutes}:${secs.toString().padStart(2, '0')}`;
-}
-
-function formatViews(count?: number): string {
-  if (!count) return '0 views';
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M views`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}K views`;
-  return `${count} views`;
-}
-
-function formatTimeAgo(dateString?: string): string {
-  if (!dateString) return 'Just now';
-  
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Just now';
-  
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  if (diffMs < 0) return 'Just now';
-  
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-  const diffWeeks = Math.floor(diffDays / 7);
-  const diffMonths = Math.floor(diffDays / 30);
-  const diffYears = Math.floor(diffDays / 365);
-  
-  if (diffYears >= 1) return `${diffYears}y`;
-  if (diffMonths >= 1) return `${diffMonths}mo`;
-  if (diffWeeks >= 1) return `${diffWeeks}w`;
-  if (diffDays >= 1) return `${diffDays}d`;
-  if (diffHours >= 1) return `${diffHours}h`;
-  if (diffMins >= 1) return `${diffMins}m`;
-  return 'Just now';
-}
+// Helper functions (formatDuration, formatViews, formatTimeAgo) are now imported from @/lib/feed-utils
 
 // ============================================================================
 // MAPPERS - Convert DeHubNFT to feed card types

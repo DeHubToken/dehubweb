@@ -10,11 +10,11 @@
  */
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
-import { CommentsSheet } from '../comments';
+import { CommentsSection } from './CommentsSection';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import {
@@ -102,13 +102,15 @@ export function LiveCard({ stream }: LiveCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments Sheet */}
-      {showComments && (
-        <CommentsSheet
-          tokenId={stream.id}
-          onClose={() => setShowComments(false)}
-        />
-      )}
+      {/* Comments Section */}
+      <AnimatePresence>
+        {showComments && (
+          <CommentsSection
+            tokenId={stream.id}
+            onClose={() => setShowComments(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* AI Chat */}
       <PostAIChat

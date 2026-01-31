@@ -17,6 +17,7 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl } from '@/lib/media-url';
+import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -58,41 +59,7 @@ function isBlockedCreator(nft: DeHubNFT): boolean {
   );
 }
 
-function formatDuration(seconds?: number): string {
-  if (!seconds) return '0:00';
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }
-  return `${minutes}:${secs.toString().padStart(2, '0')}`;
-}
-
-function formatViews(count?: number): string {
-  if (!count) return '0 views';
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M views`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}K views`;
-  return `${count} views`;
-}
-
-function formatTimeAgo(dateString?: string): string {
-  if (!dateString) return 'Just now';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Just now';
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  if (diffMs < 0) return 'Just now';
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m`;
-  if (diffHours < 24) return `${diffHours}h`;
-  if (diffDays < 7) return `${diffDays}d`;
-  return `${Math.floor(diffDays / 7)}w`;
-}
-
+// Helper functions (formatDuration, formatViews, formatTimeAgo) are now imported from @/lib/feed-utils
 function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const minterAddress = nft.minter || nft.creator?.id || '';
   const rawAvatarUrl = nft.minterAvatarUrl || nft.creator?.avatar_url;
