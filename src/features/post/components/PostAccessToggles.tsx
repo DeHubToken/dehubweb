@@ -100,17 +100,65 @@ export function PostAccessToggles({
       </div>
 
       {/* Bounty */}
-      <div className="space-y-1">
+      <div className="space-y-1 sm:space-y-0">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Bounty</span>
           </div>
-          <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-white scale-75" />
+          <div className="flex items-center gap-2">
+            {/* Desktop/Tablet: inline options */}
+            <AnimatePresence>
+              {isWatch2Earn && (
+                <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="hidden sm:flex items-center gap-1 overflow-hidden">
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
+                          <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
+                            <Eye className="w-3 h-3 text-white/70" />
+                          </div>
+                          <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Total number of viewers to reward</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
+                          <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
+                            <MessageCircle className="w-3 h-3 text-white/70" />
+                          </div>
+                          <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Total number of commenters to reward</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex h-6 rounded overflow-hidden border border-white/20 cursor-help">
+                          <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
+                          <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Currency for reward</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <Switch checked={isWatch2Earn} onCheckedChange={setIsWatch2Earn} className="data-[state=checked]:bg-white scale-75" />
+          </div>
         </div>
+        {/* Mobile: options on new line */}
         <AnimatePresence>
           {isWatch2Earn && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="sm:hidden overflow-hidden">
               <div className="flex items-center gap-1.5 pl-6 pb-1">
                 <TooltipProvider delayDuration={300}>
                   <Tooltip>
@@ -122,9 +170,7 @@ export function PostAccessToggles({
                         <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top">
-                      Total number of viewers to reward
-                    </TooltipContent>
+                    <TooltipContent side="top">Total number of viewers to reward</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <TooltipProvider delayDuration={300}>
@@ -137,9 +183,7 @@ export function PostAccessToggles({
                         <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top">
-                      Total number of commenters to reward
-                    </TooltipContent>
+                    <TooltipContent side="top">Total number of commenters to reward</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
@@ -151,9 +195,7 @@ export function PostAccessToggles({
                         <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="top">
-                      Currency for reward
-                    </TooltipContent>
+                    <TooltipContent side="top">Currency for reward</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
@@ -163,17 +205,41 @@ export function PostAccessToggles({
       </div>
 
       {/* Token Gated */}
-      <div className="space-y-1">
+      <div className="space-y-1 sm:space-y-0">
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
           </div>
-          <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-white scale-75" />
+          <div className="flex items-center gap-2">
+            {/* Desktop/Tablet: inline options */}
+            <AnimatePresence>
+              {isTokenGated && (
+                <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="hidden sm:flex items-center gap-1 overflow-hidden">
+                  <input
+                    type="text"
+                    value={tokenContract}
+                    onChange={(e) => setTokenContract(e.target.value)}
+                    placeholder="Contract address"
+                    className="w-32 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
+                  />
+                  <input
+                    type="number"
+                    value={tokenAmount}
+                    onChange={(e) => setTokenAmount(e.target.value)}
+                    placeholder="Min"
+                    className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <Switch checked={isTokenGated} onCheckedChange={setIsTokenGated} className="data-[state=checked]:bg-white scale-75" />
+          </div>
         </div>
+        {/* Mobile: options on new line */}
         <AnimatePresence>
           {isTokenGated && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="sm:hidden overflow-hidden">
               <div className="flex items-center gap-1.5 pl-6 pb-1">
                 <input
                   type="text"
