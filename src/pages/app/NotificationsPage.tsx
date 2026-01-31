@@ -1,22 +1,30 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Share, Bell, Check, Loader2, UserPlus, AtSign, AlertCircle } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useNotifications, useUnreadNotificationCount, useMarkAllNotificationsAsRead, useMarkNotificationAsRead } from '@/hooks/use-notifications';
-import { getMediaUrl, type DeHubNotification } from '@/lib/api/dehub';
+import { 
+  useNotifications, 
+  useUnreadNotificationCount, 
+  useMarkAllNotificationsAsRead, 
+  useMarkNotificationAsRead,
+  type DeHubNotification,
+  type NotificationCategory,
+} from '@/hooks/use-notifications';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const tabs = [
+// Tabs organized by category as per API spec
+const tabs: { label: string; value: NotificationCategory | 'all'; icon: React.ElementType }[] = [
   { label: 'All', value: 'all', icon: Bell },
-  { label: 'Likes', value: 'like', icon: Heart },
-  { label: 'Comments', value: 'comment', icon: MessageCircle },
-  { label: 'Shares', value: 'share', icon: Share },
-  { label: 'Tips', value: 'tip', icon: DollarSign },
-  { label: 'Subs', value: 'subscribe', icon: Users },
+  { label: 'Engagement', value: 'engagement', icon: Heart },
+  { label: 'Social', value: 'social', icon: Users },
+  { label: 'Monetization', value: 'monetization', icon: DollarSign },
+  { label: 'Content', value: 'content', icon: Video },
+  { label: 'System', value: 'system', icon: AlertTriangle },
 ];
 
 function getNotificationIcon(type: DeHubNotification['type']) {
@@ -24,45 +32,87 @@ function getNotificationIcon(type: DeHubNotification['type']) {
     case 'like':
       return <Heart className="w-4 h-4 text-pink-500" />;
     case 'comment':
+    case 'comment_reply':
       return <MessageCircle className="w-4 h-4 text-blue-500" />;
-    case 'share':
-      return <Share className="w-4 h-4 text-green-500" />;
     case 'tip':
       return <DollarSign className="w-4 h-4 text-yellow-500" />;
-    case 'subscribe':
+    case 'subscription':
+    case 'ppv_purchase':
       return <Users className="w-4 h-4 text-purple-500" />;
-    case 'follow':
+    case 'following':
       return <UserPlus className="w-4 h-4 text-cyan-500" />;
-    case 'mention':
-      return <AtSign className="w-4 h-4 text-orange-500" />;
+    case 'video_milestone':
+      return <Trophy className="w-4 h-4 text-orange-500" />;
+    case 'livestream_start':
+      return <Zap className="w-4 h-4 text-red-500" />;
+    case 'video_removal':
+      return <AlertTriangle className="w-4 h-4 text-red-500" />;
     default:
       return <Bell className="w-4 h-4 text-zinc-500" />;
   }
 }
 
-function getNotificationText(notification: DeHubNotification): string {
-  const actorName = notification.actor?.displayName || notification.actor?.username || 'Someone';
+function getNotificationContent(notification: DeHubNotification): React.ReactNode {
+  // Use the content from API which already includes aggregation text
+  if (notification.content) {
+    return notification.content;
+  }
+  
+  // Fallback text generation
+  const actorName = notification.actorUsername || 'Someone';
   
   switch (notification.type) {
     case 'like':
-      return `${actorName} liked your post`;
+      return `${actorName} liked your ${notification.postType === 'video' ? 'video' : 'post'}`;
     case 'comment':
-      return `${actorName} commented on your post`;
-    case 'share':
-      return `${actorName} shared your post`;
+      return `${actorName} commented on your ${notification.postType === 'video' ? 'video' : 'post'}`;
+    case 'comment_reply':
+      return `${actorName} replied to your comment`;
     case 'tip':
       const tipAmount = notification.amount ? ` ${notification.amount} ${notification.currency || 'DHB'}` : '';
       return `${actorName} tipped you${tipAmount}`;
-    case 'subscribe':
-      return `${actorName} subscribed to you`;
-    case 'follow':
+    case 'subscription':
+      return `${actorName} subscribed to your plan`;
+    case 'ppv_purchase':
+      return `${actorName} purchased access to your video`;
+    case 'following':
       return `${actorName} started following you`;
-    case 'mention':
-      return `${actorName} mentioned you`;
-    case 'system':
-      return notification.content || 'System notification';
+    case 'video_milestone':
+      return `🎉 Your video reached a new milestone!`;
+    case 'livestream_start':
+      return `${actorName} started streaming`;
+    case 'video_removal':
+      return `Your video was removed`;
     default:
-      return notification.content || 'New notification';
+      return 'New notification';
+  }
+}
+
+function getNavigationLink(notification: DeHubNotification): string | null {
+  switch (notification.type) {
+    case 'like':
+    case 'comment':
+    case 'comment_reply':
+    case 'tip':
+    case 'video_milestone':
+      return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
+    case 'following':
+      return notification.actorUsername 
+        ? `/app/profile/${notification.actorUsername}` 
+        : notification.actorAddress 
+          ? `/app/profile/${notification.actorAddress}` 
+          : null;
+    case 'subscription':
+    case 'ppv_purchase':
+      return notification.actorUsername 
+        ? `/app/profile/${notification.actorUsername}` 
+        : '/app/command-centre';
+    case 'livestream_start':
+      return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
+    case 'video_removal':
+      return '/app/settings';
+    default:
+      return null;
   }
 }
 
@@ -73,18 +123,25 @@ function NotificationItem({
   notification: DeHubNotification;
   onMarkAsRead: (id: string) => void;
 }) {
-  const avatarUrl = getMediaUrl(notification.actor?.avatarImageUrl || notification.actor?.avatarUrl);
-  const postThumbnail = notification.post?.imageUrl ? getMediaUrl(notification.post.imageUrl) : null;
-  const isVerified = notification.actor?.isVerified || notification.actor?.is_verified;
-  const profileLink = notification.actor?.username 
-    ? `/app/profile/${notification.actor.username}` 
-    : notification.actor?.address 
-      ? `/app/profile/${notification.actor.address}` 
+  const navigate = useNavigate();
+  const avatarUrl = getMediaUrl(notification.actorAvatar);
+  const postThumbnail = notification.tokenThumbnail ? getMediaUrl(notification.tokenThumbnail) : null;
+  
+  const profileLink = notification.actorUsername 
+    ? `/app/profile/${notification.actorUsername}` 
+    : notification.actorAddress 
+      ? `/app/profile/${notification.actorAddress}` 
       : null;
 
   const handleClick = () => {
     if (!notification.read) {
       onMarkAsRead(notification.id);
+    }
+    
+    // Navigate to appropriate destination
+    const navLink = getNavigationLink(notification);
+    if (navLink) {
+      navigate(navLink);
     }
   };
 
@@ -97,12 +154,12 @@ function NotificationItem({
     >
       {/* Avatar with type icon overlay */}
       <div className="relative flex-shrink-0">
-        {profileLink ? (
+        {profileLink && notification.actorUsername ? (
           <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
             <Avatar className="w-12 h-12">
               {avatarUrl && <AvatarImage src={avatarUrl} />}
               <AvatarFallback className="bg-zinc-700 text-white">
-                {(notification.actor?.displayName || notification.actor?.username || 'U').charAt(0).toUpperCase()}
+                {(notification.actorUsername || 'U').charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </Link>
@@ -110,7 +167,7 @@ function NotificationItem({
           <Avatar className="w-12 h-12">
             {avatarUrl && <AvatarImage src={avatarUrl} />}
             <AvatarFallback className="bg-zinc-700 text-white">
-              {(notification.actor?.displayName || notification.actor?.username || 'U').charAt(0).toUpperCase()}
+              {(notification.actorUsername || 'U').charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         )}
@@ -122,37 +179,32 @@ function NotificationItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${notification.read ? 'text-zinc-400' : 'text-white'}`}>
-          {profileLink && notification.actor ? (
-            <>
-              <Link 
-                to={profileLink} 
-                className="font-semibold hover:underline"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {notification.actor.displayName || notification.actor.username}
-              </Link>
-              {isVerified && <VerifiedBadge className="w-3.5 h-3.5 inline ml-1" />}
-              <span className="text-zinc-400"> {getNotificationText(notification).split(notification.actor.displayName || notification.actor.username || '')[1]}</span>
-            </>
-          ) : (
-            getNotificationText(notification)
-          )}
+          {getNotificationContent(notification)}
         </p>
+        
+        {/* Show aggregated actor names if available */}
+        {notification.aggregatedCount && notification.aggregatedCount > 1 && notification.latestActorNames && (
+          <p className="text-xs text-zinc-500 mt-0.5">
+            {notification.latestActorNames.slice(0, 3).join(', ')}
+            {notification.aggregatedCount > 3 && ` and ${notification.aggregatedCount - 3} others`}
+          </p>
+        )}
+        
         <p className="text-xs text-zinc-500 mt-1">
-          {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(notification.updatedAt || notification.createdAt), { addSuffix: true })}
         </p>
       </div>
 
       {/* Post thumbnail if applicable */}
       {postThumbnail && (
         <Link 
-          to={`/app/post/${notification.post?.tokenId}`}
+          to={`/app/post/${notification.tokenId}`}
           onClick={(e) => e.stopPropagation()}
           className="flex-shrink-0"
         >
           <img 
             src={postThumbnail} 
-            alt="Post" 
+            alt={notification.tokenTitle || 'Post'} 
             className="w-12 h-12 rounded-lg object-cover"
           />
         </Link>
@@ -167,10 +219,13 @@ function NotificationItem({
 }
 
 export default function NotificationsPage() {
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState<NotificationCategory | 'all'>('all');
   const { isAuthenticated } = useAuth();
   
-  const { notifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications(activeTab);
+  // Only pass category if not 'all'
+  const category = activeTab === 'all' ? undefined : activeTab;
+  
+  const { notifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications(category);
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
@@ -182,11 +237,20 @@ export default function NotificationsPage() {
   }
 
   const handleMarkAllAsRead = () => {
-    markAllAsRead.mutate();
+    markAllAsRead.mutate(category);
   };
 
   const handleMarkAsRead = (notificationId: string) => {
     markAsRead.mutate(notificationId);
+  };
+
+  // Get total unread count
+  const totalUnread = unreadCount?.total ?? 0;
+  
+  // Get category-specific unread count for badge display
+  const getCategoryCount = (cat: NotificationCategory | 'all'): number => {
+    if (cat === 'all') return totalUnread;
+    return unreadCount?.byCategory?.[cat] ?? 0;
   };
 
   return (
@@ -197,14 +261,14 @@ export default function NotificationsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <h1 className="font-bold text-white text-lg">Notifications</h1>
-              {unreadCount !== undefined && unreadCount > 0 && (
+              {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-full">
-                  {unreadCount > 99 ? '99+' : unreadCount}
+                  {totalUnread > 99 ? '99+' : totalUnread}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2">
-              {unreadCount !== undefined && unreadCount > 0 && (
+              {totalUnread > 0 && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -231,21 +295,29 @@ export default function NotificationsPage() {
       {/* Tabs */}
       <div className="px-3 sm:px-4 py-2">
         <div className="bg-zinc-900 rounded-2xl p-2">
-          <div className="flex justify-evenly overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={`flex-1 flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                  activeTab === tab.value
-                    ? 'bg-white text-black'
-                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
-                }`}
-              >
-                <tab.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
+          <div className="flex overflow-x-auto gap-1 scrollbar-hide">
+            {tabs.map((tab) => {
+              const count = getCategoryCount(tab.value);
+              return (
+                <button
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={`flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                    activeTab === tab.value
+                      ? 'bg-white text-black'
+                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                  }`}
+                >
+                  <tab.icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  {count > 0 && activeTab !== tab.value && (
+                    <span className="ml-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+                      {count > 99 ? '99+' : count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
