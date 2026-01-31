@@ -21,6 +21,21 @@ const FALLBACK_THUMBNAILS = [
   'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=480&h=270&fit=crop',
 ];
 
+/** Usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS = [
+  'monkey d luffy',
+  'monkeydluffy',
+  'monkey_d_luffy',
+];
+
+function isBlockedCreator(nft: DeHubNFT): boolean {
+  const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
+  const username = (nft.creator?.username || '').toLowerCase();
+  return BLOCKED_CREATORS.some(blocked => 
+    displayName.includes(blocked) || username.includes(blocked)
+  );
+}
+
 /**
  * Format duration from seconds to MM:SS or HH:MM:SS
  */
@@ -345,13 +360,17 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
       });
       
       // Handle both response formats: { result: [...] } or { data: [...] }
-      const data = (response as any).result || response.data || [];
+      const rawData = (response as any).result || response.data || [];
+      
+      // Filter out blocked creators
+      const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft));
+      
       const unit = searchParams.unit || 15;
       
       return {
         data,
         page: pageParam,
-        has_more: data.length >= unit,
+        has_more: rawData.length >= unit, // Use raw length to determine pagination
         total: response.total || data.length,
         unit,
       };

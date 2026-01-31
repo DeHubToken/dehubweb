@@ -98,6 +98,25 @@ export interface UnifiedFeedResponse {
 }
 
 // ============================================================================
+// BLOCKLIST
+// ============================================================================
+
+/** Usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS = [
+  'monkey d luffy',
+  'monkeydluffy',
+  'monkey_d_luffy',
+];
+
+function isBlockedCreator(item: UnifiedFeedItem): boolean {
+  const displayName = (item.minterDisplayName || '').toLowerCase();
+  const username = (item.minterUsername || '').toLowerCase();
+  return BLOCKED_CREATORS.some(blocked => 
+    displayName.includes(blocked) || username.includes(blocked)
+  );
+}
+
+// ============================================================================
 // HELPERS
 // ============================================================================
 
@@ -338,8 +357,11 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         limit,
       });
       
+      // Filter out blocked creators
+      const filteredItems = (response.result || []).filter(item => !isBlockedCreator(item));
+      
       return {
-        items: response.result || [],
+        items: filteredItems,
         pagination: response.pagination,
         page: pageParam,
       };
