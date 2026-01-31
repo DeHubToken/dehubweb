@@ -13,6 +13,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { AppLayout } from '@/components/app/AppLayout';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
+import { CreatePlanModal, PlanCard } from '@/components/app/subscriptions';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -24,6 +25,7 @@ import {
 } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileData } from '@/hooks/use-dehub-profile';
+import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -105,11 +107,17 @@ export default function ProfilePage() {
   
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  
+  // Fetch subscription plans for this profile
+  const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress);
+  const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
+    !isViewingOwnProfile ? apiProfile?.walletAddress : undefined
+  );
   
   // Use API's isFollowing status
   const isFollowing = apiProfile?.isFollowing ?? false;
@@ -382,55 +390,91 @@ export default function ProfilePage() {
           </div>
         );
       case 'subscribers':
-        return (
-          <div className="space-y-2 sm:space-y-3">
-            {!isSubscribed ? (
-              <div className="relative min-h-[300px] rounded-2xl overflow-hidden">
-                {/* Blurred content preview */}
-                <div className="blur-lg pointer-events-none select-none">
-                  {(PROFILE_IMAGES.length > 0 ? PROFILE_IMAGES.slice(0, 2) : ALL_PROFILE_VIDEOS.slice(0, 2)).map((item) => (
-                    <div key={`sub-blur-${item.id}`} className="mb-2">
-                      {'image' in item ? <ImageCard post={item as ImagePost} /> : <VideoCard video={item as VideoItem} />}
-                    </div>
-                  ))}
-                  {/* Fallback if no content to blur */}
-                  {PROFILE_IMAGES.length === 0 && ALL_PROFILE_VIDEOS.length === 0 && (
-                    <div className="h-[300px] bg-zinc-800/50" />
-                  )}
-                </div>
-                {/* Subscribe overlay - positioned within container */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                  <div className="text-center p-6">
-                    <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
-                      <Lock className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-white font-bold text-xl mb-2">Subscribers Only</h3>
-                    <p className="text-zinc-400 text-sm mb-4 max-w-xs">
-                      Subscribe to {profile?.name || 'this creator'} to unlock exclusive content
-                    </p>
-                    <Button 
-                      onClick={() => {
-                        setIsSubscribed(true);
-                        toast.success(`Subscribed to ${profile?.name || 'creator'}!`);
-                      }}
-                      className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                    >
-                      <CreditCard className="w-4 h-4" />
-                      Subscribe
-                    </Button>
-                  </div>
-                </div>
+        // Loading state
+        if (isLoadingPlans) {
+          return (
+            <div className="flex flex-col items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
+              <p className="text-zinc-500 text-sm">Loading plans...</p>
+            </div>
+          );
+        }
+        
+        // Own profile without plans - prompt to create
+        if (isViewingOwnProfile && !hasPlans) {
+          return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-yellow-400" />
               </div>
-            ) : (
-              <>
-                {PROFILE_IMAGES.slice(0, 5).map((image) => (
-                  <ImageCard key={`sub-${image.id}`} post={image} />
+              <h3 className="text-white font-bold text-xl mb-2">Create Subscription Plans</h3>
+              <p className="text-zinc-400 text-sm mb-6 max-w-xs">
+                Monetize your content by creating subscription plans for your fans
+              </p>
+              <Button 
+                onClick={() => setCreatePlanModalOpen(true)}
+                className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Create Your First Plan
+              </Button>
+            </div>
+          );
+        }
+        
+        // Own profile with plans - show plan management
+        if (isViewingOwnProfile && hasPlans) {
+          return (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-semibold">Your Subscription Plans</h3>
+                <Button 
+                  onClick={() => setCreatePlanModalOpen(true)}
+                  size="sm"
+                  className="rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white gap-1"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Plan
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                {plans.map((plan) => (
+                  <PlanCard 
+                    key={plan._id || plan.id} 
+                    plan={plan} 
+                    isOwner={true}
+                    onEdit={() => toast.info('Edit plan coming soon')}
+                  />
                 ))}
-                {ALL_PROFILE_VIDEOS.slice(0, 5).map((video) => (
-                  <VideoCard key={`sub-${video.id}`} video={video} />
-                ))}
-              </>
-            )}
+              </div>
+            </div>
+          );
+        }
+        
+        // Viewing other's profile - no plans available
+        if (!hasPlans) {
+          return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Star className="w-12 h-12 text-zinc-600 mb-3" />
+              <p className="text-zinc-400 text-lg font-medium">No subscription plans</p>
+              <p className="text-zinc-500 text-sm mt-1">{profile?.name || 'This creator'} hasn't set up any plans yet</p>
+            </div>
+          );
+        }
+        
+        // Viewing other's profile - show available plans
+        return (
+          <div className="space-y-4">
+            <h3 className="text-white font-semibold mb-4">Subscription Plans</h3>
+            <div className="grid gap-4">
+              {plans.map((plan) => (
+                <PlanCard 
+                  key={plan._id || plan.id} 
+                  plan={plan} 
+                  isSubscribed={isSubscribed}
+                />
+              ))}
+            </div>
           </div>
         );
       case 'songs':
@@ -574,14 +618,11 @@ export default function ProfilePage() {
                         Follow
                       </Button>
                     )}
-                    {isFollowing && !isSubscribed && (
+                    {isFollowing && !isSubscribed && hasPlans && (
                       <Button 
                         size="sm" 
                         className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white gap-2"
-                        onClick={() => {
-                          setIsSubscribed(true);
-                          toast.success(`Subscribed to ${profile.name}!`);
-                        }}
+                        onClick={() => setActiveTab('subscribers')}
                       >
                         <Star className="w-4 h-4" />
                         Subscribe
@@ -591,14 +632,11 @@ export default function ProfilePage() {
                       <Button 
                         size="sm" 
                         variant="outline"
-                        className="rounded-xl border-red-500/50 text-red-400 hover:bg-red-500/10 gap-2"
-                        onClick={() => {
-                          setIsSubscribed(false);
-                          toast.success(`Unsubscribed from ${profile.name}`);
-                        }}
+                        className="rounded-xl border-green-500/50 text-green-400 gap-2 cursor-default"
+                        disabled
                       >
                         <Star className="w-4 h-4" />
-                        Unsubscribe
+                        Subscribed
                       </Button>
                     )}
                   </>
@@ -747,6 +785,12 @@ export default function ProfilePage() {
         initialIndex={0}
         isOpen={!!fullscreenImage}
         onClose={() => setFullscreenImage(null)}
+      />
+      
+      {/* Create Plan Modal */}
+      <CreatePlanModal
+        open={createPlanModalOpen}
+        onOpenChange={setCreatePlanModalOpen}
       />
     </div>
   );
