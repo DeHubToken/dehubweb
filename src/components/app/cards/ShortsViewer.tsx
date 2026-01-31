@@ -507,7 +507,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         )}
 
         {/* Video Container */}
-        <div className={`relative ${isMobile ? 'w-full h-full' : 'w-[360px] h-[calc(100vh-80px)] max-h-[640px]'} bg-zinc-900 rounded-none md:rounded-2xl overflow-hidden`}>
+        <div className={`relative ${isMobile ? 'w-full h-full bg-black' : 'w-[360px] h-[calc(100vh-80px)] max-h-[640px] bg-zinc-900'} rounded-none md:rounded-2xl overflow-hidden`}>
           {/* Liquid glass background for non-portrait videos */}
           {videoAspect !== 'portrait' && currentShort.thumbnail && (
             <>
@@ -587,17 +587,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               {/* Creator Info */}
               <div className="absolute top-4 left-4 z-10 max-w-[50vw]">
                 <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
-                  <Avatar className="w-8 h-8 border border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                  <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
                     <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                     <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-white text-sm font-medium truncate">@{currentShort.creatorUsername || currentShort.username}</span>
-                    <span className="text-white/60 text-xs flex items-center gap-1">
-                      <Eye className="w-3 h-3 flex-shrink-0" />
-                      {currentShort.views || '0'} • {formatCount(localLikeCount)} likes
-                    </span>
-                  </div>
+                  <span className="text-white text-sm font-medium truncate min-w-0 flex-1">@{currentShort.creatorUsername || currentShort.username}</span>
                   <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl flex-shrink-0">
                     Follow
                   </button>
