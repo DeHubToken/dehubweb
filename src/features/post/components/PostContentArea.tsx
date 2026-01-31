@@ -418,6 +418,14 @@ export function PostContentArea({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
+        {/* Mobile: Avatar in absolute top left */}
+        <div className="absolute top-3 left-4 z-10 sm:hidden">
+          <Avatar className="w-8 h-8 rounded-xl">
+            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
+            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+        </div>
+
         {/* Schedule/Drafts buttons - top right corner */}
         <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
           {/* Schedule indicator */}
@@ -540,12 +548,8 @@ export function PostContentArea({
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Mobile: Avatar top left, text below aligned left */}
-        <div className="flex flex-col sm:hidden mt-8">
-          <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl mb-2">
-            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
-            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
+        {/* Mobile: Text input below avatar (avatar is absolute positioned) */}
+        <div className="flex flex-col sm:hidden mt-12">
           {/* Title input */}
           <div
             ref={editorRef}

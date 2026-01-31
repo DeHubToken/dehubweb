@@ -149,11 +149,11 @@ export function PostAccessToggles({
   return (
     <>
       <div className="px-4 py-2 border-t border-white/10 space-y-1">
-        {/* Subscribers Only */}
+        {/* Subscribers */}
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-white" />
-            <span className="text-sm text-white">Subscribers only</span>
+            <span className="text-sm text-white">Subscribers</span>
           </div>
           <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-white scale-75" />
         </div>
