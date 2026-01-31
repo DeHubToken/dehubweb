@@ -62,10 +62,13 @@ export function PostAccessToggles({
   setTokenAmount,
 }: PostAccessTogglesProps) {
   // Mobile drawer states
+  const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
 
   // Temp states for drawer inputs
+  const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
+  const [tempPpvCurrency, setTempPpvCurrency] = useState<Currency>(ppvCurrency);
   const [tempW2eViews, setTempW2eViews] = useState(w2eViews);
   const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
   const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
@@ -73,9 +76,18 @@ export function PostAccessToggles({
   const [tempTokenContract, setTempTokenContract] = useState(tokenContract);
   const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
 
+  const handlePpvToggle = (checked: boolean) => {
+    if (checked && window.innerWidth < 640) {
+      setTempPpvAmount(ppvAmount);
+      setTempPpvCurrency(ppvCurrency);
+      setPpvDrawerOpen(true);
+    } else {
+      setIsPPV(checked);
+    }
+  };
+
   const handleBountyToggle = (checked: boolean) => {
     if (checked && window.innerWidth < 640) {
-      // Open drawer on mobile
       setTempW2eViews(w2eViews);
       setTempW2eComments(w2eComments);
       setTempW2eTotal(w2eTotal);
@@ -95,6 +107,17 @@ export function PostAccessToggles({
     } else {
       setIsTokenGated(checked);
     }
+  };
+
+  const confirmPpv = () => {
+    setPpvAmount(tempPpvAmount);
+    setPpvCurrency(tempPpvCurrency);
+    setIsPPV(true);
+    setPpvDrawerOpen(false);
+  };
+
+  const cancelPpv = () => {
+    setPpvDrawerOpen(false);
   };
 
   const confirmBounty = () => {
@@ -136,16 +159,17 @@ export function PostAccessToggles({
         </div>
 
         {/* PPV */}
-        <div className="space-y-1">
+        <div className="space-y-1 sm:space-y-0">
           <div className="flex items-center justify-between py-0.5">
             <div className="flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-white" />
               <span className="text-sm text-white">PPV</span>
             </div>
             <div className="flex items-center gap-2">
+              {/* Desktop/Tablet: inline options */}
               <AnimatePresence>
                 {isPPV && (
-                  <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="flex items-center gap-1 overflow-hidden">
+                  <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="hidden sm:flex items-center gap-1 overflow-hidden">
                     <input
                       type="number"
                       value={ppvAmount}
@@ -160,7 +184,7 @@ export function PostAccessToggles({
                   </motion.div>
                 )}
               </AnimatePresence>
-              <Switch checked={isPPV} onCheckedChange={setIsPPV} className="data-[state=checked]:bg-white scale-75" />
+              <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" />
             </div>
           </div>
         </div>
@@ -258,6 +282,68 @@ export function PostAccessToggles({
         </div>
       </div>
 
+      {/* PPV Drawer for Mobile */}
+      <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
+        <DrawerContent glass>
+          <DrawerHeader className="text-left">
+            <DrawerTitle className="flex items-center gap-2 text-white">
+              <CreditCard className="w-5 h-5" />
+              Set PPV Price
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-4 space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm text-white/70">Price</label>
+              <input
+                type="number"
+                value={tempPpvAmount}
+                onChange={(e) => setTempPpvAmount(e.target.value)}
+                placeholder="0.00"
+                className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm text-white/70">Currency</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setTempPpvCurrency('USD')}
+                  className={cn(
+                    "flex-1 h-12 rounded-xl text-base font-medium transition-colors",
+                    tempPpvCurrency === 'USD' 
+                      ? "bg-white text-black" 
+                      : "bg-zinc-800/50 text-white border border-white/20"
+                  )}
+                >
+                  USD
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTempPpvCurrency('DHB')}
+                  className={cn(
+                    "flex-1 h-12 rounded-xl text-base font-medium transition-colors",
+                    tempPpvCurrency === 'DHB' 
+                      ? "bg-white text-black" 
+                      : "bg-zinc-800/50 text-white border border-white/20"
+                  )}
+                >
+                  DHB
+                </button>
+              </div>
+            </div>
+          </div>
+          <DrawerFooter className="flex-row gap-2">
+            <Button variant="outline" onClick={cancelPpv} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
+              Cancel
+            </Button>
+            <Button onClick={confirmPpv} className="flex-1 rounded-xl bg-white text-black hover:bg-white/90">
+              <Check className="w-4 h-4 mr-2" />
+              Confirm
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
       {/* Bounty Drawer for Mobile */}
       <Drawer open={bountyDrawerOpen} onOpenChange={setBountyDrawerOpen}>
         <DrawerContent glass>
@@ -335,7 +421,7 @@ export function PostAccessToggles({
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
-            <Button variant="outline" onClick={cancelBounty} className="flex-1 rounded-xl border-white/20 text-white">
+            <Button variant="outline" onClick={cancelBounty} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
               Cancel
             </Button>
             <Button onClick={confirmBounty} className="flex-1 rounded-xl bg-white text-black hover:bg-white/90">
@@ -378,7 +464,7 @@ export function PostAccessToggles({
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
-            <Button variant="outline" onClick={cancelToken} className="flex-1 rounded-xl border-white/20 text-white">
+            <Button variant="outline" onClick={cancelToken} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
               Cancel
             </Button>
             <Button onClick={confirmToken} className="flex-1 rounded-xl bg-white text-black hover:bg-white/90">
