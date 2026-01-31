@@ -196,13 +196,23 @@ export function PostActionBar({
               align="center"
               side="top"
               sideOffset={4}
+              onPointerDownOutside={(e) => {
+                // Prevent popover from closing when clicking on file input
+                const target = e.target as HTMLElement;
+                if (target.tagName === 'INPUT' && target.getAttribute('type') === 'file') {
+                  e.preventDefault();
+                }
+              }}
             >
               <div className="flex flex-col items-center gap-1.5">
                 <Tooltip open={uploadTooltipOpen}>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      onClick={() => audioInputRef.current?.click()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        audioInputRef.current?.click();
+                      }}
                       onMouseEnter={() => setUploadTooltipOpen(true)}
                       onMouseLeave={() => setUploadTooltipOpen(false)}
                       className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
