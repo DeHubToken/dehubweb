@@ -114,7 +114,7 @@ function NotificationItem({
             </AvatarFallback>
           </Avatar>
         )}
-        <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-zinc-900 border border-zinc-800">
+        <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
           {getNotificationIcon(notification.type)}
         </div>
       </div>

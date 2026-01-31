@@ -109,7 +109,7 @@ function MessagesSkeleton() {
       {[...Array(5)].map((_, i) => (
         <div key={i} className={`flex gap-3 ${i % 2 === 0 ? '' : 'flex-row-reverse'}`}>
           {i % 2 === 0 && (
-            <div className="w-8 h-8 rounded-full bg-zinc-800 animate-pulse flex-shrink-0" />
+            <div className="w-8 h-8 rounded-xl bg-zinc-800 animate-pulse flex-shrink-0" />
           )}
           <div className={`flex-1 max-w-[75%] ${i % 2 !== 0 ? 'text-right' : ''}`}>
             <div 

@@ -462,7 +462,7 @@ export default function PostInfoPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-zinc-700 flex items-center justify-center shrink-0">
                           <span className="text-sm font-bold text-white">{rank}</span>
                         </div>
                       )}

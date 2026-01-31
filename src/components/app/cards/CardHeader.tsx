@@ -87,8 +87,8 @@ export function CardHeader({
         className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
       >
         {isLive ? (
-          <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-            <div className="p-0.5 bg-zinc-900 rounded-full">
+          <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-xl">
               <Avatar className="w-8 h-8">
                 {avatarSrc && <AvatarImage src={avatarSrc} />}
                 <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>

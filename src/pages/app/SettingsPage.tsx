@@ -998,7 +998,7 @@ function AssetsSettings() {
           className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
               <Wallet className="w-5 h-5 text-white" />
             </div>
             <span className="text-white font-mono">{MOCK_WALLET_ADDRESS}</span>
@@ -1051,7 +1051,7 @@ function AssetsSettings() {
           {MOCK_OWNED_USERNAMES.map((username) => (
             <div key={username.handle} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
                   <AtSign className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1091,7 +1091,7 @@ function AssetsSettings() {
           {MOCK_OFFERS_MADE.map((offer, idx) => (
             <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
                   <Handshake className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -1162,7 +1162,7 @@ function AssetsSettings() {
                       : 'bg-zinc-800 hover:bg-zinc-750'
                   }`}
                 >
-                  <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
+                  <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-xl" />
                   <div className="text-left">
                     <p className="text-white font-medium">{user.name}</p>
                     <p className="text-zinc-500 text-sm">{user.handle}</p>

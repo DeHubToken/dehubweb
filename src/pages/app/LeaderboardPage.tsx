@@ -261,7 +261,7 @@ export default function LeaderboardPage() {
                         />
                       </div>
                     ) : (
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${getRankStyle(rank)}`}>
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold ${getRankStyle(rank)}`}>
                         {rank}
                       </div>
                     )}
