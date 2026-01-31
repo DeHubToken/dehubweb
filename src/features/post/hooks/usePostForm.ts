@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { mintPost, type StreamInfo } from '@/lib/api/dehub';
-import { mintOnChain } from '@/lib/contracts/stream-collection';
+import { mintOnChain, getWeb3AuthSigner } from '@/lib/contracts/stream-collection';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -569,6 +569,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         thumbnail = await thumbResponse.blob();
       }
 
+      // Get user's wallet address for signature generation
+      const signer = await getWeb3AuthSigner();
+      const minterAddress = await signer.getAddress();
+      console.log('[Mint] User wallet address (minter):', minterAddress);
+
       console.log('Minting post:', {
         name: text.trim(),
         description: description.trim(),
@@ -576,6 +581,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         streamInfo,
         filesCount: files.length,
         hasThumbnail: !!thumbnail,
+        minterAddress,
       });
 
       // Step 1: Call the mint API to get signature
@@ -590,6 +596,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         streamInfo,
         files: files.length > 0 ? files : undefined,
         thumbnail,
+        minterAddress, // Include minter address for signature generation
       });
 
       console.log('[Mint] Full API response:', JSON.stringify(mintResponse, null, 2));
