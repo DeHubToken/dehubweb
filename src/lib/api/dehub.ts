@@ -740,14 +740,15 @@ export async function getLikedPosts(
 /**
  * Get user's watch history
  * Uses GET /api/my_watched_nfts with limit (items per page) and page (0-based)
+ * API requires 'watcher' param for the viewer's address
  */
 export async function getWatchHistory(
   page: number = 0, 
   limit: number = 20,
-  address?: string
+  watcher?: string
 ): Promise<{ result: DeHubNFT[] }> {
   return apiCall<{ result: DeHubNFT[] }>("/api/my_watched_nfts", {
-    params: { page, limit, ...(address && { address }) },
+    params: { page, limit, ...(watcher && { watcher }) },
     requiresAuth: true,
   });
 }
