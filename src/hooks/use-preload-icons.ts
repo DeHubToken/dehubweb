@@ -7,6 +7,7 @@ import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesIcon from '@/assets/icons/messages-icon.png';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import settingsIcon from '@/assets/icons/settings-icon.png';
+import searchIcon from '@/assets/icons/search-icon.png';
 
 // List of all 3D icons that need to be preloaded
 const icons = [
@@ -16,6 +17,7 @@ const icons = [
   messagesIcon,
   notificationsIcon,
   settingsIcon,
+  searchIcon,
 ];
 
 let preloaded = false;
@@ -42,4 +44,5 @@ export {
   messagesIcon,
   notificationsIcon,
   settingsIcon,
+  searchIcon,
 };
