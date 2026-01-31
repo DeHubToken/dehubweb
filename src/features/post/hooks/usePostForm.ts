@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { mintPost, type StreamInfo } from '@/lib/api/dehub';
+import { mintOnChain } from '@/lib/contracts/stream-collection';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -577,7 +578,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         hasThumbnail: !!thumbnail,
       });
 
-      // Call the mint API
+      // Step 1: Call the mint API to get signature
+      toast.info('Uploading content...', { id: 'mint-progress' });
+      
       const mintResponse = await mintPost({
         name: text.trim(),
         description: description.trim(),
@@ -589,23 +592,43 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         thumbnail,
       });
 
-      console.log('Mint response:', mintResponse);
+      console.log('Mint API response:', mintResponse);
 
-      // TODO: Step 2 - Call smart contract with mint response values
-      // For now, just show success
+      // Handle scheduled posts (skip on-chain minting)
       if (scheduledDate) {
-        toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`);
-      } else {
-        toast.success('Post minted successfully!', {
-          description: `Token ID: ${mintResponse.createdTokenId}`,
-        });
+        toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`, { id: 'mint-progress' });
+        resetForm();
+        onClose();
+        return;
       }
+
+      // Step 2: Execute on-chain minting with the signature
+      toast.info('Minting on blockchain...', { id: 'mint-progress' });
+      
+      const txHash = await mintOnChain({
+        tokenId: mintResponse.createdTokenId,
+        timestamp: mintResponse.timestamp,
+        v: mintResponse.v,
+        r: mintResponse.r,
+        s: mintResponse.s,
+      });
+
+      console.log('Mint transaction hash:', txHash);
+
+      toast.success('Post minted successfully!', {
+        id: 'mint-progress',
+        description: `Token ID: ${mintResponse.createdTokenId}`,
+        action: {
+          label: 'View on BaseScan',
+          onClick: () => window.open(`https://basescan.org/tx/${txHash}`, '_blank'),
+        },
+      });
       
       resetForm();
       onClose();
     } catch (error) {
       console.error('Failed to mint post:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create post');
+      toast.error(error instanceof Error ? error.message : 'Failed to create post', { id: 'mint-progress' });
     } finally {
       setIsPosting(false);
     }
