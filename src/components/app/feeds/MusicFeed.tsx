@@ -35,7 +35,8 @@ const MUSIC_SUB_TABS: { icon: typeof Music; label: string; value: MusicSubTab }[
   { icon: Radio, label: 'Radio', value: 'radio' },
 ];
 
-const CAROUSEL_PAGE_SIZE = 6; // Initial load for carousel
+const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
+const CAROUSEL_LOAD_MORE = 6; // Load more items when scrolling
 const VIDEOS_PAGE_SIZE = 20; // Page size for videos tab
 
 // ============================================================================
@@ -276,10 +277,32 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
   );
 }
 
-function MusicVideosCarousel({ videos, isLoading, onSeeAll }: { videos: VideoItem[]; isLoading: boolean; onSeeAll: () => void }) {
+function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: { 
+  videos: VideoItem[]; 
+  totalCount: number;
+  isLoading: boolean; 
+  onSeeAll: () => void;
+}) {
+  const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
+  // Progressive loading on scroll
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    
+    // Check if scrolled near the end (within 100px of right edge)
+    const scrollRight = el.scrollWidth - el.scrollLeft - el.clientWidth;
+    if (scrollRight < 100 && visibleCount < videos.length) {
+      setVisibleCount(prev => Math.min(prev + CAROUSEL_LOAD_MORE, videos.length));
+    }
+  }, [visibleCount, videos.length]);
+  
+  const visibleVideos = videos.slice(0, visibleCount);
+  
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
-      <SectionHeader icon={Play} title="Music Videos" count={videos.length} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
+      <SectionHeader icon={Play} title="Music Videos" count={totalCount} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
       {isLoading ? (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-6 h-6 text-white animate-spin" />
@@ -289,10 +312,19 @@ function MusicVideosCarousel({ videos, isLoading, onSeeAll }: { videos: VideoIte
       ) : (
         <div className="relative">
           <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-            {videos.map((video) => (
+          <SwipeableCarousel 
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
+          >
+            {visibleVideos.map((video) => (
               <InlineVideoCard key={video.id} video={video} onSeeAll={onSeeAll} />
             ))}
+            {visibleCount < videos.length && (
+              <div className="flex-shrink-0 w-[280px] aspect-video rounded-xl bg-zinc-800 flex items-center justify-center">
+                <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+              </div>
+            )}
           </SwipeableCarousel>
         </div>
       )}
@@ -322,19 +354,21 @@ function PodcastsCarousel() {
 function AllSection({ 
   radioStations, 
   musicVideos,
+  totalVideoCount,
   isLoadingVideos,
   onGoToRadio,
   onGoToVideos,
 }: { 
   radioStations: RadioStation[];
   musicVideos: VideoItem[];
+  totalVideoCount: number;
   isLoadingVideos: boolean;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
 }) {
   return (
     <div className="space-y-4 pb-32">
-      <MusicVideosCarousel videos={musicVideos} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
+      <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <TracksCarousel />
       <PodcastsCarousel />
@@ -453,14 +487,14 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch music-categorized videos for carousel (paginated - smaller initial load)
+  // Fetch music-categorized videos for carousel
   const { data: carouselVideosData, isLoading: isLoadingCarouselVideos } = useQuery({
     queryKey: ['music-videos-carousel', walletAddress],
     queryFn: async () => {
       const response = await searchNFTs({
         category: 'Music',
         postType: 'video',
-        unit: CAROUSEL_PAGE_SIZE,
+        unit: 50, // Fetch more, but only show progressively
         sortMode: 'popular',
         address: walletAddress || undefined,
       });
@@ -499,6 +533,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
           <AllSection 
             radioStations={radioStations} 
             musicVideos={carouselVideos}
+            totalVideoCount={carouselVideosData?.length || 0}
             isLoadingVideos={isLoadingCarouselVideos}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
