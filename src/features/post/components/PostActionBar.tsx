@@ -198,19 +198,14 @@ export function PostActionBar({
         {/* Audio button with popover for upload/record options */}
         {!isLive && (
           <Popover>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
-                  <button 
-                    type="button" 
-                    className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-                  >
-                    <Music className="w-5 h-5 text-white" />
-                  </button>
-                </PopoverTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Add audio</TooltipContent>
-            </Tooltip>
+            <PopoverTrigger asChild>
+              <button 
+                type="button" 
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Music className="w-5 h-5 text-white" />
+              </button>
+            </PopoverTrigger>
             <PopoverContent 
               className="w-auto p-1 bg-transparent border-none shadow-none" 
               align="center"
