@@ -99,14 +99,14 @@ function getNavigationLink(notification: DeHubNotification): string | null {
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'following':
       return notification.actorUsername 
-        ? `/app/profile/${notification.actorUsername}` 
+        ? `/${notification.actorUsername}` 
         : notification.actorAddress 
-          ? `/app/profile/${notification.actorAddress}` 
+          ? `/${notification.actorAddress}` 
           : null;
     case 'subscription':
     case 'ppv_purchase':
       return notification.actorUsername 
-        ? `/app/profile/${notification.actorUsername}` 
+        ? `/${notification.actorUsername}` 
         : '/app/command-centre';
     case 'livestream_start':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
@@ -129,9 +129,9 @@ function NotificationItem({
   const postThumbnail = notification.tokenThumbnail ? getMediaUrl(notification.tokenThumbnail) : null;
   
   const profileLink = notification.actorUsername 
-    ? `/app/profile/${notification.actorUsername}` 
+    ? `/${notification.actorUsername}` 
     : notification.actorAddress 
-      ? `/app/profile/${notification.actorAddress}` 
+      ? `/${notification.actorAddress}` 
       : null;
 
   const handleClick = () => {
