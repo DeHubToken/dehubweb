@@ -50,6 +50,7 @@ export interface Comment {
   likes: number;
   dislikes: number;
   timeAgo: string;
+  createdAt: Date; // For sorting
   isLiked?: boolean;
   isDisliked?: boolean;
   voiceNote?: VoiceNote;
@@ -75,14 +76,18 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     ? buildAvatarUrl(address, rawAvatarPath) 
     : undefined;
   
+  // Parse createdAt for sorting - fallback to current time if parsing fails
+  const createdAt = apiComment.createdAt ? new Date(apiComment.createdAt) : new Date();
+  
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
     avatar: resolvedAvatar,
     text: apiComment.content,
-    likes: 0,
+    likes: 0, // API doesn't provide like counts for comments currently
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
+    createdAt,
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
   };
@@ -433,9 +438,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
     return [...filtered].sort((a, b) => {
       if (sortBy === 'liked') {
+        // Sort by likes (most liked first)
         return b.comment.likes - a.comment.likes;
       }
-      return 0;
+      // Default: sort by most recent (newest first)
+      return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
     });
   }, [groupedComments, searchQuery, sortBy]);
 
@@ -492,6 +499,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       likes: 0,
       dislikes: 0,
       timeAgo: 'Just now',
+      createdAt: new Date(), // For sorting - new comments appear at top when sorted by recent
       voiceNote: voiceNote || undefined,
       replyToId: replyTo?.id,
       address: userAddress,
