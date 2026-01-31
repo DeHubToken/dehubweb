@@ -1,25 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
-
-// Construction nail icon for thumbnail button
-const NailIcon = ({ className }: { className?: string }) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-    className={className}
-  >
-    {/* Nail head */}
-    <line x1="6" y1="4" x2="18" y2="4" />
-    {/* Nail shaft */}
-    <line x1="12" y1="4" x2="12" y2="20" />
-    {/* Pointed tip */}
-    <path d="M10 18 L12 22 L14 18" />
-  </svg>
-);
+import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -704,7 +685,7 @@ export function PostMediaPreview({
                               : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
                             }`}
                         >
-                          <NailIcon className="w-3 h-3" />
+                          <img src={nailIcon} alt="Thumbnail" className="w-3 h-3" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Add custom thumbnail</TooltipContent>
