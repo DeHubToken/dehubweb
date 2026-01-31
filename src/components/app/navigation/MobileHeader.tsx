@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Bell } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -17,9 +16,6 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-
-  // TODO: Replace with actual balance from auth/wallet state
-  const coinBalance = 0;
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -40,9 +36,6 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       </div>
       
       <div className="flex items-center gap-2">
-        {/* Coin Balance */}
-        <CoinBalanceMenu balance={coinBalance} variant="mobile" />
-        
         {/* Notifications Button */}
         <button
           onClick={() => navigate('/app/notifications')}
