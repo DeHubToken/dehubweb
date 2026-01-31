@@ -540,7 +540,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           className={`flex-1 py-3 flex items-center justify-center transition-colors ${
             activeTab === 'replies'
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300'
+              : 'text-zinc-400 hover:text-zinc-200'
           }`}
         >
           <MessageCircle className="w-5 h-5" />
@@ -551,7 +551,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           className={`flex-1 py-3 flex items-center justify-center transition-colors ${
             activeTab === 'quotes'
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300'
+              : 'text-zinc-400 hover:text-zinc-200'
           }`}
         >
           <Quote className="w-5 h-5" />
@@ -562,7 +562,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           className={`flex-1 py-3 flex items-center justify-center transition-colors ${
             activeTab === 'search'
               ? 'text-white'
-              : 'text-zinc-500 hover:text-zinc-300'
+              : 'text-zinc-400 hover:text-zinc-200'
           }`}
         >
           <Search className="w-5 h-5" />
@@ -570,7 +570,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         <button
           type="button"
           onClick={() => setSortBy(prev => prev === 'recent' ? 'liked' : 'recent')}
-          className="flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-500 hover:text-white"
+          className="flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-400 hover:text-white"
           title={sortBy === 'recent' ? 'Sorted by Most Recent' : 'Sorted by Most Liked'}
         >
           <ArrowUpDown className="w-5 h-5" />
