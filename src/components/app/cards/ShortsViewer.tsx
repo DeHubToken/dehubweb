@@ -1,17 +1,26 @@
 /**
  * Shorts Viewer Component
  * =======================
- * Full-screen shorts viewer with video playback and comments overlay.
+ * Full-screen shorts viewer with video playback and comments.
+ * Uses the same ActionBar and CommentsSheet as regular posts.
  * Desktop: Centered portrait video with side panels.
  * Mobile: Full-screen video.
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Heart, Share2, Send, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2 } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
+import { useAuth } from '@/contexts/AuthContext';
+import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { voteOnNFT } from '@/lib/api/dehub';
+import { toast } from 'sonner';
+import { CommentsSheet } from '@/components/app/comments/CommentsSheet';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Repeat2, Quote, Link } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { ShortVideo } from '@/types/feed.types';
 
 interface ShortsViewerProps {
@@ -20,25 +29,110 @@ interface ShortsViewerProps {
   onClose: () => void;
 }
 
-// Comments are now loaded from real API - no mock data
+/** Format count for display (e.g., 1500 -> 1.5K) */
+function formatCount(count?: number | string): string {
+  // Handle string counts like "1.2K"
+  if (typeof count === 'string') return count;
+  const value = count ?? 0;
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return value.toString();
+}
 
 export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [comment, setComment] = useState('');
-  const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
+  const [showComments, setShowComments] = useState(false);
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  
+  // Voting state - synced with API
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+  const [localLikeCount, setLocalLikeCount] = useState(0);
+  const [localDislikeCount, setLocalDislikeCount] = useState(0);
+  const [isVoting, setIsVoting] = useState(false);
+  const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
+  
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const { isAuthenticated } = useAuth();
 
   const currentShort = shorts[currentIndex];
   
+  // Bookmark hook - uses the same system as regular posts
+  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
+  
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
+  
+  // Reset voting state when changing videos
+  useEffect(() => {
+    setIsLiked(false);
+    setIsDisliked(false);
+    // Parse likes from string if needed
+    const likes = typeof currentShort?.likes === 'string' 
+      ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0 
+      : (currentShort?.likes as unknown as number) || 0;
+    setLocalLikeCount(likes);
+    setLocalDislikeCount(0);
+    setShowComments(false);
+  }, [currentIndex, currentShort?.likes]);
+  
+  // Handle voting - same logic as ActionBar
+  const handleVote = useCallback(async (vote: boolean) => {
+    if (!currentShort?.id || isVoting || isLiked || isDisliked) return;
+    
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to vote');
+      return;
+    }
+
+    setIsVoting(true);
+    
+    // Optimistic update with animation trigger
+    if (vote) {
+      setIsLiked(true);
+      setLocalLikeCount(prev => prev + 1);
+      setJustVoted('like');
+    } else {
+      setIsDisliked(true);
+      setLocalDislikeCount(prev => prev + 1);
+      setJustVoted('dislike');
+    }
+    
+    setTimeout(() => setJustVoted(null), 400);
+
+    try {
+      await voteOnNFT(currentShort.id, vote);
+    } catch (error: unknown) {
+      // Revert optimistic update on error
+      if (vote) {
+        setIsLiked(false);
+        setLocalLikeCount(prev => prev - 1);
+      } else {
+        setIsDisliked(false);
+        setLocalDislikeCount(prev => prev - 1);
+      }
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (errorMessage.includes('409') || errorMessage.includes('already')) {
+        toast.error('You have already voted on this content');
+        if (vote) setIsLiked(true);
+        else setIsDisliked(true);
+      } else {
+        toast.error('Failed to vote. Please try again.');
+      }
+    } finally {
+      setIsVoting(false);
+    }
+  }, [currentShort?.id, isVoting, isLiked, isDisliked, isAuthenticated]);
+
+  const hasVoted = isLiked || isDisliked;
   
   // Handle video time update for view tracking
   const handleTimeUpdate = useCallback(() => {
@@ -69,7 +163,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch(() => {});
     }
-    setIsLiked(false);
     setIsPlaying(true);
   }, [currentIndex]);
 
@@ -195,6 +288,61 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     e.stopPropagation();
   };
 
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/app/post/${currentShort.id}`;
+    navigator.clipboard.writeText(url);
+    toast.success('Post URL copied to clipboard');
+    setShareSheetOpen(false);
+  };
+
+  const handleRepost = () => {
+    toast.success('Reposted!');
+    setShareSheetOpen(false);
+  };
+
+  const handleQuote = () => {
+    toast.success('Quote created!');
+    setShareSheetOpen(false);
+  };
+
+  // Action button component for consistency
+  const ActionButton = ({ 
+    icon: Icon, 
+    count, 
+    onClick, 
+    active, 
+    activeColor = 'text-red-500',
+    disabled,
+    animate
+  }: { 
+    icon: typeof ThumbsUp; 
+    count?: string | number; 
+    onClick?: () => void;
+    active?: boolean;
+    activeColor?: string;
+    disabled?: boolean;
+    animate?: boolean;
+  }) => (
+    <motion.button
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "flex flex-col items-center gap-1",
+        disabled && "opacity-50 cursor-not-allowed"
+      )}
+      animate={animate ? { scale: [1, 1.3, 1] } : {}}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      <div className={cn(
+        "w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center transition-colors",
+        active && activeColor
+      )}>
+        <Icon className={cn("w-6 h-6", active ? activeColor : "text-white", active && "fill-current")} />
+      </div>
+      {count !== undefined && <span className="text-white text-xs">{formatCount(count)}</span>}
+    </motion.button>
+  );
+
   return (
     <motion.div
       ref={containerRef}
@@ -228,7 +376,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                       {currentShort.views || '0'}
                     </span>
                     <span>•</span>
-                    <span>{currentShort.likes} likes</span>
+                    <span>{formatCount(localLikeCount)} likes</span>
                   </div>
                 </div>
                 <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0">
@@ -240,29 +388,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               )}
             </div>
 
-            {/* Comments - Rest of panel */}
+            {/* Desktop: Open comments in sheet when clicked */}
             <div className="flex-1 bg-zinc-900/50 rounded-2xl p-4 flex flex-col min-h-0">
-              <p className="text-white/60 text-xs mb-3 flex-shrink-0">Comments</p>
+              <button 
+                onClick={() => setShowComments(true)}
+                className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0 hover:text-white transition-colors"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>View Comments</span>
+              </button>
               <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 flex items-center justify-center">
-                <p className="text-white/40 text-sm">No comments yet</p>
-              </div>
-              
-              {/* Comment input */}
-              <div className="flex-shrink-0 mt-3 pt-3 border-t border-white/10">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="Add a comment..."
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    className="flex-1 bg-zinc-800 text-white placeholder-white/40 text-sm rounded-xl px-4 py-2 border border-white/10 focus:outline-none focus:border-white/30"
-                  />
-                  {comment && (
-                    <button className="text-primary">
-                      <Send className="w-5 h-5" />
-                    </button>
-                  )}
-                </div>
+                <p className="text-white/40 text-sm">Tap to view comments</p>
               </div>
             </div>
           </div>
@@ -357,7 +493,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                     <span className="text-white text-sm font-medium">@{currentShort.username}</span>
                     <span className="text-white/60 text-xs flex items-center gap-1">
                       <Eye className="w-3 h-3" />
-                      {currentShort.views || '0'} • {currentShort.likes} likes
+                      {currentShort.views || '0'} • {formatCount(localLikeCount)} likes
                     </span>
                   </div>
                   <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl">
@@ -366,35 +502,77 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 </div>
               </div>
 
-              {/* Comments Section */}
-              <div className="absolute bottom-0 left-0 right-0 z-10 p-4 space-y-3">
-                <div className="space-y-3 max-h-[150px] overflow-y-auto scrollbar-hide flex items-center justify-center">
-                  <p className="text-white/40 text-sm">No comments yet</p>
-                </div>
-                <div className="flex items-center gap-3 pt-2">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      placeholder="Add Comment..."
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      className="w-full bg-zinc-800/70 backdrop-blur-sm text-white placeholder-white/40 text-sm rounded-xl px-4 py-2.5 pr-10 border border-white/10 focus:outline-none focus:border-white/30"
-                    />
-                    {comment && (
-                      <button className="absolute right-2 top-1/2 -translate-y-1/2 text-primary">
-                        <Send className="w-4 h-4" />
-                      </button>
-                    )}
+              {/* Mobile Action Bar at Bottom */}
+              <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
+                <div className="flex items-center justify-between">
+                  {/* Like/Dislike */}
+                  <div className="flex items-center gap-3">
+                    <motion.button
+                      onClick={() => handleVote(true)}
+                      disabled={hasVoted || isVoting}
+                      className={cn(
+                        "flex items-center gap-1 transition-colors",
+                        hasVoted && !isLiked && "opacity-50"
+                      )}
+                      animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center",
+                        isLiked && "text-white"
+                      )}>
+                        <ThumbsUp className={cn("w-5 h-5", isLiked ? "fill-current text-white" : "text-white")} />
+                      </div>
+                      <span className="text-white text-xs">{formatCount(localLikeCount)}</span>
+                    </motion.button>
+                    
+                    <motion.button
+                      onClick={() => handleVote(false)}
+                      disabled={hasVoted || isVoting}
+                      className={cn(
+                        "flex items-center gap-1 transition-colors",
+                        hasVoted && !isDisliked && "opacity-50"
+                      )}
+                      animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                      )}>
+                        <ThumbsDown className={cn("w-5 h-5", isDisliked ? "fill-current text-white" : "text-white")} />
+                      </div>
+                    </motion.button>
                   </div>
+                  
+                  {/* Comments */}
                   <button
-                    onClick={() => setIsLiked(!isLiked)}
+                    onClick={() => setShowComments(true)}
                     className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
                   >
-                    <Heart className={`w-5 h-5 ${isLiked ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+                    <MessageSquare className="w-5 h-5 text-white" />
                   </button>
-                  <button className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  
+                  {/* Share */}
+                  <button
+                    onClick={() => setShareSheetOpen(true)}
+                    className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                  >
                     <Share2 className="w-5 h-5 text-white" />
                   </button>
+                  
+                  {/* Bookmark */}
+                  <motion.button
+                    onClick={toggleBookmark}
+                    disabled={isBookmarkLoading}
+                    className={cn(
+                      "w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center",
+                      isBookmarkLoading && "opacity-50"
+                    )}
+                    animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    <Bookmark className={cn("w-5 h-5", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
+                  </motion.button>
                 </div>
               </div>
             </>
@@ -413,17 +591,33 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               <ChevronUp className="w-5 h-5 text-white" />
             </button>
 
-            {/* Action buttons */}
+            {/* Action buttons - synced with API */}
             <div className="flex flex-col items-center gap-4">
-              <button
-                onClick={() => setIsLiked(!isLiked)}
-                className="flex flex-col items-center gap-1"
-              >
-                <div className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center transition-colors">
-                  <Heart className={`w-6 h-6 ${isLiked ? 'text-red-500 fill-red-500' : 'text-white'}`} />
-                </div>
-                <span className="text-white text-xs">{currentShort.likes}</span>
-              </button>
+              <ActionButton
+                icon={ThumbsUp}
+                count={localLikeCount}
+                onClick={() => handleVote(true)}
+                active={isLiked}
+                activeColor="text-white"
+                disabled={hasVoted || isVoting}
+                animate={justVoted === 'like'}
+              />
+              
+              <ActionButton
+                icon={ThumbsDown}
+                count={localDislikeCount}
+                onClick={() => handleVote(false)}
+                active={isDisliked}
+                activeColor="text-white"
+                disabled={hasVoted || isVoting}
+                animate={justVoted === 'dislike'}
+              />
+
+              <ActionButton
+                icon={MessageSquare}
+                count={currentShort.comments || 0}
+                onClick={() => setShowComments(true)}
+              />
 
               {/* View count */}
               <div className="flex flex-col items-center gap-1">
@@ -433,12 +627,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 <span className="text-white text-xs">{currentShort.views || '0'}</span>
               </div>
 
-              <button className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-full flex items-center justify-center transition-colors">
-                  <Share2 className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-white text-xs">Share</span>
-              </button>
+              <ActionButton
+                icon={Share2}
+                onClick={() => setShareSheetOpen(true)}
+              />
+              
+              <ActionButton
+                icon={Bookmark}
+                onClick={toggleBookmark}
+                active={isBookmarked}
+                activeColor="text-yellow-500"
+                disabled={isBookmarkLoading}
+                animate={isBookmarked}
+              />
 
               <button
                 onClick={toggleMute}
@@ -490,6 +691,46 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
         <div className="absolute bottom-32 left-1/2 -translate-x-1/2 text-white/40 text-xs animate-pulse z-10">
           Swipe up for next
         </div>
+      )}
+
+      {/* Share Drawer - same style as ActionBar */}
+      <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
+        <DrawerContent glass className="px-4 pb-6">
+          <DrawerHeader className="relative">
+            <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col gap-1 mt-2 relative">
+            <button
+              onClick={handleRepost}
+              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+            >
+              <Repeat2 className="w-5 h-5" />
+              <span className="font-medium">Repost</span>
+            </button>
+            <button
+              onClick={handleQuote}
+              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+            >
+              <Quote className="w-5 h-5" />
+              <span className="font-medium">Quote</span>
+            </button>
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+            >
+              <Link className="w-5 h-5" />
+              <span className="font-medium">Copy Link</span>
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Comments Sheet - same component as regular posts */}
+      {showComments && currentShort?.id && (
+        <CommentsSheet
+          tokenId={currentShort.id}
+          onClose={() => setShowComments(false)}
+        />
       )}
     </motion.div>
   );
