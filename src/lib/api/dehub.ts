@@ -1206,17 +1206,29 @@ export async function getReportsForNFT(tokenId: number | string): Promise<DeHubR
  * Uses POST /api/nft/reports endpoint
  * @param data - Report submission data
  */
-export async function submitReport(data: ReportSubmission): Promise<{ success: boolean; reportId?: string }> {
-  const response = await apiCall<{ success: boolean; result?: { id: string } }>("/api/nft/reports", {
-    method: "POST",
-    body: data as unknown as Record<string, unknown>,
-    requiresAuth: true,
-  });
-  
-  return { 
-    success: response?.success !== false, 
-    reportId: response?.result?.id 
-  };
+export async function submitReport(data: ReportSubmission): Promise<{ success: boolean; reportId?: string; message?: string }> {
+  try {
+    const response = await apiCall<{ success?: boolean; result?: { id: string }; message?: string; _id?: string }>("/api/nft/reports", {
+      method: "POST",
+      body: data as unknown as Record<string, unknown>,
+      requiresAuth: true,
+    });
+    
+    // Handle various response formats from API
+    // Format 1: { success: true, result: { id: "..." } }
+    // Format 2: { _id: "..." } (direct creation response)
+    // Format 3: { message: "Report created" }
+    const reportId = response?.result?.id || response?._id;
+    
+    return { 
+      success: response?.success !== false, 
+      reportId,
+      message: response?.message || 'Report submitted successfully',
+    };
+  } catch (error: any) {
+    console.error('[submitReport] Error:', error);
+    throw error;
+  }
 }
 
 // ============================================

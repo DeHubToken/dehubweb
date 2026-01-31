@@ -54,6 +54,11 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
     try {
       const numericTokenId = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId;
       
+      if (isNaN(numericTokenId)) {
+        toast.error('Invalid content ID');
+        return;
+      }
+      
       const result = await submitReport({
         tokenId: numericTokenId,
         reason: selectedReason,
@@ -61,14 +66,21 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
       });
 
       if (result.success) {
-        toast.success('Report submitted successfully. Our team will review it.');
+        toast.success(result.message || 'Report submitted successfully. Our team will review it.');
         handleClose();
       } else {
         toast.error('Failed to submit report. Please try again.');
       }
     } catch (error: any) {
       console.error('[ReportModal] Submit error:', error);
-      toast.error(error.message || 'Failed to submit report');
+      // Handle specific API errors
+      if (error.message?.includes('already reported')) {
+        toast.error('You have already reported this content');
+      } else if (error.message?.includes('Unauthorized')) {
+        toast.error('Please log in to submit a report');
+      } else {
+        toast.error(error.message || 'Failed to submit report');
+      }
     } finally {
       setIsSubmitting(false);
     }
