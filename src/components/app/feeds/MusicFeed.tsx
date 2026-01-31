@@ -6,7 +6,7 @@
  * @module components/app/feeds/MusicFeed
  */
 
-import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play, Music, Mic2, Radio, Disc3, Loader2, ChevronRight, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -19,6 +19,7 @@ import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl } from '@/lib/media-url';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import type { VideoItem } from '@/types/feed.types';
 
 // ============================================================================
@@ -197,17 +198,41 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
 
 // Inline playable video thumbnail card for carousel
 function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () => void }) {
+  const instanceId = useId();
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const videoRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
+
+  // Pause callback for the playback manager
+  const pauseVideo = useCallback(() => {
+    videoRef.current?.pause();
+    setIsPlaying(false);
+  }, []);
+
+  // Register with playback manager
+  useEffect(() => {
+    videoPlaybackManager.register(instanceId, pauseVideo);
+    return () => {
+      videoPlaybackManager.unregister(instanceId);
+    };
+  }, [instanceId, pauseVideo]);
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isPlaying) {
       videoRef.current?.pause();
       setIsPlaying(false);
+      videoPlaybackManager.stop(instanceId);
     } else {
+      // Sync mute state from global manager
+      const currentGlobalMuted = videoPlaybackManager.globalMuted;
+      setIsMuted(currentGlobalMuted);
+      if (videoRef.current) {
+        videoRef.current.muted = currentGlobalMuted;
+      }
+      // Notify manager - this will pause any other playing video
+      videoPlaybackManager.play(instanceId);
       videoRef.current?.play();
       setIsPlaying(true);
     }
