@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, LogOut, Pencil
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,7 +35,7 @@ export default function ProfilePage() {
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
   const userId = searchParams.get('id');
-  const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading, disconnect } = useAuth();
+  const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
   // Reset scroll position on mount
   useEffect(() => {
@@ -501,32 +501,12 @@ export default function ProfilePage() {
     return notFoundContent;
   }
 
-  const handleLogout = async () => {
-    try {
-      await disconnect();
-      toast.success('Logged out successfully');
-    } catch (error) {
-      toast.error('Failed to logout');
-    }
-  };
 
   const profileContent = (
     <div className="min-h-screen">
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
-          {/* Logout button - top right, only on own profile */}
-          {isViewingOwnProfile && isAuthenticated && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="absolute top-3 right-3 z-10 rounded-xl bg-black/40 backdrop-blur-sm hover:bg-black/60 text-white gap-2 px-3"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">Log out</span>
-            </Button>
-          )}
           
           {/* Cover Photo - clickable for fullscreen */}
           {profile.coverUrl ? (
