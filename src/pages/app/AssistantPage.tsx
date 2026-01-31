@@ -19,7 +19,7 @@ import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
-import assistantAvatar from '@/assets/assistant-avatar.png';
+import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 import aiStarIcon from '@/assets/icons/ai-star-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
