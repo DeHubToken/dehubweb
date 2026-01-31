@@ -6,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { UsernameRequiredModal } from "@/components/app/modals";
 import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import Index from "./pages/Index";
 import DeleteAccount from "./pages/DeleteAccount";
 import CreatorsPage from "./pages/app/CreatorsPage";
@@ -42,6 +43,9 @@ const queryClient = new QueryClient({
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
+  
+  // Preload 3D icons on app mount to prevent flicker during navigation
+  usePreloadIcons();
   
   return (
     <>
