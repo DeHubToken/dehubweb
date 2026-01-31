@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,11 +12,20 @@ import {
   type DeHubNotification,
   type NotificationCategory,
 } from '@/hooks/use-notifications';
-import { getMediaUrl } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 
 // Tabs organized by category as per API spec
 const tabs: { label: string; value: NotificationCategory | 'all'; icon: React.ElementType }[] = [
@@ -125,8 +134,21 @@ function NotificationItem({
   onMarkAsRead: (id: string) => void;
 }) {
   const navigate = useNavigate();
-  const avatarUrl = getMediaUrl(notification.actorAvatar);
-  const postThumbnail = notification.tokenThumbnail ? getMediaUrl(notification.tokenThumbnail) : null;
+  
+  // Build proper avatar URL using the canonical utility
+  const rawAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
+  const avatarUrl = notification.actorAddress 
+    ? buildAvatarUrl(notification.actorAddress, rawAvatarPath)
+    : rawAvatarPath?.startsWith('http') ? rawAvatarPath : undefined;
+  
+  // Dicebear fallback for when no avatar exists
+  const fallbackAvatar = notification.actorAddress 
+    ? `https://api.dicebear.com/7.x/identicon/svg?seed=${notification.actorAddress}`
+    : undefined;
+    
+  const postThumbnail = notification.tokenThumbnail 
+    ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `https://dehubcdn.dehub.io/${notification.tokenThumbnail}`)
+    : null;
   
   const profileLink = notification.actorUsername 
     ? `/${notification.actorUsername}` 
@@ -158,17 +180,25 @@ function NotificationItem({
         {profileLink && notification.actorUsername ? (
           <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
             <Avatar className="w-12 h-12">
-              {avatarUrl && <AvatarImage src={avatarUrl} />}
+              <AvatarImage src={avatarUrl || fallbackAvatar} />
               <AvatarFallback className="bg-zinc-700 text-white">
-                {(notification.actorUsername || 'U').charAt(0).toUpperCase()}
+                {fallbackAvatar ? (
+                  <img src={fallbackAvatar} alt="" className="w-full h-full" />
+                ) : (
+                  (notification.actorUsername || 'U').charAt(0).toUpperCase()
+                )}
               </AvatarFallback>
             </Avatar>
           </Link>
         ) : (
           <Avatar className="w-12 h-12">
-            {avatarUrl && <AvatarImage src={avatarUrl} />}
+            <AvatarImage src={avatarUrl || fallbackAvatar} />
             <AvatarFallback className="bg-zinc-700 text-white">
-              {(notification.actorUsername || 'U').charAt(0).toUpperCase()}
+              {fallbackAvatar ? (
+                <img src={fallbackAvatar} alt="" className="w-full h-full" />
+              ) : (
+                (notification.actorUsername || 'U').charAt(0).toUpperCase()
+              )}
             </AvatarFallback>
           </Avatar>
         )}
@@ -222,6 +252,16 @@ function NotificationItem({
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<NotificationCategory | 'all'>('all');
   const { isAuthenticated } = useAuth();
+  
+  // Notification preference toggles (local state for now)
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    likes: true,
+    comments: true,
+    follows: true,
+    tips: true,
+    subscriptions: true,
+    livestreams: true,
+  });
   
   // Only pass category if not 'all'
   const category = activeTab === 'all' ? undefined : activeTab;
@@ -286,9 +326,103 @@ export default function NotificationsPage() {
                   <span className="ml-1 hidden sm:inline">Mark all read</span>
                 </Button>
               )}
-              <button className="p-2 rounded-xl hover:bg-zinc-800 transition-colors">
-                <Settings className="w-5 h-5 text-zinc-400" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                    <Settings className="w-5 h-5 text-zinc-400" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64 bg-zinc-900 border-zinc-800">
+                  <DropdownMenuLabel className="text-zinc-400 text-xs">Actions</DropdownMenuLabel>
+                  <DropdownMenuItem 
+                    onClick={handleMarkAllAsRead}
+                    disabled={markAllAsRead.isPending || totalUnread === 0}
+                    className="text-white hover:bg-zinc-800 cursor-pointer"
+                  >
+                    <Check className="w-4 h-4 mr-2" />
+                    Mark all as read
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    className="text-red-400 hover:bg-zinc-800 hover:text-red-400 cursor-pointer"
+                    onClick={() => {
+                      // TODO: Implement clear all notifications API
+                      console.log('Clear all notifications');
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Clear all notifications
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator className="bg-zinc-800" />
+                  <DropdownMenuLabel className="text-zinc-400 text-xs">Notification Types</DropdownMenuLabel>
+                  
+                  <div className="px-2 py-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-pink-500" />
+                      <span className="text-sm text-white">Likes</span>
+                    </div>
+                    <Switch 
+                      checked={notificationPrefs.likes}
+                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, likes: checked }))}
+                    />
+                  </div>
+                  
+                  <div className="px-2 py-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm text-white">Comments</span>
+                    </div>
+                    <Switch 
+                      checked={notificationPrefs.comments}
+                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, comments: checked }))}
+                    />
+                  </div>
+                  
+                  <div className="px-2 py-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <UserPlus className="w-4 h-4 text-cyan-500" />
+                      <span className="text-sm text-white">Follows</span>
+                    </div>
+                    <Switch 
+                      checked={notificationPrefs.follows}
+                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, follows: checked }))}
+                    />
+                  </div>
+                  
+                  <div className="px-2 py-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-yellow-500" />
+                      <span className="text-sm text-white">Tips</span>
+                    </div>
+                    <Switch 
+                      checked={notificationPrefs.tips}
+                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, tips: checked }))}
+                    />
+                  </div>
+                  
+                  <div className="px-2 py-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-purple-500" />
+                      <span className="text-sm text-white">Subscriptions</span>
+                    </div>
+                    <Switch 
+                      checked={notificationPrefs.subscriptions}
+                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, subscriptions: checked }))}
+                    />
+                  </div>
+                  
+                  <div className="px-2 py-1.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-red-500" />
+                      <span className="text-sm text-white">Livestreams</span>
+                    </div>
+                    <Switch 
+                      checked={notificationPrefs.livestreams}
+                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, livestreams: checked }))}
+                    />
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
