@@ -9,8 +9,13 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, hasValidMedia, isValidMediaUrl } from '@/lib/media-url';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+
+// Blocked minters with known broken content
+const BLOCKED_MINTERS = [
+  '0x589c1562aa289ed82ffee79ad75a41523fbf2b94', // Monkey D. Luffy - broken images
+];
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
@@ -338,8 +343,19 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         limit,
       });
       
+      // Filter out blocked minters and content with broken media
+      const filteredItems = (response.result || []).filter(item => {
+        // Filter blocked minters
+        if (BLOCKED_MINTERS.includes(item.minter?.toLowerCase())) return false;
+        
+        // Filter broken media
+        if (!hasValidMedia(item)) return false;
+        
+        return true;
+      });
+      
       return {
-        items: response.result || [],
+        items: filteredItems,
         pagination: response.pagination,
         page: pageParam,
       };

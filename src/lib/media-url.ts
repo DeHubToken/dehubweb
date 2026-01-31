@@ -93,3 +93,64 @@ export function buildFeedImageUrls(apiImageUrls: string[] | undefined | null): s
     return imgUrl;
   });
 }
+
+/**
+ * Validate if media URL is likely valid (not empty, not a known broken pattern)
+ * Returns false for URLs that are known to be broken or invalid
+ */
+export function isValidMediaUrl(url: string | undefined | null): boolean {
+  if (!url) return false;
+  if (url.trim() === '') return false;
+  
+  // Check for placeholder or broken URL patterns
+  const brokenPatterns = [
+    'undefined',
+    'null',
+    'placeholder',
+    '.undefined',
+    '.null',
+  ];
+  
+  const lowerUrl = url.toLowerCase();
+  for (const pattern of brokenPatterns) {
+    if (lowerUrl.includes(pattern)) return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Check if an NFT/content item has valid media assets
+ * Returns false if the content has broken/missing images or videos
+ */
+export function hasValidMedia(item: {
+  imageUrl?: string | null;
+  imageUrls?: string[] | null;
+  videoUrl?: string | null;
+  thumbnail?: string | null;
+  postType?: string;
+}): boolean {
+  // For videos, must have valid thumbnail or image
+  if (item.postType === 'video' || item.videoUrl) {
+    const thumbnail = item.imageUrl || item.thumbnail;
+    return isValidMediaUrl(thumbnail);
+  }
+  
+  // For multi-image posts
+  if (item.imageUrls && item.imageUrls.length > 0) {
+    // At least first image must be valid
+    return isValidMediaUrl(item.imageUrls[0]);
+  }
+  
+  // For single image posts
+  if (item.imageUrl) {
+    return isValidMediaUrl(item.imageUrl);
+  }
+  
+  // Text posts don't need media
+  if (item.postType === 'feed-simple') {
+    return true;
+  }
+  
+  return false;
+}
