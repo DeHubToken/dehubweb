@@ -433,7 +433,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           onComment={() => setShowComments(true)} 
           isLiked={post.isLiked} 
           isDisliked={post.isDisliked}
-          hideDislike
           likeCount={post.likes}
           commentCount={post.comments}
         />
