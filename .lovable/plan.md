@@ -1,123 +1,141 @@
 
-# Fix Login Flow Bug: Connection State Stuck After Rejection
 
-## Problem Summary
-When a user clicks a login method (MetaMask, Google, etc.) and then rejects the sign request or cancels, the login modal becomes unresponsive. All buttons remain disabled and clicking other login options doesn't work until the page is refreshed.
+# Fix Login Flow Bug: Modal Freezes After Cancelled OAuth
 
 ## Root Cause Analysis
 
-### Issue 1: Web3Auth State Not Reset After Rejection
-When a user rejects a signature or cancels the login flow, Web3Auth's internal state may remain in a "connected" status. Subsequent `connectTo()` calls fail because Web3Auth thinks it's already connected.
+After deep investigation, the issue is that when a user cancels a login attempt (e.g., closes the Google OAuth popup), the Web3Auth SDK enters an inconsistent internal state. The current error recovery doesn't properly clean up because:
 
-### Issue 2: Missing State Cleanup in Error Handlers
-In `AuthContext.tsx`, the error handling for user rejections:
-- Sets `needsSignature` to `true` and returns early
-- Does NOT disconnect/reset Web3Auth
-- The modal remains open but Web3Auth is in a broken state
+1. **Incomplete error message detection**: Web3Auth throws various error messages when OAuth is cancelled that aren't being caught (e.g., "popup_closed_by_user", "popup closed", "Failed to connect with wallet")
 
-### Issue 3: `activeProvider` State Stuck in LoginModal
-When an error occurs, `activeProvider` is set to `null`, but this doesn't help if `isConnecting` remains true from the AuthContext.
+2. **Fire-and-forget logout**: `resetWeb3AuthState()` only calls `logout()` if `connected === true`, but when OAuth fails mid-flow, the instance isn't "connected" yet - leaving internal state, iframes, and promises dangling
+
+3. **No forced cleanup**: The SDK may have open iframes, modal overlays, or pending event listeners that block subsequent connection attempts
 
 ## Solution
 
-### 1. Add Web3Auth Disconnect on User Rejection (AuthContext.tsx)
-When the user rejects a signature, we need to:
-- Disconnect from Web3Auth to reset its internal state
-- Reset `isConnecting` to `false`
-- Allow the user to try again with any method
+### Part 1: Expand Error Message Detection
 
-### 2. Reset Web3Auth State More Aggressively
-After any rejection or cancellation, call `disconnectWeb3Auth()` to ensure the SDK is in a clean state for the next attempt.
+Update the catch block patterns to detect more cancellation scenarios:
 
-### 3. Update Error Handlers in All Connect Methods
-Modify `connectWithProvider`, `connectWithEmail`, `connectWithSMS`, and `connectWithWallet` to:
-- Disconnect Web3Auth on any error that leaves it in a connected state
-- Properly reset all local state
+```typescript
+const isCancellation = 
+  errorMessage.includes('user rejected') ||
+  errorMessage.includes('User rejected') ||
+  errorMessage.includes('User denied') ||
+  errorMessage.includes('User closed') ||
+  errorMessage.includes('cancelled') ||
+  errorMessage.includes('popup_closed') ||
+  errorMessage.includes('popup closed') ||
+  errorMessage.includes('closed by user') ||
+  errorMessage.includes('user canceled') ||
+  errorMessage.includes('window closed');
+```
 
-## Technical Implementation
+### Part 2: Forceful Web3Auth Cleanup
 
-### File: `src/contexts/AuthContext.tsx`
+Create a more aggressive reset function that cleans up regardless of connection state:
 
-**Changes to `connectWithProvider` function (around lines 337-350):**
+```typescript
+export async function forceCleanupWeb3Auth(): Promise<void> {
+  console.log("[Web3Auth] Force cleanup after error...");
+  
+  // Try to logout regardless of connection state
+  if (web3authInstance) {
+    try {
+      // Try logout even if not connected - clears internal state
+      await web3authInstance.logout();
+    } catch (e) {
+      // Expected to fail if not connected, that's fine
+    }
+  }
+  
+  // Clean up any leftover Web3Auth iframes/modals from the DOM
+  document.querySelectorAll('iframe[title*="web3auth"], iframe[id*="web3auth"]').forEach(el => el.remove());
+  document.querySelectorAll('[class*="w3a-modal"], [class*="web3auth"]').forEach(el => el.remove());
+  
+  // Reset module variables
+  web3authInstance = null;
+  isInitializing = false;
+  initPromise = null;
+  
+  console.log("[Web3Auth] ✓ Force cleanup complete");
+}
+```
+
+### Part 3: Update AuthContext Error Handlers
+
+Replace `safeResetAfterError()` calls with `forceCleanupWeb3Auth()` in all error handlers:
+
+**File: src/contexts/AuthContext.tsx**
+
+In each connect method (`connectWithProvider`, `connectWithEmail`, `connectWithSMS`, `connectWithWallet`), update the catch block:
+
 ```typescript
 } catch (error: unknown) {
-  const errorMessage = error instanceof Error ? error.message : '';
+  const errorMessage = error instanceof Error ? error.message.toLowerCase() : '';
   
-  // Check if user rejected the signature
-  if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied') || errorMessage.includes('User closed')) {
-    // Reset Web3Auth state so user can try again
-    try {
-      await disconnectWeb3Auth();
-      resetWeb3AuthState();
-    } catch (e) {
-      console.warn('[Auth] Cleanup after rejection failed:', e);
-    }
-    toast.error('Log in was cancelled');
-    return;
-  }
+  // Expanded cancellation detection
+  const isCancellation = 
+    errorMessage.includes('user rejected') ||
+    errorMessage.includes('user denied') ||
+    errorMessage.includes('user closed') ||
+    errorMessage.includes('cancelled') ||
+    errorMessage.includes('canceled') ||
+    errorMessage.includes('popup_closed') ||
+    errorMessage.includes('popup closed') ||
+    errorMessage.includes('closed by user') ||
+    errorMessage.includes('window closed') ||
+    errorMessage.includes('aborted');
   
-  // For other errors, also clean up
+  // Always force cleanup after any error
   try {
-    await disconnectWeb3Auth();
-    resetWeb3AuthState();
+    await forceCleanupWeb3Auth();
   } catch (e) {
-    console.warn('[Auth] Cleanup after error failed:', e);
+    console.warn('[Auth] Cleanup failed:', e);
   }
   
+  if (isCancellation) {
+    toast.error('Log in was cancelled');
+    return; // Don't throw, just return silently
+  }
+  
+  // For non-cancellation errors, show error toast but don't throw
+  // (throwing prevents finally block from resetting isConnecting properly)
   handleConnectionError(error);
 }
 ```
 
-**Apply same pattern to:**
-- `connectWithEmail` (lines 375-384)
-- `connectWithSMS` (lines 412-421)
-- `connectWithWallet` (lines 447-456)
+### Part 4: Prevent Error Re-throwing
 
-### File: `src/lib/web3auth.ts`
+The `handleConnectionError` function currently throws, which can cause issues. Change it to NOT throw:
 
-**Update `disconnectWeb3Auth` to be more robust (lines 289-295):**
 ```typescript
-export async function disconnectWeb3Auth(): Promise<void> {
-  console.log("[Web3Auth] disconnectWeb3Auth() called");
-  try {
-    if (web3authInstance?.connected) {
-      await web3authInstance.logout();
-      console.log("[Web3Auth] ✓ Logged out");
-    }
-  } catch (e) {
-    console.warn("[Web3Auth] Logout error (continuing cleanup):", e);
-  }
-  // Always reset the instance status tracking
-  // This ensures next connection attempt starts fresh
-}
+const handleConnectionError = (error: unknown) => {
+  console.error('[Auth] Connection failed:', error);
+  
+  const errorMessage = error instanceof Error ? error.message : 'Connection failed';
+  let userFriendlyMessage = 'Connection failed. Please try again.';
+  
+  // ... existing message mapping logic ...
+  
+  toast.error(userFriendlyMessage);
+  // Remove: throw new Error(userFriendlyMessage);
+};
 ```
 
-**Add a safe reset function that can be called after errors:**
-```typescript
-export async function safeResetAfterError(): Promise<void> {
-  console.log("[Web3Auth] Safe reset after error...");
-  try {
-    if (web3authInstance?.connected) {
-      await web3authInstance.logout();
-    }
-  } catch (e) {
-    // Ignore logout errors during reset
-  }
-  // Reset module state to allow fresh initialization
-  resetWeb3AuthState();
-}
-```
+## Files to Modify
 
-## Summary of Changes
+| File | Changes |
+|------|---------|
+| `src/lib/web3auth.ts` | Add `forceCleanupWeb3Auth()` function with DOM cleanup |
+| `src/contexts/AuthContext.tsx` | Expand error detection, use force cleanup, remove throw from handleConnectionError |
 
-| File | Change |
-|------|--------|
-| `src/contexts/AuthContext.tsx` | Add Web3Auth disconnect/reset in all error handlers for connect methods |
-| `src/lib/web3auth.ts` | Add `safeResetAfterError()` function for clean recovery from failed connections |
+## Testing Checklist
 
-## Testing Steps
-1. Open login modal
-2. Click "Continue with Google" → Cancel/reject → Verify other buttons still work
-3. Click "Connect Wallet" → "MetaMask" → Reject signature → Verify can click other wallets
-4. Try switching between Email, SMS, Social, and Wallet options after cancellations
-5. Verify successful login still works after multiple cancellations
+1. Click "Continue with Google" → Close the popup → Try clicking "Continue with X" → Should work
+2. Click "Connect Wallet" → "MetaMask" → Reject signature → Click Google → Should work
+3. Click Google → Cancel → Click Email → Enter email → Should work
+4. Repeat cancellations multiple times → Modal should remain responsive
+5. Successfully complete login after previous cancellations → Should work
+
