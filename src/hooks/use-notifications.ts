@@ -12,33 +12,36 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
   type DeHubNotification,
+  type NotificationCategory,
+  type UnreadNotificationCount,
 } from '@/lib/api/dehub';
 
 // Query keys for cache management
 export const notificationKeys = {
   all: ['notifications'] as const,
-  list: (type?: string) => [...notificationKeys.all, 'list', type] as const,
+  list: (category?: NotificationCategory) => [...notificationKeys.all, 'list', category] as const,
   unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
 };
 
 /**
  * Hook to fetch notifications with infinite scroll
+ * @param category - Optional category filter (engagement, social, monetization, content, system)
  */
-export function useNotifications(type: string = 'all') {
+export function useNotifications(category?: NotificationCategory) {
   const { isAuthenticated } = useAuth();
 
   const query = useInfiniteQuery({
-    queryKey: notificationKeys.list(type),
-    queryFn: async ({ pageParam = 0 }) => {
-      return getNotifications(pageParam, 20, type !== 'all' ? type : undefined);
+    queryKey: notificationKeys.list(category),
+    queryFn: async ({ pageParam = 1 }) => {
+      return getNotifications(pageParam, 30, category, false);
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.hasMore) {
-        return allPages.length;
+        return allPages.length + 1; // 1-indexed pages
       }
       return undefined;
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
     enabled: isAuthenticated,
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 60 * 1000, // Poll every minute
@@ -62,7 +65,7 @@ export function useNotifications(type: string = 'all') {
 }
 
 /**
- * Hook to get unread notification count
+ * Hook to get unread notification count with category breakdown
  */
 export function useUnreadNotificationCount() {
   const { isAuthenticated } = useAuth();
@@ -92,17 +95,21 @@ export function useMarkNotificationAsRead() {
 
 /**
  * Hook for marking all notifications as read
+ * @param category - Optional: Only mark notifications in this category as read
  */
 export function useMarkAllNotificationsAsRead() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: markAllNotificationsAsRead,
+    mutationFn: (category?: NotificationCategory) => markAllNotificationsAsRead(category),
     onMutate: async () => {
       // Optimistically set unread count to 0
       await queryClient.cancelQueries({ queryKey: notificationKeys.unreadCount() });
-      const previousCount = queryClient.getQueryData(notificationKeys.unreadCount());
-      queryClient.setQueryData(notificationKeys.unreadCount(), 0);
+      const previousCount = queryClient.getQueryData<UnreadNotificationCount>(notificationKeys.unreadCount());
+      queryClient.setQueryData<UnreadNotificationCount>(notificationKeys.unreadCount(), {
+        total: 0,
+        byCategory: { engagement: 0, social: 0, monetization: 0, content: 0, system: 0 },
+      });
       return { previousCount };
     },
     onError: (_err, _variables, context) => {
@@ -116,3 +123,6 @@ export function useMarkAllNotificationsAsRead() {
     },
   });
 }
+
+// Re-export types for convenience
+export type { DeHubNotification, NotificationCategory, UnreadNotificationCount };

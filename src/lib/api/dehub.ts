@@ -872,17 +872,96 @@ export async function getLeaderboard(
 // ============================================
 
 /**
- * Notification interface
+ * Notification types from DeHub API
+ */
+export type NotificationType = 
+  | 'like' 
+  | 'comment' 
+  | 'comment_reply'
+  | 'following'
+  | 'tip' 
+  | 'subscription'
+  | 'ppv_purchase'
+  | 'video_milestone'
+  | 'livestream_start'
+  | 'video_removal';
+
+/**
+ * Notification categories from DeHub API
+ */
+export type NotificationCategory = 
+  | 'engagement'    // likes, comments, replies
+  | 'social'        // follows, mentions
+  | 'monetization'  // tips, subscriptions, PPV purchases
+  | 'content'       // video milestones, livestream starts
+  | 'system';       // video removals, account warnings
+
+/**
+ * Post type for content notifications
+ */
+export type NotificationPostType = 'video' | 'feed-images' | 'feed-simple';
+
+/**
+ * Notification interface matching DeHub API spec
  */
 export interface DeHubNotification {
-  id: string;
-  type: 'like' | 'comment' | 'share' | 'tip' | 'subscribe' | 'follow' | 'mention' | 'system';
-  content?: string;
+  _id: string;
+  id: string; // Normalized from _id
+  address: string;
+  type: NotificationType;
+  category: NotificationCategory;
+  content: string;
   read: boolean;
   createdAt: string;
-  // Related entities
+  updatedAt: string;
+  readAt?: string;
+  
+  // Actor info (who triggered the notification)
+  actorAddress?: string;
+  actorUsername?: string;
+  actorAvatar?: string;
+  
+  // Related content
+  tokenId?: number;
+  tokenTitle?: string;
+  tokenThumbnail?: string;
+  postType?: NotificationPostType;
+  
+  // Aggregation (for grouped notifications)
+  aggregatedCount?: number;
+  latestActorNames?: string[];
+  
+  // Monetization specific
+  amount?: number;
+  currency?: string;
+  
+  // Legacy support - normalized actor object
   actor?: DeHubUser;
   post?: DeHubNFT;
+}
+
+/**
+ * Raw notification from API (before normalization)
+ */
+interface RawNotification {
+  _id: string;
+  address: string;
+  type: NotificationType;
+  category: NotificationCategory;
+  content: string;
+  read: boolean;
+  createdAt: string;
+  updatedAt: string;
+  readAt?: string;
+  actorAddress?: string;
+  actorUsername?: string;
+  actorAvatar?: string;
+  tokenId?: number;
+  tokenTitle?: string;
+  tokenThumbnail?: string;
+  postType?: NotificationPostType;
+  aggregatedCount?: number;
+  latestActorNames?: string[];
   amount?: number;
   currency?: string;
 }
@@ -891,63 +970,102 @@ export interface DeHubNotification {
  * Notifications list response from API
  */
 interface NotificationsApiResponse {
-  result: {
-    items: DeHubNotification[];
-    totalCount: number;
-    hasMore: boolean;
-  };
+  result: RawNotification[];
 }
 
 /**
  * Unread count response from API
  */
 interface UnreadCountApiResponse {
-  result: {
-    count: number;
+  total: number;
+  byCategory: {
+    engagement: number;
+    social: number;
+    monetization: number;
+    content: number;
+    system: number;
+  };
+}
+
+/**
+ * Normalize raw notification from API to internal format
+ */
+function normalizeNotification(raw: RawNotification): DeHubNotification {
+  return {
+    ...raw,
+    id: raw._id, // Normalize _id to id
+    // Create legacy actor object for backwards compatibility
+    actor: raw.actorUsername || raw.actorAddress ? {
+      address: raw.actorAddress,
+      username: raw.actorUsername,
+      avatarImageUrl: raw.actorAvatar,
+    } : undefined,
+    // Create legacy post object
+    post: raw.tokenId ? {
+      tokenId: raw.tokenId,
+      name: raw.tokenTitle || '',
+      title: raw.tokenTitle,
+      imageUrl: raw.tokenThumbnail || '',
+      postType: raw.postType === 'video' ? 'video' : 'image',
+      minter: '',
+      createdAt: raw.createdAt,
+    } : undefined,
   };
 }
 
 /**
  * Fetch user notifications
  * Uses GET /api/notification endpoint
- * @param page - Page number (0-indexed)
- * @param limit - Items per page
- * @param type - Optional notification type filter
+ * @param page - Page number (1-indexed as per API spec)
+ * @param limit - Items per page (default 30, max 100)
+ * @param category - Optional category filter
+ * @param unreadOnly - If true, only returns unread notifications (default true)
  */
 export async function getNotifications(
-  page: number = 0,
-  limit: number = 20,
-  type?: string
+  page: number = 1,
+  limit: number = 30,
+  category?: NotificationCategory,
+  unreadOnly: boolean = false
 ): Promise<{ items: DeHubNotification[]; totalCount: number; hasMore: boolean }> {
-  const response = await apiCall<NotificationsApiResponse | { result: DeHubNotification[] } | DeHubNotification[]>("/api/notification", {
-    params: { page, limit, ...(type && type !== 'all' ? { type } : {}) },
+  const params: Record<string, string | number> = { 
+    page, 
+    limit,
+    unreadOnly: unreadOnly.toString(),
+  };
+  
+  if (category) {
+    params.category = category;
+  }
+  
+  const response = await apiCall<NotificationsApiResponse | { result: RawNotification[] } | RawNotification[]>("/api/notification", {
+    params,
     requiresAuth: true,
   });
   
-  // Handle different response formats
-  // Format 1: { result: { items: [...], totalCount, hasMore } }
+  // Handle { result: [...] } format
   if (response && typeof response === 'object' && 'result' in response) {
     const result = response.result;
-    // Format 1a: result is already the paginated object
-    if (result && typeof result === 'object' && 'items' in result && Array.isArray(result.items)) {
-      return result;
-    }
-    // Format 1b: result is directly an array
     if (Array.isArray(result)) {
+      const items = result
+        .filter(item => item && item._id)
+        .map(normalizeNotification);
       return { 
-        items: result.filter(item => item && item.id), 
-        totalCount: result.length, 
-        hasMore: result.length >= limit 
+        items, 
+        totalCount: items.length, 
+        hasMore: items.length >= limit 
       };
     }
   }
   
-  // Format 2: Direct array response
+  // Handle direct array response
   if (Array.isArray(response)) {
+    const items = response
+      .filter(item => item && item._id)
+      .map(normalizeNotification);
     return { 
-      items: response.filter(item => item && item.id), 
-      totalCount: response.length, 
-      hasMore: response.length >= limit 
+      items, 
+      totalCount: items.length, 
+      hasMore: items.length >= limit 
     };
   }
   
@@ -955,23 +1073,47 @@ export async function getNotifications(
 }
 
 /**
- * Get unread notification count
+ * Unread count result type
+ */
+export interface UnreadNotificationCount {
+  total: number;
+  byCategory: {
+    engagement: number;
+    social: number;
+    monetization: number;
+    content: number;
+    system: number;
+  };
+}
+
+/**
+ * Get unread notification count with category breakdown
  * Uses GET /api/notification/unread-count endpoint
  */
-export async function getUnreadNotificationCount(): Promise<number> {
+export async function getUnreadNotificationCount(): Promise<UnreadNotificationCount> {
   const response = await apiCall<UnreadCountApiResponse>("/api/notification/unread-count", {
     requiresAuth: true,
   });
-  return response.result?.count || 0;
+  
+  return {
+    total: response?.total || 0,
+    byCategory: response?.byCategory || {
+      engagement: 0,
+      social: 0,
+      monetization: 0,
+      content: 0,
+      system: 0,
+    },
+  };
 }
 
 /**
  * Mark a single notification as read
  * Uses PATCH /api/notification/{notificationId} endpoint
- * @param notificationId - The notification ID
+ * @param notificationId - The notification MongoDB ObjectId
  */
-export async function markNotificationAsRead(notificationId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>(`/api/notification/${notificationId}`, {
+export async function markNotificationAsRead(notificationId: string): Promise<{ message: string }> {
+  return apiCall<{ message: string }>(`/api/notification/${notificationId}`, {
     method: "PATCH",
     requiresAuth: true,
   });
@@ -980,10 +1122,17 @@ export async function markNotificationAsRead(notificationId: string): Promise<{ 
 /**
  * Mark all notifications as read
  * Uses POST /api/notification/mark-all-read endpoint
+ * @param category - Optional: Only mark notifications in this category as read
  */
-export async function markAllNotificationsAsRead(): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>("/api/notification/mark-all-read", {
+export async function markAllNotificationsAsRead(category?: NotificationCategory): Promise<{ message: string; count: number }> {
+  const params: Record<string, string> = {};
+  if (category) {
+    params.category = category;
+  }
+  
+  return apiCall<{ message: string; count: number }>("/api/notification/mark-all-read", {
     method: "POST",
+    params,
     requiresAuth: true,
   });
 }
