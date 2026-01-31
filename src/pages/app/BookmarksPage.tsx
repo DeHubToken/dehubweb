@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, Play, Eye, Heart, RefreshCw, ThumbsUp } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useBookmarks, BookmarkType } from '@/hooks/use-bookmarks';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Link } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { PostCard } from '@/components/app/cards/PostCard';
+import type { FeedItem } from '@/types/feed.types';
 
 const tabs = [
   { label: 'All', value: 'all' as BookmarkType, icon: LayoutGrid },
@@ -17,89 +19,33 @@ const tabs = [
   { label: 'Text Posts', value: 'text' as BookmarkType, icon: FileText },
 ];
 
-function BookmarkCard({ bookmark }: { bookmark: ReturnType<typeof useBookmarks>['bookmarks'][0] }) {
-  return (
-    <Link 
-      to={`/app/post/${bookmark.tokenId}`}
-      className="group bg-zinc-800/50 rounded-xl overflow-hidden hover:bg-zinc-800 transition-colors"
-    >
-      {/* Thumbnail */}
-      <div className="relative aspect-video bg-zinc-900">
-        {bookmark.thumbnailUrl ? (
-          <img 
-            src={bookmark.thumbnailUrl} 
-            alt={bookmark.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <FileText className="w-8 h-8 text-zinc-600" />
-          </div>
-        )}
-        
-        {/* Video overlay */}
-        {bookmark.type === 'video' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-              <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-            </div>
-          </div>
-        )}
-
-        {/* Type badge */}
-        <div className="absolute top-2 left-2">
-          <span className={`px-2 py-0.5 text-[10px] font-medium uppercase rounded ${
-            bookmark.type === 'video' 
-              ? 'bg-red-500/80 text-white' 
-              : 'bg-blue-500/80 text-white'
-          }`}>
-            {bookmark.type}
-          </span>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-3">
-        <h3 className="text-sm font-medium text-white line-clamp-2 mb-1">
-          {bookmark.title}
-        </h3>
-        
-        {bookmark.creatorUsername && (
-          <p className="text-xs text-zinc-500 mb-2">
-            @{bookmark.creatorUsername}
-          </p>
-        )}
-
-        {/* Stats */}
-        <div className="flex items-center gap-3 text-xs text-zinc-500">
-          {bookmark.views !== undefined && (
-            <span className="flex items-center gap-1">
-              <Eye className="w-3 h-3" />
-              {bookmark.views.toLocaleString()}
-            </span>
-          )}
-          {bookmark.likes !== undefined && (
-            <span className="flex items-center gap-1">
-              <Heart className="w-3 h-3" />
-              {bookmark.likes.toLocaleString()}
-            </span>
-          )}
-          <span className="ml-auto">
-            {formatDistanceToNow(new Date(bookmark.createdAt), { addSuffix: true })}
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
+function FeedItemRenderer({ item }: { item: FeedItem }) {
+  switch (item.type) {
+    case 'video':
+      return <VideoCard video={item} />;
+    case 'image':
+      return <ImageCard post={item} />;
+    case 'post':
+      return <PostCard post={item} />;
+    default:
+      return null;
+  }
 }
 
 function BookmarksSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="bg-zinc-800/50 rounded-xl overflow-hidden">
+    <div className="space-y-4">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="bg-zinc-900 rounded-2xl overflow-hidden">
+          <div className="p-4 flex items-center gap-3">
+            <Skeleton className="w-10 h-10 rounded-full" />
+            <div className="space-y-2 flex-1">
+              <Skeleton className="h-4 w-1/3" />
+              <Skeleton className="h-3 w-1/4" />
+            </div>
+          </div>
           <Skeleton className="aspect-video w-full" />
-          <div className="p-3 space-y-2">
+          <div className="p-4 space-y-2">
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-1/2" />
           </div>
@@ -113,7 +59,46 @@ export default function BookmarksPage() {
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated } = useAuth();
-  const { bookmarks, totalCount, isLoading, isError, refetch } = useBookmarks(activeTab, searchQuery);
+  const { 
+    bookmarks, 
+    totalCount, 
+    isLoading, 
+    isError, 
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useBookmarks(activeTab, searchQuery);
+
+  // Infinite scroll observer
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false);
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage && !isFetchingRef.current) {
+      isFetchingRef.current = true;
+      fetchNextPage().finally(() => {
+        isFetchingRef.current = false;
+      });
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          handleLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: '200px' }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [handleLoadMore]);
 
   // Block access for unauthenticated users
   if (!isAuthenticated) {
@@ -220,10 +205,24 @@ export default function BookmarksPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {bookmarks.map((bookmark) => (
-            <BookmarkCard key={bookmark.id} bookmark={bookmark} />
+        <div className="space-y-4">
+          {bookmarks.map((item) => (
+            <FeedItemRenderer key={item.id} item={item} />
           ))}
+          
+          {/* Infinite scroll trigger */}
+          <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+            {isFetchingNextPage && (
+              <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+            )}
+          </div>
+          
+          {/* End of list indicator */}
+          {!hasNextPage && bookmarks.length > 0 && (
+            <div className="py-8 text-center text-zinc-500 text-sm">
+              You've reached the end of your bookmarks
+            </div>
+          )}
         </div>
       )}
     </div>
