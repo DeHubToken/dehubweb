@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, ImageIcon, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Pin, Loader2, Paintbrush, Crop, Scissors } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -684,7 +684,7 @@ export function PostMediaPreview({
                               : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
                             }`}
                         >
-                          <ImageIcon className="w-3 h-3" />
+                          <Pin className="w-3 h-3" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>Add custom thumbnail</TooltipContent>
