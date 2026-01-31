@@ -365,19 +365,6 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             />
           </div>
 
-          {/* Preview */}
-          {selectedDate && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mx-2 p-3 rounded-xl bg-white/5 border border-white/10"
-            >
-              <p className="text-zinc-400 text-xs mb-0.5">Scheduled for</p>
-              <p className="text-white font-semibold text-sm">
-                {format(selectedDate, 'EEEE, MMMM d, yyyy')} at {formatTimeDisplay()}
-              </p>
-            </motion.div>
-          )}
 
           {/* Clear button */}
           {scheduledDate && (
