@@ -1,59 +1,119 @@
 
-# Fix Notification Navigation for All Types
 
-## Summary
-Update the Notifications page so clicking on each notification type navigates to the correct destination. Currently, the profile links use the wrong URL pattern.
+# Plan: Fix DeHub DM (Direct Messages) API Integration
 
-## What's Being Fixed
+## Problem Analysis
 
-| Notification Type | Current (Wrong) | Should Be |
-|------------------|-----------------|-----------|
-| Follow | `/app/profile/{username}` | `/{username}` |
-| Like | `/app/post/{tokenId}` | ✓ Already correct |
-| Comment | `/app/post/{tokenId}` | ✓ Already correct |
-| Comment Reply | `/app/post/{tokenId}` | ✓ Already correct |
-| Tip | `/app/post/{tokenId}` | ✓ Already correct |
-| Subscription | `/app/profile/{username}` | `/{username}` |
-| PPV Purchase | `/app/profile/{username}` | `/{username}` |
-| Livestream Start | `/app/post/{tokenId}` | ✓ Already correct |
-| Video Milestone | `/app/post/{tokenId}` | ✓ Already correct |
-| Video Removal | `/app/settings` | ✓ Already correct |
+After investigating the codebase, I found several issues with the DM API integration that could cause the Messages page to not work:
 
-## Changes
+### Current Issues Identified
 
-### 1. Update `getNavigationLink` function in NotificationsPage
+1. **API Response Handling**: The code assumes specific response structures (e.g., `response.result.items`) but doesn't have proper error handling if the API returns different formats
+   
+2. **Missing Error Logging**: API calls fail silently without adequate logging, making debugging difficult
 
-The function at lines 92-118 will be updated to use the correct root-level profile URL pattern (`/{username}`) instead of `/app/profile/{username}`:
+3. **Endpoint Discrepancies**: Based on the memory context, the DM system uses these endpoints:
+   - `GET /api/dm/contacts/{address}` - List conversations
+   - `GET /api/dm/search?query=...` - Search conversations (requires non-empty query)
+   - `POST /api/dm/tnx` - Send message
+   - `PUT /api/dm/tnx` - Mark as read
+   
+   But the current implementation may have issues with:
+   - Response unwrapping (expects `response.result` but API may return differently)
+   - Missing or incorrect parameters
 
-```text
-Before: /app/profile/someuser
-After:  /someuser
-```
+4. **JWT Token Parsing**: The code parses the JWT to extract the wallet address, which could fail if the token structure is different
 
-This affects:
-- **Following notifications** → Takes you to the follower's profile
-- **Subscription notifications** → Takes you to the subscriber's profile  
-- **PPV Purchase notifications** → Takes you to the buyer's profile
+---
 
-### 2. Update avatar profile link in `NotificationItem`
+## Implementation Plan
 
-The `profileLink` variable at lines 131-135 also uses the wrong pattern and will be corrected:
+### Step 1: Add Comprehensive Logging to DM API Functions
+- Add console.log statements to all DM-related API calls
+- Log request URLs, parameters, and responses
+- Log errors with full context
 
-```text
-Before: /app/profile/username
-After:  /username
-```
+### Step 2: Fix Response Handling in `getConversations`
+- Handle multiple response formats from the API
+- Add fallback for when `response.result` is undefined
+- Properly handle both array and paginated response formats
 
-This ensures clicking on someone's avatar in a notification also goes to the correct profile page.
+### Step 3: Fix Response Handling in `getMessages`  
+- Similar fixes for message fetching
+- Handle API error responses gracefully
+
+### Step 4: Fix `sendMessage` and `createConversation`
+- Verify the request body matches API expectations
+- Add proper error handling and logging
+
+### Step 5: Fix `markConversationAsRead`
+- Ensure the PUT request body is correct
+
+### Step 6: Update Error States in UI Components
+- Show more descriptive error messages in MessagesPage
+- Add retry mechanisms
 
 ---
 
 ## Technical Details
 
-**File Modified:** `src/pages/app/NotificationsPage.tsx`
+### Files to Modify
 
-**Lines Changed:**
-- Lines 92-118: `getNavigationLink()` function - fix profile URL pattern
-- Lines 131-135: `profileLink` variable - fix avatar click URL pattern
+1. **`src/lib/api/dehub.ts`** - DM API functions
+   - Add logging to: `getConversations`, `getMessages`, `sendMessage`, `createConversation`, `markConversationAsRead`
+   - Fix response unwrapping logic
+   - Add try-catch blocks with detailed error logging
 
-The fix aligns notification navigation with the rest of the app, which uses `/${username}` for all profile links (as seen in LeaderboardPage, CommentsSection, CardHeader, WhoToFollow, etc.).
+2. **`src/hooks/use-messages.ts`** - React Query hooks
+   - Add better error handling
+   - Ensure proper query key invalidation
+
+3. **`src/pages/app/MessagesPage.tsx`** - Messages page component
+   - Add better error display
+   - Add debug info in development mode
+
+### Key Code Changes
+
+**In `getConversations` function:**
+```typescript
+export async function getConversations(
+  page: number = 0,
+  limit: number = 20,
+  searchQuery?: string
+): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
+  console.log('[DM API] getConversations called', { page, limit, searchQuery });
+  
+  // ... existing code with added logging
+  
+  const response = await apiCall<...>(endpoint, options);
+  console.log('[DM API] getConversations response:', response);
+  
+  // Handle various response formats
+  if (response && Array.isArray(response)) {
+    return { items: response, totalCount: response.length, hasMore: response.length >= limit };
+  }
+  if (response?.result && Array.isArray(response.result)) {
+    return { items: response.result, totalCount: response.result.length, hasMore: response.result.length >= limit };
+  }
+  // ... handle other formats
+}
+```
+
+**Similar changes for:**
+- `getMessages()`
+- `sendMessage()`
+- `createConversation()`
+- `markConversationAsRead()`
+
+---
+
+## Testing Recommendations
+
+After implementation:
+1. Open browser DevTools Console
+2. Navigate to Messages page
+3. Look for `[DM API]` prefixed log entries
+4. Check if API calls are being made and what responses are returned
+5. Try starting a new conversation and sending a message
+6. Verify error messages are helpful if something fails
+
