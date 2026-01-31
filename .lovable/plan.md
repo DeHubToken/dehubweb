@@ -1,17 +1,20 @@
 
-# Make All Avatars Squared (rounded-xl) Consistently
+# Make All Avatars Match Profile Picture Squareness
 
-## Problem
+## The Problem
 
-The profile page avatars are properly squared off (`rounded-xl`), but avatars elsewhere (comments, side panels, card headers, chat messages) appear more rounded because:
+The profile page avatar looks properly "squared off" while smaller avatars (in comments, cards, sidebars) appear more rounded - even though both use `rounded-xl`.
 
-1. The base `Avatar` component uses `rounded-xl` on the container
-2. However, `AvatarImage` doesn't inherit rounding—it uses `aspect-square h-full w-full` only
-3. This causes the image inside to have no explicit border-radius, making it appear different from the container
+**Why this happens:**
+- `rounded-xl` = fixed 12px border radius
+- On a 112px profile avatar → 12px is ~10% of the size = subtle corners
+- On a 32px chat avatar → 12px is 37% of the size = nearly circular
 
-## Solution
+## The Solution
 
-Update the base `avatar.tsx` component to apply `rounded-xl` consistently to both the image and fallback. This single change will fix ALL avatar instances across the app.
+Change small avatars from `rounded-xl` (12px) to `rounded-lg` (8px). This maintains the same visual ratio:
+- 32px avatar with 8px radius = 25% = matches the profile look
+- 40px avatar with 8px radius = 20% = matches the profile look
 
 ---
 
@@ -19,23 +22,19 @@ Update the base `avatar.tsx` component to apply `rounded-xl` consistently to bot
 
 ### File: `src/components/ui/avatar.tsx`
 
-| Line | Current | Change |
-|------|---------|--------|
-| 22 | `className={cn("aspect-square h-full w-full", className)}` | Add `rounded-xl` to AvatarImage |
+Change the base Avatar component to use `rounded-lg` instead of `rounded-xl`:
 
-**Before:**
-```tsx
-// AvatarImage (line 22)
-className={cn("aspect-square h-full w-full", className)}
-```
+| Line | Current | New |
+|------|---------|-----|
+| 12 | `rounded-xl` | `rounded-lg` |
+| 22 | `rounded-xl` | `rounded-lg` |
+| 32 | `rounded-xl` | `rounded-lg` |
 
-**After:**
-```tsx
-// AvatarImage (line 22)
-className={cn("aspect-square h-full w-full rounded-xl", className)}
-```
+This applies globally to all small avatars (32-40px).
 
-This single change ensures every avatar image in the entire app will have squared-off corners matching the container and profile pictures.
+### Files with Large Avatars (Keep `rounded-xl` override)
+
+The profile page already uses direct `<img>` tags with explicit `rounded-xl` for the large avatar, so no changes needed there.
 
 ---
 
@@ -43,22 +42,15 @@ This single change ensures every avatar image in the entire app will have square
 
 | File | Change |
 |------|--------|
-| `src/components/ui/avatar.tsx` | Add `rounded-xl` to `AvatarImage` default className |
+| `src/components/ui/avatar.tsx` | Change `rounded-xl` to `rounded-lg` on Avatar, AvatarImage, and AvatarFallback |
 
 ---
 
-## Impact
+## Visual Result
 
-This fix will automatically apply to:
-- Chat messages
-- Comments section
-- Who to Follow sidebar
-- Card headers (posts, videos, images)
-- Leaderboard avatars
-- Notifications page
-- Messages page
-- Stories bar
-- Shorts viewer
-- All other avatar usages
+After this change:
+- **Small avatars** (32-40px): More squared corners matching the profile aesthetic
+- **Large profile avatar**: Unchanged (uses direct `<img>` with `rounded-xl`)
+- **Live gradient rings**: Already use `rounded-xl` explicitly, will stay as-is
 
-No individual file changes needed—the single base component update cascades everywhere.
+This creates consistent visual proportions across all avatar sizes.
