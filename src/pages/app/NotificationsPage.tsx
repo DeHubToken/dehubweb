@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2, MoreHorizontal, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -252,24 +252,40 @@ function NotificationItem({
         </Link>
       )}
 
-      {/* Mark as read button - only show for unread notifications */}
-      {!notification.read && (
+      {/* Action buttons */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Mark as read button - only show for unread notifications */}
+        {!notification.read && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onMarkAsRead(notification.id);
+            }}
+            disabled={isMarkingAsRead}
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+            title="Mark as read"
+          >
+            {isMarkingAsRead ? (
+              <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
+            ) : (
+              <MailOpen className="w-4 h-4 text-zinc-400" />
+            )}
+          </button>
+        )}
+        
+        {/* Delete/dismiss notification button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onMarkAsRead(notification.id);
+            // TODO: Implement delete single notification API
+            console.log('Delete notification:', notification.id);
           }}
-          disabled={isMarkingAsRead}
-          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
-          title="Mark as read"
+          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+          title="Remove notification"
         >
-          {isMarkingAsRead ? (
-            <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
-          ) : (
-            <MailOpen className="w-4 h-4 text-zinc-400" />
-          )}
+          <X className="w-4 h-4 text-zinc-400" />
         </button>
-      )}
+      </div>
     </div>
   );
 }
@@ -277,9 +293,6 @@ function NotificationItem({
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { isAuthenticated } = useAuth();
-  
-  // Track notifications hidden after being marked as read
-  const [hiddenReadIds, setHiddenReadIds] = useState<Set<string>>(new Set());
   
   // Notification preference toggles (local state for now)
   const [notificationPrefs, setNotificationPrefs] = useState({
@@ -292,10 +305,7 @@ export default function NotificationsPage() {
   });
   
   // Fetch all notifications and filter client-side by type
-  const { notifications: rawNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
-  
-  // Filter out notifications that were marked as read (they disappear)
-  const allNotifications = rawNotifications.filter(n => !hiddenReadIds.has(n.id));
+  const { notifications: allNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
@@ -307,9 +317,6 @@ export default function NotificationsPage() {
   }
 
   const handleMarkAllAsRead = () => {
-    // Hide all current unread notifications
-    const unreadIds = rawNotifications.filter(n => !n.read).map(n => n.id);
-    setHiddenReadIds(prev => new Set([...prev, ...unreadIds]));
     markAllAsRead.mutate(undefined);
   };
 
@@ -317,8 +324,6 @@ export default function NotificationsPage() {
 
   const handleMarkAsRead = (notificationId: string) => {
     setMarkingNotificationId(notificationId);
-    // Hide this notification immediately
-    setHiddenReadIds(prev => new Set(prev).add(notificationId));
     markAsRead.mutate(notificationId, {
       onSettled: () => setMarkingNotificationId(null),
     });
