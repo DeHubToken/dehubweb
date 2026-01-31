@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2 } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -122,9 +122,11 @@ function getNavigationLink(notification: DeHubNotification): string | null {
 function NotificationItem({ 
   notification, 
   onMarkAsRead,
+  isMarkingAsRead,
 }: { 
   notification: DeHubNotification;
   onMarkAsRead: (id: string) => void;
+  isMarkingAsRead: boolean;
 }) {
   const navigate = useNavigate();
   
@@ -234,9 +236,23 @@ function NotificationItem({
         </Link>
       )}
 
-      {/* Unread indicator */}
+      {/* Mark as read button - only show for unread notifications */}
       {!notification.read && (
-        <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onMarkAsRead(notification.id);
+          }}
+          disabled={isMarkingAsRead}
+          className="flex-shrink-0 p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+          title="Mark as read"
+        >
+          {isMarkingAsRead ? (
+            <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
+          ) : (
+            <MailOpen className="w-4 h-4 text-zinc-400" />
+          )}
+        </button>
       )}
     </div>
   );
@@ -274,8 +290,13 @@ export default function NotificationsPage() {
     markAllAsRead.mutate(category);
   };
 
+  const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
+
   const handleMarkAsRead = (notificationId: string) => {
-    markAsRead.mutate(notificationId);
+    setMarkingNotificationId(notificationId);
+    markAsRead.mutate(notificationId, {
+      onSettled: () => setMarkingNotificationId(null),
+    });
   };
 
   // Get total unread count
@@ -531,6 +552,7 @@ export default function NotificationsPage() {
                   key={notification.id}
                   notification={notification}
                   onMarkAsRead={handleMarkAsRead}
+                  isMarkingAsRead={markingNotificationId === notification.id}
                 />
               ))}
               
