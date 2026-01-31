@@ -1,56 +1,63 @@
 
-# Make All Avatars Match Profile Picture Squareness
 
-## The Problem
+# Fix: Audio and Live Popovers in Post Modal
 
-The profile page avatar looks properly "squared off" while smaller avatars (in comments, cards, sidebars) appear more rounded - even though both use `rounded-xl`.
+## Problem Analysis
 
-**Why this happens:**
-- `rounded-xl` = fixed 12px border radius
-- On a 112px profile avatar → 12px is ~10% of the size = subtle corners
-- On a 32px chat avatar → 12px is 37% of the size = nearly circular
+After reviewing the code, session replay data, and researching this issue, I've identified the root cause:
 
-## The Solution
+**The Popover opens but immediately closes** because of a conflict between:
+1. The **Vaul Drawer** (used for the Post Modal) which has `modal={true}` by default
+2. The **Radix Popover** inside it, which renders its content in a **Portal** outside the drawer
 
-Change small avatars from `rounded-xl` (12px) to `rounded-lg` (8px). This maintains the same visual ratio:
-- 32px avatar with 8px radius = 25% = matches the profile look
-- 40px avatar with 8px radius = 20% = matches the profile look
+When you click the Music or Live button, the popover opens, but when you try to interact with it (or even just after it opens), the drawer's overlay captures the "outside click" event and triggers the popover to close.
+
+The `modal={true}` prop on the Popover was a good attempt, but it's not sufficient because the z-index layering and portal rendering create a conflict.
 
 ---
 
-## Technical Changes
+## Solution
 
-### File: `src/components/ui/avatar.tsx`
+### 1. Update the Popover component to support preventing outside clicks
 
-Change the base Avatar component to use `rounded-lg` instead of `rounded-xl`:
+Modify `src/components/ui/popover.tsx` to:
+- Add `onPointerDownOutside` handler that prevents closing when intended
+- Ensure the z-index is higher than the drawer overlay (z-index: 100+)
 
-| Line | Current | New |
-|------|---------|-----|
-| 12 | `rounded-xl` | `rounded-lg` |
-| 22 | `rounded-xl` | `rounded-lg` |
-| 32 | `rounded-xl` | `rounded-lg` |
+### 2. Update PostActionBar to properly configure the Audio and Live popovers
 
-This applies globally to all small avatars (32-40px).
-
-### Files with Large Avatars (Keep `rounded-xl` override)
-
-The profile page already uses direct `<img>` tags with explicit `rounded-xl` for the large avatar, so no changes needed there.
+In `src/features/post/components/PostActionBar.tsx`:
+- Add `onPointerDownOutside={(e) => e.preventDefault()}` to PopoverContent for both Audio and Live popovers
+- Increase z-index to ensure popovers render above the drawer
+- Keep `modal={true}` on the Popover component
 
 ---
 
-## Files to Edit
+## Technical Details
+
+### File: `src/components/ui/popover.tsx`
+Update the PopoverContent z-index from `z-50` to `z-[150]` to ensure it renders above the drawer overlay (which is `z-[100]`).
+
+### File: `src/features/post/components/PostActionBar.tsx`
+For both the Audio popover (lines 198-238) and Live popover (lines 241-283):
+
+```tsx
+<PopoverContent 
+  className="... z-[150]"
+  onPointerDownOutside={(e) => e.preventDefault()}
+  onInteractOutside={(e) => e.preventDefault()}
+  // ... rest of props
+>
+```
+
+This prevents the popover from closing when clicking inside it, which is being incorrectly triggered by the drawer's modal overlay.
+
+---
+
+## Files to Modify
 
 | File | Change |
 |------|--------|
-| `src/components/ui/avatar.tsx` | Change `rounded-xl` to `rounded-lg` on Avatar, AvatarImage, and AvatarFallback |
+| `src/components/ui/popover.tsx` | Increase z-index to `z-[150]` |
+| `src/features/post/components/PostActionBar.tsx` | Add `onPointerDownOutside` and `onInteractOutside` handlers to both popover contents |
 
----
-
-## Visual Result
-
-After this change:
-- **Small avatars** (32-40px): More squared corners matching the profile aesthetic
-- **Large profile avatar**: Unchanged (uses direct `<img>` with `rounded-xl`)
-- **Live gradient rings**: Already use `rounded-xl` explicitly, will stay as-is
-
-This creates consistent visual proportions across all avatar sizes.
