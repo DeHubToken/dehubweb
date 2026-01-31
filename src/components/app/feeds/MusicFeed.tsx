@@ -6,10 +6,10 @@
  * @module components/app/feeds/MusicFeed
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Music, Mic2, Radio, Disc3, Loader2, ChevronRight } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { Play, Music, Mic2, Radio, Disc3, Loader2, ChevronRight, Pause, Volume2, VolumeX } from 'lucide-react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
@@ -34,6 +34,9 @@ const MUSIC_SUB_TABS: { icon: typeof Music; label: string; value: MusicSubTab }[
   { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
   { icon: Radio, label: 'Radio', value: 'radio' },
 ];
+
+const CAROUSEL_PAGE_SIZE = 6; // Initial load for carousel
+const VIDEOS_PAGE_SIZE = 20; // Page size for videos tab
 
 // ============================================================================
 // HELPERS
@@ -173,36 +176,122 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
   );
 }
 
-function MusicVideosCarousel({ videos, onSeeAll }: { videos: VideoItem[]; onSeeAll: () => void }) {
+// Inline playable video thumbnail card for carousel
+function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () => void }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
-  
+
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isPlaying) {
+      videoRef.current?.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current?.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleMuteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMuted(!isMuted);
+  };
+
+  const handleContainerClick = () => {
+    // If not playing, navigate to full view
+    if (!isPlaying) {
+      navigate(`/app/post/${video.id}`);
+    }
+  };
+
+  return (
+    <div 
+      onClick={handleContainerClick}
+      className="flex-shrink-0 w-[280px] text-left group cursor-pointer"
+    >
+      <div className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative">
+        {/* Show video if playing, otherwise thumbnail */}
+        {isPlaying && video.videoUrl ? (
+          <video
+            ref={videoRef}
+            src={video.videoUrl}
+            className="w-full h-full object-cover"
+            muted={isMuted}
+            playsInline
+            autoPlay
+            loop
+            onEnded={() => setIsPlaying(false)}
+          />
+        ) : (
+          <img 
+            src={video.thumbnail} 
+            alt="" 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+          />
+        )}
+        
+        {/* Play/Pause button overlay */}
+        <button
+          onClick={handlePlayClick}
+          className={cn(
+            "absolute inset-0 flex items-center justify-center transition-opacity bg-black/30",
+            isPlaying ? "opacity-0 hover:opacity-100" : "opacity-0 group-hover:opacity-100"
+          )}
+        >
+          <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            {isPlaying ? (
+              <Pause className="w-6 h-6 text-white" />
+            ) : (
+              <Play className="w-6 h-6 text-white fill-white" />
+            )}
+          </div>
+        </button>
+
+        {/* Mute button when playing */}
+        {isPlaying && (
+          <button
+            onClick={handleMuteClick}
+            className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-black/50 flex items-center justify-center z-10"
+          >
+            {isMuted ? (
+              <VolumeX className="w-4 h-4 text-white" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-white" />
+            )}
+          </button>
+        )}
+
+        {/* Duration badge */}
+        {!isPlaying && video.duration && (
+          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
+            {video.duration}
+          </div>
+        )}
+      </div>
+      <p className="text-white text-sm font-medium truncate">{video.title}</p>
+      <p className="text-zinc-500 text-xs">{video.channel}</p>
+    </div>
+  );
+}
+
+function MusicVideosCarousel({ videos, isLoading, onSeeAll }: { videos: VideoItem[]; isLoading: boolean; onSeeAll: () => void }) {
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <SectionHeader icon={Play} title="Music Videos" count={videos.length} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
-      {videos.length === 0 ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 text-white animate-spin" />
+        </div>
+      ) : videos.length === 0 ? (
         <p className="text-zinc-500 text-sm">No music videos yet</p>
       ) : (
         <div className="relative">
           <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-            {videos.slice(0, 10).map((video) => (
-              <button 
-                key={video.id} 
-                onClick={() => navigate(`/app/post/${video.id}`)}
-                className="flex-shrink-0 w-[280px] text-left group cursor-pointer"
-              >
-                <div className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative">
-                  <img src={video.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  {/* Play button overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
-                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <Play className="w-6 h-6 text-white fill-white" />
-                    </div>
-                  </div>
-                </div>
-                <p className="text-white text-sm font-medium truncate">{video.title}</p>
-                <p className="text-zinc-500 text-xs">{video.channel}</p>
-              </button>
+            {videos.map((video) => (
+              <InlineVideoCard key={video.id} video={video} onSeeAll={onSeeAll} />
             ))}
           </SwipeableCarousel>
         </div>
@@ -232,18 +321,20 @@ function PodcastsCarousel() {
 // All Section with all subsections
 function AllSection({ 
   radioStations, 
-  musicVideos, 
+  musicVideos,
+  isLoadingVideos,
   onGoToRadio,
   onGoToVideos,
 }: { 
   radioStations: RadioStation[];
   musicVideos: VideoItem[];
+  isLoadingVideos: boolean;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
 }) {
   return (
     <div className="space-y-4 pb-32">
-      <MusicVideosCarousel videos={musicVideos} onSeeAll={onGoToVideos} />
+      <MusicVideosCarousel videos={musicVideos} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <TracksCarousel />
       <PodcastsCarousel />
@@ -251,8 +342,68 @@ function AllSection({
   );
 }
 
-// Music Videos Section - Full list
-function MusicVideosSection({ videos, isLoading }: { videos: VideoItem[]; isLoading: boolean }) {
+// Music Videos Section - Full list with infinite scroll
+function MusicVideosSection({ walletAddress }: { walletAddress: string | null }) {
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false);
+  
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ['music-videos-infinite', walletAddress],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await searchNFTs({
+        category: 'Music',
+        postType: 'video',
+        unit: VIDEOS_PAGE_SIZE,
+        page: pageParam,
+        sortMode: 'popular',
+        address: walletAddress || undefined,
+      });
+      return {
+        items: response.data || [],
+        nextPage: (response.data?.length ?? 0) >= VIDEOS_PAGE_SIZE ? pageParam + 1 : undefined,
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 1,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Flatten pages to video items
+  const videos = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap((page, pageIndex) => 
+      page.items.map((nft, index) => mapNFTToVideoItem(nft, pageIndex * VIDEOS_PAGE_SIZE + index))
+    );
+  }, [data]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const el = loadMoreRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -270,6 +421,13 @@ function MusicVideosSection({ videos, isLoading }: { videos: VideoItem[]; isLoad
       {videos.map((video) => (
         <VideoCard key={video.id} video={video} />
       ))}
+      
+      {/* Infinite scroll trigger */}
+      <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+        {isFetchingNextPage && (
+          <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+        )}
+      </div>
     </div>
   );
 }
@@ -295,14 +453,14 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch music-categorized videos
-  const { data: musicVideosData, isLoading: isLoadingVideos } = useQuery({
-    queryKey: ['music-videos', walletAddress],
+  // Fetch music-categorized videos for carousel (paginated - smaller initial load)
+  const { data: carouselVideosData, isLoading: isLoadingCarouselVideos } = useQuery({
+    queryKey: ['music-videos-carousel', walletAddress],
     queryFn: async () => {
       const response = await searchNFTs({
         category: 'Music',
         postType: 'video',
-        unit: 50,
+        unit: CAROUSEL_PAGE_SIZE,
         sortMode: 'popular',
         address: walletAddress || undefined,
       });
@@ -311,11 +469,11 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 5 * 60 * 1000,
   });
 
-  // Map to VideoItem
-  const musicVideos = useMemo(() => {
-    if (!musicVideosData) return [];
-    return musicVideosData.map((nft, index) => mapNFTToVideoItem(nft, index));
-  }, [musicVideosData]);
+  // Map to VideoItem for carousel
+  const carouselVideos = useMemo(() => {
+    if (!carouselVideosData) return [];
+    return carouselVideosData.map((nft, index) => mapNFTToVideoItem(nft, index));
+  }, [carouselVideosData]);
 
   const getEmptyLabel = () => {
     switch (activeSubTab) {
@@ -340,13 +498,14 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
         return (
           <AllSection 
             radioStations={radioStations} 
-            musicVideos={musicVideos}
+            musicVideos={carouselVideos}
+            isLoadingVideos={isLoadingCarouselVideos}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
           />
         );
       case 'videos':
-        return <MusicVideosSection videos={musicVideos} isLoading={isLoadingVideos} />;
+        return <MusicVideosSection walletAddress={walletAddress} />;
       case 'radio':
         return <RadioSection showFilters={showFilters} />;
       case 'tracks':
