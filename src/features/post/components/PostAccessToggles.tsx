@@ -221,14 +221,14 @@ export function PostAccessToggles({
                     value={tokenContract}
                     onChange={(e) => setTokenContract(e.target.value)}
                     placeholder="Contract address"
-                    className="w-32 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
+                    className="w-64 lg:w-96 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
                   />
                   <input
                     type="number"
                     value={tokenAmount}
                     onChange={(e) => setTokenAmount(e.target.value)}
                     placeholder="Min"
-                    className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-[19px] lg:w-[21px] h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </motion.div>
               )}
