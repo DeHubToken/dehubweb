@@ -70,6 +70,9 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 
   const tokenId = nft.tokenId || nft.id || nft.token_id || index;
   
+  // Get duration from various possible fields
+  const duration = nft.videoDuration || nft.duration;
+  
   return {
     id: String(tokenId),
     type: 'video',
@@ -80,7 +83,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     channelAvatar: avatarUrl || `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}`,
     views: formatViews(nft.views || nft.view_count || 0),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
-    duration: formatDuration(nft.duration),
+    duration: formatDuration(duration),
     videoUrl: buildVideoUrl(tokenId),
     isPPV: nft.is_ppv,
     ppvPrice: nft.ppv_price,
