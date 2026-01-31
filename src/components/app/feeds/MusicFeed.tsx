@@ -39,6 +39,11 @@ const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
 const CAROUSEL_LOAD_MORE = 6; // Load more items when scrolling
 const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initial load
 
+// Filter out creators with broken content
+const BLOCKED_MINTERS = [
+  '0x589c1562aa289ed82ffee79ad75a41523fbf2b94', // Monkey D. Luffy - broken "Mochi Mochi" images
+];
+
 // ============================================================================
 // HELPERS
 // ============================================================================
@@ -409,11 +414,13 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
     staleTime: 5 * 60 * 1000,
   });
 
-  // Flatten pages to video items
+  // Flatten pages to video items, filtering out blocked minters
   const videos = useMemo(() => {
     if (!data?.pages) return [];
     return data.pages.flatMap((page, pageIndex) => 
-      page.items.map((nft, index) => mapNFTToVideoItem(nft, pageIndex * VIDEOS_PAGE_SIZE + index))
+      page.items
+        .filter(nft => !BLOCKED_MINTERS.includes(nft.minter?.toLowerCase() || ''))
+        .map((nft, index) => mapNFTToVideoItem(nft, pageIndex * VIDEOS_PAGE_SIZE + index))
     );
   }, [data]);
 
@@ -507,8 +514,12 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   // Shuffle and map to VideoItem for carousel - randomized on each mount
   const carouselVideos = useMemo(() => {
     if (!carouselVideosData) return [];
+    // Filter out blocked minters with broken content
+    const filtered = carouselVideosData.filter(nft => 
+      !BLOCKED_MINTERS.includes(nft.minter?.toLowerCase() || '')
+    );
     // Fisher-Yates shuffle
-    const shuffled = [...carouselVideosData];
+    const shuffled = [...filtered];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
