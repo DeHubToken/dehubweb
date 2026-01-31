@@ -342,8 +342,8 @@ export function PostMediaPreview({
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
+                            bg-black/60 backdrop-blur-xl border border-white/20
+                            hover:bg-black/70 hover:border-white/40"
                         >
                           <Paintbrush className="w-3 h-3 text-white" />
                         </button>
@@ -358,8 +358,8 @@ export function PostMediaPreview({
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
+                            bg-black/60 backdrop-blur-xl border border-white/20
+                            hover:bg-black/70 hover:border-white/40"
                         >
                           <Crop className="w-3 h-3 text-white" />
                         </button>
@@ -627,8 +627,8 @@ export function PostMediaPreview({
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
+                            bg-black/60 backdrop-blur-xl border border-white/20
+                            hover:bg-black/70 hover:border-white/40"
                         >
                           <Paintbrush className="w-3 h-3 text-white" />
                         </button>
@@ -643,8 +643,8 @@ export function PostMediaPreview({
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
                           className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-white/10 backdrop-blur-xl border border-white/20
-                            hover:bg-white/20 hover:border-white/40"
+                            bg-black/60 backdrop-blur-xl border border-white/20
+                            hover:bg-black/70 hover:border-white/40"
                         >
                           <Crop className="w-3 h-3 text-white" />
                         </button>
@@ -660,8 +660,8 @@ export function PostMediaPreview({
                           onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
                           className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                             ${m.trimStart !== undefined || m.trimEnd !== undefined
-                              ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40'
-                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
+                              ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40'
+                              : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
                             }`}
                         >
                           <Scissors className="w-3 h-3 text-white" />
@@ -688,8 +688,8 @@ export function PostMediaPreview({
                           onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
                           className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                             ${m.thumbnail 
-                              ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40' 
-                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
+                              ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40' 
+                              : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
                             }`}
                         >
                           <ImageIcon className="w-3 h-3" />
@@ -706,8 +706,8 @@ export function PostMediaPreview({
                           onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
                           className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                             ${m.isMusicVideo 
-                              ? 'bg-emerald-500/30 text-white backdrop-blur-xl border border-emerald-400/40' 
-                              : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
+                              ? 'bg-emerald-500/40 text-white backdrop-blur-xl border border-emerald-400/40' 
+                              : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
                             }`}
                         >
                           <Music className="w-3 h-3" />
