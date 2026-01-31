@@ -17,14 +17,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
 
 // Tabs organized by category as per API spec
@@ -326,103 +319,161 @@ export default function NotificationsPage() {
                   <span className="ml-1 hidden sm:inline">Mark all read</span>
                 </Button>
               )}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <Sheet>
+                <SheetTrigger asChild>
                   <button className="p-2 rounded-xl hover:bg-zinc-800 transition-colors">
                     <Settings className="w-5 h-5 text-zinc-400" />
                   </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 bg-zinc-900 border-zinc-800">
-                  <DropdownMenuLabel className="text-zinc-400 text-xs">Actions</DropdownMenuLabel>
-                  <DropdownMenuItem 
-                    onClick={handleMarkAllAsRead}
-                    disabled={markAllAsRead.isPending || totalUnread === 0}
-                    className="text-white hover:bg-zinc-800 cursor-pointer"
-                  >
-                    <Check className="w-4 h-4 mr-2" />
-                    Mark all as read
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    className="text-red-400 hover:bg-zinc-800 hover:text-red-400 cursor-pointer"
-                    onClick={() => {
-                      // TODO: Implement clear all notifications API
-                      console.log('Clear all notifications');
-                    }}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Clear all notifications
-                  </DropdownMenuItem>
+                </SheetTrigger>
+                <SheetContent 
+                  side="bottom" 
+                  className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
+                >
+                  <SheetHeader className="pb-4">
+                    <SheetTitle className="text-white text-lg font-bold flex items-center gap-2">
+                      <Settings className="w-5 h-5" />
+                      Notification Settings
+                    </SheetTitle>
+                  </SheetHeader>
                   
-                  <DropdownMenuSeparator className="bg-zinc-800" />
-                  <DropdownMenuLabel className="text-zinc-400 text-xs">Notification Types</DropdownMenuLabel>
-                  
-                  <div className="px-2 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-pink-500" />
-                      <span className="text-sm text-white">Likes</span>
-                    </div>
-                    <Switch 
-                      checked={notificationPrefs.likes}
-                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, likes: checked }))}
-                    />
+                  {/* Actions Section */}
+                  <div className="space-y-3 mb-6">
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-medium">Actions</p>
+                    <button
+                      onClick={handleMarkAllAsRead}
+                      disabled={markAllAsRead.isPending || totalUnread === 0}
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                        <Check className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-white font-medium">Mark all as read</p>
+                        <p className="text-zinc-500 text-sm">Clear all unread indicators</p>
+                      </div>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        // TODO: Implement clear all notifications API
+                        console.log('Clear all notifications');
+                      }}
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
+                        <Trash2 className="w-5 h-5 text-red-400" />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-red-400 font-medium">Clear all notifications</p>
+                        <p className="text-zinc-500 text-sm">Remove all notification history</p>
+                      </div>
+                    </button>
                   </div>
                   
-                  <div className="px-2 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <MessageCircle className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm text-white">Comments</span>
+                  {/* Notification Types Section */}
+                  <div className="space-y-3">
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider font-medium">Notification Types</p>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
+                            <Heart className="w-5 h-5 text-pink-500" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">Likes</p>
+                            <p className="text-zinc-500 text-sm">When someone likes your content</p>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={notificationPrefs.likes}
+                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, likes: checked }))}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                            <MessageCircle className="w-5 h-5 text-blue-500" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">Comments</p>
+                            <p className="text-zinc-500 text-sm">When someone comments or replies</p>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={notificationPrefs.comments}
+                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, comments: checked }))}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                            <UserPlus className="w-5 h-5 text-cyan-500" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">Follows</p>
+                            <p className="text-zinc-500 text-sm">When someone follows you</p>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={notificationPrefs.follows}
+                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, follows: checked }))}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                            <DollarSign className="w-5 h-5 text-yellow-500" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">Tips</p>
+                            <p className="text-zinc-500 text-sm">When someone tips your content</p>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={notificationPrefs.tips}
+                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, tips: checked }))}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                            <Users className="w-5 h-5 text-purple-500" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">Subscriptions</p>
+                            <p className="text-zinc-500 text-sm">When someone subscribes to you</p>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={notificationPrefs.subscriptions}
+                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, subscriptions: checked }))}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
+                            <Zap className="w-5 h-5 text-red-500" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">Livestreams</p>
+                            <p className="text-zinc-500 text-sm">When creators you follow go live</p>
+                          </div>
+                        </div>
+                        <Switch 
+                          checked={notificationPrefs.livestreams}
+                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, livestreams: checked }))}
+                        />
+                      </div>
                     </div>
-                    <Switch 
-                      checked={notificationPrefs.comments}
-                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, comments: checked }))}
-                    />
                   </div>
-                  
-                  <div className="px-2 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <UserPlus className="w-4 h-4 text-cyan-500" />
-                      <span className="text-sm text-white">Follows</span>
-                    </div>
-                    <Switch 
-                      checked={notificationPrefs.follows}
-                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, follows: checked }))}
-                    />
-                  </div>
-                  
-                  <div className="px-2 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm text-white">Tips</span>
-                    </div>
-                    <Switch 
-                      checked={notificationPrefs.tips}
-                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, tips: checked }))}
-                    />
-                  </div>
-                  
-                  <div className="px-2 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-purple-500" />
-                      <span className="text-sm text-white">Subscriptions</span>
-                    </div>
-                    <Switch 
-                      checked={notificationPrefs.subscriptions}
-                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, subscriptions: checked }))}
-                    />
-                  </div>
-                  
-                  <div className="px-2 py-1.5 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-red-500" />
-                      <span className="text-sm text-white">Livestreams</span>
-                    </div>
-                    <Switch 
-                      checked={notificationPrefs.livestreams}
-                      onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, livestreams: checked }))}
-                    />
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
