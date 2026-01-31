@@ -122,14 +122,16 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       <div className="p-3 space-y-2">
         <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
-        <ActionBar 
-          postId={post.id} 
-          className="p-0"
-          onComment={() => setShowComments(prev => !prev)}
-          likeCount={post.stats.likes}
-          commentCount={post.stats.comments}
-          hideDislike
-        />
+        <div className="pt-2">
+          <ActionBar 
+            postId={post.id} 
+            className="p-0"
+            onComment={() => setShowComments(prev => !prev)}
+            likeCount={post.stats.likes}
+            commentCount={post.stats.comments}
+            hideDislike
+          />
+        </div>
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (
