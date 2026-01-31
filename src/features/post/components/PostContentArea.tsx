@@ -569,48 +569,13 @@ export function PostContentArea({
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
             
-            {/* Add description button or description input */}
-            <AnimatePresence mode="wait">
-              {!showDescription ? (
-                <motion.button
-                  key="add-btn"
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  onClick={() => setShowDescription(true)}
-                  className="flex items-center gap-1.5 mt-2 text-sm text-white/50 hover:text-white/80 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add description
-                </motion.button>
-              ) : (
-                <motion.div
-                  key="desc-input"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-2"
-                >
-                  <div className="flex items-start gap-2">
-                    <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Add a description (optional)..."
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm resize-none outline-none focus:border-white/30 transition-colors min-h-[60px]"
-                    />
-                    <button
-                      onClick={() => {
-                        setDescription('');
-                        setShowDescription(false);
-                      }}
-                      className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Description input */}
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add a description (optional)..."
+              className="w-full mt-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm resize-none outline-none focus:border-white/30 transition-colors min-h-[60px]"
+            />
           </div>
         </div>
 
@@ -642,48 +607,13 @@ export function PostContentArea({
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
             
-            {/* Add description button or description input */}
-            <AnimatePresence mode="wait">
-              {!showDescription ? (
-                <motion.button
-                  key="add-btn"
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  onClick={() => setShowDescription(true)}
-                  className="flex items-center gap-1.5 mt-2 text-sm text-white/50 hover:text-white/80 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add description
-                </motion.button>
-              ) : (
-                <motion.div
-                  key="desc-input"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-2"
-                >
-                  <div className="flex items-start gap-2">
-                    <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Add a description (optional)..."
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm resize-none outline-none focus:border-white/30 transition-colors min-h-[80px]"
-                    />
-                    <button
-                      onClick={() => {
-                        setDescription('');
-                        setShowDescription(false);
-                      }}
-                      className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Description input */}
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add a description (optional)..."
+              className="w-full mt-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm resize-none outline-none focus:border-white/30 transition-colors min-h-[80px]"
+            />
           </div>
         </div>
 
