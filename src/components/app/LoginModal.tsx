@@ -14,6 +14,8 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import phantomLogo from '@/assets/icons/phantom-logo.png';
+import rabbyLogo from '@/assets/icons/rabby-logo.png';
+
 // Social provider icons as SVG components
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -59,10 +61,7 @@ const PhantomIcon = () => (
 );
 
 const RabbyIcon = () => (
-  <svg viewBox="0 0 32 32" className="w-5 h-5">
-    <rect width="32" height="32" rx="6" fill="#8697FF"/>
-    <path fill="#fff" d="M8 12c0-2.2 1.8-4 4-4h8c2.2 0 4 1.8 4 4v4c0 2.2-1.8 4-4 4h-2l-3 4-3-4h-2c-2.2 0-4-1.8-4-4v-4zm6 2a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm6-1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-  </svg>
+  <img src={rabbyLogo} alt="Rabby" className="w-5 h-5 rounded-full" />
 );
 
 const CoinbaseIcon = () => (
