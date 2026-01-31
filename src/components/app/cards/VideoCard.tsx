@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
@@ -34,6 +34,21 @@ import {
 } from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
 
+// Use lg breakpoint (1024px) to determine if we show drawer vs inline
+function useIsTabletOrMobile() {
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+  
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    const onChange = () => setIsTabletOrMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    setIsTabletOrMobile(mql.matches);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  
+  return isTabletOrMobile;
+}
+
 interface VideoCardProps {
   video: VideoItem;
 }
@@ -45,6 +60,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const isTabletOrMobile = useIsTabletOrMobile();
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -730,15 +746,34 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </span>
         </div>
 
-        {/* Inline Comments Section */}
-        <AnimatePresence>
-          {showComments && (
-            <CommentsSection
-              tokenId={video.id}
-              onClose={() => setShowComments(false)}
-            />
-          )}
-        </AnimatePresence>
+        {/* Comments - Drawer for tablet/mobile, inline for desktop */}
+        {isTabletOrMobile ? (
+          <Drawer open={showComments} onOpenChange={setShowComments}>
+            <DrawerContent glass className="max-h-[70vh] overflow-hidden">
+              <DrawerHeader className="border-b border-white/10 pb-3">
+                <DrawerTitle className="text-white font-semibold flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Comments
+                </DrawerTitle>
+              </DrawerHeader>
+              <div className="flex-1 overflow-y-auto px-4 pb-4">
+                <CommentsSection
+                  tokenId={video.id}
+                  onClose={() => setShowComments(false)}
+                />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <AnimatePresence>
+            {showComments && (
+              <CommentsSection
+                tokenId={video.id}
+                onClose={() => setShowComments(false)}
+              />
+            )}
+          </AnimatePresence>
+        )}
       </div>
 
       {/* AI Chat */}

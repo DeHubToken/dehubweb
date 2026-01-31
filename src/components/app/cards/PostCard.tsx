@@ -9,8 +9,8 @@
  * ```
  */
 
-import { useState, memo } from 'react';
-import { Eye, Sparkles, MoreVertical, Link2, Flag, Ban } from 'lucide-react';
+import { useState, memo, useEffect } from 'react';
+import { Eye, Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -21,12 +21,33 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { TextPost } from '@/types/feed.types';
+
+// Use lg breakpoint (1024px) to determine if we show drawer vs inline
+function useIsTabletOrMobile() {
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+  
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    const onChange = () => setIsTabletOrMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    setIsTabletOrMobile(mql.matches);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  
+  return isTabletOrMobile;
+}
 
 interface PostCardProps {
   post: TextPost;
@@ -36,6 +57,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const isTabletOrMobile = useIsTabletOrMobile();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -113,15 +135,34 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           hideDislike
         />
 
-        {/* Inline Comments Section - inside padded container to match VideoCard */}
-        <AnimatePresence>
-          {showComments && (
-            <CommentsSection
-              tokenId={post.id}
-              onClose={() => setShowComments(false)}
-            />
-          )}
-        </AnimatePresence>
+        {/* Comments - Drawer for tablet/mobile, inline for desktop */}
+        {isTabletOrMobile ? (
+          <Drawer open={showComments} onOpenChange={setShowComments}>
+            <DrawerContent glass className="max-h-[70vh] overflow-hidden">
+              <DrawerHeader className="border-b border-white/10 pb-3">
+                <DrawerTitle className="text-white font-semibold flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Comments
+                </DrawerTitle>
+              </DrawerHeader>
+              <div className="flex-1 overflow-y-auto px-4 pb-4">
+                <CommentsSection
+                  tokenId={post.id}
+                  onClose={() => setShowComments(false)}
+                />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <AnimatePresence>
+            {showComments && (
+              <CommentsSection
+                tokenId={post.id}
+                onClose={() => setShowComments(false)}
+              />
+            )}
+          </AnimatePresence>
+        )}
       </div>
 
       {/* AI Chat */}

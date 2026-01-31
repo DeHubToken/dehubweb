@@ -10,7 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2 } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -25,12 +25,33 @@ import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { ImagePost } from '@/types/feed.types';
+
+// Use lg breakpoint (1024px) to determine if we show drawer vs inline
+function useIsTabletOrMobile() {
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+  
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    const onChange = () => setIsTabletOrMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    setIsTabletOrMobile(mql.matches);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  
+  return isTabletOrMobile;
+}
 
 interface ImageCardProps {
   post: ImagePost;
@@ -324,6 +345,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
+  const isTabletOrMobile = useIsTabletOrMobile();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -429,15 +451,34 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           </span>
         </div>
 
-        {/* Inline Comments Section - inside padded container to match VideoCard */}
-        <AnimatePresence>
-          {showComments && (
-            <CommentsSection
-              tokenId={post.id}
-              onClose={() => setShowComments(false)}
-            />
-          )}
-        </AnimatePresence>
+        {/* Comments - Drawer for tablet/mobile, inline for desktop */}
+        {isTabletOrMobile ? (
+          <Drawer open={showComments} onOpenChange={setShowComments}>
+            <DrawerContent glass className="max-h-[70vh] overflow-hidden">
+              <DrawerHeader className="border-b border-white/10 pb-3">
+                <DrawerTitle className="text-white font-semibold flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Comments
+                </DrawerTitle>
+              </DrawerHeader>
+              <div className="flex-1 overflow-y-auto px-4 pb-4">
+                <CommentsSection
+                  tokenId={post.id}
+                  onClose={() => setShowComments(false)}
+                />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <AnimatePresence>
+            {showComments && (
+              <CommentsSection
+                tokenId={post.id}
+                onClose={() => setShowComments(false)}
+              />
+            )}
+          </AnimatePresence>
+        )}
       </div>
 
       {/* AI Chat */}
