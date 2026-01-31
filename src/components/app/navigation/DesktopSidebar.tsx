@@ -78,15 +78,17 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto" />
           </button>
-          <CoinBalanceMenu 
-            balance={coinBalance} 
-            variant="desktop" 
-            onAuthRequired={handleCoinClick}
-          />
+          <div className="mt-[10px]">
+            <CoinBalanceMenu 
+              balance={coinBalance} 
+              variant="desktop" 
+              onAuthRequired={handleCoinClick}
+            />
+          </div>
         </div>
 
         {/* Navigation Bento - reduced padding */}
-        <div className="-mt-[10px] bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
