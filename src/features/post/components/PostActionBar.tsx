@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type } from 'lucide-react';
+import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -147,13 +147,30 @@ export function PostActionBar({
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
         
+        {/* Mobile: Combined attachment button for image/video */}
+        {!isLive && !hasVideo && !hasImage && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={() => imageInputRef.current?.click()} 
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors sm:hidden"
+              >
+                <Paperclip className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Add media</TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Desktop: Separate image button */}
         {!isLive && !hasVideo && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
                 type="button" 
                 onClick={() => imageInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden sm:block"
               >
                 <Image className="w-5 h-5 text-white" />
               </button>
@@ -162,13 +179,14 @@ export function PostActionBar({
           </Tooltip>
         )}
         
+        {/* Desktop: Separate video button */}
         {!hasImage && !isLive && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
                 type="button" 
                 onClick={() => videoInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden sm:block"
               >
                 <Film className="w-5 h-5 text-white" />
               </button>
