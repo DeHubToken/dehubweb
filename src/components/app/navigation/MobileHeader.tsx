@@ -53,7 +53,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'text-zinc-400'}`}
           aria-label="Notifications"
         >
-          <Bell className="w-[22px] h-[22px]" />
+          <Bell className="w-[26px] h-[26px]" />
         </button>
         
         {/* Menu Button - Avatar when authenticated, burger when not */}
