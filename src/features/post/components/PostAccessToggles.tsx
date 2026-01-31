@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import type { Currency } from '../types';
 
 interface PostAccessTogglesProps {
@@ -77,35 +75,37 @@ export function PostAccessToggles({
   const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
 
   const handlePpvToggle = (checked: boolean) => {
-    if (checked && window.innerWidth < 640) {
+    if (checked) {
+      // Always open drawer for all screen sizes
       setTempPpvAmount(ppvAmount);
       setTempPpvCurrency(ppvCurrency);
       setPpvDrawerOpen(true);
     } else {
-      setIsPPV(checked);
+      setIsPPV(false);
     }
   };
 
   const handleBountyToggle = (checked: boolean) => {
-    if (checked && window.innerWidth < 640) {
+    if (checked) {
+      // Always open drawer for all screen sizes
       setTempW2eViews(w2eViews);
       setTempW2eComments(w2eComments);
       setTempW2eTotal(w2eTotal);
       setTempW2eCurrency(w2eCurrency);
       setBountyDrawerOpen(true);
     } else {
-      setIsWatch2Earn(checked);
+      setIsWatch2Earn(false);
     }
   };
 
   const handleTokenToggle = (checked: boolean) => {
-    if (checked && window.innerWidth < 640) {
-      // Open drawer on mobile
+    if (checked) {
+      // Always open drawer for all screen sizes
       setTempTokenContract(tokenContract);
       setTempTokenAmount(tokenAmount);
       setTokenDrawerOpen(true);
     } else {
-      setIsTokenGated(checked);
+      setIsTokenGated(false);
     }
   };
 
@@ -159,126 +159,39 @@ export function PostAccessToggles({
         </div>
 
         {/* PPV */}
-        <div className="space-y-1 sm:space-y-0">
-          <div className="flex items-center justify-between py-0.5">
-            <div className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4 text-white" />
-              <span className="text-sm text-white">PPV</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {/* Desktop/Tablet: inline options */}
-              <AnimatePresence>
-                {isPPV && (
-                  <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="hidden sm:flex items-center gap-1 overflow-hidden">
-                    <input
-                      type="number"
-                      value={ppvAmount}
-                      onChange={(e) => setPpvAmount(e.target.value)}
-                      placeholder="0.00"
-                      className="w-16 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                    <div className="flex h-6 rounded overflow-hidden border border-white/20">
-                      <button type="button" onClick={() => setPpvCurrency('USD')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                      <button type="button" onClick={() => setPpvCurrency('DHB')} className={cn("px-2 text-xs transition-colors", ppvCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" />
-            </div>
+        <div className="flex items-center justify-between py-0.5">
+          <div className="flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">PPV</span>
+            {isPPV && ppvAmount && (
+              <span className="text-xs text-white/50">({ppvAmount} {ppvCurrency})</span>
+            )}
           </div>
+          <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" />
         </div>
 
         {/* Bounty */}
-        <div className="space-y-1 sm:space-y-0">
-          <div className="flex items-center justify-between py-0.5">
-            <div className="flex items-center gap-2">
-              <Gift className="w-4 h-4 text-white" />
-              <span className="text-sm text-white">Bounty</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {/* Desktop/Tablet: inline options */}
-              <AnimatePresence>
-                {isWatch2Earn && (
-                  <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="hidden sm:flex items-center gap-1 overflow-hidden">
-                    <TooltipProvider delayDuration={300}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
-                            <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
-                              <Eye className="w-3 h-3 text-white/70" />
-                            </div>
-                            <input type="number" value={w2eViews} onChange={(e) => setW2eViews(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top">Total number of viewers to reward</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TooltipProvider delayDuration={300}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center h-6 bg-zinc-800/50 border border-white/20 rounded overflow-hidden cursor-help">
-                            <div className="flex items-center justify-center w-6 h-full bg-white/10 border-r border-white/20">
-                              <MessageCircle className="w-3 h-3 text-white/70" />
-                            </div>
-                            <input type="number" value={w2eComments} onChange={(e) => setW2eComments(e.target.value)} placeholder="0" className="w-10 h-full px-1.5 text-xs bg-transparent text-white placeholder:text-zinc-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top">Total number of commenters to reward</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <input type="number" value={w2eTotal} onChange={(e) => setW2eTotal(e.target.value)} placeholder="Total" className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                    <TooltipProvider delayDuration={300}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex h-6 rounded overflow-hidden border border-white/20 cursor-help">
-                            <button type="button" onClick={() => setW2eCurrency('USD')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'USD' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>USD</button>
-                            <button type="button" onClick={() => setW2eCurrency('DHB')} className={cn("px-1.5 text-xs transition-colors", w2eCurrency === 'DHB' ? "bg-white text-black" : "bg-zinc-800/50 text-zinc-400")}>DHB</button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top">Currency for reward</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" />
-            </div>
+        <div className="flex items-center justify-between py-0.5">
+          <div className="flex items-center gap-2">
+            <Gift className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">Bounty</span>
+            {isWatch2Earn && w2eTotal && (
+              <span className="text-xs text-white/50">({w2eTotal} {w2eCurrency})</span>
+            )}
           </div>
+          <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" />
         </div>
 
         {/* Token Gated */}
-        <div className="space-y-1 sm:space-y-0">
-          <div className="flex items-center justify-between py-0.5">
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-white" />
-              <span className="text-sm text-white">Token Gated</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {/* Desktop/Tablet: inline options */}
-              <AnimatePresence>
-                {isTokenGated && (
-                  <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="hidden sm:flex items-center gap-1 overflow-hidden">
-                    <input
-                      type="text"
-                      value={tokenContract}
-                      onChange={(e) => setTokenContract(e.target.value)}
-                      placeholder="Contract address"
-                      className="w-32 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 font-mono"
-                    />
-                    <input
-                      type="number"
-                      value={tokenAmount}
-                      onChange={(e) => setTokenAmount(e.target.value)}
-                      placeholder="Min"
-                      className="w-14 h-6 px-2 text-xs bg-zinc-800/50 border border-white/20 rounded text-white placeholder:text-zinc-500 outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" />
-            </div>
+        <div className="flex items-center justify-between py-0.5">
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">Token Gated</span>
+            {isTokenGated && tokenAmount && (
+              <span className="text-xs text-white/50">({tokenAmount} tokens)</span>
+            )}
           </div>
+          <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" />
         </div>
       </div>
 
