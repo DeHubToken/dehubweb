@@ -9,7 +9,7 @@
  * without showing the default Web3Auth modal.
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { 
   authenticateWallet, 
@@ -22,6 +22,7 @@ import {
 import { 
   initWeb3Auth, 
   disconnectWeb3Auth,
+  resetWeb3AuthState,
   connectToSocialProvider,
   connectToExternalWallet,
   connectWithModal,
@@ -115,11 +116,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [needsSignature, setNeedsSignature] = useState(false);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  
+  // Ref to track if connection should be aborted when modal is closed
+  const connectionAbortedRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
-  const openLoginModal = useCallback(() => setIsLoginModalOpen(true), []);
-  const closeLoginModal = useCallback(() => setIsLoginModalOpen(false), []);
+  const openLoginModal = useCallback(() => {
+    connectionAbortedRef.current = false;
+    setIsLoginModalOpen(true);
+  }, []);
+  
+  const closeLoginModal = useCallback(() => {
+    connectionAbortedRef.current = true;
+    setIsConnecting(false);
+    setIsLoginModalOpen(false);
+    
+    // If we were connecting, reset Web3Auth to clear stuck iframes
+    if (isConnecting) {
+      console.log('[Auth] Force closing modal - resetting Web3Auth state');
+      setTimeout(() => {
+        resetWeb3AuthState();
+      }, 100);
+    }
+  }, [isConnecting]);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -292,11 +312,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const connectWithProvider = useCallback(async (provider: SocialProvider) => {
     console.log(`[Auth] connectWithProvider(${provider}) called`);
+    connectionAbortedRef.current = false;
     setIsConnecting(true);
 
     try {
       const authConnection = mapSocialProvider(provider);
       const web3authProvider = await connectToSocialProvider(authConnection);
+      
+      // Check if user closed modal during connection
+      if (connectionAbortedRef.current) {
+        console.log('[Auth] Connection aborted by user');
+        return;
+      }
       
       if (!web3authProvider) {
         throw new Error('Failed to connect - no provider returned');
