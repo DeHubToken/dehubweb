@@ -3,10 +3,25 @@
  * =================================================
  * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico-powered
  * Account Abstraction for gasless transactions.
+ * 
+ * CUSTOM UI MODE: Uses connectTo() for direct provider connections
+ * without showing the default Web3Auth modal.
  */
 
-import { Web3Auth, CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/modal";
+import { 
+  Web3Auth, 
+  CHAIN_NAMESPACES, 
+  WEB3AUTH_NETWORK,
+  WALLET_CONNECTORS,
+  AUTH_CONNECTION,
+} from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
+
+// Re-export for use in other files
+export { WALLET_CONNECTORS, AUTH_CONNECTION };
+
+// Auth connection type for TypeScript
+export type AuthConnectionType = typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION];
 
 // Chain configuration for Base Mainnet
 const chainConfig = {
@@ -61,6 +76,7 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
 
 /**
  * Initialize Web3Auth with Account Abstraction via Pimlico
+ * Configured for CUSTOM UI - no default modal shown
  */
 export async function initWeb3Auth(): Promise<Web3Auth> {
   console.log("[Web3Auth] initWeb3Auth() called");
@@ -93,9 +109,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
       console.log("[Web3Auth] ✓ Pimlico config fetched");
 
-      // Create Web3Auth instance with v10 accountAbstractionConfig
-      // Uses Safe Smart Account with Pimlico bundler and paymaster
-      console.log("[Web3Auth] Creating Web3Auth instance with AA config...");
+      // Create Web3Auth instance with custom UI configuration
+      // Modal is hidden - we use connectTo() for direct provider access
+      console.log("[Web3Auth] Creating Web3Auth instance with custom UI config...");
       web3authInstance = new Web3Auth({
         clientId,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
@@ -117,6 +133,12 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         // Use AA only for embedded wallets (social/email login)
         // External wallets like MetaMask will use their own accounts
         useAAWithExternalWallet: false,
+        // Custom UI configuration - we use our own modal
+        uiConfig: {
+          appName: "DeHub",
+          mode: "dark",
+          defaultLanguage: "en",
+        },
       });
       console.log("[Web3Auth] ✓ Instance created with Account Abstraction");
 
@@ -146,6 +168,62 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
   })();
 
   return initPromise;
+}
+
+/**
+ * Connect to a specific social login provider using connectTo()
+ * This bypasses the Web3Auth modal completely
+ */
+export async function connectToSocialProvider(
+  authConnection: AuthConnectionType,
+  loginHint?: string
+): Promise<ReturnType<Web3Auth['connectTo']>> {
+  const web3auth = await getOrInitWeb3Auth();
+  
+  console.log(`[Web3Auth] Connecting to ${authConnection}...`);
+  
+  const params: Record<string, unknown> = {
+    authConnection,
+  };
+  
+  // Add login hint for email/sms passwordless
+  if (loginHint) {
+    params.loginHint = loginHint;
+  }
+  
+  const provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+  
+  console.log(`[Web3Auth] ✓ Connected to ${authConnection}`);
+  return provider;
+}
+
+/**
+ * Connect to an external wallet (MetaMask, WalletConnect, etc.)
+ */
+export async function connectToExternalWallet(
+  walletConnector: typeof WALLET_CONNECTORS[keyof typeof WALLET_CONNECTORS]
+): Promise<ReturnType<Web3Auth['connectTo']>> {
+  const web3auth = await getOrInitWeb3Auth();
+  
+  console.log(`[Web3Auth] Connecting to external wallet: ${walletConnector}...`);
+  
+  const provider = await web3auth.connectTo(walletConnector);
+  
+  console.log(`[Web3Auth] ✓ Connected to ${walletConnector}`);
+  return provider;
+}
+
+/**
+ * Connect using the default Web3Auth modal (fallback)
+ */
+export async function connectWithModal(): Promise<ReturnType<Web3Auth['connect']>> {
+  const web3auth = await getOrInitWeb3Auth();
+  
+  console.log("[Web3Auth] Opening default modal...");
+  const provider = await web3auth.connect();
+  
+  console.log("[Web3Auth] ✓ Connected via modal");
+  return provider;
 }
 
 /**

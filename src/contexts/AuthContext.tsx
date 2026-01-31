@@ -4,6 +4,9 @@
  * Provides Web3Auth authentication integrated with DeHub API.
  * Smart accounts are handled automatically by Web3Auth's AccountAbstractionProvider
  * with Pimlico paymaster for gasless transactions.
+ * 
+ * CUSTOM UI MODE: Uses connectTo() for direct provider connections
+ * without showing the default Web3Auth modal.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -16,9 +19,22 @@ import {
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
-import { initWeb3Auth, disconnectWeb3Auth } from '@/lib/web3auth';
+import { 
+  initWeb3Auth, 
+  disconnectWeb3Auth,
+  connectToSocialProvider,
+  connectToExternalWallet,
+  connectWithModal,
+  AUTH_CONNECTION,
+  WALLET_CONNECTORS,
+  getOrInitWeb3Auth,
+} from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 import type { IProvider } from '@web3auth/modal';
+
+// Provider types for the custom login modal
+export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
+export type WalletProvider = 'metamask' | 'walletconnect' | 'coinbase';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -27,12 +43,21 @@ interface AuthContextType {
   isLoading: boolean;
   isConnecting: boolean;
   requiresUsername: boolean;
-  needsSignature: boolean; // Web3Auth connected but signature pending
+  needsSignature: boolean;
   web3auth: Web3Auth | null;
+  // Legacy connect method (opens default modal)
   connect: () => Promise<void>;
+  // New custom UI methods
+  connectWithProvider: (provider: SocialProvider) => Promise<void>;
+  connectWithEmail: (email: string) => Promise<void>;
+  connectWithWallet: (wallet: WalletProvider) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   setRequiresUsername: (value: boolean) => void;
+  // Login modal state
+  isLoginModalOpen: boolean;
+  openLoginModal: () => void;
+  closeLoginModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,6 +82,29 @@ function normalizeUser(userData: Partial<DeHubUser>, fallbackAddress: string): D
   };
 }
 
+// Map custom provider names to Web3Auth AUTH_CONNECTION
+function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION] {
+  switch (provider) {
+    case 'google': return AUTH_CONNECTION.GOOGLE;
+    case 'twitter': return AUTH_CONNECTION.TWITTER;
+    case 'telegram': return AUTH_CONNECTION.TELEGRAM;
+    case 'apple': return AUTH_CONNECTION.APPLE;
+    case 'discord': return AUTH_CONNECTION.DISCORD;
+    case 'github': return AUTH_CONNECTION.GITHUB;
+    default: return AUTH_CONNECTION.GOOGLE;
+  }
+}
+
+// Map wallet providers to Web3Auth connectors
+function mapWalletProvider(wallet: WalletProvider): typeof WALLET_CONNECTORS[keyof typeof WALLET_CONNECTORS] {
+  switch (wallet) {
+    case 'metamask': return WALLET_CONNECTORS.METAMASK;
+    case 'walletconnect': return WALLET_CONNECTORS.WALLET_CONNECT_V2;
+    case 'coinbase': return WALLET_CONNECTORS.COINBASE;
+    default: return WALLET_CONNECTORS.METAMASK;
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<DeHubUser | null>(null);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -65,8 +113,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [requiresUsername, setRequiresUsername] = useState(false);
   const [needsSignature, setNeedsSignature] = useState(false);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
+
+  const openLoginModal = useCallback(() => setIsLoginModalOpen(true), []);
+  const closeLoginModal = useCallback(() => setIsLoginModalOpen(false), []);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -114,15 +166,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     init();
   }, []);
 
-  // Helper function to complete DeHub authentication after Web3Auth connects
-  // Detects EOA vs smart account and uses appropriate signing method
-  const completeDeHubAuth = async (web3authInstance: Web3Auth) => {
-    if (!web3authInstance.provider) {
-      throw new Error('No provider available');
-    }
-
-    const provider = web3authInstance.provider as IProvider;
-    
+  /**
+   * Complete DeHub authentication after Web3Auth connects
+   * Detects EOA vs smart account and uses appropriate signing method
+   */
+  const completeDeHubAuth = async (provider: IProvider) => {
     // Get address using eth_accounts
     const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
     if (!accounts || accounts.length === 0) {
@@ -133,31 +181,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const normalizedAddress = address.toLowerCase();
     
     // Detect if this is social login (embedded wallet) or external wallet (EOA)
-    // getUserInfo returns user data for social logins, null/empty for external wallets
     let isEmbeddedWallet = false;
+    const web3authInstance = await getOrInitWeb3Auth();
+    
     try {
       const userInfo = await web3authInstance.getUserInfo();
       console.log('[Auth] Full userInfo:', JSON.stringify(userInfo, null, 2));
       
-      // Check multiple indicators of social/embedded login
-      // Social logins have email, name, verifier, or typeOfLogin
       const info = userInfo as Record<string, unknown>;
       isEmbeddedWallet = !!(info && (
         info.email || 
         info.name || 
         info.verifier || 
         info.typeOfLogin ||
-        info.idToken // Social logins typically have an ID token
+        info.idToken
       ));
-      console.log('[Auth] Detection fields:', {
-        email: info?.email,
-        name: info?.name,
-        verifier: info?.verifier,
-        typeOfLogin: info?.typeOfLogin,
-        idToken: info?.idToken ? 'present' : 'none'
-      });
     } catch (e) {
-      // getUserInfo throws for external wallets
       console.log('[Auth] getUserInfo threw (likely external wallet):', e);
       isEmbeddedWallet = false;
     }
@@ -176,7 +215,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // EOA path: use personal_sign with injected provider
       console.log('[Auth] Using EOA signing path');
       try {
-        // Try standard param order: [message, address]
         signature = await provider.request({
           method: 'personal_sign',
           params: [message, address],
@@ -223,101 +261,147 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] ✓ DeHub authentication complete');
   };
 
-  const connect = useCallback(async () => {
-    console.log('[Auth] connect() called');
-    console.log('[Auth] Current web3auth state:', web3auth?.status || 'null');
-    console.log('[Auth] needsSignature:', needsSignature);
+  /**
+   * Handle errors during connection
+   */
+  const handleConnectionError = (error: unknown) => {
+    console.error('[Auth] Connection failed:', error);
+    
+    const errorMessage = error instanceof Error ? error.message : 'Connection failed';
+    let userFriendlyMessage = 'Connection failed. Please try again.';
+    
+    if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User closed')) {
+      userFriendlyMessage = 'Log in was cancelled';
+    } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
+      userFriendlyMessage = 'Please switch to Base network and try again';
+    } else if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
+      userFriendlyMessage = 'Connection timed out. Please try again.';
+    } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
+      userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
+    } else if (errorMessage.includes('bundler') || errorMessage.includes('paymaster')) {
+      userFriendlyMessage = 'Account setup failed. Please try again.';
+    }
+    
+    toast.error(userFriendlyMessage);
+    throw new Error(userFriendlyMessage);
+  };
+
+  /**
+   * Connect with a social provider (Google, X, Telegram, Apple, etc.)
+   */
+  const connectWithProvider = useCallback(async (provider: SocialProvider) => {
+    console.log(`[Auth] connectWithProvider(${provider}) called`);
     setIsConnecting(true);
 
     try {
-      let web3authInstance = web3auth;
-      
-      // If we already have a connected instance and just need signature, skip Web3Auth connect
-      if (needsSignature && web3authInstance?.connected && web3authInstance?.provider) {
-        console.log('[Auth] Retrying signature with existing connection...');
-        await completeDeHubAuth(web3authInstance);
-        setNeedsSignature(false);
-        console.log('[Auth] ✓ Signature retry successful!');
-        return;
-      }
-
-      // Ensure Web3Auth is initialized and ready
-      console.log('[Auth] Checking if web3auth needs initialization...');
-      
-      if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
-        console.log('[Auth] Web3Auth not ready, calling initWeb3Auth()...');
-        web3authInstance = await initWeb3Auth();
-        console.log('[Auth] initWeb3Auth() returned, status:', web3authInstance.status);
-        setWeb3auth(web3authInstance);
-      } else {
-        console.log('[Auth] Web3Auth already ready, status:', web3authInstance.status);
-      }
-
-      console.log('[Auth] Calling web3authInstance.connect()...');
-      console.log('[Auth] Instance status before connect:', web3authInstance.status);
-      
-      const web3authProvider = await web3authInstance.connect();
-      
-      console.log('[Auth] connect() returned');
-      console.log('[Auth] Provider:', web3authProvider ? 'exists' : 'null');
+      const authConnection = mapSocialProvider(provider);
+      const web3authProvider = await connectToSocialProvider(authConnection);
       
       if (!web3authProvider) {
-        throw new Error('Failed to connect wallet - no provider returned');
+        throw new Error('Failed to connect - no provider returned');
       }
 
-      console.log('[Auth] Web3Auth connected successfully');
+      await completeDeHubAuth(web3authProvider);
+      setNeedsSignature(false);
+      closeLoginModal();
       
-      // Note: Smart account deployment is now handled automatically by
-      // Web3Auth's AccountAbstractionProvider with Pimlico paymaster.
-      // The first transaction will trigger deployment if needed.
-
-      // Complete DeHub authentication (signature)
-      try {
-        await completeDeHubAuth(web3authInstance);
-        setNeedsSignature(false);
-      } catch (signError) {
-        console.error('[Auth] Signature failed:', signError);
-        const signErrorMessage = signError instanceof Error ? signError.message : 'Signature failed';
-        
-        // Check if user rejected the signature
-        if (signErrorMessage.includes('user rejected') || signErrorMessage.includes('User rejected') || signErrorMessage.includes('User denied')) {
-          // Keep Web3Auth connected, allow retry
-          setNeedsSignature(true);
-          toast.error('Please sign the message to complete login');
-          return;
-        }
-        
-        // For other errors, disconnect and fail
-        await web3authInstance.logout();
-        throw signError;
-      }
-      
-      console.log('[Auth] ✓ Connection complete!');
+      console.log(`[Auth] ✓ ${provider} connection complete!`);
     } catch (error: unknown) {
-      console.error('[Auth] Connection failed:', error);
+      const errorMessage = error instanceof Error ? error.message : '';
       
-      const errorMessage = error instanceof Error ? error.message : 'Connection failed';
-      let userFriendlyMessage = 'Connection failed. Please try again.';
-      
-      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User closed')) {
-        userFriendlyMessage = 'Log in was cancelled';
-      } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
-        userFriendlyMessage = 'Please switch to Base network and try again';
-      } else if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
-        userFriendlyMessage = 'Connection timed out. Please try again.';
-      } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
-        userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
-      } else if (errorMessage.includes('bundler') || errorMessage.includes('paymaster')) {
-        userFriendlyMessage = 'Account setup failed. Please try again.';
+      // Check if user rejected the signature
+      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        setNeedsSignature(true);
+        toast.error('Please sign the message to complete login');
+        return;
       }
       
-      toast.error(userFriendlyMessage);
-      throw new Error(userFriendlyMessage);
+      handleConnectionError(error);
     } finally {
-      console.log('[Auth] connect() finished, setting isConnecting=false');
       setIsConnecting(false);
     }
-  }, [web3auth, needsSignature]);
+  }, [closeLoginModal]);
+
+  /**
+   * Connect with email (passwordless)
+   */
+  const connectWithEmail = useCallback(async (email: string) => {
+    console.log('[Auth] connectWithEmail() called');
+    setIsConnecting(true);
+
+    try {
+      const web3authProvider = await connectToSocialProvider(
+        AUTH_CONNECTION.EMAIL_PASSWORDLESS,
+        email
+      );
+      
+      if (!web3authProvider) {
+        throw new Error('Failed to connect - no provider returned');
+      }
+
+      await completeDeHubAuth(web3authProvider);
+      setNeedsSignature(false);
+      closeLoginModal();
+      
+      console.log('[Auth] ✓ Email connection complete!');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '';
+      
+      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        setNeedsSignature(true);
+        toast.error('Please sign the message to complete login');
+        return;
+      }
+      
+      handleConnectionError(error);
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [closeLoginModal]);
+
+  /**
+   * Connect with an external wallet (MetaMask, WalletConnect, Coinbase)
+   */
+  const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
+    console.log(`[Auth] connectWithWallet(${wallet}) called`);
+    setIsConnecting(true);
+
+    try {
+      const walletConnector = mapWalletProvider(wallet);
+      const web3authProvider = await connectToExternalWallet(walletConnector);
+      
+      if (!web3authProvider) {
+        throw new Error('Failed to connect - no provider returned');
+      }
+
+      await completeDeHubAuth(web3authProvider);
+      setNeedsSignature(false);
+      closeLoginModal();
+      
+      console.log(`[Auth] ✓ ${wallet} connection complete!`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '';
+      
+      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        setNeedsSignature(true);
+        toast.error('Please sign the message to complete login');
+        return;
+      }
+      
+      handleConnectionError(error);
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [closeLoginModal]);
+
+  /**
+   * Legacy connect method - opens default Web3Auth modal
+   * Kept for backwards compatibility
+   */
+  const connect = useCallback(async () => {
+    console.log('[Auth] connect() called - opening custom login modal');
+    openLoginModal();
+  }, [openLoginModal]);
 
   const disconnect = useCallback(async () => {
     try {
@@ -366,9 +450,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         needsSignature,
         web3auth,
         connect,
+        connectWithProvider,
+        connectWithEmail,
+        connectWithWallet,
         disconnect,
         refreshUser,
         setRequiresUsername,
+        isLoginModalOpen,
+        openLoginModal,
+        closeLoginModal,
       }}
     >
       {children}

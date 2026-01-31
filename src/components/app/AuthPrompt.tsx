@@ -1,7 +1,7 @@
 /**
  * Auth Prompt Component
  * ======================
- * Directly triggers Web3Auth modal for authentication.
+ * Opens the custom LoginModal for authentication.
  * 
  * @module components/app/AuthPrompt
  */
@@ -15,23 +15,17 @@ interface AuthPromptProps {
 }
 
 export function AuthPrompt({ isOpen, onClose }: AuthPromptProps) {
-  const { connect, isConnecting, isAuthenticated } = useAuth();
+  const { openLoginModal, isAuthenticated } = useAuth();
   const hasTriggeredRef = useRef(false);
 
   useEffect(() => {
-    if (isOpen && !isAuthenticated && !isConnecting && !hasTriggeredRef.current) {
+    if (isOpen && !isAuthenticated && !hasTriggeredRef.current) {
       hasTriggeredRef.current = true;
-      // Directly trigger Web3Auth modal
-      connect()
-        .catch((error) => {
-          console.error('Connection failed:', error);
-        })
-        .finally(() => {
-          hasTriggeredRef.current = false;
-          onClose();
-        });
+      // Open the custom login modal
+      openLoginModal();
+      onClose();
     }
-  }, [isOpen, isAuthenticated, isConnecting, connect, onClose]);
+  }, [isOpen, isAuthenticated, openLoginModal, onClose]);
 
   // Reset ref when modal closes
   useEffect(() => {
@@ -50,16 +44,17 @@ import { useState, useCallback } from 'react';
 
 export function useAuthPrompt() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, openLoginModal } = useAuth();
 
   const requireAuth = useCallback((callback?: () => void) => {
     if (isAuthenticated) {
       callback?.();
       return true;
     }
-    setIsOpen(true);
+    // Directly open the login modal
+    openLoginModal();
     return false;
-  }, [isAuthenticated]);
+  }, [isAuthenticated, openLoginModal]);
 
   const close = useCallback(() => setIsOpen(false), []);
 
