@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -21,8 +21,11 @@ import {
 } from '@/hooks/use-dehub-search';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { VideoCard, ImageCard, PostCard } from '@/components/app/cards';
+import { mapNFTToVideoItem, mapNFTToImagePost, getContentType } from '@/hooks/use-dehub-feed';
+import type { VideoItem, ImagePost } from '@/types/feed.types';
 
 const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
@@ -192,90 +195,6 @@ const FilterDropdown = ({
   );
 };
 
-// Search result card for content items
-const SearchResultCard = ({ 
-  item 
-}: { 
-  item: {
-    id: string;
-    title?: string;
-    description?: string;
-    thumbnail?: string;
-    media_type?: string;
-    minter?: string;
-    mintername?: string;
-    minterDisplayName?: string;
-    minterAvatarUrl?: string;
-    createdAt?: string;
-    like_count?: number;
-    comment_count?: number;
-  }
-}) => {
-  const navigate = useNavigate();
-  const thumbnailUrl = item.thumbnail ? getMediaUrl(item.thumbnail) : undefined;
-  const avatarUrl = (item.minterAvatarUrl && item.minter) ? buildAvatarUrl(item.minter, item.minterAvatarUrl) : undefined;
-  const displayName = item.minterDisplayName || item.mintername || 'User';
-  const handle = item.mintername ? `@${item.mintername}` : item.minter?.slice(0, 8);
-  const timeAgo = item.createdAt 
-    ? new Date(item.createdAt).toLocaleDateString() 
-    : '';
-
-  return (
-    <div 
-      className="p-3 bg-zinc-800 rounded-xl cursor-pointer hover:bg-zinc-700/80 transition-colors"
-      onClick={() => navigate(`/app/post/${item.id}`)}
-    >
-      <div className="flex gap-3">
-        {thumbnailUrl && (
-          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-700">
-            <img 
-              src={thumbnailUrl} 
-              alt="" 
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-        )}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <Avatar className="w-5 h-5">
-              <AvatarImage src={avatarUrl} className="object-cover" />
-              <AvatarFallback className="bg-zinc-600 text-[10px]">{displayName[0]}</AvatarFallback>
-            </Avatar>
-            <span className="text-white text-sm font-medium truncate">{displayName}</span>
-            <span className="text-zinc-500 text-xs">{handle}</span>
-            {timeAgo && (
-              <>
-                <span className="text-zinc-600">·</span>
-                <span className="text-zinc-500 text-xs">{timeAgo}</span>
-              </>
-            )}
-          </div>
-          {item.title && (
-            <p className="text-zinc-300 text-sm line-clamp-2">{item.title}</p>
-          )}
-          {item.description && !item.title && (
-            <p className="text-zinc-400 text-sm line-clamp-2">{item.description}</p>
-          )}
-          <div className="flex items-center gap-3 mt-2 text-xs text-zinc-500">
-            {item.like_count !== undefined && (
-              <span>{item.like_count.toLocaleString()} likes</span>
-            )}
-            {item.comment_count !== undefined && (
-              <span>{item.comment_count.toLocaleString()} comments</span>
-            )}
-            {item.media_type && (
-              <span className="px-1.5 py-0.5 bg-zinc-700 rounded text-[10px] uppercase">
-                {item.media_type}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // User result card
 const UserResultCard = ({ user }: { user: SearchCreator }) => {
   const navigate = useNavigate();
@@ -435,11 +354,48 @@ export default function ExplorePage() {
     setSelectedCategory('All');
   };
 
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+  // Infinite scroll ref
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const isFetchingRef = useRef(false);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!isSearching || activeTab === 'people') return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, [isSearching, activeTab, hasNextPage, fetchNextPage]);
+
+  // Map NFTs to feed items
+  const mappedFeedItems = useMemo(() => {
+    return searchResults.posts.map((nft, index) => {
+      const contentType = getContentType(nft);
+      if (contentType === 'video' || contentType === 'audio') {
+        return { type: 'video' as const, item: mapNFTToVideoItem(nft, index) };
+      } else {
+        return { type: 'image' as const, item: mapNFTToImagePost(nft, index) };
+      }
+    });
+  }, [searchResults.posts]);
 
   const showLoading = isSearchLoading || isUserLoading;
   const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
@@ -704,52 +660,48 @@ export default function ExplorePage() {
                   </div>
                 )}
 
-                {/* Content Results */}
-                {showResults && activeTab !== 'people' && searchResults.posts.length > 0 && (
-                  <div>
+                {/* Content Results - Using Feed Cards */}
+                {showResults && activeTab !== 'people' && mappedFeedItems.length > 0 && (
+                  <div className="space-y-4">
                     <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
-                      {activeTab === 'all' ? 'Content' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({searchResults.posts.length})
+                      {activeTab === 'all' ? 'Content' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} ({mappedFeedItems.length}{hasNextPage ? '+' : ''})
                     </h3>
-                    <div className="space-y-3">
-                      {searchResults.posts.map((post) => (
-                        <SearchResultCard key={post.id || post.tokenId} item={{
-                          id: String(post.id || post.tokenId),
-                          title: post.title || post.name,
-                          description: post.description,
-                          thumbnail: post.imageUrl || post.thumbnail_url,
-                          media_type: post.media_type || post.postType,
-                          minter: post.minter,
-                          mintername: post.mintername,
-                          minterDisplayName: post.minterDisplayName,
-                          minterAvatarUrl: post.minterAvatarUrl,
-                          createdAt: post.createdAt || post.created_at,
-                          like_count: post.like_count,
-                          comment_count: post.comment_count || post.commentCount,
-                        }} />
-                      ))}
+                    
+                    {/* Feed Cards */}
+                    <div className="space-y-4">
+                      {mappedFeedItems.map((feedItem, index) => {
+                        if (feedItem.type === 'video') {
+                          const video = feedItem.item as VideoItem;
+                          return (
+                            <VideoCard
+                              key={video.id}
+                              video={video}
+                            />
+                          );
+                        } else {
+                          const image = feedItem.item as ImagePost;
+                          return (
+                            <ImageCard
+                              key={image.id}
+                              post={image}
+                            />
+                          );
+                        }
+                      })}
                     </div>
 
-                    {/* Load More */}
-                    {hasNextPage && (
-                      <div className="flex justify-center mt-4">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleLoadMore}
-                          disabled={isFetchingNextPage}
-                          className="border-zinc-700 text-white hover:bg-zinc-800"
-                        >
-                          {isFetchingNextPage ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                              Loading...
-                            </>
-                          ) : (
-                            'Load More'
-                          )}
-                        </Button>
-                      </div>
-                    )}
+                    {/* Infinite scroll trigger */}
+                    <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+                      {isFetchingNextPage && (
+                        <div className="flex items-center gap-2 text-zinc-400">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm">Loading more...</span>
+                        </div>
+                      )}
+                      {!hasNextPage && mappedFeedItems.length > 0 && (
+                        <p className="text-zinc-500 text-sm">No more results</p>
+                      )}
+                    </div>
                   </div>
                 )}
 
