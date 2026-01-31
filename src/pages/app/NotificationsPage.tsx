@@ -16,6 +16,7 @@ import { getMediaUrl } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
+import notificationsIcon from '@/assets/icons/notifications-icon.png';
 
 // Tabs organized by category as per API spec
 const tabs: { label: string; value: NotificationCategory | 'all'; icon: React.ElementType }[] = [
@@ -260,6 +261,7 @@ export default function NotificationsPage() {
         <div className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
+              <img src={notificationsIcon} alt="Notifications" className="w-7 h-7 object-contain" />
               <h1 className="font-bold text-white text-lg">Notifications</h1>
               {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-full">
