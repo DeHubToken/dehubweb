@@ -592,7 +592,25 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         thumbnail,
       });
 
-      console.log('Mint API response:', mintResponse);
+      console.log('[Mint] Full API response:', JSON.stringify(mintResponse, null, 2));
+      console.log('[Mint] Signature components:', {
+        v: mintResponse.v,
+        r: mintResponse.r,
+        s: mintResponse.s,
+        createdTokenId: mintResponse.createdTokenId,
+        timestamp: mintResponse.timestamp,
+      });
+
+      // Validate signature data from API
+      if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
+        console.error('[Mint] Missing signature components in API response');
+        throw new Error('Invalid signature data from backend - missing v, r, or s');
+      }
+      
+      if (!mintResponse.createdTokenId) {
+        console.error('[Mint] Missing token ID in API response');
+        throw new Error('Invalid response from backend - missing token ID');
+      }
 
       // Handle scheduled posts (skip on-chain minting)
       if (scheduledDate) {

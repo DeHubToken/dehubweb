@@ -61,6 +61,19 @@ export const STREAM_COLLECTION_ABI = [
     stateMutability: 'view',
     type: 'function',
   },
+  // Debug function to verify signature recovery
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'id', type: 'uint256' },
+      { internalType: 'uint8', name: 'v', type: 'uint8' },
+      { internalType: 'bytes32', name: 'r', type: 'bytes32' },
+      { internalType: 'bytes32', name: 's', type: 'bytes32' },
+    ],
+    name: 'getecrecover',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const;
 
 // Fee structure for royalties
@@ -112,8 +125,13 @@ export async function getStreamCollectionContract(): Promise<Contract> {
  */
 export async function mintOnChain(params: MintParams): Promise<string> {
   console.log('[StreamCollection] Starting on-chain mint with params:', params);
+  console.log('[StreamCollection] Full mint params JSON:', JSON.stringify(params, null, 2));
   
   const contract = await getStreamCollectionContract();
+  const signer = await getWeb3AuthSigner();
+  const signerAddress = await signer.getAddress();
+  
+  console.log('[StreamCollection] Signer address (msg.sender):', signerAddress);
   
   // Prepare parameters
   const tokenId = BigInt(params.tokenId);
@@ -121,6 +139,20 @@ export async function mintOnChain(params: MintParams): Promise<string> {
   const v = params.v;
   const r = params.r.startsWith('0x') ? params.r : `0x${params.r}`;
   const s = params.s.startsWith('0x') ? params.s : `0x${params.s}`;
+  
+  // Debug: Call getecrecover to see what address the signature recovers to
+  try {
+    const recoveredAddress = await contract.getecrecover(tokenId, v, r, s);
+    console.log('[StreamCollection] Recovered signer from signature:', recoveredAddress);
+    console.log('[StreamCollection] Expected signer (likely contract owner/backend):', 'Check if this matches DeHub backend signer');
+    
+    // If recovered address is the zero address, signature is invalid
+    if (recoveredAddress === '0x0000000000000000000000000000000000000000') {
+      console.error('[StreamCollection] Signature recovery returned zero address - invalid signature');
+    }
+  } catch (ecrecoverError) {
+    console.warn('[StreamCollection] getecrecover call failed (function may not exist):', ecrecoverError);
+  }
   
   // Default to empty fees array (no royalties) - fees can be set via DeHub backend
   const fees: Array<{ recipient: string; value: bigint }> = params.fees || [];
@@ -140,6 +172,7 @@ export async function mintOnChain(params: MintParams): Promise<string> {
     fees,
     supply: supply.toString(),
     uri,
+    signerAddress,
   });
 
   try {
@@ -164,6 +197,7 @@ export async function mintOnChain(params: MintParams): Promise<string> {
     return receipt.hash;
   } catch (error: unknown) {
     console.error('[StreamCollection] Mint failed:', error);
+    console.error('[StreamCollection] Error details:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
     
     // Extract meaningful error message
     if (error instanceof Error) {
@@ -177,8 +211,13 @@ export async function mintOnChain(params: MintParams): Promise<string> {
       if (error.message.includes('already minted') || error.message.includes('token already exists')) {
         throw new Error('This content has already been minted.');
       }
-      if (error.message.includes('invalid signature')) {
-        throw new Error('Invalid signature. Please try minting again.');
+      if (error.message.includes('invalid signature') || error.message.includes('signer should sign tokenId')) {
+        console.error('[StreamCollection] Signature mismatch! The backend signature does not match what the contract expects.');
+        console.error('[StreamCollection] This may be because:');
+        console.error('  1. The message hash format differs (minter address included?)');
+        console.error('  2. The signature was meant for a different function');
+        console.error('  3. The backend signer is not authorized on the contract');
+        throw new Error('Signature verification failed. The minting signature could not be verified on-chain.');
       }
       throw error;
     }
