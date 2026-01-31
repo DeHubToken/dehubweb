@@ -1540,7 +1540,7 @@ export async function getMessages(
 
 /**
  * Send a message in a conversation
- * Uses /api/dm/upload endpoint for sending messages
+ * Uses /api/dm/upload endpoint with FormData for sending messages
  * @param conversationId - The conversation ID (or 'new_{address}' for new conversations)
  * @param content - Message content
  * @param type - Message type (text, image, gif)
@@ -1554,57 +1554,74 @@ export async function sendMessage(
 ): Promise<DeHubDMMessage> {
   console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
   
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("Authentication required");
+  }
+  
   // Check if this is a new/virtual conversation
   const isNewConversation = conversationId.startsWith('new_');
   const recipientAddress = isNewConversation ? conversationId.replace('new_', '') : undefined;
   
   try {
-    // Build request body for /api/dm/upload
-    const body: Record<string, any> = { 
-      content,
-      type: type === 'text' ? 'text' : type,
-    };
-    
-    if (mediaUrl) body.mediaUrl = mediaUrl;
+    // Build FormData for /api/dm/upload (endpoint expects multipart/form-data)
+    const formData = new FormData();
+    formData.append('content', content);
+    formData.append('type', type);
     
     if (isNewConversation && recipientAddress) {
       // For new conversations, send to recipient address
-      body.receiverAddress = recipientAddress;
+      formData.append('receiverAddress', recipientAddress);
       console.log('[DM API] Sending to new conversation with recipient:', recipientAddress);
     } else {
       // For existing conversations, use conversationId
-      body.conversationId = conversationId;
+      formData.append('conversationId', conversationId);
     }
     
-    const response = await apiCall<any>("/api/dm/upload", {
+    if (mediaUrl) {
+      formData.append('mediaUrl', mediaUrl);
+    }
+    
+    // Use raw fetch with FormData (don't set Content-Type - browser auto-sets multipart boundary)
+    const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
       method: "POST",
-      body,
-      requiresAuth: true,
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        // Don't set Content-Type - browser sets it with multipart boundary
+      },
+      body: formData,
     });
-    console.log('[DM API] sendMessage response:', response);
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('[DM API] sendMessage response:', data);
     
     // Handle various response formats
-    if (response?.result) {
-      return response.result;
+    if (data?.result) {
+      return data.result;
     }
     // If the response itself is the message
-    if (response?._id || response?.id) {
+    if (data?._id || data?.id) {
       return {
-        id: response._id || response.id,
-        conversationId: response.conversationId || conversationId,
-        sender: response.sender,
-        content: response.content || content,
-        type: response.type || type,
-        mediaUrl: response.mediaUrl,
-        createdAt: response.createdAt || new Date().toISOString(),
+        id: data._id || data.id,
+        conversationId: data.conversationId || conversationId,
+        sender: data.sender,
+        content: data.content || content,
+        type: data.type || type,
+        mediaUrl: data.mediaUrl,
+        createdAt: data.createdAt || new Date().toISOString(),
       };
     }
     // Handle response with message object
-    if (response?.message) {
-      return response.message;
+    if (data?.message && typeof data.message === 'object') {
+      return data.message;
     }
     
-    console.warn('[DM API] Unknown response format for sendMessage:', response);
+    console.warn('[DM API] Unknown response format for sendMessage:', data);
     throw new Error('Invalid response from sendMessage');
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
