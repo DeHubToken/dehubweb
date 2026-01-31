@@ -295,7 +295,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           </div>
         </DrawerHeader>
 
-        <div className="relative pt-6 space-y-6">
+        <div className="relative pt-4 space-y-4 sm:space-y-3">
           {/* Calendar Header */}
           <div className="flex items-center justify-between px-2">
             <button
@@ -354,12 +354,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
           </div>
 
           {/* iOS-style Time Wheel Picker */}
-          <div className="border-t border-white/10 pt-6">
-            <div className="flex items-center gap-2 mb-4 px-2">
-              <Clock className="w-4 h-4 text-zinc-400" />
-              <span className="text-sm text-zinc-400">Select time</span>
-            </div>
-            
+          <div className="border-t border-white/10 pt-4">
             <WheelTimePicker
               hour={selectedHour12}
               minute={selectedMinute}
