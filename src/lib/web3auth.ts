@@ -334,6 +334,15 @@ export async function forceCleanupWeb3Auth(): Promise<void> {
   isInitializing = false;
   initPromise = null;
   
+  // Pre-initialize a new instance so it's ready for the next connection attempt
+  console.log("[Web3Auth] Pre-initializing new instance after cleanup...");
+  try {
+    await initWeb3Auth();
+    console.log("[Web3Auth] ✓ New instance ready after cleanup");
+  } catch (e) {
+    console.warn("[Web3Auth] Pre-init after cleanup failed (will retry on connect):", e);
+  }
+  
   console.log("[Web3Auth] ✓ Force cleanup complete - ready for new connection");
 }
 
