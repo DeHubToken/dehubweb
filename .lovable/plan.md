@@ -1,135 +1,204 @@
 
-# Fix Phantom and Rabby Wallet Button Bug
+# Instant Home Feed Loading - Server-Side Caching Implementation
 
-## Problem
-Clicking **Phantom** or **Rabby** wallet buttons in the login modal incorrectly triggers MetaMask connection. This is due to a copy-paste error where both buttons call `handleWalletConnect('metamask')` instead of their own wallet types.
+## Current Problem
 
-## Root Cause Analysis
-
-Looking at `LoginModal.tsx` lines 344-368:
-
-```typescript
-// Line 345 - Phantom button (BUG!)
-onClick={() => handleWalletConnect('metamask')}  
-
-// Line 358 - Rabby button (BUG!)
-onClick={() => handleWalletConnect('metamask')}  
-```
-
-Both call `'metamask'` instead of their respective wallet identifiers.
+Every user visiting the app triggers a direct API call to `https://api.dehub.io/api/feed`, which:
+- Takes 1-3+ seconds depending on network conditions
+- Puts load on the external DeHub API
+- Results in visible loading spinners on every page visit
+- No data is shared between users - each person fetches independently
 
 ## Solution Overview
 
-### How Web3Auth Handles Wallets
-Web3Auth uses EIP-6963 for wallet discovery. The `WALLET_CONNECTORS.METAMASK` connector connects to the **injected provider** (window.ethereum). When multiple wallets are installed:
-- All EIP-6963 compatible wallets (MetaMask, Phantom, Rabby) inject themselves
-- The connector uses whichever one is the active/default injected provider
+Implement **server-side feed caching** using the same proven pattern as the leaderboard, storing pre-fetched feed data in your database that all users share instantly.
 
-### The Fix
-Since Phantom and Rabby are **injected wallets** (like MetaMask), they all use the same underlying connector. The cleanest solution is to:
+```
+Current Flow:
+User → DeHub API (1-3s) → Display
 
-1. **Consolidate injected wallets** into a single "Browser Wallet" option that triggers EIP-6963 selection
-2. **Keep WalletConnect and Coinbase** as separate options (they have their own connectors)
-
-Alternatively, if users expect to see Phantom/Rabby buttons:
-- Keep all buttons visible
-- All injected wallets (MetaMask, Phantom, Rabby) will use the same connector
-- The user's default browser wallet will be triggered
+New Flow:
+User → Database Cache (<100ms) → Display (instant!)
+Background Job → DeHub API → Updates Cache (every 5 minutes)
+```
 
 ---
 
-## Implementation Plan
+## Architecture
 
-### File: `src/components/app/LoginModal.tsx`
+### Caching Strategy
 
-**Option A: Consolidate to "Browser Wallet" (Recommended)**
+| Cache Key | Description | Refresh Interval |
+|-----------|-------------|------------------|
+| `feed_latest_page1` | First 50 posts sorted by date | 5 minutes |
+| `feed_latest_page2` | Posts 51-100 sorted by date | 5 minutes |
+| `feed_popular` | Top 100 most-liked posts | 10 minutes |
 
-Replace the 4 injected wallet buttons with 1:
+### Why This Works
+- **Instant loads**: Database query is ~50-100ms vs 1-3s API call
+- **Shared cache**: One fetch serves all users
+- **Fresh content**: 5-minute refresh means new posts appear within minutes
+- **Fallback safety**: If cache is stale/missing, falls back to direct API
+
+---
+
+## Technical Implementation
+
+### 1. Database Table: `feed_cache`
+
+```sql
+CREATE TABLE feed_cache (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  cache_key TEXT UNIQUE NOT NULL,
+  data JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Index for fast lookups
+CREATE INDEX idx_feed_cache_key ON feed_cache(cache_key);
+CREATE INDEX idx_feed_cache_updated ON feed_cache(updated_at);
+
+-- Enable RLS with public read access (feed is public data)
+ALTER TABLE feed_cache ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access" ON feed_cache FOR SELECT USING (true);
+```
+
+### 2. Edge Function: `refresh-feed-cache`
+
+Creates a background function that fetches feed data from DeHub API and stores it:
 
 ```typescript
-const renderWalletsStep = () => (
-  <div className="space-y-3">
-    {/* Browser Wallet - uses EIP-6963 to detect installed wallets */}
-    <Button
-      onClick={() => handleWalletConnect('metamask')}
-      disabled={isConnecting}
-      className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-    >
-      {activeProvider === 'metamask' ? (
-        <Loader2 className="w-5 h-5 animate-spin" />
-      ) : (
-        <Wallet className="w-5 h-5" />
-      )}
-      <span>Browser Wallet</span>
-    </Button>
+// supabase/functions/refresh-feed-cache/index.ts
+import { createClient } from "@supabase/supabase-js";
 
-    <Button
-      onClick={() => handleWalletConnect('walletconnect')}
-      ...
-    </Button>
+const DEHUB_API_BASE = "https://api.dehub.io";
 
-    <Button
-      onClick={() => handleWalletConnect('coinbase')}
-      ...
-    </Button>
-  </div>
+// Cache configurations to pre-fetch
+const CACHE_CONFIGS = [
+  { key: "feed_latest_page1", page: 1, limit: 50, sortBy: "createdAt" },
+  { key: "feed_latest_page2", page: 2, limit: 50, sortBy: "createdAt" },
+  { key: "feed_popular", page: 1, limit: 100, sortBy: "likes" },
+];
+
+async function fetchFeed(config) {
+  const url = new URL("/api/feed", DEHUB_API_BASE);
+  url.searchParams.set("page", config.page);
+  url.searchParams.set("limit", config.limit);
+  url.searchParams.set("sortBy", config.sortBy);
+  url.searchParams.set("sortOrder", "desc");
+  url.searchParams.set("status", "minted");
+  
+  const response = await fetch(url.toString());
+  return response.json();
+}
+
+Deno.serve(async (req) => {
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL"),
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+  );
+  
+  for (const config of CACHE_CONFIGS) {
+    const data = await fetchFeed(config);
+    await supabase.from("feed_cache").upsert({
+      cache_key: config.key,
+      data: data,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "cache_key" });
+  }
+  
+  return new Response(JSON.stringify({ success: true }));
+});
+```
+
+### 3. Scheduled Job (pg_cron)
+
+Automatically refresh cache every 5 minutes:
+
+```sql
+SELECT cron.schedule(
+  'refresh-feed-cache',
+  '*/5 * * * *',  -- Every 5 minutes
+  $$
+  SELECT net.http_post(
+    url := 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/refresh-feed-cache',
+    headers := '{"Authorization": "Bearer ' || current_setting('app.settings.service_role_key') || '"}'
+  )
+  $$
 );
 ```
 
-**Option B: Keep Individual Buttons (Visual preference only)**
+### 4. Frontend Changes
 
-If you want to keep the visual appearance of separate wallets, fix the `activeProvider` display but keep all using the injected connector:
+Update `useUnifiedFeed` hook to check cache first:
 
 ```typescript
-// Line 344-355: Fix Phantom button
-<Button
-  onClick={() => {
-    setActiveProvider('phantom');
-    handleWalletConnect('metamask'); // Still uses injected connector
-  }}
-  disabled={isConnecting}
-  ...
->
-  {activeProvider === 'phantom' ? (
-    <Loader2 className="w-5 h-5 animate-spin" />
-  ) : (
-    <PhantomIcon />
-  )}
-  <span>Phantom</span>
-</Button>
+// src/hooks/use-unified-feed.ts
 
-// Line 357-368: Fix Rabby button  
-<Button
-  onClick={() => {
-    setActiveProvider('rabby');
-    handleWalletConnect('metamask'); // Still uses injected connector
-  }}
-  disabled={isConnecting}
-  ...
->
-  {activeProvider === 'rabby' ? (
-    <Loader2 className="w-5 h-5 animate-spin" />
-  ) : (
-    <RabbyIcon />
-  )}
-  <span>Rabby</span>
-</Button>
+// New function to fetch from cache
+async function fetchCachedFeed(cacheKey: string): Promise<UnifiedFeedResponse | null> {
+  const { data, error } = await supabase
+    .from("feed_cache")
+    .select("data, updated_at")
+    .eq("cache_key", cacheKey)
+    .single();
+  
+  if (error || !data) return null;
+  
+  // Check if cache is stale (>10 minutes old)
+  const cacheAge = Date.now() - new Date(data.updated_at).getTime();
+  if (cacheAge > 10 * 60 * 1000) return null;
+  
+  return data.data as UnifiedFeedResponse;
+}
+
+// Updated fetch function with cache-first strategy
+async function fetchUnifiedFeed(params: UnifiedFeedParams): Promise<UnifiedFeedResponse> {
+  // Try cache first for common requests
+  if (params.page === 1 && params.sortBy === 'createdAt') {
+    const cached = await fetchCachedFeed('feed_latest_page1');
+    if (cached) return cached;
+  }
+  
+  // Fallback to direct API
+  return fetchFromAPI(params);
+}
 ```
 
 ---
 
-## Technical Details
+## User Experience Impact
 
-| Change | File | Description |
-|--------|------|-------------|
-| Fix Phantom button | `LoginModal.tsx` | Update onClick to properly set activeProvider |
-| Fix Rabby button | `LoginModal.tsx` | Update onClick to properly set activeProvider |
-| Update handleWalletConnect | `LoginModal.tsx` | Accept provider param for loading state tracking |
+| Before | After |
+|--------|-------|
+| 1-3 second loading spinner | Instant content display |
+| Each user fetches independently | Shared cache, one fetch for all |
+| Network-dependent performance | Consistent fast loads |
+| Loading state on every tab switch | Cached data shows immediately |
 
-## Important Note
-All injected browser wallets (MetaMask, Phantom, Rabby) share the same `window.ethereum` interface. Web3Auth's `WALLET_CONNECTORS.METAMASK` connects to whichever wallet is the **active injected provider** in the browser. 
+---
 
-If a user clicks "Phantom" but MetaMask is their default, MetaMask will open. This is a browser limitation, not a code bug. The "Browser Wallet" consolidation (Option A) is more honest UX.
+## Files to Create/Modify
 
-## Recommendation
-I recommend **Option A** (consolidate to "Browser Wallet") for honest UX, but can implement **Option B** if you prefer keeping the individual wallet icons for branding purposes.
+| File | Action | Description |
+|------|--------|-------------|
+| `supabase/migrations/xxx_create_feed_cache.sql` | Create | New database table for feed cache |
+| `supabase/functions/refresh-feed-cache/index.ts` | Create | Edge function to populate cache |
+| `src/hooks/use-unified-feed.ts` | Modify | Add cache-first fetching logic |
+| `src/lib/api/feed-cache.ts` | Create | Cache utility functions |
+
+---
+
+## Additional Optimizations (Phase 2)
+
+1. **Optimistic UI**: Show skeleton instantly, then swap in real content
+2. **Prefetch on hover**: Load next page when user hovers near bottom
+3. **Service Worker**: Cache feed data in browser for offline/instant revisits
+4. **Image preloading**: Start loading thumbnails while data is fetching
+
+---
+
+## Summary
+
+This implements the same server-side caching pattern already proven with your leaderboard - storing pre-fetched API data in your database that's refreshed on a schedule. The result is instant feed loading for all users regardless of network speed.
