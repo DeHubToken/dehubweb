@@ -179,16 +179,11 @@ export default function MessagesPage() {
               onClick={() => setShowPublicChat(true)}
               className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left border-b border-zinc-800"
             >
-              <div className="relative">
-                <img 
-                  src={chatBubbleIcon} 
-                  alt="Public Chat" 
-                  className="w-12 h-12 object-contain"
-                />
-                <div className="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-[10px]">📌</span>
-                </div>
-              </div>
+              <img 
+                src={chatBubbleIcon} 
+                alt="Public Chat" 
+                className="w-12 h-12 object-contain"
+              />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-white truncate">Public Chat</span>
