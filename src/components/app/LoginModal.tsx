@@ -30,17 +30,7 @@ const XIcon = () => (
   </svg>
 );
 
-const TelegramIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#26A5E4]">
-    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-  </svg>
-);
-
-const AppleIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white">
-    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/>
-  </svg>
-);
+// Telegram and Apple icons removed
 
 interface LoginModalProps {
   open: boolean;
@@ -66,7 +56,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'twitter' | 'telegram' | 'apple') => {
+  const handleSocialLogin = async (provider: 'google' | 'twitter') => {
     setActiveProvider(provider);
     try {
       await connectWithProvider(provider);
@@ -111,12 +101,21 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderMainStep = () => (
     <div className="space-y-4">
-      {/* Social logins */}
+      {/* Email first, then social logins */}
       <div className="space-y-3">
+        <Button
+          onClick={() => setStep('email')}
+          disabled={isConnecting}
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+        >
+          <Mail className="w-5 h-5" />
+          <span>Continue with Email</span>
+        </Button>
+
         <Button
           onClick={() => handleSocialLogin('google')}
           disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'google' ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -129,7 +128,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <Button
           onClick={() => handleSocialLogin('twitter')}
           disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'twitter' ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -138,68 +137,27 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           )}
           <span>Continue with X</span>
         </Button>
-
-        <Button
-          onClick={() => handleSocialLogin('telegram')}
-          disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
-        >
-          {activeProvider === 'telegram' ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <TelegramIcon />
-          )}
-          <span>Continue with Telegram</span>
-        </Button>
-
-        <Button
-          onClick={() => handleSocialLogin('apple')}
-          disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
-        >
-          {activeProvider === 'apple' ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <AppleIcon />
-          )}
-          <span>Continue with Apple</span>
-        </Button>
       </div>
 
       <div className="flex items-center gap-3 py-2">
-        <Separator className="flex-1 bg-zinc-700" />
-        <span className="text-zinc-500 text-sm">or</span>
-        <Separator className="flex-1 bg-zinc-700" />
+        <Separator className="flex-1 bg-white/10" />
+        <span className="text-white/40 text-sm">or</span>
+        <Separator className="flex-1 bg-white/10" />
       </div>
 
-      {/* Email & Wallet options */}
-      <div className="space-y-3">
-        <Button
-          onClick={() => setStep('email')}
-          disabled={isConnecting}
-          variant="outline"
-          className="w-full h-12 bg-transparent hover:bg-zinc-800 text-white rounded-xl flex items-center justify-between border-zinc-700"
-        >
-          <div className="flex items-center gap-3">
-            <Mail className="w-5 h-5" />
-            <span>Continue with Email</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-zinc-500" />
-        </Button>
-
-        <Button
-          onClick={() => setStep('wallets')}
-          disabled={isConnecting}
-          variant="outline"
-          className="w-full h-12 bg-transparent hover:bg-zinc-800 text-white rounded-xl flex items-center justify-between border-zinc-700"
-        >
-          <div className="flex items-center gap-3">
-            <Wallet className="w-5 h-5" />
-            <span>Connect Wallet</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-zinc-500" />
-        </Button>
-      </div>
+      {/* Wallet option */}
+      <Button
+        onClick={() => setStep('wallets')}
+        disabled={isConnecting}
+        variant="outline"
+        className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-between border-white/10"
+      >
+        <div className="flex items-center gap-3">
+          <Wallet className="w-5 h-5" />
+          <span>Connect Wallet</span>
+        </div>
+        <ChevronRight className="w-4 h-4 text-white/40" />
+      </Button>
     </div>
   );
 
@@ -207,7 +165,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     <div className="space-y-4">
       <button
         onClick={() => setStep('main')}
-        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm"
+        className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm"
       >
         <ChevronRight className="w-4 h-4 rotate-180" />
         Back
@@ -221,7 +179,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isConnecting}
-            className="h-12 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+            className="h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
             autoFocus
           />
           {emailError && (
@@ -244,7 +202,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           )}
         </Button>
 
-        <p className="text-zinc-500 text-xs text-center">
+        <p className="text-white/40 text-xs text-center">
           We'll send you a magic link to sign in
         </p>
       </form>
@@ -255,7 +213,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     <div className="space-y-4">
       <button
         onClick={() => setStep('main')}
-        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm"
+        className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm"
       >
         <ChevronRight className="w-4 h-4 rotate-180" />
         Back
@@ -265,7 +223,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <Button
           onClick={() => handleWalletConnect('metamask')}
           disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'metamask' ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -282,7 +240,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <Button
           onClick={() => handleWalletConnect('walletconnect')}
           disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'walletconnect' ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -299,7 +257,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <Button
           onClick={() => handleWalletConnect('coinbase')}
           disabled={isConnecting}
-          className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl flex items-center justify-center gap-3 border border-zinc-700"
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
         >
           {activeProvider === 'coinbase' ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -318,28 +276,26 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden">
+      <DialogContent className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden">
         {/* Header */}
         <DialogHeader className="px-6 pt-6 pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src={dehubLogo} alt="DeHub" className="h-8" />
-            </div>
+          <div className="flex items-center justify-center relative">
+            <img src={dehubLogo} alt="DeHub" className="h-8" />
             <button
               onClick={handleClose}
               disabled={isConnecting}
-              className="p-2 rounded-xl hover:bg-zinc-800 transition-colors text-zinc-400 hover:text-white"
+              className="absolute right-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
-          <DialogTitle className="text-xl font-bold text-white mt-4">
+          <DialogTitle className="text-xl font-bold text-white mt-4 text-center">
             {step === 'main' && 'Log in to DeHub'}
             {step === 'email' && 'Continue with Email'}
             {step === 'wallets' && 'Connect Wallet'}
           </DialogTitle>
           {step === 'main' && (
-            <p className="text-zinc-400 text-sm mt-1">
+            <p className="text-white/50 text-sm mt-1 text-center">
               Choose how you want to connect
             </p>
           )}
@@ -353,8 +309,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-zinc-950 border-t border-zinc-800">
-          <p className="text-xs text-zinc-500 text-center">
+        <div className="px-6 py-4 bg-black/20 border-t border-white/10">
+          <p className="text-xs text-white/40 text-center">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
