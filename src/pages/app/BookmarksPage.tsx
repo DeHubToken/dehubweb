@@ -9,6 +9,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import type { FeedItem } from '@/types/feed.types';
+import bookmarkIcon from '@/assets/icons/bookmark-icon.png';
 
 const tabs = [
   { label: 'All', value: 'all' as BookmarkType, icon: LayoutGrid },
@@ -114,9 +115,7 @@ export default function BookmarksPage() {
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center">
-              <Bookmark className="w-6 h-6 text-zinc-400" />
-            </div>
+            <img src={bookmarkIcon} alt="Bookmarks" className="w-10 h-10 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">Your Bookmarks</h1>
               <p className="text-zinc-500 text-sm">
