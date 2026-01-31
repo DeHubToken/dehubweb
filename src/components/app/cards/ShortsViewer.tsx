@@ -609,26 +609,26 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 </div>
               </div>
 
-              {/* Right Side Action Buttons - TikTok Style */}
-              <div className="absolute right-3 bottom-32 z-10 flex flex-col items-center gap-5">
+              {/* Right Side Action Buttons */}
+              <div className="absolute right-3 top-[52%] z-10 flex flex-col items-center gap-3">
                 {/* Like */}
                 <motion.button
                   onClick={() => handleVote(true)}
                   disabled={hasVoted || isVoting}
                   className={cn(
-                    "flex flex-col items-center gap-1 transition-colors",
+                    "flex flex-col items-center gap-0.5 transition-colors",
                     hasVoted && !isLiked && "opacity-50"
                   )}
                   animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   <div className={cn(
-                    "w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center",
+                    "w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center",
                     isLiked && "text-white"
                   )}>
-                    <ThumbsUp className={cn("w-6 h-6", isLiked ? "fill-current text-white" : "text-white")} />
+                    <ThumbsUp className={cn("w-5 h-5", isLiked ? "fill-current text-white" : "text-white")} />
                   </div>
-                  <span className="text-white text-xs font-medium">{formatCount(localLikeCount)}</span>
+                  <span className="text-white text-[10px] font-medium">{formatCount(localLikeCount)}</span>
                 </motion.button>
                 
                 {/* Dislike */}
@@ -636,40 +636,40 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                   onClick={() => handleVote(false)}
                   disabled={hasVoted || isVoting}
                   className={cn(
-                    "flex flex-col items-center gap-1 transition-colors",
+                    "flex flex-col items-center gap-0.5 transition-colors",
                     hasVoted && !isDisliked && "opacity-50"
                   )}
                   animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   <div className={cn(
-                    "w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center"
+                    "w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
                   )}>
-                    <ThumbsDown className={cn("w-6 h-6", isDisliked ? "fill-current text-white" : "text-white")} />
+                    <ThumbsDown className={cn("w-5 h-5", isDisliked ? "fill-current text-white" : "text-white")} />
                   </div>
-                  <span className="text-white text-xs font-medium">{formatCount(localDislikeCount)}</span>
+                  <span className="text-white text-[10px] font-medium">{formatCount(localDislikeCount)}</span>
                 </motion.button>
 
                 {/* Comments */}
                 <button
                   onClick={() => setShowComments(true)}
-                  className="flex flex-col items-center gap-1"
+                  className="flex flex-col items-center gap-0.5"
                 >
-                  <div className="w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <MessageSquare className="w-6 h-6 text-white" />
+                  <div className="w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <MessageSquare className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-white text-xs font-medium">{formatCount(currentShort.comments || 0)}</span>
+                  <span className="text-white text-[10px] font-medium">{formatCount(currentShort.comments || 0)}</span>
                 </button>
                 
                 {/* Share */}
                 <button
                   onClick={() => setShareSheetOpen(true)}
-                  className="flex flex-col items-center gap-1"
+                  className="flex flex-col items-center gap-0.5"
                 >
-                  <div className="w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <Share2 className="w-6 h-6 text-white" />
+                  <div className="w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <Share2 className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-white text-xs font-medium">Share</span>
+                  <span className="text-white text-[10px] font-medium">Share</span>
                 </button>
                 
                 {/* Bookmark */}
@@ -677,29 +677,29 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                   onClick={toggleBookmark}
                   disabled={isBookmarkLoading}
                   className={cn(
-                    "flex flex-col items-center gap-1",
+                    "flex flex-col items-center gap-0.5",
                     isBookmarkLoading && "opacity-50"
                   )}
                   animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                 >
-                  <div className="w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <Bookmark className={cn("w-6 h-6", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
+                  <div className="w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <Bookmark className={cn("w-5 h-5", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
                   </div>
-                  <span className="text-white text-xs font-medium">Save</span>
+                  <span className="text-white text-[10px] font-medium">Save</span>
                 </motion.button>
               </div>
 
               {/* Bottom Comments Preview - Fading Recent Comments */}
               <button
                 onClick={() => setShowComments(true)}
-                className="absolute bottom-20 left-4 right-20 z-10"
+                className="absolute bottom-20 left-4 right-20 z-10 text-left"
               >
                 <div className="space-y-2">
                   {inlineComments.slice(0, 3).map((comment, index) => (
                     <div 
                       key={comment.id} 
-                      className="flex items-start gap-2"
+                      className="flex items-center gap-2"
                       style={{ opacity: 1 - (index * 0.25) }}
                     >
                       <Avatar className="w-6 h-6 flex-shrink-0 rounded-lg">
@@ -708,12 +708,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                           {comment.username?.[0]?.toUpperCase() || '?'}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm">
-                          <span className="font-semibold mr-1.5">{comment.username}</span>
-                          <span className="text-white/90 line-clamp-1">{comment.text}</span>
-                        </p>
-                      </div>
+                      <p className="text-white text-sm flex-1 min-w-0">
+                        <span className="font-semibold mr-1.5">{comment.username}</span>
+                        <span className="text-white/90 line-clamp-1">{comment.text}</span>
+                      </p>
                     </div>
                   ))}
                   {inlineComments.length === 0 && (
