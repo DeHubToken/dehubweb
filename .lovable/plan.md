@@ -1,92 +1,56 @@
 
+# Plan: Add Infinite Scroll to "Who to Follow" Panel
 
-# Fix: Email Login Signature Confirmation Modal Blocker
-
-## Problem Summary
-When logging in via email, a Web3Auth signature request modal appears (as shown in your screenshot) with "Cancel" and "Confirm" buttons, but the "Confirm" button cannot be clicked. This blocks the entire login flow.
-
-## Root Cause
-The Web3Auth Modal v10 shows a confirmation modal for signature requests when Account Abstraction is enabled. The default confirmation strategy (`default`) displays this modal for signature requests, but there's an issue with the modal's interactivity - likely caused by:
-1. Z-index conflicts with other UI elements
-2. The modal rendering in an iframe that blocks user interaction
-3. Internal Web3Auth modal state conflicts
+## Problem
+The "Who to Follow" side panel loads a fixed set of users (from pages 0-19 of content) and stops. When you scroll to the bottom, nothing more loads because there's no infinite scroll implementation.
 
 ## Solution
-Configure `walletServicesConfig` in the Web3Auth initialization to use the `auto-approve` confirmation strategy. This will:
-- Automatically approve signature requests without showing the confirmation modal
-- This is safe because the only signature requested is the authentication message (not a transaction)
-- The authentication message is harmless: "Welcome to DeHub! Click to sign in for authentication..."
-
-## Implementation Plan
-
-### Step 1: Update Web3Auth Configuration
-**File:** `src/lib/web3auth.ts`
-
-Add `walletServicesConfig` to the Web3Auth initialization with:
-- `confirmationStrategy: "auto-approve"` - Automatically approves signatures
-- `whiteLabel.showWidgetButton: false` - Keeps the wallet widget hidden (already desired)
-
-### Step 2: Import Required Constants
-Import `CONFIRMATION_STRATEGY` from `@web3auth/modal` to use the proper constant.
+Convert the static batch-loading approach to a proper infinite scroll system that fetches more users as you scroll down.
 
 ---
 
-## Technical Details
+## Implementation Steps
 
-### Code Changes
+### 1. Convert to Infinite Query
+Replace the two separate `useQuery` calls with a single `useInfiniteQuery` that loads pages on-demand as you scroll.
 
-**src/lib/web3auth.ts** - Add walletServicesConfig:
+### 2. Add Scroll Detection  
+Add an `IntersectionObserver` that watches a loader element at the bottom of the list. When it becomes visible, fetch the next page of content.
 
-```typescript
-import { 
-  Web3Auth, 
-  CHAIN_NAMESPACES, 
-  WEB3AUTH_NETWORK,
-  WALLET_CONNECTORS,
-  AUTH_CONNECTION,
-  CONFIRMATION_STRATEGY,  // Add this import
-} from "@web3auth/modal";
+### 3. Accumulate Unique Users
+Maintain a running set of unique users across all loaded pages, filtering out:
+- Already-followed users
+- The current user
+- Users already shown
 
-// In the Web3Auth constructor (around line 115):
-web3authInstance = new Web3Auth({
-  clientId,
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-  accountAbstractionConfig: {
-    smartAccountType: "safe",
-    chains: [
-      {
-        chainId: "0x2105",
-        bundlerConfig: { url: pimlicoConfig.bundlerUrl },
-        paymasterConfig: { url: pimlicoConfig.paymasterUrl },
-      },
-    ],
-  },
-  useAAWithExternalWallet: false,
-  // ADD: Wallet services configuration for auto-approve
-  walletServicesConfig: {
-    confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-    whiteLabel: {
-      showWidgetButton: false,
-    },
-  },
-  uiConfig: {
-    appName: "DeHub",
-    mode: "dark",
-    defaultLanguage: "en",
-  },
-});
+### 4. Show Loading State
+Display a small spinner at the bottom while fetching more users.
+
+---
+
+## Technical Changes
+
+**File: `src/components/app/WhoToFollow.tsx`**
+
+- Replace `useQuery` imports with `useInfiniteQuery` from TanStack Query
+- Add `useRef`, `useEffect` for the intersection observer
+- Create a `fetchUserPage` function that loads one page at a time
+- Add `IntersectionObserver` that triggers `fetchNextPage()` when the bottom loader is visible
+- Use `isFetchingRef` guard to prevent duplicate fetches (same pattern as HomeFeed)
+- Add loading spinner at the bottom of the list
+
+**Key code pattern (from existing HomeFeed):**
+```text
+1. loaderRef - reference to bottom sentinel element
+2. isFetchingRef - prevents race conditions  
+3. IntersectionObserver - watches loaderRef
+4. When visible + hasNextPage + not fetching → fetchNextPage()
 ```
 
-## Security Consideration
-Using `auto-approve` is safe in this context because:
-1. The only signature being approved is the authentication message
-2. This message is read-only and doesn't authorize any transactions
-3. External wallet users (MetaMask, etc.) still use their own signing flow via their wallet UI
-4. Transaction signatures (when implemented) should use a different flow
+---
 
 ## Expected Result
-After this fix:
-- Email login will complete without showing the blocking signature modal
-- The authentication flow will proceed directly after email verification
-- No user interaction required for the auth signature step
-
+- Initial load shows first batch of suggestions quickly
+- Scrolling to bottom automatically loads more suggestions
+- Loading spinner appears while fetching
+- Continues until no more unique users are found
