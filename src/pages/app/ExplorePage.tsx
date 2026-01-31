@@ -199,13 +199,8 @@ const FilterDropdown = ({
 const UserResultCard = ({ user }: { user: SearchCreator }) => {
   const navigate = useNavigate();
   
-  // Build proper avatar URL using same logic as WhoToFollow
-  const avatarUrl = useMemo(() => {
-    if (user.avatar && user.id) {
-      return buildAvatarUrl(user.id, user.avatar);
-    }
-    return undefined;
-  }, [user.avatar, user.id]);
+  // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
+  const avatarUrl = user.avatar;
   
   return (
     <div 
