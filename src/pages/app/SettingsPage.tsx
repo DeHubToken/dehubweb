@@ -942,86 +942,19 @@ function SocialLinkInput({
   );
 }
 
-// Mock data for assets
-const MOCK_OWNED_USERNAMES = [
-  { handle: '@legend', acquiredDate: '2024-12-15', value: 5000 },
-  { handle: '@crypto_king', acquiredDate: '2024-11-20', value: 12500 },
-  { handle: '@pixel', acquiredDate: '2025-01-02', value: 3200 },
-];
-
-const MOCK_OFFERS_MADE = [
-  { handle: '@diamond', amount: 8000, status: 'pending', date: '2025-01-05' },
-  { handle: '@elite', amount: 15000, status: 'rejected', date: '2024-12-28' },
-  { handle: '@vip', amount: 4500, status: 'pending', date: '2025-01-07' },
-];
-
-const MOCK_FRACTIONS = [
-  { 
-    id: 'image-1',
-    creator: 'travel_adventures',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
-    caption: 'Exploring the mountains 🏔️',
-    fraction: 2.5, 
-    totalValue: 12500 
-  },
-  { 
-    id: 'image-3',
-    creator: 'urban_explorer',
-    image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&h=600&fit=crop',
-    caption: 'City lights never get old ✨',
-    fraction: 0.8, 
-    totalValue: 8500 
-  },
-  { 
-    id: 'image-9',
-    creator: 'sunset_lover',
-    image: 'https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=600&h=600&fit=crop',
-    caption: 'Golden hour magic 🌅',
-    fraction: 5.0, 
-    totalValue: 4200 
-  },
-];
-
-const MOCK_WALLET_ADDRESS = '0x7a3B...F92d8E4c1Ab7';
-const MOCK_WALLET_ADDRESS_FULL = '0x7a3B4c5D6e8F92d8E4c1Ab7C3d2E1f0A9B8C7D6E';
-
-const MOCK_USERS_TO_ASSIGN = [
-  { id: '1', handle: '@alice', name: 'Alice Smith', avatar: undefined },
-  { id: '2', handle: '@bob', name: 'Bob Johnson', avatar: undefined },
-  { id: '3', handle: '@charlie', name: 'Charlie Brown', avatar: undefined },
-  { id: '4', handle: '@diana', name: 'Diana Prince', avatar: undefined },
-];
-
 function AssetsSettings() {
-  const [assignModalOpen, setAssignModalOpen] = useState(false);
-  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [userSearch, setUserSearch] = useState('');
+  const { walletAddress } = useAuthContext();
 
-  const filteredUsers = MOCK_USERS_TO_ASSIGN.filter(u => 
-    u.handle.toLowerCase().includes(userSearch.toLowerCase()) ||
-    u.name.toLowerCase().includes(userSearch.toLowerCase())
-  );
-
-  const handleAssign = (handle: string) => {
-    setSelectedUsername(handle);
-    setAssignModalOpen(true);
-  };
-
-  const handleConfirmAssign = () => {
-    if (selectedUser && selectedUsername) {
-      const user = MOCK_USERS_TO_ASSIGN.find(u => u.id === selectedUser);
-      alert(`Assignment request sent to ${user?.handle}. They will need to approve the transfer of ${selectedUsername}.`);
-      setAssignModalOpen(false);
-      setSelectedUsername(null);
-      setSelectedUser(null);
-      setUserSearch('');
-    }
-  };
+  // Format wallet address for display
+  const truncatedAddress = walletAddress 
+    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+    : 'Not connected';
 
   const handleCopyWallet = () => {
-    navigator.clipboard.writeText(MOCK_WALLET_ADDRESS_FULL);
-    toast.success('Wallet address copied!');
+    if (walletAddress) {
+      navigator.clipboard.writeText(walletAddress);
+      toast.success('Wallet address copied!');
+    }
   };
 
   return (
@@ -1039,13 +972,14 @@ function AssetsSettings() {
         </h3>
         <button
           onClick={handleCopyWallet}
-          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group"
+          disabled={!walletAddress}
+          className="w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
               <Wallet className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-mono">{MOCK_WALLET_ADDRESS}</span>
+            <span className="text-white font-mono">{truncatedAddress}</span>
           </div>
           <Copy className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
         </button>
@@ -1057,31 +991,9 @@ function AssetsSettings() {
           <PieChart className="w-4 h-4" />
           Fractions You Own
         </h3>
-        <div className="space-y-3">
-          {MOCK_FRACTIONS.map((post) => (
-            <div key={post.id} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-              <div className="flex items-center gap-3">
-                <img 
-                  src={post.image} 
-                  alt={post.caption} 
-                  className="w-12 h-12 rounded-lg bg-zinc-700 object-cover"
-                />
-                <div>
-                  <p className="text-white font-medium text-sm line-clamp-1">{post.caption}</p>
-                  <p className="text-zinc-500 text-sm">@{post.creator} · {post.fraction}% ownership</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-white font-medium">${((post.totalValue * post.fraction) / 100).toLocaleString()}</p>
-                <p className="text-zinc-500 text-sm">of ${post.totalValue.toLocaleString()}</p>
-              </div>
-            </div>
-          ))}
-          {MOCK_FRACTIONS.length === 0 && (
-            <div className="text-center py-8 text-zinc-500">
-              You don't own any fractions yet
-            </div>
-          )}
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <PieChart className="w-10 h-10 text-zinc-600 mb-3" />
+          <p className="text-zinc-500">You don't own any fractions yet</p>
         </div>
       </div>
 
@@ -1091,37 +1003,9 @@ function AssetsSettings() {
           <AtSign className="w-4 h-4" />
           Usernames You Own
         </h3>
-        <div className="space-y-3">
-          {MOCK_OWNED_USERNAMES.map((username) => (
-            <div key={username.handle} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
-                  <AtSign className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">{username.handle}</p>
-                  <p className="text-zinc-500 text-sm">Acquired {username.acquiredDate}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-zinc-400 text-sm">{username.value.toLocaleString()} DHB</span>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600"
-                  onClick={() => handleAssign(username.handle)}
-                >
-                  <UserPlus className="w-4 h-4 mr-1" />
-                  Assign
-                </Button>
-              </div>
-            </div>
-          ))}
-          {MOCK_OWNED_USERNAMES.length === 0 && (
-            <div className="text-center py-8 text-zinc-500">
-              You don't own any usernames yet
-            </div>
-          )}
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <AtSign className="w-10 h-10 text-zinc-600 mb-3" />
+          <p className="text-zinc-500">You don't own any usernames yet</p>
         </div>
       </div>
 
@@ -1131,108 +1015,11 @@ function AssetsSettings() {
           <Handshake className="w-4 h-4" />
           Offers You've Made
         </h3>
-        <div className="space-y-3">
-          {MOCK_OFFERS_MADE.map((offer, idx) => (
-            <div key={idx} className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
-                  <Handshake className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">{offer.handle}</p>
-                  <p className="text-zinc-500 text-sm">{offer.date}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-zinc-400 text-sm">{offer.amount.toLocaleString()} DHB</span>
-                <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                  offer.status === 'pending' 
-                    ? 'bg-yellow-500/20 text-yellow-400' 
-                    : offer.status === 'rejected' 
-                    ? 'bg-red-500/20 text-red-400'
-                    : 'bg-green-500/20 text-green-400'
-                }`}>
-                  {offer.status.charAt(0).toUpperCase() + offer.status.slice(1)}
-                </span>
-              </div>
-            </div>
-          ))}
-          {MOCK_OFFERS_MADE.length === 0 && (
-            <div className="text-center py-8 text-zinc-500">
-              You haven't made any offers yet
-            </div>
-          )}
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <Handshake className="w-10 h-10 text-zinc-600 mb-3" />
+          <p className="text-zinc-500">You haven't made any offers yet</p>
         </div>
       </div>
-
-      {/* Assign Username Modal */}
-      {assignModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-zinc-900 rounded-2xl p-6 w-full max-w-md mx-4 border border-zinc-800">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Assign {selectedUsername}</h3>
-              <button 
-                onClick={() => {
-                  setAssignModalOpen(false);
-                  setSelectedUsername(null);
-                  setSelectedUser(null);
-                  setUserSearch('');
-                }}
-                className="text-zinc-500 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <p className="text-zinc-400 text-sm mb-4">
-              Select a user to assign this username to. They will need to approve the transfer.
-            </p>
-
-            <Input
-              placeholder="Search users..."
-              value={userSearch}
-              onChange={(e) => setUserSearch(e.target.value)}
-              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 mb-4"
-            />
-
-            <div className="max-h-64 overflow-y-auto space-y-2 mb-4">
-              {filteredUsers.map((user) => (
-                <button
-                  key={user.id}
-                  onClick={() => setSelectedUser(user.id)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
-                    selectedUser === user.id 
-                      ? 'bg-zinc-700 border border-zinc-600' 
-                      : 'bg-zinc-800 hover:bg-zinc-750'
-                  }`}
-                >
-                  <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-xl" />
-                  <div className="text-left">
-                    <p className="text-white font-medium">{user.name}</p>
-                    <p className="text-zinc-500 text-sm">{user.handle}</p>
-                  </div>
-                  {selectedUser === user.id && (
-                    <Check className="w-5 h-5 text-green-400 ml-auto" />
-                  )}
-                </button>
-              ))}
-              {filteredUsers.length === 0 && (
-                <div className="text-center py-4 text-zinc-500 text-sm">
-                  No users found
-                </div>
-              )}
-            </div>
-
-            <Button 
-              onClick={handleConfirmAssign}
-              disabled={!selectedUser}
-              className="w-full bg-white text-black hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Send Assignment Request
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
