@@ -87,6 +87,8 @@ export function ActionBar({
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isDisliked, setIsDisliked] = useState(initialIsDisliked);
+  const [localLikeCount, setLocalLikeCount] = useState(likeCount ?? 0);
+  const [localDislikeCount, setLocalDislikeCount] = useState(dislikeCount ?? 0);
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const navigate = useNavigate();
@@ -108,9 +110,11 @@ export function ActionBar({
     // Optimistic update with animation trigger
     if (vote) {
       setIsLiked(true);
+      setLocalLikeCount(prev => prev + 1);
       setJustVoted('like');
     } else {
       setIsDisliked(true);
+      setLocalDislikeCount(prev => prev + 1);
       setJustVoted('dislike');
     }
     
@@ -124,8 +128,10 @@ export function ActionBar({
       // Revert optimistic update on error
       if (vote) {
         setIsLiked(false);
+        setLocalLikeCount(prev => prev - 1);
       } else {
         setIsDisliked(false);
+        setLocalDislikeCount(prev => prev - 1);
       }
       
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -222,7 +228,7 @@ export function ActionBar({
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
-            <span className="text-xs text-zinc-400">{formatCount(likeCount)}</span>
+            <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
           </motion.button>
           {!hideDislike && (
             <motion.button 
@@ -238,7 +244,7 @@ export function ActionBar({
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
-              <span className="text-xs text-zinc-400">{formatCount(dislikeCount)}</span>
+              <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
             </motion.button>
           )}
           <button 
