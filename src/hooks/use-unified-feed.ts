@@ -2,7 +2,7 @@
  * Unified Feed Hook
  * =================
  * Fetches mixed content (videos, images, text posts) from the unified /api/feed endpoint.
- * This is the recommended endpoint for the home feed.
+ * Uses server-side caching for instant loads on common requests.
  * 
  * @module hooks/use-unified-feed
  */
@@ -12,8 +12,12 @@ import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import { supabase } from '@/integrations/supabase/client';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
+
+// Cache staleness threshold (10 minutes)
+const CACHE_STALE_MS = 10 * 60 * 1000;
 
 // ============================================================================
 // TYPES
@@ -248,10 +252,79 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
 }
 
 // ============================================================================
+// CACHE UTILITIES
+// ============================================================================
+
+/**
+ * Determine the cache key for a given set of params
+ */
+function getCacheKey(params: UnifiedFeedParams): string | null {
+  // Only cache page 1 of standard queries
+  if (params.page !== 1 && params.page !== undefined) return null;
+  if (params.minter || params.address) return null; // User-specific queries aren't cached
+  if (params.isPPV || params.isLocked || params.hasBounty || params.hasPlans) return null;
+  if (params.range || params.from || params.to) return null;
+  
+  const postType = params.postType || 'all';
+  if (postType !== 'all') return null; // Only cache "all" feed for now
+  
+  const sortBy = params.sortBy || 'likes'; // Default sort is likes (popular)
+  
+  if (sortBy === 'createdAt') {
+    return 'feed_latest_page1';
+  } else if (sortBy === 'likes') {
+    return 'feed_popular';
+  }
+  
+  return null;
+}
+
+/**
+ * Fetch feed data from server-side cache
+ */
+async function fetchCachedFeed(cacheKey: string): Promise<UnifiedFeedResponse | null> {
+  try {
+    const { data, error } = await supabase
+      .from("feed_cache")
+      .select("data, updated_at")
+      .eq("cache_key", cacheKey)
+      .single();
+    
+    if (error || !data) {
+      console.log(`Cache miss for ${cacheKey}:`, error?.message || 'No data');
+      return null;
+    }
+    
+    // Check if cache is stale
+    const cacheAge = Date.now() - new Date(data.updated_at).getTime();
+    if (cacheAge > CACHE_STALE_MS) {
+      console.log(`Cache stale for ${cacheKey} (${Math.round(cacheAge / 1000 / 60)}min old)`);
+      return null;
+    }
+    
+    console.log(`Cache hit for ${cacheKey} (${Math.round(cacheAge / 1000)}s old)`);
+    
+    // Safely cast the JSONB data to our expected type
+    const feedData = data.data as unknown as UnifiedFeedResponse;
+    
+    // Basic validation that the data has expected structure
+    if (!feedData || typeof feedData !== 'object' || !Array.isArray(feedData.result)) {
+      console.log(`Invalid cache data structure for ${cacheKey}`);
+      return null;
+    }
+    
+    return feedData;
+  } catch (err) {
+    console.error('Cache fetch error:', err);
+    return null;
+  }
+}
+
+// ============================================================================
 // API CALL
 // ============================================================================
 
-async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
+async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
   const url = new URL('/api/feed', DEHUB_API_BASE);
   
   // Add query params
@@ -287,6 +360,24 @@ async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<Unified
   }
   
   return response.json();
+}
+
+/**
+ * Main fetch function with cache-first strategy
+ */
+async function fetchUnifiedFeed(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
+  // Try cache first for eligible requests
+  const cacheKey = getCacheKey(params);
+  
+  if (cacheKey) {
+    const cached = await fetchCachedFeed(cacheKey);
+    if (cached) {
+      return cached;
+    }
+  }
+  
+  // Fallback to direct API
+  return fetchUnifiedFeedFromAPI(params);
 }
 
 // ============================================================================
