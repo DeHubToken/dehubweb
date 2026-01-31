@@ -38,7 +38,8 @@ import {
   Download,
   Copy,
   Loader2,
-  LogOut
+  LogOut,
+  Coins
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -61,6 +62,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
+import { useCoinPlacement } from '@/hooks/use-coin-placement';
 
 const tabs = [
   { icon: User, value: 'profile', label: 'Profile' },
@@ -676,6 +678,8 @@ function PrivacySettings() {
 }
 
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
+  const { stickToBanner, setStickToBanner } = useCoinPlacement();
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -767,6 +771,27 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
             description="Enable smooth transitions and effects"
             defaultChecked
           />
+        </div>
+      </div>
+
+      {/* Coin Placement */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Coin Placement</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Coins className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">Stick coin to banner</p>
+                <p className="text-zinc-500 text-sm">Show coin in header (mobile) and sidebar (desktop)</p>
+              </div>
+            </div>
+            <Switch
+              checked={stickToBanner}
+              onCheckedChange={setStickToBanner}
+              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
+            />
+          </div>
         </div>
       </div>
 

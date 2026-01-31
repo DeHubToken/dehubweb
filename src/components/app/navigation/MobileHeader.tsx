@@ -1,8 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Bell } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
@@ -16,6 +18,10 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const { stickToBanner } = useCoinPlacement();
+
+  // Coin balance
+  const coinBalance = 0; // TODO: Get from user wallet
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -36,6 +42,11 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       </div>
       
       <div className="flex items-center gap-2">
+        {/* Coin Balance (when stickToBanner is enabled) */}
+        {stickToBanner && (
+          <CoinBalanceMenu balance={coinBalance} variant="mobile" />
+        )}
+        
         {/* Notifications Button */}
         <button
           onClick={() => navigate('/app/notifications')}
