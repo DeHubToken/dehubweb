@@ -1564,10 +1564,17 @@ export async function sendMessage(
   const recipientAddress = isNewConversation ? conversationId.replace('new_', '') : undefined;
   
   try {
+    // Get the sender's wallet address from localStorage
+    const senderAddress = localStorage.getItem('dehub_wallet');
+    if (!senderAddress) {
+      throw new Error("Wallet address not found. Please reconnect your wallet.");
+    }
+    
     // Build request body for /api/dm/tnx (JSON body)
     const body: Record<string, any> = {
       content,
       type,
+      senderAddress,
     };
     
     if (isNewConversation && recipientAddress) {
