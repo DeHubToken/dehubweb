@@ -8,20 +8,23 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2 } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnNFT } from '@/lib/api/dehub';
+import { voteOnNFT, getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Repeat2, Quote, Link } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ShortVideo } from '@/types/feed.types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { formatTimeAgo } from '@/lib/feed-utils';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -39,6 +42,33 @@ function formatCount(count?: number | string): string {
   return value.toString();
 }
 
+/** Map API comment to display format */
+interface InlineComment {
+  id: string;
+  username: string;
+  avatar?: string;
+  text: string;
+  timeAgo: string;
+  address?: string;
+}
+
+function mapApiCommentToInline(apiComment: ApiCommentResponse): InlineComment {
+  const address = apiComment.address;
+  const rawAvatarPath = apiComment.writor?.avatarUrl;
+  const resolvedAvatar = address && rawAvatarPath 
+    ? buildAvatarUrl(address, rawAvatarPath) 
+    : undefined;
+  
+  return {
+    id: String(apiComment.id),
+    username: apiComment.writor?.username || 'Anonymous',
+    avatar: resolvedAvatar,
+    text: apiComment.content,
+    timeAgo: formatTimeAgo(apiComment.createdAt),
+    address,
+  };
+}
+
 export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
@@ -48,6 +78,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const [showComments, setShowComments] = useState(false);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [inlineCommentText, setInlineCommentText] = useState('');
+  const [isPostingComment, setIsPostingComment] = useState(false);
   
   // Voting state - synced with API
   const [isLiked, setIsLiked] = useState(false);
@@ -70,6 +102,42 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   // View tracking for the current short
   const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
   
+  const queryClient = useQueryClient();
+  
+  // Fetch inline comments for desktop/tablet
+  const { data: inlineComments = [] } = useQuery({
+    queryKey: ['shorts-inline-comments', currentShort?.id],
+    queryFn: async () => {
+      if (!currentShort?.id) return [];
+      const response = await getNFTComments(currentShort.id, 0, 50);
+      return response.map(mapApiCommentToInline);
+    },
+    enabled: !!currentShort?.id && !isMobile,
+    staleTime: 30000,
+  });
+  
+  // Handle posting inline comment
+  const handlePostInlineComment = useCallback(async () => {
+    if (!inlineCommentText.trim() || !currentShort?.id || isPostingComment) return;
+    
+    if (!isAuthenticated) {
+      toast.error('Please log in to comment');
+      return;
+    }
+    
+    setIsPostingComment(true);
+    try {
+      await postComment(currentShort.id, inlineCommentText.trim());
+      setInlineCommentText('');
+      queryClient.invalidateQueries({ queryKey: ['shorts-inline-comments', currentShort.id] });
+      toast.success('Comment posted!');
+    } catch (error) {
+      toast.error('Failed to post comment');
+    } finally {
+      setIsPostingComment(false);
+    }
+  }, [inlineCommentText, currentShort?.id, isPostingComment, isAuthenticated, queryClient]);
+  
   // Reset voting state when changing videos
   useEffect(() => {
     setIsLiked(false);
@@ -81,6 +149,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     setLocalLikeCount(likes);
     setLocalDislikeCount(0);
     setShowComments(false);
+    setInlineCommentText('');
   }, [currentIndex, currentShort?.likes]);
   
   // Handle voting - same logic as ActionBar
@@ -653,17 +722,68 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               )}
             </div>
 
-            {/* Desktop: Open comments in sheet when clicked */}
-            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-4 flex flex-col min-h-0">
-              <button 
-                onClick={() => setShowComments(true)}
-                className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0 hover:text-white transition-colors"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>View Comments</span>
-              </button>
-              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 flex items-center justify-center">
-                <p className="text-white/40 text-sm">Tap to view comments</p>
+            {/* Desktop: Inline comments */}
+            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0">
+              <div className="flex items-center justify-between mb-3 flex-shrink-0">
+                <div className="flex items-center gap-2 text-white/60 text-xs">
+                  <MessageSquare className="w-4 h-4" />
+                  <span>{inlineComments.length} Comments</span>
+                </div>
+                <button 
+                  onClick={() => setShowComments(true)}
+                  className="text-white/40 text-xs hover:text-white transition-colors"
+                >
+                  View all
+                </button>
+              </div>
+              
+              {/* Comments list */}
+              <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 min-h-0">
+                {inlineComments.length === 0 ? (
+                  <p className="text-white/40 text-sm text-center py-4">No comments yet</p>
+                ) : (
+                  inlineComments.slice(0, 10).map((comment) => (
+                    <div key={comment.id} className="flex gap-2">
+                      <Avatar className="w-6 h-6 flex-shrink-0 rounded-lg">
+                        {comment.avatar && <AvatarImage src={comment.avatar} className="rounded-lg" />}
+                        <AvatarFallback className="bg-zinc-700 text-white text-xs rounded-lg">
+                          {comment.username?.[0]?.toUpperCase() || '?'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-white text-xs font-medium truncate">{comment.username}</span>
+                          <span className="text-white/40 text-[10px]">{comment.timeAgo}</span>
+                        </div>
+                        <p className="text-white/70 text-xs leading-relaxed line-clamp-2">{comment.text}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              
+              {/* Comment input */}
+              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/10 flex-shrink-0">
+                <input
+                  type="text"
+                  value={inlineCommentText}
+                  onChange={(e) => setInlineCommentText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handlePostInlineComment();
+                    }
+                  }}
+                  placeholder="Add a comment..."
+                  className="flex-1 bg-transparent text-white text-xs placeholder:text-white/40 outline-none"
+                />
+                <button
+                  onClick={handlePostInlineComment}
+                  disabled={!inlineCommentText.trim() || isPostingComment}
+                  className="text-white/60 hover:text-white disabled:opacity-40 transition-colors"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
