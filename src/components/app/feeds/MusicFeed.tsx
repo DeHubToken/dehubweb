@@ -207,12 +207,23 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
     }
   };
 
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Navigate to user profile using channel name
+    const username = video.channel?.replace('@', '') || '';
+    if (username && username !== 'Anonymous') {
+      navigate(`/${username}`);
+    }
+  };
+
   return (
     <div 
-      onClick={handleContainerClick}
-      className="flex-shrink-0 w-[280px] text-left group cursor-pointer"
+      className="flex-shrink-0 w-[280px] text-left group"
     >
-      <div className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative">
+      <div 
+        onClick={handleContainerClick}
+        className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative cursor-pointer"
+      >
         {/* Show video if playing, otherwise thumbnail */}
         {isPlaying && video.videoUrl ? (
           <video
@@ -232,6 +243,18 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
           />
         )}
+        
+        {/* Avatar overlay - bottom left */}
+        <button
+          onClick={handleProfileClick}
+          className="absolute bottom-2 left-2 z-20"
+        >
+          <img 
+            src={video.channelAvatar} 
+            alt={video.channel}
+            className="w-8 h-8 rounded-xl object-cover border-2 border-white/20 hover:border-white/50 transition-colors"
+          />
+        </button>
         
         {/* Play/Pause button overlay */}
         <button
@@ -272,7 +295,12 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
         )}
       </div>
       <p className="text-white text-sm font-medium truncate">{video.title}</p>
-      <p className="text-zinc-500 text-xs">{video.channel}</p>
+      <button 
+        onClick={handleProfileClick}
+        className="text-zinc-500 text-xs hover:text-white transition-colors text-left"
+      >
+        {video.channel}
+      </button>
     </div>
   );
 }
