@@ -6,7 +6,7 @@ import { LinkPreviews } from './LinkPreviews';
 import type { MediaFile, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Upload, Calendar, Save, Clock, Mic, Square } from 'lucide-react';
+import { Upload, Calendar, Save, Clock, Mic, Square, Plus, X } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScheduleSheet } from './ScheduleSheet';
 import { DraftsSheet, type Draft } from './DraftsSheet';
@@ -19,6 +19,10 @@ import { buildAvatarUrl } from '@/lib/media-url';
 interface PostContentAreaProps {
   text: string;
   setText: (text: string) => void;
+  description: string;
+  setDescription: (description: string) => void;
+  showDescription: boolean;
+  setShowDescription: (show: boolean) => void;
   editorRef: React.RefObject<HTMLDivElement>;
   media: MediaFile[];
   onRemoveMedia: (index: number) => void;
@@ -75,6 +79,10 @@ function createLinkChip(url: string): HTMLSpanElement {
 export function PostContentArea({
   text,
   setText,
+  description,
+  setDescription,
+  showDescription,
+  setShowDescription,
   editorRef,
   media,
   onRemoveMedia,
@@ -538,26 +546,72 @@ export function PostContentArea({
             <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
             <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
-          <div
-            ref={editorRef}
-            contentEditable
-            onInput={handleInput}
-            onPaste={handlePaste}
-            onKeyDown={(e) => {
-              if (mention.handleKeyDown(e)) {
-                if (e.key === 'Enter' || e.key === 'Tab') {
-                  e.preventDefault();
-                  const users = searchUsers(mention.query, 5);
-                  if (users[mention.selectedIndex]) {
-                    mention.handleSelect(users[mention.selectedIndex]);
+          <div className="flex-1 min-w-0">
+            {/* Title input */}
+            <div
+              ref={editorRef}
+              contentEditable
+              onInput={handleInput}
+              onPaste={handlePaste}
+              onKeyDown={(e) => {
+                if (mention.handleKeyDown(e)) {
+                  if (e.key === 'Enter' || e.key === 'Tab') {
+                    e.preventDefault();
+                    const users = searchUsers(mention.query, 5);
+                    if (users[mention.selectedIndex]) {
+                      mention.handleSelect(users[mention.selectedIndex]);
+                    }
                   }
                 }
-              }
-            }}
-            data-placeholder={hasVideo ? "Add a caption..." : "What's happening?"}
-            className="flex-1 bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
-            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-          />
+              }}
+              data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
+              className="flex-1 bg-transparent text-white text-base font-semibold resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+            />
+            
+            {/* Add description button or description input */}
+            <AnimatePresence mode="wait">
+              {!showDescription ? (
+                <motion.button
+                  key="add-btn"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  onClick={() => setShowDescription(true)}
+                  className="flex items-center gap-1.5 mt-2 text-sm text-white/50 hover:text-white/80 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add description
+                </motion.button>
+              ) : (
+                <motion.div
+                  key="desc-input"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-2"
+                >
+                  <div className="flex items-start gap-2">
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Add a description (optional)..."
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm resize-none outline-none focus:border-white/30 transition-colors min-h-[60px]"
+                    />
+                    <button
+                      onClick={() => {
+                        setDescription('');
+                        setShowDescription(false);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Desktop: Avatar + text side by side */}
@@ -567,6 +621,7 @@ export function PostContentArea({
             <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
+            {/* Title input */}
             <div
               contentEditable
               onInput={handleInput}
@@ -582,10 +637,53 @@ export function PostContentArea({
                   }
                 }
               }}
-              data-placeholder={hasVideo ? "This first line is used for thumbnail titles..." : "What's happening?"}
-              className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[92px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+              data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
+              className="w-full bg-transparent text-white text-lg font-semibold resize-none outline-none min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
+            
+            {/* Add description button or description input */}
+            <AnimatePresence mode="wait">
+              {!showDescription ? (
+                <motion.button
+                  key="add-btn"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  onClick={() => setShowDescription(true)}
+                  className="flex items-center gap-1.5 mt-2 text-sm text-white/50 hover:text-white/80 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add description
+                </motion.button>
+              ) : (
+                <motion.div
+                  key="desc-input"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-2"
+                >
+                  <div className="flex items-start gap-2">
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Add a description (optional)..."
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm resize-none outline-none focus:border-white/30 transition-colors min-h-[80px]"
+                    />
+                    <button
+                      onClick={() => {
+                        setDescription('');
+                        setShowDescription(false);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 

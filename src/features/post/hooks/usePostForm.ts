@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { mintPost, type StreamInfo } from '@/lib/api/dehub';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -59,6 +60,8 @@ interface UsePostFormReturn {
 export function usePostForm(onClose: () => void): UsePostFormReturn {
   // Form state
   const [text, setText] = useState('');
+  const [description, setDescription] = useState('');
+  const [showDescription, setShowDescription] = useState(false);
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(false);
   const [isPPV, setIsPPV] = useState(false);
@@ -74,6 +77,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [tokenAmount, setTokenAmount] = useState('');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
   const [isRecording, setIsRecording] = useState(false);
@@ -382,6 +386,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   const resetForm = useCallback(() => {
     setText('');
+    setDescription('');
+    setShowDescription(false);
     setMedia([]);
     setIsSubscribersOnly(false);
     setIsPPV(false);
@@ -498,23 +504,123 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     }
   }, []);
 
-  const handlePost = useCallback(() => {
-    console.log('Posting to:', destinations);
-    console.log('Content:', { text, media, isSubscribersOnly, liveMode, scheduledDate });
+  const handlePost = useCallback(async () => {
+    if (isPosting) return;
     
-    if (scheduledDate) {
-      toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`);
-    } else {
-      toast.success('Post published!');
+    // Validate required fields
+    if (!text.trim() && media.length === 0 && !liveMode) {
+      toast.error('Add some content first');
+      return;
     }
+
+    setIsPosting(true);
     
-    resetForm();
-    onClose();
-  }, [destinations, text, media, isSubscribersOnly, liveMode, scheduledDate, resetForm, onClose]);
+    try {
+      // Determine post type based on media
+      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' = 'feed-simple';
+      if (liveMode) {
+        postType = 'live';
+      } else if (hasVideo) {
+        postType = 'video';
+      } else if (hasImage) {
+        postType = 'feed-images';
+      }
+
+      // Build streamInfo for monetization
+      const streamInfo: StreamInfo = {
+        isLockContent: isSubscribersOnly,
+        isPayPerView: isPPV,
+        isAddBounty: isWatch2Earn,
+      };
+
+      // Add PPV settings
+      if (isPPV && ppvAmount) {
+        streamInfo.payPerViewAmount = parseFloat(ppvAmount);
+        streamInfo.payPerViewTokenSymbol = ppvCurrency === 'DHB' ? 'DHB' : 'USDC';
+        streamInfo.payPerViewChainIds = [8453]; // Base chain
+      }
+
+      // Add W2E bounty settings
+      if (isWatch2Earn && w2eTotal) {
+        streamInfo.addBountyAmount = parseFloat(w2eTotal);
+        streamInfo.addBountyTokenSymbol = w2eCurrency === 'DHB' ? 'DHB' : 'USDC';
+        streamInfo.addBountyFirstXViewers = w2eViews ? parseInt(w2eViews) : 10;
+        streamInfo.addBountyFirstXComments = w2eComments ? parseInt(w2eComments) : 5;
+        streamInfo.addBountyChainId = 8453;
+      }
+
+      // Add token gating settings
+      if (isTokenGated && tokenContract) {
+        streamInfo.isLockContent = true;
+        streamInfo.lockContentContractAddress = tokenContract;
+        streamInfo.lockContentAmount = tokenAmount ? parseFloat(tokenAmount) : 1;
+        streamInfo.lockContentChainIds = [8453];
+      }
+
+      // Get media files
+      const files = media.map(m => m.file);
+      
+      // Get thumbnail for video posts
+      let thumbnail: Blob | undefined;
+      if (hasVideo && media[0]?.thumbnail) {
+        // Convert thumbnail URL to blob
+        const thumbResponse = await fetch(media[0].thumbnail);
+        thumbnail = await thumbResponse.blob();
+      }
+
+      console.log('Minting post:', {
+        name: text.trim(),
+        description: description.trim(),
+        postType,
+        streamInfo,
+        filesCount: files.length,
+        hasThumbnail: !!thumbnail,
+      });
+
+      // Call the mint API
+      const mintResponse = await mintPost({
+        name: text.trim(),
+        description: description.trim(),
+        postType,
+        chainId: 8453, // Base chain
+        category: ['General'],
+        streamInfo,
+        files: files.length > 0 ? files : undefined,
+        thumbnail,
+      });
+
+      console.log('Mint response:', mintResponse);
+
+      // TODO: Step 2 - Call smart contract with mint response values
+      // For now, just show success
+      if (scheduledDate) {
+        toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`);
+      } else {
+        toast.success('Post minted successfully!', {
+          description: `Token ID: ${mintResponse.createdTokenId}`,
+        });
+      }
+      
+      resetForm();
+      onClose();
+    } catch (error) {
+      console.error('Failed to mint post:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create post');
+    } finally {
+      setIsPosting(false);
+    }
+  }, [
+    text, description, media, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+    isTokenGated, tokenContract, tokenAmount, liveMode, scheduledDate,
+    hasVideo, hasImage, isPosting, resetForm, onClose
+  ]);
 
   return {
     state: {
       text,
+      description,
+      showDescription,
       media,
       isSubscribersOnly,
       isPPV,
@@ -530,6 +636,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       tokenAmount,
       liveMode,
       isEnhancing,
+      isPosting,
       scheduledDate,
       drafts,
       isRecording,
@@ -537,6 +644,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     },
     actions: {
       setText,
+      setDescription,
+      setShowDescription,
       setMedia,
       setIsSubscribersOnly,
       setIsPPV,

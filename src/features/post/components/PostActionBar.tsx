@@ -24,6 +24,7 @@ interface PostActionBarProps {
   onPost: () => void;
   canPost: boolean;
   isEnhancing: boolean;
+  isPosting?: boolean;
   hasText: boolean;
   hasImage?: boolean;
   hasVideo?: boolean;
@@ -45,6 +46,7 @@ export function PostActionBar({
   onPost,
   canPost,
   isEnhancing,
+  isPosting,
   hasText,
   hasImage,
   hasVideo,
@@ -379,7 +381,7 @@ export function PostActionBar({
         
         <Button
           onClick={onPost}
-          disabled={!canPost}
+          disabled={!canPost || isPosting}
                 className={cn(
                   "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
             isLive 
@@ -389,10 +391,16 @@ export function PostActionBar({
                 : "bg-white text-black hover:bg-zinc-200"
           )}
         >
-          <span className="hidden sm:inline">
-            {isLive ? 'Go Live' : isScheduled ? 'Schedule' : 'Post'}
-          </span>
-          {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
+          {isPosting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <>
+              <span className="hidden sm:inline">
+                {isLive ? 'Go Live' : isScheduled ? 'Schedule' : 'Post'}
+              </span>
+              {isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
+            </>
+          )}
         </Button>
       </div>
     </div>
