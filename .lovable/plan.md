@@ -1,131 +1,123 @@
 
-# Fix: Include Wallet Address in Mint Request
 
-## Problem Identified
+# Login Modal UX Improvements Plan
 
-The on-chain minting is failing with "signer should sign tokenId" because the signature verification in the StreamCollection contract likely includes the **minter's address (msg.sender)** in the signed message hash.
+## Current Situation Analysis
 
-Currently, the `/api/user_mint` request sends:
-- `name`, `description`, `postType`, `chainId`, `category`, `streamInfo`, `files`
+The login modal currently has a good custom UI for initial provider selection, but when users click "Continue with Email" or "Continue with SMS", Web3Auth opens a separate popup window for OTP verification. This creates a jarring UX where users are pulled out of your branded experience.
 
-But it does NOT send:
-- **The user's wallet address** that will call the `mint()` function
+### Technical Limitation
+Web3Auth Modal SDK v10 uses secure MPC (Multi-Party Computation) for key generation during OTP verification. This cryptographic process **requires** their managed iframe/popup to protect the key shares. There is no way to fully embed the OTP entry UI using the Modal SDK.
 
-Without the minter address, the backend cannot generate a signature that will pass `ecrecover` verification on-chain.
+---
 
-## Evidence
+## What We CAN Improve
 
-From the contract ABI:
-```solidity
-function mint(
-  uint256 id,
-  uint256 timestamp,
-  uint8 v, bytes32 r, bytes32 s,  // signature components
-  Fee[] fees,
-  uint256 supply,
-  string uri
-)
+### 1. Smoother Transition States
+Add visual feedback when the popup is opening so users understand what's happening:
+- Show a "Verification window opening..." state
+- Add instructions like "Check your popup blocker if nothing appears"
+- Display a "Waiting for verification..." overlay while the popup is active
+
+### 2. Fallback Detection
+Detect if the popup was blocked and show helpful instructions:
+- Monitor for popup blockers
+- Provide a "Retry" button with guidance
+- Show browser-specific help for enabling popups
+
+### 3. Loading States During Verification
+Keep the modal visible with a clear waiting state:
+- Animated spinner with "Verifying your email..." message
+- Timer showing how long verification has been pending
+- Cancel button to abort the flow
+
+### 4. Modal Size & Polish
+Improve the modal's visual presentation:
+- Adjust padding and spacing for better mobile experience
+- Add subtle animations for step transitions
+- Improve error state styling
+
+### 5. Reduce Steps Where Possible
+For social logins (Google, X), the popup opens immediately. For email/SMS, we can:
+- Show the email input inline (already done)
+- Pre-validate input before triggering the popup
+- Remember last used login method
+
+---
+
+## Technical Implementation Details
+
+### File Changes Required
+
+**1. LoginModal.tsx**
+- Add new `awaitingVerification` state to show waiting overlay
+- Add popup blocker detection logic
+- Improve transition animations between steps
+- Add "Waiting for verification..." UI with cancel option
+- Polish spacing, add subtle entrance animations
+
+**2. AuthContext.tsx**
+- Add state tracking for verification-in-progress
+- Improve error handling for popup blocked scenarios
+- Add timeout detection with user-friendly messaging
+
+### New UI States
+
+```text
++----------------------------------+
+|          [DeHub Logo]         X  |
+|                                  |
+|         Verifying...             |
+|                                  |
+|     [Animated spinner icon]      |
+|                                  |
+|   Check the popup window to      |
+|   complete verification          |
+|                                  |
+|   [Cancel]                       |
+|                                  |
++----------------------------------+
 ```
 
-The signature verification likely hashes:
-```solidity
-bytes32 message = keccak256(abi.encodePacked(id, msg.sender));
-// OR with timestamp:
-bytes32 message = keccak256(abi.encodePacked(id, timestamp, msg.sender));
+### Popup Blocked Detection
+
+```text
++----------------------------------+
+|          [DeHub Logo]         X  |
+|                                  |
+|    Popup was blocked             |
+|                                  |
+|   Your browser blocked the       |
+|   verification window.           |
+|                                  |
+|   [How to enable popups]         |
+|                                  |
+|   [Try Again]                    |
+|                                  |
++----------------------------------+
 ```
 
-## Solution
+---
 
-### Step 1: Get User's Wallet Address Before API Call
+## Implementation Steps
 
-In `usePostForm.ts`, retrieve the signer address before calling the mint API:
+1. **Add verification-in-progress state** - Track when we're waiting for the Web3Auth popup to complete
+2. **Create waiting overlay component** - Shows spinner and helpful text while popup is active
+3. **Add popup blocker detection** - Detect when window.open returns null
+4. **Improve error recovery** - Add retry buttons and helpful guidance
+5. **Polish animations** - Add Framer Motion transitions for smooth step changes
+6. **Refine mobile experience** - Ensure the modal works well as a bottom sheet
 
-```typescript
-import { getWeb3AuthSigner } from '@/lib/contracts/stream-collection';
+---
 
-// Before calling mintPost()
-const signer = await getWeb3AuthSigner();
-const minterAddress = await signer.getAddress();
-```
+## Summary
 
-### Step 2: Include Address in API Request
+While we cannot eliminate the Web3Auth popup entirely (it's a security requirement for their MPC key generation), we can significantly improve the UX by:
 
-Add the `minter` or `creator` field to the FormData:
+- Keeping users informed during the verification process
+- Detecting and helping with popup blockers
+- Providing clear cancel/retry options
+- Adding polished animations and transitions
 
-```typescript
-formData.append('minter', minterAddress);
-// OR depending on DeHub API expectations:
-formData.append('creator', minterAddress);
-```
+This creates a much more seamless experience even with the external popup requirement.
 
-### Step 3: Update mintPost Function
-
-Modify the `mintPost` function in `src/lib/api/dehub.ts` to accept and include the minter address parameter.
-
-## Technical Details
-
-### Files to Modify
-
-1. **src/features/post/hooks/usePostForm.ts**
-   - Import `getWeb3AuthSigner` 
-   - Get wallet address before API call
-   - Pass address to `mintPost`
-
-2. **src/lib/api/dehub.ts**
-   - Update `mintPost` function signature to accept `minterAddress`
-   - Append `minter` field to FormData
-
-### Code Changes
-
-**usePostForm.ts**
-```typescript
-// Before calling API
-const signer = await getWeb3AuthSigner();
-const minterAddress = await signer.getAddress();
-console.log('[Mint] User wallet address:', minterAddress);
-
-// Pass to API
-const mintResponse = await mintPost({
-  ...params,
-  minterAddress,
-});
-```
-
-**dehub.ts - mintPost function**
-```typescript
-export async function mintPost(params: {
-  name: string;
-  description?: string;
-  // ... other params
-  minterAddress: string;  // Add this
-}) {
-  const formData = new FormData();
-  // ... existing fields
-  formData.append('minter', params.minterAddress);
-  
-  // API call
-}
-```
-
-## Alternative: Check DeHub API Documentation
-
-If the backend doesn't accept a `minter` field, the API might:
-1. Extract the address from the JWT token (already authenticated)
-2. Use a different parameter name (`creator`, `address`, `wallet`)
-3. Require a different endpoint for Web3Auth/Smart Account users
-
-The JWT already contains the address (`0x742371a7cce6b068f3c6222016bf009d570d7d15`), so the backend might already know the minter. In that case, the issue could be:
-- The contract's authorized signer list doesn't include the DeHub backend signer
-- The message format uses a different encoding (e.g., with or without timestamp)
-
-## Testing Plan
-
-1. Add the minter address to the API request
-2. Retry the mint flow
-3. Check console logs for recovered signer address
-4. Compare recovered address against contract's authorized signers
-
-If this doesn't work, we'll need to contact DeHub team to clarify:
-1. Exact message format being signed
-2. Whether Smart Account addresses are supported
-3. If a different flow is needed for gasless transactions
