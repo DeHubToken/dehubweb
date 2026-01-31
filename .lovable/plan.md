@@ -1,111 +1,69 @@
 
-# Fix DM Message Sending - Use Correct Endpoint
+# Fix Multiple Home Page Refreshes
 
-## Problem Identified
+## Problem Summary
 
-The `/api/dm/tnx` endpoint is failing because it requires a `transactionHash` field. This endpoint appears to be specifically for recording **blockchain transactions** (like tips), not for sending regular text messages.
+When the home page loads or refreshes, you see the content visually "refresh" 3-4 times in rapid succession. This is jarring and makes the app feel buggy.
 
-**Current Error:**
-```json
-{
-  "success": false,
-  "message": "Missing required fields: senderAddress, receiverAddress, transactionHash, or type."
-}
-```
+## Root Cause
 
-Despite having `senderAddress`, `receiverAddress`, and `type` in the request, the API still fails because `transactionHash` is required for this endpoint.
+The home feed uses a "Random" sort mode by default that pre-fetches 5 pages of content to enable cross-page shuffling. The issue is:
 
-## Root Cause Analysis
-
-The endpoint naming reveals the issue:
-- `/api/dm/tnx` = "transaction" endpoint - for recording blockchain transactions
-- `/api/dm/upload` = file/message upload endpoint
-
-The memory context stating "Sending messages and marking them as read both utilize the `/api/dm/tnx` endpoint" appears to be incorrect or outdated.
+1. **Sequential Fetching**: The pre-fetch logic triggers one page at a time, running the effect 5 times
+2. **Immediate Reshuffling**: Each time a new page arrives, the `balancedShuffle` function runs and reorders all content
+3. **Visual Updates on Each Fetch**: Users see the feed content reorganize after each of the 5 fetches
 
 ## Solution
 
-Switch back to using the `/api/dm/upload` endpoint with FormData for sending messages. This endpoint handles both text and media messages:
+Change the rendering logic to only display the shuffled content **after pre-fetching is complete**. This means:
 
-**For text messages**: Use FormData with message fields (no file attachment)
-**For media messages**: Use FormData with both message fields and file attachment
-
-The `/api/dm/upload` endpoint accepts:
-- `content` - Message text
-- `type` - Message type ("text", "image", "gif")
-- `senderAddress` - Sender's wallet address
-- `receiverAddress` - Recipient's wallet address (for new conversations)
-- `conversationId` - Existing conversation ID
-- `file` - Optional file attachment
+1. Show a loading state while pre-fetching is in progress
+2. Only render the final shuffled feed once all 5 pages are loaded
+3. This turns 5 visual refreshes into: loading spinner > final content
 
 ## Technical Changes
 
-**File: `src/lib/api/dehub.ts`** (sendMessage function, lines ~1550-1630)
+### File: `src/components/app/feeds/HomeFeed.tsx`
 
-Revert to using FormData and `/api/dm/upload` endpoint:
+**Change 1: Show skeleton/loading during pre-fetch (around line 640-660)**
+
+Update the loading condition to include the pre-fetch state for random mode:
 
 ```typescript
-export async function sendMessage(
-  conversationId: string,
-  content: string,
-  type: 'text' | 'image' | 'gif' = 'text',
-  mediaUrl?: string
-): Promise<DeHubDMMessage> {
-  const token = getAuthToken();
-  if (!token) throw new Error("Authentication required");
-  
-  const isNewConversation = conversationId.startsWith('new_');
-  const recipientAddress = isNewConversation 
-    ? conversationId.replace('new_', '') 
-    : undefined;
-  
-  const senderAddress = localStorage.getItem('dehub_wallet');
-  if (!senderAddress) {
-    throw new Error("Wallet address not found");
-  }
-  
-  // Build FormData for /api/dm/upload endpoint
-  const formData = new FormData();
-  formData.append('content', content);
-  formData.append('type', type);
-  formData.append('senderAddress', senderAddress);
-  
-  if (isNewConversation && recipientAddress) {
-    formData.append('receiverAddress', recipientAddress);
-  } else {
-    formData.append('conversationId', conversationId);
-  }
-  
-  if (mediaUrl) {
-    formData.append('mediaUrl', mediaUrl);
-  }
-  
-  // Use /api/dm/upload for sending messages
-  const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      // Don't set Content-Type - browser sets it with boundary
-    },
-    body: formData,
-  });
-  
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to send message');
-  }
-  
-  return await response.json();
+// Current loading check
+if (isLoading || !feedData?.pages) {
+  return <LoadingSkeleton />;
+}
+
+// Updated loading check - also wait for pre-fetch in random mode
+const isPreFetching = selectedSort.value === 'random' && !hasPreFetched;
+if (isLoading || !feedData?.pages || isPreFetching) {
+  return <LoadingSkeleton />;
 }
 ```
 
-## Key Differences From Previous Attempts
+**Change 2: Stabilize the shuffled items with useMemo dependency (around line 530-600)**
 
-1. **Use `/api/dm/upload` instead of `/api/dm/tnx`** - The upload endpoint is designed for messages
-2. **Use FormData instead of JSON** - The upload endpoint expects multipart/form-data
-3. **Include `senderAddress`** - Required field we discovered earlier
-4. **Keep existing field names** - `content`, `type`, `receiverAddress`, `conversationId`
+Only recompute the shuffled feed when pre-fetching is complete, not on every page addition:
+
+```typescript
+const feedItems = useMemo(() => {
+  // Don't compute until pre-fetch is complete for random mode
+  if (selectedSort.value === 'random' && !hasPreFetched) {
+    return [];
+  }
+  
+  // ... rest of existing mapping logic
+}, [feedData, selectedSort.value, hasPreFetched, shuffleTrigger, pinnedItem]);
+```
 
 ## Expected Result
 
-Messages will be sent via the upload endpoint which handles both text and media, without requiring a blockchain transaction hash.
+- The home page will show a loading state during initial load
+- Once all 5 pages are pre-fetched, the feed appears with a single, stable shuffle
+- No more "flickering" or multiple visual refreshes
+- Pull-to-refresh will show loading > refreshed content (one transition)
+
+## Trade-off
+
+The initial load may take slightly longer to show content (waiting for 5 pages instead of 1), but the experience will be much smoother. Users currently wait anyway while watching content reshuffle repeatedly.
