@@ -65,7 +65,7 @@ export function SidebarLeaderboard() {
   if (entries.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
           <Trophy className="w-6 h-6 text-zinc-500" />
         </div>
         <p className="text-zinc-400 text-sm">No leaderboard data yet</p>
@@ -100,7 +100,7 @@ export function SidebarLeaderboard() {
                     />
                   </div>
                 ) : (
-                  <div className="w-5 h-5 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
+                  <div className="w-5 h-5 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
                     {rank}
                   </div>
                 )}

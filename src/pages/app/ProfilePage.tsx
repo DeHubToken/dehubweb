@@ -483,7 +483,7 @@ export default function ProfilePage() {
   if (!profile) {
     const notFoundContent = (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4 text-center">
-        <div className="w-20 h-20 rounded-full bg-zinc-800 flex items-center justify-center">
+        <div className="w-20 h-20 rounded-xl bg-zinc-800 flex items-center justify-center">
           <AtSign className="w-10 h-10 text-zinc-500" />
         </div>
         <h2 className="text-xl font-bold text-white">Profile Not Found</h2>
@@ -546,7 +546,7 @@ export default function ProfilePage() {
             <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
               <div className="relative">
                 <button 
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
                   onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
                   disabled={!profile.avatarUrl}
                 >
@@ -554,14 +554,14 @@ export default function ProfilePage() {
                     <img 
                       src={profile.avatarUrl} 
                       alt={profile.name} 
-                      className="w-full h-full rounded-full object-cover"
+                      className="w-full h-full rounded-xl object-cover"
                     />
                   ) : (
                     <UserAvatar 
                       name={profile.name} 
                       handle={profile.handle} 
                       size="lg" 
-                      className="w-full h-full rounded-full"
+                      className="w-full h-full rounded-xl"
                     />
                   )}
                 </button>

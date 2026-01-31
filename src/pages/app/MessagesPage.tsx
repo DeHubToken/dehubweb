@@ -16,7 +16,7 @@ function ConversationsSkeleton() {
     <div className="space-y-1">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="flex items-center gap-3 p-4">
-          <Skeleton className="w-12 h-12 rounded-full bg-zinc-800" />
+          <Skeleton className="w-12 h-12 rounded-xl bg-zinc-800" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-32 bg-zinc-800" />
             <Skeleton className="h-3 w-48 bg-zinc-800" />
@@ -75,7 +75,7 @@ function ConversationItem({
       </div>
       
       {conversation.unreadCount > 0 && (
-        <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+        <div className="w-5 h-5 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
           <span className="text-primary-foreground text-xs font-bold">
             {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
           </span>

@@ -64,7 +64,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleGoLive}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-red-500/20 flex items-center justify-center">
           <Video className="w-4 h-4 text-red-500" />
         </div>
         <span className="text-white font-medium">Go Live</span>
@@ -73,7 +73,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleAddStory}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center">
           <Image className="w-4 h-4 text-orange-500" />
         </div>
         <span className="text-white font-medium">Add Story</span>
@@ -131,8 +131,8 @@ export function StoriesBar({ users }: StoriesBarProps) {
           {users.map((user) => (
             <div key={user.name} className="flex flex-col items-center gap-1 flex-shrink-0">
               {user.hasStory !== false ? (
-                <div className="p-0.5 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                  <div className="p-0.5 bg-zinc-900 rounded-full">
+              <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+                  <div className="p-0.5 bg-zinc-900 rounded-xl">
                     <Avatar className="w-14 h-14">
                       <AvatarImage src={user.avatar} className="object-cover" />
                       <AvatarFallback className="bg-zinc-700">{user.name[0].toUpperCase()}</AvatarFallback>
