@@ -8,6 +8,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -92,9 +93,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
   const currentShort = shorts[currentIndex];
+  
+  // Navigate to creator profile
+  const handleNavigateToProfile = useCallback(() => {
+    const username = currentShort?.creatorUsername || currentShort?.username;
+    if (username) {
+      onClose();
+      navigate(`/${username}`);
+    }
+  }, [currentShort?.creatorUsername, currentShort?.username, navigate, onClose]);
   
   // Bookmark hook - uses the same system as regular posts
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
@@ -456,11 +467,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 animate={justVoted === 'dislike'}
               />
 
-              <ActionButton
-                icon={MessageSquare}
-                count={currentShort.comments || 0}
-                onClick={() => setShowComments(true)}
-              />
 
               {/* View count */}
               <div className="flex flex-col items-center gap-1">
@@ -587,11 +593,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
               {/* Creator Info */}
               <div className="absolute top-4 left-4 z-10 max-w-[50vw]">
                 <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
-                  <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
-                    <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                    <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-white text-sm font-medium truncate min-w-0 flex-1">@{currentShort.creatorUsername || currentShort.username}</span>
+                  <button
+                    onClick={() => handleNavigateToProfile()}
+                    className="flex items-center gap-2 min-w-0 flex-1"
+                  >
+                    <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-white text-sm font-medium truncate min-w-0 flex-1">@{currentShort.creatorUsername || currentShort.username}</span>
+                  </button>
                   <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl flex-shrink-0">
                     Follow
                   </button>
@@ -692,21 +703,26 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
             {/* Creator Info - Top */}
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
               <div className="flex items-center gap-2 lg:gap-3">
-                <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
-                  <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                  <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold text-sm lg:text-base truncate">@{currentShort.creatorUsername || currentShort.username}</p>
-                  <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {currentShort.views || '0'}
-                    </span>
-                    <span>•</span>
-                    <span>{formatCount(localLikeCount)} likes</span>
+                <button
+                  onClick={() => handleNavigateToProfile()}
+                  className="flex items-center gap-2 lg:gap-3 min-w-0 flex-1 text-left"
+                >
+                  <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                    <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline">@{currentShort.creatorUsername || currentShort.username}</p>
+                    <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
+                      <span className="flex items-center gap-1">
+                        <Eye className="w-3 h-3" />
+                        {currentShort.views || '0'}
+                      </span>
+                      <span>•</span>
+                      <span>{formatCount(localLikeCount)} likes</span>
+                    </div>
                   </div>
-                </div>
+                </button>
                 <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0 max-w-[80px]">
                   Follow
                 </button>
