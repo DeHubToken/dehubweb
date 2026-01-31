@@ -821,10 +821,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 onClick={handlePostComment}
                 disabled={!canPost}
                 className={cn(
-                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0",
+                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 border",
                   canPost
-                    ? "bg-zinc-700 text-white hover:bg-zinc-600"
-                    : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                    ? "bg-white/10 border-white/10 text-white hover:bg-white/15"
+                    : "bg-white/5 border-white/10 text-zinc-500 cursor-not-allowed"
                 )}
               >
                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
