@@ -336,7 +336,11 @@ export function PostAccessToggles({
             <Button variant="outline" onClick={cancelPpv} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
               Cancel
             </Button>
-            <Button onClick={confirmPpv} className="flex-1 rounded-xl bg-white text-black hover:bg-white/90">
+            <Button 
+              onClick={confirmPpv} 
+              disabled={!tempPpvAmount.trim()}
+              className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Check className="w-4 h-4 mr-2" />
               Confirm
             </Button>
@@ -424,7 +428,11 @@ export function PostAccessToggles({
             <Button variant="outline" onClick={cancelBounty} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
               Cancel
             </Button>
-            <Button onClick={confirmBounty} className="flex-1 rounded-xl bg-white text-black hover:bg-white/90">
+            <Button 
+              onClick={confirmBounty} 
+              disabled={!tempW2eViews.trim() || !tempW2eComments.trim() || !tempW2eTotal.trim()}
+              className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Check className="w-4 h-4 mr-2" />
               Confirm
             </Button>
@@ -467,7 +475,11 @@ export function PostAccessToggles({
             <Button variant="outline" onClick={cancelToken} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
               Cancel
             </Button>
-            <Button onClick={confirmToken} className="flex-1 rounded-xl bg-white text-black hover:bg-white/90">
+            <Button 
+              onClick={confirmToken} 
+              disabled={!tempTokenContract.trim() || !tempTokenAmount.trim()}
+              className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Check className="w-4 h-4 mr-2" />
               Confirm
             </Button>

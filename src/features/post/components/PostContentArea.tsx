@@ -540,35 +540,33 @@ export function PostContentArea({
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Mobile: Avatar in top left, below buttons row */}
-        <div className="flex items-start gap-3 sm:hidden mb-2 mt-8">
-          <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl">
+        {/* Mobile: Avatar top left, text below aligned left */}
+        <div className="flex flex-col sm:hidden mt-8">
+          <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl mb-2">
             <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
             <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0">
-            {/* Title input */}
-            <div
-              ref={editorRef}
-              contentEditable
-              onInput={handleInput}
-              onPaste={handlePaste}
-              onKeyDown={(e) => {
-                if (mention.handleKeyDown(e)) {
-                  if (e.key === 'Enter' || e.key === 'Tab') {
-                    e.preventDefault();
-                    const users = searchUsers(mention.query, 5);
-                    if (users[mention.selectedIndex]) {
-                      mention.handleSelect(users[mention.selectedIndex]);
-                    }
+          {/* Title input */}
+          <div
+            ref={editorRef}
+            contentEditable
+            onInput={handleInput}
+            onPaste={handlePaste}
+            onKeyDown={(e) => {
+              if (mention.handleKeyDown(e)) {
+                if (e.key === 'Enter' || e.key === 'Tab') {
+                  e.preventDefault();
+                  const users = searchUsers(mention.query, 5);
+                  if (users[mention.selectedIndex]) {
+                    mention.handleSelect(users[mention.selectedIndex]);
                   }
                 }
-              }}
-              data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
-              className="flex-1 bg-transparent text-white text-base font-semibold resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
-              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-            />
-          </div>
+              }
+            }}
+            data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
+            className="bg-transparent text-white text-base font-semibold resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+          />
         </div>
 
         {/* Desktop: Avatar + text side by side */}
