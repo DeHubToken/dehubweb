@@ -3,7 +3,7 @@ import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { PublicChat, DirectMessageChat, NewConversationModal } from '@/components/app/chat';
+import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations } from '@/hooks/use-messages';
@@ -91,7 +91,9 @@ function ConversationItem({
 export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
+  const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated } = useAuth();
 
@@ -169,7 +171,7 @@ export default function MessagesPage() {
               />
               <Button 
                 size="icon" 
-                onClick={() => setShowNewConversation(true)}
+                onClick={() => setShowMessageSelector(true)}
                 className="absolute right-1.5 w-7 h-7 rounded-xl bg-zinc-800 hover:bg-zinc-700 border-0"
               >
                 <Plus className="w-4 h-4 text-white" />
@@ -190,10 +192,7 @@ export default function MessagesPage() {
                 className="w-12 h-12 object-contain"
               />
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-white truncate">Public Chat</span>
-                  <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
-                </div>
+                <span className="font-semibold text-white truncate block">Public Chat</span>
                 <p className="text-zinc-500 text-sm truncate">Join the community conversation</p>
               </div>
             </button>
@@ -223,7 +222,7 @@ export default function MessagesPage() {
                 <p className="text-zinc-400 mb-2">No conversations yet</p>
                 <p className="text-zinc-500 text-sm mb-4">Start a new message to connect with others</p>
                 <Button 
-                  onClick={() => setShowNewConversation(true)}
+                  onClick={() => setShowMessageSelector(true)}
                   className="bg-zinc-800 hover:bg-zinc-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -245,11 +244,28 @@ export default function MessagesPage() {
         </div>
       </div>
 
-      {/* New Conversation Modal */}
+      {/* Message Type Selector */}
+      <NewMessageSelector
+        open={showMessageSelector}
+        onOpenChange={setShowMessageSelector}
+        onSelectDM={() => setShowNewConversation(true)}
+        onSelectGroup={() => setShowCreateGroup(true)}
+      />
+
+      {/* New DM Conversation Modal */}
       <NewConversationModal
         open={showNewConversation}
         onOpenChange={setShowNewConversation}
         onConversationCreated={(conversation) => {
+          setSelectedConversation(conversation);
+        }}
+      />
+
+      {/* Create Group Modal */}
+      <CreateGroupModal
+        open={showCreateGroup}
+        onOpenChange={setShowCreateGroup}
+        onGroupCreated={(conversation) => {
           setSelectedConversation(conversation);
         }}
       />

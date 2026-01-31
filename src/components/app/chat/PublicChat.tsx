@@ -49,10 +49,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
           </Button>
           
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="font-bold text-white">Public Chat</h2>
-              <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
-            </div>
+            <h2 className="font-bold text-white">Public Chat</h2>
           </div>
         </div>
         
