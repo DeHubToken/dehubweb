@@ -18,7 +18,7 @@
  * ```
  */
 
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ContentType } from '@/types/feed.types';
@@ -26,6 +26,8 @@ import type { ContentType } from '@/types/feed.types';
 interface CardHeaderProps {
   /** Display name or username */
   username: string;
+  /** @handle for the user (optional, shown greyed next to username) */
+  handle?: string;
   /** Seed for generating avatar image or actual avatar URL */
   avatarSeed: string;
   /** Whether user is verified */
@@ -38,6 +40,10 @@ interface CardHeaderProps {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Timestamp to show next to username (e.g., "2h") */
+  timestamp?: string;
+  /** View count to show next to timestamp */
+  viewCount?: string | number;
 }
 
 /**
@@ -53,12 +59,15 @@ const CONTENT_BADGES: Record<ContentType, { label: string; className: string }> 
 
 export function CardHeader({ 
   username, 
+  handle,
   avatarSeed, 
   verified = false, 
   contentType,
   isLive = false,
   creatorId,
   creatorUsername,
+  timestamp,
+  viewCount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const badge = CONTENT_BADGES[contentType];
@@ -78,6 +87,9 @@ export function CardHeader({
   };
 
   const isClickable = !!(creatorId || creatorUsername);
+  
+  // Format handle to ensure it starts with @
+  const formattedHandle = handle ? (handle.startsWith('@') ? handle : `@${handle}`) : null;
 
   return (
     <div className="flex items-center gap-3 p-3">
@@ -101,10 +113,27 @@ export function CardHeader({
             <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
-        <div className="flex items-center gap-1">
-          <span className="font-semibold text-white text-sm">{username}</span>
-          {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
-          {isLive && <span className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-white text-sm">{username}</span>
+            {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+            {formattedHandle && (
+              <span className="text-zinc-500 text-sm">{formattedHandle}</span>
+            )}
+            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+          </div>
+          {/* Timestamp and view count row */}
+          {(timestamp || viewCount) && (
+            <div className="flex items-center gap-2 text-zinc-500 text-xs">
+              {timestamp && <span>{timestamp}</span>}
+              {viewCount && (
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3 h-3" />
+                  {viewCount}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </button>
     </div>
