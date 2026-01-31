@@ -138,10 +138,12 @@ function getNavigationLink(notification: DeHubNotification): string | null {
 function NotificationItem({ 
   notification, 
   onMarkAsRead,
+  onRemove,
   isMarkingAsRead,
 }: { 
   notification: DeHubNotification;
   onMarkAsRead: (id: string) => void;
+  onRemove: (id: string) => void;
   isMarkingAsRead: boolean;
 }) {
   const navigate = useNavigate();
@@ -277,8 +279,7 @@ function NotificationItem({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            // TODO: Implement delete single notification API
-            console.log('Delete notification:', notification.id);
+            onRemove(notification.id);
           }}
           className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
           title="Remove notification"
@@ -294,6 +295,9 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { isAuthenticated } = useAuth();
   
+  // Track dismissed notifications (client-side only since no DELETE API exists)
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  
   // Notification preference toggles (local state for now)
   const [notificationPrefs, setNotificationPrefs] = useState({
     likes: true,
@@ -305,7 +309,10 @@ export default function NotificationsPage() {
   });
   
   // Fetch all notifications and filter client-side by type
-  const { notifications: allNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
+  const { notifications: rawNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
+  
+  // Filter out dismissed notifications
+  const allNotifications = rawNotifications.filter(n => !dismissedIds.has(n.id));
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
@@ -327,6 +334,10 @@ export default function NotificationsPage() {
     markAsRead.mutate(notificationId, {
       onSettled: () => setMarkingNotificationId(null),
     });
+  };
+
+  const handleRemoveNotification = (notificationId: string) => {
+    setDismissedIds(prev => new Set(prev).add(notificationId));
   };
 
   // Filter notifications by selected tab type
@@ -592,6 +603,7 @@ export default function NotificationsPage() {
                   key={notification.id}
                   notification={notification}
                   onMarkAsRead={handleMarkAsRead}
+                  onRemove={handleRemoveNotification}
                   isMarkingAsRead={markingNotificationId === notification.id}
                 />
               ))}
