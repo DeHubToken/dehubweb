@@ -1,58 +1,78 @@
 
-# Fix Search Results Avatar Rendering
+# Fix Search Results Avatar - Field Mapping Issue
 
-## Problem
-The avatars in search results show fallback icons instead of actual images because the URL is being **double-processed** through `buildAvatarUrl`.
+## Root Cause
 
-## Root Cause Analysis
+The API returns `avatarImageUrl` but the code only checks for `avatarUrl`:
 
-The `SearchCreator` type's `avatar` field is **already a fully built URL** - it's processed through `buildAvatarUrl` inside:
-- `mapAccountToCreator()` (line 101-103)
-- `extractUniqueCreators()` (line 129)
-
-But `UserResultCard` in ExplorePage calls `buildAvatarUrl` **again** on an already-processed URL:
-```typescript
-// BROKEN - double processing
-const avatarUrl = useMemo(() => {
-  if (user.avatar && user.id) {
-    return buildAvatarUrl(user.id, user.avatar); // user.avatar is already a full URL!
-  }
-  return undefined;
-}, [user.avatar, user.id]);
+**API Response:**
+```json
+{
+  "avatarImageUrl": "statics/avatars/0x5ef7cd....jpeg",
+  "address": "0x5ef7cd..."
+}
 ```
 
-This corrupts the URL because `buildAvatarUrl` expects a relative path like `avatars/0x123.png`, not a full URL like `https://cdn.dehub.io/avatars/0x123.png`.
+**Current Code (broken):**
+```typescript
+avatar: account.avatarUrl  // WRONG - field doesn't exist!
+  ? buildAvatarUrl(account.address, account.avatarUrl) 
+  : undefined,
+```
+
+The `SearchAccount` interface only defines `avatarUrl`, but the real API uses `avatarImageUrl` (same pattern as `DeHubUser`).
 
 ## Solution
-Use `user.avatar` directly since it's already processed - just like `WhoToFollow` does with its `getAvatarUrl` helper but simpler since the data is pre-processed.
+
+Fix the field mapping in two places:
+
+### 1. Update `SearchAccount` interface (`src/lib/api/dehub.ts`)
+
+Add the `avatarImageUrl` field that the API actually returns:
+
+```typescript
+export interface SearchAccount {
+  id: string;
+  address: string;
+  username: string;
+  displayName?: string;
+  bio?: string;
+  avatarUrl?: string;
+  avatarImageUrl?: string;  // ADD - API returns this field
+  verified?: boolean;
+  followerCount?: number;
+  followingCount?: number;
+}
+```
+
+### 2. Update `mapAccountToCreator` function (`src/hooks/use-dehub-search.ts`)
+
+Check both field names, matching the pattern used elsewhere in the codebase:
+
+```typescript
+export function mapAccountToCreator(account: SearchAccount): SearchCreator {
+  // Check both field names - API returns avatarImageUrl
+  const rawAvatarPath = account.avatarImageUrl || account.avatarUrl;
+  
+  return {
+    id: account.address || account.id,
+    name: account.displayName || account.username || 'User',
+    handle: `@${account.username || account.address?.slice(0, 8)}`,
+    avatar: rawAvatarPath 
+      ? buildAvatarUrl(account.address, rawAvatarPath) 
+      : undefined,
+    verified: account.verified || false,
+    bio: account.bio,
+    followerCount: account.followerCount,
+  };
+}
+```
 
 ---
 
-## Technical Changes
+## Files to Edit
 
-### File: `src/pages/app/ExplorePage.tsx`
-
-**Current (broken):**
-```typescript
-const UserResultCard = ({ user }: { user: SearchCreator }) => {
-  const navigate = useNavigate();
-  
-  // Build proper avatar URL using same logic as WhoToFollow
-  const avatarUrl = useMemo(() => {
-    if (user.avatar && user.id) {
-      return buildAvatarUrl(user.id, user.avatar);
-    }
-    return undefined;
-  }, [user.avatar, user.id]);
-```
-
-**Fixed:**
-```typescript
-const UserResultCard = ({ user }: { user: SearchCreator }) => {
-  const navigate = useNavigate();
-  
-  // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
-  const avatarUrl = user.avatar;
-```
-
-Remove the unnecessary `useMemo` import if no longer used elsewhere, and remove the `buildAvatarUrl` import if not used elsewhere in the file.
+| File | Change |
+|------|--------|
+| `src/lib/api/dehub.ts` | Add `avatarImageUrl` to `SearchAccount` interface |
+| `src/hooks/use-dehub-search.ts` | Update `mapAccountToCreator` to use `avatarImageUrl \|\| avatarUrl` |
