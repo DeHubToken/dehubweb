@@ -269,7 +269,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
       <DrawerContent 
         glass
         hideHandle
-        className="max-h-[85vh] overflow-y-auto px-4 pb-6"
+        className="max-h-[85vh] overflow-y-auto px-4 pb-2"
       >
         <DrawerHeader className="relative pb-4 border-b border-white/10 px-0">
           <div className="flex items-center justify-between">
@@ -397,8 +397,8 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule }: Sc
             </button>
           )}
 
-          {/* Safe area padding */}
-          <div className="h-[env(safe-area-inset-bottom,16px)]" />
+          {/* Safe area padding for notched devices */}
+          <div className="h-[env(safe-area-inset-bottom,0px)]" />
         </div>
       </DrawerContent>
     </Drawer>
