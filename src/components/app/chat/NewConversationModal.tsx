@@ -11,7 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useUserSearchForDM, useCreateConversation } from '@/hooks/use-messages';
-import { getMediaUrl, type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
+import { type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
+import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { VerifiedBadge } from '../VerifiedBadge';
 
@@ -30,7 +31,8 @@ function UserSearchResult({
   onSelect: () => void;
   isLoading: boolean;
 }) {
-  const avatarUrl = getMediaUrl(user.avatarImageUrl || user.avatarUrl);
+  const avatarPath = extractAvatarPath(user);
+  const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
   const displayName = user.displayName || user.display_name || user.username || 'User';
   const isVerified = user.isVerified || user.is_verified;
   
