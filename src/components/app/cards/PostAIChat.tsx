@@ -18,7 +18,7 @@ import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { toast } from 'sonner';
-import assistantAvatar from '@/assets/assistant-avatar.png';
+import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 
 interface Message {
   id: string;
