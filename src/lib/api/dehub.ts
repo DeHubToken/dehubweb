@@ -1425,16 +1425,15 @@ export async function getConversation(conversationId: string): Promise<DeHubConv
 }
 
 /**
- * Create a new conversation with a user
- * Uses /api/dm/tnx endpoint with recipient info
+ * Create or get a conversation with a user
+ * Uses GET /api/dm/{address} to fetch/create conversation by recipient address
  * @param recipientAddress - Wallet address of the recipient
  */
 export async function createConversation(recipientAddress: string): Promise<DeHubConversation> {
   console.log('[DM API] createConversation called', { recipientAddress });
   try {
-    const response = await apiCall<any>("/api/dm/tnx", {
-      method: "POST",
-      body: { recipientAddress, type: "new" },
+    // Try to get/create conversation via the /api/dm/{address} endpoint
+    const response = await apiCall<any>(`/api/dm/${recipientAddress}`, {
       requiresAuth: true,
     });
     console.log('[DM API] createConversation response:', response);
@@ -1444,8 +1443,12 @@ export async function createConversation(recipientAddress: string): Promise<DeHu
       return response.result;
     }
     // If the response itself is the conversation
-    if (response?.id) {
-      return response;
+    if (response?._id || response?.id) {
+      // Normalize the conversation object
+      return {
+        ...response,
+        id: response._id || response.id,
+      };
     }
     
     throw new Error('Invalid response format from createConversation');
