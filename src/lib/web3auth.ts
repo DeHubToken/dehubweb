@@ -288,10 +288,31 @@ export function getWeb3AuthProvider() {
 
 export async function disconnectWeb3Auth(): Promise<void> {
   console.log("[Web3Auth] disconnectWeb3Auth() called");
-  if (web3authInstance?.connected) {
-    await web3authInstance.logout();
-    console.log("[Web3Auth] ✓ Logged out");
+  try {
+    if (web3authInstance?.connected) {
+      await web3authInstance.logout();
+      console.log("[Web3Auth] ✓ Logged out");
+    }
+  } catch (e) {
+    console.warn("[Web3Auth] Logout error (continuing cleanup):", e);
   }
+}
+
+/**
+ * Safe reset after connection errors - ensures clean state for retry
+ */
+export async function safeResetAfterError(): Promise<void> {
+  console.log("[Web3Auth] Safe reset after error...");
+  try {
+    if (web3authInstance?.connected) {
+      await web3authInstance.logout();
+    }
+  } catch (e) {
+    // Ignore logout errors during reset
+    console.warn("[Web3Auth] Reset logout error (ignored):", e);
+  }
+  // Reset module state to allow fresh initialization
+  resetWeb3AuthState();
 }
 
 export function isWeb3AuthConnected(): boolean {
