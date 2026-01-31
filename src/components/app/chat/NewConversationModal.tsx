@@ -99,7 +99,10 @@ export function NewConversationModal({
     setSelectedUserId(userAddress);
     
     try {
-      const conversation = await createConversation.mutateAsync(userAddress);
+      const conversation = await createConversation.mutateAsync({
+        recipientAddress: userAddress,
+        recipientUser: user,
+      });
       toast.success('Conversation started!');
       onConversationCreated(conversation);
       onOpenChange(false);

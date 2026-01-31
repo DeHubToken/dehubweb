@@ -201,12 +201,14 @@ export function useSendMessage(conversationId: string) {
 
 /**
  * Hook for creating a new conversation
+ * Takes recipientAddress and optional user data to construct virtual conversation
  */
 export function useCreateConversation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (recipientAddress: string) => createConversation(recipientAddress),
+    mutationFn: ({ recipientAddress, recipientUser }: { recipientAddress: string; recipientUser?: Partial<import('@/lib/api/dehub').DeHubUser> }) => 
+      createConversation(recipientAddress, recipientUser),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
