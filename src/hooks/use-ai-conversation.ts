@@ -8,6 +8,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 
 interface Message {
   id: string;
@@ -44,14 +45,17 @@ export function useAIConversation() {
         ? firstMessage.substring(0, 50) + '...'
         : firstMessage;
 
-      const { data, error } = await supabase
-        .from('ai_conversations')
-        .insert({
-          wallet_address: walletAddress.toLowerCase(),
-          title,
-        })
-        .select('id')
-        .single();
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('ai_conversations')
+          .insert({
+            wallet_address: walletAddress.toLowerCase(),
+            title,
+          })
+          .select('id')
+          .single(),
+        walletAddress
+      );
 
       if (error) {
         console.error('[AI Conversation] Error creating conversation:', error);
@@ -77,16 +81,19 @@ export function useAIConversation() {
     if (!walletAddress || !currentConversationId) return;
 
     try {
-      const { error } = await supabase
-        .from('ai_messages')
-        .insert({
-          conversation_id: currentConversationId,
-          role: message.role,
-          content: message.content || '(image)',
-          image_url: message.imageUrl || null,
-          video_url: message.videoUrl || null,
-          attached_image: message.attachedImage || null,
-        });
+      const { error } = await withWalletHeader(
+        supabase
+          .from('ai_messages')
+          .insert({
+            conversation_id: currentConversationId,
+            role: message.role,
+            content: message.content || '(image)',
+            image_url: message.imageUrl || null,
+            video_url: message.videoUrl || null,
+            attached_image: message.attachedImage || null,
+          }),
+        walletAddress
+      );
 
       if (error) {
         console.error('[AI Conversation] Error saving message:', error);
@@ -94,10 +101,13 @@ export function useAIConversation() {
       }
 
       // Update conversation's updated_at
-      await supabase
-        .from('ai_conversations')
-        .update({ updated_at: new Date().toISOString() })
-        .eq('id', currentConversationId);
+      await withWalletHeader(
+        supabase
+          .from('ai_conversations')
+          .update({ updated_at: new Date().toISOString() })
+          .eq('id', currentConversationId),
+        walletAddress
+      );
 
       console.log('[AI Conversation] Saved message to conversation:', currentConversationId);
     } catch (error) {
