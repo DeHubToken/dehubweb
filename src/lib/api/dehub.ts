@@ -1491,6 +1491,13 @@ export async function getMessages(
   limit: number = 30
 ): Promise<{ items: DeHubDMMessage[]; totalCount: number; hasMore: boolean }> {
   console.log('[DM API] getMessages called', { conversationId, page, limit });
+  
+  // Skip API call for virtual/new conversations - they have no messages yet
+  if (conversationId.startsWith('new_')) {
+    console.log('[DM API] Virtual conversation - returning empty messages');
+    return { items: [], totalCount: 0, hasMore: false };
+  }
+  
   try {
     const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {
       params: { page, limit },
@@ -1533,7 +1540,7 @@ export async function getMessages(
 
 /**
  * Send a message in a conversation
- * Uses /api/dm/tnx endpoint
+ * Uses /api/dm/upload endpoint for sending messages
  * @param conversationId - The conversation ID (or 'new_{address}' for new conversations)
  * @param content - Message content
  * @param type - Message type (text, image, gif)
@@ -1552,20 +1559,24 @@ export async function sendMessage(
   const recipientAddress = isNewConversation ? conversationId.replace('new_', '') : undefined;
   
   try {
-    // Build request body - use recipientAddress for new conversations
-    const body: Record<string, any> = { content, type };
+    // Build request body for /api/dm/upload
+    const body: Record<string, any> = { 
+      content,
+      type: type === 'text' ? 'text' : type,
+    };
+    
     if (mediaUrl) body.mediaUrl = mediaUrl;
     
     if (isNewConversation && recipientAddress) {
       // For new conversations, send to recipient address
-      body.recipientAddress = recipientAddress;
+      body.receiverAddress = recipientAddress;
       console.log('[DM API] Sending to new conversation with recipient:', recipientAddress);
     } else {
       // For existing conversations, use conversationId
       body.conversationId = conversationId;
     }
     
-    const response = await apiCall<any>("/api/dm/tnx", {
+    const response = await apiCall<any>("/api/dm/upload", {
       method: "POST",
       body,
       requiresAuth: true,
@@ -1577,8 +1588,16 @@ export async function sendMessage(
       return response.result;
     }
     // If the response itself is the message
-    if (response?.id && response?.content) {
-      return response;
+    if (response?._id || response?.id) {
+      return {
+        id: response._id || response.id,
+        conversationId: response.conversationId || conversationId,
+        sender: response.sender,
+        content: response.content || content,
+        type: response.type || type,
+        mediaUrl: response.mediaUrl,
+        createdAt: response.createdAt || new Date().toISOString(),
+      };
     }
     // Handle response with message object
     if (response?.message) {
@@ -1600,6 +1619,13 @@ export async function sendMessage(
  */
 export async function markConversationAsRead(conversationId: string): Promise<{ success: boolean }> {
   console.log('[DM API] markConversationAsRead called', { conversationId });
+  
+  // Skip for virtual/new conversations
+  if (conversationId.startsWith('new_')) {
+    console.log('[DM API] Virtual conversation - skipping mark as read');
+    return { success: true };
+  }
+  
   try {
     const response = await apiCall<any>("/api/dm/tnx", {
       method: "PUT",
