@@ -10,7 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -23,7 +23,9 @@ import { ReportModal } from '../modals/ReportModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
+import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import { useImageTranslation } from '@/hooks/use-image-translation';
 import {
   Drawer,
   DrawerContent,
@@ -345,10 +347,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
+  
+  // Image translation hook
+  const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
 
   // Get images array - use imageUrls if available, otherwise fall back to single image
   const images = post.imageUrls && post.imageUrls.length > 0 
@@ -359,6 +365,20 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     setFullscreenIndex(index);
     setFullscreenOpen(true);
   };
+  
+  const handleTranslateImage = useCallback(async () => {
+    // Use the first image for translation (or could allow selecting which image)
+    const imageUrl = images[0];
+    if (!imageUrl) return;
+    
+    setShowTranslationSheet(true);
+    await translateImage(imageUrl);
+  }, [images, translateImage]);
+  
+  const handleCloseTranslation = useCallback(() => {
+    setShowTranslationSheet(false);
+    clearResult();
+  }, [clearResult]);
 
   return (
     <div ref={viewRef} className="bg-zinc-900 rounded-2xl overflow-hidden">
@@ -390,6 +410,12 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+              <DropdownMenuItem 
+                onClick={handleTranslateImage}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Languages className="w-4 h-4" /> Translate Image
+              </DropdownMenuItem>
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Download className="w-4 h-4" /> Download
               </DropdownMenuItem>
@@ -492,6 +518,15 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
+      />
+
+      {/* Image Translation Sheet */}
+      <ImageTranslationSheet
+        isOpen={showTranslationSheet}
+        onClose={handleCloseTranslation}
+        isLoading={isTranslating}
+        error={translationError}
+        result={translationResult}
       />
 
       {/* Report Modal */}
