@@ -1057,7 +1057,7 @@ export default function AssistantPage() {
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <img src={aiStarIcon} alt="AI" className="w-8 h-8 object-contain" />
-          <h1 className="text-lg font-semibold text-white">AI Assistant</h1>
+          <h1 className="text-lg font-semibold text-white leading-none mt-0.5">AI Assistant</h1>
           {/* New Chat Button */}
           {messages.length > 1 && (
             <button
