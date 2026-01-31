@@ -15,8 +15,8 @@ import { RadioSection } from '@/components/app/radio';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { VideoCard } from '@/components/app/cards/VideoCard';
-import { searchNFTs, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl } from '@/lib/media-url';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoItem } from '@/types/feed.types';
@@ -100,10 +100,12 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     ? buildAvatarUrl(minterAddress, rawAvatarUrl) 
     : undefined;
 
+  const tokenId = nft.tokenId || nft.id || nft.token_id || index;
+  
   return {
-    id: String(nft.tokenId || nft.id || nft.token_id || index),
+    id: String(tokenId),
     type: 'video',
-    thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
+    thumbnail: buildImageUrl(tokenId, nft.imageUrl) || buildImageUrl(tokenId, nft.thumbnail_url) || '',
     title: nft.name || nft.title || nft.description || 'Untitled',
     channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'Anonymous',
     verified: nft.creator?.is_verified || false,
@@ -111,7 +113,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     views: formatViews(nft.views || nft.view_count || 0),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     duration: formatDuration(nft.duration),
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url),
+    videoUrl: buildVideoUrl(tokenId),
     isPPV: nft.is_ppv,
     ppvPrice: nft.ppv_price,
     ppvCurrency: nft.ppv_currency,
