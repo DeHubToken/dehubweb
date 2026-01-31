@@ -13,6 +13,8 @@ import { DraftsSheet, type Draft } from './DraftsSheet';
 import { format } from 'date-fns';
 import { UserMentionDropdown, searchUsers, type MentionUser } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { useAuth } from '@/contexts/AuthContext';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 interface PostContentAreaProps {
   text: string;
@@ -109,6 +111,13 @@ export function PostContentArea({
   const dragCounterRef = useRef(0);
   const [showSchedule, setShowSchedule] = useState(false);
   const [showDrafts, setShowDrafts] = useState(false);
+  
+  // Get user info for avatar - exactly like DesktopSidebar
+  const { user } = useAuth();
+  const displayName = user?.displayName || user?.username || 'Anonymous';
+  const userAvatarUrl = user?.avatarImageUrl && user?.address
+    ? buildAvatarUrl(user.address, user.avatarImageUrl)
+    : null;
   
   // Mention hook - handles @mention detection and dropdown
   const mention = useMention({
@@ -525,9 +534,9 @@ export function PostContentArea({
         </AnimatePresence>
         {/* Mobile: Avatar in top left, below buttons row */}
         <div className="flex items-start gap-3 sm:hidden mb-2 mt-8">
-          <Avatar className="w-8 h-8 flex-shrink-0">
-            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
-            <AvatarFallback>U</AvatarFallback>
+          <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl">
+            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
+            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div
             ref={editorRef}
@@ -553,9 +562,9 @@ export function PostContentArea({
 
         {/* Desktop: Avatar + text side by side */}
         <div className="hidden sm:flex gap-3">
-          <Avatar className="w-10 h-10 flex-shrink-0">
-            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" />
-            <AvatarFallback>U</AvatarFallback>
+          <Avatar className="w-10 h-10 flex-shrink-0 rounded-xl">
+            <AvatarImage src={userAvatarUrl || undefined} className="rounded-xl" />
+            <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <div
