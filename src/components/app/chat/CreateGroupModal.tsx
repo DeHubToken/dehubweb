@@ -219,7 +219,7 @@ export function CreateGroupModal({
               <Button
                 onClick={() => setStep('members')}
                 disabled={!groupName.trim()}
-                className="flex-1"
+                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white"
               >
                 Next
               </Button>
@@ -317,7 +317,7 @@ export function CreateGroupModal({
               <Button
                 onClick={handleCreateGroup}
                 disabled={selectedMembers.length === 0 || isCreating}
-                className="flex-1"
+                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white"
               >
                 {isCreating ? (
                   <>

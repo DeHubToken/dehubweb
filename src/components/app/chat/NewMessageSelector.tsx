@@ -23,7 +23,7 @@ export function NewMessageSelector({
 }: NewMessageSelectorProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border-white/10 max-w-sm">
+      <DialogContent className="bg-zinc-900 border-zinc-800 max-w-sm">
         <DialogHeader>
           <DialogTitle className="text-white text-center">Create</DialogTitle>
         </DialogHeader>
