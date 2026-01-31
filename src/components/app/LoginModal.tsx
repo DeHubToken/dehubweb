@@ -30,7 +30,56 @@ const XIcon = () => (
   </svg>
 );
 
-// Telegram and Apple icons removed
+// Wallet icons as SVG components
+const MetaMaskIcon = () => (
+  <svg viewBox="0 0 35 33" className="w-5 h-5">
+    <path fill="#E17726" d="M32.958 1l-13.134 9.718 2.442-5.727z"/>
+    <path fill="#E27625" d="M2.663 1l13.017 9.809-2.325-5.818zM28.229 23.533l-3.495 5.339 7.483 2.06 2.143-7.282zM.638 23.65l2.13 7.282 7.47-2.06-3.481-5.339z"/>
+    <path fill="#E27625" d="M9.875 14.471l-2.079 3.14 7.405.337-.247-7.969zM25.746 14.471l-5.158-4.587-.169 8.064 7.405-.337zM10.238 28.872l4.486-2.18-3.876-3.024zM20.897 26.692l4.472 2.18-.596-5.204z"/>
+    <path fill="#D5BFB2" d="M25.369 28.872l-4.472-2.18.364 2.903-.039 1.231zM10.238 28.872l4.147 1.954-.026-1.231.351-2.903z"/>
+    <path fill="#233447" d="M14.463 21.607l-3.733-1.1 2.636-1.205zM21.158 21.607l1.097-2.305 2.649 1.205z"/>
+    <path fill="#CC6228" d="M10.238 28.872l.611-5.339-4.092.117zM24.758 23.533l.611 5.339 3.481-5.222zM27.825 17.611l-7.405.337.689 3.659 1.097-2.305 2.649 1.205zM10.73 20.507l2.636-1.205 1.097 2.305.689-3.659-7.405-.337z"/>
+    <path fill="#E27625" d="M7.747 17.611l3.12 6.083-.104-3.029zM24.904 20.665l-.117 3.029 3.133-6.083zM15.152 17.948l-.689 3.659.871 4.496.195-5.926zM20.42 17.948l-.364 2.216.169 5.939.884-4.496z"/>
+    <path fill="#F5841F" d="M21.109 21.607l-.884 4.496.637.449 3.876-3.024.117-3.029zM10.73 20.507l.104 3.029 3.876 3.024.637-.449-.884-4.496z"/>
+    <path fill="#C0AC9D" d="M21.187 30.826l.039-1.231-.338-.286h-4.957l-.325.286.026 1.231-4.147-1.954 1.449 1.192 2.948 2.033h5.048l2.961-2.033 1.449-1.192z"/>
+    <path fill="#161616" d="M20.897 26.692l-.637-.449h-3.699l-.637.449-.351 2.903.325-.286h4.957l.338.286z"/>
+    <path fill="#763E1A" d="M33.517 11.353l1.114-5.364L32.958 1l-12.061 8.966 4.64 3.924 6.56 1.914 1.449-1.688-.631-.455 1.001-.914-.767-.597 1.001-.767zM.99 5.989l1.127 5.364-.72.539 1.001.767-.767.597 1.001.914-.631.455 1.449 1.688 6.56-1.914 4.64-3.924L2.663 1z"/>
+    <path fill="#F5841F" d="M32.049 15.84l-6.56-1.914 1.98 3.14-2.948 5.705 3.889-.052h5.809zM9.875 13.926l-6.56 1.914-2.182 7.81h5.796l3.889.052-2.948-5.705zM20.42 17.948l.416-7.234 1.902-5.141h-8.436l1.889 5.141.429 7.234.156 2.229.013 5.913h3.699l.026-5.913z"/>
+  </svg>
+);
+
+const WalletConnectIcon = () => (
+  <svg viewBox="0 0 300 185" className="w-5 h-5">
+    <path fill="#3B99FC" d="M61.439 36.256c48.91-47.888 128.212-47.888 177.123 0l5.886 5.764a6.041 6.041 0 0 1 0 8.67l-20.136 19.716a3.179 3.179 0 0 1-4.428 0l-8.101-7.931c-34.122-33.408-89.444-33.408-123.566 0l-8.675 8.494a3.179 3.179 0 0 1-4.428 0L54.978 51.253a6.041 6.041 0 0 1 0-8.67l6.461-6.327zM280.206 77.03l17.922 17.547a6.041 6.041 0 0 1 0 8.67l-80.81 79.122a6.357 6.357 0 0 1-8.856 0l-57.354-56.155a1.59 1.59 0 0 0-2.214 0L91.54 182.369a6.357 6.357 0 0 1-8.856 0L1.872 103.247a6.041 6.041 0 0 1 0-8.67l17.922-17.547a6.357 6.357 0 0 1 8.856 0l57.354 56.155a1.59 1.59 0 0 0 2.214 0l57.354-56.155a6.357 6.357 0 0 1 8.856 0l57.354 56.155a1.59 1.59 0 0 0 2.214 0l57.354-56.155a6.357 6.357 0 0 1 8.856 0z"/>
+  </svg>
+);
+
+const PhantomIcon = () => (
+  <svg viewBox="0 0 128 128" className="w-5 h-5">
+    <circle cx="64" cy="64" r="64" fill="url(#phantom-gradient)"/>
+    <path fill="#fff" d="M110.6 57.4c-1.6 16.5-15 29.2-32 29.2H46.1c-2.4 0-4.3-2.1-4.3-4.6V37.2c0-2.5 1.9-4.6 4.3-4.6h31c18.5 0 33.6 11 35.5 24.8zm-52-14.8c-2.4 0-4.3 2.1-4.3 4.6v35.2c0 2.5 1.9 4.6 4.3 4.6H78c14 0 25.4-11.5 25.4-25.8S92 35.4 78 35.4H58.6v7.2zm11 17.6c0 3.5-2.8 6.4-6.2 6.4s-6.2-2.9-6.2-6.4 2.8-6.4 6.2-6.4 6.2 2.9 6.2 6.4zm18.4 0c0 3.5-2.8 6.4-6.2 6.4s-6.2-2.9-6.2-6.4 2.8-6.4 6.2-6.4 6.2 2.9 6.2 6.4z"/>
+    <defs>
+      <linearGradient id="phantom-gradient" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#534BB1"/>
+        <stop offset="1" stopColor="#551BF9"/>
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const RabbyIcon = () => (
+  <svg viewBox="0 0 32 32" className="w-5 h-5">
+    <rect width="32" height="32" rx="6" fill="#8697FF"/>
+    <path fill="#fff" d="M8 12c0-2.2 1.8-4 4-4h8c2.2 0 4 1.8 4 4v4c0 2.2-1.8 4-4 4h-2l-3 4-3-4h-2c-2.2 0-4-1.8-4-4v-4zm6 2a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm6-1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+  </svg>
+);
+
+const CoinbaseIcon = () => (
+  <svg viewBox="0 0 32 32" className="w-5 h-5">
+    <circle cx="16" cy="16" r="16" fill="#0052FF"/>
+    <path fill="#fff" d="M16 6C10.5 6 6 10.5 6 16s4.5 10 10 10 10-4.5 10-10S21.5 6 16 6zm0 15c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"/>
+  </svg>
+);
 
 interface LoginModalProps {
   open: boolean;
@@ -284,11 +333,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {activeProvider === 'metamask' ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <img 
-            src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" 
-            alt="MetaMask" 
-            className="w-5 h-5"
-          />
+          <MetaMaskIcon />
         )}
         <span>MetaMask</span>
       </Button>
@@ -301,11 +346,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {activeProvider === 'walletconnect' ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <img 
-            src="https://walletconnect.com/static/favicon.ico" 
-            alt="WalletConnect" 
-            className="w-5 h-5"
-          />
+          <WalletConnectIcon />
         )}
         <span>WalletConnect</span>
       </Button>
@@ -318,11 +359,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {activeProvider === 'phantom' ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <img 
-            src="https://phantom.com/favicon.ico" 
-            alt="Phantom" 
-            className="w-5 h-5"
-          />
+          <PhantomIcon />
         )}
         <span>Phantom</span>
       </Button>
@@ -335,11 +372,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {activeProvider === 'rabby' ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <img 
-            src="https://rabby.io/assets/images/logo.svg" 
-            alt="Rabby" 
-            className="w-5 h-5"
-          />
+          <RabbyIcon />
         )}
         <span>Rabby</span>
       </Button>
@@ -352,11 +385,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {activeProvider === 'coinbase' ? (
           <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <img 
-            src="https://www.coinbase.com/favicon.ico" 
-            alt="Coinbase" 
-            className="w-5 h-5"
-          />
+          <CoinbaseIcon />
         )}
         <span>Coinbase Wallet</span>
       </Button>
