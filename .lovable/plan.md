@@ -1,58 +1,57 @@
 
 
-## Fix: Move Navigation Panel Up Without Affecting Logo/Coin
+# Fix: Filter Broken Videos That Don't Play
 
-### Current Issue
-The sidebar container was shifted up with `-mt-[10px]`, and then the logo/coin were pushed down with `mt-[20px]` - this over-compensated and moved them down 10px from their original position.
+## Problem
+The video "Ninguém Explica Deus.mp4" by iamsandeep/Alan Vieira appears in the Music tab even though it doesn't play. The current filtering only catches:
+- Specific blocked wallet addresses
+- URLs with obviously broken patterns (containing "undefined", "null", etc.)
 
-### Solution
-1. **Remove the sidebar container offset** (`-mt-[10px]` and `pt-0`) - revert to `pt-[2px]`
-2. **Reset logo margin** to original `mt-[10px]`  
-3. **Remove coin wrapper div** - coin goes back to no extra margin
-4. **Add negative margin to the Navigation Bento** - apply `-mt-[10px]` to the navigation panel div only
+This video has valid-looking URLs but the actual media file is corrupted or broken.
 
-### Changes to `src/components/app/navigation/DesktopSidebar.tsx`
+## Solution Approach
 
-**Line 75** - Revert aside container:
-```tsx
-// FROM:
-<aside className="... pt-0 -mt-[10px] ...">
+Since we can't detect at fetch time if a video is playable (that requires actually loading it), there are two complementary strategies:
 
-// TO:
-<aside className="... pt-[2px] ...">
-```
+---
 
-**Line 78** - Revert logo button margin:
-```tsx
-// FROM:
-<button ... className="block cursor-pointer mt-[20px]">
+### Strategy 1: Block Known Broken Content Creators
+Add the wallet address of "iamsandeep" (the uploader of the broken video) to the `BLOCKED_MINTERS` list in `MusicFeed.tsx`.
 
-// TO:
-<button ... className="block cursor-pointer mt-[10px]">
-```
+**Files to modify:**
+| File | Change |
+|------|--------|
+| `src/components/app/feeds/MusicFeed.tsx` | Add iamsandeep's wallet address to `BLOCKED_MINTERS` |
 
-**Lines 81-87** - Remove wrapper div from CoinBalanceMenu:
-```tsx
-// FROM:
-<div className="mt-[20px]">
-  <CoinBalanceMenu ... />
-</div>
+**Note:** I'll need the wallet address for this account. It should be visible in the app when viewing their content, or can be found by checking the API response. If you can provide it, I can add it immediately.
 
-// TO:
-<CoinBalanceMenu ... />
-```
+---
 
-**Line 91** - Add negative margin to Navigation Bento:
-```tsx
-// FROM:
-<div className="bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+### Strategy 2: Runtime Video Error Detection (Optional Enhancement)
+Add error handling to the video player components that marks videos as "broken" when they fail to load, and use that to filter them from appearing again.
 
-// TO:
-<div className="-mt-[10px] bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
-```
+This would involve:
+1. Track video load/play errors in `InlineVideoCard` and `VideoCard`
+2. Store broken video IDs in localStorage or app state
+3. Filter out known-broken videos before rendering
 
-### Result
-- Logo stays at original position (with `mt-[10px]`)
-- Coin stays at original position (no extra margin)
-- Navigation panel moves up 10px (with `-mt-[10px]` on the bento box)
+**Trade-offs:**
+- More comprehensive but complex
+- Videos still show once before being marked broken
+- Would need persistent storage to remember across sessions
+
+---
+
+## Recommended Approach
+
+**Start with Strategy 1** - block the specific minter address. This is immediate and handles the reported issue.
+
+If more broken videos appear from different uploaders, we can discuss adding the runtime detection system.
+
+---
+
+## What I Need From You
+Please share the wallet address of "iamsandeep" so I can add it to the blocked list. You can find this by:
+- Clicking on their profile in the app
+- Or the full URL when viewing their content
 
