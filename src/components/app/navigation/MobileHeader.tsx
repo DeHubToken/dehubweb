@@ -41,22 +41,20 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         </button>
       </div>
       
-      <div className="flex items-center gap-2">
-        {/* Coin Balance (when stickToBanner is enabled) */}
-        {stickToBanner && (
-          <div className="-mr-[5px]">
-            <CoinBalanceMenu balance={coinBalance} variant="mobile" />
-          </div>
-        )}
-        
+      <div className="flex items-center gap-4">
         {/* Notifications Button */}
         <button
           onClick={() => navigate('/app/notifications')}
-          className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors -mr-[8px] ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'text-zinc-400'}`}
+          className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${isNotificationsActive ? 'bg-zinc-800 text-white' : 'text-zinc-400'}`}
           aria-label="Notifications"
         >
-          <Bell className="w-[30px] h-[30px]" />
+          <Bell className="w-[32px] h-[32px]" />
         </button>
+        
+        {/* Coin Balance (when stickToBanner is enabled) */}
+        {stickToBanner && (
+          <CoinBalanceMenu balance={coinBalance} variant="mobile" />
+        )}
         
         {/* Menu Button - Avatar when authenticated, burger when not */}
         <Drawer open={isOpen} onOpenChange={onToggle}>
