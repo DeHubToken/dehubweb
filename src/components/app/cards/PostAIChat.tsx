@@ -384,10 +384,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
-                <div className="flex flex-col items-start">
-                  <DrawerTitle className="text-white text-base">AI Assistant</DrawerTitle>
-                  <span className="text-xs text-white/50">Powered by Grok</span>
-                </div>
+                <DrawerTitle className="text-white text-base">AI Assistant</DrawerTitle>
               </div>
               <Button
                 variant="ghost"
@@ -412,10 +409,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-3">
             <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
-            <div className="flex flex-col items-start">
-              <DialogTitle className="text-white text-base">AI Assistant</DialogTitle>
-              <span className="text-xs text-white/50">Powered by Grok</span>
-            </div>
+            <DialogTitle className="text-white text-base">AI Assistant</DialogTitle>
           </div>
         </DialogHeader>
         <div className="flex-1 overflow-hidden">
