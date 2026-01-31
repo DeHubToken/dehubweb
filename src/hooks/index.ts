@@ -17,12 +17,18 @@ export { useUnifiedFeed, mapToVideoItem, mapToImagePost, mapToTextPost, type Uni
 export { useDeHubProfile, useDeHubUserContent, separateUserContent, mapUserToProfile, type ProfileData } from './use-dehub-profile';
 export { 
   useDeHubSearch, 
+  getTypeForTab,
   getPostTypeForTab, 
   extractUniqueCreators, 
-  mapNFTsToContent, 
+  mapAccountToCreator,
+  flattenSearchAccounts,
+  flattenSearchVideos,
+  flattenSearchLivestreams,
   flattenSearchResults,
+  mapNFTsToContent,
   type SearchCreator,
-  type UseDeHubSearchOptions 
+  type UseDeHubSearchOptions,
+  type SearchPageResult,
 } from './use-dehub-search';
 export { useDeHubUserSearch, mapUserToSearchCreator } from './use-dehub-user-search';
 export { useGlitchEffect } from './use-glitch-effect';

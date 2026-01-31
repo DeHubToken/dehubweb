@@ -11,9 +11,12 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   useDeHubSearch, 
+  getTypeForTab,
   getPostTypeForTab, 
-  extractUniqueCreators, 
-  flattenSearchResults,
+  extractUniqueCreators,
+  mapAccountToCreator,
+  flattenSearchAccounts,
+  flattenSearchVideos,
   type SearchCreator 
 } from '@/hooks/use-dehub-search';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
@@ -350,7 +353,7 @@ export default function ExplorePage() {
 
   const isSearching = searchQuery.trim().length >= 3;
 
-  // API search hook
+  // API search hook - using new universal search
   const {
     data: searchData,
     isLoading: isSearchLoading,
@@ -360,8 +363,8 @@ export default function ExplorePage() {
     error: searchError,
   } = useDeHubSearch({
     query: searchQuery,
+    type: getTypeForTab(activeTab),
     postType: getPostTypeForTab(activeTab),
-    category: selectedCategory !== 'All' ? selectedCategory.toLowerCase() : undefined,
     address: walletAddress || undefined,
     enabled: isSearching,
   });
@@ -376,23 +379,37 @@ export default function ExplorePage() {
     enabled: isSearching && (activeTab === 'all' || activeTab === 'people'),
   });
 
-  // Process search results
+  // Process search results from the new universal search API
   const searchResults = useMemo(() => {
-    const allItems = flattenSearchResults(searchData) || [];
-    const creators = extractUniqueCreators(allItems) || [];
+    // Get accounts directly from universal search
+    const accounts = flattenSearchAccounts(searchData) || [];
+    const videos = flattenSearchVideos(searchData) || [];
     
-    // Add exact user match to top if found and not already in list
-    let peopleResults = creators;
+    // Map accounts to our SearchCreator format
+    const accountCreators = accounts.map(mapAccountToCreator);
+    
+    // Also extract creators from video results for backwards compatibility
+    const videoCreators = extractUniqueCreators(videos) || [];
+    
+    // Combine and dedupe users: accounts first, then video creators
+    const userMap = new Map<string, SearchCreator>();
+    accountCreators.forEach(u => userMap.set(u.id, u));
+    videoCreators.forEach(u => {
+      if (!userMap.has(u.id)) userMap.set(u.id, u);
+    });
+    
+    // Add exact user match to top if found
+    let peopleResults = Array.from(userMap.values());
     if (exactUser && exactUser.id) {
-      const exists = creators.some(c => c.id === exactUser.id);
+      const exists = peopleResults.some(c => c.id === exactUser.id);
       if (!exists) {
-        peopleResults = [exactUser, ...creators];
+        peopleResults = [exactUser, ...peopleResults];
       }
     }
     
     return {
       users: peopleResults.filter(u => u && u.id),
-      posts: allItems.filter(p => p && (p.id || p.tokenId)),
+      posts: videos.filter(p => p && (p.id || p.tokenId)),
       total: searchData?.pages?.[0]?.total || 0,
     };
   }, [searchData, exactUser]);

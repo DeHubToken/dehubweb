@@ -203,6 +203,67 @@ export interface SearchNFTsParams {
   address?: string;
 }
 
+/**
+ * Universal search params for /api/search endpoint
+ */
+export interface UniversalSearchParams {
+  /** Search query */
+  q: string;
+  /** Page number (0-indexed) */
+  page?: number;
+  /** Items per page */
+  unit?: number;
+  /** Type filter: "accounts", "videos", "livestreams", or undefined for all */
+  type?: "accounts" | "videos" | "livestreams";
+  /** Post type filter for videos: "video", "feed-all", "feed", "feed-simple", "feed-images" */
+  postType?: string;
+  /** Connected wallet address to get isLiked/isDisliked info */
+  address?: string;
+}
+
+/**
+ * Account from search results
+ */
+export interface SearchAccount {
+  id: string;
+  address: string;
+  username: string;
+  displayName?: string;
+  bio?: string;
+  avatarUrl?: string;
+  verified?: boolean;
+  followerCount?: number;
+  followingCount?: number;
+}
+
+/**
+ * Livestream from search results
+ */
+export interface SearchLivestream {
+  id: string;
+  title: string;
+  description?: string;
+  thumbnailUrl?: string;
+  viewerCount?: number;
+  streamer?: {
+    address: string;
+    username?: string;
+    displayName?: string;
+    avatarUrl?: string;
+  };
+}
+
+/**
+ * Universal search response
+ */
+export interface UniversalSearchResponse {
+  accounts?: SearchAccount[];
+  videos?: DeHubNFT[];
+  livestreams?: SearchLivestream[];
+  total?: number;
+  has_more?: boolean;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
@@ -378,6 +439,30 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
   }
   
   return response as PaginatedResponse<DeHubNFT>;
+}
+
+/**
+ * Universal search across accounts, videos, and livestreams
+ * Uses the /api/search endpoint
+ */
+export async function universalSearch(params: UniversalSearchParams): Promise<UniversalSearchResponse> {
+  const response = await apiCall<UniversalSearchResponse | { result: UniversalSearchResponse }>("/api/search", {
+    params: {
+      q: params.q,
+      page: params.page,
+      unit: params.unit,
+      type: params.type,
+      postType: params.postType,
+      address: params.address,
+    },
+  });
+  
+  // Handle wrapped response from API
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  
+  return response as UniversalSearchResponse;
 }
 
 export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
