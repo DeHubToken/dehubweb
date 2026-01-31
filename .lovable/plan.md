@@ -1,56 +1,73 @@
 
-# Plan: Add Infinite Scroll to "Who to Follow" Panel
 
-## Problem
-The "Who to Follow" side panel loads a fixed set of users (from pages 0-19 of content) and stops. When you scroll to the bottom, nothing more loads because there's no infinite scroll implementation.
+# Fix: Feed Randomization Not Working Properly
 
-## Solution
-Convert the static batch-loading approach to a proper infinite scroll system that fetches more users as you scroll down.
+## The Problem
+You're seeing the same creators at the top of the feed every time because the "random" shuffle has multiple flaws:
+
+1. **API returns sorted data first**: When "Random" is selected, the feed fetches with `sortBy: 'createdAt'` and `sortOrder: 'desc'`. This means the API **always returns the newest posts first**. The shuffle then operates on this already-sorted data.
+
+2. **Seeded shuffle is consistent within a session**: The shuffle uses `Date.now()` as a seed on mount, but this only changes when you hard-refresh. Within a session, the same seed produces the same shuffle pattern.
+
+3. **Pagination breaks randomness**: The API returns pages of 20 items sorted by `createdAt`. Page 1 always contains the same 20 newest items, and they get shuffled among themselves. Older content never appears at the top because it's on later pages.
+
+4. **Seed regeneration bug**: On pull-to-refresh, `setRandomSeed(Math.random())` sets a value between 0-1, but `seededRandom()` expects larger integer seeds for good distribution.
 
 ---
 
-## Implementation Steps
+## Root Cause: Shuffling only works on already-fetched pages
 
-### 1. Convert to Infinite Query
-Replace the two separate `useQuery` calls with a single `useInfiniteQuery` that loads pages on-demand as you scroll.
+The shuffle happens client-side on **items already loaded from the API**. Since the API returns items in `createdAt desc` order:
+- Page 1 = 20 newest posts → these get shuffled among themselves
+- Page 2 = next 20 newest → these get shuffled among themselves
+- etc.
 
-### 2. Add Scroll Detection  
-Add an `IntersectionObserver` that watches a loader element at the bottom of the list. When it becomes visible, fetch the next page of content.
+**Same creators posting frequently will always dominate the top because their posts are on page 1.**
 
-### 3. Accumulate Unique Users
-Maintain a running set of unique users across all loaded pages, filtering out:
-- Already-followed users
-- The current user
-- Users already shown
+---
 
-### 4. Show Loading State
-Display a small spinner at the bottom while fetching more users.
+## Solution
+
+### Option A: True Random (API-side randomization)
+Ask if the DeHub API supports a random sort mode. This would be the cleanest fix.
+
+### Option B: Pre-fetch and shuffle across pages (client-side workaround)
+Fetch multiple pages upfront before displaying, then shuffle across all of them.
+
+**Recommended approach:**
+1. Fetch first 5 pages (100 items) before rendering
+2. Shuffle across ALL 100 items together 
+3. Use `Math.random()` instead of seeded random for true randomness each load
 
 ---
 
 ## Technical Changes
 
-**File: `src/components/app/WhoToFollow.tsx`**
+**File: `src/components/app/feeds/HomeFeed.tsx`**
 
-- Replace `useQuery` imports with `useInfiniteQuery` from TanStack Query
-- Add `useRef`, `useEffect` for the intersection observer
-- Create a `fetchUserPage` function that loads one page at a time
-- Add `IntersectionObserver` that triggers `fetchNextPage()` when the bottom loader is visible
-- Use `isFetchingRef` guard to prevent duplicate fetches (same pattern as HomeFeed)
-- Add loading spinner at the bottom of the list
+### Changes:
+1. **Remove seeded random** - Use `Math.random()` directly for true randomness
+2. **Pre-fetch multiple pages** - Before displaying "Random" mode, load 3-5 pages worth of content
+3. **Shuffle across all items** - Not just per-page shuffling
+4. **New seed on every render** - Don't persist the seed in state
 
-**Key code pattern (from existing HomeFeed):**
+### Code pattern:
 ```text
-1. loaderRef - reference to bottom sentinel element
-2. isFetchingRef - prevents race conditions  
-3. IntersectionObserver - watches loaderRef
-4. When visible + hasNextPage + not fetching → fetchNextPage()
+// Instead of: shuffling 20 newest items
+// Do: fetch 100 items first, then shuffle all 100 together
+
+// balancedShuffle should use Math.random() directly
+function balancedShuffle<T>(items: T[]): T[] {
+  // Use Math.random() - no seed, true randomness each time
+  const shuffled = [...items].sort(() => Math.random() - 0.5);
+  // ... interleave text and media posts
+}
 ```
 
 ---
 
 ## Expected Result
-- Initial load shows first batch of suggestions quickly
-- Scrolling to bottom automatically loads more suggestions
-- Loading spinner appears while fetching
-- Continues until no more unique users are found
+- Fresh random order every page load
+- Different creators appear at top, not just the most active/recent
+- Older popular content gets mixed in with new content
+
