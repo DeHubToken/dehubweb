@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen } from 'lucide-react';
+import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -20,15 +20,31 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
 
-// Tabs organized by category as per API spec
-const tabs: { label: string; value: NotificationCategory | 'all'; icon: React.ElementType }[] = [
+// Notification type tabs
+type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams';
+
+const tabs: { label: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
   { label: 'All', value: 'all', icon: Bell },
-  { label: 'Engagement', value: 'engagement', icon: Heart },
-  { label: 'Social', value: 'social', icon: Users },
-  { label: 'Monetization', value: 'monetization', icon: DollarSign },
-  { label: 'Content', value: 'content', icon: Video },
-  { label: 'System', value: 'system', icon: AlertTriangle },
+  { label: 'Likes', value: 'likes', icon: Heart },
+  { label: 'Follows', value: 'follows', icon: UserPlus },
+  { label: 'Comments', value: 'comments', icon: MessageCircle },
+  { label: 'Reposts', value: 'reposts', icon: Repeat2 },
+  { label: 'Subs', value: 'subscriptions', icon: Users },
+  { label: 'Tips', value: 'tips', icon: DollarSign },
+  { label: 'Live', value: 'livestreams', icon: Zap },
 ];
+
+// Map tab filter to notification types
+const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
+  all: null,
+  likes: ['like'],
+  follows: ['following'],
+  comments: ['comment', 'comment_reply'],
+  reposts: ['repost', 'quote'],
+  subscriptions: ['subscription', 'ppv_purchase'],
+  tips: ['tip'],
+  livestreams: ['livestream_start'],
+};
 
 function getNotificationIcon(type: DeHubNotification['type']) {
   switch (type) {
@@ -259,7 +275,7 @@ function NotificationItem({
 }
 
 export default function NotificationsPage() {
-  const [activeTab, setActiveTab] = useState<NotificationCategory | 'all'>('all');
+  const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { isAuthenticated } = useAuth();
   
   // Notification preference toggles (local state for now)
@@ -272,10 +288,8 @@ export default function NotificationsPage() {
     livestreams: true,
   });
   
-  // Only pass category if not 'all'
-  const category = activeTab === 'all' ? undefined : activeTab;
-  
-  const { notifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications(category);
+  // Fetch all notifications and filter client-side by type
+  const { notifications: allNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
@@ -287,7 +301,7 @@ export default function NotificationsPage() {
   }
 
   const handleMarkAllAsRead = () => {
-    markAllAsRead.mutate(category);
+    markAllAsRead.mutate(undefined);
   };
 
   const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
@@ -299,13 +313,23 @@ export default function NotificationsPage() {
     });
   };
 
+  // Filter notifications by selected tab type
+  const notifications = activeTab === 'all' 
+    ? allNotifications 
+    : allNotifications.filter(n => {
+        const allowedTypes = filterTypeMap[activeTab];
+        return allowedTypes ? allowedTypes.includes(n.type) : true;
+      });
+
   // Get total unread count
   const totalUnread = unreadCount?.total ?? 0;
   
-  // Get category-specific unread count for badge display
-  const getCategoryCount = (cat: NotificationCategory | 'all'): number => {
-    if (cat === 'all') return totalUnread;
-    return unreadCount?.byCategory?.[cat] ?? 0;
+  // Get count per tab (count matching notification types in current data)
+  const getTabCount = (tabValue: NotificationTypeFilter): number => {
+    if (tabValue === 'all') return totalUnread;
+    const allowedTypes = filterTypeMap[tabValue];
+    if (!allowedTypes) return 0;
+    return allNotifications.filter(n => !n.read && allowedTypes.includes(n.type)).length;
   };
 
   return (
@@ -505,7 +529,7 @@ export default function NotificationsPage() {
         <div className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex overflow-x-auto gap-1 scrollbar-hide">
             {tabs.map((tab) => {
-              const count = getCategoryCount(tab.value);
+              const count = getTabCount(tab.value);
               return (
                 <button
                   key={tab.value}
