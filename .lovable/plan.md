@@ -1,74 +1,58 @@
 
 
-# Fix Desktop Pinch-Zoom Panning Issue
+## Fix: Move Navigation Panel Up Without Affecting Logo/Coin
 
-## Problem Identified
+### Current Issue
+The sidebar container was shifted up with `-mt-[10px]`, and then the logo/coin were pushed down with `mt-[20px]` - this over-compensated and moved them down 10px from their original position.
 
-After removing the viewport restrictions (`maximum-scale=1.0, user-scalable=no`), pinch-zoom now works in some areas, but panning after zooming is still blocked. This is because of `touch-action: pan-x pan-y` applied in multiple places:
+### Solution
+1. **Remove the sidebar container offset** (`-mt-[10px]` and `pt-0`) - revert to `pt-[2px]`
+2. **Reset logo margin** to original `mt-[10px]`  
+3. **Remove coin wrapper div** - coin goes back to no extra margin
+4. **Add negative margin to the Navigation Bento** - apply `-mt-[10px]` to the navigation panel div only
 
-1. **`src/index.css`** - Lines 169 and 178 on `html` and `body`
-2. **`src/components/app/AppLayout.tsx`** - Inline style on line 22
+### Changes to `src/components/app/navigation/DesktopSidebar.tsx`
 
-The `pan-x pan-y` value explicitly excludes the `pinch-zoom` gesture, which also affects desktop trackpad behavior in some browsers.
-
-## Solution
-
-Change `touch-action: pan-x pan-y` to `touch-action: manipulation` in both locations.
-
-**Why `manipulation`?**
-- Allows panning (scrolling) and pinch-zoom
-- Disables double-tap-to-zoom (prevents the 300ms click delay)
-- Standard approach for touch-friendly web apps that still allow zoom
-
-## Files to Modify
-
-### 1. `src/index.css`
-
-Update the `html, body` rule and the `body` rule:
-
-```css
-html, body {
-  height: 100%;
-  width: 100%;
-  background-color: black;
-  overscroll-behavior: none;
-  overscroll-behavior-y: none;
-  touch-action: manipulation;  /* Changed from pan-x pan-y */
-  -webkit-overflow-scrolling: touch;
-}
-
-body {
-  background-color: black;
-  overflow-x: hidden;
-  overscroll-behavior-y: none;
-  touch-action: manipulation;  /* Changed from pan-x pan-y */
-}
-```
-
-### 2. `src/components/app/AppLayout.tsx`
-
-Update the inline style on the main container:
-
+**Line 75** - Revert aside container:
 ```tsx
-<div 
-  className="min-h-screen bg-black text-white overflow-x-clip" 
-  style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}
->
+// FROM:
+<aside className="... pt-0 -mt-[10px] ...">
+
+// TO:
+<aside className="... pt-[2px] ...">
 ```
 
-## Risk Assessment
+**Line 78** - Revert logo button margin:
+```tsx
+// FROM:
+<button ... className="block cursor-pointer mt-[20px]">
 
-| Risk | Likelihood | Mitigation |
-|------|------------|------------|
-| Mobile swipe gestures affected | Low | `manipulation` still allows panning; existing `SwipeableCarousel` isolation will continue to work |
-| Accidental zoom on mobile | Low | Double-tap-to-zoom is disabled by `manipulation`, which is actually a benefit |
-| Tab switching conflicts | None | The gesture isolation logic (`SwipeableCarousel`, `gesture-state.ts`) operates at a higher level and is unaffected |
+// TO:
+<button ... className="block cursor-pointer mt-[10px]">
+```
 
-## Expected Result
+**Lines 81-87** - Remove wrapper div from CoinBalanceMenu:
+```tsx
+// FROM:
+<div className="mt-[20px]">
+  <CoinBalanceMenu ... />
+</div>
 
-After this change:
-- Desktop trackpad pinch-zoom will work fully (zoom in + pan around)
-- Mobile touch gestures (swipe tabs, scroll, carousel navigation) will remain functional
-- Pull-to-refresh will continue to work
-- No accidental double-tap zooming
+// TO:
+<CoinBalanceMenu ... />
+```
+
+**Line 91** - Add negative margin to Navigation Bento:
+```tsx
+// FROM:
+<div className="bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+
+// TO:
+<div className="-mt-[10px] bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+```
+
+### Result
+- Logo stays at original position (with `mt-[10px]`)
+- Coin stays at original position (no extra margin)
+- Navigation panel moves up 10px (with `-mt-[10px]` on the bento box)
 
