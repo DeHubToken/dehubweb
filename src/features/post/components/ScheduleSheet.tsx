@@ -87,6 +87,7 @@ function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleI
       style={{ height: containerHeight }}
       onPointerDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
+      onWheel={(e) => e.stopPropagation()}
     >
       {/* Selection highlight bar - subtle transparent */}
       <div 
