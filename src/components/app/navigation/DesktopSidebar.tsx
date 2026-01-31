@@ -4,7 +4,6 @@ import { PenSquare, Sparkles, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
-import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
@@ -20,9 +19,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const navigate = useNavigate();
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
-
-  // Get balance from user or default to 0
-  const coinBalance = 0; // TODO: Get from user wallet
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -52,14 +48,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     }
   };
 
-  const handleCoinClick = () => {
-    if (!isAuthenticated) {
-      setShowAuthPrompt(true);
-      return false;
-    }
-    return true;
-  };
-
   // Filter out Assistant item - we'll render it specially as a NavLink
   const navItemsWithoutAI = NAV_ITEMS.filter((item) => item.path !== '/app' && item.label !== 'Assistant');
   const isAIActive = location.pathname === '/app/assistant';
@@ -73,18 +61,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   return (
     <>
       <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible">
-        {/* Logo & Coin Balance */}
-        <div className="mb-6 flex items-center justify-between">
+        {/* Logo */}
+        <div className="mb-6">
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto" />
           </button>
-          <div className="mt-[10px]">
-            <CoinBalanceMenu 
-              balance={coinBalance} 
-              variant="desktop" 
-              onAuthRequired={handleCoinClick}
-            />
-          </div>
         </div>
 
         {/* Navigation Bento - reduced padding */}
