@@ -430,7 +430,7 @@ export function PostContentArea({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center transition-all",
+                  "w-9 h-9 rounded-xl flex items-center justify-center transition-all",
                   "bg-white/10 backdrop-blur-xl border border-white/20",
                   "hover:bg-white/20 hover:border-white/40",
                   scheduledDate && "bg-amber-500/20 border-amber-500/40"
@@ -452,7 +452,7 @@ export function PostContentArea({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center transition-all relative",
+                  "w-9 h-9 rounded-xl flex items-center justify-center transition-all relative",
                   "bg-white/10 backdrop-blur-xl border border-white/20",
                   "hover:bg-white/20 hover:border-white/40"
                 )}
