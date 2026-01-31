@@ -1,271 +1,164 @@
 
 
-# True Random Feed Implementation for All Feeds
+# Fix: Login Modal Should Always Be Closable
 
-## Overview
+## Problem
 
-Implement **true random** content discovery by selecting random post IDs from the entire database (~2600+ posts) instead of just shuffling the newest 100 posts. This will be applied to:
+The login modal occasionally becomes "corrupted" and unclosable due to Web3Auth's wallet iframe overlay:
 
-1. **Home Feed** - Already has Random mode, needs upgrade
-2. **Videos Feed** - Needs Random sort option added
-3. **Images Feed** - Already has Random mode, needs upgrade
+- Web3Auth creates a fullscreen iframe with `z-index: 99999`
+- This iframe can get stuck in an active state after failed/cancelled authentication
+- The iframe blocks clicks on the modal's close button
+- The `handleClose` function currently prevents closing while `isConnecting` is true
 
-## How It Works
+## Solution
 
-```text
-Current Approach:
-┌─────────────────────────────────────────────────────┐
-│  Fetch pages 1-5 (100 posts) → Shuffle them        │
-│  Result: Only newest content, shuffled order       │
-└─────────────────────────────────────────────────────┘
-
-New Approach:
-┌─────────────────────────────────────────────────────┐
-│  1. Get totalCount from API (e.g., 2600)           │
-│  2. Generate 30 random IDs (1 to 2600)             │
-│  3. Fetch each post by ID using getNFTInfo         │
-│  4. Filter valid minted posts → Display            │
-└─────────────────────────────────────────────────────┘
-```
-
-## User Experience
-
-- **Loading**: Shows skeleton while fetching random posts
-- **Pull-to-refresh**: Generates fresh random IDs
-- **Content variety**: Posts from any time period can appear
-- **No more "flickering"**: Single stable render after fetch
+Make the modal always closable regardless of connection state, and add cleanup for stuck Web3Auth states.
 
 ---
 
-## Technical Implementation
+## Changes
 
-### Step 1: Create Shared Random Feed Utility
+### 1. LoginModal.tsx - Always Allow Close
 
-**New file: `src/lib/random-feed.ts`**
+**File:** `src/components/app/LoginModal.tsx`
 
-Create a reusable utility for fetching truly random posts:
+Remove the `isConnecting` guard from `handleClose`:
 
 ```typescript
-import { getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
-
-const DEHUB_API_BASE = "https://api.dehub.io";
-const RANDOM_BATCH_SIZE = 30;
-
-// Get total count from feed API
-export async function getFeedTotalCount(postType?: string): Promise<number> {
-  const url = new URL('/api/feed', DEHUB_API_BASE);
-  url.searchParams.set('page', '1');
-  url.searchParams.set('limit', '1');
-  url.searchParams.set('status', 'minted');
-  if (postType) url.searchParams.set('postType', postType);
-  
-  const response = await fetch(url.toString());
-  const data = await response.json();
-  return data.pagination?.totalCount || 2600; // Fallback
-}
-
-// Fetch random posts by generating random IDs
-export async function fetchRandomPosts(
-  totalCount: number,
-  batchSize: number = RANDOM_BATCH_SIZE,
-  postType?: 'video' | 'feed-images' | 'all'
-): Promise<DeHubNFT[]> {
-  // Generate unique random IDs
-  const randomIds = new Set<number>();
-  const attempts = batchSize * 2; // Over-generate to account for invalid IDs
-  
-  for (let i = 0; i < attempts && randomIds.size < batchSize; i++) {
-    const id = Math.floor(Math.random() * totalCount) + 1;
-    randomIds.add(id);
+// BEFORE (line 51-61)
+const handleClose = () => {
+  if (!isConnecting) {  // ← This blocks closing
+    setStep('main');
+    // ...
+    onOpenChange(false);
   }
-  
-  // Fetch all posts in parallel
-  const results = await Promise.allSettled(
-    Array.from(randomIds).map(id => getNFTInfo(String(id)))
-  );
-  
-  // Filter successful fetches and valid minted posts
-  const posts = results
-    .filter((r): r is PromiseFulfilledResult<DeHubNFT> => 
-      r.status === 'fulfilled' && r.value !== null
-    )
-    .map(r => r.value)
-    .filter(post => {
-      if (!post || post.status !== 'minted') return false;
-      if (postType === 'video') return post.postType === 'video' || post.videoUrl;
-      if (postType === 'feed-images') return post.postType === 'feed-images' || (post.imageUrl && !post.videoUrl);
-      return true;
-    });
-  
-  return posts;
-}
+};
+
+// AFTER
+const handleClose = () => {
+  // Always allow closing - user should never be trapped
+  setStep('main');
+  setEmail('');
+  setPhone('');
+  setEmailError('');
+  setPhoneError('');
+  setActiveProvider(null);
+  onOpenChange(false);
+};
 ```
 
-### Step 2: Update HomeFeed.tsx
-
-**File: `src/components/app/feeds/HomeFeed.tsx`**
-
-Replace the 5-page pre-fetch with the new random ID approach:
-
-**Changes:**
-1. Import the new utility functions
-2. Add state for random posts and loading
-3. Create effect to fetch random posts when in random mode
-4. Use random posts instead of shuffled paginated data for random mode
+Also remove `disabled={isConnecting}` from the close button (line 366):
 
 ```typescript
-// New imports
-import { getFeedTotalCount, fetchRandomPosts } from '@/lib/random-feed';
+// BEFORE
+<button
+  onClick={handleClose}
+  disabled={isConnecting}  // ← Remove this
+  className="..."
+>
 
-// New state (around line 318)
-const [randomPosts, setRandomPosts] = useState<DeHubNFT[]>([]);
-const [isLoadingRandom, setIsLoadingRandom] = useState(false);
-const [randomFetchTrigger, setRandomFetchTrigger] = useState(0);
-
-// Replace pre-fetch effect with random fetch effect
-useEffect(() => {
-  if (selectedSort.value !== 'random') {
-    setHasPreFetched(true);
-    return;
-  }
-  
-  let cancelled = false;
-  
-  async function loadRandomPosts() {
-    setIsLoadingRandom(true);
-    try {
-      const totalCount = await getFeedTotalCount();
-      const posts = await fetchRandomPosts(totalCount, 30);
-      if (!cancelled) {
-        setRandomPosts(posts);
-        setHasPreFetched(true);
-      }
-    } catch (error) {
-      console.error('Failed to fetch random posts:', error);
-      setHasPreFetched(true);
-    } finally {
-      if (!cancelled) setIsLoadingRandom(false);
-    }
-  }
-  
-  loadRandomPosts();
-  return () => { cancelled = true; };
-}, [selectedSort.value, randomFetchTrigger]);
-
-// Update pull-to-refresh handler
-useEffect(() => {
-  if (shuffleKey > 0) {
-    setRandomFetchTrigger(prev => prev + 1);
-    setHasPreFetched(false);
-    if (selectedSort.value !== 'random') refetch();
-  }
-}, [shuffleKey, refetch, selectedSort.value]);
+// AFTER  
+<button
+  onClick={handleClose}
+  className="..."
+>
 ```
 
-**Update the items mapping** to use random posts when in random mode instead of shuffled paginated data.
+### 2. AuthContext.tsx - Cancel Connection on Modal Close
 
-### Step 3: Update VideosFeed.tsx
+**File:** `src/contexts/AuthContext.tsx`
 
-**File: `src/components/app/feeds/VideosFeed.tsx`**
-
-Add the Random sort option and true random fetching:
-
-**Changes:**
-1. Add "Random" to the sort options (currently only has Latest, Most Liked, etc.)
-2. Add state for random video posts
-3. Implement random fetch logic for video content
-4. Display random videos when in random mode
+Add a flag to abort in-progress connections when modal closes:
 
 ```typescript
-// New imports
-import { getFeedTotalCount, fetchRandomPosts } from '@/lib/random-feed';
+// Add ref to track if connection should be aborted
+const connectionAbortedRef = useRef(false);
 
-// Add state
-const [randomVideos, setRandomVideos] = useState<VideoItem[]>([]);
-const [isLoadingRandom, setIsLoadingRandom] = useState(false);
+// Update closeLoginModal to signal abort
+const closeLoginModal = useCallback(() => {
+  connectionAbortedRef.current = true;
+  setIsConnecting(false);
+  setIsLoginModalOpen(false);
+}, []);
 
-// Add effect for random mode
-useEffect(() => {
-  if (selectedSort.value !== 'random') return;
+// In connection methods, check abort flag before completing
+const connectWithProvider = useCallback(async (provider: SocialProvider) => {
+  connectionAbortedRef.current = false;
+  setIsConnecting(true);
   
-  async function loadRandomVideos() {
-    setIsLoadingRandom(true);
-    try {
-      const totalCount = await getFeedTotalCount('video');
-      const posts = await fetchRandomPosts(totalCount, 30, 'video');
-      setRandomVideos(posts.map((nft, i) => mapNFTToVideoItem(nft, i)));
-    } finally {
-      setIsLoadingRandom(false);
+  try {
+    // ... connection logic ...
+    
+    // Check if user closed modal during connection
+    if (connectionAbortedRef.current) {
+      console.log('[Auth] Connection aborted by user');
+      return;
     }
+    
+    await completeDeHubAuth(web3authProvider);
+    // ...
+  } catch (error) {
+    // ... error handling ...
+  } finally {
+    setIsConnecting(false);
   }
-  
-  loadRandomVideos();
-}, [selectedSort.value, refreshKey]);
+}, [closeLoginModal]);
 ```
 
-### Step 4: Update ImagesFeed.tsx
+### 3. Add Web3Auth Cleanup on Close
 
-**File: `src/components/app/feeds/ImagesFeed.tsx`**
+**File:** `src/contexts/AuthContext.tsx`
 
-Replace the deterministic shuffle with true random:
-
-**Changes:**
-1. Add state for random image posts
-2. Implement random fetch logic for image content
-3. Display random images when in random mode
+When the modal is force-closed, cleanup any stuck Web3Auth state:
 
 ```typescript
-// New imports  
-import { getFeedTotalCount, fetchRandomPosts } from '@/lib/random-feed';
-import { mapNFTToImagePost } from '@/hooks/use-dehub-feed';
+import { resetWeb3AuthState } from '@/lib/web3auth';
 
-// Add state
-const [randomImages, setRandomImages] = useState<ImagePost[]>([]);
-const [isLoadingRandom, setIsLoadingRandom] = useState(false);
-
-// Add effect for random mode
-useEffect(() => {
-  if (selectedSort.value !== 'random') return;
+const closeLoginModal = useCallback(() => {
+  connectionAbortedRef.current = true;
+  setIsConnecting(false);
+  setIsLoginModalOpen(false);
   
-  async function loadRandomImages() {
-    setIsLoadingRandom(true);
-    try {
-      const totalCount = await getFeedTotalCount('feed-images');
-      const posts = await fetchRandomPosts(totalCount, 30, 'feed-images');
-      setRandomImages(posts.map((nft, i) => mapNFTToImagePost(nft, i)));
-    } finally {
-      setIsLoadingRandom(false);
-    }
+  // If we were connecting, reset Web3Auth to clear stuck iframes
+  if (isConnecting) {
+    console.log('[Auth] Force closing - resetting Web3Auth state');
+    // Small delay to let state update first
+    setTimeout(() => {
+      resetWeb3AuthState();
+    }, 100);
   }
-  
-  loadRandomImages();
-}, [selectedSort.value, refreshKey]);
+}, [isConnecting]);
+```
+
+### 4. Ensure Close Button Has Higher z-index
+
+**File:** `src/components/app/LoginModal.tsx`
+
+Add explicit z-index to the close button to ensure it's above any overlays:
+
+```typescript
+<button
+  onClick={handleClose}
+  className="absolute right-0 p-2 rounded-xl hover:bg-white/10 transition-colors text-white/60 hover:text-white z-[100000]"
+>
+  <X className="w-5 h-5" />
+</button>
 ```
 
 ---
 
-## Files to Create/Modify
+## Summary of Changes
 
-| File | Action | Purpose |
-|------|--------|---------|
-| `src/lib/random-feed.ts` | Create | Shared utility for random post fetching |
-| `src/components/app/feeds/HomeFeed.tsx` | Modify | Use true random instead of pre-fetch shuffle |
-| `src/components/app/feeds/VideosFeed.tsx` | Modify | Add Random sort option with true random |
-| `src/components/app/feeds/ImagesFeed.tsx` | Modify | Upgrade Random mode to true random |
+| File | Change |
+|------|--------|
+| `src/components/app/LoginModal.tsx` | Remove `isConnecting` guard from close, add high z-index to close button |
+| `src/contexts/AuthContext.tsx` | Add abort mechanism, cleanup Web3Auth on force close |
 
----
+## Result
 
-## Benefits
-
-1. **True content discovery** - Any post from history can appear
-2. **Better engagement** - High-quality older content resurfaces
-3. **Faster perceived loading** - Single fetch cycle, no multiple re-renders
-4. **Consistent UX** - Same random behavior across all feeds
-5. **Fresh every time** - New random IDs on each refresh
-
-## Trade-offs
-
-- ~30 parallel API calls per random load (vs 1 paginated call)
-- Some random IDs may be invalid (deleted/failed posts), reducing actual count
-- Slightly higher network usage, but still reasonable
+- User can **always** close the login modal with the X button
+- Closing during auth will abort the connection attempt
+- Stuck Web3Auth iframes are cleaned up
+- Close button has z-index higher than Web3Auth's overlay (100000 > 99999)
 
