@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { UsernameRequiredModal } from "@/components/app/modals";
+import { LoginModal } from "@/components/app/LoginModal";
+import { useAuth } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import DeleteAccount from "./pages/DeleteAccount";
 import CreatorsPage from "./pages/app/CreatorsPage";
@@ -37,13 +39,16 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Sonner />
-        <UsernameRequiredModal />
-        <BrowserRouter>
+// Inner app component that uses auth context
+function AppContent() {
+  const { isLoginModalOpen, closeLoginModal } = useAuth();
+  
+  return (
+    <>
+      <Sonner />
+      <UsernameRequiredModal />
+      <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
+      <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
@@ -73,6 +78,15 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+      </>
+    );
+}
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TooltipProvider>
+        <AppContent />
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>

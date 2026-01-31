@@ -3,6 +3,7 @@
  * ===================
  * A unified auth gate UI that shows skeleton while loading auth state
  * or while the avatar image is loading, ensuring all content appears together.
+ * Opens the custom LoginModal instead of the default Web3Auth modal.
  * 
  * @module components/app/AuthGate
  */
@@ -18,18 +19,14 @@ interface AuthGateProps {
 }
 
 export function AuthGate({ description }: AuthGateProps) {
-  const { connect, isLoading, isConnecting, needsSignature } = useAuth();
+  const { openLoginModal, isLoading, isConnecting, needsSignature } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
 
   // Show skeleton while auth is loading OR while image hasn't loaded yet
   const showSkeleton = isLoading || !imageLoaded;
 
-  const handleLogin = async () => {
-    try {
-      await connect();
-    } catch {
-      // Error is already toasted in AuthContext
-    }
+  const handleLogin = () => {
+    openLoginModal();
   };
 
   const getButtonText = () => {
