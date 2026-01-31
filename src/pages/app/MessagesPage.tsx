@@ -11,6 +11,8 @@ import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
+import messagesIcon from '@/assets/icons/messages-icon.png';
+import dehubLogoCircle from '@/assets/dehub-logo-circle.png';
 
 function ConversationsSkeleton() {
   return (
@@ -143,7 +145,10 @@ export default function MessagesPage() {
           {/* Header */}
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-xl font-bold text-white">Messages</h1>
+              <div className="flex items-center gap-3">
+                <img src={messagesIcon} alt="Messages" className="w-8 h-8 object-contain" />
+                <h1 className="text-xl font-bold text-white">Messages</h1>
+              </div>
               <Button
                 variant="ghost"
                 size="icon"
@@ -180,7 +185,7 @@ export default function MessagesPage() {
               className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left border-b border-zinc-800"
             >
               <img 
-                src={chatBubbleIcon} 
+                src={dehubLogoCircle} 
                 alt="Public Chat" 
                 className="w-12 h-12 object-contain"
               />
