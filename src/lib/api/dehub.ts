@@ -1685,3 +1685,193 @@ export async function updateTokenVisibility(
 
   return response.json();
 }
+
+// ============= SUBSCRIPTIONS & PLANS API =============
+
+/**
+ * Subscription plan from the DeHub API
+ */
+export interface SubscriptionPlan {
+  _id?: string;
+  id?: string;
+  creatorAddress: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency: string; // e.g., "DHB", "USDC"
+  duration: number; // Duration in days
+  benefits?: string[];
+  isActive?: boolean;
+  subscriberCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * User subscription data
+ */
+export interface Subscription {
+  _id?: string;
+  id?: string;
+  planId: string;
+  plan?: SubscriptionPlan;
+  subscriberAddress: string;
+  creatorAddress: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  autoRenew?: boolean;
+  transactionHash?: string;
+  createdAt?: string;
+}
+
+/**
+ * Get a specific subscription plan by ID
+ * GET /api/plans/{id}
+ */
+export async function getPlan(planId: string): Promise<SubscriptionPlan> {
+  const response = await apiCall<{ result: SubscriptionPlan } | SubscriptionPlan>(`/api/plans/${planId}`);
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as SubscriptionPlan;
+}
+
+/**
+ * Get all plans for a creator
+ * GET /api/plans with optional creator filter
+ */
+export async function getPlans(creatorAddress?: string): Promise<SubscriptionPlan[]> {
+  const response = await apiCall<{ result: SubscriptionPlan[] } | SubscriptionPlan[]>("/api/plans", {
+    params: creatorAddress ? { creator: creatorAddress } : {},
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  return Array.isArray(response) ? response : [];
+}
+
+/**
+ * Get current user's plans (as a creator)
+ * GET /api/plans with auth
+ */
+export async function getMyPlans(): Promise<SubscriptionPlan[]> {
+  const response = await apiCall<{ result: SubscriptionPlan[] } | SubscriptionPlan[]>("/api/plans", {
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  return Array.isArray(response) ? response : [];
+}
+
+/**
+ * Get current user's subscriptions (what they're subscribed to)
+ * GET /api/subscription/me
+ */
+export async function getMySubscriptions(): Promise<Subscription[]> {
+  const response = await apiCall<{ result: Subscription[] } | Subscription[]>("/api/subscription/me", {
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  return Array.isArray(response) ? response : [];
+}
+
+/**
+ * Get a specific subscription by ID
+ * GET /api/subscription/{id}
+ */
+export async function getSubscription(subscriptionId: string): Promise<Subscription> {
+  const response = await apiCall<{ result: Subscription } | Subscription>(`/api/subscription/${subscriptionId}`, {
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as Subscription;
+}
+
+/**
+ * Create a new subscription plan (as a creator)
+ * POST /api/plans
+ */
+export async function createPlan(planData: {
+  name: string;
+  description?: string;
+  price: number;
+  currency?: string;
+  duration: number; // days
+  benefits?: string[];
+}): Promise<SubscriptionPlan> {
+  const response = await apiCall<{ result: SubscriptionPlan } | SubscriptionPlan>("/api/plans", {
+    method: "POST",
+    body: {
+      ...planData,
+      currency: planData.currency || "DHB",
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as SubscriptionPlan;
+}
+
+/**
+ * Update an existing subscription plan
+ * POST /api/plans/{id}
+ */
+export async function updatePlan(
+  planId: string, 
+  planData: Partial<{
+    name: string;
+    description: string;
+    price: number;
+    currency: string;
+    duration: number;
+    benefits: string[];
+    isActive: boolean;
+  }>
+): Promise<SubscriptionPlan> {
+  const response = await apiCall<{ result: SubscriptionPlan } | SubscriptionPlan>(`/api/plans/${planId}`, {
+    method: "POST",
+    body: planData,
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as SubscriptionPlan;
+}
+
+/**
+ * Subscribe to a plan (buy subscription)
+ * POST /api/plan/buy
+ */
+export async function buyPlan(planId: string): Promise<{ subscription: Subscription; transactionHash?: string }> {
+  const response = await apiCall<{ result: { subscription: Subscription; transactionHash?: string } } | { subscription: Subscription; transactionHash?: string }>("/api/plan/buy", {
+    method: "POST",
+    body: { planId },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as { subscription: Subscription; transactionHash?: string };
+}
+
+/**
+ * Check if user is subscribed to a specific creator
+ */
+export async function isSubscribedToCreator(creatorAddress: string): Promise<boolean> {
+  try {
+    const subscriptions = await getMySubscriptions();
+    return subscriptions.some(
+      sub => sub.creatorAddress.toLowerCase() === creatorAddress.toLowerCase() && sub.isActive
+    );
+  } catch {
+    return false;
+  }
+}
