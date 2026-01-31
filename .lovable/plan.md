@@ -1,34 +1,45 @@
 
-# Fix DM Message Sending - Use FormData
+# Fix DM Message Sending - Use Correct Endpoint
 
 ## Problem
-The `/api/dm/upload` endpoint returns "Failed to send file" with error "Cannot read properties of undefined (reading 'toLowerCase')". This is because the endpoint expects **FormData** (multipart form-data), not JSON.
+Messages fail to send with error: `"Failed to send file"` and `"Cannot read properties of undefined (reading 'toLowerCase')"`.
+
+The current code sends ALL messages to `/api/dm/upload` which is specifically for **file uploads**. When sending a text message without a file, the backend expects a file field and crashes trying to read its extension.
 
 ## Root Cause
-Currently sending:
-```javascript
-// Current implementation - WRONG
-await apiCall<any>("/api/dm/upload", {
-  method: "POST",
-  body: { content, type, receiverAddress },  // JSON body
-  requiresAuth: true,
-});
-```
+- **Current**: All messages go to `/api/dm/upload` (file upload endpoint)
+- **Correct**: Text messages should go to `/api/dm/tnx` (transaction endpoint)
 
-But the endpoint expects FormData like the profile update endpoint does.
+The DeHub API has two distinct endpoints:
+1. `/api/dm/tnx` (POST) - For sending text/content messages
+2. `/api/dm/upload` - For uploading file attachments
 
 ## Solution
 
-### Step 1: Update sendMessage to use FormData
-Change from JSON body to FormData:
-- Create `new FormData()`
-- Append fields: `content`, `type`, `receiverAddress` (or `conversationId`)
-- Use raw fetch with FormData (not apiCall which adds JSON headers)
-- Don't set Content-Type header (browser auto-sets multipart boundary)
+Update the `sendMessage` function to use the correct endpoint based on message type:
 
-### Technical Changes
+**For text messages**: Use `POST /api/dm/tnx` with JSON body
+```javascript
+{
+  content: "hello",
+  type: "text",
+  receiverAddress: "0x..." // for new conversations
+  // OR
+  conversationId: "abc123" // for existing conversations
+}
+```
+
+**For file/image messages**: Continue using `/api/dm/upload` with FormData (only when there's an actual file to upload)
+
+## Technical Changes
 
 **File: `src/lib/api/dehub.ts`**
+
+Modify the `sendMessage` function (lines 1549-1629):
+
+1. Check if the message has media content (image/gif with actual file)
+2. For text messages or messages with just URLs: use `apiCall` to `/api/dm/tnx` with JSON
+3. For actual file uploads: use FormData to `/api/dm/upload`
 
 ```typescript
 export async function sendMessage(
@@ -41,41 +52,36 @@ export async function sendMessage(
   if (!token) throw new Error("Authentication required");
   
   const isNewConversation = conversationId.startsWith('new_');
-  const recipientAddress = isNewConversation ? conversationId.replace('new_', '') : undefined;
+  const recipientAddress = isNewConversation 
+    ? conversationId.replace('new_', '') 
+    : undefined;
   
-  // Build FormData instead of JSON
-  const formData = new FormData();
-  formData.append('content', content);
-  formData.append('type', type);
+  // Build request body
+  const body: Record<string, any> = {
+    content,
+    type,
+  };
   
   if (isNewConversation && recipientAddress) {
-    formData.append('receiverAddress', recipientAddress);
+    body.receiverAddress = recipientAddress;
   } else {
-    formData.append('conversationId', conversationId);
+    body.conversationId = conversationId;
   }
   
   if (mediaUrl) {
-    formData.append('mediaUrl', mediaUrl);
+    body.mediaUrl = mediaUrl;
   }
   
-  // Use raw fetch with FormData (no Content-Type header - browser sets it)
-  const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
+  // Use /api/dm/tnx for sending messages (JSON body)
+  const response = await apiCall<any>("/api/dm/tnx", {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      // Don't set Content-Type - browser sets multipart boundary
-    },
-    body: formData,
+    body,
+    requiresAuth: true,
   });
   
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
-  }
-  
-  const data = await response.json();
   // Handle response normalization...
+  return normalizedMessage;
 }
 ```
 
-This follows the same pattern as `updateProfile()` which successfully uses FormData for the `/api/update_profile` endpoint.
+This matches how `markConversationAsRead` correctly uses `/api/dm/tnx` with PUT, and follows the memory context stating that "Sending messages and marking them as read both utilize the `/api/dm/tnx` endpoint."
