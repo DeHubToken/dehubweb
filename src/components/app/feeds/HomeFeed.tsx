@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Loader2, RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, POST_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type PostTypeFilterValue } from '@/lib/feed-utils';
+import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, POST_TYPE_FILTERS, formatCount, formatViews, formatDuration, formatTimeAgo, type SortOption, type DateFilterOption, type ContentTypeFilters, type PostTypeFilterValue } from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -137,57 +137,7 @@ function balancedShuffle<T extends { type: string }>(
   return result;
 }
 
-function formatCount(count: number): string {
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  return count.toString();
-}
-
-function formatViews(count?: number): string {
-  if (!count) return '0';
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  return count.toString();
-}
-
-function formatDuration(seconds?: number): string {
-  if (!seconds) return '0:00';
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }
-  return `${minutes}:${secs.toString().padStart(2, '0')}`;
-}
-
-function formatTimeAgo(dateString?: string): string {
-  if (!dateString) return 'Just now';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Just now';
-  
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  if (diffMs < 0) return 'Just now';
-  
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m`;
-  
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h`;
-  
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}d`;
-  
-  const diffWeeks = Math.floor(diffDays / 7);
-  if (diffWeeks < 4) return `${diffWeeks}w`;
-  
-  const diffMonths = Math.floor(diffDays / 30);
-  if (diffMonths < 12) return `${diffMonths}mo`;
-  
-  return `${Math.floor(diffDays / 365)}y`;
-}
+// Helper functions (formatCount, formatViews, formatDuration, formatTimeAgo) are now imported from @/lib/feed-utils
 
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);

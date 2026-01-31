@@ -14,7 +14,14 @@
 export { cn } from './utils';
 
 // Feed utilities
-export { getViewCount, shuffleArray, formatCount } from './feed-utils';
+export { 
+  getViewCount, 
+  shuffleArray, 
+  formatCount, 
+  formatDuration, 
+  formatViews, 
+  formatTimeAgo 
+} from './feed-utils';
 
 // Filter utilities
 export { 

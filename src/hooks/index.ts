@@ -10,7 +10,7 @@
  * ```
  */
 
-export { useAudioAnalyser } from './use-audio-analyser';
+// useAudioAnalyser removed - was unused
 export { useDebouncedValue } from './use-debounced-value';
 export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVideoItem, mapNFTToImagePost } from './use-dehub-feed';
 export { useUnifiedFeed, mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem, type UnifiedFeedParams } from './use-unified-feed';
