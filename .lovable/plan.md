@@ -1,72 +1,41 @@
 
-# Fix Search Results Avatar - Field Mapping Issue
+# Make All Avatars Squared (rounded-xl) Consistently
 
-## Root Cause
+## Problem
 
-The API returns `avatarImageUrl` but the code only checks for `avatarUrl`:
+The profile page avatars are properly squared off (`rounded-xl`), but avatars elsewhere (comments, side panels, card headers, chat messages) appear more rounded because:
 
-**API Response:**
-```json
-{
-  "avatarImageUrl": "statics/avatars/0x5ef7cd....jpeg",
-  "address": "0x5ef7cd..."
-}
-```
-
-**Current Code (broken):**
-```typescript
-avatar: account.avatarUrl  // WRONG - field doesn't exist!
-  ? buildAvatarUrl(account.address, account.avatarUrl) 
-  : undefined,
-```
-
-The `SearchAccount` interface only defines `avatarUrl`, but the real API uses `avatarImageUrl` (same pattern as `DeHubUser`).
+1. The base `Avatar` component uses `rounded-xl` on the container
+2. However, `AvatarImage` doesn't inherit rounding—it uses `aspect-square h-full w-full` only
+3. This causes the image inside to have no explicit border-radius, making it appear different from the container
 
 ## Solution
 
-Fix the field mapping in two places:
+Update the base `avatar.tsx` component to apply `rounded-xl` consistently to both the image and fallback. This single change will fix ALL avatar instances across the app.
 
-### 1. Update `SearchAccount` interface (`src/lib/api/dehub.ts`)
+---
 
-Add the `avatarImageUrl` field that the API actually returns:
+## Technical Changes
 
-```typescript
-export interface SearchAccount {
-  id: string;
-  address: string;
-  username: string;
-  displayName?: string;
-  bio?: string;
-  avatarUrl?: string;
-  avatarImageUrl?: string;  // ADD - API returns this field
-  verified?: boolean;
-  followerCount?: number;
-  followingCount?: number;
-}
+### File: `src/components/ui/avatar.tsx`
+
+| Line | Current | Change |
+|------|---------|--------|
+| 22 | `className={cn("aspect-square h-full w-full", className)}` | Add `rounded-xl` to AvatarImage |
+
+**Before:**
+```tsx
+// AvatarImage (line 22)
+className={cn("aspect-square h-full w-full", className)}
 ```
 
-### 2. Update `mapAccountToCreator` function (`src/hooks/use-dehub-search.ts`)
-
-Check both field names, matching the pattern used elsewhere in the codebase:
-
-```typescript
-export function mapAccountToCreator(account: SearchAccount): SearchCreator {
-  // Check both field names - API returns avatarImageUrl
-  const rawAvatarPath = account.avatarImageUrl || account.avatarUrl;
-  
-  return {
-    id: account.address || account.id,
-    name: account.displayName || account.username || 'User',
-    handle: `@${account.username || account.address?.slice(0, 8)}`,
-    avatar: rawAvatarPath 
-      ? buildAvatarUrl(account.address, rawAvatarPath) 
-      : undefined,
-    verified: account.verified || false,
-    bio: account.bio,
-    followerCount: account.followerCount,
-  };
-}
+**After:**
+```tsx
+// AvatarImage (line 22)
+className={cn("aspect-square h-full w-full rounded-xl", className)}
 ```
+
+This single change ensures every avatar image in the entire app will have squared-off corners matching the container and profile pictures.
 
 ---
 
@@ -74,5 +43,22 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
 
 | File | Change |
 |------|--------|
-| `src/lib/api/dehub.ts` | Add `avatarImageUrl` to `SearchAccount` interface |
-| `src/hooks/use-dehub-search.ts` | Update `mapAccountToCreator` to use `avatarImageUrl \|\| avatarUrl` |
+| `src/components/ui/avatar.tsx` | Add `rounded-xl` to `AvatarImage` default className |
+
+---
+
+## Impact
+
+This fix will automatically apply to:
+- Chat messages
+- Comments section
+- Who to Follow sidebar
+- Card headers (posts, videos, images)
+- Leaderboard avatars
+- Notifications page
+- Messages page
+- Stories bar
+- Shorts viewer
+- All other avatar usages
+
+No individual file changes needed—the single base component update cascades everywhere.
