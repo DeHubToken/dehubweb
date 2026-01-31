@@ -1540,7 +1540,7 @@ export async function getMessages(
 
 /**
  * Send a message in a conversation
- * Uses /api/dm/tnx endpoint with JSON body for sending messages
+ * Uses /api/dm/upload endpoint with FormData for sending messages
  * @param conversationId - The conversation ID (or 'new_{address}' for new conversations)
  * @param content - Message content
  * @param type - Message type (text, image, gif)
@@ -1570,57 +1570,66 @@ export async function sendMessage(
       throw new Error("Wallet address not found. Please reconnect your wallet.");
     }
     
-    // Build request body for /api/dm/tnx (JSON body)
-    const body: Record<string, any> = {
-      content,
-      type,
-      senderAddress,
-    };
+    // Build FormData for /api/dm/upload endpoint
+    const formData = new FormData();
+    formData.append('content', content);
+    formData.append('type', type);
+    formData.append('senderAddress', senderAddress);
     
     if (isNewConversation && recipientAddress) {
       // For new conversations, send to recipient address
-      body.receiverAddress = recipientAddress;
+      formData.append('receiverAddress', recipientAddress);
       console.log('[DM API] Sending to new conversation with recipient:', recipientAddress);
     } else {
       // For existing conversations, use conversationId
-      body.conversationId = conversationId;
+      formData.append('conversationId', conversationId);
     }
     
     if (mediaUrl) {
-      body.mediaUrl = mediaUrl;
+      formData.append('mediaUrl', mediaUrl);
     }
     
-    // Use /api/dm/tnx for sending messages (JSON body)
-    const response = await apiCall<any>("/api/dm/tnx", {
-      method: "POST",
-      body,
-      requiresAuth: true,
+    // Use /api/dm/upload for sending messages (FormData)
+    const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        // Don't set Content-Type - browser sets it with multipart boundary
+      },
+      body: formData,
     });
     
-    console.log('[DM API] sendMessage response:', response);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('[DM API] sendMessage error response:', errorData);
+      throw new Error(errorData.message || 'Failed to send message');
+    }
+    
+    const data = await response.json();
+    console.log('[DM API] sendMessage response:', data);
     
     // Handle various response formats
-    if (response?.result) {
-      return response.result;
+    if (data?.result) {
+      return data.result;
     }
     // If the response itself is the message
-    if (response?._id || response?.id) {
+    if (data?._id || data?.id) {
       return {
-        id: response._id || response.id,
-        conversationId: response.conversationId || conversationId,
-        sender: response.sender,
-        content: response.content || content,
-        type: response.type || type,
-        mediaUrl: response.mediaUrl,
-        createdAt: response.createdAt || new Date().toISOString(),
+        id: data._id || data.id,
+        conversationId: data.conversationId || conversationId,
+        sender: data.sender,
+        content: data.content || content,
+        type: data.type || type,
+        mediaUrl: data.mediaUrl,
+        createdAt: data.createdAt || new Date().toISOString(),
       };
     }
     // Handle response with message object
-    if (response?.message && typeof response.message === 'object') {
-      return response.message;
+    if (data?.message && typeof data.message === 'object') {
+      return data.message;
     }
     
-    console.warn('[DM API] Unknown response format for sendMessage:', response);
+    console.warn('[DM API] Unknown response format for sendMessage:', data);
     throw new Error('Invalid response from sendMessage');
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
