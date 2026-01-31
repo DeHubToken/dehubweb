@@ -585,8 +585,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
           {isMobile && (
             <>
               {/* Creator Info */}
-              <div className="absolute top-4 left-4 z-10 max-w-[calc(100%-100px)]">
-                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1 max-w-full">
+              <div className="absolute top-4 left-4 z-10 max-w-[50vw]">
+                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
                   <Avatar className="w-8 h-8 border border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
                     <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                     <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
