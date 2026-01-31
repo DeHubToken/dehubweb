@@ -341,7 +341,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
@@ -357,7 +357,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
@@ -373,14 +373,14 @@ export function PostMediaPreview({
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); stopRecording(); }}
-                        className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-full text-white text-xs font-medium animate-pulse"
+                        className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-xl text-white text-xs font-medium animate-pulse"
                       >
                         <Square className="w-3 h-3 fill-white" />
                         {recordingTime}s / {MAX_DURATION}s
                       </button>
                     ) : m.audio ? (
                       // Audio attached - show playback controls
-                      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-full" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-xl" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={(e) => { e.stopPropagation(); playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index); }}
                           className="w-6 h-6 flex items-center justify-center text-white"
@@ -407,7 +407,7 @@ export function PostMediaPreview({
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-gradient-to-br from-white/20 via-white/10 to-white/5
                                 backdrop-blur-xl border border-white/20
                                 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
@@ -424,7 +424,7 @@ export function PostMediaPreview({
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-gradient-to-br from-white/20 via-white/10 to-white/5
                                 backdrop-blur-xl border border-white/20
                                 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
@@ -441,7 +441,7 @@ export function PostMediaPreview({
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-gradient-to-br from-white/20 via-white/10 to-white/5
                                 backdrop-blur-xl border border-white/20
                                 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
@@ -459,7 +459,7 @@ export function PostMediaPreview({
                           <button
                             type="button"
                             onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
-                            className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                            className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                               bg-white/10 backdrop-blur-xl border border-white/20
                               hover:bg-white/20 hover:border-white/40"
                           >
@@ -529,7 +529,7 @@ export function PostMediaPreview({
                         }}
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 rounded-full bg-black/60 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-xl bg-black/60 flex items-center justify-center">
                           <Play className="w-6 h-6 text-white fill-white" />
                         </div>
                       </div>
@@ -539,7 +539,7 @@ export function PostMediaPreview({
                           <button
                             type="button"
                             onClick={() => onRemoveThumbnail?.(index)}
-                            className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-full transition-colors"
+                            className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
                           >
                             <Trash2 className="w-3 h-3 text-white" />
                           </button>
@@ -604,7 +604,7 @@ export function PostMediaPreview({
                           }}
                           className="absolute inset-0 flex items-center justify-center group cursor-pointer"
                         >
-                          <div className={`w-12 h-12 rounded-full bg-black/60 flex items-center justify-center transition-opacity ${
+                          <div className={`w-12 h-12 rounded-xl bg-black/60 flex items-center justify-center transition-opacity ${
                             playingVideoIndex === index ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
                           }`}>
                             {playingVideoIndex === index ? (
@@ -626,7 +626,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
@@ -642,7 +642,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-full text-white transition-all duration-300 hover:scale-105
+                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                             bg-white/10 backdrop-blur-xl border border-white/20
                             hover:bg-white/20 hover:border-white/40"
                         >
@@ -658,7 +658,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 hover:scale-105
+                          className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                             ${m.trimStart !== undefined || m.trimEnd !== undefined
                               ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40'
                               : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
@@ -686,7 +686,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 hover:scale-105
+                          className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                             ${m.thumbnail 
                               ? 'bg-white/25 text-white backdrop-blur-xl border border-white/40' 
                               : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
@@ -704,7 +704,7 @@ export function PostMediaPreview({
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 hover:scale-105
+                          className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                             ${m.isMusicVideo 
                               ? 'bg-emerald-500/30 text-white backdrop-blur-xl border border-emerald-400/40' 
                               : 'bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-white/40'
@@ -720,9 +720,9 @@ export function PostMediaPreview({
               )}
               <button
                 onClick={() => onRemove(index)}
-                className="absolute top-2 right-2 p-1 bg-black/70 hover:bg-black rounded-full transition-colors"
+                className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
               >
-                <X className="w-3 h-3 text-white" />
+                <X className="w-4 h-4 text-white" />
               </button>
             </div>
           ))}
