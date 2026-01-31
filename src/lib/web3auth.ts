@@ -299,20 +299,50 @@ export async function disconnectWeb3Auth(): Promise<void> {
 }
 
 /**
+ * Force cleanup Web3Auth after errors - aggressively removes all state
+ * This handles the case where OAuth popup is closed mid-flow and SDK is stuck
+ */
+export async function forceCleanupWeb3Auth(): Promise<void> {
+  console.log("[Web3Auth] Force cleanup after error...");
+  
+  // Try to logout regardless of connection state - clears internal SDK state
+  if (web3authInstance) {
+    try {
+      await web3authInstance.logout();
+      console.log("[Web3Auth] ✓ Logged out during cleanup");
+    } catch (e) {
+      // Expected to fail if not connected, that's fine
+      console.log("[Web3Auth] Logout during cleanup failed (expected):", e);
+    }
+  }
+  
+  // Clean up any leftover Web3Auth iframes/modals from the DOM
+  const iframes = document.querySelectorAll('iframe[title*="web3auth"], iframe[id*="web3auth"], iframe[src*="web3auth"]');
+  iframes.forEach(el => {
+    console.log("[Web3Auth] Removing leftover iframe:", el);
+    el.remove();
+  });
+  
+  const modals = document.querySelectorAll('[class*="w3a-modal"], [class*="web3auth"], [id*="w3a-"]');
+  modals.forEach(el => {
+    console.log("[Web3Auth] Removing leftover modal element:", el);
+    el.remove();
+  });
+  
+  // Reset all module variables to allow fresh initialization
+  web3authInstance = null;
+  isInitializing = false;
+  initPromise = null;
+  
+  console.log("[Web3Auth] ✓ Force cleanup complete - ready for new connection");
+}
+
+/**
  * Safe reset after connection errors - ensures clean state for retry
+ * @deprecated Use forceCleanupWeb3Auth instead
  */
 export async function safeResetAfterError(): Promise<void> {
-  console.log("[Web3Auth] Safe reset after error...");
-  try {
-    if (web3authInstance?.connected) {
-      await web3authInstance.logout();
-    }
-  } catch (e) {
-    // Ignore logout errors during reset
-    console.warn("[Web3Auth] Reset logout error (ignored):", e);
-  }
-  // Reset module state to allow fresh initialization
-  resetWeb3AuthState();
+  return forceCleanupWeb3Auth();
 }
 
 export function isWeb3AuthConnected(): boolean {

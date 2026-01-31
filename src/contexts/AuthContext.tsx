@@ -23,7 +23,7 @@ import {
   initWeb3Auth, 
   disconnectWeb3Auth,
   resetWeb3AuthState,
-  safeResetAfterError,
+  forceCleanupWeb3Auth,
   connectToSocialProvider,
   connectToExternalWallet,
   connectWithModal,
@@ -284,7 +284,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Handle errors during connection
+   * Check if error is a user cancellation (covers many Web3Auth error variants)
+   */
+  const isCancellationError = (errorMessage: string): boolean => {
+    const lowerMessage = errorMessage.toLowerCase();
+    return (
+      lowerMessage.includes('user rejected') ||
+      lowerMessage.includes('user denied') ||
+      lowerMessage.includes('user closed') ||
+      lowerMessage.includes('cancelled') ||
+      lowerMessage.includes('canceled') ||
+      lowerMessage.includes('popup_closed') ||
+      lowerMessage.includes('popup closed') ||
+      lowerMessage.includes('closed by user') ||
+      lowerMessage.includes('window closed') ||
+      lowerMessage.includes('aborted') ||
+      lowerMessage.includes('user cancelled') ||
+      lowerMessage.includes('modal closed') ||
+      lowerMessage.includes('login cancelled')
+    );
+  };
+
+  /**
+   * Handle errors during connection - does NOT throw, just shows toast
    */
   const handleConnectionError = (error: unknown) => {
     console.error('[Auth] Connection failed:', error);
@@ -292,7 +314,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const errorMessage = error instanceof Error ? error.message : 'Connection failed';
     let userFriendlyMessage = 'Connection failed. Please try again.';
     
-    if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User closed')) {
+    if (isCancellationError(errorMessage)) {
       userFriendlyMessage = 'Log in was cancelled';
     } else if (errorMessage.includes('network') || errorMessage.includes('chain')) {
       userFriendlyMessage = 'Please switch to Base network and try again';
@@ -305,7 +327,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     toast.error(userFriendlyMessage);
-    throw new Error(userFriendlyMessage);
+    // NOTE: Removed throw - throwing here prevents finally block from resetting isConnecting
   };
 
   /**
@@ -338,23 +360,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
       
-      // Check if user rejected/cancelled the login
-      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied') || errorMessage.includes('User closed') || errorMessage.includes('cancelled')) {
-        // Reset Web3Auth state so user can try again with any method
-        try {
-          await safeResetAfterError();
-        } catch (e) {
-          console.warn('[Auth] Cleanup after rejection failed:', e);
-        }
-        toast.error('Log in was cancelled');
-        return;
-      }
-      
-      // For other errors, also clean up Web3Auth state
+      // Always force cleanup after any error to ensure clean state for retry
       try {
-        await safeResetAfterError();
+        await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
+      }
+      
+      if (isCancellationError(errorMessage)) {
+        toast.error('Log in was cancelled');
+        return;
       }
       
       handleConnectionError(error);
@@ -388,20 +403,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
       
-      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied') || errorMessage.includes('User closed') || errorMessage.includes('cancelled')) {
-        try {
-          await safeResetAfterError();
-        } catch (e) {
-          console.warn('[Auth] Cleanup after rejection failed:', e);
-        }
-        toast.error('Log in was cancelled');
-        return;
-      }
-      
       try {
-        await safeResetAfterError();
+        await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
+      }
+      
+      if (isCancellationError(errorMessage)) {
+        toast.error('Log in was cancelled');
+        return;
       }
       
       handleConnectionError(error);
@@ -435,20 +445,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
       
-      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied') || errorMessage.includes('User closed') || errorMessage.includes('cancelled')) {
-        try {
-          await safeResetAfterError();
-        } catch (e) {
-          console.warn('[Auth] Cleanup after rejection failed:', e);
-        }
-        toast.error('Log in was cancelled');
-        return;
-      }
-      
       try {
-        await safeResetAfterError();
+        await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
+      }
+      
+      if (isCancellationError(errorMessage)) {
+        toast.error('Log in was cancelled');
+        return;
       }
       
       handleConnectionError(error);
@@ -480,20 +485,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
       
-      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied') || errorMessage.includes('User closed') || errorMessage.includes('cancelled')) {
-        try {
-          await safeResetAfterError();
-        } catch (e) {
-          console.warn('[Auth] Cleanup after rejection failed:', e);
-        }
-        toast.error('Log in was cancelled');
-        return;
-      }
-      
       try {
-        await safeResetAfterError();
+        await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
+      }
+      
+      if (isCancellationError(errorMessage)) {
+        toast.error('Log in was cancelled');
+        return;
       }
       
       handleConnectionError(error);
