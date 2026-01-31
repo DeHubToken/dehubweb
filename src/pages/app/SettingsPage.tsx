@@ -37,7 +37,8 @@ import {
   Check,
   Download,
   Copy,
-  Loader2
+  Loader2,
+  LogOut
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -74,7 +75,16 @@ const tabs = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [theme, setTheme] = useState('system');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, disconnect } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await disconnect();
+      toast.success('Logged out');
+    } catch {
+      toast.error('Logout failed');
+    }
+  };
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
@@ -87,14 +97,23 @@ export default function SettingsPage() {
     <div className="min-h-screen p-3 sm:p-4">
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center">
-            <SettingsIcon className="w-6 h-6 text-zinc-400" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center">
+              <SettingsIcon className="w-6 h-6 text-zinc-400" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white">Settings</h1>
+              <p className="text-zinc-500 text-sm">Manage your account and preferences</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">Settings</h1>
-            <p className="text-zinc-500 text-sm">Manage your account and preferences</p>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline text-sm font-medium">Log out</span>
+          </button>
         </div>
 
         {/* Tab Icons */}
