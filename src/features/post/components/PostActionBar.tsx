@@ -151,7 +151,7 @@ export function PostActionBar({
               <button 
                 type="button" 
                 onClick={() => imageInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               >
                 <Image className="w-5 h-5 text-white" />
               </button>
@@ -166,7 +166,7 @@ export function PostActionBar({
               <button 
                 type="button" 
                 onClick={() => videoInputRef.current?.click()} 
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
               >
                 <Film className="w-5 h-5 text-white" />
               </button>
@@ -183,7 +183,7 @@ export function PostActionBar({
                 <PopoverTrigger asChild>
                   <button 
                     type="button" 
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                    className="p-2 hover:bg-white/10 rounded-xl transition-colors"
                   >
                     <Music className="w-5 h-5 text-white" />
                   </button>
@@ -205,7 +205,7 @@ export function PostActionBar({
                       onClick={() => audioInputRef.current?.click()}
                       onMouseEnter={() => setUploadTooltipOpen(true)}
                       onMouseLeave={() => setUploadTooltipOpen(false)}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
                       <Upload className="w-5 h-5 text-white" />
                     </button>
@@ -219,7 +219,7 @@ export function PostActionBar({
                       onClick={onStartRecording}
                       onMouseEnter={() => setRecordTooltipOpen(true)}
                       onMouseLeave={() => setRecordTooltipOpen(false)}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
                       <Mic className="w-5 h-5 text-white" />
                     </button>
@@ -245,7 +245,7 @@ export function PostActionBar({
                         setLivePopoverOpen(true);
                       }
                     }}
-                    className={cn("p-2 hover:bg-white/10 rounded-full transition-colors", isLive && "bg-white/20")}
+                    className={cn("p-2 hover:bg-white/10 rounded-xl transition-colors", isLive && "bg-white/20")}
                   >
                     <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
                   </button>
@@ -265,7 +265,7 @@ export function PostActionBar({
                     <button
                       type="button"
                       onClick={() => handleSelectLiveMode('video')}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
                       <Video className="w-5 h-5 text-white" />
                     </button>
@@ -277,7 +277,7 @@ export function PostActionBar({
                     <button
                       type="button"
                       onClick={() => handleSelectLiveMode('townhall')}
-                      className="p-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
+                      className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/5 hover:bg-white/20 transition-all shadow-lg"
                     >
                       <Mic className="w-5 h-5 text-white" />
                     </button>
@@ -298,7 +298,7 @@ export function PostActionBar({
             <button 
               type="button" 
               onClick={() => onInsertFormatting('bold')} 
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
             >
               <Bold className="w-4 h-4 text-zinc-400" />
             </button>
@@ -311,7 +311,7 @@ export function PostActionBar({
             <button 
               type="button" 
               onClick={() => onInsertFormatting('italic')} 
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
             >
               <Italic className="w-4 h-4 text-zinc-400" />
             </button>
@@ -323,7 +323,7 @@ export function PostActionBar({
           <TooltipTrigger asChild>
             <button 
               type="button" 
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
             >
               <Smile className="w-4 h-4 text-zinc-400" />
             </button>
@@ -339,7 +339,7 @@ export function PostActionBar({
           size="sm"
           disabled={!hasText || isEnhancing}
           onClick={() => setEnhanceSheetOpen(true)}
-          className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
+          className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
         >
           {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
           <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
@@ -370,8 +370,8 @@ export function PostActionBar({
         <Button
           onClick={onPost}
           disabled={!canPost}
-          className={cn(
-            "rounded-full px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
+                className={cn(
+                  "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
             isLive 
               ? "bg-red-500 text-white hover:bg-red-600" 
               : isScheduled
