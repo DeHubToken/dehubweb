@@ -1,138 +1,227 @@
 
-# Fix: Audio Preview Stopping After a Few Seconds
+# Image Translation (OCR + Translate) Implementation Plan
 
-## Problem Identified
-
-After analyzing the code, I found the root cause of why audio stops after a few seconds in the post modal:
-
-The `AudioVisualizer` component has a **race condition** in how it attaches the `ended` event listener to the audio element. The listener is added in a `useEffect` that depends on `[onPlayPause, isInitialized]`:
-
-```javascript
-useEffect(() => {
-  const audio = audioRef.current;
-  if (!audio) return;
-
-  const handleEnded = () => {
-    onPlayPause();
-  };
-
-  audio.addEventListener('ended', handleEnded);
-  return () => audio.removeEventListener('ended', handleEnded);
-}, [onPlayPause, isInitialized]);
-```
-
-**The issue:** When `onPlayPause` is passed from the parent component, it's recreated on each render because it's defined inline:
-
-```javascript
-onPlayPause={() => {
-  if (playingIndex === index) {
-    setPlayingIndex(null);
-  } else {
-    setPlayingIndex(index);
-  }
-}}
-```
-
-This causes the `useEffect` to run frequently, detaching and re-attaching the `ended` listener. If the audio happens to end during this transition, the event is missed - but more critically, **the frequent re-renders may cause the audio to be unintentionally paused**.
-
-Additionally, the playback effect at lines 141-153 has `draw` in its dependencies, which changes when `style` or `hue` changes. This can cause unwanted pause/play cycles.
+## Overview
+Add the ability to extract text from images using Gemini's vision capabilities and translate it to the user's language. This feature will integrate seamlessly with the existing translation infrastructure.
 
 ---
 
-## Solution
+## Architecture
 
-### 1. Stabilize the `onPlayPause` callback in PostMediaPreview
-
-Wrap the callback in `useCallback` to prevent unnecessary re-renders affecting the audio element.
-
-### 2. Fix the AudioVisualizer event listener management
-
-Move the `ended` event listener setup into the `setupAudio` function so it's attached immediately when the audio element is created, rather than in a separate effect that can be out of sync.
-
-### 3. Remove `draw` from the playback effect dependencies
-
-The playback effect should only depend on `isPlaying`, not on `draw`. The drawing is already triggered separately.
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                        User Interface                           │
+├─────────────────────────────────────────────────────────────────┤
+│  ImageCard / FullscreenImageViewer                              │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  "Translate Image" button (Globe + Languages icon)      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                            │                                    │
+│                            ▼                                    │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  ImageTranslationOverlay (extracted + translated text)  │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Edge Function Layer                          │
+├─────────────────────────────────────────────────────────────────┤
+│  supabase/functions/translate-image/index.ts                    │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  1. Receive image URL                                    │   │
+│  │  2. Call Gemini Vision API for OCR                       │   │
+│  │  3. Detect source language (reuse existing logic)        │   │
+│  │  4. Translate extracted text to target language          │   │
+│  │  5. Return structured response                           │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Lovable AI Gateway                           │
+├─────────────────────────────────────────────────────────────────┤
+│  google/gemini-2.5-flash (vision + text capabilities)          │
+│  - OCR: Extract text from image with position data              │
+│  - Translation: Convert to target language                      │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Technical Changes
+## Implementation Steps
 
-### File: `src/features/post/components/PostMediaPreview.tsx`
+### Step 1: Create the Edge Function
 
-Create a memoized callback for the audio play/pause toggle:
+**File:** `supabase/functions/translate-image/index.ts`
 
+The edge function will:
+1. Accept an image URL and target language
+2. Use Gemini 2.5 Flash's vision capabilities to extract text from the image
+3. Detect the source language of extracted text
+4. Translate the text to the user's language
+5. Return both extracted and translated text
+
+**Key Features:**
+- Uses `LOVABLE_API_KEY` (pre-configured, no user setup needed)
+- Model: `google/gemini-2.5-flash` (supports vision + text)
+- Caches results to avoid repeated API calls for same image
+- Returns structured data with original text, translated text, and source language
+
+**Request/Response Format:**
 ```typescript
-// Add near the top of the component, around line 100
-const handleAudioVisualizerPlayPause = useCallback((index: number) => {
-  setPlayingIndex(prev => prev === index ? null : index);
-}, []);
+// Request
+{
+  imageUrl: string;      // URL of image to translate
+  targetLang: string;    // e.g., "en", "es", "fr"
+}
+
+// Response
+{
+  extractedText: string;      // Original text from image
+  translatedText: string;     // Translated text
+  sourceLang: string;         // Detected source language
+  hasText: boolean;           // Whether image contains text
+}
 ```
 
-Update the AudioVisualizer usage (around line 474):
-```typescript
-<AudioVisualizer
-  audioUrl={m.preview}
-  isPlaying={playingIndex === index}
-  onPlayPause={() => handleAudioVisualizerPlayPause(index)}
-  // ... rest of props
-/>
+---
+
+### Step 2: Create UI Components
+
+**File:** `src/components/app/cards/ImageTranslationSheet.tsx`
+
+A bottom sheet/drawer component that displays:
+- Loading state with spinner
+- Extracted original text (collapsible)
+- Translated text (main display)
+- Source language indicator
+- "No text found" state for images without text
+
+**File:** `src/hooks/use-image-translation.ts`
+
+Custom hook for image translation logic:
+- Manages loading, error, and result states
+- Handles caching (sessionStorage) to avoid repeat API calls
+- Provides `translateImage(imageUrl, targetLang)` function
+
+---
+
+### Step 3: Integrate into ImageCard
+
+**File:** `src/components/app/cards/ImageCard.tsx` (modify)
+
+Add a "Translate Image" button to the image actions:
+- Appears in the dropdown menu or as an overlay button
+- Uses the Globe icon with a language indicator
+- Triggers the translation sheet when clicked
+
+---
+
+### Step 4: Integrate into FullscreenImageViewer
+
+**File:** `src/components/app/cards/FullscreenImageViewer.tsx` (modify)
+
+Add translation functionality to fullscreen view:
+- "Translate" button in the toolbar
+- Overlay panel showing translated text
+- Toggle between original view and text overlay
+
+---
+
+### Step 5: Update Config
+
+**File:** `supabase/config.toml` (modify)
+
+Add the new edge function configuration:
+```toml
+[functions.translate-image]
+verify_jwt = false
 ```
 
-### File: `src/components/app/audio/AudioVisualizer.tsx`
+---
 
-1. **Move the `ended` listener into `setupAudio`** (around line 58-90):
+## File Changes Summary
+
+| File | Action | Purpose |
+|------|--------|---------|
+| `supabase/functions/translate-image/index.ts` | Create | OCR + Translation edge function |
+| `supabase/config.toml` | Modify | Register new edge function |
+| `src/hooks/use-image-translation.ts` | Create | Translation state management |
+| `src/components/app/cards/ImageTranslationSheet.tsx` | Create | Translation results UI |
+| `src/components/app/cards/ImageCard.tsx` | Modify | Add translate button to dropdown |
+| `src/components/app/cards/FullscreenImageViewer.tsx` | Modify | Add translate overlay |
+
+---
+
+## Technical Details
+
+### Edge Function Implementation
+
+The translate-image function will use Gemini's multimodal capabilities:
 
 ```typescript
-const setupAudio = useCallback(() => {
-  if (isConnectedRef.current) return;
-
-  try {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(audioUrl);
-      audioRef.current.crossOrigin = 'anonymous';
-      
-      // Attach ended listener immediately when creating audio
-      audioRef.current.addEventListener('ended', () => {
-        onPlayPause();
-      });
+// Gemini vision request structure
+{
+  model: "google/gemini-2.5-flash",
+  messages: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "text",
+          text: "Extract all visible text from this image. Return ONLY the text..."
+        },
+        {
+          type: "image_url",
+          image_url: { url: imageUrl }
+        }
+      ]
     }
-    // ... rest of setup
-  } catch (err) {
-    console.error('Failed to setup audio:', err);
-  }
-}, [audioUrl, onPlayPause]);
+  ]
+}
 ```
 
-2. **Fix the playback effect** - remove `draw` from dependencies (lines 141-153):
+### Caching Strategy
 
-```typescript
-useEffect(() => {
-  if (!audioRef.current) return;
+1. **Server-side cache:** In-memory Map with LRU eviction (1000 entries)
+2. **Client-side cache:** sessionStorage keyed by `imageUrl + targetLang`
 
-  if (isPlaying) {
-    audioRef.current.play().catch(console.error);
-  } else {
-    audioRef.current.pause();
-  }
-}, [isPlaying]);
+### Error Handling
 
-// Separate effect for animation
-useEffect(() => {
-  if (isPlaying && analyserRef.current) {
-    draw();
-  } else if (animationRef.current) {
-    cancelAnimationFrame(animationRef.current);
-  }
-}, [isPlaying, draw]);
-```
+- Image load failures: Show "Unable to process image"
+- No text detected: Show "No text found in this image"
+- Translation failures: Fall back to showing extracted text only
+- Rate limits (429/402): Show appropriate user-facing message
 
-3. **Remove the separate ended listener effect** (lines 182-192) since it's now handled in `setupAudio`.
+### Cost Optimization
+
+- Use `google/gemini-2.5-flash` (cheapest vision-capable model)
+- Truncate very long extracted text before translation
+- Cache aggressively to minimize repeat API calls
+- Only call API when user explicitly requests translation
 
 ---
 
-## Files to Modify
+## User Experience Flow
 
-| File | Change |
-|------|--------|
-| `src/components/app/audio/AudioVisualizer.tsx` | Fix event listener attachment and separate playback/animation effects |
-| `src/features/post/components/PostMediaPreview.tsx` | Memoize the play/pause callback to prevent unnecessary re-renders |
+1. User sees an image with foreign text in feed
+2. User taps the "..." menu or long-presses the image
+3. User selects "Translate Image"
+4. Loading spinner appears (1-3 seconds)
+5. Bottom sheet slides up showing:
+   - Source language detected
+   - Translated text
+   - Collapsible original text section
+6. User can dismiss sheet and continue browsing
+7. Result is cached - instant on repeat views
+
+---
+
+## Accessibility Considerations
+
+- Screen reader support for extracted text
+- Sufficient color contrast in translation sheet
+- Keyboard navigation support in fullscreen viewer
+- Loading state announcements
+
