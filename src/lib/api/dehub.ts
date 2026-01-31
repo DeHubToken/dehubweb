@@ -1315,56 +1315,101 @@ export async function getConversations(
   limit: number = 20,
   searchQuery?: string
 ): Promise<{ items: DeHubConversation[]; totalCount: number; hasMore: boolean }> {
+  console.log('[DM API] getConversations called', { page, limit, searchQuery });
+  
   // If no search query, use the contacts endpoint to list all conversations
   if (!searchQuery) {
     const token = getAuthToken();
-    if (!token) return { items: [], totalCount: 0, hasMore: false };
+    if (!token) {
+      console.log('[DM API] No auth token available');
+      return { items: [], totalCount: 0, hasMore: false };
+    }
     
     try {
       // Parse user address from JWT token
       const payload = JSON.parse(atob(token.split('.')[1]));
       const userAddress = payload.address;
+      console.log('[DM API] Parsed user address from JWT:', userAddress);
       
       if (!userAddress) {
+        console.warn('[DM API] No user address in JWT payload');
         return { items: [], totalCount: 0, hasMore: false };
       }
       
       // Use contacts endpoint which returns conversations for the user
-      const response = await apiCall<{ result: DeHubConversation[] | { items: DeHubConversation[]; hasMore: boolean } }>(
+      console.log('[DM API] Fetching from /api/dm/contacts/' + userAddress);
+      const response = await apiCall<any>(
         `/api/dm/contacts/${userAddress}`,
         {
           params: { page, limit },
           requiresAuth: true,
         }
       );
+      console.log('[DM API] getConversations raw response:', response);
       
-      // Handle both array and paginated response formats
-      if (Array.isArray(response.result)) {
-        return { 
-          items: response.result, 
-          totalCount: response.result.length, 
-          hasMore: response.result.length >= limit 
-        };
+      // Handle multiple response formats from the API
+      let items: DeHubConversation[] = [];
+      
+      // Format 1: Direct array response
+      if (Array.isArray(response)) {
+        items = response;
+      }
+      // Format 2: { result: [...] }
+      else if (response?.result && Array.isArray(response.result)) {
+        items = response.result;
+      }
+      // Format 3: { result: { items: [...] } }
+      else if (response?.result?.items && Array.isArray(response.result.items)) {
+        items = response.result.items;
+        const hasMore = response.result.hasMore ?? items.length >= limit;
+        console.log('[DM API] Returning conversations (format 3):', { count: items.length, hasMore });
+        return { items, totalCount: items.length, hasMore };
+      }
+      // Format 4: { items: [...] }
+      else if (response?.items && Array.isArray(response.items)) {
+        items = response.items;
+        const hasMore = response.hasMore ?? items.length >= limit;
+        console.log('[DM API] Returning conversations (format 4):', { count: items.length, hasMore });
+        return { items, totalCount: items.length, hasMore };
       }
       
-      const items = response.result?.items || [];
+      console.log('[DM API] Returning conversations:', { count: items.length, hasMore: items.length >= limit });
       return { 
         items, 
         totalCount: items.length, 
-        hasMore: response.result?.hasMore ?? items.length >= limit 
+        hasMore: items.length >= limit 
       };
     } catch (error) {
-      console.warn("Failed to parse JWT or fetch contacts:", error);
+      console.error('[DM API] Failed to fetch conversations:', error);
       return { items: [], totalCount: 0, hasMore: false };
     }
   }
   
   // With search query, use the search endpoint
-  const response = await apiCall<ConversationsApiResponse>("/api/dm/search", {
-    params: { query: searchQuery, page, limit },
-    requiresAuth: true,
-  });
-  return response.result || { items: [], totalCount: 0, hasMore: false };
+  console.log('[DM API] Searching conversations with query:', searchQuery);
+  try {
+    const response = await apiCall<any>("/api/dm/search", {
+      params: { query: searchQuery, page, limit },
+      requiresAuth: true,
+    });
+    console.log('[DM API] Search response:', response);
+    
+    // Handle various response formats
+    if (response?.result?.items) {
+      return response.result;
+    }
+    if (response?.result && Array.isArray(response.result)) {
+      return { items: response.result, totalCount: response.result.length, hasMore: response.result.length >= limit };
+    }
+    if (Array.isArray(response)) {
+      return { items: response, totalCount: response.length, hasMore: response.length >= limit };
+    }
+    
+    return { items: [], totalCount: 0, hasMore: false };
+  } catch (error) {
+    console.error('[DM API] Search failed:', error);
+    return { items: [], totalCount: 0, hasMore: false };
+  }
 }
 
 /**
@@ -1385,12 +1430,29 @@ export async function getConversation(conversationId: string): Promise<DeHubConv
  * @param recipientAddress - Wallet address of the recipient
  */
 export async function createConversation(recipientAddress: string): Promise<DeHubConversation> {
-  const response = await apiCall<{ result: DeHubConversation }>("/api/dm/tnx", {
-    method: "POST",
-    body: { recipientAddress, type: "new" },
-    requiresAuth: true,
-  });
-  return response.result;
+  console.log('[DM API] createConversation called', { recipientAddress });
+  try {
+    const response = await apiCall<any>("/api/dm/tnx", {
+      method: "POST",
+      body: { recipientAddress, type: "new" },
+      requiresAuth: true,
+    });
+    console.log('[DM API] createConversation response:', response);
+    
+    // Handle various response formats
+    if (response?.result) {
+      return response.result;
+    }
+    // If the response itself is the conversation
+    if (response?.id) {
+      return response;
+    }
+    
+    throw new Error('Invalid response format from createConversation');
+  } catch (error) {
+    console.error('[DM API] createConversation failed:', error);
+    throw error;
+  }
 }
 
 /**
@@ -1418,11 +1480,45 @@ export async function getMessages(
   page: number = 0,
   limit: number = 30
 ): Promise<{ items: DeHubDMMessage[]; totalCount: number; hasMore: boolean }> {
-  const response = await apiCall<MessagesApiResponse>(`/api/dm/messages/${conversationId}`, {
-    params: { page, limit },
-    requiresAuth: true,
-  });
-  return response.result || { items: [], totalCount: 0, hasMore: false };
+  console.log('[DM API] getMessages called', { conversationId, page, limit });
+  try {
+    const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {
+      params: { page, limit },
+      requiresAuth: true,
+    });
+    console.log('[DM API] getMessages raw response:', response);
+    
+    // Handle various response formats
+    let items: DeHubDMMessage[] = [];
+    
+    // Format 1: { result: { items: [...] } }
+    if (response?.result?.items && Array.isArray(response.result.items)) {
+      items = response.result.items;
+      const hasMore = response.result.hasMore ?? items.length >= limit;
+      return { items, totalCount: response.result.totalCount || items.length, hasMore };
+    }
+    // Format 2: { result: [...] }
+    if (response?.result && Array.isArray(response.result)) {
+      items = response.result;
+      return { items, totalCount: items.length, hasMore: items.length >= limit };
+    }
+    // Format 3: Direct array
+    if (Array.isArray(response)) {
+      items = response;
+      return { items, totalCount: items.length, hasMore: items.length >= limit };
+    }
+    // Format 4: { items: [...] }
+    if (response?.items && Array.isArray(response.items)) {
+      items = response.items;
+      return { items, totalCount: response.totalCount || items.length, hasMore: response.hasMore ?? items.length >= limit };
+    }
+    
+    console.warn('[DM API] Unknown response format for getMessages:', response);
+    return { items: [], totalCount: 0, hasMore: false };
+  } catch (error) {
+    console.error('[DM API] getMessages failed:', error);
+    return { items: [], totalCount: 0, hasMore: false };
+  }
 }
 
 /**
@@ -1439,12 +1535,30 @@ export async function sendMessage(
   type: 'text' | 'image' | 'gif' = 'text',
   mediaUrl?: string
 ): Promise<DeHubDMMessage> {
-  const response = await apiCall<{ result: DeHubDMMessage }>("/api/dm/tnx", {
-    method: "POST",
-    body: { conversationId, content, type, mediaUrl },
-    requiresAuth: true,
-  });
-  return response.result;
+  console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
+  try {
+    const response = await apiCall<any>("/api/dm/tnx", {
+      method: "POST",
+      body: { conversationId, content, type, mediaUrl },
+      requiresAuth: true,
+    });
+    console.log('[DM API] sendMessage response:', response);
+    
+    // Handle various response formats
+    if (response?.result) {
+      return response.result;
+    }
+    // If the response itself is the message
+    if (response?.id && response?.content) {
+      return response;
+    }
+    
+    console.warn('[DM API] Unknown response format for sendMessage:', response);
+    throw new Error('Invalid response from sendMessage');
+  } catch (error) {
+    console.error('[DM API] sendMessage failed:', error);
+    throw error;
+  }
 }
 
 /**
@@ -1453,11 +1567,28 @@ export async function sendMessage(
  * @param conversationId - The conversation ID
  */
 export async function markConversationAsRead(conversationId: string): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>("/api/dm/tnx", {
-    method: "PUT",
-    body: { conversationId, read: true },
-    requiresAuth: true,
-  });
+  console.log('[DM API] markConversationAsRead called', { conversationId });
+  try {
+    const response = await apiCall<any>("/api/dm/tnx", {
+      method: "PUT",
+      body: { conversationId, read: true },
+      requiresAuth: true,
+    });
+    console.log('[DM API] markConversationAsRead response:', response);
+    
+    // Handle various response formats
+    if (response?.success !== undefined) {
+      return { success: response.success };
+    }
+    if (response?.result?.success !== undefined) {
+      return { success: response.result.success };
+    }
+    // Assume success if no error was thrown
+    return { success: true };
+  } catch (error) {
+    console.error('[DM API] markConversationAsRead failed:', error);
+    return { success: false };
+  }
 }
 
 /**

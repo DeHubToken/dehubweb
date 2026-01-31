@@ -37,14 +37,21 @@ export function useConversations(searchQuery: string = '') {
   const query = useQuery({
     queryKey: [...messagesKeys.conversations(), searchQuery],
     queryFn: async () => {
-      // Pass undefined for empty search to use contacts endpoint instead of broken search
-      const response = await getConversations(0, 50, searchQuery || undefined);
-      return response.items || [];
+      console.log('[useConversations] Fetching conversations...', { searchQuery, isAuthenticated });
+      try {
+        // Pass undefined for empty search to use contacts endpoint instead of broken search
+        const response = await getConversations(0, 50, searchQuery || undefined);
+        console.log('[useConversations] Response:', response);
+        return response.items || [];
+      } catch (error) {
+        console.error('[useConversations] Error fetching conversations:', error);
+        throw error;
+      }
     },
     enabled: isAuthenticated,
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 30 * 1000, // Poll every 30s for new messages
-    retry: 1, // Don't retry too many times on API errors
+    retry: 2, // Retry twice on API errors
   });
 
   // Server-side search is now used via the query parameter
@@ -72,8 +79,16 @@ export function useMessages(conversationId: string | null) {
   const query = useInfiniteQuery({
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
+      console.log('[useMessages] Fetching messages...', { conversationId, pageParam });
       if (!conversationId) return { items: [], totalCount: 0, hasMore: false };
-      return getMessages(conversationId, pageParam, 30);
+      try {
+        const result = await getMessages(conversationId, pageParam, 30);
+        console.log('[useMessages] Response:', result);
+        return result;
+      } catch (error) {
+        console.error('[useMessages] Error:', error);
+        throw error;
+      }
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.hasMore) {
