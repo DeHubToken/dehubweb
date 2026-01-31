@@ -1312,12 +1312,19 @@ export default function AssistantPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
                   >
+                    {/* AI Avatar for assistant messages */}
+                    {message.role === 'assistant' && (
+                      <img 
+                        src={assistantAvatar} 
+                        alt="" 
+                        className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+                      />
+                    )}
                     {message.role === 'assistant' && message.videoUrl ? (
                       /* Video messages */
                       <div className="max-w-[85%] flex flex-col gap-2">
-                        {/* Video container with controls */}
                         <div className="relative rounded-lg overflow-hidden">
                           <video 
                             src={message.videoUrl}
@@ -1660,10 +1667,16 @@ export default function AssistantPage() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex justify-start"
+                  className="flex justify-start gap-2"
                 >
-                  <div className="bg-white/10 rounded-2xl px-4 py-3">
+                  <img 
+                    src={assistantAvatar} 
+                    alt="" 
+                    className="w-7 h-7 rounded-full shrink-0"
+                  />
+                  <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white/60" />
+                    <span className="text-sm text-white/60">Thinking...</span>
                   </div>
                 </motion.div>
               )}
