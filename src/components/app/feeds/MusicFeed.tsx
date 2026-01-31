@@ -302,13 +302,15 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
       {/* Title and channel info with avatar */}
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={handleProfileClick}
-          className="flex-shrink-0"
+          onPointerDown={(e) => e.stopPropagation()}
+          className="flex-shrink-0 cursor-pointer"
         >
           <img 
             src={video.channelAvatar} 
             alt={video.channel}
-            className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity"
+            className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity pointer-events-none"
           />
         </button>
         <div className="min-w-0 flex-1">
