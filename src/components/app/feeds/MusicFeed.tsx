@@ -41,7 +41,20 @@ const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initia
 
 // ============================================================================
 // HELPERS
-// ============================================================================
+/** Usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS = [
+  'monkey d luffy',
+  'monkeydluffy',
+  'monkey_d_luffy',
+];
+
+function isBlockedCreator(nft: DeHubNFT): boolean {
+  const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
+  const username = (nft.creator?.username || '').toLowerCase();
+  return BLOCKED_CREATORS.some(blocked => 
+    displayName.includes(blocked) || username.includes(blocked)
+  );
+}
 
 function formatDuration(seconds?: number): string {
   if (!seconds) return '0:00';
@@ -429,8 +442,10 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
         sortMode: 'new', // Use 'new' for variety instead of always 'popular'
         address: walletAddress || undefined,
       });
+      // Filter out blocked creators
+      const filteredData = (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft));
       return {
-        items: response.data || [],
+        items: filteredData,
         nextPage: (response.data?.length ?? 0) >= VIDEOS_PAGE_SIZE ? pageParam + 1 : undefined,
       };
     },
@@ -529,7 +544,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
         sortMode: 'popular',
         address: walletAddress || undefined,
       });
-      return response.data || [];
+      // Filter out blocked creators
+      return (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft));
     },
     staleTime: 5 * 60 * 1000,
   });
