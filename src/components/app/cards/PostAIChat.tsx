@@ -286,9 +286,9 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
         </div>
       </ScrollArea>
 
-      {/* Input - Matching AssistantPage style */}
+      {/* Input - Matching AssistantPage style exactly */}
       <div className="p-4 border-t border-white/10">
-        <div className={`flex items-end gap-2 px-3 py-2 rounded-2xl border bg-white/5 transition-colors ${
+        <div className={`flex items-end gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
           isRecording ? 'border-red-500/50' : 'border-white/10'
         }`}>
           {/* Voice recording button */}
