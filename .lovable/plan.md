@@ -1,43 +1,59 @@
 
-# Fix Shorts Username Display
+# Fix Mobile Nav Border on Shorts Playback
 
 ## Problem
-The Shorts viewer displays "@user" instead of actual usernames because the data mapping uses a non-existent field `minterUsername`. The correct API field is `mintername`.
+When viewing Shorts in fullscreen mode on mobile, a visible "border" appears around the bottom navigation bar. This is caused by:
 
-## Root Cause
-In `ShortsFeed.tsx` (line 123):
-```typescript
-creatorUsername: nft.minterUsername || nft.creator?.username || 'user',
-```
-- `minterUsername` doesn't exist in the API response
-- Should be `mintername` which contains the actual username/handle
+1. The `MobileBottomNav` container has `p-2` (8px padding) which creates space around the nav element
+2. The nav itself has `border border-white/10` which adds a subtle white border
+3. The Shorts viewer has `z-50`, same as the nav, allowing the nav to remain visible on top
+4. Against the pure black background of the Shorts viewer, this padding gap becomes visible as a border artifact
 
 ## Solution
 
-### 1. Fix ShortsFeed.tsx mapping (line 123)
-Change from:
-```typescript
-creatorUsername: nft.minterUsername || nft.creator?.username || 'user',
+Hide the `MobileBottomNav` completely when the Shorts viewer is open. Since the Shorts viewer already has its own navigation and action buttons, the bottom nav is redundant and creates visual clutter.
+
+### Implementation
+
+**File: `src/components/app/MobileBottomNav.tsx`**
+
+1. Add a listener for when ShortsViewer is active by checking if a Shorts viewer element exists in the DOM
+2. Use a state variable to track visibility
+3. Return `null` when Shorts are being viewed
+
+```text
+Changes to MobileBottomNav.tsx:
+- Add useEffect to detect when ShortsViewer is open (checks for fixed z-50 element with bg-black)
+- Alternatively: Use a custom event or context to track Shorts viewer state
+- Hide the entire nav when Shorts are playing
 ```
-To:
+
+### Alternative Approach (Simpler)
+
+Since the ShortsViewer is positioned `fixed inset-0 z-50`, we can simply increase its z-index to be above the MobileBottomNav, OR decrease the MobileBottomNav z-index to be below.
+
+**Recommended fix:**
+- Change ShortsViewer's z-index from `z-50` to `z-[60]` so it fully covers the MobileBottomNav
+
+This is the simpler, cleaner solution that requires minimal code changes.
+
+---
+
+## Technical Details
+
+| File | Change |
+|------|--------|
+| `src/components/app/cards/ShortsViewer.tsx` | Change `z-50` to `z-[60]` on the main container (line 416) |
+
+### Code Change
+
 ```typescript
-creatorUsername: nft.mintername || nft.creator?.username || 'user',
+// Line 416 in ShortsViewer.tsx
+// From:
+className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+
+// To:
+className="fixed inset-0 z-[60] bg-black flex items-center justify-center"
 ```
 
-### 2. Verify HomeFeed.tsx and VideosFeed.tsx
-Check and fix the same issue in these files if present - ensuring `creatorUsername` uses `mintername` (the handle) and not `minterDisplayName` (the display name).
-
-### 3. Update DeHubNFT interface (optional)
-Add `minterUsername` as an alias to document both field names if the API sometimes returns it.
-
-## Files to Modify
-- `src/components/app/feeds/ShortsFeed.tsx` - Fix `creatorUsername` mapping
-- `src/components/app/feeds/HomeFeed.tsx` - Verify/fix if same issue exists
-- `src/components/app/feeds/VideosFeed.tsx` - Verify/fix if same issue exists
-
-## Technical Note
-The API returns:
-- `mintername` → The @username handle (e.g., "cryptodev42")
-- `minterDisplayName` → The display name (e.g., "Crypto Developer")
-
-The current code incorrectly looks for `minterUsername` which doesn't exist, causing the fallback to `'user'`.
+This ensures the Shorts viewer fully covers all other UI elements including the bottom navigation, eliminating the border artifact completely.
