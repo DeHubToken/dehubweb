@@ -1,65 +1,54 @@
 
-# Fix DM Message Sending - Use Correct Endpoint
+# Fix DM Sending - Add Missing senderAddress
 
-## Problem
-Messages fail to send with error: `"Failed to send file"` and `"Cannot read properties of undefined (reading 'toLowerCase')"`.
+## Problem Identified
 
-The current code sends ALL messages to `/api/dm/upload` which is specifically for **file uploads**. When sending a text message without a file, the backend expects a file field and crashes trying to read its extension.
+The DeHub API `/api/dm/tnx` endpoint requires the `senderAddress` field in the request body, but the current implementation doesn't include it.
 
-## Root Cause
-- **Current**: All messages go to `/api/dm/upload` (file upload endpoint)
-- **Correct**: Text messages should go to `/api/dm/tnx` (transaction endpoint)
-
-The DeHub API has two distinct endpoints:
-1. `/api/dm/tnx` (POST) - For sending text/content messages
-2. `/api/dm/upload` - For uploading file attachments
-
-## Solution
-
-Update the `sendMessage` function to use the correct endpoint based on message type:
-
-**For text messages**: Use `POST /api/dm/tnx` with JSON body
-```javascript
+**API Error Response:**
+```json
 {
-  content: "hello",
-  type: "text",
-  receiverAddress: "0x..." // for new conversations
-  // OR
-  conversationId: "abc123" // for existing conversations
+  "success": false,
+  "message": "Missing required fields: senderAddress, receiverAddress, transactionHash, or type."
 }
 ```
 
-**For file/image messages**: Continue using `/api/dm/upload` with FormData (only when there's an actual file to upload)
+**Current Request Body (missing senderAddress):**
+```json
+{
+  "content": "work",
+  "type": "text",
+  "receiverAddress": "0x9324..."
+}
+```
+
+## Solution
+
+Add the `senderAddress` field to the request body by reading it from `localStorage.getItem('dehub_wallet')`.
 
 ## Technical Changes
 
-**File: `src/lib/api/dehub.ts`**
+**File: `src/lib/api/dehub.ts`** (lines 1566-1591)
 
-Modify the `sendMessage` function (lines 1549-1629):
+Update the `sendMessage` function to:
 
-1. Check if the message has media content (image/gif with actual file)
-2. For text messages or messages with just URLs: use `apiCall` to `/api/dm/tnx` with JSON
-3. For actual file uploads: use FormData to `/api/dm/upload`
+1. Get the sender's wallet address from localStorage
+2. Include `senderAddress` in the request body
 
 ```typescript
-export async function sendMessage(
-  conversationId: string,
-  content: string,
-  type: 'text' | 'image' | 'gif' = 'text',
-  mediaUrl?: string
-): Promise<DeHubDMMessage> {
-  const token = getAuthToken();
-  if (!token) throw new Error("Authentication required");
+// Inside sendMessage function, around line 1566
+try {
+  // Get the sender's wallet address from localStorage
+  const senderAddress = localStorage.getItem('dehub_wallet');
+  if (!senderAddress) {
+    throw new Error("Wallet address not found. Please reconnect your wallet.");
+  }
   
-  const isNewConversation = conversationId.startsWith('new_');
-  const recipientAddress = isNewConversation 
-    ? conversationId.replace('new_', '') 
-    : undefined;
-  
-  // Build request body
+  // Build request body for /api/dm/tnx (JSON body)
   const body: Record<string, any> = {
     content,
     type,
+    senderAddress,  // ADD THIS - required by API
   };
   
   if (isNewConversation && recipientAddress) {
@@ -72,16 +61,26 @@ export async function sendMessage(
     body.mediaUrl = mediaUrl;
   }
   
-  // Use /api/dm/tnx for sending messages (JSON body)
+  // Use /api/dm/tnx for sending messages
   const response = await apiCall<any>("/api/dm/tnx", {
     method: "POST",
     body,
     requiresAuth: true,
   });
-  
-  // Handle response normalization...
-  return normalizedMessage;
+  // ... rest of function
 }
 ```
 
-This matches how `markConversationAsRead` correctly uses `/api/dm/tnx` with PUT, and follows the memory context stating that "Sending messages and marking them as read both utilize the `/api/dm/tnx` endpoint."
+## Expected Result
+
+After this fix, the request body will be:
+```json
+{
+  "content": "work",
+  "type": "text",
+  "senderAddress": "0x742371a7cce6b068f3c6222016bf009d570d7d15",
+  "receiverAddress": "0x9324840523a5d17dd12a2f11a9472e5a199c1937"
+}
+```
+
+This matches the API's required fields and messages will send successfully.
