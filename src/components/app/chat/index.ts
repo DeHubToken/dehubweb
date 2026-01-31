@@ -6,3 +6,5 @@ export { GifPicker } from './GifPicker';
 export { GeneralAIChat } from './GeneralAIChat';
 export { DirectMessageChat } from './DirectMessageChat';
 export { NewConversationModal } from './NewConversationModal';
+export { NewMessageSelector } from './NewMessageSelector';
+export { CreateGroupModal } from './CreateGroupModal';
