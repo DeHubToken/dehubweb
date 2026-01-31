@@ -734,17 +734,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
 
             {/* Desktop: Inline comments */}
             <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0">
-              <div className="flex items-center justify-between mb-3 flex-shrink-0">
-                <div className="flex items-center gap-2 text-white/60 text-xs">
-                  <MessageSquare className="w-4 h-4" />
-                  <span>{inlineComments.length} Comments</span>
-                </div>
-                <button 
-                  onClick={() => setShowComments(true)}
-                  className="text-white/40 text-xs hover:text-white transition-colors"
-                >
-                  View all
-                </button>
+              <div className="flex items-center gap-2 text-white/60 text-xs mb-3 flex-shrink-0">
+                <MessageSquare className="w-4 h-4" />
+                <span>{inlineComments.length} Comments</span>
               </div>
               
               {/* Comments list */}
