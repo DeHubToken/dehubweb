@@ -115,7 +115,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
   
   const queryClient = useQueryClient();
   
-  // Fetch inline comments for desktop/tablet
+  // Fetch inline comments for all devices (mobile shows 3, desktop shows more)
   const { data: inlineComments = [] } = useQuery({
     queryKey: ['shorts-inline-comments', currentShort?.id],
     queryFn: async () => {
@@ -123,7 +123,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       const response = await getNFTComments(currentShort.id, 0, 50);
       return response.map(mapApiCommentToInline);
     },
-    enabled: !!currentShort?.id && !isMobile,
+    enabled: !!currentShort?.id,
     staleTime: 30000,
   });
   
@@ -590,7 +590,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
           {/* Mobile-only overlays */}
           {isMobile && (
             <>
-              {/* Creator Info */}
+              {/* Creator Info - Top Left */}
               <div className="absolute top-4 left-4 z-10 max-w-[50vw]">
                 <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
                   <button
@@ -609,90 +609,118 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
                 </div>
               </div>
 
-              {/* Mobile Action Bar at Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
-                <div className="flex items-center justify-between">
-                  {/* Like/Dislike */}
-                  <div className="flex items-center gap-3">
-                    <motion.button
-                      onClick={() => handleVote(true)}
-                      disabled={hasVoted || isVoting}
-                      className={cn(
-                        "flex items-center gap-1 transition-colors",
-                        hasVoted && !isLiked && "opacity-50"
-                      )}
-                      animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
-                      <div className={cn(
-                        "w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center",
-                        isLiked && "text-white"
-                      )}>
-                        <ThumbsUp className={cn("w-5 h-5", isLiked ? "fill-current text-white" : "text-white")} />
-                      </div>
-                      <span className="text-white text-xs">{formatCount(localLikeCount)}</span>
-                    </motion.button>
-                    
-                    <motion.button
-                      onClick={() => handleVote(false)}
-                      disabled={hasVoted || isVoting}
-                      className={cn(
-                        "flex items-center gap-1 transition-colors",
-                        hasVoted && !isDisliked && "opacity-50"
-                      )}
-                      animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
-                      <div className={cn(
-                        "w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
-                      )}>
-                        <ThumbsDown className={cn("w-5 h-5", isDisliked ? "fill-current text-white" : "text-white")} />
-                      </div>
-                    </motion.button>
+              {/* Right Side Action Buttons - TikTok Style */}
+              <div className="absolute right-3 bottom-32 z-10 flex flex-col items-center gap-5">
+                {/* Like */}
+                <motion.button
+                  onClick={() => handleVote(true)}
+                  disabled={hasVoted || isVoting}
+                  className={cn(
+                    "flex flex-col items-center gap-1 transition-colors",
+                    hasVoted && !isLiked && "opacity-50"
+                  )}
+                  animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <div className={cn(
+                    "w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center",
+                    isLiked && "text-white"
+                  )}>
+                    <ThumbsUp className={cn("w-6 h-6", isLiked ? "fill-current text-white" : "text-white")} />
                   </div>
-                  
-                  {/* Comments */}
-                  <button
-                    onClick={() => setShowComments(true)}
-                    className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
-                  >
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </button>
-                  
-                  {/* Share */}
-                  <button
-                    onClick={() => setShareSheetOpen(true)}
-                    className="w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
-                  >
-                    <Share2 className="w-5 h-5 text-white" />
-                  </button>
-                  
-                  {/* Bookmark */}
-                  <motion.button
-                    onClick={toggleBookmark}
-                    disabled={isBookmarkLoading}
-                    className={cn(
-                      "w-10 h-10 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center",
-                      isBookmarkLoading && "opacity-50"
-                    )}
-                    animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                  >
-                    <Bookmark className={cn("w-5 h-5", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
-                  </motion.button>
-                </div>
+                  <span className="text-white text-xs font-medium">{formatCount(localLikeCount)}</span>
+                </motion.button>
                 
-                {/* Mobile Comments Preview - tap to expand */}
+                {/* Dislike */}
+                <motion.button
+                  onClick={() => handleVote(false)}
+                  disabled={hasVoted || isVoting}
+                  className={cn(
+                    "flex flex-col items-center gap-1 transition-colors",
+                    hasVoted && !isDisliked && "opacity-50"
+                  )}
+                  animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <div className={cn(
+                    "w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center"
+                  )}>
+                    <ThumbsDown className={cn("w-6 h-6", isDisliked ? "fill-current text-white" : "text-white")} />
+                  </div>
+                  <span className="text-white text-xs font-medium">{formatCount(localDislikeCount)}</span>
+                </motion.button>
+
+                {/* Comments */}
                 <button
                   onClick={() => setShowComments(true)}
-                  className="mt-3 w-full bg-zinc-900/60 backdrop-blur-sm rounded-xl p-3 text-left"
+                  className="flex flex-col items-center gap-1"
                 >
-                  <div className="flex items-center gap-2 text-white/60 text-sm">
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Tap to view comments</span>
+                  <div className="w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <MessageSquare className="w-6 h-6 text-white" />
                   </div>
+                  <span className="text-white text-xs font-medium">{formatCount(currentShort.comments || 0)}</span>
                 </button>
+                
+                {/* Share */}
+                <button
+                  onClick={() => setShareSheetOpen(true)}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <div className="w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <Share2 className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-white text-xs font-medium">Share</span>
+                </button>
+                
+                {/* Bookmark */}
+                <motion.button
+                  onClick={toggleBookmark}
+                  disabled={isBookmarkLoading}
+                  className={cn(
+                    "flex flex-col items-center gap-1",
+                    isBookmarkLoading && "opacity-50"
+                  )}
+                  animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <div className="w-12 h-12 bg-zinc-800/70 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <Bookmark className={cn("w-6 h-6", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
+                  </div>
+                  <span className="text-white text-xs font-medium">Save</span>
+                </motion.button>
               </div>
+
+              {/* Bottom Comments Preview - Fading Recent Comments */}
+              <button
+                onClick={() => setShowComments(true)}
+                className="absolute bottom-20 left-4 right-20 z-10"
+              >
+                <div className="space-y-2">
+                  {inlineComments.slice(0, 3).map((comment, index) => (
+                    <div 
+                      key={comment.id} 
+                      className="flex items-start gap-2"
+                      style={{ opacity: 1 - (index * 0.25) }}
+                    >
+                      <Avatar className="w-6 h-6 flex-shrink-0 rounded-lg">
+                        {comment.avatar && <AvatarImage src={comment.avatar} className="rounded-lg" />}
+                        <AvatarFallback className="bg-zinc-700 text-white text-xs rounded-lg">
+                          {comment.username?.[0]?.toUpperCase() || '?'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-sm">
+                          <span className="font-semibold mr-1.5">{comment.username}</span>
+                          <span className="text-white/90 line-clamp-1">{comment.text}</span>
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                  {inlineComments.length === 0 && (
+                    <p className="text-white/50 text-sm">No comments yet. Be the first!</p>
+                  )}
+                </div>
+              </button>
             </>
           )}
         </div>
