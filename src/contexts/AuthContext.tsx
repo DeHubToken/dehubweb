@@ -50,6 +50,7 @@ interface AuthContextType {
   // New custom UI methods
   connectWithProvider: (provider: SocialProvider) => Promise<void>;
   connectWithEmail: (email: string) => Promise<void>;
+  connectWithSMS: (phone: string) => Promise<void>;
   connectWithWallet: (wallet: WalletProvider) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -360,6 +361,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [closeLoginModal]);
 
   /**
+   * Connect with SMS (passwordless)
+   */
+  const connectWithSMS = useCallback(async (phone: string) => {
+    console.log('[Auth] connectWithSMS() called');
+    setIsConnecting(true);
+
+    try {
+      const web3authProvider = await connectToSocialProvider(
+        AUTH_CONNECTION.SMS_PASSWORDLESS,
+        phone
+      );
+      
+      if (!web3authProvider) {
+        throw new Error('Failed to connect - no provider returned');
+      }
+
+      await completeDeHubAuth(web3authProvider);
+      setNeedsSignature(false);
+      closeLoginModal();
+      
+      console.log('[Auth] ✓ SMS connection complete!');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '';
+      
+      if (errorMessage.includes('user rejected') || errorMessage.includes('User rejected') || errorMessage.includes('User denied')) {
+        setNeedsSignature(true);
+        toast.error('Please sign the message to complete login');
+        return;
+      }
+      
+      handleConnectionError(error);
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [closeLoginModal]);
+
+  /**
    * Connect with an external wallet (MetaMask, WalletConnect, Coinbase)
    */
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
@@ -452,6 +490,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         connect,
         connectWithProvider,
         connectWithEmail,
+        connectWithSMS,
         connectWithWallet,
         disconnect,
         refreshUser,
