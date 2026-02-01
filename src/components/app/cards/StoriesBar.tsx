@@ -101,7 +101,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
             <div onClick={() => setIsOpen(true)}>
               {triggerButton}
             </div>
-            <DrawerContent glass className="px-4 pb-8">
+            <DrawerContent glass className="px-4 pb-8" hideHandle>
               <DrawerHeader className="mb-2">
                 <DrawerTitle className="text-white">Create</DrawerTitle>
               </DrawerHeader>
