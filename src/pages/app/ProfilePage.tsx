@@ -771,10 +771,10 @@ export default function ProfilePage() {
               </div>
               
               {/* Show followers/following section based on privacy settings */}
-              {/* Hide entirely if hideFollowerCounts is true (unless viewing own profile) */}
+              {/* Privacy modes: public (clickable), counts-only (visible not clickable), hidden (not shown) */}
               {(!hideFollowerCounts || isViewingOwnProfile) && (
                 <div className="flex items-center gap-4 mt-3">
-                  {/* Following count - clickable only if showFollowersFollowing is true or viewing own profile */}
+                  {/* Following count */}
                   {(showFollowersFollowing || isViewingOwnProfile) ? (
                     <button 
                       onClick={() => {
@@ -796,7 +796,7 @@ export default function ProfilePage() {
                       <span className="text-zinc-500 ml-1">Following</span>
                     </div>
                   )}
-                  {/* Followers count - clickable only if showFollowersFollowing is true or viewing own profile */}
+                  {/* Followers count */}
                   {(showFollowersFollowing || isViewingOwnProfile) ? (
                     <button 
                       onClick={() => {

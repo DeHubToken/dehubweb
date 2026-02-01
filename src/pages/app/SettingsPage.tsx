@@ -583,31 +583,36 @@ function PrivacySettings() {
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Show Followers & Following List</p>
-                <p className="text-zinc-500 text-sm">Allow others to click and see who follows you</p>
+                <p className="text-white font-medium">Followers & Following Visibility</p>
+                <p className="text-zinc-500 text-sm">Control how others see your social stats</p>
               </div>
             </div>
-            <Switch
-              checked={showFollowersFollowing}
-              onCheckedChange={(checked) => updateSettings({ show_followers_following: checked })}
+            <Select 
+              value={
+                hideFollowerCounts ? 'hidden' : 
+                showFollowersFollowing ? 'public' : 
+                'counts-only'
+              }
+              onValueChange={(value) => {
+                if (value === 'public') {
+                  updateSettings({ show_followers_following: true, hide_follower_counts: false });
+                } else if (value === 'counts-only') {
+                  updateSettings({ show_followers_following: false, hide_follower_counts: false });
+                } else {
+                  updateSettings({ show_followers_following: false, hide_follower_counts: true });
+                }
+              }}
               disabled={isUpdating || isLoading}
-              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Eye className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">Hide Follower & Following Counts</p>
-                <p className="text-zinc-500 text-sm">Hide the numbers from your profile</p>
-              </div>
-            </div>
-            <Switch
-              checked={hideFollowerCounts}
-              onCheckedChange={(checked) => updateSettings({ hide_follower_counts: checked })}
-              disabled={isUpdating || isLoading}
-              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
-            />
+            >
+              <SelectTrigger className="w-36 bg-zinc-800 border-zinc-700 text-white rounded-xl">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectItem value="public">Public</SelectItem>
+                <SelectItem value="counts-only">Counts only</SelectItem>
+                <SelectItem value="hidden">Hidden</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <SettingToggle
             icon={Users}
