@@ -200,16 +200,28 @@ const FilterDropdown = ({
 };
 
 // User result card
-const UserResultCard = ({ user }: { user: SearchCreator }) => {
+const UserResultCard = ({ 
+  user, 
+  onProfileClick 
+}: { 
+  user: SearchCreator; 
+  onProfileClick?: (handle: string) => void;
+}) => {
   const navigate = useNavigate();
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
   const avatarUrl = user.avatar;
   
+  const handleClick = () => {
+    const cleanHandle = user.handle.replace('@', '');
+    onProfileClick?.(cleanHandle);
+    navigate(`/${cleanHandle}`);
+  };
+  
   return (
     <div 
       className="flex items-center justify-between cursor-pointer hover:bg-zinc-800/50 rounded-lg p-2 -mx-2 transition-colors"
-      onClick={() => navigate(`/${user.handle.replace('@', '')}`)}
+      onClick={handleClick}
     >
       <div className="flex items-center gap-3">
         <Avatar className="w-10 h-10 rounded-xl">
@@ -677,7 +689,11 @@ export default function ExplorePage() {
                     </h3>
                     <div className="space-y-1">
                       {searchResults.users.slice(0, activeTab === 'people' ? undefined : 5).map((user, idx) => (
-                        <UserResultCard key={user.id || `user-${idx}`} user={user} />
+                        <UserResultCard 
+                          key={user.id || `user-${idx}`} 
+                          user={user} 
+                          onProfileClick={(handle) => addToHistory(`@${handle}`, 'user')}
+                        />
                       ))}
                     </div>
                     {activeTab === 'all' && searchResults.users.length > 5 && (
