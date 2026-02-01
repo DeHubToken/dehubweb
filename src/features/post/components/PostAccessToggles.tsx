@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check } from 'lucide-react';
+import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Currency } from '../types';
+
+// DHB is the only supported token
+const DHB_INFO = {
+  symbol: 'DHB',
+  chainId: 8453,
+  address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
+};
 
 interface PostAccessTogglesProps {
   isSubscribersOnly: boolean;
@@ -40,7 +47,6 @@ export function PostAccessToggles({
   setIsPPV,
   ppvAmount,
   setPpvAmount,
-  ppvCurrency,
   setPpvCurrency,
   isWatch2Earn,
   setIsWatch2Earn,
@@ -50,11 +56,9 @@ export function PostAccessToggles({
   setW2eComments,
   w2eTotal,
   setW2eTotal,
-  w2eCurrency,
   setW2eCurrency,
   isTokenGated,
   setIsTokenGated,
-  tokenContract,
   setTokenContract,
   tokenAmount,
   setTokenAmount,
@@ -66,19 +70,14 @@ export function PostAccessToggles({
 
   // Temp states for drawer inputs
   const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
-  const [tempPpvCurrency, setTempPpvCurrency] = useState<Currency>(ppvCurrency);
   const [tempW2eViews, setTempW2eViews] = useState(w2eViews);
   const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
   const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
-  const [tempW2eCurrency, setTempW2eCurrency] = useState<Currency>(w2eCurrency);
-  const [tempTokenContract, setTempTokenContract] = useState(tokenContract);
   const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
 
   const handlePpvToggle = (checked: boolean) => {
     if (checked) {
-      // Always open drawer for all screen sizes
       setTempPpvAmount(ppvAmount);
-      setTempPpvCurrency(ppvCurrency);
       setPpvDrawerOpen(true);
     } else {
       setIsPPV(false);
@@ -87,11 +86,9 @@ export function PostAccessToggles({
 
   const handleBountyToggle = (checked: boolean) => {
     if (checked) {
-      // Always open drawer for all screen sizes
       setTempW2eViews(w2eViews);
       setTempW2eComments(w2eComments);
       setTempW2eTotal(w2eTotal);
-      setTempW2eCurrency(w2eCurrency);
       setBountyDrawerOpen(true);
     } else {
       setIsWatch2Earn(false);
@@ -100,8 +97,6 @@ export function PostAccessToggles({
 
   const handleTokenToggle = (checked: boolean) => {
     if (checked) {
-      // Always open drawer for all screen sizes
-      setTempTokenContract(tokenContract);
       setTempTokenAmount(tokenAmount);
       setTokenDrawerOpen(true);
     } else {
@@ -111,7 +106,7 @@ export function PostAccessToggles({
 
   const confirmPpv = () => {
     setPpvAmount(tempPpvAmount);
-    setPpvCurrency(tempPpvCurrency);
+    setPpvCurrency('DHB'); // Always DHB
     setIsPPV(true);
     setPpvDrawerOpen(false);
   };
@@ -124,7 +119,7 @@ export function PostAccessToggles({
     setW2eViews(tempW2eViews);
     setW2eComments(tempW2eComments);
     setW2eTotal(tempW2eTotal);
-    setW2eCurrency(tempW2eCurrency);
+    setW2eCurrency('DHB'); // Always DHB
     setIsWatch2Earn(true);
     setBountyDrawerOpen(false);
   };
@@ -134,7 +129,7 @@ export function PostAccessToggles({
   };
 
   const confirmToken = () => {
-    setTokenContract(tempTokenContract);
+    setTokenContract(DHB_INFO.address); // Always DHB contract
     setTokenAmount(tempTokenAmount);
     setIsTokenGated(true);
     setTokenDrawerOpen(false);
@@ -143,6 +138,11 @@ export function PostAccessToggles({
   const cancelToken = () => {
     setTokenDrawerOpen(false);
   };
+
+  // Calculate total bounty for preview
+  const totalBounty = tempW2eTotal && tempW2eViews 
+    ? parseFloat(tempW2eTotal) * (parseInt(tempW2eViews) + parseInt(tempW2eComments || '0'))
+    : 0;
 
   const inputClass = "w-full h-12 px-4 text-base bg-zinc-800/50 border border-white/20 rounded-xl text-white placeholder:text-zinc-500 outline-none focus:border-white/50";
 
@@ -164,7 +164,7 @@ export function PostAccessToggles({
             <CreditCard className="w-4 h-4 text-white" />
             <span className="text-sm text-white">PPV</span>
             {isPPV && ppvAmount && (
-              <span className="text-xs text-white/50">({ppvAmount} {ppvCurrency})</span>
+              <span className="text-xs text-white/50">({ppvAmount} DHB)</span>
             )}
           </div>
           <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" />
@@ -176,7 +176,7 @@ export function PostAccessToggles({
             <Gift className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Bounty</span>
             {isWatch2Earn && w2eTotal && (
-              <span className="text-xs text-white/50">({w2eTotal} {w2eCurrency})</span>
+              <span className="text-xs text-white/50">({w2eTotal} DHB)</span>
             )}
           </div>
           <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" />
@@ -188,14 +188,14 @@ export function PostAccessToggles({
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
             {isTokenGated && tokenAmount && (
-              <span className="text-xs text-white/50">({tokenAmount} tokens)</span>
+              <span className="text-xs text-white/50">({tokenAmount} DHB)</span>
             )}
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" />
         </div>
       </div>
 
-      {/* PPV Drawer for Mobile */}
+      {/* PPV Drawer */}
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>
         <DrawerContent glass>
           <DrawerHeader className="text-left">
@@ -206,7 +206,7 @@ export function PostAccessToggles({
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-4">
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Price</label>
+              <label className="text-sm text-white/70">Price (DHB)</label>
               <input
                 type="number"
                 value={tempPpvAmount}
@@ -215,34 +215,9 @@ export function PostAccessToggles({
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-white/70">Currency</label>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setTempPpvCurrency('USD')}
-                  className={cn(
-                    "flex-1 h-12 rounded-xl text-base font-medium transition-colors",
-                    tempPpvCurrency === 'USD' 
-                      ? "bg-white text-black" 
-                      : "bg-zinc-800/50 text-white border border-white/20"
-                  )}
-                >
-                  USD
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTempPpvCurrency('DHB')}
-                  className={cn(
-                    "flex-1 h-12 rounded-xl text-base font-medium transition-colors",
-                    tempPpvCurrency === 'DHB' 
-                      ? "bg-white text-black" 
-                      : "bg-zinc-800/50 text-white border border-white/20"
-                  )}
-                >
-                  DHB
-                </button>
-              </div>
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
+              <Info className="w-4 h-4 text-white/50 shrink-0" />
+              <span className="text-xs text-white/50">Payments are in DHB on Base chain</span>
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
@@ -261,7 +236,7 @@ export function PostAccessToggles({
         </DrawerContent>
       </Drawer>
 
-      {/* Bounty Drawer for Mobile */}
+      {/* Bounty Drawer */}
       <Drawer open={bountyDrawerOpen} onOpenChange={setBountyDrawerOpen}>
         <DrawerContent glass>
           <DrawerHeader className="text-left">
@@ -298,44 +273,23 @@ export function PostAccessToggles({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Total reward amount</label>
+              <label className="text-sm text-white/70">Reward per person (DHB)</label>
               <input
                 type="number"
                 value={tempW2eTotal}
                 onChange={(e) => setTempW2eTotal(e.target.value)}
-                placeholder="Total amount"
+                placeholder="Amount per person"
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-white/70">Currency</label>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setTempW2eCurrency('USD')}
-                  className={cn(
-                    "flex-1 h-12 rounded-xl text-base font-medium transition-colors",
-                    tempW2eCurrency === 'USD' 
-                      ? "bg-white text-black" 
-                      : "bg-zinc-800/50 text-white border border-white/20"
-                  )}
-                >
-                  USD
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTempW2eCurrency('DHB')}
-                  className={cn(
-                    "flex-1 h-12 rounded-xl text-base font-medium transition-colors",
-                    tempW2eCurrency === 'DHB' 
-                      ? "bg-white text-black" 
-                      : "bg-zinc-800/50 text-white border border-white/20"
-                  )}
-                >
-                  DHB
-                </button>
+            {totalBounty > 0 && (
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
+                <Info className="w-4 h-4 text-white/50 shrink-0" />
+                <span className="text-xs text-white/50">
+                  Total: {totalBounty.toFixed(2)} DHB will be locked for rewards
+                </span>
               </div>
-            </div>
+            )}
           </div>
           <DrawerFooter className="flex-row gap-2">
             <Button variant="outline" onClick={cancelBounty} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
@@ -343,7 +297,7 @@ export function PostAccessToggles({
             </Button>
             <Button 
               onClick={confirmBounty} 
-              disabled={!tempW2eViews.trim() || !tempW2eComments.trim() || !tempW2eTotal.trim()}
+              disabled={!tempW2eViews.trim() || !tempW2eTotal.trim()}
               className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
@@ -353,7 +307,7 @@ export function PostAccessToggles({
         </DrawerContent>
       </Drawer>
 
-      {/* Token Gated Drawer for Mobile */}
+      {/* Token Gated Drawer */}
       <Drawer open={tokenDrawerOpen} onOpenChange={setTokenDrawerOpen}>
         <DrawerContent glass>
           <DrawerHeader className="text-left">
@@ -363,23 +317,19 @@ export function PostAccessToggles({
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm text-white/70">Contract Address</label>
-              <input
-                type="text"
-                value={tempTokenContract}
-                onChange={(e) => setTempTokenContract(e.target.value)}
-                placeholder="0x..."
-                className={cn(inputClass, "font-mono")}
-              />
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
+              <Info className="w-4 h-4 text-white/50 shrink-0" />
+              <span className="text-xs text-white/50">
+                Requires DHB tokens on Base chain ({DHB_INFO.address.slice(0, 8)}...)
+              </span>
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Minimum Token Amount</label>
+              <label className="text-sm text-white/70">Minimum DHB Required</label>
               <input
                 type="number"
                 value={tempTokenAmount}
                 onChange={(e) => setTempTokenAmount(e.target.value)}
-                placeholder="Minimum required"
+                placeholder="Minimum amount"
                 className={cn(inputClass, "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none")}
               />
             </div>
@@ -390,7 +340,7 @@ export function PostAccessToggles({
             </Button>
             <Button 
               onClick={confirmToken} 
-              disabled={!tempTokenContract.trim() || !tempTokenAmount.trim()}
+              disabled={!tempTokenAmount.trim()}
               className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />

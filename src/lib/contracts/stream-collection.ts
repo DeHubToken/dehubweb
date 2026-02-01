@@ -7,9 +7,13 @@
 
 import { BrowserProvider, Contract, type Signer } from 'ethers';
 import { getWeb3AuthProvider } from '@/lib/web3auth';
+import { BASE_CHAIN_ID } from './dhb-token';
 
 // Contract address on Base Mainnet
 export const STREAM_COLLECTION_ADDRESS = '0x9f8012074d27F8596C0E5038477ACB52057BC934';
+
+// Re-export chain ID for convenience
+export { BASE_CHAIN_ID };
 
 // Minimal ABI for the mint function
 export const STREAM_COLLECTION_ABI = [

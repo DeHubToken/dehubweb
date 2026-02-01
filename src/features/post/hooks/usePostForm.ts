@@ -2,7 +2,15 @@ import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { mintPost, type StreamInfo } from '@/lib/api/dehub';
-import { mintOnChain, getWeb3AuthSigner } from '@/lib/contracts/stream-collection';
+import { 
+  mintOnChain, 
+  getWeb3AuthSigner,
+  mintWithBounty,
+  calculateTotalBounty,
+  getDHBBalance,
+  DHB_TOKEN,
+  BASE_CHAIN_ID,
+} from '@/lib/contracts';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
@@ -527,35 +535,72 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         postType = 'feed-images';
       }
 
-      // Build streamInfo for monetization
+      // Get user's wallet address for signature generation
+      const signer = await getWeb3AuthSigner();
+      const minterAddress = await signer.getAddress();
+      console.log('[Mint] User wallet address (minter):', minterAddress);
+
+      // Build streamInfo for monetization - ONLY DHB on Base chain
       const streamInfo: StreamInfo = {
-        isLockContent: isSubscribersOnly,
-        isPayPerView: isPPV,
-        isAddBounty: isWatch2Earn,
+        isLockContent: false,
+        isPayPerView: false,
+        isAddBounty: false,
       };
 
-      // Add PPV settings
-      if (isPPV && ppvAmount) {
-        streamInfo.payPerViewAmount = parseFloat(ppvAmount);
-        streamInfo.payPerViewTokenSymbol = ppvCurrency === 'DHB' ? 'DHB' : 'USDC';
-        streamInfo.payPerViewChainIds = [8453]; // Base chain
-      }
-
-      // Add W2E bounty settings
-      if (isWatch2Earn && w2eTotal) {
-        streamInfo.addBountyAmount = parseFloat(w2eTotal);
-        streamInfo.addBountyTokenSymbol = w2eCurrency === 'DHB' ? 'DHB' : 'USDC';
-        streamInfo.addBountyFirstXViewers = w2eViews ? parseInt(w2eViews) : 10;
-        streamInfo.addBountyFirstXComments = w2eComments ? parseInt(w2eComments) : 5;
-        streamInfo.addBountyChainId = 8453;
-      }
-
-      // Add token gating settings
-      if (isTokenGated && tokenContract) {
+      // Add Lock/Subscribers settings (Token Gated)
+      if (isTokenGated && tokenAmount) {
         streamInfo.isLockContent = true;
-        streamInfo.lockContentContractAddress = tokenContract;
-        streamInfo.lockContentAmount = tokenAmount ? parseFloat(tokenAmount) : 1;
-        streamInfo.lockContentChainIds = [8453];
+        streamInfo.lockContentContractAddress = DHB_TOKEN.address;
+        streamInfo.lockContentTokenSymbol = 'DHB';
+        streamInfo.lockContentAmount = parseFloat(tokenAmount);
+        streamInfo.lockContentChainIds = [BASE_CHAIN_ID];
+      } else if (isSubscribersOnly) {
+        streamInfo.isLockContent = true;
+        streamInfo.lockContentContractAddress = DHB_TOKEN.address;
+        streamInfo.lockContentTokenSymbol = 'DHB';
+        streamInfo.lockContentChainIds = [BASE_CHAIN_ID];
+      }
+
+      // Add PPV settings - DHB only
+      if (isPPV && ppvAmount) {
+        const ppvValue = parseFloat(ppvAmount);
+        if (ppvValue > 0) {
+          streamInfo.isPayPerView = true;
+          streamInfo.payPerViewContractAddress = DHB_TOKEN.address;
+          streamInfo.payPerViewTokenSymbol = 'DHB';
+          streamInfo.payPerViewAmount = ppvValue;
+          streamInfo.payPerViewChainIds = [BASE_CHAIN_ID];
+        }
+      }
+
+      // Add Bounty (W2E) settings - DHB only
+      const hasBounty = isWatch2Earn && w2eTotal && w2eViews;
+      if (hasBounty) {
+        const bountyAmount = parseFloat(w2eTotal);
+        const viewerCount = parseInt(w2eViews) || 10;
+        const commentCount = parseInt(w2eComments) || 0;
+        
+        if (bountyAmount > 0 && (viewerCount > 0 || commentCount > 0)) {
+          // Calculate total bounty needed
+          const totalBounty = calculateTotalBounty(bountyAmount, viewerCount, commentCount);
+          
+          // Check DHB balance
+          const balance = await getDHBBalance(minterAddress);
+          const balanceNum = Number(balance) / 1e18;
+          
+          if (balanceNum < totalBounty) {
+            toast.error(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`);
+            setIsPosting(false);
+            return;
+          }
+          
+          streamInfo.isAddBounty = true;
+          streamInfo.addBountyTokenSymbol = 'DHB';
+          streamInfo.addBountyAmount = bountyAmount;
+          streamInfo.addBountyFirstXViewers = viewerCount;
+          streamInfo.addBountyFirstXComments = commentCount;
+          streamInfo.addBountyChainId = BASE_CHAIN_ID;
+        }
       }
 
       // Get media files
@@ -569,18 +614,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         thumbnail = await thumbResponse.blob();
       }
 
-      // Get user's wallet address for signature generation
-      const signer = await getWeb3AuthSigner();
-      const minterAddress = await signer.getAddress();
-      console.log('[Mint] User wallet address (minter):', minterAddress);
-
-      console.log('Minting post:', {
-        name: text.trim(),
-        description: description.trim(),
+      console.log('[Mint] Minting post:', {
+        name: text.trim().slice(0, 100) || 'Untitled',
+        description: description.trim() || text.trim(),
         postType,
         streamInfo,
         filesCount: files.length,
         hasThumbnail: !!thumbnail,
+        hasBounty,
         minterAddress,
       });
 
@@ -588,25 +629,18 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.info('Uploading content...', { id: 'mint-progress' });
       
       const mintResponse = await mintPost({
-        name: text.trim(),
-        description: description.trim(),
+        name: text.trim().slice(0, 100) || 'Untitled',
+        description: description.trim() || text.trim(),
         postType,
-        chainId: 8453, // Base chain
+        chainId: BASE_CHAIN_ID,
         category: ['General'],
         streamInfo,
         files: files.length > 0 ? files : undefined,
         thumbnail,
-        minterAddress, // Include minter address for signature generation
+        minterAddress,
       });
 
-      console.log('[Mint] Full API response:', JSON.stringify(mintResponse, null, 2));
-      console.log('[Mint] Signature components:', {
-        v: mintResponse.v,
-        r: mintResponse.r,
-        s: mintResponse.s,
-        createdTokenId: mintResponse.createdTokenId,
-        timestamp: mintResponse.timestamp,
-      });
+      console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
 
       // Validate signature data from API
       if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
@@ -627,18 +661,37 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         return;
       }
 
-      // Step 2: Execute on-chain minting with the signature
+      // Step 2: Execute on-chain minting
       toast.info('Minting on blockchain...', { id: 'mint-progress' });
       
-      const txHash = await mintOnChain({
-        tokenId: mintResponse.createdTokenId,
-        timestamp: mintResponse.timestamp,
-        v: mintResponse.v,
-        r: mintResponse.r,
-        s: mintResponse.s,
-      });
+      let txHash: string;
+      
+      if (hasBounty) {
+        // Use StreamController for bounty minting
+        toast.info('Approving DHB tokens...', { id: 'mint-progress' });
+        
+        txHash = await mintWithBounty({
+          tokenId: mintResponse.createdTokenId,
+          timestamp: mintResponse.timestamp,
+          v: mintResponse.v,
+          r: mintResponse.r,
+          s: mintResponse.s,
+          bountyAmount: parseFloat(w2eTotal),
+          countOfViewers: parseInt(w2eViews) || 10,
+          countOfCommentors: parseInt(w2eComments) || 0,
+        });
+      } else {
+        // Use StreamCollection for standard minting
+        txHash = await mintOnChain({
+          tokenId: mintResponse.createdTokenId,
+          timestamp: mintResponse.timestamp,
+          v: mintResponse.v,
+          r: mintResponse.r,
+          s: mintResponse.s,
+        });
+      }
 
-      console.log('Mint transaction hash:', txHash);
+      console.log('[Mint] Transaction hash:', txHash);
 
       toast.success('Post minted successfully!', {
         id: 'mint-progress',
@@ -652,15 +705,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       resetForm();
       onClose();
     } catch (error) {
-      console.error('Failed to mint post:', error);
+      console.error('[Mint] Failed to mint post:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create post', { id: 'mint-progress' });
     } finally {
       setIsPosting(false);
     }
   }, [
-    text, description, media, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
-    isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
-    isTokenGated, tokenContract, tokenAmount, liveMode, scheduledDate,
+    text, description, media, isSubscribersOnly, isPPV, ppvAmount,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal,
+    isTokenGated, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, isPosting, resetForm, onClose
   ]);
 
