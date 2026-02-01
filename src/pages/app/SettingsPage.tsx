@@ -609,7 +609,7 @@ function PrivacySettings() {
               </SelectTrigger>
               <SelectContent className="bg-zinc-800 border-zinc-700">
                 <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="counts-only">Counts only</SelectItem>
+                <SelectItem value="counts-only">Numbers only</SelectItem>
                 <SelectItem value="hidden">Hidden</SelectItem>
               </SelectContent>
             </Select>
