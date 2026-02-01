@@ -834,6 +834,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             name: user?.displayName || username,
             handle: `@${username}`,
             verified: false,
+            avatarSeed: avatar || undefined,
           },
           content: text.trim(),
           views: '0',

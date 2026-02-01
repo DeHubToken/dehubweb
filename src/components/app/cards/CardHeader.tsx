@@ -80,7 +80,8 @@ export function CardHeader({
   const stakingBadgeUrl = getBadgeUrl(stakedAmount);
 
   // Only use avatarSeed as image source if it's a real URL
-  const hasRealAvatar = avatarSeed.startsWith('http');
+  // Handle undefined/empty avatarSeed gracefully for optimistic posts
+  const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http');
   const avatarSrc = hasRealAvatar ? avatarSeed : undefined;
 
   const handleProfileClick = () => {
