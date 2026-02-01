@@ -1,16 +1,22 @@
 /**
  * Report Modal Component
  * ======================
- * Modal for reporting content violations.
+ * Drawer for reporting content violations.
  */
 
 import { useState } from 'react';
-import { Flag, Loader2, X, AlertTriangle } from 'lucide-react';
+import { Flag, Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from '@/components/ui/drawer';
 import { submitReport } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
@@ -73,7 +79,6 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
       }
     } catch (error: any) {
       console.error('[ReportModal] Submit error:', error);
-      // Handle specific API errors
       if (error.message?.includes('already reported')) {
         toast.error('You have already reported this content');
       } else if (error.message?.includes('Unauthorized')) {
@@ -93,19 +98,22 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-white">
+    <Drawer open={open} onOpenChange={handleClose}>
+      <DrawerContent glass className="max-h-[90vh]">
+        <DrawerHeader className="text-left">
+          <DrawerTitle className="flex items-center gap-2 text-white">
             <Flag className="w-5 h-5 text-red-500" />
             Report {contentType}
-          </DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          </DrawerTitle>
+          <DrawerDescription className="text-zinc-400">
             Help us understand what's wrong with this content
-          </DialogDescription>
-        </DialogHeader>
+          </DrawerDescription>
+        </DrawerHeader>
 
-        <div className="space-y-4 py-2">
+        <div 
+          className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain space-y-4"
+          style={{ maxHeight: 'calc(90vh - 160px)', WebkitOverflowScrolling: 'touch' }}
+        >
           {/* Reason Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium text-zinc-300">
@@ -121,8 +129,8 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
                   key={reason.value}
                   className={`flex items-center space-x-3 rounded-xl p-3 cursor-pointer transition-colors ${
                     selectedReason === reason.value
-                      ? 'bg-zinc-800 border border-primary'
-                      : 'bg-zinc-800/50 border border-transparent hover:bg-zinc-800'
+                      ? 'bg-white/10 border border-primary'
+                      : 'bg-white/5 border border-transparent hover:bg-white/10'
                   }`}
                   onClick={() => setSelectedReason(reason.value)}
                 >
@@ -148,7 +156,7 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Provide any additional context that might help us review this report..."
-              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 min-h-[100px] rounded-xl resize-none"
+              className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 min-h-[100px] rounded-xl resize-none"
               maxLength={500}
             />
             <p className="text-xs text-zinc-500 text-right">
@@ -163,34 +171,34 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
               False reports may result in restrictions on your account. Only report content that actually violates our community guidelines.
             </p>
           </div>
-        </div>
 
-        {/* Actions */}
-        <div className="flex gap-3 pt-2">
-          <Button
-            variant="ghost"
-            onClick={handleClose}
-            disabled={isSubmitting}
-            className="flex-1 text-zinc-400 hover:text-white"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={!selectedReason || isSubmitting}
-            className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Submitting...
-              </>
-            ) : (
-              'Submit Report'
-            )}
-          </Button>
+          {/* Actions */}
+          <div className="flex gap-3 pt-2">
+            <Button
+              variant="ghost"
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="flex-1 text-zinc-400 hover:text-white"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={!selectedReason || isSubmitting}
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Report'
+              )}
+            </Button>
+          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }
