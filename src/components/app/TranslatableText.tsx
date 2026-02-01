@@ -221,7 +221,7 @@ export function TranslatableText({
 
   // If no translation needed and not detecting, just render the text
   if (!shouldOfferTranslation && !isDetecting) {
-    return <Component className={className}>{text}</Component>;
+    return <Component className={cn("whitespace-pre-wrap", className)}>{text}</Component>;
   }
 
   const renderTranslateControl = () => {
@@ -291,7 +291,7 @@ export function TranslatableText({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
         >
-          <Component className={className}>
+          <Component className={cn("whitespace-pre-wrap", className)}>
             {isTranslated ? translatedText : text}
           </Component>
         </motion.div>
