@@ -127,19 +127,19 @@ export function CardHeader({
             <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-white text-sm">{username}</span>
-            {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+        <div className="flex flex-col min-w-0 max-w-[200px]">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="font-semibold text-white text-sm truncate max-w-[100px]">{username}</span>
+            {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
             <img 
               src={stakingBadgeUrl} 
               alt="Staking tier" 
-              className="w-4 h-4 object-contain"
+              className="w-4 h-4 object-contain shrink-0"
             />
             {formattedHandle && (
-              <span className="text-zinc-500 text-sm">{formattedHandle}</span>
+              <span className="text-zinc-500 text-sm truncate max-w-[100px]">{formattedHandle}</span>
             )}
-            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
             {isPending && (
               <Badge variant="outline" className="ml-1 px-1.5 py-0 h-5 text-[10px] border-amber-500/50 bg-amber-500/10 text-amber-400 gap-1">
                 <Clock className="w-2.5 h-2.5" />
