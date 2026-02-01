@@ -319,10 +319,10 @@ export async function createOnrampSession(request: OnrampSessionRequest): Promis
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
-        amount: request.amount,
-        currency: request.currency,
-        tokenSymbol: request.tokenSymbol,
-        walletAddress: request.walletAddress,
+        source_amount: request.amount,
+        source_currency: request.currency.toLowerCase(),
+        destination_currency: request.tokenSymbol.toLowerCase(),
+        destination_wallet_address: request.walletAddress,
       }),
     });
 
