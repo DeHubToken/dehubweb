@@ -64,6 +64,19 @@ const RabbyIcon = () => (
   <img src={rabbyLogo} alt="Rabby" className="w-5 h-5 rounded-full" />
 );
 
+const TrustWalletIcon = () => (
+  <svg viewBox="0 0 32 32" className="w-5 h-5">
+    <defs>
+      <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#0500FF" />
+        <stop offset="100%" stopColor="#00D9B8" />
+      </linearGradient>
+    </defs>
+    <circle cx="16" cy="16" r="16" fill="url(#trustGradient)"/>
+    <path fill="#fff" d="M16 7c-2.5 0-6 1.8-6 1.8v7.7c0 4 6 7.5 6 7.5s6-3.5 6-7.5V8.8S18.5 7 16 7zm4 9.5c0 2.8-4 5.2-4 5.2s-4-2.4-4-5.2v-5.8s2.5-1.2 4-1.2 4 1.2 4 1.2v5.8z"/>
+  </svg>
+);
+
 const CoinbaseIcon = () => (
   <svg viewBox="0 0 32 32" className="w-5 h-5">
     <circle cx="16" cy="16" r="16" fill="#0052FF"/>
@@ -152,7 +165,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase') => {
+  const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {
     setActiveProvider(wallet);
     try {
       await connectWithWallet(wallet);
@@ -342,7 +355,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </Button>
 
       <Button
-        onClick={() => handleWalletConnect('metamask')}
+        onClick={() => handleWalletConnect('phantom')}
         disabled={isConnecting}
         className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
       >
@@ -355,7 +368,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </Button>
 
       <Button
-        onClick={() => handleWalletConnect('metamask')}
+        onClick={() => handleWalletConnect('rabby')}
         disabled={isConnecting}
         className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
       >
@@ -365,6 +378,19 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <RabbyIcon />
         )}
         <span>Rabby</span>
+      </Button>
+
+      <Button
+        onClick={() => handleWalletConnect('trust')}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+      >
+        {activeProvider === 'trust' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <TrustWalletIcon />
+        )}
+        <span>Trust Wallet</span>
       </Button>
 
       <Button

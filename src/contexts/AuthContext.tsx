@@ -36,7 +36,7 @@ import type { IProvider } from '@web3auth/modal';
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
-export type WalletProvider = 'metamask' | 'walletconnect' | 'coinbase';
+export type WalletProvider = 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -99,9 +99,15 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 }
 
 // Map wallet providers to Web3Auth connectors
+// Note: Phantom, Rabby, Trust all use the same injected provider (window.ethereum)
+// The browser's active wallet extension will respond to connection requests
 function mapWalletProvider(wallet: WalletProvider): typeof WALLET_CONNECTORS[keyof typeof WALLET_CONNECTORS] {
   switch (wallet) {
-    case 'metamask': return WALLET_CONNECTORS.METAMASK;
+    case 'metamask': 
+    case 'phantom':
+    case 'rabby':
+    case 'trust':
+      return WALLET_CONNECTORS.METAMASK; // All injected wallets use the same connector
     case 'walletconnect': return WALLET_CONNECTORS.WALLET_CONNECT_V2;
     case 'coinbase': return WALLET_CONNECTORS.COINBASE;
     default: return WALLET_CONNECTORS.METAMASK;
