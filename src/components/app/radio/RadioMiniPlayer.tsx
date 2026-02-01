@@ -46,12 +46,12 @@ export function RadioMiniPlayer() {
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
             'fixed bottom-16 lg:bottom-4 z-50',
-            // Mobile: 95% width centered with equal margins
-            'left-[2.5%] w-[95%]',
-            // Tablet/iPad: smaller width, centered then offset 69px left
-            'md:left-1/2 md:w-[92%] md:max-w-[412px] md:-translate-x-[calc(50%+69px)]',
-            // Desktop: fixed width on right side, reset transforms
-            'lg:left-auto lg:right-4 lg:translate-x-0 lg:w-[400px] lg:max-w-none',
+            // Mobile: 95% width with side margins
+            'left-[2.5%] right-[2.5%]',
+            // Tablet/iPad: centered with 69px left offset for sidebar
+            'md:left-0 md:right-[138px] md:mx-auto md:max-w-[412px]',
+            // Desktop: fixed width on right side
+            'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
             'bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10',
             'rounded-2xl p-3 shadow-2xl'
           )}
