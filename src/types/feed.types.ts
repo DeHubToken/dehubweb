@@ -39,6 +39,8 @@ export interface TextPost extends BaseFeedItem {
   content: string;
   /** Formatted view count string (e.g., "1.2K") */
   views?: string;
+  /** Mint status: 'minted' | 'signed' (pending) */
+  status?: 'minted' | 'signed' | string;
   stats: {
     comments: number;
     reposts: number;
@@ -60,6 +62,8 @@ export interface VideoItem extends BaseFeedItem {
   verified: boolean;
   views: string;
   uploadedAgo: string;
+  /** Mint status: 'minted' | 'signed' (pending) */
+  status?: 'minted' | 'signed' | string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
@@ -118,6 +122,8 @@ export interface ImagePost extends BaseFeedItem {
   /** @deprecated Use title/description instead */
   caption: string;
   comments: number;
+  /** Mint status: 'minted' | 'signed' (pending) */
+  status?: 'minted' | 'signed' | string;
   /** Formatted view count string (e.g., "1.2K") */
   views: string;
   timeAgo: string;
