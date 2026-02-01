@@ -284,8 +284,8 @@ export default function ExplorePage() {
     }
   }, [searchQuery, setSearchParams, searchParams]);
 
-  // Add to history and log analytics only after 3 seconds of inactivity (complete words)
-  const stableQuery = useDebouncedValue(searchQuery, 3000);
+  // Add to history and log analytics only after 1.5 seconds of inactivity (complete words)
+  const stableQuery = useDebouncedValue(searchQuery, 1500);
   const hasLoggedRef = useRef<string | null>(null);
   
   useEffect(() => {
