@@ -45,7 +45,13 @@ export function RadioMiniPlayer() {
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
-            'fixed bottom-16 lg:bottom-4 left-2 right-2 sm:left-4 sm:right-4 lg:left-auto lg:right-4 lg:w-[400px] z-50',
+            'fixed bottom-16 lg:bottom-4 z-50',
+            // Mobile: full width with small margins
+            'left-2 right-2',
+            // Tablet: match nav bar width (max-w-md centered)
+            'md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-full md:max-w-md',
+            // Desktop: fixed width on right side
+            'lg:left-auto lg:right-4 lg:translate-x-0 lg:w-[400px] lg:max-w-none',
             'bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10',
             'rounded-2xl p-3 shadow-2xl'
           )}
