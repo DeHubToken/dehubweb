@@ -50,7 +50,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
           aria-label="Notifications"
         >
-          <Bell className="w-[30px] h-[30px]" />
+          <Bell className="w-[26px] h-[26px]" />
           {unreadCount?.total !== undefined && unreadCount.total > 0 && (
             <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full">
               {unreadCount.total > 99 ? '99+' : unreadCount.total}
@@ -71,7 +71,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
                 className="hover:opacity-80 transition-opacity"
                 aria-label="Toggle menu"
               >
-                <Avatar className="w-8 h-8">
+                <Avatar className="w-[27px] h-[27px]">
                   {user.avatarImageUrl && user.address && (
                     <AvatarImage
                       src={buildAvatarUrl(user.address, user.avatarImageUrl)}
