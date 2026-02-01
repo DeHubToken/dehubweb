@@ -75,6 +75,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         timestamp={post.createdAt}
         viewCount={post.views}
         status={post.status}
+        stakedAmount={post.author.stakedAmount}
       />
 
       {/* AI Button for text posts - positioned in header area */}
