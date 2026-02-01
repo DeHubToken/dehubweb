@@ -150,7 +150,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
       <img 
         src={dehubCoin} 
         alt="coins" 
-        className={`transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)] ${variant === 'mobile' ? 'h-[31px] w-[31px]' : 'h-5 w-5'}`}
+        className={`transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)] ${variant === 'mobile' ? 'h-[26px] w-[26px]' : 'h-5 w-5'}`}
       />
     </div>
   );
