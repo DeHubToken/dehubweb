@@ -171,9 +171,10 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   
   const mainMenuContent = (
     <div className="space-y-1">
-      {/* Network Selector */}
-      <div className="px-3 py-2 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
-        <div className="flex items-center justify-between">
+      {/* Balance display with network selector */}
+      <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
+        {/* Network Selector Row */}
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
           <div className="flex items-center gap-2">
             <Globe className="w-4 h-4 text-zinc-400" />
             <span className="text-xs text-zinc-400">Network</span>
@@ -184,10 +185,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
             variant="full"
           />
         </div>
-      </div>
-      
-      {/* Balance display for desktop */}
-      <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
         {/* DeHub Coin Balance */}
         <div className="flex items-center gap-2">
           <img src={dehubCoin} alt="coins" className="w-5 h-5" />
