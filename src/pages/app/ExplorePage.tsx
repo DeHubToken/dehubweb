@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { EXPLORE_TABS, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
+import { EXPLORE_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -816,26 +816,7 @@ export default function ExplorePage() {
                     onChange={setSelectedCountry}
                   />
                 </div>
-                <div className="space-y-3">
-                  {EXPLORE_TRENDING.map((item) => (
-                    <div
-                      key={item.tag}
-                      className="flex items-center justify-between gap-4"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-semibold text-white truncate">{item.tag}</p>
-                        <p className="text-zinc-500 text-sm">{item.postCount}</p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0"
-                      >
-                        Follow
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-zinc-500 text-sm">Nothing trending yet! Check back soon.</p>
               </div>
             </motion.div>
           )}
