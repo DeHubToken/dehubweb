@@ -18,10 +18,9 @@
  * ```
  */
 
-import { CheckCircle, Eye, Clock } from 'lucide-react';
+import { CheckCircle, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import type { ContentType } from '@/types/feed.types';
 
@@ -46,8 +45,6 @@ interface CardHeaderProps {
   timestamp?: string;
   /** View count to show next to timestamp */
   viewCount?: string | number;
-  /** Mint status - shows pending badge if 'signed' */
-  status?: 'minted' | 'signed' | string;
   /** Creator's staked DHB amount for tier badge */
   stakedAmount?: number;
 }
@@ -74,14 +71,10 @@ export function CardHeader({
   creatorUsername,
   timestamp,
   viewCount,
-  status,
   stakedAmount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const badge = CONTENT_BADGES[contentType];
-  
-  // Check if content is pending mint (signed but not minted)
-  const isPending = status === 'signed';
   
   // Get staking badge image URL
   const stakingBadgeUrl = getBadgeUrl(stakedAmount);
@@ -140,12 +133,6 @@ export function CardHeader({
               <span className="text-zinc-500 text-sm truncate max-w-[100px]">{formattedHandle}</span>
             )}
             {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
-            {isPending && (
-              <Badge variant="outline" className="ml-1 px-1.5 py-0 h-5 text-[10px] border-amber-500/50 bg-amber-500/10 text-amber-400 gap-1">
-                <Clock className="w-2.5 h-2.5" />
-                Pending
-              </Badge>
-            )}
           </div>
           {/* Timestamp and view count row */}
           {(timestamp || viewCount) && (
