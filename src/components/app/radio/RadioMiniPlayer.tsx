@@ -7,7 +7,7 @@
  * @module components/app/radio/RadioMiniPlayer
  */
 
-import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minimize2 } from 'lucide-react';
+import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
@@ -207,7 +207,7 @@ export function RadioMiniPlayer() {
               className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
               title="Minimize player"
             >
-              <Minimize2 className="w-4 h-4 text-zinc-400" />
+              <Minus className="w-4 h-4 text-zinc-400" />
             </button>
             
             {/* Fullscreen Visualizer Button */}
