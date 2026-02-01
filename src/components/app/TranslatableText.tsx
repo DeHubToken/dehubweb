@@ -258,7 +258,7 @@ export function TranslatableText({
             "flex items-center gap-1.5 text-xs transition-colors mt-1",
             error 
               ? "text-red-400" 
-              : "text-blue-400 hover:text-blue-300"
+              : "text-zinc-500 hover:text-zinc-400"
           )}
         >
           {isLoading ? (
@@ -342,7 +342,7 @@ export function TranslatableGroup({ text, children }: TranslatableGroupProps) {
             "flex items-center gap-1.5 text-xs transition-colors mt-1",
             error 
               ? "text-red-400" 
-              : "text-blue-400 hover:text-blue-300"
+              : "text-zinc-500 hover:text-zinc-400"
           )}
         >
           {isLoading ? (
