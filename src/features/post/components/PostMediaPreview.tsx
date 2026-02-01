@@ -307,259 +307,208 @@ export function PostMediaPreview({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {media.map((m, index) => (
-              <div 
-                key={index} 
-                className={`relative rounded-2xl overflow-hidden bg-zinc-900 flex-shrink-0 snap-center ${
-                  m.type === 'video' ? 'aspect-video w-full sm:w-[356px] md:w-[426px]' : 
-                  m.type === 'audio' ? 'w-full sm:w-[320px] md:w-[360px]' :
-                  'h-[160px] sm:h-[200px] md:h-[240px]'
-                }`}
-              >
+              <div key={index} className="relative flex-shrink-0 snap-center">
                 {m.type === 'image' ? (
-                  <div className="relative h-full flex items-center justify-center">
-                    <img 
-                      src={m.preview} 
-                      alt="" 
-                      className="h-full w-auto max-w-none object-contain rounded-2xl cursor-pointer" 
-                      style={{ 
-                        filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
-                        transform: generateCropTransform(m.cropSettings),
-                      }}
-                      onClick={() => setFullscreenPreview({ 
-                        index, 
-                        src: m.preview, 
-                        type: 'image',
-                        filterSettings: m.filterSettings,
-                        cropSettings: m.cropSettings
-                      })}
-                    />
-                  
-                  {/* Top left: Filter + Crop + Audio buttons */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                    {/* Filter button - consistent style */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-black/60 backdrop-blur-xl border border-white/20
-                            hover:bg-black/70 hover:border-white/40"
-                        >
-                          <Paintbrush className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Edit filters</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Crop button - consistent style */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-black/60 backdrop-blur-xl border border-white/20
-                            hover:bg-black/70 hover:border-white/40"
-                        >
-                          <Crop className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Crop & rotate</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Audio controls */}
-                    {recordingIndex === index ? (
-                      // Recording in progress
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); stopRecording(); }}
-                        className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-xl text-white text-xs font-medium animate-pulse"
-                      >
-                        <Square className="w-3 h-3 fill-white" />
-                        {recordingTime}s / {MAX_DURATION}s
-                      </button>
-                    ) : m.audio ? (
-                      // Audio attached - show playback controls
-                      <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-xl" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index); }}
-                          className="w-6 h-6 flex items-center justify-center text-white"
-                        >
-                          {playingIndex === index ? (
-                            <Pause className="w-4 h-4" />
-                          ) : (
-                            <Play className="w-4 h-4" />
-                          )}
-                        </button>
-                        <span className="text-white text-xs">{m.audio.duration}s</span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); onRemoveAudio(index); }}
-                          className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-300"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ) : showAudioOptions === index ? (
-                      // Show upload/record options with liquid glass effect
-                      <>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                bg-black/60 backdrop-blur-xl border border-white/20
-                                hover:bg-blue-500/40 hover:border-blue-400/40"
-                            >
-                              <Upload className="w-3 h-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Upload audio</TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                bg-black/60 backdrop-blur-xl border border-white/20
-                                hover:bg-red-500/40 hover:border-red-400/40"
-                            >
-                              <Mic className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Record audio</TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                bg-black/60 backdrop-blur-xl border border-white/20
-                                hover:bg-black/70 hover:border-white/40"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Cancel</TooltipContent>
-                        </Tooltip>
-                      </>
-                    ) : (
-                      <Tooltip delayDuration={300}>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
-                            className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                              bg-black/60 backdrop-blur-xl border border-white/20
-                              hover:bg-black/70 hover:border-white/40"
-                          >
-                            <Music className="w-3 h-3" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Add audio</TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                </div>
-              ) : m.type === 'audio' ? (
-                // Standalone audio post preview with visualizer - matching image container style
-                <div className="relative h-full flex items-center justify-center">
-                  {/* Visualizer background */}
-                  <AudioVisualizer
-                    audioUrl={m.preview}
-                    isPlaying={playingIndex === index}
-                    onPlayPause={useCallback(() => {
-                      setPlayingIndex(prev => prev === index ? null : index);
-                    }, [index])}
-                    className="h-full w-auto min-w-[200px] aspect-[2/1]"
-                    showStylePicker={true}
-                  />
-                  
-                  {/* Track info overlay */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                      <Music className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium text-sm truncate drop-shadow-lg">{m.file.name}</p>
-                      <p className="text-white/70 text-xs drop-shadow">
-                        {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="relative w-full h-full">
-                  {/* Processing overlay */}
-                  {processingVideos.has(index) && (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
-                      <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
-                      <p className="text-white text-sm font-medium mb-2">Processing video...</p>
-                      <div className="w-3/4 max-w-[200px]">
-                        <Progress value={processingVideos.get(index) ?? 0} className="h-2" />
-                      </div>
-                      <p className="text-zinc-400 text-xs mt-1">{Math.round(processingVideos.get(index) ?? 0)}%</p>
-                    </div>
-                  )}
-                  
-                  {/* Show thumbnail if set, otherwise show video */}
-                  {m.thumbnail ? (
-                    <div className="relative w-full h-full">
+                  /* ==================== IMAGE PREVIEW ==================== */
+                  <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
+                    <div className="relative h-full flex items-center justify-center">
                       <img 
-                        src={m.thumbnail} 
-                        alt="Video thumbnail" 
-                        className="w-full h-full object-cover rounded-2xl"
+                        src={m.preview} 
+                        alt="" 
+                        className="h-full w-auto max-w-none object-contain rounded-2xl cursor-pointer" 
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
                         }}
+                        onClick={() => setFullscreenPreview({ 
+                          index, 
+                          src: m.preview, 
+                          type: 'image',
+                          filterSettings: m.filterSettings,
+                          cropSettings: m.cropSettings
+                        })}
                       />
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-12 h-12 rounded-xl bg-black/60 flex items-center justify-center">
-                          <Play className="w-6 h-6 text-white fill-white" />
+                    
+                      {/* Top left: Filter + Crop + Audio buttons */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Paintbrush className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Edit filters</TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Crop className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Crop & rotate</TooltipContent>
+                        </Tooltip>
+                        
+                        {/* Audio controls for images */}
+                        {recordingIndex === index ? (
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); stopRecording(); }}
+                            className="flex items-center gap-2 bg-red-500 px-3 py-1.5 rounded-xl text-white text-xs font-medium animate-pulse"
+                          >
+                            <Square className="w-3 h-3 fill-white" />
+                            {recordingTime}s / {MAX_DURATION}s
+                          </button>
+                        ) : m.audio ? (
+                          <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-xl" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); playingIndex === index ? stopAudio() : playAudio(m.audio!.url, index); }}
+                              className="w-6 h-6 flex items-center justify-center text-white"
+                            >
+                              {playingIndex === index ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                            </button>
+                            <span className="text-white text-xs">{m.audio.duration}s</span>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onRemoveAudio(index); }}
+                              className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-300"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : showAudioOptions === index ? (
+                          <>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); triggerAudioUpload(index); }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                    bg-black/60 backdrop-blur-xl border border-white/20
+                                    hover:bg-blue-500/40 hover:border-blue-400/40"
+                                >
+                                  <Upload className="w-3 h-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Upload audio</TooltipContent>
+                            </Tooltip>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); handleStartRecording(index); }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                    bg-black/60 backdrop-blur-xl border border-white/20
+                                    hover:bg-red-500/40 hover:border-red-400/40"
+                                >
+                                  <Mic className="w-3 h-3 text-white" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Record audio</TooltipContent>
+                            </Tooltip>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); setShowAudioOptions(null); }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                    bg-black/60 backdrop-blur-xl border border-white/20
+                                    hover:bg-black/70 hover:border-white/40"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Cancel</TooltipContent>
+                            </Tooltip>
+                          </>
+                        ) : (
+                          <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setShowAudioOptions(index); }}
+                                className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                  bg-black/60 backdrop-blur-xl border border-white/20
+                                  hover:bg-black/70 hover:border-white/40"
+                              >
+                                <Music className="w-3 h-3" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>Add audio</TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                      
+                      {/* Remove button */}
+                      <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  </div>
+                ) : m.type === 'audio' ? (
+                  /* ==================== AUDIO PREVIEW ==================== */
+                  <div className="relative w-full sm:w-[320px] md:w-[360px] rounded-2xl overflow-hidden bg-zinc-900">
+                    <div className="relative h-full flex items-center justify-center">
+                      <AudioVisualizer
+                        audioUrl={m.preview}
+                        isPlaying={playingIndex === index}
+                        onPlayPause={() => setPlayingIndex(prev => prev === index ? null : index)}
+                        className="h-full w-auto min-w-[200px] aspect-[2/1]"
+                        showStylePicker={true}
+                      />
+                      
+                      <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                          <Music className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-medium text-sm truncate drop-shadow-lg">{m.file.name}</p>
+                          <p className="text-white/70 text-xs drop-shadow">
+                            {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
+                          </p>
                         </div>
                       </div>
-                      {/* Thumbnail controls */}
-                      <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                        {/* Change thumbnail button */}
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={() => triggerThumbnailUpload(index)}
-                              className="p-1.5 bg-black/70 hover:bg-primary/80 rounded-xl transition-colors"
-                            >
-                              <Upload className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>{m.isAutoThumbnail ? 'Change thumbnail' : 'Replace thumbnail'}</TooltipContent>
-                        </Tooltip>
-                        {/* Remove thumbnail button */}
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={() => onRemoveThumbnail?.(index)}
-                              className="p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
-                            >
-                              <Trash2 className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>Remove thumbnail</TooltipContent>
-                        </Tooltip>
-                      </div>
-                      {/* Auto-generated badge */}
-                      {m.isAutoThumbnail && (
-                        <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-lg">
-                          <span className="text-[10px] text-white/70 font-medium">Auto-generated</span>
+                      
+                      <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  </div>
+                ) : m.type === 'video' ? (
+                  /* ==================== VIDEO + THUMBNAIL SIDE BY SIDE ==================== */
+                  <div className="flex gap-2">
+                    {/* Video preview container */}
+                    <div className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900">
+                      {/* Processing overlay */}
+                      {processingVideos.has(index) && (
+                        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
+                          <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
+                          <p className="text-white text-sm font-medium mb-2">Processing video...</p>
+                          <div className="w-3/4 max-w-[200px]">
+                            <Progress value={processingVideos.get(index) ?? 0} className="h-2" />
+                          </div>
+                          <p className="text-zinc-400 text-xs mt-1">{Math.round(processingVideos.get(index) ?? 0)}%</p>
                         </div>
                       )}
-                    </div>
-                  ) : (
-                    <div className="relative w-full h-full flex items-center justify-center">
+                      
+                      {/* Always show video */}
                       <video 
                         ref={(el) => {
                           if (el) videoRefs.current.set(index, el);
@@ -575,7 +524,8 @@ export function PostMediaPreview({
                           if (playingVideoIndex === index) setPlayingVideoIndex(null);
                         }}
                       />
-                      {/* Play/Pause overlay - double click for fullscreen */}
+                      
+                      {/* Play/Pause overlay */}
                       {!processingVideos.has(index) && (
                         <button
                           type="button"
@@ -599,10 +549,7 @@ export function PostMediaPreview({
                             e.stopPropagation();
                             const video = videoRefs.current.get(index);
                             const currentTime = video?.currentTime || 0;
-                            // Pause the thumbnail video
-                            if (video) {
-                              video.pause();
-                            }
+                            if (video) video.pause();
                             setPlayingVideoIndex(null);
                             setFullscreenPreview({ 
                               index, 
@@ -626,117 +573,139 @@ export function PostMediaPreview({
                           </div>
                         </button>
                       )}
+                      
+                      {/* Top left: Filter + Crop + Trim buttons */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Paintbrush className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Edit filters</TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
+                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
+                            >
+                              <Crop className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Crop & rotate</TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
+                              className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
+                                ${m.trimStart !== undefined || m.trimEnd !== undefined
+                                  ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40'
+                                  : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
+                                }`}
+                            >
+                              <Scissors className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Trim video</TooltipContent>
+                        </Tooltip>
+                      </div>
+                      
+                      {/* Duration badge */}
+                      {m.duration && (
+                        <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
+                          {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
+                          {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
+                        </div>
+                      )}
+                      
+                      {/* Bottom right: Music Video Toggle */}
+                      <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
+                              className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
+                                ${m.isMusicVideo 
+                                  ? 'bg-emerald-500/40 text-white backdrop-blur-xl border border-emerald-400/40' 
+                                  : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
+                                }`}
+                            >
+                              <Music className="w-3 h-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Mark as music video</TooltipContent>
+                        </Tooltip>
+                      </div>
+                      
+                      {/* Remove button */}
+                      <button
+                        onClick={() => onRemove(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
                     </div>
-                  )}
-                  
-                  {/* Top left: Filter + Crop + Trim buttons - liquid glass style */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                    {/* Filter button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-black/60 backdrop-blur-xl border border-white/20
-                            hover:bg-black/70 hover:border-white/40"
-                        >
-                          <Paintbrush className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Edit filters</TooltipContent>
-                    </Tooltip>
                     
-                    {/* Crop button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                          className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                            bg-black/60 backdrop-blur-xl border border-white/20
-                            hover:bg-black/70 hover:border-white/40"
-                        >
-                          <Crop className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Crop & rotate</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Trim button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
-                            ${m.trimStart !== undefined || m.trimEnd !== undefined
-                              ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40'
-                              : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
-                            }`}
-                        >
-                          <Scissors className="w-3 h-3 text-white" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Trim video</TooltipContent>
-                    </Tooltip>
-                  </div>
-                  
-                  {m.duration && (
-                    <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
-                      {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
-                      {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
+                    {/* Separate Thumbnail preview card */}
+                    <div className="relative w-[100px] sm:w-[120px] md:w-[140px] aspect-[9/16] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
+                      onClick={() => triggerThumbnailUpload(index)}
+                    >
+                      {m.thumbnail ? (
+                        <>
+                          <img 
+                            src={m.thumbnail} 
+                            alt="Thumbnail" 
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Upload className="w-6 h-6 text-white" />
+                          </div>
+                          {/* Auto-generated badge */}
+                          {m.isAutoThumbnail && (
+                            <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-black/70 backdrop-blur-sm rounded">
+                              <span className="text-[8px] text-white/70 font-medium">Auto</span>
+                            </div>
+                          )}
+                          {/* Remove thumbnail */}
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); onRemoveThumbnail?.(index); }}
+                            className="absolute top-1 right-1 p-1 bg-black/70 hover:bg-red-500/80 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-3 h-3 text-white" />
+                          </button>
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
+                          <Upload className="w-6 h-6" />
+                          <span className="text-[10px] text-center px-2">Add Cover</span>
+                        </div>
+                      )}
+                      {/* Label */}
+                      <div className="absolute bottom-1 left-1 right-1 text-center">
+                        <span className="text-[9px] text-white/60 font-medium bg-black/50 px-1.5 py-0.5 rounded">Cover</span>
+                      </div>
                     </div>
-                  )}
-                  
-                  {/* Video action buttons - liquid glass style */}
-                  <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
-                    {/* Thumbnail button */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
-                            ${m.thumbnail 
-                              ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40' 
-                              : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
-                            }`}
-                        >
-                          <img src={nailIcon} alt="Thumbnail" className="w-3 h-3" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Add custom thumbnail</TooltipContent>
-                    </Tooltip>
-                    
-                    {/* Music Video Toggle */}
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
-                          className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
-                            ${m.isMusicVideo 
-                              ? 'bg-emerald-500/40 text-white backdrop-blur-xl border border-emerald-400/40' 
-                              : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
-                            }`}
-                        >
-                          <Music className="w-3 h-3" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>Mark as music video</TooltipContent>
-                    </Tooltip>
                   </div>
-                </div>
-              )}
-              <button
-                onClick={() => onRemove(index)}
-                className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
-              >
-                <X className="w-4 h-4 text-white" />
-              </button>
-            </div>
-          ))}
+                ) : null}
+              </div>
+            ))}
           </div>
         </motion.div>
       </AnimatePresence>
