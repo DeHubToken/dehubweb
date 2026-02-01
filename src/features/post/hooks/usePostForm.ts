@@ -687,7 +687,6 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           v: mintResponse.v,
           r: mintResponse.r,
           s: mintResponse.s,
-          creator: minterAddress, // Pass the creator's wallet address
         });
       }
 

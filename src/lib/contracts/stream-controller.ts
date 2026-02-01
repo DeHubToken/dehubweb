@@ -19,7 +19,7 @@ import { DHB_TOKEN, toWei } from './dhb-token';
 // StreamController contract address on Base Mainnet
 export const STREAM_CONTROLLER_ADDRESS = '0x4fa30dAef50c6dc8593470750F3c721CA3275581';
 
-// ABI for StreamController
+// ABI for StreamController - mintWithBounty(id, timestamp, v, r, s, uri, bountyAmount, countOfViewers, countOfCommentors, tokenAddress)
 export const STREAM_CONTROLLER_ABI = [
   'function mintWithBounty(uint256 id, uint256 timestamp, uint8 v, bytes32 r, bytes32 s, string uri, uint256 bountyAmount, uint32 countOfViewers, uint32 countOfCommentors, address tokenAddress)',
   'function bounties(uint256) view returns (uint256 totalAmount, uint256 reserveAmount, uint256 bountyAmount, uint32 countOfViewers, uint32 countOfCommentors, address tokenAddress)',
