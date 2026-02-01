@@ -8,6 +8,7 @@ export interface PrivacySettings {
   id: string;
   wallet_address: string;
   show_followers_following: boolean;
+  hide_follower_counts: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -44,7 +45,7 @@ export function usePrivacySettings() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async (updates: Partial<Pick<PrivacySettings, 'show_followers_following'>>) => {
+    mutationFn: async (updates: Partial<Pick<PrivacySettings, 'show_followers_following' | 'hide_follower_counts'>>) => {
       if (!lowerAddress) throw new Error('Not authenticated');
 
       // Check if settings exist
@@ -91,7 +92,8 @@ export function usePrivacySettings() {
   return {
     settings,
     isLoading,
-    showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true
+    showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true (list is visible)
+    hideFollowerCounts: settings?.hide_follower_counts ?? false, // Default to false (counts are shown)
     updateSettings: updateMutation.mutate,
     isUpdating: updateMutation.isPending,
   };
@@ -128,6 +130,7 @@ export function useUserPrivacySettings(walletAddress?: string) {
   return {
     settings,
     isLoading,
-    showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true if not set
+    showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true (list is visible)
+    hideFollowerCounts: settings?.hide_follower_counts ?? false, // Default to false (counts are shown)
   };
 }

@@ -169,6 +169,7 @@ export type Database = {
       user_privacy_settings: {
         Row: {
           created_at: string
+          hide_follower_counts: boolean
           id: string
           show_followers_following: boolean
           updated_at: string
@@ -176,6 +177,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          hide_follower_counts?: boolean
           id?: string
           show_followers_following?: boolean
           updated_at?: string
@@ -183,6 +185,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          hide_follower_counts?: boolean
           id?: string
           show_followers_following?: boolean
           updated_at?: string
