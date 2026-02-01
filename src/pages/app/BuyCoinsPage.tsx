@@ -10,7 +10,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { 
   getDPayPrice, 
   getAvailableTokens, 
-  createOnrampSession,
+  createCheckoutSession,
   type DPayToken,
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -57,13 +57,13 @@ export default function BuyCoinsPage() {
     }
   }, [tokens, selectedToken]);
 
-  // Create onramp session mutation
+  // Create checkout session mutation
   const createSessionMutation = useMutation({
-    mutationFn: createOnrampSession,
+    mutationFn: createCheckoutSession,
     onSuccess: (data) => {
-      if (data.url) {
+      if (data.checkoutUrl) {
         // Redirect to payment provider
-        window.open(data.url, '_blank');
+        window.open(data.checkoutUrl, '_blank');
         toast.success('Redirecting to payment...');
       } else if (data.sessionId) {
         toast.success('Session created', { description: `Session ID: ${data.sessionId}` });
@@ -90,7 +90,6 @@ export default function BuyCoinsPage() {
 
     createSessionMutation.mutate({
       amount: effectiveAmount,
-      currency: 'USD',
       tokenSymbol: selectedToken?.symbol || 'DHB',
       walletAddress,
     });
