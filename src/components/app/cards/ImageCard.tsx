@@ -394,6 +394,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           creatorUsername={post.creatorUsername}
           timestamp={post.timeAgo}
           viewCount={post.views || '0'}
+          status={post.status}
         />
         <div className="flex items-center gap-1 pr-3">
           <button

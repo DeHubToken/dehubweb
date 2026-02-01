@@ -159,6 +159,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     verified: false,
     views: formatViews(item.views),
     uploadedAgo: formatTimeAgo(item.createdAt),
+    status: item.status,
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
@@ -212,6 +213,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     comments: item.commentCount || 0,
     views: formatViews(item.views).replace(' views', ''),
     timeAgo: formatTimeAgo(item.createdAt),
+    status: item.status,
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
@@ -243,6 +245,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     content: item.description || item.name || '',
     createdAt: formatTimeAgo(item.createdAt),
     views: formatViews(item.views).replace(' views', ''),
+    status: item.status,
     stats: {
       comments: item.commentCount || 0,
       reposts: 0,

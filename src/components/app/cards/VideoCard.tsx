@@ -399,6 +399,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           creatorUsername={video.creatorUsername}
           timestamp={video.uploadedAgo}
           viewCount={video.views?.replace(' views', '') || getViewCount(video.id)}
+          status={video.status}
         />
         <div className="flex items-center gap-1 pr-3">
           <motion.button
