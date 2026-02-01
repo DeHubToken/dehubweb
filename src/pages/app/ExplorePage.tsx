@@ -780,11 +780,11 @@ export default function ExplorePage() {
                     {recentSearches.map((term) => (
                       <div
                         key={term}
-                        className="group relative flex items-center"
+                        className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
                       >
                         <button
                           onClick={() => setSearchQuery(term)}
-                          className="px-3 sm:px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors text-sm pr-8"
+                          className="px-3 sm:px-4 py-2 text-white text-sm"
                         >
                           {term}
                         </button>
@@ -793,7 +793,7 @@ export default function ExplorePage() {
                             e.stopPropagation();
                             removeFromHistory(term);
                           }}
-                          className="absolute right-2 text-zinc-500 hover:text-white transition-colors"
+                          className="pr-3 pl-1 py-2 text-zinc-500 hover:text-white transition-colors"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
