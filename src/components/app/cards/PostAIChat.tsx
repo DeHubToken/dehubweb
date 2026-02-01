@@ -5,7 +5,7 @@
  * Matches the UI of AssistantPage for consistency.
  */
 
-import { useState, useRef, useEffect, useId } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -46,7 +46,13 @@ interface PostAIChatProps {
 }
 
 export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
-  const chatId = useId();
+  // Generate a STABLE chat ID based on post context (not useId which changes on remount)
+  const chatId = useMemo(() => {
+    const baseId = `${postContext.type}-${postContext.author || 'anon'}`;
+    const contentHash = (postContext.title || postContext.caption || 'untitled').slice(0, 20);
+    return `ai-chat-${baseId}-${contentHash}`.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+  }, [postContext.type, postContext.author, postContext.title, postContext.caption]);
+
   const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -58,6 +64,16 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   // Global minimized chats manager
   const { addChat, removeChat, isMinimized } = useMinimizedChats();
   const isThisMinimized = isMinimized(chatId);
+  
+  // Cleanup orphan entries on unmount
+  useEffect(() => {
+    return () => {
+      // If this chat is minimized when unmounting, remove it to prevent orphans
+      if (isMinimized(chatId)) {
+        removeChat(chatId);
+      }
+    };
+  }, [chatId, isMinimized, removeChat]);
 
   // Voice chat hook
   const {
@@ -392,10 +408,10 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     return null;
   }
 
-  // Mobile: Drawer
+  // Mobile: Drawer - dismissible={false} prevents swipe-to-close
   if (isMobile) {
     return (
-      <Drawer open={isOpen && !isThisMinimized} onOpenChange={(open) => !open && handleClose()}>
+      <Drawer open={isOpen && !isThisMinimized} dismissible={false}>
         <DrawerContent glass className="h-[85vh]">
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
@@ -429,10 +445,16 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     );
   }
 
-  // Desktop: Dialog
+  // Desktop: Dialog - prevent accidental closes via escape/outside click
   return (
-    <Dialog open={isOpen && !isThisMinimized} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent hideCloseButton className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col">
+    <Dialog open={isOpen && !isThisMinimized}>
+      <DialogContent 
+        hideCloseButton 
+        className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col"
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
