@@ -693,11 +693,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] Transaction hash:', txHash);
 
-      toast.success('Post minted successfully!', {
+      toast.success('Post Sent!', {
         id: 'mint-progress',
-        description: `Token ID: ${mintResponse.createdTokenId}`,
+        description: 'Your post is being confirmed on-chain. This may take a few minutes.',
         action: {
-          label: 'View on BaseScan',
+          label: 'View Transaction',
           onClick: () => window.open(`https://basescan.org/tx/${txHash}`, '_blank'),
         },
       });
