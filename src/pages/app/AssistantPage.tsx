@@ -1602,13 +1602,13 @@ export default function AssistantPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-wrap gap-1.5 mt-4"
+                  className="flex gap-1.5 mt-4 overflow-x-auto scrollbar-hide pb-1 -mx-4 px-4 lg:mx-0 lg:px-0 lg:flex-wrap lg:overflow-visible"
                 >
                   <button
                     onClick={() => {
                       handleSend("What's happening in the news today?");
                     }}
-                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                   >
                     What's new?
                   </button>
@@ -1619,7 +1619,7 @@ export default function AssistantPage() {
                       setInputGlow(true);
                       setTimeout(() => setInputGlow(false), 2000);
                     }}
-                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                   >
                     Generate an image
                   </button>
@@ -1627,7 +1627,7 @@ export default function AssistantPage() {
                     onClick={() => {
                       fileInputRef.current?.click();
                     }}
-                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                   >
                     Edit an image
                   </button>
@@ -1638,7 +1638,7 @@ export default function AssistantPage() {
                       setInputGlow(true);
                       setTimeout(() => setInputGlow(false), 2000);
                     }}
-                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                    className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                   >
                     Generate a video
                   </button>
