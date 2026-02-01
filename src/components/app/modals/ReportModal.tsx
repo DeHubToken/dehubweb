@@ -154,8 +154,7 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Provide any additional context that might help us review this report..."
-              className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 min-h-[100px] rounded-xl resize-none"
+              className="bg-white/5 border-white/10 text-white min-h-[100px] rounded-xl resize-none"
               maxLength={500}
             />
             <p className="text-xs text-zinc-500 text-right">
