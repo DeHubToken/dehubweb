@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -45,11 +45,10 @@ export function SettingDrawerSelect({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild disabled={disabled}>
         <button
-          className={`flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm min-w-[120px] hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+          className={`flex items-center justify-center px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm min-w-[120px] hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
           disabled={disabled}
         >
           <span className="truncate">{displayLabel}</span>
-          <ChevronRight className="w-4 h-4 text-zinc-400 flex-shrink-0" />
         </button>
       </DrawerTrigger>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10">
