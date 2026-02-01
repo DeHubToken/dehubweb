@@ -45,7 +45,7 @@ export function RadioMiniPlayer() {
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
-            'fixed bottom-16 lg:bottom-4 z-50',
+            'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50',
             // Mobile: 95% width with side margins
             'left-[2.5%] right-[2.5%]',
             // Tablet/iPad: centered with 69px left offset for sidebar
