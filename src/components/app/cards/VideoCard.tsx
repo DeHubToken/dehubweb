@@ -17,6 +17,7 @@ import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
+import { PostMetadata } from './PostMetadata';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -397,8 +398,6 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           contentType="video"
           creatorId={video.creatorId}
           creatorUsername={video.creatorUsername}
-          timestamp={video.uploadedAgo}
-          viewCount={video.views?.replace(' views', '') || getViewCount(video.id)}
           stakedAmount={video.stakedAmount}
         />
         <div className="flex items-center gap-1 pr-3">
@@ -731,8 +730,12 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-2" as="h3" />
-        <ActionBar 
+        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
+        <PostMetadata 
+          timestamp={video.uploadedAgo} 
+          viewCount={video.views?.replace(' views', '') || getViewCount(video.id)} 
+        />
+        <ActionBar
           postId={video.id} 
           className="p-0" 
           isLiked={video.isLiked} 
