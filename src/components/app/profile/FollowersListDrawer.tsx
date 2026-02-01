@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Users, UserPlus, UserMinus, X } from 'lucide-react';
+import { Loader2, Users, UserPlus, UserMinus, X, ChevronDown } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -13,11 +13,14 @@ import {
   DrawerClose,
 } from '@/components/ui/drawer';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { getAccountInfo, followUser, unfollowUser, type DeHubUser } from '@/lib/api/dehub';
+import { getAccountInfo, followUser, unfollowUser } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+
+const PAGE_SIZE = 20;
+const MAX_USERS = 100;
 
 interface UserListItem {
   address: string;
@@ -38,6 +41,9 @@ interface FollowersListDrawerProps {
   profileAddress?: string;
 }
 
+// Cache for fetched user data
+const userCache = new Map<string, UserListItem>();
+
 export function FollowersListDrawer({
   open,
   onOpenChange,
@@ -49,47 +55,68 @@ export function FollowersListDrawer({
   const { walletAddress: currentUserAddress, isAuthenticated } = useAuth();
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [loadedCount, setLoadedCount] = useState(0);
   const [loadingFollows, setLoadingFollows] = useState<Set<string>>(new Set());
 
-  // Fetch user details when drawer opens
+  // Get addresses limited to MAX_USERS
+  const limitedAddresses = addresses.slice(0, MAX_USERS);
+  const hasMore = loadedCount < limitedAddresses.length;
+
+  // Fetch a batch of users
+  const fetchBatch = useCallback(async (addressBatch: string[]): Promise<UserListItem[]> => {
+    const results: UserListItem[] = [];
+    
+    const promises = addressBatch.map(async (address) => {
+      // Check cache first
+      const cacheKey = `${address}-${currentUserAddress || ''}`;
+      if (userCache.has(cacheKey)) {
+        return userCache.get(cacheKey)!;
+      }
+      
+      try {
+        const user = await getAccountInfo(address, currentUserAddress || undefined);
+        const item: UserListItem = {
+          address,
+          username: user.username,
+          displayName: user.displayName || user.display_name || user.username,
+          avatarUrl: buildAvatarUrl(address, user.avatarImageUrl || user.avatarUrl || user.avatar_url),
+          isVerified: user.isVerified || user.is_verified,
+          isFollowing: user.isFollowing,
+          followsYou: user.followsYou,
+        };
+        userCache.set(cacheKey, item);
+        return item;
+      } catch {
+        const item: UserListItem = { address };
+        return item;
+      }
+    });
+    
+    const batchResults = await Promise.all(promises);
+    results.push(...batchResults);
+    return results;
+  }, [currentUserAddress]);
+
+  // Initial load when drawer opens
   useEffect(() => {
-    if (!open || addresses.length === 0) {
+    if (!open) {
+      return;
+    }
+    
+    if (limitedAddresses.length === 0) {
       setUsers([]);
+      setLoadedCount(0);
       return;
     }
 
-    const fetchUsers = async () => {
+    const loadInitial = async () => {
       setIsLoading(true);
       try {
-        // Batch fetch in chunks of 10 for performance
-        const chunkSize = 10;
-        const results: UserListItem[] = [];
-        
-        for (let i = 0; i < addresses.length; i += chunkSize) {
-          const chunk = addresses.slice(i, i + chunkSize);
-          const promises = chunk.map(async (address) => {
-            try {
-              const user = await getAccountInfo(address, currentUserAddress || undefined);
-              return {
-                address,
-                username: user.username,
-                displayName: user.displayName || user.display_name || user.username,
-                avatarUrl: buildAvatarUrl(address, user.avatarImageUrl || user.avatarUrl || user.avatar_url),
-                isVerified: user.isVerified || user.is_verified,
-                isFollowing: user.isFollowing,
-                followsYou: user.followsYou,
-              } as UserListItem;
-            } catch {
-              // Return minimal info if fetch fails
-              return { address } as UserListItem;
-            }
-          });
-          
-          const chunkResults = await Promise.all(promises);
-          results.push(...chunkResults);
-        }
-        
+        const initialBatch = limitedAddresses.slice(0, PAGE_SIZE);
+        const results = await fetchBatch(initialBatch);
         setUsers(results);
+        setLoadedCount(initialBatch.length);
       } catch (error) {
         console.error('Error fetching user list:', error);
         toast.error('Failed to load user list');
@@ -98,8 +125,26 @@ export function FollowersListDrawer({
       }
     };
 
-    fetchUsers();
-  }, [open, addresses, currentUserAddress]);
+    loadInitial();
+  }, [open, limitedAddresses.join(','), fetchBatch]);
+
+  // Load more users
+  const loadMore = async () => {
+    if (isLoadingMore || !hasMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const nextBatch = limitedAddresses.slice(loadedCount, loadedCount + PAGE_SIZE);
+      const results = await fetchBatch(nextBatch);
+      setUsers(prev => [...prev, ...results]);
+      setLoadedCount(prev => prev + nextBatch.length);
+    } catch (error) {
+      console.error('Error loading more users:', error);
+      toast.error('Failed to load more users');
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
 
   const handleUserClick = (user: UserListItem) => {
     onOpenChange(false);
@@ -126,12 +171,20 @@ export function FollowersListDrawer({
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isFollowing: false } : u
         ));
+        // Update cache
+        const cacheKey = `${user.address}-${currentUserAddress || ''}`;
+        const cached = userCache.get(cacheKey);
+        if (cached) userCache.set(cacheKey, { ...cached, isFollowing: false });
         toast.success(`Unfollowed ${user.displayName || user.username || 'user'}`);
       } else {
         await followUser(user.address);
         setUsers(prev => prev.map(u => 
           u.address === user.address ? { ...u, isFollowing: true } : u
         ));
+        // Update cache
+        const cacheKey = `${user.address}-${currentUserAddress || ''}`;
+        const cached = userCache.get(cacheKey);
+        if (cached) userCache.set(cacheKey, { ...cached, isFollowing: true });
         toast.success(`Following ${user.displayName || user.username || 'user'}`);
       }
     } catch (error) {
@@ -154,7 +207,7 @@ export function FollowersListDrawer({
         <DrawerHeader className="flex items-center justify-between px-4 pb-2">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
-            {title} ({addresses.length})
+            {title} ({addresses.length.toLocaleString()})
           </DrawerTitle>
           <DrawerClose asChild>
             <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
@@ -256,6 +309,30 @@ export function FollowersListDrawer({
                   )}
                 </button>
               ))}
+
+              {/* Load More Button */}
+              {hasMore && (
+                <Button
+                  variant="ghost"
+                  onClick={loadMore}
+                  disabled={isLoadingMore}
+                  className="w-full mt-4 bg-white/5 hover:bg-white/10 text-zinc-400"
+                >
+                  {isLoadingMore ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 mr-2" />
+                  )}
+                  Load More ({Math.min(PAGE_SIZE, limitedAddresses.length - loadedCount)} remaining)
+                </Button>
+              )}
+
+              {/* Max reached message */}
+              {loadedCount >= MAX_USERS && addresses.length > MAX_USERS && (
+                <p className="text-center text-zinc-500 text-sm py-3">
+                  Showing first {MAX_USERS} of {addresses.length.toLocaleString()}
+                </p>
+              )}
             </div>
           )}
         </ScrollArea>
