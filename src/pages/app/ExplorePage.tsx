@@ -1,17 +1,18 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import searchIcon from '@/assets/icons/search-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { EXPLORE_TABS, RECENT_SEARCHES, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
+import { EXPLORE_TABS, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   useDeHubSearch, 
+  useSearchAnalytics,
   getTypeForTab,
   getPostTypeForTab, 
   extractUniqueCreators,
@@ -20,6 +21,7 @@ import {
   flattenSearchVideos,
   type SearchCreator 
 } from '@/hooks/use-dehub-search';
+import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
@@ -242,6 +244,7 @@ const UserResultCard = ({ user }: { user: SearchCreator }) => {
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { walletAddress } = useAuth();
+  const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
@@ -257,6 +260,12 @@ export default function ExplorePage() {
   });
   const [selectedCountry, setSelectedCountry] = useState('Global');
 
+  // Search history hook
+  const { recentSearches, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
+  
+  // Search analytics mutation
+  const { mutate: logSearch } = useSearchAnalytics();
+
   // Sync search query with URL
   useEffect(() => {
     const urlQuery = searchParams.get('q') || '';
@@ -265,7 +274,7 @@ export default function ExplorePage() {
     }
   }, [searchParams]);
 
-  // Update URL when search query changes
+  // Update URL when search query changes and log to history
   useEffect(() => {
     if (searchQuery.trim().length >= 3) {
       setSearchParams({ q: searchQuery.trim() }, { replace: true });
@@ -273,6 +282,21 @@ export default function ExplorePage() {
       setSearchParams({}, { replace: true });
     }
   }, [searchQuery, setSearchParams, searchParams]);
+
+  // Add to history and log analytics when search is executed
+  const hasLoggedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (searchQuery.trim().length >= 3 && hasLoggedRef.current !== searchQuery.trim()) {
+      hasLoggedRef.current = searchQuery.trim();
+      // Add to local history
+      addToHistory(searchQuery.trim());
+      // Log analytics (fire and forget)
+      logSearch({ 
+        query: searchQuery.trim(), 
+        type: getTypeForTab(activeTab) || 'all',
+      });
+    }
+  }, [searchQuery, activeTab, addToHistory, logSearch]);
 
   const isSearching = searchQuery.trim().length >= 3;
 
@@ -733,21 +757,49 @@ export default function ExplorePage() {
             >
               {/* Recent Searches Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <img src={searchIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7" />
-                  Recent Searches
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {RECENT_SEARCHES.map((term) => (
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-400" />
+                    Recent Searches
+                  </h2>
+                  {recentSearches.length > 0 && (
                     <button
-                      key={term}
-                      onClick={() => setSearchQuery(term)}
-                      className="px-3 sm:px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors text-sm"
+                      onClick={clearHistory}
+                      className="text-zinc-500 hover:text-white text-sm flex items-center gap-1 transition-colors"
                     >
-                      {term}
+                      <Trash2 className="w-4 h-4" />
+                      Clear
                     </button>
-                  ))}
+                  )}
                 </div>
+                {recentSearches.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.map((term) => (
+                      <div
+                        key={term}
+                        className="group relative flex items-center"
+                      >
+                        <button
+                          onClick={() => setSearchQuery(term)}
+                          className="px-3 sm:px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors text-sm pr-8"
+                        >
+                          {term}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFromHistory(term);
+                          }}
+                          className="absolute right-2 text-zinc-500 hover:text-white transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-zinc-500 text-sm">No recent searches yet. Start exploring!</p>
+                )}
               </div>
 
               {/* Trending Bento */}
