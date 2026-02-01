@@ -286,15 +286,17 @@ interface UseDeHubFeedOptions extends SearchNFTsParams {
 
 /**
  * Hook to fetch paginated DeHub feed content
+ * By default, only shows minted (confirmed on-chain) content
  */
 export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
-  const { enabled = true, ...searchParams } = options;
+  const { enabled = true, status = 'minted', ...searchParams } = options;
   
   return useInfiniteQuery({
-    queryKey: ['dehub-feed', searchParams],
+    queryKey: ['dehub-feed', { ...searchParams, status }],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await searchNFTs({
         ...searchParams,
+        status,
         page: pageParam,
         unit: searchParams.unit || 15,
       });

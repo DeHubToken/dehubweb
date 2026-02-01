@@ -201,6 +201,8 @@ export interface SearchNFTsParams {
   search?: string;
   /** Connected wallet address to get isLiked/isDisliked info */
   address?: string;
+  /** Content status filter - use "minted" to only show confirmed on-chain content */
+  status?: "minted" | "pending" | "failed";
 }
 
 /**
@@ -425,6 +427,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
       postType: params.postType,
       search: params.search,
       address: params.address,
+      status: params.status,
     },
   });
   
