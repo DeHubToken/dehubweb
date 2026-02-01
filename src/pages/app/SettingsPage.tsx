@@ -560,7 +560,7 @@ function NotificationSettings() {
 }
 
 function PrivacySettings() {
-  const { showFollowersFollowing, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   
   return (
     <div className="space-y-6">
@@ -583,13 +583,28 @@ function PrivacySettings() {
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Show Followers & Following</p>
-                <p className="text-zinc-500 text-sm">Allow others to see your followers and following counts</p>
+                <p className="text-white font-medium">Show Followers & Following List</p>
+                <p className="text-zinc-500 text-sm">Allow others to click and see who follows you</p>
               </div>
             </div>
             <Switch
               checked={showFollowersFollowing}
               onCheckedChange={(checked) => updateSettings({ show_followers_following: checked })}
+              disabled={isUpdating || isLoading}
+              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Eye className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">Hide Follower & Following Counts</p>
+                <p className="text-zinc-500 text-sm">Hide the numbers from your profile</p>
+              </div>
+            </div>
+            <Switch
+              checked={hideFollowerCounts}
+              onCheckedChange={(checked) => updateSettings({ hide_follower_counts: checked })}
               disabled={isUpdating || isLoading}
               className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
             />
