@@ -35,7 +35,6 @@ export {
   isTokenMinted,
   getTokenBalance,
   type MintParams,
-  type MintFee,
 } from './stream-collection';
 
 // StreamController (Bounty minting)
