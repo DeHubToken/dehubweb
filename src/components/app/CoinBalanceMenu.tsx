@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut, Globe } from 'lucide-react';
+import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -171,24 +171,19 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   
   const mainMenuContent = (
     <div className="space-y-1">
-      {/* Balance display with network selector */}
+      {/* Balance display with chain selector */}
       <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
-        {/* Network Selector Row */}
-        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+        {/* DeHub Coin Balance */}
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-zinc-400" />
-            <span className="text-xs text-zinc-400">Network</span>
+            <img src={dehubCoin} alt="coins" className="w-5 h-5" />
+            <span className="text-white font-semibold">{formatBalance(balance)}</span>
           </div>
           <ChainSelector
             selectedChainId={selectedChainId}
             onChainChange={setSelectedChainId}
-            variant="full"
+            variant="icon"
           />
-        </div>
-        {/* DeHub Coin Balance */}
-        <div className="flex items-center gap-2">
-          <img src={dehubCoin} alt="coins" className="w-5 h-5" />
-          <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
         {/* USD Balance with USDC logo */}
         <div className="flex items-center gap-2">

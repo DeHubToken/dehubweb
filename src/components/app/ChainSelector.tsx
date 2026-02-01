@@ -78,10 +78,7 @@ export function ChainSelector({
       <img 
         src={selectedChain.icon} 
         alt={selectedChain.name} 
-        className={cn(
-          "rounded-full object-cover",
-          variant === 'icon' ? "w-5 h-5" : "w-5 h-5"
-        )} 
+        className="w-5 h-5 rounded-md object-cover"
       />
       {variant === 'full' && (
         <span className="text-white text-sm font-medium">{selectedChain.name}</span>
@@ -119,7 +116,7 @@ export function ChainSelector({
                 <img 
                   src={chain.icon} 
                   alt={chain.name} 
-                  className="w-8 h-8 rounded-full object-cover" 
+                  className="w-8 h-8 rounded-lg object-cover" 
                 />
                 <div className="text-left">
                   <p className="text-white font-medium">{chain.name}</p>
