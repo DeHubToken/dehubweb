@@ -433,10 +433,38 @@ export default function ProfilePage() {
             </div>
           );
         }
+        // Filter optimistic posts that have matching content in API (to prevent duplicates)
+        const filteredOptimisticPosts = isViewingOwnProfile 
+          ? optimisticPosts.filter((op) => {
+              // Check if this optimistic post has a matching API post (by content match)
+              return !ALL_CONTENT.some((apiItem) => {
+                // Match by content for text posts
+                if (op.type === 'post' && apiItem.type === 'post') {
+                  const opData = op.data as TextPost;
+                  const apiData = apiItem.data as TextPost;
+                  return opData.content === apiData.content;
+                }
+                // Match by title/description for images
+                if (op.type === 'image' && apiItem.type === 'image') {
+                  const opData = op.data as ImagePost;
+                  const apiData = apiItem.data as ImagePost;
+                  return opData.title === apiData.title || opData.caption === apiData.caption;
+                }
+                // Match by title for videos
+                if (op.type === 'video' && apiItem.type === 'video') {
+                  const opData = op.data as VideoItem;
+                  const apiData = apiItem.data as VideoItem;
+                  return opData.title === apiData.title;
+                }
+                return false;
+              });
+            })
+          : [];
+        
         return (
           <div className="space-y-2 sm:space-y-3">
-            {/* Render optimistic posts first (only on own profile) */}
-            {isViewingOwnProfile && optimisticPosts.map((op) => {
+            {/* Render optimistic posts first (only on own profile, deduplicated) */}
+            {filteredOptimisticPosts.map((op) => {
               if (op.type === 'post') {
                 return <PostCard key={op.id} post={op.data as TextPost} />;
               } else if (op.type === 'image') {
