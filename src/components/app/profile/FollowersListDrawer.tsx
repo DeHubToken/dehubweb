@@ -323,7 +323,7 @@ export function FollowersListDrawer({
                   ) : (
                     <ChevronDown className="w-4 h-4 mr-2" />
                   )}
-                  Load More ({Math.min(PAGE_SIZE, limitedAddresses.length - loadedCount)} remaining)
+                  Load More
                 </Button>
               )}
 

@@ -82,6 +82,9 @@ export interface DeHubUser {
   seenModal?: boolean;
   online?: boolean;
 
+  // Staking (can be returned directly or inside balanceData)
+  staked?: number;
+
   // Timestamps
   createdAt?: string;
   created_at?: string;

@@ -35,6 +35,8 @@ export interface ProfileData {
   followersList?: string[];
   /** Raw array of following wallet addresses (for list display) */
   followingsList?: string[];
+  /** Staked DHB amount for tier badge */
+  staked?: number;
 }
 
 /**
@@ -85,6 +87,9 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     followsYou: user.followsYou,
     followersList,
     followingsList,
+    staked: typeof user.staked === 'number' 
+      ? user.staked 
+      : user.balanceData?.[0]?.staked,
   };
 }
 
