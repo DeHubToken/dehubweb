@@ -47,8 +47,8 @@ export function RadioMiniPlayer() {
           exit={{ scale: 0, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
-            'fixed bottom-20 right-4 z-50',
-            'md:bottom-[90px] md:right-6',
+            'fixed bottom-16 right-4 z-50',
+            'md:bottom-[74px] md:right-6',
             'lg:bottom-6 lg:right-6'
           )}
         >
