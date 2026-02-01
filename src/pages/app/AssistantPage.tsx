@@ -1604,14 +1604,13 @@ export default function AssistantPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="relative mt-4 -mx-4 px-4 lg:mx-0 lg:px-0"
                 >
-                  {/* Fade overlay on right - mobile only */}
                   <div 
-                    className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none z-10 lg:hidden"
+                    className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 pr-8 lg:pr-0 lg:flex-wrap lg:overflow-visible lg:mask-none"
                     style={{
-                      background: 'linear-gradient(to right, transparent, hsl(var(--background)))'
+                      maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
+                      WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
                     }}
-                  />
-                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 pr-8 lg:pr-0 lg:flex-wrap lg:overflow-visible">
+                  >
                     <button
                       onClick={() => {
                         handleSend("What's happening in the news today?");
