@@ -19,7 +19,7 @@ export function MinimizedAIChats({ onRestore }: MinimizedAIChatsProps) {
   if (chats.length === 0) return null;
 
   return (
-    <div className="fixed right-4 z-50 flex flex-col-reverse gap-2" style={{ bottom: '80px' }}>
+    <div className="fixed right-4 z-50 flex flex-col-reverse gap-2" style={{ bottom: '140px' }}>
       <AnimatePresence>
         {chats.map((chat, index) => (
           <motion.button
