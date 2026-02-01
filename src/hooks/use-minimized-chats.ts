@@ -32,8 +32,17 @@ function saveChats(chats: MinimizedChat[]) {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chats));
 }
 
+// Clear all stored chats on page load to prevent orphan accumulation
+// This ensures a fresh start each page load
+function clearStoredChats() {
+  sessionStorage.removeItem(STORAGE_KEY);
+}
+
+// Clear on initial load to prevent orphans from previous sessions
+clearStoredChats();
+
 // Global state to sync across components
-let globalChats: MinimizedChat[] = getStoredChats();
+let globalChats: MinimizedChat[] = [];
 const listeners = new Set<(chats: MinimizedChat[]) => void>();
 
 function notifyListeners() {
