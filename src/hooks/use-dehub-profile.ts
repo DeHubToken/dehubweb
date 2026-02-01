@@ -169,6 +169,8 @@ export function useDeHubUserContent({ userId, viewerAddress, enabled = true, lim
       url.searchParams.set('minter', userId);
       url.searchParams.set('sortBy', 'createdAt');
       url.searchParams.set('sortOrder', 'desc');
+      // Only show minted (confirmed on-chain) content
+      url.searchParams.set('status', 'minted');
       // Pass viewer's address to get isLiked/isSaved states
       if (viewerAddress) {
         url.searchParams.set('address', viewerAddress);
