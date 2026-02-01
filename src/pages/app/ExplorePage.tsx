@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import searchIcon from '@/assets/icons/search-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
@@ -283,20 +284,22 @@ export default function ExplorePage() {
     }
   }, [searchQuery, setSearchParams, searchParams]);
 
-  // Add to history and log analytics when search is executed
+  // Add to history and log analytics only after 3 seconds of inactivity (complete words)
+  const stableQuery = useDebouncedValue(searchQuery, 3000);
   const hasLoggedRef = useRef<string | null>(null);
+  
   useEffect(() => {
-    if (searchQuery.trim().length >= 3 && hasLoggedRef.current !== searchQuery.trim()) {
-      hasLoggedRef.current = searchQuery.trim();
+    if (stableQuery.trim().length >= 3 && hasLoggedRef.current !== stableQuery.trim()) {
+      hasLoggedRef.current = stableQuery.trim();
       // Add to local history
-      addToHistory(searchQuery.trim());
+      addToHistory(stableQuery.trim());
       // Log analytics (fire and forget)
       logSearch({ 
-        query: searchQuery.trim(), 
+        query: stableQuery.trim(), 
         type: getTypeForTab(activeTab) || 'all',
       });
     }
-  }, [searchQuery, activeTab, addToHistory, logSearch]);
+  }, [stableQuery, activeTab, addToHistory, logSearch]);
 
   const isSearching = searchQuery.trim().length >= 3;
 
