@@ -1315,8 +1315,8 @@ export default function AssistantPage() {
                     exit={{ opacity: 0 }}
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
                   >
-                    {/* AI Avatar for assistant messages */}
-                    {message.role === 'assistant' && (
+                    {/* AI Avatar for assistant messages - hide for initial welcome message */}
+                    {message.role === 'assistant' && message.id !== 'initial' && (
                       <img 
                         src={assistantAvatar} 
                         alt="" 
@@ -1610,7 +1610,7 @@ export default function AssistantPage() {
                     }}
                     className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
-                    📰 What's new?
+                    What's new?
                   </button>
                   <button
                     onClick={() => {
@@ -1621,7 +1621,7 @@ export default function AssistantPage() {
                     }}
                     className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
-                    🎨 Generate an image
+                    Generate an image
                   </button>
                   <button
                     onClick={() => {
@@ -1629,7 +1629,7 @@ export default function AssistantPage() {
                     }}
                     className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
-                    🖼️ Edit an image
+                    Edit an image
                   </button>
                   <button
                     onClick={() => {
@@ -1640,7 +1640,7 @@ export default function AssistantPage() {
                     }}
                     className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
                   >
-                    🎬 Generate a video
+                    Generate a video
                   </button>
                 </motion.div>
               )}
