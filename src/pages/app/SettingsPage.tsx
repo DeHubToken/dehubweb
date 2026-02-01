@@ -63,6 +63,7 @@ import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser }
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
+import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import dehubCoin from '@/assets/dehub-coin.png';
 import settingsIcon from '@/assets/icons/settings-icon.png';
@@ -559,6 +560,8 @@ function NotificationSettings() {
 }
 
 function PrivacySettings() {
+  const { showFollowersFollowing, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -576,6 +579,21 @@ function PrivacySettings() {
             description="Make your profile visible to everyone"
             defaultChecked
           />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Users className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">Show Followers & Following</p>
+                <p className="text-zinc-500 text-sm">Allow others to see your followers and following counts</p>
+              </div>
+            </div>
+            <Switch
+              checked={showFollowersFollowing}
+              onCheckedChange={(checked) => updateSettings({ show_followers_following: checked })}
+              disabled={isUpdating || isLoading}
+              className="data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-700"
+            />
+          </div>
           <SettingToggle
             icon={Users}
             title="Show Activity Status"
