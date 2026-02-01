@@ -30,6 +30,7 @@ import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -172,6 +173,9 @@ export default function ProfilePage() {
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined
   );
+  
+  // Get optimistic posts for own profile
+  const { optimisticPosts } = useOptimisticPosts();
   
   // Fetch privacy settings for the profile being viewed
   const { showFollowersFollowing, hideFollowerCounts } = useUserPrivacySettings(apiProfile?.walletAddress);
@@ -380,7 +384,10 @@ export default function ProfilePage() {
     
     switch (activeTab) {
       case 'home':
-        if (ALL_CONTENT.length === 0) {
+        // Check if we have any content (including optimistic posts for own profile)
+        const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
+        
+        if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Home className="w-12 h-12 text-muted-foreground mb-3" />
@@ -391,6 +398,18 @@ export default function ProfilePage() {
         }
         return (
           <div className="space-y-2 sm:space-y-3">
+            {/* Render optimistic posts first (only on own profile) */}
+            {isViewingOwnProfile && optimisticPosts.map((op) => {
+              if (op.type === 'post') {
+                return <PostCard key={op.id} post={op.data as TextPost} />;
+              } else if (op.type === 'image') {
+                return <ImageCard key={op.id} post={op.data as ImagePost} />;
+              } else {
+                return <VideoCard key={op.id} video={op.data as VideoItem} />;
+              }
+            })}
+            
+            {/* Render API content */}
             {ALL_CONTENT.map((item) => {
               if (item.type === 'post') {
                 return <PostCard key={item.data.id} post={item.data as TextPost} />;
