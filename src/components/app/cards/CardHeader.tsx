@@ -22,6 +22,7 @@ import { CheckCircle, Eye, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import type { ContentType } from '@/types/feed.types';
 
 interface CardHeaderProps {
@@ -47,6 +48,8 @@ interface CardHeaderProps {
   viewCount?: string | number;
   /** Mint status - shows pending badge if 'signed' */
   status?: 'minted' | 'signed' | string;
+  /** Creator's staked DHB amount for tier badge */
+  stakedAmount?: number;
 }
 
 /**
@@ -72,12 +75,16 @@ export function CardHeader({
   timestamp,
   viewCount,
   status,
+  stakedAmount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const badge = CONTENT_BADGES[contentType];
   
   // Check if content is pending mint (signed but not minted)
   const isPending = status === 'signed';
+  
+  // Get staking badge image URL
+  const stakingBadgeUrl = getBadgeUrl(stakedAmount);
 
   // Only use avatarSeed as image source if it's a real URL
   const hasRealAvatar = avatarSeed.startsWith('http');
@@ -124,6 +131,11 @@ export function CardHeader({
           <div className="flex items-center gap-1.5">
             <span className="font-semibold text-white text-sm">{username}</span>
             {verified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+            <img 
+              src={stakingBadgeUrl} 
+              alt="Staking tier" 
+              className="w-4 h-4 object-contain"
+            />
             {formattedHandle && (
               <span className="text-zinc-500 text-sm">{formattedHandle}</span>
             )}

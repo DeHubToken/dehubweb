@@ -35,7 +35,7 @@ export interface BaseFeedItem {
  */
 export interface TextPost extends BaseFeedItem {
   type: 'post';
-  author: User;
+  author: User & { stakedAmount?: number };
   content: string;
   /** Formatted view count string (e.g., "1.2K") */
   views?: string;
@@ -64,6 +64,8 @@ export interface VideoItem extends BaseFeedItem {
   uploadedAgo: string;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Creator's staked DHB amount for badge */
+  stakedAmount?: number;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
@@ -124,6 +126,8 @@ export interface ImagePost extends BaseFeedItem {
   comments: number;
   /** Mint status: 'minted' | 'signed' (pending) */
   status?: 'minted' | 'signed' | string;
+  /** Creator's staked DHB amount for badge */
+  stakedAmount?: number;
   /** Formatted view count string (e.g., "1.2K") */
   views: string;
   timeAgo: string;
