@@ -50,6 +50,18 @@ export function usePullToRefresh({
   const wheelAccumulator = useRef<number>(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   const isHoveringContainer = useRef<boolean>(false);
+  
+  // Synchronous lock to prevent race conditions with rapid events
+  const hasTriggeredRef = useRef<boolean>(false);
+  const lastTriggerTime = useRef<number>(0);
+  const TRIGGER_COOLDOWN_MS = 1000;
+
+  // Reset the trigger lock when refresh completes
+  useEffect(() => {
+    if (!isRefreshing) {
+      hasTriggeredRef.current = false;
+    }
+  }, [isRefreshing]);
 
   // Helper to check if we're truly at the top (both window AND container)
   const isAtTop = useCallback(() => {
@@ -77,11 +89,20 @@ export function usePullToRefresh({
     return true;
   }, [containerRef]);
 
-  // Trigger the refresh
+  // Trigger the refresh with synchronous lock to prevent double-fires
   const triggerRefresh = useCallback(() => {
-    if (!isRefreshing) {
-      onRefresh();
+    const now = Date.now();
+    // Synchronous checks prevent race conditions from rapid events
+    if (
+      hasTriggeredRef.current || 
+      isRefreshing || 
+      now - lastTriggerTime.current < TRIGGER_COOLDOWN_MS
+    ) {
+      return;
     }
+    hasTriggeredRef.current = true;
+    lastTriggerTime.current = now;
+    onRefresh();
   }, [isRefreshing, onRefresh]);
 
   // Touch handlers
