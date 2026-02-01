@@ -12,6 +12,7 @@ import {
   DHB_TOKEN,
   BASE_CHAIN_ID,
 } from '@/lib/contracts';
+import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
@@ -776,11 +777,10 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Create optimistic post to show immediately in feed
       const optimisticId = `optimistic-${Date.now()}`;
       const username = user?.username || user?.displayName || 'You';
-      // Use proper avatar resolution - check all possible fields and build CDN URL
-      const rawAvatar = user?.avatarImageUrl || user?.avatarUrl || user?.avatar_url;
-      const avatar = rawAvatar 
-        ? (rawAvatar.startsWith('http') ? rawAvatar : `https://cdn.dehub.io/avatars/${user?.address}.${rawAvatar.split('.').pop() || 'png'}`)
-        : undefined;
+      // Use proper avatar resolution - extract path from all possible fields and build CDN URL
+      // This matches the exact pattern used in ProfilePage and other components
+      const rawAvatarPath = extractAvatarPath(user as Record<string, any>);
+      const avatar = buildAvatarUrl(user?.address || '', rawAvatarPath);
       
       if (hasVideo && media[0]) {
         // Video post
