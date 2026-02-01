@@ -46,8 +46,8 @@ export function RadioMiniPlayer() {
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className={cn(
             'fixed bottom-16 lg:bottom-4 z-50',
-            // Mobile: full width with small margins
-            'left-2 right-2',
+            // Mobile: 95% width centered
+            'left-1/2 -translate-x-1/2 w-[95%] max-w-[calc(100%-1rem)]',
             // Tablet/iPad: 8% smaller than nav, offset left by 69px from center
             'md:left-1/2 md:right-auto md:w-[92%] md:max-w-[412px] md:[transform:translateX(calc(-50%-69px))]',
             // Desktop: fixed width on right side
