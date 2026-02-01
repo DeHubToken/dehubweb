@@ -281,7 +281,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     if (!container) return;
 
     const handleWheel = (e: WheelEvent) => {
+      // Stop propagation to prevent pull-to-refresh from triggering
       e.preventDefault();
+      e.stopPropagation();
       
       if (isScrolling) return;
       
@@ -300,8 +302,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
       setTimeout(() => setIsScrolling(false), 500);
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheel);
+    // Use capture phase to intercept events before they reach the window listener
+    container.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    return () => container.removeEventListener('wheel', handleWheel, { capture: true });
   }, [currentIndex, isScrolling]);
 
   // Handle keyboard navigation
