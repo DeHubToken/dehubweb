@@ -19,11 +19,10 @@
  */
 
 import { useState } from 'react';
-import { CheckCircle, Eye } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getBadgeUrl } from '@/lib/staking-badges';
-import { formatTimeAgo } from '@/lib/feed-utils';
 import type { ContentType } from '@/types/feed.types';
 
 interface CardHeaderProps {
@@ -85,13 +84,6 @@ export function CardHeader({
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
   const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
   const avatarSrc = hasRealAvatar ? avatarSeed : undefined;
-  
-  // Format timestamp - if it's an ISO string, convert to relative time
-  const formattedTimestamp = timestamp ? (
-    timestamp.includes('T') || timestamp.includes('-') 
-      ? formatTimeAgo(timestamp) 
-      : timestamp
-  ) : undefined;
 
   const handleProfileClick = () => {
     // Prefer username-based navigation, fallback to ID
@@ -130,32 +122,18 @@ export function CardHeader({
             <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
-        <div className="flex flex-col min-w-0 max-w-[200px]">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-semibold text-white text-sm truncate max-w-[100px]">{username}</span>
-            {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
-            <img 
-              src={stakingBadgeUrl} 
-              alt="Staking tier" 
-              className="w-4 h-4 object-contain shrink-0"
-            />
-            {formattedHandle && (
-              <span className="text-zinc-500 text-sm truncate max-w-[100px]">{formattedHandle}</span>
-            )}
-            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
-          </div>
-          {/* Timestamp and view count row */}
-          {(formattedTimestamp || viewCount) && (
-            <div className="flex items-center gap-2 text-zinc-500 text-xs">
-              {formattedTimestamp && <span>{formattedTimestamp}</span>}
-              {viewCount && (
-                <span className="flex items-center gap-1">
-                  <Eye className="w-3 h-3" />
-                  {viewCount}
-                </span>
-              )}
-            </div>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="font-semibold text-white text-sm truncate max-w-[100px]">{username}</span>
+          {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
+          <img 
+            src={stakingBadgeUrl} 
+            alt="Staking tier" 
+            className="w-4 h-4 object-contain shrink-0"
+          />
+          {formattedHandle && (
+            <span className="text-zinc-500 text-sm truncate max-w-[100px]">{formattedHandle}</span>
           )}
+          {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
         </div>
       </button>
     </div>

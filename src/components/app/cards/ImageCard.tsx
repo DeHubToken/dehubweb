@@ -17,6 +17,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
+import { PostMetadata } from './PostMetadata';
 import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -387,8 +388,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           contentType="image"
           creatorId={post.creatorId}
           creatorUsername={post.creatorUsername}
-          timestamp={post.timeAgo}
-          viewCount={post.views || '0'}
           stakedAmount={post.stakedAmount}
         />
         <div className="flex items-center gap-1 pr-3">
@@ -459,6 +458,9 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           title={post.title} 
           description={post.description} 
         />
+        
+        {/* Metadata: timestamp and views */}
+        <PostMetadata timestamp={post.timeAgo} viewCount={post.views} />
         
         <ActionBar 
           postId={post.id} 
