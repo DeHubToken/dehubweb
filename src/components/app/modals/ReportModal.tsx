@@ -24,9 +24,8 @@ import { useAuth } from '@/contexts/AuthContext';
 const REPORT_REASONS = [
   { value: 'spam', label: 'Spam or misleading' },
   { value: 'harassment', label: 'Harassment or bullying' },
-  { value: 'hate', label: 'Hate speech or symbols' },
   { value: 'violence', label: 'Violence or dangerous content' },
-  { value: 'nudity', label: 'Nudity or sexual content' },
+  { value: 'nudity', label: 'Explicit sexual content' },
   { value: 'copyright', label: 'Copyright infringement' },
   { value: 'scam', label: 'Scam or fraud' },
   { value: 'other', label: 'Other' },
