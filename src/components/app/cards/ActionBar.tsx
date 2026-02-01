@@ -104,7 +104,7 @@ export function ActionBar({
     if (!postId || isVoting || isLiked || isDisliked) return;
     
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet to vote');
+      toast.error('Log in to engage');
       return;
     }
 
