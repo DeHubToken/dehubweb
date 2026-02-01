@@ -699,6 +699,25 @@ export async function postComment(tokenId: string, content: string, replyToId?: 
   });
 }
 
+export interface DeleteCommentResponse {
+  result?: boolean;
+  message?: string;
+}
+
+/**
+ * Delete a comment by its ID
+ * Uses DELETE /api/comment/{commentId}
+ * 
+ * @param commentId - The ID of the comment to delete
+ * @returns DeleteCommentResponse with success status
+ */
+export async function deleteComment(commentId: string): Promise<DeleteCommentResponse> {
+  return apiCall<DeleteCommentResponse>(`/api/comment/${commentId}`, {
+    method: "DELETE",
+    requiresAuth: true,
+  });
+}
+
 // Bookmark/Saved functions
 export interface SavePostResponse {
   status: string; // "success"
