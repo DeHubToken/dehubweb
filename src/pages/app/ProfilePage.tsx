@@ -433,11 +433,15 @@ export default function ProfilePage() {
             </div>
           );
         }
-        // Filter optimistic posts that have matching content in API (to prevent duplicates)
+        // Filter optimistic posts - only remove when a MINTED match exists in API
         const filteredOptimisticPosts = isViewingOwnProfile 
           ? optimisticPosts.filter((op) => {
-              // Check if this optimistic post has a matching API post (by content match)
+              // Only remove optimistic post if a matching MINTED post exists in API
               return !ALL_CONTENT.some((apiItem) => {
+                // Must be minted status to replace the optimistic post
+                const apiStatus = (apiItem.data as { status?: string }).status;
+                if (apiStatus !== 'minted') return false;
+                
                 // Match by content for text posts
                 if (op.type === 'post' && apiItem.type === 'post') {
                   const opData = op.data as TextPost;
