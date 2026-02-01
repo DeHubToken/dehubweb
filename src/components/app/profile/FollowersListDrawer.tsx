@@ -4,7 +4,7 @@ import { Loader2, Users, UserPlus, UserMinus, X, ChevronDown } from 'lucide-reac
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 import {
   Drawer,
   DrawerContent,
@@ -216,7 +216,7 @@ export function FollowersListDrawer({
           </DrawerClose>
         </DrawerHeader>
 
-        <ScrollArea className="flex-1 px-4 pb-6" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+        <div className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(85vh - 80px)', WebkitOverflowScrolling: 'touch' }}>
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: Math.min(5, addresses.length) }).map((_, i) => (
@@ -335,7 +335,7 @@ export function FollowersListDrawer({
               )}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </DrawerContent>
     </Drawer>
   );
