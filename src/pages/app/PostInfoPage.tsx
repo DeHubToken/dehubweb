@@ -267,6 +267,57 @@ export default function PostInfoPage() {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
   
+  // Optimistic post - still being minted
+  const isOptimisticPost = postId?.startsWith('optimistic-');
+  
+  if (isOptimisticPost) {
+    return (
+      <div className="min-h-screen bg-black">
+        <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-white/10">
+          <div className="flex items-center gap-4 p-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 -ml-2 text-white hover:text-white/70 transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-lg font-semibold text-white">Post Info</h1>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto mt-16">
+          {/* Animated processing indicator */}
+          <div className="relative mb-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+              <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            </div>
+            <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" />
+          </div>
+          
+          <h2 className="text-xl font-semibold text-white mb-3">
+            Minting in Progress
+          </h2>
+          
+          <p className="text-white/60 text-sm leading-relaxed mb-4">
+            Your post is being minted on public decentralised databases. This process typically takes a couple of minutes to propagate across the network.
+          </p>
+          
+          <p className="text-white/40 text-xs leading-relaxed">
+            Once complete, your post will be permanently stored on-chain and others will be able to see and engage with it.
+          </p>
+          
+          <button
+            onClick={() => navigate(-1)}
+            className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-full text-sm font-medium transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
   // Loading state
   if (isLoading) {
     return (
