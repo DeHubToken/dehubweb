@@ -16,8 +16,9 @@ export const STREAM_COLLECTION_ADDRESS = '0x9f8012074d27F8596C0E5038477ACB52057B
 export { BASE_CHAIN_ID };
 
 // Minimal ABI for the mint function - matches actual contract signature
+// mint(id, timestamp, v, r, s, fees[], supply, uri)
 export const STREAM_COLLECTION_ABI = [
-  'function mint(uint256 id, uint256 timestamp, uint8 v, bytes32 r, bytes32 s, uint256 supply, string uri, address creator)',
+  'function mint(uint256 id, uint256 timestamp, uint8 v, bytes32 r, bytes32 s, tuple(address recipient, uint256 value)[] fees, uint256 supply, string uri)',
   'function balanceOf(address owner, uint256 id) view returns (uint256)',
   'function uri(uint256 id) view returns (string)',
   'function creators(uint256 id) view returns (address)',
@@ -27,6 +28,12 @@ export const STREAM_COLLECTION_ABI = [
 // Create interface for encoding/decoding
 const streamCollectionInterface = new Interface(STREAM_COLLECTION_ABI);
 
+// Fee structure for royalties (recipient + value in basis points)
+export interface MintFee {
+  recipient: string;
+  value: bigint;
+}
+
 // Parameters for the mint function
 export interface MintParams {
   tokenId: string | number;
@@ -34,9 +41,9 @@ export interface MintParams {
   v: number;
   r: string;
   s: string;
+  fees?: MintFee[];
   supply?: number;
   uri?: string;
-  creator: string; // The wallet address of the creator
 }
 
 /**
@@ -64,14 +71,14 @@ export async function mintOnChain(params: MintParams): Promise<string> {
   const r = params.r.startsWith('0x') ? params.r : `0x${params.r}`;
   const s = params.s.startsWith('0x') ? params.s : `0x${params.s}`;
   
-  // Default supply of 1 for unique content
-  const supply = BigInt(params.supply || 1);
+  // Default to empty fees array (no royalties)
+  const fees: Array<{ recipient: string; value: bigint }> = params.fees || [];
   
-  // URI is typically empty as metadata is stored on DeHub's backend
-  const uri = params.uri || '';
+  // Default supply of 1000 for content (matches existing app behavior)
+  const supply = BigInt(params.supply || 1000);
   
-  // Creator is the wallet address that will own the NFT
-  const creator = params.creator;
+  // URI format: {tokenId}.json
+  const uri = params.uri || `${params.tokenId}.json`;
 
   console.log('[StreamCollection] Calling mint with:', {
     tokenId: tokenId.toString(),
@@ -79,18 +86,18 @@ export async function mintOnChain(params: MintParams): Promise<string> {
     v,
     r,
     s,
+    fees,
     supply: supply.toString(),
     uri,
-    creator,
   });
 
   try {
-    // Use AA-aware write with correct parameter order: id, timestamp, v, r, s, supply, uri, creator
+    // Use AA-aware write with correct parameter order: id, timestamp, v, r, s, fees, supply, uri
     const result = await writeContractAA(
       STREAM_COLLECTION_ADDRESS,
       streamCollectionInterface,
       'mint',
-      [tokenId, timestamp, v, r, s, supply, uri, creator],
+      [tokenId, timestamp, v, r, s, fees, supply, uri],
       { context: 'mint NFT' }
     );
     
