@@ -1622,14 +1622,15 @@ export async function sendMessage(
     }
     
     // Build FormData for /api/dm/upload endpoint
+    // Field names: sender, receiver (for new), conversationId (for existing)
     const formData = new FormData();
     formData.append('content', content);
     formData.append('type', type);
-    formData.append('senderAddress', senderAddress);
+    formData.append('sender', senderAddress.toLowerCase());
     
     if (isNewConversation && recipientAddress) {
       // For new conversations, send to recipient address
-      formData.append('receiverAddress', recipientAddress);
+      formData.append('receiver', recipientAddress.toLowerCase());
       console.log('[DM API] Sending to new conversation with recipient:', recipientAddress);
     } else {
       // For existing conversations, use conversationId
