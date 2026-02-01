@@ -30,7 +30,7 @@ import {
 import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
-import { getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, deleteComment, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -109,8 +109,11 @@ interface CommentItemProps {
   onReply: (id: string) => void;
   onShare: (id: string) => void;
   onBookmark: (id: string) => void;
+  onDelete: (id: string) => void;
   onUserPress: (username: string) => void;
   isReply?: boolean;
+  isOwner?: boolean;
+  isDeleting?: boolean;
 }
 
 interface VoiceNotePlayerProps {
@@ -157,7 +160,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
+function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onDelete, onUserPress, isReply, isOwner, isDeleting }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   
   // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
@@ -172,7 +175,8 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex gap-3 py-3", isReply && "ml-8")}
+      exit={{ opacity: 0, x: -20 }}
+      className={cn("flex gap-3 py-3", isReply && "ml-8", isDeleting && "opacity-50 pointer-events-none")}
     >
       <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
@@ -257,6 +261,16 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {isOwner && (
+              <button
+                onClick={() => onDelete(comment.id)}
+                disabled={isDeleting}
+                className="text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
+                aria-label="Delete"
+              >
+                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+              </button>
+            )}
           </div>
           <button
             onClick={handleBookmark}
@@ -290,6 +304,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -463,6 +478,39 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     // Optimistic update for local state
   };
 
+  const handleDeleteComment = useCallback(async (commentId: string) => {
+    if (!isAuthenticated || !user) {
+      toast.error('Please connect your wallet to delete comments');
+      return;
+    }
+
+    // Don't delete optimistic (temp) comments via API
+    if (commentId.startsWith('temp-')) {
+      setOptimisticComments(prev => prev.filter(c => c.id !== commentId));
+      return;
+    }
+
+    setDeletingCommentId(commentId);
+    try {
+      await deleteComment(commentId);
+      toast.success('Comment deleted');
+      // Invalidate comments cache to refetch
+      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+    } catch (error) {
+      console.error('Failed to delete comment:', error);
+      toast.error('Failed to delete comment');
+    } finally {
+      setDeletingCommentId(null);
+    }
+  }, [isAuthenticated, user, queryClient, tokenId]);
+
+  // Check if user owns a comment
+  const isCommentOwner = useCallback((comment: Comment) => {
+    if (!user) return false;
+    const userAddress = (user.address || user.wallet_address || '').toLowerCase();
+    return comment.address?.toLowerCase() === userAddress;
+  }, [user]);
+
   const handleReply = (commentId: string) => {
     const found = allComments.find(c => c.id === commentId);
     if (found) {
@@ -624,7 +672,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
+                        onDelete={handleDeleteComment}
                         onUserPress={handleUserPress}
+                        isOwner={isCommentOwner(comment)}
+                        isDeleting={deletingCommentId === comment.id}
                       />
                       {replies.map(reply => (
                         <CommentItem 
@@ -635,8 +686,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onReply={handleReply} 
                           onShare={() => {}} 
                           onBookmark={() => {}}
+                          onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
+                          isOwner={isCommentOwner(reply)}
+                          isDeleting={deletingCommentId === reply.id}
                         />
                       ))}
                     </div>
@@ -687,7 +741,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
+                        onDelete={handleDeleteComment}
                         onUserPress={handleUserPress}
+                        isOwner={isCommentOwner(comment)}
+                        isDeleting={deletingCommentId === comment.id}
                       />
                       {replies.map(reply => (
                         <CommentItem 
@@ -698,8 +755,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onReply={handleReply} 
                           onShare={() => {}} 
                           onBookmark={() => {}}
+                          onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
+                          isOwner={isCommentOwner(reply)}
+                          isDeleting={deletingCommentId === reply.id}
                         />
                       ))}
                     </div>
