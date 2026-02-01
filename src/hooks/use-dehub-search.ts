@@ -7,13 +7,17 @@
  * @module hooks/use-dehub-search
  */
 
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useMutation } from '@tanstack/react-query';
 import { 
-  universalSearch, 
+  universalSearch,
+  getSearchSuggestions,
+  logSearchAnalytics,
   type DeHubNFT, 
   type SearchAccount,
   type SearchLivestream,
-  type UniversalSearchResponse 
+  type UniversalSearchResponse,
+  type SearchSuggestion,
+  type SearchLogParams,
 } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
@@ -227,7 +231,7 @@ export function mapNFTsToContent(nfts: DeHubNFT[]): {
   videos: DeHubNFT[];
   images: DeHubNFT[];
   all: DeHubNFT[];
-} {
+}  {
   const videos: DeHubNFT[] = [];
   const images: DeHubNFT[] = [];
 
@@ -240,4 +244,41 @@ export function mapNFTsToContent(nfts: DeHubNFT[]): {
   });
 
   return { videos, images, all: nfts };
+}
+
+// Re-export types for convenience
+export type { SearchSuggestion, SearchLogParams };
+
+/**
+ * Hook for search autocomplete suggestions
+ */
+export function useSearchSuggestions(query: string, enabled = true) {
+  const debouncedQuery = useDebouncedValue(query, 200);
+  
+  // Only fetch if query is at least 2 characters
+  const shouldFetch = enabled && debouncedQuery.trim().length >= 2;
+
+  return useQuery({
+    queryKey: ['search-suggestions', debouncedQuery.trim()],
+    queryFn: () => getSearchSuggestions({ 
+      q: debouncedQuery.trim(),
+      limit: 8,
+    }),
+    enabled: shouldFetch,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+  });
+}
+
+/**
+ * Hook for logging search analytics
+ */
+export function useSearchAnalytics() {
+  return useMutation({
+    mutationFn: logSearchAnalytics,
+    // Fire and forget - no need to handle errors for analytics
+    onError: (error) => {
+      console.debug('Search analytics log failed:', error);
+    },
+  });
 }

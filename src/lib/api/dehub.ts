@@ -472,6 +472,82 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
   return response as UniversalSearchResponse;
 }
 
+/**
+ * Search suggestions/autocomplete params
+ */
+export interface SearchSuggestionsParams {
+  /** Partial search query */
+  q: string;
+  /** Max number of suggestions */
+  limit?: number;
+}
+
+/**
+ * Search suggestion item
+ */
+export interface SearchSuggestion {
+  text: string;
+  type: 'query' | 'account' | 'tag';
+  data?: {
+    address?: string;
+    username?: string;
+    avatarUrl?: string;
+  };
+}
+
+/**
+ * Get search autocomplete suggestions
+ * Uses the /api/search/suggestions endpoint
+ */
+export async function getSearchSuggestions(params: SearchSuggestionsParams): Promise<SearchSuggestion[]> {
+  const response = await apiCall<{ suggestions: SearchSuggestion[] } | SearchSuggestion[]>("/api/search/suggestions", {
+    params: {
+      q: params.q,
+      limit: params.limit,
+    },
+  });
+  
+  // Handle wrapped response from API
+  if (response && typeof response === 'object' && 'suggestions' in response) {
+    return response.suggestions;
+  }
+  
+  return response as SearchSuggestion[];
+}
+
+/**
+ * Search analytics log params
+ */
+export interface SearchLogParams {
+  /** Search query that was executed */
+  query: string;
+  /** Type of content searched */
+  type?: 'accounts' | 'videos' | 'livestreams' | 'all';
+  /** Number of results returned */
+  resultCount?: number;
+  /** Whether user clicked on a result */
+  clicked?: boolean;
+  /** ID of clicked result (if applicable) */
+  clickedResultId?: string;
+}
+
+/**
+ * Log search analytics
+ * Uses the POST /api/search/log endpoint
+ */
+export async function logSearchAnalytics(params: SearchLogParams): Promise<void> {
+  await apiCall<{ status: boolean }>("/api/search/log", {
+    method: "POST",
+    body: {
+      query: params.query,
+      type: params.type,
+      resultCount: params.resultCount,
+      clicked: params.clicked,
+      clickedResultId: params.clickedResultId,
+    },
+  });
+}
+
 export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
   const response = await apiCall<{ result: DeHubNFT } | DeHubNFT>(`/api/nft_info/${tokenId}`);
   // Handle wrapped response from API
