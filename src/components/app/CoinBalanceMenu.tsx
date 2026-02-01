@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut } from 'lucide-react';
 import {
   Drawer,
@@ -48,6 +49,7 @@ const MOCK_TRANSACTIONS = [
 export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { walletAddress, isAuthenticated, disconnect } = useAuth();
+  const navigate = useNavigate();
 
   const handleOpenChange = (open: boolean) => {
     if (open && onAuthRequired && !onAuthRequired()) {
@@ -93,15 +95,15 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   };
 
   const handleBuyWithCard = () => {
-    toast.info('Coming Soon', { description: 'Card payments will be available soon' });
     setIsOpen(false);
     setMenuView('main');
+    navigate('/app/buy');
   };
 
   const handleBuyWithCrypto = () => {
-    toast.info('Coming Soon', { description: 'Crypto payments will be available soon' });
     setIsOpen(false);
     setMenuView('main');
+    navigate('/app/buy');
   };
 
   const handleSendCoins = () => {
