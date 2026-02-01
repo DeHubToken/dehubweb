@@ -625,7 +625,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       });
 
       // Step 1: Call the mint API to get signature
-      toast.info('Uploading content...', { id: 'mint-progress' });
+      // Dismiss any existing toast to avoid overlap
+      toast.dismiss('mint-progress');
+      toast.loading('Uploading content...', { id: 'mint-progress' });
       
       const mintResponse = await mintPost({
         name: text.trim().slice(0, 100) || 'Untitled',
@@ -692,9 +694,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] Transaction hash:', txHash);
 
+      toast.dismiss('mint-progress');
       toast.success('Post Sent!', {
-        id: 'mint-progress',
-        description: 'Your post is being confirmed on-chain. This may take a few minutes.',
         action: {
           label: 'View Transaction',
           onClick: () => window.open(`https://basescan.org/tx/${txHash}`, '_blank'),
@@ -705,7 +706,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       onClose();
     } catch (error) {
       console.error('[Mint] Failed to mint post:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create post', { id: 'mint-progress' });
+      toast.dismiss('mint-progress');
+      toast.error(error instanceof Error ? error.message : 'Failed to create post');
     } finally {
       setIsPosting(false);
     }
