@@ -56,7 +56,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const pendingVoiceRef = useRef(false);
   
   // Global minimized chats manager
-  const { chats: minimizedChats, addChat, removeChat, isMinimized, getPosition } = useMinimizedChats();
+  const { addChat, removeChat, isMinimized } = useMinimizedChats();
   const isThisMinimized = isMinimized(chatId);
 
   // Voice chat hook
@@ -387,23 +387,9 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     </div>
   );
 
-  // Minimized floating button - stacked based on position
-  if (isThisMinimized && isOpen) {
-    const position = getPosition(chatId);
-    const bottomOffset = 80 + (position * 56); // 80px base + 56px per stacked item
-    
-    return (
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0, opacity: 0 }}
-        onClick={handleRestore}
-        style={{ bottom: `${bottomOffset}px` }}
-        className="fixed right-4 z-50 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors"
-      >
-        <img src={assistantAvatar} alt="AI Assistant" className="w-8 h-8 rounded-lg" />
-      </motion.button>
-    );
+  // When minimized, don't render anything - global MinimizedAIChats handles the floating button
+  if (isThisMinimized) {
+    return null;
   }
 
   // Mobile: Drawer

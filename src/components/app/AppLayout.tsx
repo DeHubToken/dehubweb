@@ -9,6 +9,7 @@ import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
 import { PostModal } from '@/features/post/PostModal';
 import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
+import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 interface AppLayoutContentProps {
   children?: ReactNode;
 }
@@ -38,6 +39,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       
       {/* Radio Mini Player */}
       <RadioMiniPlayer />
+      
+      {/* Minimized AI Chats */}
+      <MinimizedAIChats />
       
       {/* Global Post Modal for drag & drop */}
       <PostModal 
