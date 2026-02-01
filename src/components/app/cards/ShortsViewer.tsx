@@ -168,7 +168,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     if (!currentShort?.id || isVoting || isLiked || isDisliked) return;
     
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet to vote');
+      toast.error('Log in to engage');
       return;
     }
 
