@@ -274,31 +274,53 @@ export function PostContentArea({
     }
   }, [editorRef, saveCursorPosition, restoreCursorPosition]);
 
-  // Handle input changes
+  // Handle input changes - preserve line breaks from contentEditable
   const handleInput = useCallback((e?: React.FormEvent<HTMLDivElement>) => {
     const editor = e?.currentTarget || editorRef.current;
     if (!editor) return;
     
-    // Get plain text including URLs from chips
+    // Get plain text including URLs from chips and preserving line breaks
     let plainText = '';
-    const walker = document.createTreeWalker(
-      editor,
-      NodeFilter.SHOW_ALL,
-      null
-    );
     
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
+    const processNode = (node: Node, isFirst: boolean = false) => {
       if (node.nodeType === Node.TEXT_NODE) {
-        plainText += node.textContent;
+        plainText += node.textContent || '';
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const el = node as HTMLElement;
+        const tagName = el.tagName.toUpperCase();
+        
+        // Handle link chips specially - skip their children
         if (el.hasAttribute('data-link-chip')) {
           plainText += el.getAttribute('data-url') || '';
-          // Skip children of link chip
-          walker.nextSibling();
+          return;
+        }
+        
+        // BR elements become newlines
+        if (tagName === 'BR') {
+          plainText += '\n';
+          return;
+        }
+        
+        // Block elements (DIV, P) add newline before (except first)
+        const isBlock = tagName === 'DIV' || tagName === 'P';
+        if (isBlock && !isFirst && plainText.length > 0 && !plainText.endsWith('\n')) {
+          plainText += '\n';
+        }
+        
+        // Process children recursively
+        let first = true;
+        for (const child of el.childNodes) {
+          processNode(child, first && isFirst);
+          first = false;
         }
       }
+    };
+    
+    // Process all children of editor
+    let first = true;
+    for (const child of editor.childNodes) {
+      processNode(child, first);
+      first = false;
     }
     
     setText(plainText);
