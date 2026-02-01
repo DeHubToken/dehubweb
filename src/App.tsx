@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 import { UsernameRequiredModal } from "@/components/app/modals";
 import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -91,9 +92,11 @@ function AppContent() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <AppContent />
-      </TooltipProvider>
+      <OptimisticPostsProvider>
+        <TooltipProvider>
+          <AppContent />
+        </TooltipProvider>
+      </OptimisticPostsProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

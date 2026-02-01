@@ -35,6 +35,7 @@ import { getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
@@ -324,6 +325,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   };
 
   const { walletAddress } = useAuth();
+  const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
@@ -403,9 +405,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Trigger new shuffle and reset pre-fetch state
       setShuffleTrigger(prev => prev + 1);
       setHasPreFetched(false);
+      // Clear optimistic posts on refresh since real data should be available
+      clearOptimisticPosts();
       refetch();
     }
-  }, [shuffleKey, refetch]);
+  }, [shuffleKey, refetch, clearOptimisticPosts]);
 
   // Pre-fetch multiple pages for random mode to enable cross-page shuffling
   useEffect(() => {
@@ -742,11 +746,29 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <StoriesBar users={storyUsers} />
           </div>
           
-          {items.length === 0 && !pinnedItem ? (
+          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 ? (
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
-              {/* Render pinned post first if available */}
+              {/* Render optimistic posts first (newly created, not yet minted) */}
+              {optimisticPosts.map((op) => {
+                const feedItem: FeedItemType = { 
+                  type: op.type, 
+                  data: op.data as any 
+                };
+                return (
+                  <div key={op.id} className="relative">
+                    {/* Subtle indicator that post is processing */}
+                    <div className="absolute top-2 right-2 z-10 px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-medium flex items-center gap-1">
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      Processing
+                    </div>
+                    {renderFeedItem(feedItem, -999)}
+                  </div>
+                );
+              })}
+              
+              {/* Render pinned post if available */}
               {pinnedItem && renderFeedItem(pinnedItem, -1)}
               
               {/* Rest of the feed */}
