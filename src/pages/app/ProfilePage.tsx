@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
@@ -26,6 +26,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileData } from '@/hooks/use-dehub-profile';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
+import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -69,10 +70,31 @@ export default function ProfilePage() {
   const {
     data: userContentData,
     isLoading: isLoadingContent,
+    refetch: refetchContent,
+    isFetching: isFetchingContent,
   } = useDeHubUserContent({
     userId: apiProfile?.walletAddress,
     viewerAddress: currentWalletAddress || undefined,
     enabled: !!apiProfile?.walletAddress,
+  });
+  
+  // Pull-to-refresh state
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetchContent();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+  
+  const { pullDistance, isPulling, handlers } = usePullToRefresh({
+    onRefresh: handleRefresh,
+    isRefreshing,
+    containerRef,
   });
   
   // Determine which profile to show - no more mock fallback
@@ -559,7 +581,26 @@ export default function ProfilePage() {
 
 
   const profileContent = (
-    <div className="min-h-screen">
+    <div 
+      ref={containerRef}
+      className="min-h-screen"
+      {...handlers}
+    >
+      {/* Pull-to-refresh indicator */}
+      {(isPulling || isRefreshing) && (
+        <div 
+          className="flex items-center justify-center py-3 transition-all duration-200"
+          style={{ 
+            height: isRefreshing ? 48 : Math.min(pullDistance, 48),
+            opacity: isRefreshing ? 1 : Math.min(pullDistance / 40, 1)
+          }}
+        >
+          <div className={cn(
+            "w-6 h-6 border-2 border-white/30 border-t-white rounded-full",
+            isRefreshing && "animate-spin"
+          )} />
+        </div>
+      )}
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
