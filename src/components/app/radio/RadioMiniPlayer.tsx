@@ -48,8 +48,8 @@ export function RadioMiniPlayer() {
             'fixed bottom-16 lg:bottom-4 z-50',
             // Mobile: 95% width with side margins
             'left-[2.5%] right-[2.5%]',
-            // Tablet/iPad: centered with 69px left offset for sidebar
-            'md:left-0 md:right-[138px] md:mx-auto md:max-w-[412px]',
+            // Tablet/iPad: centered with slight left offset, 5% smaller
+            'md:left-0 md:right-[100px] md:mx-auto md:max-w-[390px]',
             // Desktop: fixed width on right side
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
             'bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10',
