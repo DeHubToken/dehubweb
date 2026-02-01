@@ -14,9 +14,23 @@ import {
   markConversationAsRead,
   deleteConversation,
   searchUsersForDM,
+  blockConversation,
+  unblockConversation,
+  createGroup,
+  getGroupInfo,
+  joinGroup,
+  updateGroup,
+  leaveGroup,
+  blockUserInGroup,
+  uploadChatImage,
+  getUserOnlineStatus,
+  updateUserOnlineStatus,
+  getDMVideos,
   type DeHubConversation,
   type DeHubDMMessage,
   type DeHubUser,
+  type GroupInfo,
+  type DMMessageType,
 } from '@/lib/api/dehub';
 
 // Query keys for cache management
@@ -141,12 +155,16 @@ export function useSendMessage(conversationId: string) {
       content,
       type = 'text',
       mediaUrl,
+      tipAmount,
+      tipCurrency,
     }: {
       content: string;
-      type?: 'text' | 'image' | 'gif';
+      type?: DMMessageType;
       mediaUrl?: string;
+      tipAmount?: number;
+      tipCurrency?: string;
     }) => {
-      return sendMessage(conversationId, content, type, mediaUrl);
+      return sendMessage(conversationId, content, type, mediaUrl, tipAmount, tipCurrency);
     },
     onMutate: async ({ content, type, mediaUrl }) => {
       // Cancel outgoing refetches
@@ -166,7 +184,7 @@ export function useSendMessage(conversationId: string) {
           avatarImageUrl: user?.avatarImageUrl,
         } as DeHubUser,
         content,
-        type: type || 'text',
+        type: type as DMMessageType || 'text',
         mediaUrl,
         createdAt: new Date().toISOString(),
       };
@@ -250,4 +268,203 @@ export function useUserSearchForDM(query: string) {
 export function useTotalUnreadCount() {
   const { conversations } = useConversations();
   return conversations.reduce((sum, conv) => sum + (conv.unreadCount || 0), 0);
+}
+
+// ============================================
+// BLOCK / UNBLOCK HOOKS
+// ============================================
+
+/**
+ * Hook for blocking a conversation
+ */
+export function useBlockConversation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (conversationId: string) => blockConversation(conversationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
+}
+
+/**
+ * Hook for unblocking a conversation
+ */
+export function useUnblockConversation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (conversationId: string) => unblockConversation(conversationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
+}
+
+// ============================================
+// GROUP CHAT HOOKS
+// ============================================
+
+/**
+ * Hook for creating a new group chat
+ */
+export function useCreateGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ name, memberAddresses, description }: { 
+      name: string; 
+      memberAddresses: string[]; 
+      description?: string 
+    }) => createGroup(name, memberAddresses, description),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
+}
+
+/**
+ * Hook for fetching group info
+ */
+export function useGroupInfo(groupId: string | null) {
+  const { isAuthenticated } = useAuth();
+
+  return useQuery({
+    queryKey: [...messagesKeys.conversation(groupId || ''), 'groupInfo'],
+    queryFn: () => getGroupInfo(groupId!),
+    enabled: isAuthenticated && !!groupId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+/**
+ * Hook for joining a group
+ */
+export function useJoinGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (groupId: string) => joinGroup(groupId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
+}
+
+/**
+ * Hook for updating a group
+ */
+export function useUpdateGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ groupId, updates }: { 
+      groupId: string; 
+      updates: { name?: string; description?: string; avatarUrl?: string } 
+    }) => updateGroup(groupId, updates),
+    onSuccess: (_, { groupId }) => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversation(groupId) });
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
+}
+
+/**
+ * Hook for leaving a group
+ */
+export function useLeaveGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (groupId: string) => leaveGroup(groupId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+  });
+}
+
+/**
+ * Hook for blocking a user in a group (admin action)
+ */
+export function useBlockUserInGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ groupId, userAddress }: { groupId: string; userAddress: string }) => 
+      blockUserInGroup(groupId, userAddress),
+    onSuccess: (_, { groupId }) => {
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversation(groupId) });
+    },
+  });
+}
+
+// ============================================
+// MEDIA UPLOAD HOOKS
+// ============================================
+
+/**
+ * Hook for uploading chat images
+ */
+export function useUploadChatImage() {
+  return useMutation({
+    mutationFn: (file: File) => uploadChatImage(file),
+  });
+}
+
+// ============================================
+// USER STATUS HOOKS
+// ============================================
+
+/**
+ * Hook for fetching a user's online status
+ */
+export function useUserOnlineStatus(address: string | null) {
+  const { isAuthenticated } = useAuth();
+
+  return useQuery({
+    queryKey: [...messagesKeys.all, 'userStatus', address],
+    queryFn: () => getUserOnlineStatus(address!),
+    enabled: isAuthenticated && !!address,
+    staleTime: 30 * 1000, // 30 seconds
+    refetchInterval: 60 * 1000, // Refresh every minute
+  });
+}
+
+/**
+ * Hook for updating user's own online status (heartbeat)
+ */
+export function useUpdateOnlineStatus() {
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: () => updateUserOnlineStatus(user?.address || ''),
+  });
+}
+
+// ============================================
+// DM VIDEOS HOOK
+// ============================================
+
+/**
+ * Hook for fetching videos shared in DMs
+ */
+export function useDMVideos() {
+  const { isAuthenticated } = useAuth();
+
+  return useInfiniteQuery({
+    queryKey: [...messagesKeys.all, 'dmVideos'],
+    queryFn: async ({ pageParam = 0 }) => {
+      return getDMVideos(pageParam, 20);
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.hasMore) {
+        return allPages.length;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 }
