@@ -624,7 +624,7 @@ function PrivacySettings() {
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Followers & Following Visibility</p>
+                <p className="text-white font-medium">Follow Visibility</p>
                 <p className="text-zinc-500 text-sm">Control how others see your social stats</p>
               </div>
             </div>
@@ -644,7 +644,7 @@ function PrivacySettings() {
                 }
               }}
               disabled={isUpdating || isLoading}
-              title="Followers & Following Visibility"
+              title="Follow Visibility"
               options={[
                 { value: 'public', label: 'Public', description: 'Numbers visible and clickable' },
                 { value: 'counts-only', label: 'Numbers only', description: 'Numbers visible but not clickable' },
