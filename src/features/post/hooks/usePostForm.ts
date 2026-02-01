@@ -776,7 +776,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Create optimistic post to show immediately in feed
       const optimisticId = `optimistic-${Date.now()}`;
       const username = user?.username || user?.displayName || 'You';
-      const avatar = user?.avatarUrl || '';
+      // Use proper avatar resolution - check all possible fields and build CDN URL
+      const rawAvatar = user?.avatarImageUrl || user?.avatarUrl || user?.avatar_url;
+      const avatar = rawAvatar 
+        ? (rawAvatar.startsWith('http') ? rawAvatar : `https://cdn.dehub.io/avatars/${user?.address}.${rawAvatar.split('.').pop() || 'png'}`)
+        : undefined;
       
       if (hasVideo && media[0]) {
         // Video post
@@ -788,7 +792,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           duration: media[0].duration ? `${Math.floor(media[0].duration / 60)}:${String(Math.floor(media[0].duration % 60)).padStart(2, '0')}` : '0:00',
           title: text.trim().split('\n')[0] || 'Untitled',
           channel: username,
-          channelAvatar: avatar,
+          channelAvatar: avatar || '', // Must be string for VideoItem type
           verified: false,
           views: '0',
           uploadedAgo: 'Just now',
@@ -808,7 +812,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           type: 'image',
           username,
           verified: false,
-          avatar,
+          avatar: avatar || '', // Must be string for ImagePost type
           image: media[0].preview,
           imageUrls: media.filter(m => m.type === 'image').map(m => m.preview),
           title: text.trim().split('\n')[0] || '',
