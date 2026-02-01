@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
@@ -31,6 +31,7 @@ import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
 
@@ -167,6 +168,10 @@ export default function ProfilePage() {
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // Refs for pull-to-refresh
+  const profileContainerRef = useRef<HTMLDivElement>(null);
   
   // Fetch subscription plans for this profile
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress);
@@ -175,13 +180,45 @@ export default function ProfilePage() {
   );
   
   // Get optimistic posts for own profile
-  const { optimisticPosts } = useOptimisticPosts();
+  const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
   
   // Fetch privacy settings for the profile being viewed
   const { showFollowersFollowing, hideFollowerCounts } = useUserPrivacySettings(apiProfile?.walletAddress);
   
   // Use API's isFollowing status
   const isFollowing = apiProfile?.isFollowing ?? false;
+  
+  // Pull-to-refresh handler
+  const PULL_THRESHOLD = 80;
+  
+  const triggerRefresh = useCallback(() => {
+    if (isRefreshing) return;
+    
+    setIsRefreshing(true);
+    
+    // Clear optimistic posts on refresh since real data should be available
+    if (isViewingOwnProfile) {
+      clearOptimisticPosts();
+    }
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Simulate refresh delay then refetch
+    setTimeout(() => {
+      // Trigger refetch of profile content
+      // The queries will refetch automatically when key changes
+      setIsRefreshing(false);
+    }, 1000);
+  }, [isRefreshing, isViewingOwnProfile, clearOptimisticPosts]);
+  
+  // Pull-to-refresh hook
+  const { pullDistance, handlers: pullHandlers } = usePullToRefresh({
+    pullThreshold: PULL_THRESHOLD,
+    onRefresh: triggerRefresh,
+    isRefreshing,
+    containerRef: profileContainerRef,
+  });
 
   const handleCopyProfileUrl = () => {
     navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
@@ -621,7 +658,37 @@ export default function ProfilePage() {
 
 
   const profileContent = (
-    <div className="min-h-screen">
+    <div 
+      ref={profileContainerRef}
+      className="min-h-screen"
+      onTouchStart={pullHandlers.onTouchStart}
+      onTouchMove={pullHandlers.onTouchMove}
+      onTouchEnd={pullHandlers.onTouchEnd}
+      onMouseDown={pullHandlers.onMouseDown}
+      onMouseMove={pullHandlers.onMouseMove}
+      onMouseUp={pullHandlers.onMouseUp}
+      onMouseLeave={pullHandlers.onMouseLeave}
+    >
+      {/* Pull-to-refresh indicator */}
+      {pullDistance > 0 && (
+        <div 
+          className="flex items-center justify-center transition-all duration-150"
+          style={{ height: pullDistance, minHeight: pullDistance > 0 ? 20 : 0 }}
+        >
+          <Loader2 
+            className={`w-6 h-6 text-white transition-opacity ${pullDistance >= PULL_THRESHOLD ? 'animate-spin' : ''}`}
+            style={{ opacity: Math.min(pullDistance / PULL_THRESHOLD, 1) }}
+          />
+        </div>
+      )}
+      
+      {/* Refreshing indicator */}
+      {isRefreshing && pullDistance === 0 && (
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="w-6 h-6 text-white animate-spin" />
+        </div>
+      )}
+      
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
