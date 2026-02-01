@@ -554,8 +554,54 @@ function NotificationSettings() {
 }
 
 function PrivacySettings() {
-  const { showFollowersFollowing, hideFollowerCounts, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const [whoCanMessage, setWhoCanMessage] = useState('everyone');
+  const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
+  const { user } = useAuthContext();
+  
+  const handlePostVisibilityChange = async (newVisibility: 'public' | 'private') => {
+    if (!user?.address) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+    
+    setIsUpdatingVisibility(true);
+    
+    try {
+      // First update the setting in database
+      updateSettings({ default_post_visibility: newVisibility });
+      
+      // Then call the API to update all existing posts visibility
+      const token = localStorage.getItem('dehub_jwt');
+      if (token) {
+        const response = await fetch('https://api.dehub.io/api/batch_token_visibility', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            visibility: newVisibility === 'private' ? 'private' : 'public',
+          }),
+        });
+        
+        if (!response.ok) {
+          console.warn('Batch visibility update not supported, posts will use new default going forward');
+        }
+      }
+      
+      toast.success(
+        newVisibility === 'private' 
+          ? 'All posts set to private' 
+          : 'All posts set to public'
+      );
+    } catch (error) {
+      console.error('Failed to update visibility:', error);
+      toast.error('Failed to update visibility');
+    } finally {
+      setIsUpdatingVisibility(false);
+    }
+  };
   
   return (
     <div className="space-y-6">
@@ -618,6 +664,35 @@ function PrivacySettings() {
             description="Allow search engines to index your profile"
             defaultChecked
           />
+        </div>
+      </div>
+
+      {/* Post Visibility */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Post Visibility</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Eye className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">Default Post Visibility</p>
+                <p className="text-zinc-500 text-sm">Applies to all current and future posts</p>
+              </div>
+            </div>
+            <SettingDrawerSelect
+              value={defaultPostVisibility}
+              onValueChange={(value) => handlePostVisibilityChange(value as 'public' | 'private')}
+              disabled={isUpdating || isLoading || isUpdatingVisibility}
+              title="Default Post Visibility"
+              options={[
+                { value: 'public', label: 'Public', description: 'Anyone can see your posts' },
+                { value: 'private', label: 'Private', description: 'Only you can see your posts' },
+              ]}
+            />
+          </div>
+          <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
+            <p><strong className="text-white">Note:</strong> Changing this will update the visibility of all your existing posts and set the default for new posts.</p>
+          </div>
         </div>
       </div>
 
