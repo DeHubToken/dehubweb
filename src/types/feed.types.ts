@@ -28,6 +28,8 @@ export interface ContentBadge {
 export interface BaseFeedItem {
   id: string;
   createdAt?: string;
+  /** Whether this is an optimistic (processing) post not yet minted */
+  isOptimistic?: boolean;
 }
 
 /**
