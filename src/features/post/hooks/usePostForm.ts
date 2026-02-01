@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { mintPost, type StreamInfo } from '@/lib/api/dehub';
@@ -11,9 +12,12 @@ import {
   DHB_TOKEN,
   BASE_CHAIN_ID,
 } from '@/lib/contracts';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { useAuth } from '@/contexts/AuthContext';
 import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
+import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -67,6 +71,10 @@ interface UsePostFormReturn {
 }
 
 export function usePostForm(onClose: () => void): UsePostFormReturn {
+  const navigate = useNavigate();
+  const { addOptimisticPost } = useOptimisticPosts();
+  const { user } = useAuth();
+  
   // Form state
   const [text, setText] = useState('');
   const [description, setDescription] = useState('');
@@ -765,8 +773,85 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.dismiss('mint-progress');
       toast.success('Posted successfully');
       
+      // Create optimistic post to show immediately in feed
+      const optimisticId = `optimistic-${Date.now()}`;
+      const username = user?.username || user?.displayName || 'You';
+      const avatar = user?.avatarUrl || '';
+      
+      if (hasVideo && media[0]) {
+        // Video post
+        const videoPost: VideoItem = {
+          id: optimisticId,
+          type: 'video',
+          thumbnail: media[0].thumbnail || media[0].preview,
+          videoUrl: media[0].preview,
+          duration: media[0].duration ? `${Math.floor(media[0].duration / 60)}:${String(Math.floor(media[0].duration % 60)).padStart(2, '0')}` : '0:00',
+          title: text.trim().split('\n')[0] || 'Untitled',
+          channel: username,
+          channelAvatar: avatar,
+          verified: false,
+          views: '0',
+          uploadedAgo: 'Just now',
+          creatorId: user?.address,
+          creatorUsername: username,
+          createdAt: new Date().toISOString(),
+          isLiked: false,
+          likeCount: 0,
+          dislikeCount: 0,
+          commentCount: 0,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'video', data: videoPost, createdAt: new Date() });
+      } else if (hasImage && media[0]) {
+        // Image post
+        const imagePost: ImagePost = {
+          id: optimisticId,
+          type: 'image',
+          username,
+          verified: false,
+          avatar,
+          image: media[0].preview,
+          imageUrls: media.filter(m => m.type === 'image').map(m => m.preview),
+          title: text.trim().split('\n')[0] || '',
+          description: text.trim(),
+          likes: 0,
+          caption: text.trim(),
+          comments: 0,
+          views: '0',
+          timeAgo: 'Just now',
+          creatorId: user?.address,
+          creatorUsername: username,
+          isLiked: false,
+          createdAt: new Date().toISOString(),
+        };
+        addOptimisticPost({ id: optimisticId, type: 'image', data: imagePost, createdAt: new Date() });
+      } else {
+        // Text post
+        const textPost: TextPost = {
+          id: optimisticId,
+          type: 'post',
+          author: {
+            id: user?.address || '',
+            name: user?.displayName || username,
+            handle: `@${username}`,
+            verified: false,
+          },
+          content: text.trim(),
+          views: '0',
+          createdAt: new Date().toISOString(),
+          stats: {
+            comments: 0,
+            reposts: 0,
+            likes: 0,
+          },
+        };
+        addOptimisticPost({ id: optimisticId, type: 'post', data: textPost, createdAt: new Date() });
+      }
+      
       resetForm();
       onClose();
+      
+      // Navigate to home to show the new post
+      navigate('/app');
     } catch (error) {
       console.error('[Mint] Failed to mint post:', error);
       toast.dismiss('mint-progress');
@@ -779,7 +864,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenAmount, liveMode, scheduledDate,
-    hasVideo, hasImage, isPosting, resetForm, onClose
+    hasVideo, hasImage, isPosting, resetForm, onClose, navigate, addOptimisticPost, user
   ]);
 
   return {
