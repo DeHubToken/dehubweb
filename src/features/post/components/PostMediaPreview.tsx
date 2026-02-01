@@ -517,24 +517,46 @@ export function PostMediaPreview({
                           transform: generateCropTransform(m.cropSettings),
                         }}
                       />
-                      <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="w-12 h-12 rounded-xl bg-black/60 flex items-center justify-center">
                           <Play className="w-6 h-6 text-white fill-white" />
                         </div>
                       </div>
-                      {/* Remove thumbnail button */}
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            onClick={() => onRemoveThumbnail?.(index)}
-                            className="absolute top-2 left-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
-                          >
-                            <Trash2 className="w-3 h-3 text-white" />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent>Remove thumbnail</TooltipContent>
-                      </Tooltip>
+                      {/* Thumbnail controls */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5">
+                        {/* Change thumbnail button */}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={() => triggerThumbnailUpload(index)}
+                              className="p-1.5 bg-black/70 hover:bg-primary/80 rounded-xl transition-colors"
+                            >
+                              <Upload className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>{m.isAutoThumbnail ? 'Change thumbnail' : 'Replace thumbnail'}</TooltipContent>
+                        </Tooltip>
+                        {/* Remove thumbnail button */}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={() => onRemoveThumbnail?.(index)}
+                              className="p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
+                            >
+                              <Trash2 className="w-3 h-3 text-white" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>Remove thumbnail</TooltipContent>
+                        </Tooltip>
+                      </div>
+                      {/* Auto-generated badge */}
+                      {m.isAutoThumbnail && (
+                        <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-lg">
+                          <span className="text-[10px] text-white/70 font-medium">Auto-generated</span>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="relative w-full h-full flex items-center justify-center">

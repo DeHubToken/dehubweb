@@ -184,16 +184,66 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     const preview = URL.createObjectURL(file);
     
     const video = document.createElement('video');
-    video.preload = 'metadata';
+    video.preload = 'auto';
+    video.muted = true;
+    video.crossOrigin = 'anonymous';
     video.src = preview;
     
-    const duration = await new Promise<number>((resolve) => {
+    // Wait for video metadata and enough data to seek
+    const duration = await new Promise<number>((resolve, reject) => {
       video.onloadedmetadata = () => {
         resolve(video.duration);
       };
+      video.onerror = () => reject(new Error('Failed to load video'));
     });
 
-    setMedia([{ file, preview, type: 'video', duration }]);
+    // Generate thumbnail from video frame (at 1 second or 10% of duration)
+    let thumbnailUrl: string | undefined;
+    let thumbnailBlob: Blob | undefined;
+    
+    try {
+      const seekTime = Math.min(1, duration * 0.1);
+      
+      await new Promise<void>((resolve, reject) => {
+        video.onseeked = () => resolve();
+        video.onerror = () => reject(new Error('Failed to seek video'));
+        video.currentTime = seekTime;
+      });
+      
+      // Create canvas to capture frame
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      
+      if (ctx && canvas.width > 0 && canvas.height > 0) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to blob for upload
+        const blob = await new Promise<Blob | null>((resolve) => {
+          canvas.toBlob(resolve, 'image/jpeg', 0.85);
+        });
+        
+        if (blob) {
+          thumbnailBlob = blob;
+          thumbnailUrl = URL.createObjectURL(blob);
+          console.log('[Video] Auto-generated thumbnail:', { width: canvas.width, height: canvas.height, size: blob.size });
+        }
+      }
+    } catch (err) {
+      console.warn('[Video] Failed to generate thumbnail:', err);
+      // Continue without thumbnail - user can add one manually
+    }
+
+    setMedia([{ 
+      file, 
+      preview, 
+      type: 'video', 
+      duration,
+      thumbnail: thumbnailUrl,
+      thumbnailBlob,
+      isAutoThumbnail: !!thumbnailUrl,
+    }]);
   }, [hasImage, hasVideo]);
 
   const removeMedia = useCallback((index: number) => {
@@ -274,11 +324,25 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     ));
   }, []);
 
-  const addThumbnailToMedia = useCallback((index: number, thumbnailUrl: string) => {
+  const addThumbnailToMedia = useCallback(async (index: number, thumbnailUrl: string) => {
+    // Fetch the blob from URL for upload
+    let thumbnailBlob: Blob | undefined;
+    try {
+      const response = await fetch(thumbnailUrl);
+      thumbnailBlob = await response.blob();
+    } catch (err) {
+      console.warn('[Thumbnail] Failed to fetch blob:', err);
+    }
+    
     setMedia(prev => prev.map((m, i) => {
       if (i === index && m.type === 'video') {
         if (m.thumbnail) URL.revokeObjectURL(m.thumbnail);
-        return { ...m, thumbnail: thumbnailUrl };
+        return { 
+          ...m, 
+          thumbnail: thumbnailUrl, 
+          thumbnailBlob,
+          isAutoThumbnail: false, // Custom upload, not auto-generated
+        };
       }
       return m;
     }));
@@ -288,7 +352,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setMedia(prev => prev.map((m, i) => {
       if (i === index && m.thumbnail) {
         URL.revokeObjectURL(m.thumbnail);
-        return { ...m, thumbnail: undefined };
+        return { ...m, thumbnail: undefined, thumbnailBlob: undefined, isAutoThumbnail: false };
       }
       return m;
     }));
@@ -605,12 +669,16 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Get media files
       const files = media.map(m => m.file);
       
-      // Get thumbnail for video posts
+      // Get thumbnail for video posts - use stored blob if available
       let thumbnail: Blob | undefined;
-      if (hasVideo && media[0]?.thumbnail) {
-        // Convert thumbnail URL to blob
-        const thumbResponse = await fetch(media[0].thumbnail);
-        thumbnail = await thumbResponse.blob();
+      if (hasVideo && media[0]) {
+        if (media[0].thumbnailBlob) {
+          thumbnail = media[0].thumbnailBlob;
+        } else if (media[0].thumbnail) {
+          // Fallback: convert thumbnail URL to blob
+          const thumbResponse = await fetch(media[0].thumbnail);
+          thumbnail = await thumbResponse.blob();
+        }
       }
 
       console.log('[Mint] Minting post:', {
