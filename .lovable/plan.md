@@ -1,122 +1,213 @@
 
-# Fix: Pull-to-Refresh Firing Twice
+# Fix: Preserve Line Breaks in Posts
 
 ## Problem Summary
 
-The pull-to-refresh animation on the Profile page fires twice on mobile and sometimes on desktop. Users see two pull-down animations and two reload operations.
+When users enter line breaks in the post modal (by pressing Enter), those line breaks are not preserved in the final post display. The text appears as a single paragraph.
 
 ## Root Cause Analysis
 
-The issue stems from **race conditions** in the `usePullToRefresh` hook:
+Two issues cause this problem:
 
-1. **Async State Guard**: The `triggerRefresh` function checks `isRefreshing` state, but React state updates are asynchronous. Multiple events can call `triggerRefresh()` before the state updates.
+### Issue 1: Line Breaks Not Captured During Input
 
-2. **Mobile Touch Events**: On mobile, browsers can fire multiple rapid touch events during a single swipe gesture (especially with overscroll/bounce effects).
+The `handleInput` function in `PostContentArea.tsx` uses a TreeWalker to extract plain text:
 
-3. **Trackpad Inertia**: On desktop trackpads, inertial scrolling fires many wheel events in quick succession. The accumulator can reset and rebuild fast enough to trigger multiple refreshes.
-
+```typescript
+while (walker.nextNode()) {
+  const node = walker.currentNode;
+  if (node.nodeType === Node.TEXT_NODE) {
+    plainText += node.textContent;  // Only captures text nodes
+  }
+  // ...
+}
 ```
-Current Flow (Buggy):
-+---------------+     +---------------+     +---------------+
-| Touch/Wheel   | --> | Check state   | --> | onRefresh()   |
-| Event 1       |     | isRefreshing  |     | Called        |
-+---------------+     | = false ✓     |     +---------------+
-                      +---------------+
-                              ↓
-+---------------+     +---------------+     +---------------+
-| Touch/Wheel   | --> | Check state   | --> | onRefresh()   |
-| Event 2       |     | isRefreshing  |     | Called AGAIN! |
-| (rapid fire)  |     | = false ✓     |     +---------------+
-+---------------+     | (not updated  |
-                      |  yet!)        |
-                      +---------------+
+
+When users press Enter in a `contentEditable` div, browsers insert `<br>` elements or wrap text in `<div>` elements. The TreeWalker ignores these, so line breaks are lost.
+
+### Issue 2: Line Breaks Not Rendered in PostCard
+
+Even if line breaks were captured as `\n` characters, the `TranslatableText` component renders without CSS whitespace handling:
+
+```tsx
+// PostCard.tsx line 124
+<TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
+
+// TranslatableText.tsx line 294-295
+<Component className={className}>
+  {isTranslated ? translatedText : text}
+</Component>
 ```
+
+Without `whitespace-pre-wrap`, newline characters render as spaces.
 
 ## Solution
 
-Add a **synchronous ref-based lock** that updates immediately, preventing any subsequent calls before React state catches up:
+### Change 1: Capture Line Breaks in Input Handler
+
+Update the `handleInput` function to detect `<br>` elements and block-level elements (`<div>`, `<p>`) and convert them to newline characters:
 
 ```
-Fixed Flow:
-+---------------+     +---------------+     +---------------+
-| Touch/Wheel   | --> | Check REF     | --> | onRefresh()   |
-| Event 1       |     | hasTriggered  |     | Called        |
-+---------------+     | = false ✓     |     | Set ref=true  |
-                      +---------------+     +---------------+
-                              ↓
-+---------------+     +---------------+
-| Touch/Wheel   | --> | Check REF     |
-| Event 2       |     | hasTriggered  |
-| (rapid fire)  |     | = true ✗      | --> BLOCKED
-+---------------+     | (immediately  |
-                      |  updated!)    |
-                      +---------------+
+File: src/features/post/components/PostContentArea.tsx
+
+Current TreeWalker logic:
+- Only captures text nodes
+- Ignores structural elements
+
+Updated logic:
+- Check for BR elements and append '\n'
+- Check for DIV/P elements and append '\n' before their content
+- Handle edge cases (first element, consecutive breaks)
 ```
 
-## Technical Changes
+### Change 2: Render with Preserved Whitespace
 
-### File: `src/hooks/use-pull-to-refresh.ts`
+Update the `TranslatableText` component to include `whitespace-pre-wrap` in its styling:
 
-1. **Add a ref-based trigger lock**:
-   ```typescript
-   const hasTriggeredRef = useRef<boolean>(false);
-   ```
+```
+File: src/components/app/TranslatableText.tsx
 
-2. **Update `triggerRefresh` to use synchronous lock**:
-   ```typescript
-   const triggerRefresh = useCallback(() => {
-     // Synchronous check prevents race conditions
-     if (hasTriggeredRef.current || isRefreshing) {
-       return;
-     }
-     hasTriggeredRef.current = true;
-     onRefresh();
-   }, [isRefreshing, onRefresh]);
-   ```
+Add to the wrapper element:
+- className that includes "whitespace-pre-wrap"
+- This ensures \n characters render as line breaks
+```
 
-3. **Reset the lock when `isRefreshing` changes to false**:
-   ```typescript
-   useEffect(() => {
-     if (!isRefreshing) {
-       hasTriggeredRef.current = false;
-     }
-   }, [isRefreshing]);
-   ```
+## Implementation Details
 
-4. **Add cooldown period after trigger** (extra safety for mobile):
-   ```typescript
-   const lastTriggerTime = useRef<number>(0);
-   const TRIGGER_COOLDOWN_MS = 1000;
-   
-   const triggerRefresh = useCallback(() => {
-     const now = Date.now();
-     if (
-       hasTriggeredRef.current || 
-       isRefreshing || 
-       now - lastTriggerTime.current < TRIGGER_COOLDOWN_MS
-     ) {
-       return;
-     }
-     hasTriggeredRef.current = true;
-     lastTriggerTime.current = now;
-     onRefresh();
-   }, [isRefreshing, onRefresh]);
-   ```
+### File 1: `src/features/post/components/PostContentArea.tsx`
+
+Update the `handleInput` function (around lines 278-311):
+
+```typescript
+const handleInput = useCallback((e?: React.FormEvent<HTMLDivElement>) => {
+  const editor = e?.currentTarget || editorRef.current;
+  if (!editor) return;
+  
+  // Get plain text including URLs from chips and preserving line breaks
+  let plainText = '';
+  
+  const processNode = (node: Node, isFirst: boolean = false) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      plainText += node.textContent || '';
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement;
+      const tagName = el.tagName.toUpperCase();
+      
+      // Handle link chips specially
+      if (el.hasAttribute('data-link-chip')) {
+        plainText += el.getAttribute('data-url') || '';
+        return;
+      }
+      
+      // BR elements become newlines
+      if (tagName === 'BR') {
+        plainText += '\n';
+        return;
+      }
+      
+      // Block elements (DIV, P) add newline before (except first)
+      const isBlock = tagName === 'DIV' || tagName === 'P';
+      if (isBlock && !isFirst && plainText.length > 0 && !plainText.endsWith('\n')) {
+        plainText += '\n';
+      }
+      
+      // Process children
+      let first = true;
+      for (const child of el.childNodes) {
+        processNode(child, first && isFirst);
+        first = false;
+      }
+    }
+  };
+  
+  // Process all children of editor
+  let first = true;
+  for (const child of editor.childNodes) {
+    processNode(child, first);
+    first = false;
+  }
+  
+  setText(plainText);
+  
+  // Trigger mention detection
+  mention.handleInput(plainText);
+  
+  // Process links after a short delay (debounce)
+  setTimeout(processLinks, 300);
+}, [editorRef, setText, processLinks, mention]);
+```
+
+### File 2: `src/components/app/TranslatableText.tsx`
+
+Update the rendering to preserve whitespace (around line 294):
+
+```typescript
+// Before (line 284-301):
+return (
+  <>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={isTranslated ? 'translated' : 'original'}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
+      >
+        <Component className={className}>
+          {isTranslated ? translatedText : text}
+        </Component>
+      </motion.div>
+    </AnimatePresence>
+    {renderTranslateControl()}
+  </>
+);
+
+// After:
+return (
+  <>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={isTranslated ? 'translated' : 'original'}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
+      >
+        <Component className={cn("whitespace-pre-wrap", className)}>
+          {isTranslated ? translatedText : text}
+        </Component>
+      </motion.div>
+    </AnimatePresence>
+    {renderTranslateControl()}
+  </>
+);
+```
+
+Also update the simple render case (around line 224):
+
+```typescript
+// Before:
+if (!shouldOfferTranslation && !isDetecting) {
+  return <Component className={className}>{text}</Component>;
+}
+
+// After:
+if (!shouldOfferTranslation && !isDetecting) {
+  return <Component className={cn("whitespace-pre-wrap", className)}>{text}</Component>;
+}
+```
 
 ## Summary of Changes
 
-| Change | Purpose |
-|--------|---------|
-| Add `hasTriggeredRef` | Synchronous lock that updates immediately |
-| Add `lastTriggerTime` ref | Cooldown prevents rapid re-triggers |
-| Reset ref in `useEffect` | Clear lock when refresh completes |
-| 1000ms cooldown | Extra buffer for inertial/bounce events |
+| File | Change | Purpose |
+|------|--------|---------|
+| `PostContentArea.tsx` | Update `handleInput` to detect BR/DIV/P elements | Capture line breaks as `\n` in text state |
+| `TranslatableText.tsx` | Add `whitespace-pre-wrap` to className | Render `\n` as visible line breaks |
 
 ## Testing Recommendations
 
-After implementation, verify:
-1. On mobile: Single pull-down gesture triggers exactly one refresh
-2. On desktop trackpad: Scroll-up at top triggers exactly one refresh
-3. On desktop mouse: Click-and-drag pull works correctly
-4. Rapid repeated gestures respect the cooldown
-5. Animation still feels responsive (no perceivable delay)
+1. Create a post with multiple paragraphs (press Enter twice between them)
+2. Verify the line breaks appear in the preview
+3. Post and verify line breaks persist in the final displayed post
+4. Test with translated text to ensure line breaks are preserved after translation
+5. Test on mobile to ensure the touch keyboard Enter key works correctly
