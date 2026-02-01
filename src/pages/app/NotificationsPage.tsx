@@ -526,11 +526,14 @@ export default function NotificationsPage() {
 
       {/* Tabs */}
       <div className="px-3 sm:px-4 py-2">
-        <div className="bg-zinc-900 rounded-2xl p-2 relative">
-          {/* Right fade gradient */}
-          <div className="absolute right-2 top-2 bottom-2 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10 rounded-r-xl" />
-          
-          <div className="flex overflow-x-auto gap-1 scrollbar-hide pr-6">
+        <div className="bg-zinc-900 rounded-2xl p-2">
+          <div 
+            className="flex overflow-x-auto gap-1 scrollbar-hide"
+            style={{
+              maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent 100%)'
+            }}
+          >
             {tabs.map((tab) => {
               const count = getTabCount(tab.value);
               return (
