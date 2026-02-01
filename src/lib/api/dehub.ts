@@ -1259,6 +1259,27 @@ export async function submitReport(data: ReportSubmission): Promise<{ success: b
 // ============================================
 
 /**
+ * Message types supported by the DM system
+ */
+export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
+
+/**
+ * Group chat info
+ */
+export interface GroupInfo {
+  id: string;
+  name: string;
+  description?: string;
+  avatarUrl?: string;
+  creatorAddress: string;
+  memberCount: number;
+  members?: DeHubUser[];
+  isPublic?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
  * Conversation interface for DMs
  */
 export interface DeHubConversation {
@@ -1270,6 +1291,12 @@ export interface DeHubConversation {
   updatedAt: string;
   /** The other participant (convenience field for 1:1 chats) */
   otherUser?: DeHubUser;
+  /** Group info if this is a group chat */
+  groupInfo?: GroupInfo;
+  /** Whether this is a group conversation */
+  isGroup?: boolean;
+  /** Whether the current user has blocked this conversation */
+  isBlocked?: boolean;
 }
 
 /**
@@ -1280,10 +1307,24 @@ export interface DeHubDMMessage {
   conversationId: string;
   sender: DeHubUser;
   content: string;
-  type: 'text' | 'image' | 'gif';
+  type: DMMessageType;
   mediaUrl?: string;
   createdAt: string;
   readAt?: string;
+  /** For tip messages */
+  tipAmount?: number;
+  tipCurrency?: string;
+  /** For audio messages - duration in seconds */
+  duration?: number;
+}
+
+/**
+ * User online status
+ */
+export interface UserOnlineStatus {
+  address: string;
+  online: boolean;
+  lastSeen?: string;
 }
 
 /**
@@ -1549,14 +1590,18 @@ export async function getMessages(
  * Uses /api/dm/upload endpoint with FormData for sending messages
  * @param conversationId - The conversation ID (or 'new_{address}' for new conversations)
  * @param content - Message content
- * @param type - Message type (text, image, gif)
- * @param mediaUrl - Optional media URL for images/gifs
+ * @param type - Message type (text, image, gif, audio, video, tip)
+ * @param mediaUrl - Optional media URL for images/gifs/audio/video
+ * @param tipAmount - Optional tip amount for tip messages
+ * @param tipCurrency - Optional tip currency (default: DHB)
  */
 export async function sendMessage(
   conversationId: string,
   content: string,
-  type: 'text' | 'image' | 'gif' = 'text',
-  mediaUrl?: string
+  type: DMMessageType = 'text',
+  mediaUrl?: string,
+  tipAmount?: number,
+  tipCurrency?: string
 ): Promise<DeHubDMMessage> {
   console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
   
@@ -1593,6 +1638,12 @@ export async function sendMessage(
     
     if (mediaUrl) {
       formData.append('mediaUrl', mediaUrl);
+    }
+    
+    // For tip messages, include tip amount and currency
+    if (type === 'tip' && tipAmount !== undefined) {
+      formData.append('tipAmount', String(tipAmount));
+      formData.append('tipCurrency', tipCurrency || 'DHB');
     }
     
     // Use /api/dm/upload for sending messages (FormData)
@@ -1776,13 +1827,416 @@ export async function searchUsersForDM(
       dmSettings: acc.dmSettings,
     }));
     
-    console.log('[DM API] searchUsersForDM returning', { count: items.length });
+  console.log('[DM API] searchUsersForDM returning', { count: items.length });
     return { 
       items, 
       hasMore: items.length >= limit 
     };
   } catch (error) {
     console.error('[DM API] searchUsersForDM failed:', error);
+    return { items: [], hasMore: false };
+  }
+}
+
+// ============================================
+// DM: BLOCK / UNBLOCK
+// ============================================
+
+/**
+ * Block a user/conversation
+ * POST /api/dm/block
+ */
+export async function blockConversation(conversationId: string): Promise<{ success: boolean }> {
+  console.log('[DM API] blockConversation called', { conversationId });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/block", {
+      method: "POST",
+      body: { conversationId },
+      requiresAuth: true,
+    });
+    console.log('[DM API] blockConversation response:', response);
+    
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] blockConversation failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Unblock a conversation
+ * GET /api/dm/un-block/{conversationId}
+ */
+export async function unblockConversation(conversationId: string): Promise<{ success: boolean }> {
+  console.log('[DM API] unblockConversation called', { conversationId });
+  
+  try {
+    const response = await apiCall<any>(`/api/dm/un-block/${conversationId}`, {
+      method: "GET",
+      requiresAuth: true,
+    });
+    console.log('[DM API] unblockConversation response:', response);
+    
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] unblockConversation failed:', error);
+    throw error;
+  }
+}
+
+// ============================================
+// DM: GROUP CHAT
+// ============================================
+
+/**
+ * Create a new group chat
+ * POST /api/dm/group
+ * @param name - Group name
+ * @param memberAddresses - Array of wallet addresses to add to the group
+ * @param description - Optional group description
+ */
+export async function createGroup(
+  name: string,
+  memberAddresses: string[],
+  description?: string
+): Promise<DeHubConversation> {
+  console.log('[DM API] createGroup called', { name, memberAddresses, description });
+  
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("Authentication required");
+  }
+  
+  try {
+    const response = await apiCall<any>("/api/dm/group", {
+      method: "POST",
+      body: {
+        name,
+        members: JSON.stringify(memberAddresses),
+        description,
+      },
+      requiresAuth: true,
+    });
+    console.log('[DM API] createGroup response:', response);
+    
+    // Handle response formats
+    if (response?.result) {
+      return response.result;
+    }
+    if (response?.id || response?._id) {
+      return {
+        id: response._id || response.id,
+        participants: response.members || [],
+        unreadCount: 0,
+        createdAt: response.createdAt || new Date().toISOString(),
+        updatedAt: response.updatedAt || new Date().toISOString(),
+        isGroup: true,
+        groupInfo: {
+          id: response._id || response.id,
+          name: response.name || name,
+          description: response.description,
+          creatorAddress: response.creatorAddress,
+          memberCount: memberAddresses.length,
+          createdAt: response.createdAt || new Date().toISOString(),
+          updatedAt: response.updatedAt || new Date().toISOString(),
+        },
+      };
+    }
+    
+    throw new Error('Invalid response from createGroup');
+  } catch (error) {
+    console.error('[DM API] createGroup failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get group info
+ * POST /api/dm/group/info
+ */
+export async function getGroupInfo(groupId: string): Promise<GroupInfo> {
+  console.log('[DM API] getGroupInfo called', { groupId });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/group/info", {
+      method: "POST",
+      body: { groupId },
+      requiresAuth: true,
+    });
+    console.log('[DM API] getGroupInfo response:', response);
+    
+    if (response?.result) {
+      return response.result;
+    }
+    return response;
+  } catch (error) {
+    console.error('[DM API] getGroupInfo failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Join a group chat
+ * POST /api/dm/group/join
+ */
+export async function joinGroup(groupId: string): Promise<{ success: boolean }> {
+  console.log('[DM API] joinGroup called', { groupId });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/group/join", {
+      method: "POST",
+      body: { groupId },
+      requiresAuth: true,
+    });
+    console.log('[DM API] joinGroup response:', response);
+    
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] joinGroup failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update group info
+ * PUT /api/dm/group
+ */
+export async function updateGroup(
+  groupId: string,
+  updates: { name?: string; description?: string; avatarUrl?: string }
+): Promise<GroupInfo> {
+  console.log('[DM API] updateGroup called', { groupId, updates });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/group", {
+      method: "PUT",
+      body: { groupId, ...updates },
+      requiresAuth: true,
+    });
+    console.log('[DM API] updateGroup response:', response);
+    
+    if (response?.result) {
+      return response.result;
+    }
+    return response;
+  } catch (error) {
+    console.error('[DM API] updateGroup failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Leave a group chat
+ * POST /api/dm/group-user-exit
+ */
+export async function leaveGroup(groupId: string): Promise<{ success: boolean }> {
+  console.log('[DM API] leaveGroup called', { groupId });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/group-user-exit", {
+      method: "POST",
+      body: { groupId },
+      requiresAuth: true,
+    });
+    console.log('[DM API] leaveGroup response:', response);
+    
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] leaveGroup failed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Block a user in a group chat (admin action)
+ * POST /api/dm/group-user-block
+ */
+export async function blockUserInGroup(
+  groupId: string,
+  userAddress: string
+): Promise<{ success: boolean }> {
+  console.log('[DM API] blockUserInGroup called', { groupId, userAddress });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/group-user-block", {
+      method: "POST",
+      body: { groupId, userAddress },
+      requiresAuth: true,
+    });
+    console.log('[DM API] blockUserInGroup response:', response);
+    
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] blockUserInGroup failed:', error);
+    throw error;
+  }
+}
+
+// ============================================
+// DM: MEDIA UPLOAD
+// ============================================
+
+/**
+ * Upload an image for chat/DM
+ * POST /api/chat-image
+ * @param file - The image file to upload
+ * @returns The URL of the uploaded image
+ */
+export async function uploadChatImage(file: File): Promise<{ url: string }> {
+  console.log('[DM API] uploadChatImage called', { fileName: file.name, size: file.size });
+  
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error("Authentication required");
+  }
+  
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await fetch(`${DEHUB_API_BASE}/api/chat-image`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to upload image');
+    }
+    
+    const data = await response.json();
+    console.log('[DM API] uploadChatImage response:', data);
+    
+    // Handle various response formats
+    const url = data?.result?.url || data?.url || data?.imageUrl || data?.result?.imageUrl;
+    
+    if (!url) {
+      throw new Error('No URL returned from image upload');
+    }
+    
+    return { url };
+  } catch (error) {
+    console.error('[DM API] uploadChatImage failed:', error);
+    throw error;
+  }
+}
+
+// ============================================
+// DM: USER STATUS
+// ============================================
+
+/**
+ * Get user's online status
+ * GET /api/dm/user-status/{address}
+ */
+export async function getUserOnlineStatus(address: string): Promise<UserOnlineStatus> {
+  console.log('[DM API] getUserOnlineStatus called', { address });
+  
+  try {
+    const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
+      method: "GET",
+      requiresAuth: true,
+    });
+    console.log('[DM API] getUserOnlineStatus response:', response);
+    
+    const result = response?.result || response;
+    return {
+      address,
+      online: result?.online ?? false,
+      lastSeen: result?.lastSeen,
+    };
+  } catch (error) {
+    console.error('[DM API] getUserOnlineStatus failed:', error);
+    return { address, online: false };
+  }
+}
+
+/**
+ * Update user's online status (heartbeat)
+ * POST /api/dm/user-status/{address}
+ */
+export async function updateUserOnlineStatus(address: string): Promise<{ success: boolean }> {
+  console.log('[DM API] updateUserOnlineStatus called', { address });
+  
+  try {
+    const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
+      method: "POST",
+      body: {},
+      requiresAuth: true,
+    });
+    console.log('[DM API] updateUserOnlineStatus response:', response);
+    
+    return { success: response?.success !== false };
+  } catch (error) {
+    console.error('[DM API] updateUserOnlineStatus failed:', error);
+    return { success: false };
+  }
+}
+
+// ============================================
+// DM: SUBSCRIPTION-GATED DMs
+// ============================================
+
+/**
+ * Get DM settings for a subscription plan
+ * GET /api/dm/plan/{planId}
+ */
+export async function getDMPlanSettings(planId: string): Promise<{
+  enabled: boolean;
+  minTipDhb?: number;
+  allowedMessageTypes?: DMMessageType[];
+}> {
+  console.log('[DM API] getDMPlanSettings called', { planId });
+  
+  try {
+    const response = await apiCall<any>(`/api/dm/plan/${planId}`, {
+      method: "GET",
+      requiresAuth: true,
+    });
+    console.log('[DM API] getDMPlanSettings response:', response);
+    
+    return response?.result || response || { enabled: true };
+  } catch (error) {
+    console.error('[DM API] getDMPlanSettings failed:', error);
+    return { enabled: true };
+  }
+}
+
+/**
+ * Get DM videos (videos shared in DMs)
+ * GET /api/dm/dm-videos
+ */
+export async function getDMVideos(
+  page: number = 0,
+  limit: number = 20
+): Promise<{ items: DeHubNFT[]; hasMore: boolean }> {
+  console.log('[DM API] getDMVideos called', { page, limit });
+  
+  try {
+    const response = await apiCall<any>("/api/dm/dm-videos", {
+      params: { page, limit },
+      requiresAuth: true,
+    });
+    console.log('[DM API] getDMVideos response:', response);
+    
+    // Handle various response formats
+    if (response?.result?.items) {
+      return response.result;
+    }
+    if (response?.result && Array.isArray(response.result)) {
+      return { items: response.result, hasMore: response.result.length >= limit };
+    }
+    if (Array.isArray(response)) {
+      return { items: response, hasMore: response.length >= limit };
+    }
+    
+    return { items: [], hasMore: false };
+  } catch (error) {
+    console.error('[DM API] getDMVideos failed:', error);
     return { items: [], hasMore: false };
   }
 }
