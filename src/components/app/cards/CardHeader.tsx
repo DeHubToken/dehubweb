@@ -18,10 +18,12 @@
  * ```
  */
 
+import { useState } from 'react';
 import { CheckCircle, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { formatTimeAgo } from '@/lib/feed-utils';
 import type { ContentType } from '@/types/feed.types';
 
 interface CardHeaderProps {
@@ -74,15 +76,22 @@ export function CardHeader({
   stakedAmount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
   const badge = CONTENT_BADGES[contentType];
   
   // Get staking badge image URL
   const stakingBadgeUrl = getBadgeUrl(stakedAmount);
 
-  // Only use avatarSeed as image source if it's a real URL
-  // Handle undefined/empty avatarSeed gracefully for optimistic posts
-  const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http');
+  // Only use avatarSeed as image source if it's a real URL and hasn't errored
+  const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
   const avatarSrc = hasRealAvatar ? avatarSeed : undefined;
+  
+  // Format timestamp - if it's an ISO string, convert to relative time
+  const formattedTimestamp = timestamp ? (
+    timestamp.includes('T') || timestamp.includes('-') 
+      ? formatTimeAgo(timestamp) 
+      : timestamp
+  ) : undefined;
 
   const handleProfileClick = () => {
     // Prefer username-based navigation, fallback to ID
@@ -110,14 +119,14 @@ export function CardHeader({
           <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
             <div className="p-0.5 bg-zinc-900 rounded-xl">
               <Avatar className="w-8 h-8">
-                {avatarSrc && <AvatarImage src={avatarSrc} />}
+                {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} />}
                 <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
           </div>
         ) : (
           <Avatar className="w-8 h-8">
-            {avatarSrc && <AvatarImage src={avatarSrc} />}
+            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} />}
             <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
@@ -136,9 +145,9 @@ export function CardHeader({
             {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
           </div>
           {/* Timestamp and view count row */}
-          {(timestamp || viewCount) && (
+          {(formattedTimestamp || viewCount) && (
             <div className="flex items-center gap-2 text-zinc-500 text-xs">
-              {timestamp && <span>{timestamp}</span>}
+              {formattedTimestamp && <span>{formattedTimestamp}</span>}
               {viewCount && (
                 <span className="flex items-center gap-1">
                   <Eye className="w-3 h-3" />
