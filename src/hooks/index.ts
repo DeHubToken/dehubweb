@@ -16,7 +16,9 @@ export { useDeHubFeed, useDeHubVideos, useDeHubImages, useDeHubLive, mapNFTToVid
 export { useUnifiedFeed, mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem, type UnifiedFeedParams } from './use-unified-feed';
 export { useDeHubProfile, useDeHubUserContent, separateUserContent, mapUserToProfile, type ProfileData } from './use-dehub-profile';
 export { 
-  useDeHubSearch, 
+  useDeHubSearch,
+  useSearchSuggestions,
+  useSearchAnalytics,
   getTypeForTab,
   getPostTypeForTab, 
   extractUniqueCreators, 
@@ -30,6 +32,7 @@ export {
   type UseDeHubSearchOptions,
   type SearchPageResult,
 } from './use-dehub-search';
+export { useSearchHistory, type SearchHistoryItem } from './use-search-history';
 export { useDeHubUserSearch, mapUserToSearchCreator } from './use-dehub-user-search';
 export { useGlitchEffect } from './use-glitch-effect';
 export { GlobalDropZoneProvider, useGlobalDropZone } from './use-global-drop-zone';

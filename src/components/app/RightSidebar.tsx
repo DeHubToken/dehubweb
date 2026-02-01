@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
+import { useSearchHistory } from '@/hooks/use-search-history';
 
 interface RightSidebarProps {
   showSearch?: boolean;
@@ -12,9 +13,12 @@ interface RightSidebarProps {
 export function RightSidebar({ showSearch = true }: RightSidebarProps) {
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
+  const { addToHistory } = useSearchHistory();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchValue.trim()) {
+      // Add to search history before navigating
+      addToHistory(searchValue.trim());
       navigate(`/app/explore?q=${encodeURIComponent(searchValue.trim())}`);
       setSearchValue('');
     }
