@@ -7,7 +7,7 @@
  * @module components/app/radio/RadioMiniPlayer
  */
 
-import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2 } from 'lucide-react';
+import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
@@ -30,11 +30,80 @@ export function RadioMiniPlayer() {
   
   const [showVolume, setShowVolume] = useState(false);
   const [showVisualizer, setShowVisualizer] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   
   if (!currentStation) return null;
   
   const countryFlag = getCountryFlag(currentStation.countrycode);
   const isMuted = volume === 0;
+  
+  // Minimized view - just the station icon with play/pause
+  if (isMinimized) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          className={cn(
+            'fixed bottom-20 right-4 z-50',
+            'md:bottom-[90px] md:right-6',
+            'lg:bottom-6 lg:right-6'
+          )}
+        >
+          <button
+            onClick={togglePlayPause}
+            className="relative w-14 h-14 rounded-full overflow-hidden bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl group"
+          >
+            {/* Station Logo */}
+            {currentStation.favicon ? (
+              <img 
+                src={currentStation.favicon} 
+                alt={currentStation.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
+                <Radio className="w-6 h-6 text-zinc-500" />
+              </div>
+            )}
+            
+            {/* Play/Pause Overlay */}
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              {isLoading ? (
+                <Loader2 className="w-6 h-6 text-white animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-6 h-6 text-white fill-white" />
+              ) : (
+                <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+              )}
+            </div>
+            
+            {/* Now Playing Animation */}
+            {isPlaying && !isLoading && (
+              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-end gap-0.5 h-2">
+                <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '60%', animationDelay: '0ms' }} />
+                <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '100%', animationDelay: '150ms' }} />
+                <div className="w-0.5 bg-white rounded-full animate-pulse" style={{ height: '40%', animationDelay: '300ms' }} />
+              </div>
+            )}
+          </button>
+          
+          {/* Expand Button */}
+          <button
+            onClick={() => setIsMinimized(false)}
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-lg"
+          >
+            <Maximize2 className="w-3 h-3 text-black" />
+          </button>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
   
   return (
     <>
@@ -48,7 +117,7 @@ export function RadioMiniPlayer() {
             'fixed bottom-16 md:bottom-[74px] lg:bottom-4 z-50',
             // Mobile: 95% width with side margins
             'left-[2.5%] right-[2.5%]',
-            // Tablet/iPad: centered with 69px left offset for sidebar
+            // Tablet/iPad: centered with offset
             'md:left-0 md:right-[3px] md:mx-auto md:max-w-[446px]',
             // Desktop: fixed width on right side
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
@@ -132,16 +201,23 @@ export function RadioMiniPlayer() {
               </AnimatePresence>
             </div>
             
+            {/* Minimize Button */}
+            <button
+              onClick={() => setIsMinimized(true)}
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+              title="Minimize player"
+            >
+              <Minimize2 className="w-4 h-4 text-zinc-400" />
+            </button>
+            
             {/* Fullscreen Visualizer Button */}
-            {isPlaying && (
-              <button
-                onClick={() => setShowVisualizer(true)}
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-                title="Fullscreen visualizer"
-              >
-                <Maximize2 className="w-4 h-4 text-zinc-400" />
-              </button>
-            )}
+            <button
+              onClick={() => setShowVisualizer(true)}
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+              title="Fullscreen visualizer"
+            >
+              <Maximize2 className="w-4 h-4 text-zinc-400" />
+            </button>
             
             {/* Play/Pause Button */}
             <button
