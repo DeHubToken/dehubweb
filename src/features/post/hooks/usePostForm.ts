@@ -692,7 +692,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] Minting post:', {
         name: text.trim().slice(0, 100) || 'Untitled',
-        description: description.trim() || text.trim(),
+        description: description.trim(),
         postType,
         streamInfo,
         filesCount: files.length,
@@ -708,7 +708,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       
       const mintResponse = await mintPost({
         name: text.trim().slice(0, 100) || 'Untitled',
-        description: description.trim() || text.trim(),
+        description: description.trim(),
         postType,
         chainId: BASE_CHAIN_ID,
         category: ['General'],
