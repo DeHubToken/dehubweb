@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX } from 'lucide-react';
+import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -48,6 +48,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [isMinimized, setIsMinimized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -367,10 +368,25 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     </div>
   );
 
+  // Minimized floating button
+  if (isMinimized && isOpen) {
+    return (
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
+        onClick={() => setIsMinimized(false)}
+        className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors"
+      >
+        <img src={assistantAvatar} alt="AI Assistant" className="w-8 h-8 rounded-full" />
+      </motion.button>
+    );
+  }
+
   // Mobile: Drawer
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <Drawer open={isOpen && !isMinimized} onOpenChange={(open) => !open && handleClose()}>
         <DrawerContent glass className="h-[85vh]">
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
@@ -378,14 +394,24 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                 <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
                 <DrawerTitle className="text-white text-base">AI Assistant</DrawerTitle>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClose}
-                className="text-white/60 hover:text-white hover:bg-white/10"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMinimized(true)}
+                  className="text-white/60 hover:text-white hover:bg-white/10"
+                >
+                  <Minus className="w-5 h-5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClose}
+                  className="text-white/60 hover:text-white hover:bg-white/10"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
           </DrawerHeader>
           {chatContent}
@@ -396,12 +422,32 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
 
   // Desktop: Dialog
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={isOpen && !isMinimized} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col">
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
-          <div className="flex items-center gap-3">
-            <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
-            <DialogTitle className="text-white text-base">AI Assistant</DialogTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
+              <DialogTitle className="text-white text-base">AI Assistant</DialogTitle>
+            </div>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMinimized(true)}
+                className="text-white/60 hover:text-white hover:bg-white/10 h-8 w-8"
+              >
+                <Minus className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
+                className="text-white/60 hover:text-white hover:bg-white/10 h-8 w-8"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </DialogHeader>
         <div className="flex-1 overflow-hidden">
