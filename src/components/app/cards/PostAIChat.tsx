@@ -5,7 +5,7 @@
  * Matches the UI of AssistantPage for consistency.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useId } from 'react';
 import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
+import { useMinimizedChats } from '@/hooks/use-minimized-chats';
 import { supabase } from '@/integrations/supabase/client';
 import { MarkdownText } from '@/lib/markdown';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -45,17 +46,18 @@ interface PostAIChatProps {
 }
 
 export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
+  const chatId = useId();
   const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isMinimized, setIsMinimized] = useState(() => {
-    // Persist minimized state across refreshes
-    return sessionStorage.getItem('ai-chat-minimized') === 'true';
-  });
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingVoiceRef = useRef(false);
+  
+  // Global minimized chats manager
+  const { chats: minimizedChats, addChat, removeChat, isMinimized, getPosition } = useMinimizedChats();
+  const isThisMinimized = isMinimized(chatId);
 
   // Voice chat hook
   const {
@@ -230,9 +232,21 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const handleClose = () => {
     setMessages([]);
     setInput('');
-    setIsMinimized(false);
-    sessionStorage.removeItem('ai-chat-minimized');
+    removeChat(chatId);
     onClose();
+  };
+  
+  const handleMinimize = () => {
+    addChat({
+      id: chatId,
+      title: postContext.title || postContext.caption || `${postContext.type} by ${postContext.author}`,
+      type: postContext.type,
+      author: postContext.author,
+    });
+  };
+  
+  const handleRestore = () => {
+    removeChat(chatId);
   };
 
   const chatContent = (
@@ -373,18 +387,19 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     </div>
   );
 
-  // Minimized floating button
-  if (isMinimized && isOpen) {
+  // Minimized floating button - stacked based on position
+  if (isThisMinimized && isOpen) {
+    const position = getPosition(chatId);
+    const bottomOffset = 80 + (position * 56); // 80px base + 56px per stacked item
+    
     return (
       <motion.button
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0, opacity: 0 }}
-        onClick={() => {
-          setIsMinimized(false);
-          sessionStorage.removeItem('ai-chat-minimized');
-        }}
-        className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors"
+        onClick={handleRestore}
+        style={{ bottom: `${bottomOffset}px` }}
+        className="fixed right-4 z-50 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors"
       >
         <img src={assistantAvatar} alt="AI Assistant" className="w-8 h-8 rounded-lg" />
       </motion.button>
@@ -394,7 +409,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   // Mobile: Drawer
   if (isMobile) {
     return (
-      <Drawer open={isOpen && !isMinimized} onOpenChange={(open) => !open && handleClose()}>
+      <Drawer open={isOpen && !isThisMinimized} onOpenChange={(open) => !open && handleClose()}>
         <DrawerContent glass className="h-[85vh]">
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
@@ -406,10 +421,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => {
-                    setIsMinimized(true);
-                    sessionStorage.setItem('ai-chat-minimized', 'true');
-                  }}
+                  onClick={handleMinimize}
                   className="text-white/60 hover:text-white hover:bg-white/10"
                 >
                   <Minus className="w-5 h-5" />
@@ -433,7 +445,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
 
   // Desktop: Dialog
   return (
-    <Dialog open={isOpen && !isMinimized} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={isOpen && !isThisMinimized} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col">
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
           <div className="flex items-center justify-between">
@@ -445,10 +457,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {
-                  setIsMinimized(true);
-                  sessionStorage.setItem('ai-chat-minimized', 'true');
-                }}
+                onClick={handleMinimize}
                 className="text-white/60 hover:text-white hover:bg-white/10 h-8 w-8"
               >
                 <Minus className="w-4 h-4" />
