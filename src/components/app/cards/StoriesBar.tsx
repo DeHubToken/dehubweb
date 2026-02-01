@@ -18,12 +18,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
@@ -41,7 +35,6 @@ interface StoriesBarProps {
 
 export function StoriesBar({ users }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const isMobile = useIsMobile();
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
 
   const handleGoLive = () => {
@@ -64,8 +57,8 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleGoLive}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-xl bg-red-500/20 flex items-center justify-center">
-          <Video className="w-4 h-4 text-red-500" />
+        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+          <Video className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Go Live</span>
       </button>
@@ -73,8 +66,8 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleAddStory}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center">
-          <Image className="w-4 h-4 text-orange-500" />
+        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+          <Image className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Add Story</span>
       </button>
@@ -103,29 +96,18 @@ export function StoriesBar({ users }: StoriesBarProps) {
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
         
         <SwipeableCarousel className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
-          {/* Create Story/Live Button */}
-          {isMobile ? (
-            <Drawer open={isOpen} onOpenChange={setIsOpen}>
-              <div onClick={() => setIsOpen(true)}>
-                {triggerButton}
-              </div>
-              <DrawerContent glass className="px-4 pb-8">
-                <DrawerHeader className="mb-2">
-                  <DrawerTitle className="text-white">Create</DrawerTitle>
-                </DrawerHeader>
-                {menuContent}
-              </DrawerContent>
-            </Drawer>
-          ) : (
-            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-              <DropdownMenuTrigger asChild>
-                {triggerButton}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 p-2 bg-black/40 backdrop-blur-2xl border border-white/10" align="start" sideOffset={8}>
-                {menuContent}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          {/* Create Story/Live Button - Always use drawer for liquid glass effect */}
+          <Drawer open={isOpen} onOpenChange={setIsOpen}>
+            <div onClick={() => setIsOpen(true)}>
+              {triggerButton}
+            </div>
+            <DrawerContent glass className="px-4 pb-8">
+              <DrawerHeader className="mb-2">
+                <DrawerTitle className="text-white">Create</DrawerTitle>
+              </DrawerHeader>
+              {menuContent}
+            </DrawerContent>
+          </Drawer>
 
           {/* User Stories */}
           {users.map((user) => (
