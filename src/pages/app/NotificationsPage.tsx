@@ -168,12 +168,21 @@ function NotificationItem({
       : null;
 
   const handleClick = () => {
+    // Debug: log notification data to see what we're getting
+    console.log('[Notification Click]', {
+      type: notification.type,
+      tokenId: notification.tokenId,
+      postType: notification.postType,
+      fullNotification: notification,
+    });
+    
     if (!notification.read) {
       onMarkAsRead(notification.id);
     }
     
     // Navigate to appropriate destination
     const navLink = getNavigationLink(notification);
+    console.log('[Notification Nav]', navLink);
     if (navLink) {
       navigate(navLink);
     }
