@@ -25,13 +25,8 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from '@/components/ui/drawer';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import type { TextPost } from '@/types/feed.types';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -77,7 +72,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         stakedAmount={post.author.stakedAmount}
       />
 
-      {/* AI Button for text posts - positioned in header area */}
+      {/* AI Button and Options Drawer - positioned in header area */}
       <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
         <motion.button
           onClick={() => setShowAIChat(true)}
@@ -89,34 +84,39 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <Sparkles className="w-5 h-5" />
         </motion.button>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <Drawer>
+          <DrawerTrigger asChild>
             <button className="text-zinc-400 hover:text-white transition-colors">
               <MoreVertical className="w-5 h-5" />
             </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-            <DropdownMenuItem 
-              onClick={() => setShowReportModal(true)}
-              className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-            >
-              <Flag className="w-4 h-4" /> Report
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => {
-                const url = `${window.location.origin}/app/post/${post.id}`;
-                navigator.clipboard.writeText(url);
-                toast.success('Post URL copied to clipboard');
-              }}
-              className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-            >
-              <Link2 className="w-4 h-4" /> Copy Post URL
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-              <Ban className="w-4 h-4" /> Block Creator
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </DrawerTrigger>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-2">
+              <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => setShowReportModal(true)}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Flag className="w-5 h-5" /> Report
+              </button>
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/app/post/${post.id}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Post URL copied to clipboard');
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Link2 className="w-5 h-5" /> Copy Post URL
+              </button>
+              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <Ban className="w-5 h-5" /> Block Creator
+              </button>
+            </div>
+          </DrawerContent>
+        </Drawer>
       </div>
 
       {/* Content */}

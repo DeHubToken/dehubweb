@@ -31,13 +31,8 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from '@/components/ui/drawer';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import type { ImagePost } from '@/types/feed.types';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -404,46 +399,51 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           >
             <Sparkles className="w-5 h-5" />
           </button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Drawer>
+            <DrawerTrigger asChild>
               <button className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
                 <MoreVertical className="w-5 h-5" />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-              <DropdownMenuItem 
-                onClick={handleTranslateImage}
-                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-              >
-                <Languages className="w-4 h-4" /> Translate Image
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Download className="w-4 h-4" /> Download
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setShowReportModal(true)}
-                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-              >
-                <Flag className="w-4 h-4" /> Report
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => {
-                  const url = `${window.location.origin}/app/post/${post.id}`;
-                  navigator.clipboard.writeText(url);
-                  toast.success('Post URL copied to clipboard');
-                }}
-                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
-              >
-                <Link2 className="w-4 h-4" /> Copy Post URL
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Ban className="w-4 h-4" /> Block Creator
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> See Less Like This
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </DrawerTrigger>
+            <DrawerContent glass className="px-4 pb-6">
+              <DrawerHeader className="pb-2">
+                <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={handleTranslateImage}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Languages className="w-5 h-5" /> Translate Image
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Download className="w-5 h-5" /> Download
+                </button>
+                <button
+                  onClick={() => setShowReportModal(true)}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Flag className="w-5 h-5" /> Report
+                </button>
+                <button
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/post/${post.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success('Post URL copied to clipboard');
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Link2 className="w-5 h-5" /> Copy Post URL
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <Ban className="w-5 h-5" /> Block Creator
+                </button>
+                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                  <EyeOff className="w-5 h-5" /> See Less Like This
+                </button>
+              </div>
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
 
