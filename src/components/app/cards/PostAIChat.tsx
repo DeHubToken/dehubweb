@@ -290,29 +290,24 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
         }`}>
           {/* Voice recording button */}
           {isVoiceSupported && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={isRecording ? stopRecording : startRecording}
-                  disabled={isLoading}
-                  className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
-                    isRecording 
-                      ? 'text-red-500' 
-                      : 'text-white hover:text-white/80'
-                  }`}
-                >
-                  {isRecording ? (
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
-                    </div>
-                  ) : (
-                    <Mic className="w-5 h-5" />
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
-            </Tooltip>
+            <button
+              type="button"
+              onClick={isRecording ? stopRecording : startRecording}
+              disabled={isLoading}
+              className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                isRecording 
+                  ? 'text-red-500' 
+                  : 'text-white hover:text-white/80'
+              }`}
+            >
+              {isRecording ? (
+                <div className="w-5 h-5 flex items-center justify-center">
+                  <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
+                </div>
+              ) : (
+                <Mic className="w-5 h-5" />
+              )}
+            </button>
           )}
           
           {/* Auto-expanding textarea */}
