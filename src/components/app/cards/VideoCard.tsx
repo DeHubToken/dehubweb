@@ -730,11 +730,13 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
-        <PostMetadata 
-          timestamp={video.uploadedAgo} 
-          viewCount={video.views?.replace(' views', '') || getViewCount(video.id)} 
-        />
+        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-2" as="h3" />
+        <div className="mb-3">
+          <PostMetadata 
+            timestamp={video.uploadedAgo} 
+            viewCount={video.views?.replace(' views', '') || getViewCount(video.id)} 
+          />
+        </div>
         <ActionBar
           postId={video.id} 
           className="p-0" 
