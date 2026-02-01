@@ -1,136 +1,122 @@
 
-# Followers/Following List Feature
+# Fix: Pull-to-Refresh Firing Twice
 
-## Overview
-Add clickable follower/following counts on profile pages that open a drawer showing the full list of users. Each user in the list will be clickable to navigate to their profile.
+## Problem Summary
 
-## Technical Approach
+The pull-to-refresh animation on the Profile page fires twice on mobile and sometimes on desktop. Users see two pull-down animations and two reload operations.
 
-### 1. Preserve Raw Follower/Following Arrays
+## Root Cause Analysis
 
-**File: `src/hooks/use-dehub-profile.ts`**
+The issue stems from **race conditions** in the `usePullToRefresh` hook:
 
-Update `ProfileData` interface and `mapUserToProfile` to preserve the raw arrays:
+1. **Async State Guard**: The `triggerRefresh` function checks `isRefreshing` state, but React state updates are asynchronous. Multiple events can call `triggerRefresh()` before the state updates.
 
-```typescript
-export interface ProfileData {
-  // ... existing fields
-  following: number;
-  followers: number;
-  // NEW: Raw arrays for list display
-  followersList?: string[];   // Array of wallet addresses
-  followingsList?: string[];  // Array of wallet addresses
-}
+2. **Mobile Touch Events**: On mobile, browsers can fire multiple rapid touch events during a single swipe gesture (especially with overscroll/bounce effects).
 
-export function mapUserToProfile(user: DeHubUser): ProfileData {
-  // ... existing logic
-  
-  // Preserve raw arrays if available
-  const followersList = Array.isArray(user.followers) ? user.followers : undefined;
-  const followingsList = user.followings;
-  
-  return {
-    // ... existing fields
-    followersList,
-    followingsList,
-  };
-}
-```
-
-### 2. Create FollowersListDrawer Component
-
-**File: `src/components/app/profile/FollowersListDrawer.tsx`** (new)
-
-A reusable drawer component that:
-- Accepts a list of wallet addresses and a title ("Followers" or "Following")
-- Fetches user details for each address using `getAccountInfo`
-- Displays users in a scrollable list with:
-  - Avatar, display name, @handle
-  - "Follows you" badge (when applicable)
-  - Follow/Unfollow button
-- Clicking a user navigates to their profile
-
-Key implementation details:
-- Use batch fetching (Promise.all with chunking) for performance
-- Show loading skeleton while fetching
-- Handle empty states gracefully
-- Pass current user's address to get `followsYou` status for each user
-
-### 3. Integrate into ProfilePage
-
-**File: `src/pages/app/ProfilePage.tsx`**
-
-- Add state for drawer open/close and which list to show
-- Replace the static follower/following buttons with drawer triggers
-- Pass the appropriate list to the drawer component
-
-```typescript
-// New state
-const [listDrawerOpen, setListDrawerOpen] = useState(false);
-const [listType, setListType] = useState<'followers' | 'following'>('followers');
-
-// Updated buttons (around line 751-760)
-<button 
-  onClick={() => {
-    setListType('following');
-    setListDrawerOpen(true);
-  }}
-  className="hover:underline"
->
-  <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
-  <span className="text-zinc-500 ml-1">Following</span>
-</button>
-```
-
-### 4. Handle API Limitations
-
-If the DeHub API returns only counts (not arrays) for the viewed profile:
-- We'll need to check if arrays are available
-- Show a toast message like "List not available" if arrays are empty
-- Consider adding a dedicated API endpoint request to DeHub team
-
-## UI Design
-
-The drawer will match existing app patterns:
-- Glass-style `DrawerContent`
-- User rows similar to `WhoToFollow` component
-- Infinite scroll if lists are long (optional, phase 2)
-- Loading states with skeleton animation
+3. **Trackpad Inertia**: On desktop trackpads, inertial scrolling fires many wheel events in quick succession. The accumulator can reset and rebuild fast enough to trigger multiple refreshes.
 
 ```
-+-----------------------------------+
-|   Followers (123)            [X] |
-+-----------------------------------+
-| [Avatar] Display Name            |
-|         @handle                  |
-|         [Follows you] [Follow]   |
-+-----------------------------------+
-| [Avatar] Another User            |
-|         @username                |
-|                      [Following] |
-+-----------------------------------+
-|           ...more users...       |
-+-----------------------------------+
+Current Flow (Buggy):
++---------------+     +---------------+     +---------------+
+| Touch/Wheel   | --> | Check state   | --> | onRefresh()   |
+| Event 1       |     | isRefreshing  |     | Called        |
++---------------+     | = false ✓     |     +---------------+
+                      +---------------+
+                              ↓
++---------------+     +---------------+     +---------------+
+| Touch/Wheel   | --> | Check state   | --> | onRefresh()   |
+| Event 2       |     | isRefreshing  |     | Called AGAIN! |
+| (rapid fire)  |     | = false ✓     |     +---------------+
++---------------+     | (not updated  |
+                      |  yet!)        |
+                      +---------------+
 ```
 
-## Files to Create/Modify
+## Solution
 
-| File | Action |
-|------|--------|
-| `src/hooks/use-dehub-profile.ts` | Add `followersList`/`followingsList` to ProfileData |
-| `src/components/app/profile/FollowersListDrawer.tsx` | **Create** new component |
-| `src/components/app/profile/index.ts` | **Create** barrel export |
-| `src/pages/app/ProfilePage.tsx` | Add drawer integration |
+Add a **synchronous ref-based lock** that updates immediately, preventing any subsequent calls before React state catches up:
 
-## Edge Cases
+```
+Fixed Flow:
++---------------+     +---------------+     +---------------+
+| Touch/Wheel   | --> | Check REF     | --> | onRefresh()   |
+| Event 1       |     | hasTriggered  |     | Called        |
++---------------+     | = false ✓     |     | Set ref=true  |
+                      +---------------+     +---------------+
+                              ↓
++---------------+     +---------------+
+| Touch/Wheel   | --> | Check REF     |
+| Event 2       |     | hasTriggered  |
+| (rapid fire)  |     | = true ✗      | --> BLOCKED
++---------------+     | (immediately  |
+                      |  updated!)    |
+                      +---------------+
+```
 
-- **Empty lists**: Show friendly message "No followers yet" / "Not following anyone"
-- **Large lists**: Initial load of 20-50 users, with load more button
-- **API returns count not array**: Gracefully handle with "List unavailable" state
-- **Self-profile**: Still show lists, but hide Follow button on yourself
+## Technical Changes
 
-## Future Enhancements (Phase 2)
+### File: `src/hooks/use-pull-to-refresh.ts`
 
-- Search/filter within the list
-- Mutual followers highlight ("Followed by X, Y, and Z others you follow")
-- Infinite scroll for very large lists
+1. **Add a ref-based trigger lock**:
+   ```typescript
+   const hasTriggeredRef = useRef<boolean>(false);
+   ```
+
+2. **Update `triggerRefresh` to use synchronous lock**:
+   ```typescript
+   const triggerRefresh = useCallback(() => {
+     // Synchronous check prevents race conditions
+     if (hasTriggeredRef.current || isRefreshing) {
+       return;
+     }
+     hasTriggeredRef.current = true;
+     onRefresh();
+   }, [isRefreshing, onRefresh]);
+   ```
+
+3. **Reset the lock when `isRefreshing` changes to false**:
+   ```typescript
+   useEffect(() => {
+     if (!isRefreshing) {
+       hasTriggeredRef.current = false;
+     }
+   }, [isRefreshing]);
+   ```
+
+4. **Add cooldown period after trigger** (extra safety for mobile):
+   ```typescript
+   const lastTriggerTime = useRef<number>(0);
+   const TRIGGER_COOLDOWN_MS = 1000;
+   
+   const triggerRefresh = useCallback(() => {
+     const now = Date.now();
+     if (
+       hasTriggeredRef.current || 
+       isRefreshing || 
+       now - lastTriggerTime.current < TRIGGER_COOLDOWN_MS
+     ) {
+       return;
+     }
+     hasTriggeredRef.current = true;
+     lastTriggerTime.current = now;
+     onRefresh();
+   }, [isRefreshing, onRefresh]);
+   ```
+
+## Summary of Changes
+
+| Change | Purpose |
+|--------|---------|
+| Add `hasTriggeredRef` | Synchronous lock that updates immediately |
+| Add `lastTriggerTime` ref | Cooldown prevents rapid re-triggers |
+| Reset ref in `useEffect` | Clear lock when refresh completes |
+| 1000ms cooldown | Extra buffer for inertial/bounce events |
+
+## Testing Recommendations
+
+After implementation, verify:
+1. On mobile: Single pull-down gesture triggers exactly one refresh
+2. On desktop trackpad: Scroll-up at top triggers exactly one refresh
+3. On desktop mouse: Click-and-drag pull works correctly
+4. Rapid repeated gestures respect the cooldown
+5. Animation still feels responsive (no perceivable delay)
