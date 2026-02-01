@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { EXPLORE_TABS, EXPLORE_TRENDING, SUGGESTED_USERS } from '@/constants/app.constants';
+import { EXPLORE_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -34,44 +34,6 @@ import type { VideoItem, ImagePost } from '@/types/feed.types';
 const DATE_OPTIONS = ['Any time', 'Today', 'This week', 'This month', 'This year'];
 const ENGAGEMENT_OPTIONS = ['Any', '100+', '1K+', '10K+', '100K+', '1M+'];
 const SEARCH_CATEGORIES = ['All', 'Gaming', 'Music', 'Art', 'Programming', 'Crypto', 'Entertainment'];
-const COUNTRY_OPTIONS = [
-  'Global',
-  'United States',
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'Germany',
-  'France',
-  'Spain',
-  'Italy',
-  'Brazil',
-  'Mexico',
-  'Japan',
-  'South Korea',
-  'India',
-  'Netherlands',
-  'Sweden',
-  'Norway',
-  'Denmark',
-  'Finland',
-  'Poland',
-  'Russia',
-  'China',
-  'Singapore',
-  'Philippines',
-  'Indonesia',
-  'Thailand',
-  'Vietnam',
-  'South Africa',
-  'Nigeria',
-  'Egypt',
-  'UAE',
-  'Saudi Arabia',
-  'Turkey',
-  'Argentina',
-  'Colombia',
-  'Chile',
-];
 
 type FilterState = {
   w2e: boolean;
@@ -259,7 +221,7 @@ export default function ExplorePage() {
     shares: 'Any',
     comments: 'Any',
   });
-  const [selectedCountry, setSelectedCountry] = useState('Global');
+  
 
   // Search history hook
   const { recentSearches, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
@@ -805,38 +767,6 @@ export default function ExplorePage() {
                 )}
               </div>
 
-              {/* Trending Bento */}
-              <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
-                  <FilterDropdown
-                    label="Country"
-                    value={selectedCountry}
-                    options={COUNTRY_OPTIONS}
-                    onChange={setSelectedCountry}
-                  />
-                </div>
-                <div className="space-y-3">
-                  {EXPLORE_TRENDING.map((item) => (
-                    <div
-                      key={item.tag}
-                      className="flex items-center justify-between gap-4"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-semibold text-white truncate">{item.tag}</p>
-                        <p className="text-zinc-500 text-sm">{item.postCount}</p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0"
-                      >
-                        Follow
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </motion.div>
           )}
         </AnimatePresence>
