@@ -27,6 +27,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileData } from '@/hooks/use-dehub-profile';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
+import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -171,6 +172,9 @@ export default function ProfilePage() {
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined
   );
+  
+  // Fetch privacy settings for the profile being viewed
+  const { showFollowersFollowing } = useUserPrivacySettings(apiProfile?.walletAddress);
   
   // Use API's isFollowing status
   const isFollowing = apiProfile?.isFollowing ?? false;
@@ -757,36 +761,39 @@ export default function ProfilePage() {
                 <span>Joined {profile.joinedDate}</span>
               </div>
               
-              <div className="flex items-center gap-4 mt-3">
-                <button 
-                  onClick={() => {
-                    if (!apiProfile?.followingsList?.length) {
-                      toast.info('Following list not available');
-                      return;
-                    }
-                    setFollowListType('following');
-                    setFollowListDrawerOpen(true);
-                  }}
-                  className="hover:underline"
-                >
-                  <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
-                  <span className="text-zinc-500 ml-1">Following</span>
-                </button>
-                <button 
-                  onClick={() => {
-                    if (!apiProfile?.followersList?.length) {
-                      toast.info('Followers list not available');
-                      return;
-                    }
-                    setFollowListType('followers');
-                    setFollowListDrawerOpen(true);
-                  }}
-                  className="hover:underline"
-                >
-                  <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
-                  <span className="text-zinc-500 ml-1">Followers</span>
-                </button>
-              </div>
+              {/* Only show followers/following if privacy setting allows OR viewing own profile */}
+              {(showFollowersFollowing || isViewingOwnProfile) && (
+                <div className="flex items-center gap-4 mt-3">
+                  <button 
+                    onClick={() => {
+                      if (!apiProfile?.followingsList?.length) {
+                        toast.info('Following list not available');
+                        return;
+                      }
+                      setFollowListType('following');
+                      setFollowListDrawerOpen(true);
+                    }}
+                    className="hover:underline"
+                  >
+                    <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
+                    <span className="text-zinc-500 ml-1">Following</span>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      if (!apiProfile?.followersList?.length) {
+                        toast.info('Followers list not available');
+                        return;
+                      }
+                      setFollowListType('followers');
+                      setFollowListDrawerOpen(true);
+                    }}
+                    className="hover:underline"
+                  >
+                    <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
+                    <span className="text-zinc-500 ml-1">Followers</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
