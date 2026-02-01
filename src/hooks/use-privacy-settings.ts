@@ -9,6 +9,7 @@ export interface PrivacySettings {
   wallet_address: string;
   show_followers_following: boolean;
   hide_follower_counts: boolean;
+  default_post_visibility: 'public' | 'private';
   created_at: string;
   updated_at: string;
 }
@@ -45,7 +46,7 @@ export function usePrivacySettings() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async (updates: Partial<Pick<PrivacySettings, 'show_followers_following' | 'hide_follower_counts'>>) => {
+    mutationFn: async (updates: Partial<Pick<PrivacySettings, 'show_followers_following' | 'hide_follower_counts' | 'default_post_visibility'>>) => {
       if (!lowerAddress) throw new Error('Not authenticated');
 
       // Check if settings exist
@@ -94,6 +95,7 @@ export function usePrivacySettings() {
     isLoading,
     showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true (list is visible)
     hideFollowerCounts: settings?.hide_follower_counts ?? false, // Default to false (counts are shown)
+    defaultPostVisibility: settings?.default_post_visibility ?? 'public', // Default to public
     updateSettings: updateMutation.mutate,
     isUpdating: updateMutation.isPending,
   };
@@ -132,5 +134,6 @@ export function useUserPrivacySettings(walletAddress?: string) {
     isLoading,
     showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true (list is visible)
     hideFollowerCounts: settings?.hide_follower_counts ?? false, // Default to false (counts are shown)
+    defaultPostVisibility: settings?.default_post_visibility ?? 'public', // Default to public
   };
 }
