@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 
 export interface PrivacySettings {
   id: string;
@@ -24,11 +25,13 @@ export function usePrivacySettings() {
     queryFn: async (): Promise<PrivacySettings | null> => {
       if (!lowerAddress) return null;
 
-      const { data, error } = await supabase
+      const query = supabase
         .from('user_privacy_settings')
         .select('*')
         .eq('wallet_address', lowerAddress)
         .maybeSingle();
+
+      const { data, error } = await withWalletHeader(query, lowerAddress);
 
       if (error) {
         console.error('Failed to fetch privacy settings:', error);
@@ -45,29 +48,33 @@ export function usePrivacySettings() {
       if (!lowerAddress) throw new Error('Not authenticated');
 
       // Check if settings exist
-      const { data: existing } = await supabase
+      const checkQuery = supabase
         .from('user_privacy_settings')
         .select('id')
         .eq('wallet_address', lowerAddress)
         .maybeSingle();
 
+      const { data: existing } = await withWalletHeader(checkQuery, lowerAddress);
+
       if (existing) {
         // Update existing
-        const { error } = await supabase
+        const updateQuery = supabase
           .from('user_privacy_settings')
           .update({ ...updates, updated_at: new Date().toISOString() })
           .eq('wallet_address', lowerAddress);
 
+        const { error } = await withWalletHeader(updateQuery, lowerAddress);
         if (error) throw error;
       } else {
         // Insert new
-        const { error } = await supabase
+        const insertQuery = supabase
           .from('user_privacy_settings')
           .insert({
             wallet_address: lowerAddress,
             ...updates,
           });
 
+        const { error } = await withWalletHeader(insertQuery, lowerAddress);
         if (error) throw error;
       }
     },
