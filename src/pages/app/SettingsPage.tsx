@@ -47,14 +47,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
@@ -561,6 +555,7 @@ function NotificationSettings() {
 
 function PrivacySettings() {
   const { showFollowersFollowing, hideFollowerCounts, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const [whoCanMessage, setWhoCanMessage] = useState('everyone');
   
   return (
     <div className="space-y-6">
@@ -587,7 +582,7 @@ function PrivacySettings() {
                 <p className="text-zinc-500 text-sm">Control how others see your social stats</p>
               </div>
             </div>
-            <Select 
+            <SettingDrawerSelect
               value={
                 hideFollowerCounts ? 'hidden' : 
                 showFollowersFollowing ? 'public' : 
@@ -603,16 +598,13 @@ function PrivacySettings() {
                 }
               }}
               disabled={isUpdating || isLoading}
-            >
-              <SelectTrigger className="w-36 bg-zinc-800 border-zinc-700 text-white rounded-xl">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
-                <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="counts-only">Numbers only</SelectItem>
-                <SelectItem value="hidden">Hidden</SelectItem>
-              </SelectContent>
-            </Select>
+              title="Followers & Following Visibility"
+              options={[
+                { value: 'public', label: 'Public', description: 'Numbers visible and clickable' },
+                { value: 'counts-only', label: 'Numbers only', description: 'Numbers visible but not clickable' },
+                { value: 'hidden', label: 'Hidden', description: 'Numbers hidden from visitors' },
+              ]}
+            />
           </div>
           <SettingToggle
             icon={Users}
@@ -640,16 +632,16 @@ function PrivacySettings() {
               <p className="text-zinc-500 text-sm">Control who can send you direct messages</p>
             </div>
           </div>
-          <Select defaultValue="everyone">
-            <SelectTrigger className="w-32 bg-zinc-800 border-zinc-700 text-white rounded-md">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-zinc-800 border-zinc-700">
-              <SelectItem value="everyone">Everyone</SelectItem>
-              <SelectItem value="followers">Followers</SelectItem>
-              <SelectItem value="none">No one</SelectItem>
-            </SelectContent>
-          </Select>
+          <SettingDrawerSelect
+            value={whoCanMessage}
+            onValueChange={setWhoCanMessage}
+            title="Who can message you"
+            options={[
+              { value: 'everyone', label: 'Everyone', description: 'Anyone can send you messages' },
+              { value: 'followers', label: 'Followers', description: 'Only your followers can message you' },
+              { value: 'none', label: 'No one', description: 'Disable direct messages' },
+            ]}
+          />
         </div>
       </div>
 
@@ -718,7 +710,7 @@ function PrivacySettings() {
 
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { stickToBanner, setStickToBanner } = useCoinPlacement();
-  
+  const [feedLayout, setFeedLayout] = useState('comfortable');
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -776,15 +768,15 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                 <p className="text-zinc-500 text-sm">Choose how posts are displayed</p>
               </div>
             </div>
-            <Select defaultValue="comfortable">
-              <SelectTrigger className="w-36 bg-zinc-800 border-zinc-700 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
-                <SelectItem value="comfortable">Comfortable</SelectItem>
-                <SelectItem value="compact">Compact</SelectItem>
-              </SelectContent>
-            </Select>
+            <SettingDrawerSelect
+              value={feedLayout}
+              onValueChange={setFeedLayout}
+              title="Feed Layout"
+              options={[
+                { value: 'comfortable', label: 'Comfortable', description: 'Standard spacing for easy reading' },
+                { value: 'compact', label: 'Compact', description: 'Reduced spacing for more content' },
+              ]}
+            />
           </div>
           <SettingToggle
             icon={LayoutGrid}
@@ -844,6 +836,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
 }
 
 function ContentSettings() {
+  const [postVisibility, setPostVisibility] = useState('public');
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -863,16 +857,16 @@ function ContentSettings() {
                 <p className="text-zinc-500 text-sm">Who can see your posts by default</p>
               </div>
             </div>
-            <Select defaultValue="public">
-              <SelectTrigger className="w-28 bg-zinc-800 border-zinc-700 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
-                <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="followers">Followers</SelectItem>
-                <SelectItem value="private">Private</SelectItem>
-              </SelectContent>
-            </Select>
+            <SettingDrawerSelect
+              value={postVisibility}
+              onValueChange={setPostVisibility}
+              title="Default Post Visibility"
+              options={[
+                { value: 'public', label: 'Public', description: 'Anyone can see your posts' },
+                { value: 'followers', label: 'Followers', description: 'Only your followers can see' },
+                { value: 'private', label: 'Private', description: 'Only you can see' },
+              ]}
+            />
           </div>
           <SettingToggle
             icon={FileText}
@@ -1090,6 +1084,8 @@ function AssetsSettings() {
 }
 
 function MessagesSettings() {
+  const [dmAccess, setDmAccess] = useState('everyone');
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -1109,16 +1105,16 @@ function MessagesSettings() {
                 <p className="text-zinc-500 text-sm">Control who can send you DMs</p>
               </div>
             </div>
-            <Select defaultValue="everyone">
-              <SelectTrigger className="w-40 bg-zinc-800 border-zinc-700 text-white rounded-md">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
-                <SelectItem value="everyone">Everyone</SelectItem>
-                <SelectItem value="following">People I follow</SelectItem>
-                <SelectItem value="none">No one (Closed)</SelectItem>
-              </SelectContent>
-            </Select>
+            <SettingDrawerSelect
+              value={dmAccess}
+              onValueChange={setDmAccess}
+              title="Allow Direct Messages"
+              options={[
+                { value: 'everyone', label: 'Everyone', description: 'Anyone can send you a DM' },
+                { value: 'following', label: 'People I follow', description: 'Only users you follow can message you' },
+                { value: 'none', label: 'No one (Closed)', description: 'DMs are completely disabled' },
+              ]}
+            />
           </div>
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
             <p className="mb-2"><strong className="text-white">Everyone:</strong> Anyone can send you a DM</p>
