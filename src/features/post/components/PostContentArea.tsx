@@ -15,6 +15,7 @@ import { UserMentionDropdown, searchUsers, type MentionUser } from '@/components
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { ChainSelector, type ChainId } from '@/components/app/ChainSelector';
 
 interface PostContentAreaProps {
   text: string;
@@ -54,6 +55,9 @@ interface PostContentAreaProps {
   isRecording?: boolean;
   recordingTime?: number;
   onStopRecording?: () => void;
+  // Chain selector props
+  chainId: ChainId;
+  onChainChange: (chainId: ChainId) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -112,6 +116,8 @@ export function PostContentArea({
   isRecording,
   recordingTime,
   onStopRecording,
+  chainId,
+  onChainChange,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -448,7 +454,7 @@ export function PostContentArea({
           </Avatar>
         </div>
 
-        {/* Schedule/Drafts buttons - top right corner */}
+        {/* Schedule/Drafts/Chain buttons - top right corner */}
         <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
           {/* Schedule indicator */}
           {scheduledDate && (
@@ -468,6 +474,13 @@ export function PostContentArea({
               {drafts.length} draft{drafts.length !== 1 ? 's' : ''}
             </span>
           )}
+
+          {/* Chain selector button */}
+          <ChainSelector
+            selectedChainId={chainId}
+            onChainChange={onChainChange}
+            variant="icon"
+          />
 
           {/* Schedule button */}
           <Tooltip>

@@ -5,7 +5,6 @@ import { usePostForm } from './hooks/usePostForm';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
-import { ChainSelector } from '@/components/app/ChainSelector';
 
 interface PostModalProps {
   isOpen: boolean;
@@ -69,6 +68,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         isRecording={state.isRecording}
         recordingTime={state.recordingTime}
         onStopRecording={actions.stopRecording}
+        chainId={state.chainId}
+        onChainChange={actions.setChainId}
       />
 
       <PostAccessToggles
@@ -97,16 +98,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         tokenAmount={state.tokenAmount}
         setTokenAmount={actions.setTokenAmount}
       />
-
-      {/* Chain Selector - positioned before action bar */}
-      <div className="px-4 py-2 flex items-center gap-2 border-t border-white/5">
-        <span className="text-xs text-zinc-500">Network:</span>
-        <ChainSelector
-          selectedChainId={state.chainId}
-          onChainChange={actions.setChainId}
-          variant="full"
-        />
-      </div>
 
       <PostActionBar
         imageInputRef={refs.imageInputRef}
