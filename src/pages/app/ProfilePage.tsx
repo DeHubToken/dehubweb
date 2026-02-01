@@ -30,6 +30,33 @@ import { followUser, unfollowUser } from '@/lib/api/dehub';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
 
+// Default banner templates for users without custom covers
+import defaultBanner1 from '@/assets/banners/default-banner-1.png';
+import defaultBanner2 from '@/assets/banners/default-banner-2.png';
+import defaultBanner3 from '@/assets/banners/default-banner-3.png';
+import defaultBanner4 from '@/assets/banners/default-banner-4.png';
+import defaultBanner5 from '@/assets/banners/default-banner-5.png';
+
+const DEFAULT_BANNERS = [
+  defaultBanner1,
+  defaultBanner2,
+  defaultBanner3,
+  defaultBanner4,
+  defaultBanner5,
+];
+
+/**
+ * Get a deterministic default banner based on wallet address
+ * Uses simple hash to consistently assign same banner to same user
+ */
+function getDefaultBanner(walletAddress?: string): string {
+  if (!walletAddress) return DEFAULT_BANNERS[0];
+  
+  // Simple hash: sum char codes and mod by banner count
+  const hash = walletAddress.toLowerCase().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return DEFAULT_BANNERS[hash % DEFAULT_BANNERS.length];
+}
+
 type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
 
 export default function ProfilePage() {
@@ -564,17 +591,17 @@ export default function ProfilePage() {
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
           
-          {/* Cover Photo - clickable for fullscreen */}
-          {profile.coverUrl ? (
-            <button 
-              className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer hover:opacity-95 transition-opacity"
-              onClick={() => setFullscreenImage(profile.coverUrl!)}
-            >
-              <img src={profile.coverUrl} alt="Cover" className="w-full h-full object-cover" />
-            </button>
-          ) : (
-            <div className="aspect-[3/1] bg-gradient-to-br from-purple-900/50 via-zinc-800 to-blue-900/50" />
-          )}
+          {/* Cover Photo - clickable for fullscreen, uses default banner if no custom cover */}
+          <button 
+            className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer hover:opacity-95 transition-opacity"
+            onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
+          >
+            <img 
+              src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
+              alt="Cover" 
+              className="w-full h-full object-cover" 
+            />
+          </button>
           
           {/* Profile Content */}
           <div className="px-4 sm:px-6 pb-4">
