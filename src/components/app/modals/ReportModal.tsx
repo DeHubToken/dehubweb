@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { Flag, Loader2, AlertTriangle } from 'lucide-react';
+import { Flag, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -128,12 +128,16 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
                   key={reason.value}
                   className={`flex items-center space-x-3 rounded-xl p-3 cursor-pointer transition-colors ${
                     selectedReason === reason.value
-                      ? 'bg-white/10 border border-primary'
+                      ? 'bg-white/10 border border-white/20'
                       : 'bg-white/5 border border-transparent hover:bg-white/10'
                   }`}
                   onClick={() => setSelectedReason(reason.value)}
                 >
-                  <RadioGroupItem value={reason.value} id={reason.value} />
+                  <RadioGroupItem 
+                    value={reason.value} 
+                    id={reason.value} 
+                    className="border-white/40 text-white data-[state=checked]:bg-white data-[state=checked]:border-white"
+                  />
                   <Label 
                     htmlFor={reason.value} 
                     className="text-sm text-white cursor-pointer flex-1"
@@ -162,28 +166,20 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
             </p>
           </div>
 
-          {/* Warning */}
-          <div className="flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-            <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-amber-200">
-              False reports may result in restrictions on your account. Only report content that actually violates our community guidelines.
-            </p>
-          </div>
-
           {/* Actions */}
           <div className="flex gap-3 pt-2">
             <Button
               variant="ghost"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="flex-1 text-zinc-400 hover:text-white"
+              className="flex-1 text-zinc-400 hover:text-white hover:bg-white/10"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={!selectedReason || isSubmitting}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+              className="flex-1 bg-white text-black hover:bg-white/90"
             >
               {isSubmitting ? (
                 <>
