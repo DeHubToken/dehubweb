@@ -118,10 +118,7 @@ export function ChainSelector({
                   alt={chain.name} 
                   className="w-8 h-8 rounded-lg object-cover" 
                 />
-                <div className="text-left">
-                  <p className="text-white font-medium">{chain.name}</p>
-                  <p className="text-xs text-zinc-400">Chain ID: {chain.id}</p>
-                </div>
+                <p className="text-white font-medium">{chain.name}</p>
               </div>
               {chain.id === selectedChainId && (
                 <Check className="w-5 h-5 text-white" />
