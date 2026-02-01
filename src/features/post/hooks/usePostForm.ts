@@ -803,6 +803,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           likeCount: 0,
           dislikeCount: 0,
           commentCount: 0,
+          isOptimistic: true,
         };
         addOptimisticPost({ id: optimisticId, type: 'video', data: videoPost, createdAt: new Date() });
       } else if (hasImage && media[0]) {
@@ -826,6 +827,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           creatorUsername: username,
           isLiked: false,
           createdAt: new Date().toISOString(),
+          isOptimistic: true,
         };
         addOptimisticPost({ id: optimisticId, type: 'image', data: imagePost, createdAt: new Date() });
       } else {
@@ -848,6 +850,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             reposts: 0,
             likes: 0,
           },
+          isOptimistic: true,
         };
         addOptimisticPost({ id: optimisticId, type: 'post', data: textPost, createdAt: new Date() });
       }

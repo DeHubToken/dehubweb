@@ -741,6 +741,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           likeCount={video.likeCount}
           dislikeCount={video.dislikeCount}
           commentCount={video.commentCount}
+          isOptimistic={video.isOptimistic}
         />
 
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}

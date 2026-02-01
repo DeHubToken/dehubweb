@@ -58,6 +58,8 @@ interface ActionBarProps {
   commentCount?: number;
   /** Share count to display */
   shareCount?: number;
+  /** Whether this is an optimistic (processing) post */
+  isOptimistic?: boolean;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -83,6 +85,7 @@ export function ActionBar({
   dislikeCount,
   commentCount,
   shareCount,
+  isOptimistic = false,
 }: ActionBarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -258,7 +261,15 @@ export function ActionBar({
           
           {/* Share - Bottom sheet for all devices with liquid glass effect */}
           <button 
-            onClick={() => setSheetOpen(true)}
+            onClick={() => {
+              if (isOptimistic) {
+                toast('Post processing, click ⓘ for more info', {
+                  icon: <Info className="w-4 h-4" />,
+                });
+              } else {
+                setSheetOpen(true);
+              }
+            }}
             className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
             aria-label="Share"
           >
