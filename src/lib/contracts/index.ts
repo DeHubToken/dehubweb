@@ -4,6 +4,19 @@
  * Re-exports for all contract-related utilities.
  */
 
+// AA Utilities
+export {
+  writeContractAA,
+  readContract,
+  getWalletAddress,
+  isSmartAccountSession,
+  approveERC20,
+  getERC20Balance,
+  getERC20Allowance,
+  parseTxError,
+  type AAWriteResult,
+} from './aa-utils';
+
 // DHB Token
 export { 
   DHB_TOKEN, 
@@ -18,7 +31,6 @@ export {
   STREAM_COLLECTION_ADDRESS, 
   STREAM_COLLECTION_ABI,
   getWeb3AuthSigner,
-  getStreamCollectionContract,
   mintOnChain,
   isTokenMinted,
   getTokenBalance,
@@ -30,8 +42,6 @@ export {
 export {
   STREAM_CONTROLLER_ADDRESS,
   STREAM_CONTROLLER_ABI,
-  getStreamControllerContract,
-  getDHBContract,
   getDHBBalance,
   getDHBAllowance,
   approveDHB,
