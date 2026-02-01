@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut } from 'lucide-react';
+import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut, Globe } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
+import { ChainSelector, type ChainId, SUPPORTED_CHAINS, getChainById } from './ChainSelector';
 
 interface CoinBalanceMenuProps {
   balance: number;
@@ -64,6 +65,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
+  const [selectedChainId, setSelectedChainId] = useState<ChainId>(8453);
 
   const formattedWalletAddress = useMemo(() => {
     if (!walletAddress) return null;
@@ -165,8 +167,25 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     return value % 1 === 0 ? value.toLocaleString() : value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
+  const selectedChain = getChainById(selectedChainId);
+  
   const mainMenuContent = (
     <div className="space-y-1">
+      {/* Network Selector */}
+      <div className="px-3 py-2 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Globe className="w-4 h-4 text-zinc-400" />
+            <span className="text-xs text-zinc-400">Network</span>
+          </div>
+          <ChainSelector
+            selectedChainId={selectedChainId}
+            onChainChange={setSelectedChainId}
+            variant="full"
+          />
+        </div>
+      </div>
+      
       {/* Balance display for desktop */}
       <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
         {/* DeHub Coin Balance */}

@@ -19,6 +19,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import type { ChainId } from '@/components/app/ChainSelector';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -53,6 +54,7 @@ interface UsePostFormReturn {
     drafts: Draft[];
     isRecording: boolean;
     recordingTime: number;
+    chainId: ChainId;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -61,6 +63,7 @@ interface UsePostFormReturn {
     deleteDraft: (id: string) => void;
     startRecording: () => void;
     stopRecording: () => void;
+    setChainId: (chainId: ChainId) => void;
   };
   computed: PostFormComputed;
   refs: {
@@ -100,6 +103,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -485,6 +489,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setTokenAmount('');
     setLiveMode(null);
     setScheduledDate(null);
+    setChainId(BASE_CHAIN_ID as ChainId);
   }, []);
 
   // Drafts actions
@@ -710,7 +715,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         name: text.trim().slice(0, 100) || 'Untitled',
         description: description.trim(),
         postType,
-        chainId: BASE_CHAIN_ID,
+        chainId,
         category: ['General'],
         streamInfo,
         files: files.length > 0 ? files : undefined,
@@ -900,6 +905,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       drafts,
       isRecording,
       recordingTime,
+      chainId,
     },
     actions: {
       setText,
@@ -944,6 +950,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       deleteDraft,
       startRecording,
       stopRecording,
+      setChainId,
     },
     computed: {
       hasVideo,
