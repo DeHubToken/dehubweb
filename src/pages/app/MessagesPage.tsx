@@ -115,12 +115,10 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (showPublicChat) {
     return (
-      <div className="min-h-screen p-3 sm:p-4">
-        <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
-          <PublicChat 
-            onBack={() => setShowPublicChat(false)} 
-          />
-        </div>
+      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)] p-3 sm:p-4">
+        <PublicChat 
+          onBack={() => setShowPublicChat(false)} 
+        />
       </div>
     );
   }
@@ -128,13 +126,11 @@ export default function MessagesPage() {
   // If a DM conversation is selected, show it
   if (selectedConversation) {
     return (
-      <div className="min-h-screen p-3 sm:p-4">
-        <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
-          <DirectMessageChat 
-            conversation={selectedConversation}
-            onBack={() => setSelectedConversation(null)} 
-          />
-        </div>
+      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)] p-3 sm:p-4">
+        <DirectMessageChat 
+          conversation={selectedConversation}
+          onBack={() => setSelectedConversation(null)} 
+        />
       </div>
     );
   }
