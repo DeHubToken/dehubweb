@@ -65,11 +65,13 @@ export default function ProfilePage() {
   });
   
   // Fetch user content from API - use wallet address once we have profile
+  // Pass current user's wallet address to get isLiked/isSaved states
   const {
     data: userContentData,
     isLoading: isLoadingContent,
   } = useDeHubUserContent({
     userId: apiProfile?.walletAddress,
+    viewerAddress: currentWalletAddress || undefined,
     enabled: !!apiProfile?.walletAddress,
   });
   

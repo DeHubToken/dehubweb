@@ -145,6 +145,8 @@ export function useDeHubProfileByUsername(username?: string, enabled = true) {
 
 interface UseDeHubUserContentOptions {
   userId?: string;
+  /** Viewer's wallet address for personalized data (isLiked, isSaved) */
+  viewerAddress?: string;
   enabled?: boolean;
   limit?: number;
 }
@@ -152,10 +154,11 @@ interface UseDeHubUserContentOptions {
 /**
  * Hook to fetch user's NFT content (videos/images)
  * Uses the /api/feed endpoint with minter filter for reliable content fetching
+ * Pass viewerAddress to get isLiked/isSaved state for the logged-in user
  */
-export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseDeHubUserContentOptions = {}) {
+export function useDeHubUserContent({ userId, viewerAddress, enabled = true, limit = 50 }: UseDeHubUserContentOptions = {}) {
   return useInfiniteQuery({
-    queryKey: ['dehub-user-content', userId],
+    queryKey: ['dehub-user-content', userId, viewerAddress],
     queryFn: async ({ pageParam = 1 }) => {
       if (!userId) throw new Error('User ID (wallet address) is required');
       
@@ -166,6 +169,10 @@ export function useDeHubUserContent({ userId, enabled = true, limit = 50 }: UseD
       url.searchParams.set('minter', userId);
       url.searchParams.set('sortBy', 'createdAt');
       url.searchParams.set('sortOrder', 'desc');
+      // Pass viewer's address to get isLiked/isSaved states
+      if (viewerAddress) {
+        url.searchParams.set('address', viewerAddress);
+      }
       
       const token = getAuthToken();
       const headers: HeadersInit = {
