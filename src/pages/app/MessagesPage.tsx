@@ -140,8 +140,8 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="min-h-screen p-3 sm:p-4">
-      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)]">
+    <div className="h-full p-3 sm:p-4 overflow-hidden">
+      <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
         <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
