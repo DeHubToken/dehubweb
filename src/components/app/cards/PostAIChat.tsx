@@ -446,7 +446,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   // Desktop: Dialog
   return (
     <Dialog open={isOpen && !isThisMinimized} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col">
+      <DialogContent hideCloseButton className="max-w-lg h-[600px] p-0 bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex flex-col">
         <DialogHeader className="p-4 border-b border-white/10 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
