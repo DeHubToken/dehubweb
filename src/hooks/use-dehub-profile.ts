@@ -31,6 +31,10 @@ export interface ProfileData {
   isFollowing?: boolean;
   /** Whether this user follows the current viewer */
   followsYou?: boolean;
+  /** Raw array of follower wallet addresses (for list display) */
+  followersList?: string[];
+  /** Raw array of following wallet addresses (for list display) */
+  followingsList?: string[];
 }
 
 /**
@@ -60,6 +64,10 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   const avatarUrl = buildAvatarUrl(address, rawAvatarUrl);
   const coverUrl = buildCoverUrl(address, rawCoverUrl);
 
+  // Preserve raw arrays for list display (if available)
+  const followersList = Array.isArray(user.followers) ? user.followers : undefined;
+  const followingsList = Array.isArray(user.followings) ? user.followings : undefined;
+
   return {
     id: user._id || user.id || '',
     name: user.displayName || user.display_name || user.username || 'Unknown User',
@@ -75,6 +83,8 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     walletAddress: user.address || user.wallet_address,
     isFollowing: user.isFollowing,
     followsYou: user.followsYou,
+    followersList,
+    followingsList,
   };
 }
 

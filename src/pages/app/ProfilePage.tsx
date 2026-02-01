@@ -14,6 +14,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { AppLayout } from '@/components/app/AppLayout';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { CreatePlanModal, PlanCard } from '@/components/app/subscriptions';
+import { FollowersListDrawer } from '@/components/app/profile';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -161,6 +162,8 @@ export default function ProfilePage() {
   const [offerAmount, setOfferAmount] = useState('');
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
+  const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
   
   // Fetch subscription plans for this profile
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress);
@@ -749,11 +752,31 @@ export default function ProfilePage() {
               </div>
               
               <div className="flex items-center gap-4 mt-3">
-                <button className="hover:underline">
+                <button 
+                  onClick={() => {
+                    if (!apiProfile?.followingsList?.length) {
+                      toast.info('Following list not available');
+                      return;
+                    }
+                    setFollowListType('following');
+                    setFollowListDrawerOpen(true);
+                  }}
+                  className="hover:underline"
+                >
                   <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
                   <span className="text-zinc-500 ml-1">Following</span>
                 </button>
-                <button className="hover:underline">
+                <button 
+                  onClick={() => {
+                    if (!apiProfile?.followersList?.length) {
+                      toast.info('Followers list not available');
+                      return;
+                    }
+                    setFollowListType('followers');
+                    setFollowListDrawerOpen(true);
+                  }}
+                  className="hover:underline"
+                >
                   <span className="font-bold text-white">{profile.followers.toLocaleString()}</span>
                   <span className="text-zinc-500 ml-1">Followers</span>
                 </button>
@@ -838,6 +861,17 @@ export default function ProfilePage() {
       <CreatePlanModal
         open={createPlanModalOpen}
         onOpenChange={setCreatePlanModalOpen}
+      />
+
+      {/* Followers/Following List Drawer */}
+      <FollowersListDrawer
+        open={followListDrawerOpen}
+        onOpenChange={setFollowListDrawerOpen}
+        addresses={followListType === 'followers' 
+          ? (apiProfile?.followersList || []) 
+          : (apiProfile?.followingsList || [])}
+        title={followListType === 'followers' ? 'Followers' : 'Following'}
+        profileAddress={apiProfile?.walletAddress}
       />
     </div>
   );
