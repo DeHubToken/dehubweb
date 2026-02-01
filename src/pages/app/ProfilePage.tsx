@@ -80,22 +80,34 @@ export default function ProfilePage() {
   // Also check if profile wallet matches current user's wallet (for /{username} routes)
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
   
-  // Process API content - no mock fallback
-  const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS } = useMemo(() => {
+  // Process API content - separate by type AND create unified feed sorted by date
+  const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, ALL_CONTENT } = useMemo(() => {
     if (!userContentData?.pages) {
-      return { PROFILE_POSTS: [], PROFILE_IMAGES: [], ALL_PROFILE_VIDEOS: [] };
+      return { PROFILE_POSTS: [], PROFILE_IMAGES: [], ALL_PROFILE_VIDEOS: [], ALL_CONTENT: [] };
     }
     const allNFTs = userContentData.pages.flatMap(page => page.data || []);
     const separated = separateUserContent(allNFTs);
+    
+    // Create unified content array with type info for home tab (sorted by createdAt - latest first)
+    const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string }> = [
+      ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+      ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
+      ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+    ];
+    
+    // Sort by createdAt descending (newest first)
+    unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    
     return { 
       PROFILE_POSTS: separated.posts,
       PROFILE_IMAGES: separated.images, 
-      ALL_PROFILE_VIDEOS: separated.videos 
+      ALL_PROFILE_VIDEOS: separated.videos,
+      ALL_CONTENT: unified,
     };
   }, [userContentData]);
   
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
-    { icon: Home, label: 'All', value: 'home', count: PROFILE_POSTS.length + PROFILE_IMAGES.length + ALL_PROFILE_VIDEOS.length },
+    { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
     { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
     { icon: MessageCircle, label: 'Replies', value: 'replies', count: 0 },
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
@@ -321,30 +333,28 @@ export default function ProfilePage() {
       );
     }
     
-    const hasNoContent = PROFILE_POSTS.length === 0 && PROFILE_IMAGES.length === 0 && ALL_PROFILE_VIDEOS.length === 0;
-    
     switch (activeTab) {
       case 'home':
-        if (hasNoContent) {
+        if (ALL_CONTENT.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Home className="w-12 h-12 text-zinc-600 mb-3" />
-              <p className="text-zinc-400 text-lg font-medium">No posts yet</p>
-              <p className="text-zinc-500 text-sm mt-1">Content will appear here when posted</p>
+              <Home className="w-12 h-12 text-muted-foreground mb-3" />
+              <p className="text-muted-foreground text-lg font-medium">No posts yet</p>
+              <p className="text-muted-foreground/70 text-sm mt-1">Content will appear here when posted</p>
             </div>
           );
         }
         return (
           <div className="space-y-2 sm:space-y-3">
-            {PROFILE_POSTS.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-            {PROFILE_IMAGES.map((image) => (
-              <ImageCard key={image.id} post={image} />
-            ))}
-            {ALL_PROFILE_VIDEOS.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
+            {ALL_CONTENT.map((item) => {
+              if (item.type === 'post') {
+                return <PostCard key={item.data.id} post={item.data as TextPost} />;
+              } else if (item.type === 'image') {
+                return <ImageCard key={item.data.id} post={item.data as ImagePost} />;
+              } else {
+                return <VideoCard key={item.data.id} video={item.data as VideoItem} />;
+              }
+            })}
           </div>
         );
       case 'images':
