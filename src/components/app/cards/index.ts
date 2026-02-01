@@ -16,3 +16,4 @@ export { ShortsReel } from './ShortsReel';
 export { StoriesBar } from './StoriesBar';
 export { AIButton } from './AIButton';
 export { PostAIChat } from './PostAIChat';
+export { PostMetadata } from './PostMetadata';

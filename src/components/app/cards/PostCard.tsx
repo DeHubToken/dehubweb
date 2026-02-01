@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
+import { PostMetadata } from './PostMetadata';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -67,8 +68,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         contentType="post"
         creatorId={post.author.id}
         creatorUsername={post.author.handle}
-        timestamp={post.createdAt}
-        viewCount={post.views}
         stakedAmount={post.author.stakedAmount}
       />
 
@@ -123,7 +122,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       <div className="p-3 space-y-2">
         <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
-        <div className="pt-2">
+        {/* Metadata: timestamp and views */}
+        <PostMetadata timestamp={post.createdAt} viewCount={post.views} />
+
+        <div className="pt-1">
           <ActionBar 
             postId={post.id} 
             className="p-0"
