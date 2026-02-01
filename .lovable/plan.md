@@ -1,67 +1,136 @@
 
-# Smart Title/Description Parsing for Posts
+# Followers/Following List Feature
 
 ## Overview
-Update the posting system to properly parse user input into separate `name` (title) and `description` fields that the DeHub API expects, with logic that adapts based on content type and line count.
+Add clickable follower/following counts on profile pages that open a drawer showing the full list of users. Each user in the list will be clickable to navigate to their profile.
 
-## Updated Requirements
+## Technical Approach
 
-| Post Type | Lines | Title | Description |
-|-----------|-------|-------|-------------|
-| Video | 1 line | First line | Empty |
-| Video | Multi-line | First line | Lines 2+ |
-| Feed/Image | 1 line | First line | **Empty** |
-| Feed/Image | Multi-line | First line | Lines 2+ |
+### 1. Preserve Raw Follower/Following Arrays
 
-The key change: Multi-line posts (of any type) now keep the description populated with lines 2+. Only single-line posts have an empty description.
+**File: `src/hooks/use-dehub-profile.ts`**
 
-## Technical Changes
+Update `ProfileData` interface and `mapUserToProfile` to preserve the raw arrays:
 
-### File: `src/features/post/hooks/usePostForm.ts`
-
-**Location**: Around lines 684-710 (in the `handlePost` function)
-
-Replace the current title/description logic:
 ```typescript
-// BEFORE (current)
-name: text.trim().slice(0, 100) || 'Untitled',
-description: description.trim() || text.trim(),
+export interface ProfileData {
+  // ... existing fields
+  following: number;
+  followers: number;
+  // NEW: Raw arrays for list display
+  followersList?: string[];   // Array of wallet addresses
+  followingsList?: string[];  // Array of wallet addresses
+}
 
-// AFTER (new parsing logic)
-// Parse title and description from text content
-const textContent = text.trim();
-const lines = textContent.split('\n').filter(line => line.trim());
-const firstLine = lines[0]?.trim() || '';
-
-// Title is always the first line (max 100 chars)
-const postTitle = firstLine.slice(0, 100) || 'Untitled';
-
-// Description: use lines 2+ if multi-line, otherwise blank
-const postDescription = lines.length > 1 
-  ? lines.slice(1).map(l => l.trim()).join('\n') 
-  : '';
+export function mapUserToProfile(user: DeHubUser): ProfileData {
+  // ... existing logic
+  
+  // Preserve raw arrays if available
+  const followersList = Array.isArray(user.followers) ? user.followers : undefined;
+  const followingsList = user.followings;
+  
+  return {
+    // ... existing fields
+    followersList,
+    followingsList,
+  };
+}
 ```
 
-Then update the `mintPost` call:
+### 2. Create FollowersListDrawer Component
+
+**File: `src/components/app/profile/FollowersListDrawer.tsx`** (new)
+
+A reusable drawer component that:
+- Accepts a list of wallet addresses and a title ("Followers" or "Following")
+- Fetches user details for each address using `getAccountInfo`
+- Displays users in a scrollable list with:
+  - Avatar, display name, @handle
+  - "Follows you" badge (when applicable)
+  - Follow/Unfollow button
+- Clicking a user navigates to their profile
+
+Key implementation details:
+- Use batch fetching (Promise.all with chunking) for performance
+- Show loading skeleton while fetching
+- Handle empty states gracefully
+- Pass current user's address to get `followsYou` status for each user
+
+### 3. Integrate into ProfilePage
+
+**File: `src/pages/app/ProfilePage.tsx`**
+
+- Add state for drawer open/close and which list to show
+- Replace the static follower/following buttons with drawer triggers
+- Pass the appropriate list to the drawer component
+
 ```typescript
-const mintResponse = await mintPost({
-  name: postTitle,
-  description: postDescription,
-  // ... rest unchanged
-});
+// New state
+const [listDrawerOpen, setListDrawerOpen] = useState(false);
+const [listType, setListType] = useState<'followers' | 'following'>('followers');
+
+// Updated buttons (around line 751-760)
+<button 
+  onClick={() => {
+    setListType('following');
+    setListDrawerOpen(true);
+  }}
+  className="hover:underline"
+>
+  <span className="font-bold text-white">{profile.following.toLocaleString()}</span>
+  <span className="text-zinc-500 ml-1">Following</span>
+</button>
 ```
 
-Also update the console.log statement for debugging consistency.
+### 4. Handle API Limitations
 
-## Summary of Changes
+If the DeHub API returns only counts (not arrays) for the viewed profile:
+- We'll need to check if arrays are available
+- Show a toast message like "List not available" if arrays are empty
+- Consider adding a dedicated API endpoint request to DeHub team
 
-| Change | Description |
-|--------|-------------|
-| Parse logic | Split text by newlines, first line = title, rest = description |
-| Single-line behavior | Description is blank (for all post types) |
-| Multi-line behavior | Lines 2+ become description (for all post types) |
-| Edge cases | Empty content falls back to "Untitled" title |
+## UI Design
 
-## Files to Modify
+The drawer will match existing app patterns:
+- Glass-style `DrawerContent`
+- User rows similar to `WhoToFollow` component
+- Infinite scroll if lists are long (optional, phase 2)
+- Loading states with skeleton animation
 
-- `src/features/post/hooks/usePostForm.ts` - Update title/description parsing in `handlePost`
+```
++-----------------------------------+
+|   Followers (123)            [X] |
++-----------------------------------+
+| [Avatar] Display Name            |
+|         @handle                  |
+|         [Follows you] [Follow]   |
++-----------------------------------+
+| [Avatar] Another User            |
+|         @username                |
+|                      [Following] |
++-----------------------------------+
+|           ...more users...       |
++-----------------------------------+
+```
+
+## Files to Create/Modify
+
+| File | Action |
+|------|--------|
+| `src/hooks/use-dehub-profile.ts` | Add `followersList`/`followingsList` to ProfileData |
+| `src/components/app/profile/FollowersListDrawer.tsx` | **Create** new component |
+| `src/components/app/profile/index.ts` | **Create** barrel export |
+| `src/pages/app/ProfilePage.tsx` | Add drawer integration |
+
+## Edge Cases
+
+- **Empty lists**: Show friendly message "No followers yet" / "Not following anyone"
+- **Large lists**: Initial load of 20-50 users, with load more button
+- **API returns count not array**: Gracefully handle with "List unavailable" state
+- **Self-profile**: Still show lists, but hide Follow button on yourself
+
+## Future Enhancements (Phase 2)
+
+- Search/filter within the list
+- Mutual followers highlight ("Followed by X, Y, and Z others you follow")
+- Infinite scroll for very large lists
