@@ -1058,23 +1058,6 @@ export default function AssistantPage() {
         <div className="flex items-center gap-3">
           <img src={aiStarIcon} alt="AI" className="w-8 h-8 object-contain" />
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">AI Assistant</h1>
-          {/* New Chat Button */}
-          {messages.length > 1 && (
-            <button
-              onClick={() => {
-                startNewConversation();
-                setMessages([{
-                  id: 'initial',
-                  role: 'assistant',
-                  content: `Use the text box below or these action buttons to get started.`
-                }]);
-              }}
-              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors"
-              title="Start new conversation"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          )}
         </div>
 
         <div className="flex items-center gap-4">
