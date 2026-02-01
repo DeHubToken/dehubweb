@@ -695,7 +695,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // Step 1: Call the mint API to get signature
       // Dismiss any existing toast to avoid overlap
       toast.dismiss('mint-progress');
-      toast.loading('Uploading content...', { id: 'mint-progress' });
+      toast.loading('Uploading content', { id: 'mint-progress', duration: Infinity });
       
       const mintResponse = await mintPost({
         name: text.trim().slice(0, 100) || 'Untitled',
@@ -731,13 +731,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       // Step 2: Execute on-chain minting
-      toast.info('Minting on blockchain...', { id: 'mint-progress' });
+      toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
       
       let txHash: string;
       
       if (hasBounty) {
         // Use StreamController for bounty minting
-        toast.info('Approving DHB tokens...', { id: 'mint-progress' });
+        toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
         
         txHash = await mintWithBounty({
           tokenId: mintResponse.createdTokenId,
@@ -763,19 +763,15 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       console.log('[Mint] Transaction hash:', txHash);
 
       toast.dismiss('mint-progress');
-      toast.success('Post Sent!', {
-        action: {
-          label: 'View Transaction',
-          onClick: () => window.open(`https://basescan.org/tx/${txHash}`, '_blank'),
-        },
-      });
+      toast.success('Posted successfully');
       
       resetForm();
       onClose();
     } catch (error) {
       console.error('[Mint] Failed to mint post:', error);
       toast.dismiss('mint-progress');
-      toast.error(error instanceof Error ? error.message : 'Failed to create post');
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(`Post failed: ${errorMsg}`);
     } finally {
       setIsPosting(false);
     }
