@@ -756,16 +756,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   type: op.type, 
                   data: op.data as any 
                 };
-                return (
-                  <div key={op.id} className="relative">
-                    {/* Subtle indicator that post is processing */}
-                    <div className="absolute top-2 right-2 z-10 px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-medium flex items-center gap-1">
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      Processing
-                    </div>
-                    {renderFeedItem(feedItem, -999)}
-                  </div>
-                );
+                return renderFeedItem(feedItem, -999);
               })}
               
               {/* Render pinned post if available */}
