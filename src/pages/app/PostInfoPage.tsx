@@ -296,15 +296,15 @@ export default function PostInfoPage() {
           </div>
           
           <h2 className="text-xl font-semibold text-white mb-3">
-            Minting in Progress
+            Processing...
           </h2>
           
           <p className="text-white/60 text-sm leading-relaxed mb-4">
-            Your post is being minted on public decentralised databases. This process typically takes a couple of minutes to propagate across the network.
+            Your post is being minted on public decentralized databases and our system is validating everything before it goes live on user feeds.
           </p>
           
           <p className="text-white/40 text-xs leading-relaxed">
-            Once complete, your post will be permanently stored on-chain and others will be able to see and engage with it.
+            Your post metadata is permanently stored on-chain but you can hide content from feeds at any time should you need to.
           </p>
           
           <button
