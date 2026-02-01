@@ -726,18 +726,6 @@ function PrivacySettings() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Lock className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">Password</p>
-                <p className="text-zinc-500 text-sm">Last updated 30 days ago</p>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md">
-              Change Password
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
               <Shield className="w-5 h-5 text-zinc-500" />
               <div>
                 <p className="text-white font-medium">Two-Factor Authentication</p>
