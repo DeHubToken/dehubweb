@@ -536,8 +536,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }
 
       // Get user's wallet address for signature generation
-      const signer = await getWeb3AuthSigner();
-      const minterAddress = await signer.getAddress();
+      const minterAddress = await getWeb3AuthSigner();
       console.log('[Mint] User wallet address (minter):', minterAddress);
 
       // Build streamInfo for monetization - ONLY DHB on Base chain
