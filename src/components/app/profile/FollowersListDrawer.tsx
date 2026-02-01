@@ -204,16 +204,16 @@ export function FollowersListDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass className="max-h-[85vh]" hideHandle>
-        <DrawerHeader className="flex items-center justify-between px-4 pb-2">
+        <DrawerClose asChild>
+          <button className="absolute top-4 right-4 p-2 rounded-xl hover:bg-white/10 transition-colors">
+            <X className="w-5 h-5 text-zinc-400" />
+          </button>
+        </DrawerClose>
+        <DrawerHeader className="px-4 pb-2">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
             {title} ({addresses.length.toLocaleString()})
           </DrawerTitle>
-          <DrawerClose asChild>
-            <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
-              <X className="w-5 h-5 text-zinc-400" />
-            </button>
-          </DrawerClose>
         </DrawerHeader>
 
         <div className="flex-1 px-4 pb-6 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(85vh - 80px)', WebkitOverflowScrolling: 'touch' }}>
