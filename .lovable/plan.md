@@ -1,77 +1,136 @@
 
-# Fix Dead Avatar in Story Playback
+# Story Viewer: TikTok-Style Vertical Scroll Feed
 
-## Root Cause
-
-The avatar stored in the database is a **relative path**:
-```
-avatars/0x742371a7cce6b068f3c6222016bf009d570d7d15.jpg
-```
-
-This needs to be processed through `buildAvatarUrl()` to become a full CDN URL:
-```
-https://dehubcdn.../avatars/0x742371a7cce6b068f3c6222016bf009d570d7d15.jpg
-```
-
-Currently, both `StoriesBar.tsx` and `StoryViewerModal.tsx` pass the raw `story.avatar` value directly to `<AvatarImage>`, which breaks because relative paths don't load.
+## Overview
+Transform the story viewer from horizontal tap navigation to a full-screen vertical scroll feed like TikTok. Users scroll down to see the next story, one video per screen.
 
 ---
 
-## Changes Required
+## Current Behavior
+- Opens as full-screen modal
+- Tap left/right sides to navigate between stories
+- Progress bar timer at top for each story
+- Horizontal-style navigation with chevron hints
 
-### 1. `src/components/app/cards/StoriesBar.tsx`
+## New Behavior
+- Full-screen vertical scroll feed
+- Swipe/scroll up to see next story, down for previous
+- One video fills the screen at a time with snap scrolling
+- Keyboard (Arrow Up/Down) and mouse wheel support
+- Progress bar synced to actual video playback
+- Same liquid glass header with user info and controls
 
-**Import the utility:**
+---
+
+## Technical Implementation
+
+### 1. Replace Navigation Model
+**File: `src/components/app/stories/StoryViewerModal.tsx`**
+
+Remove:
+- Horizontal tap zones (left/right 1/3 click areas)
+- ChevronLeft/ChevronRight navigation hints
+- Interval-based progress timer
+
+Add:
+- Vertical scroll/swipe navigation using Framer Motion drag
+- Mouse wheel handler with debounce (similar to ShortsViewer)
+- Video `onTimeUpdate` for real-time progress sync
+- Snap-to-story scrolling behavior
+
+### 2. Update Video Progress Bar
+Instead of a separate interval timer that estimates progress:
 ```tsx
-import { buildAvatarUrl } from '@/lib/media-url';
+onTimeUpdate={(e) => {
+  const video = e.currentTarget;
+  if (video.duration && isFinite(video.duration)) {
+    setProgress((video.currentTime / video.duration) * 100);
+  }
+}}
 ```
 
-**Update the story mapping (around line 166-172):**
+This keeps the progress bar perfectly synced with actual playback.
+
+### 3. Scroll Navigation Logic
+Add these handlers (pattern from ShortsViewer):
+
 ```tsx
-...storyUsers.map((story) => ({
-  type: 'story' as const,
-  story,
-  name: story.username ? `@${story.username}` : `${story.wallet_address.slice(0, 6)}...`,
-  avatar: buildAvatarUrl(story.wallet_address, story.avatar) || '',  // Process through utility
-  thumbnail: story.thumbnail_url || '',
-})),
+// Mouse wheel
+const handleWheel = (e: WheelEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (isScrolling) return;
+  if (Math.abs(e.deltaY) < 50) return;
+  
+  setIsScrolling(true);
+  if (e.deltaY > 0) goNext();
+  else goPrev();
+  setTimeout(() => setIsScrolling(false), 500);
+};
+
+// Touch swipe via Framer Motion
+const handleDragEnd = (_, info: PanInfo) => {
+  if (info.offset.y < -100) goNext();
+  else if (info.offset.y > 100) goPrev();
+};
+```
+
+### 4. Keyboard Support
+Add Arrow Up/Down and Escape key handlers for desktop users.
+
+### 5. Lock Body Scroll
+Prevent background page scrolling when viewer is open:
+```tsx
+useEffect(() => {
+  document.body.style.overflow = 'hidden';
+  return () => { document.body.style.overflow = ''; };
+}, []);
+```
+
+### 6. Video Key for Clean Transitions
+Force video remount on story change to ensure clean playback:
+```tsx
+<video key={currentStory.id} ... />
 ```
 
 ---
 
-### 2. `src/components/app/stories/StoryViewerModal.tsx`
+## UI Changes
 
-**Import the utility:**
-```tsx
-import { buildAvatarUrl } from '@/lib/media-url';
-```
+### Remove
+- Left/right tap zones
+- ChevronLeft/ChevronRight icons
+- Multi-story progress segments at top
 
-**Update the avatar image (around line 156-157):**
+### Keep
+- Header with avatar, username, timestamp
+- Pause/Play button
+- Delete button (for own stories)
+- Close (X) button
+
+### Modify
+- Single progress bar (for current story only)
+- Add subtle up/down chevron hints on sides
+
+---
+
+## State Changes
+
 ```tsx
-<Avatar className="w-10 h-10 border-2 border-white">
-  <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
-  <AvatarFallback className="bg-zinc-700 text-white">
-    {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
-  </AvatarFallback>
-</Avatar>
+// Remove
+const [videoDuration, setVideoDuration] = useState(30);
+const progressRef = useRef<NodeJS.Timeout | null>(null);
+
+// Add
+const [isScrolling, setIsScrolling] = useState(false);
 ```
 
 ---
 
-## Technical Details
-
-The `buildAvatarUrl()` function (from `src/lib/media-url.ts`) handles:
-- Relative paths like `avatars/xxx.jpg` → converts to `https://dehubcdn.../avatars/{address}.{ext}`
-- Full URLs starting with `http` → returns as-is
-- `null`/`undefined` → returns `undefined` (triggers fallback)
-
-This is the same pattern used throughout the app for profile pages, feed cards, and search results per the established conventions in the codebase.
+## Files to Modify
+1. **`src/components/app/stories/StoryViewerModal.tsx`** - Complete refactor to vertical scroll pattern
 
 ---
 
 ## Summary
-
-| File | Change |
-|------|--------|
-| `StoriesBar.tsx` | Add import + wrap `story.avatar` with `buildAvatarUrl()` |
-| `StoryViewerModal.tsx` | Add import + wrap `currentStory.avatar` with `buildAvatarUrl()` |
+The story viewer will feel just like scrolling through TikTok or Instagram Reels - one story per screen, scroll down for more, with smooth snap transitions and real-time progress tracking synced to video playback.
