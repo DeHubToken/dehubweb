@@ -185,11 +185,18 @@ export default function SinglePostPage() {
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
     retry: 1,
+    // Use cached data from feed navigation as placeholder for instant display
+    // This allows background refetch while showing content immediately
+    placeholderData: (previousData) => previousData,
   });
 
+  // Check if we have cached data (from feed navigation) to show immediately
+  const hasCachedData = !!post;
+  
   // Determine content type and render appropriate card
   const renderContent = () => {
-    if (isLoading) return <LoadingState />;
+    // Only show loading if we have no data at all (not even cached)
+    if (isLoading && !hasCachedData) return <LoadingState />;
     if (error || !post) return <NotFoundState />;
     
     // Handle processing posts

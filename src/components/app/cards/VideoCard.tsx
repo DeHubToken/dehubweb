@@ -11,6 +11,7 @@
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -27,6 +28,7 @@ import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { getViewCount } from '@/lib/feed-utils';
+import { cacheVideoForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
   DrawerContent,
@@ -64,6 +66,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -388,12 +391,16 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFocused, isPlaying, handlePlayClick, seekBy, adjustVolume]);
   // Navigate to single post page when clicking non-interactive areas (header only)
+  // Pre-cache video data for instant display on the single post page
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
+    
+    // Cache the video data before navigation for instant display
+    cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`);
-  }, [navigate, video.id]);
+  }, [navigate, video.id, queryClient, video]);
   
   return (
     <div 

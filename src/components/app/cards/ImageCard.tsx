@@ -11,6 +11,7 @@
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,6 +29,7 @@ import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
+import { cacheImageForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
   DrawerContent,
@@ -350,6 +352,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -382,12 +385,16 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   }, [clearResult]);
 
   // Navigate to single post page when clicking non-interactive areas
+  // Pre-cache post data for instant display on the single post page
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
+    
+    // Cache the post data before navigation for instant display
+    cacheImageForNavigation(queryClient, post);
     navigate(`/app/post/${post.id}`);
-  }, [navigate, post.id]);
+  }, [navigate, post.id, queryClient, post]);
 
   return (
     <div 

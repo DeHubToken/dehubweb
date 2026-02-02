@@ -11,6 +11,7 @@
 
 import { useState, memo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -22,6 +23,7 @@ import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
   DrawerContent,
@@ -56,17 +58,22 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
 
   // Navigate to single post page when clicking non-interactive areas
+  // Pre-cache post data for instant display on the single post page
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
+    
+    // Cache the post data before navigation for instant display
+    cacheTextPostForNavigation(queryClient, post);
     navigate(`/app/post/${post.id}`);
-  }, [navigate, post.id]);
+  }, [navigate, post.id, queryClient, post]);
 
   return (
     <div 
