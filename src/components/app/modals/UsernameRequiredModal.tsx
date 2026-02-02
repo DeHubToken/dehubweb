@@ -279,7 +279,7 @@ export function UsernameRequiredModal() {
           <div className="flex flex-col gap-2 pt-2">
             <Button 
               type="submit" 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-white/10 rounded-full h-12"
               disabled={isSubmitting || !canSubmit}
             >
               {isSubmitting ? (
