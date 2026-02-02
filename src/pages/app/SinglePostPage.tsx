@@ -13,6 +13,7 @@
 
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { Loader2, AlertCircle, Clock } from 'lucide-react';
 import { getNFTInfo, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { PageHeader } from '@/components/app/PageHeader';
@@ -179,6 +180,11 @@ export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const id = postId || tokenId;
 
+  // Scroll to top when post page mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['single-post', id],
     queryFn: () => getNFTInfo(id!),
@@ -217,7 +223,7 @@ export default function SinglePostPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="flex flex-col">
       <PageHeader showBack />
       
       <div className="px-3 sm:px-4 pb-8">
