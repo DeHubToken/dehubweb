@@ -839,11 +839,13 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-white">{profile.name}</h2>
                 {profile.verified && <VerifiedBadge className="w-5 h-5" />}
-                <img 
-                  src={getBadgeUrl(apiProfile?.staked)} 
-                  alt="Staking tier" 
-                  className="w-5 h-5 object-contain"
-                />
+                {getBadgeUrl(apiProfile?.staked) && (
+                  <img 
+                    src={getBadgeUrl(apiProfile?.staked)!} 
+                    alt="Holdings tier" 
+                    className="w-5 h-5 object-contain"
+                  />
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <button
