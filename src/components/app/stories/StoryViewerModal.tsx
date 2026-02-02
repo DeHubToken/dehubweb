@@ -101,15 +101,16 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   };
 
   const handleDelete = async () => {
-    if (!currentStory || !isOwnStory) return;
+    if (!currentStory || !isOwnStory || !walletAddress) return;
 
     setIsDeleting(true);
     try {
-      // Delete from database
+      // Delete from database with wallet header for RLS
       const { error } = await supabase
         .from('stories')
         .delete()
-        .eq('id', currentStory.id);
+        .eq('id', currentStory.id)
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
 
       if (error) throw error;
 
