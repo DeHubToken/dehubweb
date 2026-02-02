@@ -22,7 +22,7 @@ import { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getBadgeUrl } from '@/lib/staking-badges';
+
 import type { ContentType } from '@/types/feed.types';
 
 interface CardHeaderProps {
@@ -46,8 +46,6 @@ interface CardHeaderProps {
   timestamp?: string;
   /** View count to show next to timestamp */
   viewCount?: string | number;
-  /** Creator's staked DHB amount for tier badge */
-  stakedAmount?: number;
 }
 
 /**
@@ -72,14 +70,10 @@ export function CardHeader({
   creatorUsername,
   timestamp,
   viewCount,
-  stakedAmount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
   const badge = CONTENT_BADGES[contentType];
-  
-  // Get staking badge image URL
-  const stakingBadgeUrl = getBadgeUrl(stakedAmount);
 
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
   const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
@@ -125,11 +119,6 @@ export function CardHeader({
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="font-semibold text-white text-sm truncate max-w-[100px] sm:max-w-none">{username}</span>
           {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
-          <img 
-            src={stakingBadgeUrl} 
-            alt="Staking tier" 
-            className="w-4 h-4 object-contain shrink-0"
-          />
           {formattedHandle && (
             <span className="text-zinc-500 text-sm truncate max-w-[100px] sm:max-w-none">{formattedHandle}</span>
           )}
