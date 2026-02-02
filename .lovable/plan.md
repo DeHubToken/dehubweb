@@ -1,35 +1,95 @@
 
-# Plan: Instant Post Navigation from Feed
+# Plan: Fix Feed Refresh on Back Navigation
 
-## Problem
-When clicking a post in the feed, the dedicated post page shows a loading spinner while making a new API call—even though the feed already has all the data for that post.
+## Problem Identified
+
+When you navigate back from a post page, the feed shows a loading spinner and refreshes even though React Query has cached data. This happens because:
+
+1. **State Reset on Remount**: When `HomeFeed` remounts, `hasPreFetched` is initialized to `false`
+2. **Random Mode Guard**: When `hasPreFetched` is `false` and sort is "Random", the `items` array is returned as empty (to prevent partial shuffles)
+3. **Loading Logic Flaw**: The loading state check `items.length > 0` fails because items is empty, triggering the spinner
+
+## Root Cause Flow
+
+```
+User clicks back
+  → HomePage remounts
+  → HomeFeed remounts with fresh state
+  → hasPreFetched = false (useState initial)
+  → isPreFetchingRandom = true (because sort is 'random')
+  → items = [] (guard in useMemo returns empty)
+  → hasCachedData = false (items.length check fails)
+  → isLoadingState = true
+  → Shows spinner! ❌
+```
 
 ## Solution
-Pre-populate the single-post cache when navigating from the feed, so the post page displays instantly with no loading phase.
 
-## How It Works
-When you click a post card in the feed:
-1. Before navigating, the card will save its data to React Query's cache using the `['single-post', id]` key
-2. The SinglePostPage will find this data already cached and display it immediately
-3. No loading spinner, no delay—the content appears instantly
+Persist `hasPreFetched` state using sessionStorage, so when returning via back navigation:
+- The state is restored from session, not reset to `false`
+- Items are computed from cached React Query data immediately
+- No loading spinner appears
 
-## What Changes
+## Technical Changes
 
-### 1. Create a Cache Helper
-A small utility function to save post data before navigation.
+### File: `src/components/app/feeds/HomeFeed.tsx`
 
-### 2. Update Card Components
-Modify VideoCard, ImageCard, and PostCard to cache their data when clicked:
-- Convert the display data back to the API format
-- Store it in the `['single-post', id]` cache
-- Then navigate to the post page
+**1. Initialize `hasPreFetched` from sessionStorage:**
+```typescript
+const getInitialPreFetched = () => {
+  try {
+    return sessionStorage.getItem('home-feed-prefetched') === 'true';
+  } catch {
+    return false;
+  }
+};
 
-### 3. SinglePostPage Adjustment
-Update the query to use `placeholderData` from the cache when available, ensuring instant display while still allowing background refresh for the latest data (like new comments).
+const [hasPreFetched, setHasPreFetched] = useState(getInitialPreFetched);
+```
 
-## User Experience
-- **Before**: Click post → Loading spinner → Content appears
-- **After**: Click post → Content appears instantly (feels native)
+**2. Save to sessionStorage when pre-fetch completes:**
+```typescript
+// In the pre-fetch effect:
+else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
+  setHasPreFetched(true);
+  sessionStorage.setItem('home-feed-prefetched', 'true');
+}
+```
 
-## Technical Note
-The background refetch can still happen silently to get fresh engagement stats (likes, comments), but the user sees content immediately without any visible loading state.
+**3. Reset the persisted state on explicit refresh:**
+```typescript
+// In shuffleKey effect:
+if (shuffleKey > 0) {
+  setHasPreFetched(false);
+  sessionStorage.removeItem('home-feed-prefetched');
+  // ... rest of refresh logic
+}
+```
+
+## Alternative Approach (Cleaner)
+
+Instead of persisting pre-fetch state, we can change the loading logic to check for React Query cache directly:
+
+```typescript
+// Check if React Query has data regardless of hasPreFetched state
+const hasQueryData = feedData?.pages && feedData.pages.length > 0;
+
+// Only show loading when there's truly no cached data
+const isLoadingState = !hasQueryData && isLoading;
+```
+
+This would render the cached content immediately, even if `hasPreFetched` is false. The shuffle logic would still work because the pre-fetch effect would trigger, but users would see stale content while it happens (acceptable tradeoff for instant rendering).
+
+## Recommended Approach
+
+Combine both:
+1. Persist `hasPreFetched` in sessionStorage for the cleanest UX
+2. Add a fallback that shows cached data even if state restoration fails
+
+## Files to Modify
+- `src/components/app/feeds/HomeFeed.tsx` - Persist and restore pre-fetch state
+
+## Expected Result
+- Back navigation shows cached feed content instantly
+- No loading spinner when returning from a post
+- Pull-to-refresh still works (clears the persisted state)
