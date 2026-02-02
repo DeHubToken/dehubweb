@@ -711,9 +711,24 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       toast.dismiss('mint-progress');
       toast.loading('Uploading content', { id: 'mint-progress', duration: Infinity });
       
+      // Determine title and description based on post type
+      let postTitle = '';
+      let postDescription = '';
+
+      if (postType === 'video') {
+        // Video: first line = title, rest = description
+        const lines = text.trim().split('\n');
+        postTitle = (lines[0] || '').trim().slice(0, 100) || 'Untitled';
+        postDescription = lines.slice(1).join('\n').trim();
+      } else {
+        // Image/Text posts: title blank, everything goes to description
+        postTitle = '';
+        postDescription = text.trim();
+      }
+
       const mintResponse = await mintPost({
-        name: text.trim().slice(0, 100) || 'Untitled',
-        description: description.trim(),
+        name: postTitle,
+        description: postDescription,
         postType,
         chainId,
         category: ['General'],
