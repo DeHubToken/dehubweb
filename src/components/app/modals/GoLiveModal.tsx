@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { Video, Mic, Radio, Loader2, Copy, Check, ExternalLink, Calendar } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,19 +14,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { createLiveStream, startLiveStream, type StartLiveStreamResponse } from '@/lib/api/dehub';
-import type { LiveMode } from '@/features/post/types';
+
 
 interface GoLiveModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialMode?: LiveMode;
 }
 
 type Step = 'setup' | 'ready' | 'streaming';
 
-export function GoLiveModal({ isOpen, onClose, initialMode = 'video' }: GoLiveModalProps) {
+export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [step, setStep] = useState<Step>('setup');
-  const [mode, setMode] = useState<LiveMode>(initialMode);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -123,34 +121,6 @@ export function GoLiveModal({ isOpen, onClose, initialMode = 'video' }: GoLiveMo
 
         {step === 'setup' && (
           <div className="space-y-4">
-            {/* Mode Selection */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setMode('video')}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors',
-                  mode === 'video'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                )}
-              >
-                <Video className="w-5 h-5" />
-                <span className="font-medium">Video</span>
-              </button>
-              <button
-                onClick={() => setMode('townhall')}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors',
-                  mode === 'townhall'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                )}
-              >
-                <Mic className="w-5 h-5" />
-                <span className="font-medium">Audio Only</span>
-              </button>
-            </div>
-
             {/* Title */}
             <div className="space-y-2">
               <label className="text-sm text-zinc-400">Stream Title *</label>
