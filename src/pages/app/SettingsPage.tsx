@@ -344,7 +344,7 @@ function ProfileSettings() {
       </div>
 
       {/* Profile Picture */}
-      <div className="flex items-center gap-4 -mt-10 ml-4">
+      <div className="flex items-center gap-4 -mt-10">
         <div className="relative">
           <Avatar className="w-20 h-20 border-4 border-zinc-900">
             <AvatarImage src={avatarPreview} />
