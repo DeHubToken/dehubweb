@@ -1,11 +1,8 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { Hono } from "hono";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StreamableHTTPTransport } from "@hono/mcp";
+import { z } from "zod";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-dehub-api-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
 
 const DEHUB_API_BASE = 'https://api.dehub.io';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
@@ -13,19 +10,12 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 // Rate limits per action type (per hour)
 const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
-  'post_create': { limit: 2, windowMs: 60 * 60 * 1000 }, // 2 per hour
+  'post_create': { limit: 2, windowMs: 60 * 60 * 1000 },
   'comment': { limit: 50, windowMs: 60 * 60 * 1000 },
   'vote': { limit: 200, windowMs: 60 * 60 * 1000 },
   'follow': { limit: 50, windowMs: 60 * 60 * 1000 },
-  'default': { limit: 100, windowMs: 60 * 1000 }, // 100 per minute for reads
+  'default': { limit: 100, windowMs: 60 * 1000 },
 };
-
-interface MCPRequest {
-  jsonrpc: string;
-  id: number | string;
-  method: string;
-  params?: Record<string, unknown>;
-}
 
 interface AgentRow {
   id: string;
@@ -64,7 +54,6 @@ async function authenticateWithDeHub(walletAddress: string): Promise<string | nu
     }
     
     const data = await response.json();
-    // Return the session/token if available
     return data.token || walletAddress;
   } catch (error) {
     console.error('DeHub auth error:', error);
@@ -95,7 +84,6 @@ async function checkRateLimit(
   const now = new Date();
   
   if (!data || new Date(data.window_start) < windowStart) {
-    // Reset or create window
     await supabase.from('ai_agent_rate_limits').upsert({
       agent_id: agentId,
       action_type: actionType,
@@ -114,7 +102,6 @@ async function checkRateLimit(
     };
   }
   
-  // Increment count
   await supabase.from('ai_agent_rate_limits').update({
     count: data.count + 1,
   }).eq('agent_id', agentId).eq('action_type', actionType);
@@ -126,28 +113,52 @@ async function checkRateLimit(
   };
 }
 
-// MCP Tool Handlers
-type ToolHandler = (
-  params: Record<string, unknown>, 
-  agent: Partial<AgentRow>, 
+// Get agent from API key header
+async function getAgentFromApiKey(
+  apiKey: string | null,
   supabase: SupabaseClient
-) => Promise<unknown>;
-
-const toolHandlers: Record<string, ToolHandler> = {
+): Promise<AgentRow | null> {
+  if (!apiKey) return null;
   
-  // Register a new AI agent
-  async dehub_register(params, _agent, supabase) {
-    const { name, description, owner_wallet_address } = params as {
-      name: string;
-      description?: string;
-      owner_wallet_address: string;
-    };
+  const { data: agent, error } = await supabase
+    .from('ai_agents')
+    .select('*')
+    .eq('api_key', apiKey)
+    .eq('is_active', true)
+    .single();
+  
+  if (error || !agent) return null;
+  return agent as AgentRow;
+}
+
+// Store API key for current request context
+let currentApiKey: string | null = null;
+
+// Create the MCP server
+const mcpServer = new McpServer({
+  name: "dehub-mcp",
+  version: "1.0.0",
+});
+
+// ============= MCP Tool Definitions =============
+
+// Register a new AI agent (no auth required)
+mcpServer.tool(
+  "dehub_register",
+  "Register a new AI agent to interact with DeHub. Returns an API key that must be included in x-dehub-api-key header for all future requests.",
+  {
+    name: z.string().describe("Unique name for your AI agent"),
+    description: z.string().optional().describe("Description of what your agent does"),
+    owner_wallet_address: z.string().describe("Your wallet address (0x...) that will own this agent"),
+  },
+  async ({ name, description, owner_wallet_address }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     
     if (!name || !owner_wallet_address) {
-      throw new Error('Missing required fields: name and owner_wallet_address');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Missing required fields: name and owner_wallet_address" }) }] };
     }
     
-    // Check if name already exists
     const { data: existing } = await supabase
       .from('ai_agents')
       .select('id')
@@ -155,7 +166,7 @@ const toolHandlers: Record<string, ToolHandler> = {
       .single();
     
     if (existing) {
-      throw new Error(`Agent name "${name}" is already taken`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Agent name "${name}" is already taken` }) }] };
     }
     
     const apiKey = generateApiKey();
@@ -170,10 +181,10 @@ const toolHandlers: Record<string, ToolHandler> = {
     
     if (error) {
       console.error('Registration error:', error);
-      throw new Error('Failed to register agent');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to register agent" }) }] };
     }
     
-    return {
+    const result = {
       success: true,
       agent: {
         id: data.id,
@@ -183,23 +194,32 @@ const toolHandlers: Record<string, ToolHandler> = {
       },
       important: "⚠️ SAVE YOUR API KEY SECURELY! Include it in the x-dehub-api-key header for all future requests.",
     };
-  },
-
-  // Get feed posts
-  async dehub_feed(params, agent, supabase) {
-    const { sort = 'new', category, limit = 20, offset = 0 } = params as {
-      sort?: 'new' | 'hot' | 'trending';
-      category?: string;
-      limit?: number;
-      offset?: number;
-    };
     
-    if (agent.id) {
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
+// Get feed posts
+mcpServer.tool(
+  "dehub_feed",
+  "Get posts from the DeHub feed. Returns an array of posts with content, media, votes, and comments.",
+  {
+    sort: z.enum(["new", "hot", "trending"]).optional().default("new").describe("Sort order for posts"),
+    category: z.string().optional().describe("Filter by category"),
+    limit: z.number().optional().default(20).describe("Maximum posts to return (max: 50)"),
+    offset: z.number().optional().default(0).describe("Pagination offset"),
+  },
+  async ({ sort, category, limit, offset }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
+    
+    if (agent?.id) {
       await checkRateLimit(supabase, agent.id, 'default');
     }
     
     const queryParams = new URLSearchParams({
-      sort,
+      sort: sort,
       limit: String(Math.min(limit, 50)),
       offset: String(offset),
     });
@@ -211,12 +231,12 @@ const toolHandlers: Record<string, ToolHandler> = {
     const response = await fetch(`${DEHUB_API_BASE}/api/search_nfts?${queryParams}`);
     
     if (!response.ok) {
-      throw new Error(`DeHub API error: ${response.status}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `DeHub API error: ${response.status}` }) }] };
     }
     
     const data = await response.json();
     
-    return {
+    const result = {
       posts: data.nfts || data.data || [],
       pagination: {
         limit,
@@ -224,54 +244,64 @@ const toolHandlers: Record<string, ToolHandler> = {
         hasMore: (data.nfts || data.data || []).length === limit,
       },
     };
-  },
+    
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
 
-  // Get single post
-  async dehub_post(params, agent, supabase) {
-    const { token_id } = params as { token_id: string };
+// Get single post
+mcpServer.tool(
+  "dehub_post",
+  "Get a single post by its token ID. Returns full post details including content, media, votes, and comments.",
+  {
+    token_id: z.string().describe("The token ID of the post to retrieve"),
+  },
+  async ({ token_id }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    if (!token_id) {
-      throw new Error('Missing required field: token_id');
-    }
-    
-    if (agent.id) {
+    if (agent?.id) {
       await checkRateLimit(supabase, agent.id, 'default');
     }
     
     const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${token_id}`);
     
     if (!response.ok) {
-      throw new Error(`Post not found: ${token_id}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Post not found: ${token_id}` }) }] };
     }
     
-    return await response.json();
-  },
+    const data = await response.json();
+    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+  }
+);
 
-  // Create a post (requires owner's wallet auth)
-  async dehub_post_create(params, agent, supabase) {
-    const { content, media_url, media_type = 'text' } = params as {
-      content: string;
-      media_url?: string;
-      media_type?: 'text' | 'image' | 'video';
-    };
+// Create a post (requires auth)
+mcpServer.tool(
+  "dehub_post_create",
+  "Create a new post on DeHub. Requires API key authentication via x-dehub-api-key header. Rate limited to 2 posts per hour.",
+  {
+    content: z.string().describe("The text content of your post"),
+    media_url: z.string().optional().describe("Optional URL to an image or video"),
+    media_type: z.enum(["text", "image", "video"]).optional().default("text").describe("Type of media"),
+  },
+  async ({ content, media_url, media_type }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    if (!content) {
-      throw new Error('Missing required field: content');
-    }
-    
-    if (!agent.id) {
-      throw new Error('Agent authentication required');
+    if (!agent) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Authentication required. Include x-dehub-api-key header." }) }] };
     }
     
     const rateCheck = await checkRateLimit(supabase, agent.id, 'post_create');
     if (!rateCheck.allowed) {
-      throw new Error(`Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}` }) }] };
     }
     
-    // Get DeHub auth token for owner wallet
-    const authToken = await authenticateWithDeHub(agent.owner_wallet_address || '');
+    const authToken = await authenticateWithDeHub(agent.owner_wallet_address);
     if (!authToken) {
-      throw new Error('Failed to authenticate with DeHub');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to authenticate with DeHub" }) }] };
     }
     
     const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
@@ -291,71 +321,83 @@ const toolHandlers: Record<string, ToolHandler> = {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Post creation failed:', errorText);
-      throw new Error('Failed to create post');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to create post" }) }] };
     }
     
     const data = await response.json();
     
-    // Update last active
     await supabase.from('ai_agents').update({ last_active_at: new Date().toISOString() }).eq('id', agent.id);
     
-    return {
+    const result = {
       success: true,
       post: data,
       message: `Post created by ${agent.name}`,
     };
-  },
+    
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
 
-  // Vote on a post
-  async dehub_vote(params, agent, supabase) {
-    const { token_id, vote_type } = params as { token_id: string; vote_type: 'like' | 'dislike' };
+// Vote on a post
+mcpServer.tool(
+  "dehub_vote",
+  "Like or dislike a post on DeHub. Requires API key authentication. Rate limited to 200 votes per hour.",
+  {
+    token_id: z.string().describe("The token ID of the post to vote on"),
+    vote_type: z.enum(["like", "dislike"]).describe("Type of vote"),
+  },
+  async ({ token_id, vote_type }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    if (!token_id || !vote_type) {
-      throw new Error('Missing required fields: token_id and vote_type');
-    }
-    
-    if (!agent.id) {
-      throw new Error('Agent authentication required');
+    if (!agent) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Authentication required. Include x-dehub-api-key header." }) }] };
     }
     
     const rateCheck = await checkRateLimit(supabase, agent.id, 'vote');
     if (!rateCheck.allowed) {
-      throw new Error(`Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}` }) }] };
     }
     
     const response = await fetch(`${DEHUB_API_BASE}/api/request_vote?tokenId=${token_id}&wallet=${agent.owner_wallet_address}&type=${vote_type === 'like' ? 1 : 0}`);
     
     if (!response.ok) {
-      throw new Error('Failed to vote');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to vote" }) }] };
     }
     
-    return {
+    const result = {
       success: true,
       token_id,
       vote_type,
       message: `${agent.name} ${vote_type}d post ${token_id}`,
     };
-  },
+    
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
 
-  // Comment on a post
-  async dehub_comment(params, agent, supabase) {
-    const { token_id, content, parent_id } = params as {
-      token_id: string;
-      content: string;
-      parent_id?: string;
-    };
+// Comment on a post
+mcpServer.tool(
+  "dehub_comment",
+  "Comment on a post on DeHub. Requires API key authentication. Rate limited to 50 comments per hour.",
+  {
+    token_id: z.string().describe("The token ID of the post to comment on"),
+    content: z.string().describe("Your comment text"),
+    parent_id: z.string().optional().describe("Optional parent comment ID for replies"),
+  },
+  async ({ token_id, content, parent_id }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    if (!token_id || !content) {
-      throw new Error('Missing required fields: token_id and content');
-    }
-    
-    if (!agent.id) {
-      throw new Error('Agent authentication required');
+    if (!agent) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Authentication required. Include x-dehub-api-key header." }) }] };
     }
     
     const rateCheck = await checkRateLimit(supabase, agent.id, 'comment');
     if (!rateCheck.allowed) {
-      throw new Error(`Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}` }) }] };
     }
     
     const response = await fetch(`${DEHUB_API_BASE}/api/request_comment`, {
@@ -370,213 +412,146 @@ const toolHandlers: Record<string, ToolHandler> = {
     });
     
     if (!response.ok) {
-      throw new Error('Failed to post comment');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to post comment" }) }] };
     }
     
-    return {
+    const result = {
       success: true,
       token_id,
       content,
       message: `${agent.name} commented on post ${token_id}`,
     };
-  },
+    
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
 
-  // Follow/unfollow a user
-  async dehub_follow(params, agent, supabase) {
-    const { target_wallet, action = 'follow' } = params as {
-      target_wallet: string;
-      action?: 'follow' | 'unfollow';
-    };
+// Follow/unfollow a user
+mcpServer.tool(
+  "dehub_follow",
+  "Follow or unfollow a user on DeHub. Requires API key authentication. Rate limited to 50 follows per hour.",
+  {
+    target_wallet: z.string().describe("Wallet address of the user to follow/unfollow"),
+    action: z.enum(["follow", "unfollow"]).optional().default("follow").describe("Action to perform"),
+  },
+  async ({ target_wallet, action }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    if (!target_wallet) {
-      throw new Error('Missing required field: target_wallet');
-    }
-    
-    if (!agent.id) {
-      throw new Error('Agent authentication required');
+    if (!agent) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Authentication required. Include x-dehub-api-key header." }) }] };
     }
     
     const rateCheck = await checkRateLimit(supabase, agent.id, 'follow');
     if (!rateCheck.allowed) {
-      throw new Error(`Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}` }) }] };
     }
     
     const response = await fetch(`${DEHUB_API_BASE}/api/request_follow?wallet=${agent.owner_wallet_address}&target=${target_wallet}&action=${action}`);
     
     if (!response.ok) {
-      throw new Error(`Failed to ${action}`);
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to ${action}` }) }] };
     }
     
-    return {
+    const result = {
       success: true,
       target_wallet,
       action,
       message: `${agent.name} ${action}ed ${target_wallet}`,
     };
-  },
+    
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
 
-  // Search content and users
-  async dehub_search(params, agent, supabase) {
-    const { query, type = 'all', limit = 20 } = params as {
-      query: string;
-      type?: 'all' | 'posts' | 'users' | 'videos';
-      limit?: number;
-    };
+// Search content and users
+mcpServer.tool(
+  "dehub_search",
+  "Search for posts and users on DeHub.",
+  {
+    query: z.string().describe("Search query"),
+    type: z.enum(["all", "posts", "users", "videos"]).optional().default("all").describe("Type of content to search"),
+    limit: z.number().optional().default(20).describe("Maximum results to return (max: 50)"),
+  },
+  async ({ query, type, limit }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    if (!query) {
-      throw new Error('Missing required field: query');
-    }
-    
-    if (agent.id) {
+    if (agent?.id) {
       await checkRateLimit(supabase, agent.id, 'default');
     }
     
     const queryParams = new URLSearchParams({
       q: query,
-      type,
+      type: type,
       limit: String(Math.min(limit, 50)),
     });
     
     const response = await fetch(`${DEHUB_API_BASE}/api/search?${queryParams}`);
     
     if (!response.ok) {
-      throw new Error('Search failed');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Search failed" }) }] };
     }
     
-    return await response.json();
-  },
+    const data = await response.json();
+    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+  }
+);
 
-  // Get profile
-  async dehub_profile(params, agent, supabase) {
-    const { wallet_address } = params as { wallet_address?: string };
+// Get profile
+mcpServer.tool(
+  "dehub_profile",
+  "Get a user's profile from DeHub. If no wallet address is provided, returns the agent's owner profile.",
+  {
+    wallet_address: z.string().optional().describe("Wallet address to lookup (defaults to your owner wallet)"),
+  },
+  async ({ wallet_address }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
     
-    const targetWallet = wallet_address || agent.owner_wallet_address;
+    const targetWallet = wallet_address || agent?.owner_wallet_address;
     
-    if (agent.id) {
+    if (!targetWallet) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "wallet_address required when not authenticated" }) }] };
+    }
+    
+    if (agent?.id) {
       await checkRateLimit(supabase, agent.id, 'default');
     }
     
     const response = await fetch(`${DEHUB_API_BASE}/api/account_info?wallet=${targetWallet}`);
     
     if (!response.ok) {
-      throw new Error('Profile not found');
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Profile not found" }) }] };
     }
     
-    return await response.json();
-  },
-
-  // List available tools
-  async dehub_tools(_params, _agent, _supabase) {
-    return {
-      tools: [
-        { name: 'dehub_register', description: 'Register a new AI agent', params: ['name', 'description', 'owner_wallet_address'] },
-        { name: 'dehub_feed', description: 'Get posts from the feed', params: ['sort?', 'category?', 'limit?', 'offset?'] },
-        { name: 'dehub_post', description: 'Get a single post by token ID', params: ['token_id'] },
-        { name: 'dehub_post_create', description: 'Create a new post', params: ['content', 'media_url?', 'media_type?'] },
-        { name: 'dehub_vote', description: 'Like or dislike a post', params: ['token_id', 'vote_type'] },
-        { name: 'dehub_comment', description: 'Comment on a post', params: ['token_id', 'content', 'parent_id?'] },
-        { name: 'dehub_follow', description: 'Follow or unfollow a user', params: ['target_wallet', 'action?'] },
-        { name: 'dehub_search', description: 'Search posts and users', params: ['query', 'type?', 'limit?'] },
-        { name: 'dehub_profile', description: 'Get user profile', params: ['wallet_address?'] },
-      ],
-    };
-  },
-};
-
-serve(async (req) => {
-  // Handle CORS
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    const data = await response.json();
+    return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
   }
+);
 
-  try {
-    // deno-lint-ignore no-explicit-any
-    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    
-    const body: MCPRequest = await req.json();
-    const { jsonrpc, id, method, params = {} } = body;
+// ============= Hono App Setup =============
 
-    // Validate JSON-RPC format
-    if (jsonrpc !== '2.0') {
-      return new Response(JSON.stringify({
-        jsonrpc: '2.0',
-        id,
-        error: { code: -32600, message: 'Invalid Request: must use JSON-RPC 2.0' },
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-    }
+const app = new Hono();
 
-    // Registration doesn't require API key
-    if (method === 'dehub_register' || method === 'dehub_tools') {
-      const handler = toolHandlers[method];
-      if (!handler) {
-        return new Response(JSON.stringify({
-          jsonrpc: '2.0',
-          id,
-          error: { code: -32601, message: `Method not found: ${method}` },
-        }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-      }
+// Create transport
+const transport = new StreamableHTTPTransport();
 
-      const result = await handler(params as Record<string, unknown>, {}, supabase);
-      return new Response(JSON.stringify({ jsonrpc: '2.0', id, result }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // All other methods require API key
-    const apiKey = req.headers.get('x-dehub-api-key');
-    if (!apiKey) {
-      return new Response(JSON.stringify({
-        jsonrpc: '2.0',
-        id,
-        error: { code: -32000, message: 'Missing API key. Include x-dehub-api-key header.' },
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 });
-    }
-
-    // Lookup agent by API key
-    const { data: agent, error: agentError } = await supabase
-      .from('ai_agents')
-      .select('*')
-      .eq('api_key', apiKey)
-      .eq('is_active', true)
-      .single();
-
-    if (agentError || !agent) {
-      return new Response(JSON.stringify({
-        jsonrpc: '2.0',
-        id,
-        error: { code: -32000, message: 'Invalid or inactive API key' },
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 });
-    }
-
-    // Get handler
-    const handler = toolHandlers[method];
-    if (!handler) {
-      return new Response(JSON.stringify({
-        jsonrpc: '2.0',
-        id,
-        error: { code: -32601, message: `Method not found: ${method}` },
-      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-    }
-
-    // Execute handler
-    const result = await handler(params as Record<string, unknown>, agent as AgentRow, supabase);
-
-    return new Response(JSON.stringify({ jsonrpc: '2.0', id, result }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-
-  } catch (error) {
-    console.error('MCP Server error:', error);
-    return new Response(JSON.stringify({
-      jsonrpc: '2.0',
-      id: null,
-      error: { 
-        code: -32603, 
-        message: error instanceof Error ? error.message : 'Internal error' 
-      },
-    }), { 
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 500,
-    });
+// Handle all MCP requests
+app.all("/*", async (c) => {
+  // Extract API key from headers for tool handlers
+  currentApiKey = c.req.header('x-dehub-api-key') || null;
+  
+  // Connect server to transport if not already connected
+  if (!mcpServer.isConnected()) {
+    await mcpServer.connect(transport);
   }
+  
+  return transport.handleRequest(c);
 });
+
+// Start server
+Deno.serve(app.fetch);
