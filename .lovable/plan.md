@@ -1,113 +1,81 @@
 
-# Live Streaming Fix Plan
+# Post Title/Description Logic Update
 
-## Problem Summary
-The "Go Live" feature was implemented but isn't working correctly due to API integration issues and unclear user flow.
+## Summary
+Update the posting flow so that video posts extract the first line as the title and remaining lines as the description, while image and text posts keep the title blank and send all content as description.
 
-## Issues to Fix
+## Current Behavior
+- `name` field is populated with the first 100 characters of the text content
+- `description` is a separate optional field the user can toggle
 
-### Issue 1: API Flow Correction
-The current implementation calls `POST /api/live/start` directly, but the DeHub API requires a two-step process:
-1. First call `POST /api/live` to **create** a stream and get a `streamId`
-2. Then call `POST /api/live/start` with that `streamId` to **start broadcasting**
+## New Logic
 
-**Fix:** Update `GoLiveModal` to use the correct API flow:
-- Step 1: Call `createLiveStream()` with title, description, category
-- Step 2: Use the returned `streamId` to call `startLiveStream({ streamId })`
-- Step 3: Display the `streamKey`, `ingestUrl`, and `playbackUrl` to the user
+### Video Posts
+1. Split the text content by newlines
+2. **First line** → sent as `name` (title)
+3. **Second line + remaining lines** → joined and sent as `description`
+4. If only one line exists, use it as title with empty description
 
-### Issue 2: Better Error Handling
-Add proper error handling with user-friendly messages:
-- Show toast when API calls fail
-- Handle 401 (expired token) with a prompt to re-login
-- Validate required fields before API call
+### Image & Text Posts
+1. **Title/Name** → always empty string `""`
+2. **Description** → entire text content (all lines)
 
-### Issue 3: Make "Go Live" More Discoverable
-The current flow requires navigating through a drawer. Consider:
-- Keep current flow in StoriesBar (it works)
-- Ensure PostActionBar correctly opens the modal
+## Technical Changes
 
-## Implementation Steps
+### File: `src/features/post/hooks/usePostForm.ts`
 
-### Step 1: Update GoLiveModal API Flow
-**File:** `src/components/app/modals/GoLiveModal.tsx`
+**Location**: Inside `handlePost` function (around line 714-716)
 
-Changes:
+**Current code:**
 ```typescript
-const handleStartStream = async () => {
-  if (!title.trim()) {
-    toast.error('Please enter a stream title');
-    return;
-  }
-
-  setIsLoading(true);
-  try {
-    // Step 1: Create the stream first
-    const createResponse = await createLiveStream({
-      title: title.trim(),
-      description: description.trim() || undefined,
-      category: category.trim() || undefined,
-    });
-    
-    const streamId = createResponse.result?.streamId || createResponse.result?.id;
-    
-    if (!streamId) {
-      throw new Error('Failed to create stream - no stream ID returned');
-    }
-    
-    // Step 2: Start the stream to get RTMP credentials
-    const startResponse = await startLiveStream({
-      streamId,
-    });
-
-    setStreamData(startResponse.result);
-    setStep('ready');
-    toast.success('Stream created! Copy your stream key to start broadcasting.');
-  } catch (error) {
-    console.error('Failed to start stream:', error);
-    toast.error(error instanceof Error ? error.message : 'Failed to create stream');
-  } finally {
-    setIsLoading(false);
-  }
-};
+const mintResponse = await mintPost({
+  name: text.trim().slice(0, 100) || 'Untitled',
+  description: description.trim(),
+  // ...
+});
 ```
 
-### Step 2: Add Import for createLiveStream
-**File:** `src/components/app/modals/GoLiveModal.tsx`
-
-Change import:
+**New code:**
 ```typescript
-import { startLiveStream, createLiveStream, type StartLiveStreamResponse } from '@/lib/api/dehub';
+// Determine title and description based on post type
+let postTitle = '';
+let postDescription = '';
+
+if (postType === 'video') {
+  // Video: first line = title, rest = description
+  const lines = text.trim().split('\n');
+  postTitle = (lines[0] || '').trim().slice(0, 100) || 'Untitled';
+  postDescription = lines.slice(1).join('\n').trim();
+} else {
+  // Image/Text posts: title blank, everything goes to description
+  postTitle = '';
+  postDescription = text.trim();
+}
+
+const mintResponse = await mintPost({
+  name: postTitle,
+  description: postDescription,
+  // ...
+});
 ```
 
-### Step 3: Improve Error Messages
-Add better error handling in the API layer for common issues:
-- 401: "Session expired. Please log in again."
-- 400: "Invalid request. Please check your input."
-- 500: "Server error. Please try again later."
+## Additional Cleanup
 
-## Testing Flow
-After implementation:
-1. Navigate to the Home feed
-2. Click the "Live/Story" button at the top of the feed
-3. Select "Go Live" from the drawer
-4. Enter a stream title (required)
-5. Optionally add description and category
-6. Click "Go Live" button
-7. Modal should transition to "Ready to Stream" view with:
-   - Stream Key (masked, copyable)
-   - Server/Ingest URL (copyable)
-   - Playback URL (shareable)
-   - Instructions for OBS setup
+The separate `description` field and "Show Description" toggle in the UI can be kept for backwards compatibility (users might still want to add a separate description), but the new logic will take precedence:
 
-## Alternative Entry Point
-Users can also access live streaming from:
-1. Open Post Modal (click the + button in bottom nav)
-2. Click the Radio icon in the action bar
-3. Select "Video" or "Audio Only" mode
-4. Click "Go Live" button
+- For videos: if user uses the description field, it will be appended to the auto-extracted description
+- For images/text: the description field content will be appended after the main text
 
-## Summary of File Changes
-| File | Change |
-|------|--------|
-| `src/components/app/modals/GoLiveModal.tsx` | Fix API flow to create stream first, then start it |
+**OR** we can simplify and remove the separate description field entirely since:
+- Videos get description from 2nd line onwards
+- Images/text get description from the entire text
+
+I recommend keeping the current flow but updating the API call logic only - this is the minimal change.
+
+## Files Modified
+- `src/features/post/hooks/usePostForm.ts` - Update `handlePost` to implement new title/description extraction logic
+
+## Impact
+- No UI changes required
+- Existing posts unaffected
+- Only affects new posts going forward
