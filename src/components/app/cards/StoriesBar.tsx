@@ -103,7 +103,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
         </div>
         <div>
           <span className="text-white font-medium block">Video</span>
-          <span className="text-zinc-400 text-xs">Stream with RTMP</span>
+          <span className="text-zinc-400 text-xs">Start a livestream</span>
         </div>
       </button>
       <button
