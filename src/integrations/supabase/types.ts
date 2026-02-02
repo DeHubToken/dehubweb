@@ -302,6 +302,36 @@ export type Database = {
           },
         ]
       }
+      stories: {
+        Row: {
+          avatar: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          username: string | null
+          video_url: string
+          wallet_address: string
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          username?: string | null
+          video_url: string
+          wallet_address: string
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          username?: string | null
+          video_url?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       user_privacy_settings: {
         Row: {
           created_at: string
