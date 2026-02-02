@@ -194,7 +194,7 @@ export function UsernameRequiredModal() {
   return (
     <Dialog open={requiresUsername} onOpenChange={() => {}}>
       <DialogContent 
-        className="sm:max-w-md border border-white/20 bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.3)]"
+        className="sm:max-w-md border border-white/10 bg-black/60 backdrop-blur-[24px] saturate-[180%] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         hideCloseButton
@@ -279,7 +279,7 @@ export function UsernameRequiredModal() {
           <div className="flex flex-col gap-2 pt-2">
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white hover:from-white/25 hover:via-white/15 hover:to-white/10 rounded-full h-12 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]"
+              className="w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-white/10 rounded-xl h-12"
               disabled={isSubmitting || !canSubmit}
             >
               {isSubmitting ? (
