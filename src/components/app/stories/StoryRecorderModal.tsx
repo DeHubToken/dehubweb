@@ -258,44 +258,43 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
 
       {/* Controls */}
       <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent">
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex items-center justify-center gap-6">
           {!recordedBlob ? (
-            // Recording controls
+            // Recording controls - single centered button
             <button
               onClick={isRecording ? stopRecording : startRecording}
               disabled={isInitializing}
               className={cn(
-                'w-20 h-20 rounded-full flex items-center justify-center transition-all',
-                isRecording
-                  ? 'bg-red-500'
-                  : 'bg-white/20 border-4 border-white'
+                'w-16 h-16 rounded-xl flex items-center justify-center transition-all',
+                'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
+                'hover:bg-white/20 disabled:opacity-50',
+                isRecording && 'bg-red-500/20 border-red-500/40'
               )}
             >
               {isRecording ? (
-                <Square className="w-8 h-8 text-white fill-white" />
+                <Square className="w-6 h-6 text-white fill-white" />
               ) : (
-                <div className="w-14 h-14 rounded-full bg-red-500" />
+                <div className="w-8 h-8 rounded-full bg-red-500" />
               )}
             </button>
           ) : (
-            // Preview controls
+            // Preview controls - same size liquid glass buttons
             <>
               <button
                 onClick={retake}
-                className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
+                className="w-16 h-16 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all"
               >
                 <RotateCcw className="w-6 h-6 text-white" />
               </button>
               <button
                 onClick={confirmStory}
-                className="w-20 h-20 rounded-full bg-white flex items-center justify-center"
+                className="w-16 h-16 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all"
               >
-                <Check className="w-8 h-8 text-black" />
+                <Check className="w-6 h-6 text-white" />
               </button>
             </>
           )}
         </div>
-        
       </div>
     </div>
   );
