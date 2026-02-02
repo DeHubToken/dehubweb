@@ -108,7 +108,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh]">
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] [&>div:first-child]:hidden">
         <DrawerHeader className="border-b-0 pb-2">
           {/* Back button above title when in create view */}
           {view === 'create' && (
