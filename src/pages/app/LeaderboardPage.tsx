@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { getBadgeUrl } from '@/lib/staking-badges';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
@@ -306,8 +307,13 @@ export default function LeaderboardPage() {
                       size="md"
                     />
                     <div className="min-w-0">
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5">
                         <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
+                        <img 
+                          src={getBadgeUrl(entry.staked)} 
+                          alt="Staking badge" 
+                          className="w-4 h-4 flex-shrink-0"
+                        />
                       </div>
                       <span className="text-zinc-500 text-sm">{getHandle(entry)}</span>
                     </div>

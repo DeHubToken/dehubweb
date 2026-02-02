@@ -917,6 +917,7 @@ export interface LeaderboardEntry {
   followers?: number;
   likes?: number;
   subscribers?: number;
+  staked?: number;
 }
 
 export interface LeaderboardResponse {
