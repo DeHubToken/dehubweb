@@ -1,122 +1,71 @@
 
-# Plan: Freeze Feed State Using Overlay Pattern
+# Plan: Fix "No Content Yet" Flash During Random Mode Pre-fetch
 
-## Problem Root Cause
+## Problem Identified
 
-The current routing architecture **unmounts HomePage completely** when navigating to a post:
+The feed sometimes shows "No Content Yet" briefly because of a disconnect between two checks:
 
-```
-/app (HomePage mounted)
-  ↓ click post
-/app/post/:id (HomePage UNMOUNTS, SinglePostPage mounts)
-  ↓ click back
-/app (HomePage REMOUNTS from scratch)
-```
+1. **Loading State Check** (line 714): Correctly checks `hasQueryData` (if React Query has pages)
+2. **Empty State Check** (line 774): Incorrectly checks `items.length === 0` 
 
-No amount of sessionStorage or scroll restoration can make this instant because React rebuilds the entire component tree. The feed state, scroll position, and all local state are lost on unmount.
+When in "Random" sort mode (the default), the `items` array is deliberately kept empty until all 5 pages are pre-fetched (to enable cross-page shuffling). But the empty state check doesn't account for this - it sees `items.length === 0` and shows "No Content Yet" instead of showing a loading state.
 
-## Solution: Keep HomePage Mounted
-
-Instead of navigating to a separate route, we'll **overlay the SinglePostPage on top of HomePage** while keeping HomePage in the DOM. This is the same pattern used by Instagram, Twitter, and TikTok.
+### The Race Condition Flow
 
 ```
-/app (HomePage stays mounted, hidden visually)
-  ↓ click post
-/app/post/:id (SinglePostPage overlays on top)
-  ↓ click back  
-/app (HomePage becomes visible again - never unmounted!)
+Page loads with Random sort
+  → hasPreFetched = false (from state)
+  → feedData.pages starts populating from cache/API
+  → hasQueryData = true (pages exist)
+  → isLoadingState = false (has query data!)
+  → items = [] (guard returns empty during pre-fetch)
+  → Empty state check: items.length === 0 ✓
+  → Shows "No Content Yet" ❌
 ```
 
-## How It Works
+## Solution
 
-### 1. Modify AppLayout to Keep HomePage Always Mounted
+Add an additional guard to the empty state check that accounts for the pre-fetching phase. The empty state should ONLY show when:
+1. Items is empty AND
+2. We're NOT pre-fetching random pages AND  
+3. We actually have no cached data
 
-Instead of using React Router's `<Outlet />` which unmounts pages, we'll:
-- Always render HomePage (but hide it visually when on a post page)
-- Overlay the post page on top when the URL matches `/app/post/:id`
+### Code Change
 
-### 2. Visual Hide Instead of Unmount
+**File: `src/components/app/feeds/HomeFeed.tsx`**
 
-When viewing a post:
-- HomePage gets `visibility: hidden` (keeps scroll position!)
-- SinglePostPage renders in an overlay
-- Back navigation just removes the overlay
-
-### 3. URL Still Changes (Deep Links Work)
-
-The URL will still update to `/app/post/:id` so:
-- Users can share direct links to posts
-- Browser history works normally
-- Refreshing on a post page still works
-
-## Technical Implementation
-
-### File: `src/components/app/AppLayout.tsx`
-
+Update line 774 from:
 ```tsx
-import { useLocation, useMatch } from 'react-router-dom';
-import HomePage from '@/pages/app/HomePage';
-import SinglePostPage from '@/pages/app/SinglePostPage';
-
-function AppLayoutContent({ children }: AppLayoutContentProps) {
-  const location = useLocation();
-  const postMatch = useMatch('/app/post/:postId');
-  const videoMatch = useMatch('/app/video/:tokenId');
-  
-  const isPostOverlay = postMatch || videoMatch;
-  const isHomePage = location.pathname === '/app';
-  
-  // Keep HomePage mounted but hidden when viewing a post from home
-  const showHomePageHidden = isPostOverlay && /* came from home */;
-  
-  return (
-    <div>
-      {/* HomePage - always mounted when relevant, just hidden when overlay active */}
-      {(isHomePage || showHomePageHidden) && (
-        <div style={{ visibility: showHomePageHidden ? 'hidden' : 'visible' }}>
-          <HomePage />
-        </div>
-      )}
-      
-      {/* Post overlay */}
-      {isPostOverlay && (
-        <div className="fixed inset-0 z-50 bg-black overflow-auto">
-          <SinglePostPage />
-        </div>
-      )}
-      
-      {/* Other routes use Outlet normally */}
-      {!isHomePage && !isPostOverlay && <Outlet />}
-    </div>
-  );
-}
+{items.length === 0 && !pinnedItem && optimisticPosts.length === 0 ? (
 ```
 
-## User Experience After Fix
+To:
+```tsx
+{items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !isPreFetchingRandom && !hasQueryData ? (
+```
 
-| Action | Before | After |
-|--------|--------|-------|
-| Click post from feed | Loading spinner, scroll jumps | Instant overlay, feed frozen underneath |
-| Click back | Loading spinner, scroll to top | Instant, exact scroll position preserved |
-| Tab state | Lost, resets to Home | Preserved, same tab selected |
-| Feed data | Re-fetches | No re-fetch, cached data intact |
+This ensures:
+- During pre-fetch: `isPreFetchingRandom` is true → Empty state won't show
+- After pre-fetch with data: `items.length > 0` → Empty state won't show
+- Truly empty (no data from API): Shows empty state correctly
+
+### Additional Safety Improvement
+
+We should also show a loading indicator during the pre-fetch phase. Currently, the loading state only shows when `!hasQueryData`, but during pre-fetch we want visual feedback even if we have some cached pages.
+
+Update the loading state logic:
+```tsx
+// Show loading during initial load OR during random pre-fetch
+const isLoadingState = (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading))) 
+  || (isPreFetchingRandom && !hasCachedData);
+```
 
 ## Files to Modify
 
-1. **`src/components/app/AppLayout.tsx`** - Add conditional rendering logic
-2. **`src/pages/app/HomePage.tsx`** - Minor adjustments for overlay compatibility
-3. **`src/pages/app/SinglePostPage.tsx`** - Add close/back handler for overlay mode
+- `src/components/app/feeds/HomeFeed.tsx` - Fix empty state condition
 
-## Edge Cases Handled
+## Expected Result
 
-- **Direct link to post**: Works normally (HomePage not pre-mounted)
-- **Browser refresh on post page**: Works normally  
-- **Deep linking**: URL still reflects the post being viewed
-- **History navigation**: Back/forward buttons work as expected
-
-## Why This Is Better
-
-1. **Zero loading** - Feed never unmounts, nothing to reload
-2. **Perfect scroll restoration** - DOM never changes, scroll position just is where it was
-3. **Instant transitions** - Just showing/hiding, no React reconciliation
-4. **Same pattern as major apps** - Twitter, Instagram, TikTok all do this
+- No more "No Content Yet" flash during random mode pre-fetch
+- Loading spinner shows appropriately during pre-fetch
+- Truly empty feeds still show the empty state correctly
