@@ -768,34 +768,23 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           isOptimistic={video.isOptimistic}
         />
 
-        {/* Comments - Drawer for tablet/mobile, inline for desktop */}
-        {isTabletOrMobile ? (
-          <Drawer open={showComments} onOpenChange={setShowComments}>
-            <DrawerContent glass className="max-h-[70vh] overflow-hidden">
-              <DrawerHeader className="border-b border-white/10 pb-3">
-                <DrawerTitle className="text-white font-semibold flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5" />
-                  Comments
-                </DrawerTitle>
-              </DrawerHeader>
-              <div className="flex-1 overflow-y-auto px-4 pb-4">
-                <CommentsSection
-                  tokenId={video.id}
-                  onClose={() => setShowComments(false)}
-                />
-              </div>
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <AnimatePresence>
-            {showComments && (
+        {/* Comments - Always use drawer for consistent UX */}
+        <Drawer open={showComments} onOpenChange={setShowComments}>
+          <DrawerContent glass className="max-h-[70vh] overflow-hidden">
+            <DrawerHeader className="border-b border-white/10 pb-3">
+              <DrawerTitle className="text-white font-semibold flex items-center gap-2">
+                <MessageSquare className="w-5 h-5" />
+                Comments
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex-1 overflow-y-auto px-4 pb-4">
               <CommentsSection
                 tokenId={video.id}
                 onClose={() => setShowComments(false)}
               />
-            )}
-          </AnimatePresence>
-        )}
+            </div>
+          </DrawerContent>
+        </Drawer>
       </div>
 
       {/* AI Chat */}
