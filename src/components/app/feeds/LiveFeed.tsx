@@ -11,7 +11,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { Loader2, RefreshCw, Radio, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
-import { useDeHubLive, mapNFTToLiveStream } from '@/hooks/use-dehub-feed';
+import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { LiveTVSection } from '@/components/app/tv';
 
@@ -62,15 +62,15 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
     error,
   } = useDeHubLive({
     unit: 15,
-    sortMode: 'new',
+    sortMode: 'recent',
   });
 
   // Map API data to LiveStream items
   const streams = useMemo(() => {
     if (!apiData?.pages) return [];
     
-    const allNFTs = apiData.pages.flatMap(page => page.data || []);
-    return allNFTs.map((nft, index) => mapNFTToLiveStream(nft, index));
+    const allStreams = apiData.pages.flatMap(page => page.data || []);
+    return allStreams.map((stream, index) => mapApiLiveStreamToLocal(stream, index));
   }, [apiData]);
 
   // Infinite scroll observer

@@ -875,30 +875,226 @@ export async function mintNFT(data: {
   });
 }
 
-// Livestream functions
-export async function startLivestream(data: {
+// ============================================
+// LIVESTREAM API
+// ============================================
+
+/**
+ * Live stream data returned by API
+ */
+export interface LiveStream {
+  streamId: string;
+  address: string;
   title: string;
   description?: string;
   category?: string;
-  thumbnail_url?: string;
-}): Promise<{
-  stream_key: string;
-  ingest_url: string;
-  playback_url: string;
-}> {
-  return apiCall("/api/live/start", {
+  thumbnailUrl?: string;
+  viewerCount: number;
+  likeCount: number;
+  status: 'scheduled' | 'live' | 'ended';
+  scheduledAt?: string;
+  startedAt?: string;
+  endedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  streamer?: DeHubUser;
+  playbackUrl?: string;
+}
+
+/**
+ * Stream key and ingest info for starting a stream
+ */
+export interface StreamKeyInfo {
+  streamKey: string;
+  ingestUrl: string;
+}
+
+/**
+ * Activity log entry for a live stream
+ */
+export interface StreamActivity {
+  id: string;
+  type: 'join' | 'leave' | 'like' | 'gift' | 'comment';
+  address: string;
+  username?: string;
+  avatarUrl?: string;
+  message?: string;
+  giftAmount?: number;
+  giftCurrency?: string;
+  timestamp: string;
+}
+
+/**
+ * Create a new live stream (schedule or prepare to go live)
+ * POST /api/live
+ */
+export interface CreateLiveStreamData {
+  title: string;
+  description?: string;
+  category?: string;
+  thumbnailUrl?: string;
+  scheduledAt?: string; // ISO date string for scheduled streams
+}
+
+export async function createLiveStream(data: CreateLiveStreamData): Promise<{ result: LiveStream }> {
+  return apiCall<{ result: LiveStream }>("/api/live", {
     method: "POST",
-    body: data,
+    body: { ...data },
     requiresAuth: true,
   });
 }
 
-export async function endLivestream(): Promise<{ success: boolean }> {
-  return apiCall<{ success: boolean }>("/api/live/end", {
+/**
+ * Get all active live streams
+ * GET /api/live
+ */
+export interface GetLiveStreamsParams {
+  page?: number;
+  unit?: number;
+  category?: string;
+  sortMode?: 'viewers' | 'recent' | 'popular';
+}
+
+export async function getLiveStreams(params: GetLiveStreamsParams = {}): Promise<{ result: LiveStream[] }> {
+  return apiCall<{ result: LiveStream[] }>("/api/live", {
+    params: {
+      page: params.page,
+      unit: params.unit,
+      category: params.category,
+      sortMode: params.sortMode,
+    },
+  });
+}
+
+/**
+ * Get live streams by a specific user
+ * GET /api/live/user/{address}
+ */
+export async function getUserLiveStreams(address: string): Promise<{ result: LiveStream[] }> {
+  return apiCall<{ result: LiveStream[] }>(`/api/live/user/${address}`);
+}
+
+/**
+ * Get scheduled live streams for a user
+ * GET /api/live/user/{address}/scheduled
+ */
+export async function getUserScheduledStreams(address: string): Promise<{ result: LiveStream[] }> {
+  return apiCall<{ result: LiveStream[] }>(`/api/live/user/${address}/scheduled`);
+}
+
+/**
+ * Get a specific live stream by ID
+ * GET /api/live/{streamId}
+ */
+export async function getLiveStream(streamId: string): Promise<{ result: LiveStream }> {
+  return apiCall<{ result: LiveStream }>(`/api/live/${streamId}`);
+}
+
+/**
+ * Get stream key for starting broadcast (only for stream owner)
+ * GET /api/live/{streamId}/key
+ */
+export async function getStreamKey(streamId: string): Promise<{ result: StreamKeyInfo }> {
+  return apiCall<{ result: StreamKeyInfo }>(`/api/live/${streamId}/key`, {
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Get stream activities (joins, gifts, likes, etc.)
+ * GET /api/live/{streamId}/activities
+ */
+export async function getStreamActivities(
+  streamId: string,
+  params: { page?: number; unit?: number } = {}
+): Promise<{ result: StreamActivity[] }> {
+  return apiCall<{ result: StreamActivity[] }>(`/api/live/${streamId}/activities`, {
+    params,
+  });
+}
+
+/**
+ * Get the ingest URL for a stream
+ * GET /api/live/{streamId}/ingesturl
+ */
+export async function getStreamIngestUrl(streamId: string): Promise<{ result: { ingestUrl: string } }> {
+  return apiCall<{ result: { ingestUrl: string } }>(`/api/live/${streamId}/ingesturl`, {
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Start broadcasting (go live)
+ * POST /api/live/start
+ */
+export interface StartLiveStreamData {
+  streamId?: string; // If continuing a scheduled stream
+  title?: string;
+  description?: string;
+  category?: string;
+  thumbnailUrl?: string;
+}
+
+export interface StartLiveStreamResponse {
+  result: {
+    streamId: string;
+    streamKey: string;
+    ingestUrl: string;
+    playbackUrl: string;
+  };
+}
+
+export async function startLiveStream(data: StartLiveStreamData = {}): Promise<StartLiveStreamResponse> {
+  return apiCall<StartLiveStreamResponse>("/api/live/start", {
+    method: "POST",
+    body: { ...data },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Like a live stream
+ * POST /api/live/{streamId}/like
+ */
+export async function likeLiveStream(streamId: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/live/${streamId}/like`, {
     method: "POST",
     requiresAuth: true,
   });
 }
+
+/**
+ * Send a gift to a live stream
+ * POST /api/live/{streamId}/gift
+ */
+export interface SendGiftData {
+  amount: number;
+  currency: string; // 'DHB', 'USDC', etc.
+  message?: string;
+}
+
+export async function sendLiveStreamGift(streamId: string, data: SendGiftData): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/live/${streamId}/gift`, {
+    method: "POST",
+    body: { ...data },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * End a live stream
+ * POST /api/live/{streamId}/end (or use webhook)
+ */
+export async function endLiveStream(streamId: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/live/${streamId}/end`, {
+    method: "POST",
+    requiresAuth: true,
+  });
+}
+
+// Legacy alias for backwards compatibility
+export const startLivestream = startLiveStream;
+export const endLivestream = async () => ({ success: true });
 
 // DHB Price
 export async function getDHBPrice(): Promise<{ price: number; change_24h: number }> {

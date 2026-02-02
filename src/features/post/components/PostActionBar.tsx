@@ -7,6 +7,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
+import { GoLiveModal } from '@/components/app/modals';
 import type { LiveMode } from '../types';
 
 interface PostActionBarProps {
@@ -29,6 +30,7 @@ interface PostActionBarProps {
   hasImage?: boolean;
   hasVideo?: boolean;
   isScheduled?: boolean;
+  onCloseModal?: () => void;
 }
 
 export function PostActionBar({
@@ -51,16 +53,20 @@ export function PostActionBar({
   hasImage,
   hasVideo,
   isScheduled,
+  onCloseModal,
 }: PostActionBarProps) {
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
+  const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
+    // Open the Go Live modal immediately
+    setGoLiveModalOpen(true);
   };
 
   const handleSpellCheck = () => {
@@ -139,7 +145,27 @@ export function PostActionBar({
     </div>
   );
 
+  const handleGoLiveClick = () => {
+    if (isLive) {
+      // Open the Go Live modal
+      setGoLiveModalOpen(true);
+    }
+  };
+
+  const handleGoLiveModalClose = () => {
+    setGoLiveModalOpen(false);
+    setLiveMode(null);
+    // Close the parent post modal if provided
+    onCloseModal?.();
+  };
+
   return (
+    <>
+      <GoLiveModal
+        isOpen={goLiveModalOpen}
+        onClose={handleGoLiveModalClose}
+        initialMode={liveMode}
+      />
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
@@ -362,10 +388,10 @@ export function PostActionBar({
         </Drawer>
         
         <Button
-          onClick={onPost}
-          disabled={!canPost || isPosting}
-                className={cn(
-                  "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
+          onClick={isLive ? handleGoLiveClick : onPost}
+          disabled={(!canPost && !isLive) || isPosting}
+          className={cn(
+            "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
             isLive 
               ? "bg-red-500 text-white hover:bg-red-600" 
               : isScheduled
@@ -386,5 +412,6 @@ export function PostActionBar({
         </Button>
       </div>
     </div>
+    </>
   );
 }
