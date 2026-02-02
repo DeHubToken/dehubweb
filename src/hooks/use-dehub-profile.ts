@@ -223,7 +223,10 @@ export function useDeHubUserContent({ userId, viewerAddress, enabled = true, lim
     },
     initialPageParam: 1,
     enabled: enabled && !!userId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 10, // 10 minutes - data is fresh for longer
+    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false, // Don't refetch when tab switching
+    refetchOnMount: false, // Don't refetch when component remounts
     retry: 2,
   });
 }

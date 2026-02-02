@@ -409,8 +409,12 @@ export default function ProfilePage() {
   );
 
   const renderTabContent = () => {
-    // Show loading state for content tabs
-    if (isLoadingContent && ['home', 'images', 'videos'].includes(activeTab)) {
+    // Only show loading on initial fetch (no cached data) - not during refetches
+    // isLoading = isFetching && !data, so it's only true when there's no cached data
+    const hasData = userContentData && userContentData.pages && userContentData.pages.length > 0;
+    const showLoading = isLoadingContent && !hasData;
+    
+    if (showLoading && ['home', 'images', 'videos'].includes(activeTab)) {
       return (
         <div className="flex flex-col items-center justify-center py-16">
           <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
