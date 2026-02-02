@@ -36,9 +36,10 @@ export { useSearchHistory, type SearchHistoryItem } from './use-search-history';
 export { useDeHubUserSearch, mapUserToSearchCreator } from './use-dehub-user-search';
 export { useGlitchEffect } from './use-glitch-effect';
 export { GlobalDropZoneProvider, useGlobalDropZone } from './use-global-drop-zone';
-export { useIsMobile } from './use-mobile';
+export { useFeedPrefetch, clearPrefetchState } from './use-feed-prefetch';
 export { usePullToRefresh } from './use-pull-to-refresh';
 
+export { useIsMobile } from './use-mobile';
 export { useIsTouchDevice } from './use-touch-device';
 export { useUserLanguage } from './use-user-language';
 export { useVideoViewTracking, useFeedViewTracking, useFeedViewTrackingCallback } from './use-view-tracking';
