@@ -308,8 +308,8 @@ export function PostMediaPreview({
         throw new Error('Failed to get canvas context');
       }
       
-      canvas.width = 160;
-      canvas.height = 90;
+      canvas.width = 640;
+      canvas.height = 360;
       
   for (let i = 0; i < frameCount; i++) {
     // Include first frame (time 0) and distribute remaining frames evenly
