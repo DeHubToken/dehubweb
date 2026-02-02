@@ -10,7 +10,7 @@
  */
 
 import { useState } from 'react';
-import { Plus, Video, Image, Mic } from 'lucide-react';
+import { Plus, Video, Image, Mic, Camera } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Drawer,
@@ -22,6 +22,8 @@ import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
+import { StoryRecorderModal } from '@/components/app/stories';
+import { toast } from 'sonner';
 interface StoryUser {
   name: string;
   avatar: string;
@@ -39,6 +41,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
   const [isStagesOpen, setIsStagesOpen] = useState(false);
   const [showLiveOptions, setShowLiveOptions] = useState(false);
+  const [isStoryRecorderOpen, setIsStoryRecorderOpen] = useState(false);
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
 
   const handleGoLiveVideo = () => {
@@ -65,8 +68,14 @@ export function StoriesBar({ users }: StoriesBarProps) {
   const handleAddStory = () => {
     setIsOpen(false);
     requireAuth(() => {
-      // TODO: Implement story creation
+      setIsStoryRecorderOpen(true);
     });
+  };
+
+  const handleStoryRecorded = (videoBlob: Blob) => {
+    // TODO: Upload story to backend
+    console.log('Story recorded:', videoBlob);
+    toast.success('Story recorded! Upload coming soon.');
   };
 
   const menuContent = (
@@ -85,9 +94,12 @@ export function StoriesBar({ users }: StoriesBarProps) {
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-          <Image className="w-4 h-4 text-white" />
+          <Camera className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Add Story</span>
+        <div>
+          <span className="text-white font-medium block">Add Story</span>
+          <span className="text-zinc-400 text-xs">Record up to 30 seconds</span>
+        </div>
       </button>
     </div>
   );
@@ -144,6 +156,11 @@ export function StoriesBar({ users }: StoriesBarProps) {
       <AudioSpacesModal
         isOpen={isStagesOpen}
         onClose={() => setIsStagesOpen(false)}
+      />
+      <StoryRecorderModal
+        isOpen={isStoryRecorderOpen}
+        onClose={() => setIsStoryRecorderOpen(false)}
+        onStoryRecorded={handleStoryRecorded}
       />
       <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="relative">
