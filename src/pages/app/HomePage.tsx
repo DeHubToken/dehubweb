@@ -48,6 +48,9 @@ const GESTURE_LOCK_DURATION = 400;
 // MAIN COMPONENT
 // ============================================================================
 
+// Session storage key for persisting tab state across navigation
+const HOME_STATE_STORAGE_KEY = 'home-feed-state';
+
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   
@@ -65,8 +68,24 @@ export default function HomePage() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   
-  // Tab state
-  const [activeTab, setActiveTab] = useState('home');
+  // Initialize tab state - restore from sessionStorage on back navigation
+  const getInitialTab = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem(HOME_STATE_STORAGE_KEY);
+        if (saved) {
+          const { tab } = JSON.parse(saved);
+          if (tab) return tab;
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+    return 'home';
+  };
+  
+  // Tab state - initialized from sessionStorage for back navigation
+  const [activeTab, setActiveTab] = useState(getInitialTab);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
@@ -78,6 +97,15 @@ export default function HomePage() {
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
+  
+  // Save tab state to sessionStorage whenever it changes
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(HOME_STATE_STORAGE_KEY, JSON.stringify({ tab: activeTab }));
+    } catch {
+      // Ignore storage errors
+    }
+  }, [activeTab]);
   
   
   // Mobile touch gesture refs

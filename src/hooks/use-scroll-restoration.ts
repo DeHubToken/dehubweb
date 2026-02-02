@@ -2,7 +2,11 @@
  * Scroll Restoration Hook
  * =======================
  * Preserves and restores scroll position when navigating between pages.
- * Uses a global navigation stack to detect back navigation.
+ * Uses React Router's navigationType to detect back navigation.
+ * 
+ * CRITICAL: This hook prevents the feed from scrolling to top when
+ * pressing back from a post page. It saves scroll position continuously
+ * and restores it with multiple attempts to handle lazy-loaded content.
  * 
  * @module hooks/use-scroll-restoration
  */
@@ -10,40 +14,11 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 
-// Global navigation stack to track history
-const navigationStack: string[] = [];
-
-// Store scroll positions keyed by pathname
+// Store scroll positions keyed by pathname - persists across component mounts
 const scrollPositions = new Map<string, number>();
 
-/**
- * Update navigation stack when route changes
- */
-function updateNavigationStack(pathname: string, navigationType: string): boolean {
-  const isBackNavigation = navigationType === 'POP';
-  
-  if (isBackNavigation) {
-    // Pop the current page from stack (we're going back)
-    navigationStack.pop();
-  } else {
-    // Push new page to stack
-    navigationStack.push(pathname);
-  }
-  
-  return isBackNavigation;
-}
-
-/**
- * Check if we came from a specific path pattern
- */
-export function cameFromPath(pattern: string | RegExp): boolean {
-  if (navigationStack.length < 1) return false;
-  const prevPath = navigationStack[navigationStack.length - 1];
-  if (typeof pattern === 'string') {
-    return prevPath?.startsWith(pattern) ?? false;
-  }
-  return pattern.test(prevPath || '');
-}
+// Track if we've set manual scroll restoration
+let hasSetManualRestoration = false;
 
 /**
  * Hook to save and restore scroll position for the current route.
@@ -55,9 +30,18 @@ export function useScrollRestoration(key?: string) {
   const storageKey = key || location.pathname;
   const isRestoringRef = useRef(false);
   const hasRestoredRef = useRef(false);
+  const mutationObserverRef = useRef<MutationObserver | null>(null);
   
-  // Detect if this is a back navigation
+  // Detect if this is a back navigation (POP = back/forward button)
   const isBackNavigation = navigationType === 'POP';
+  
+  // Set manual scroll restoration once globally
+  useEffect(() => {
+    if (!hasSetManualRestoration && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+      hasSetManualRestoration = true;
+    }
+  }, []);
   
   // Save scroll position continuously
   useEffect(() => {
@@ -67,9 +51,13 @@ export function useScrollRestoration(key?: string) {
       }
     };
     
+    // Save immediately on mount (captures position before navigation)
+    saveScroll();
+    
     window.addEventListener('scroll', saveScroll, { passive: true });
     
     return () => {
+      // Save final position before unmounting
       saveScroll();
       window.removeEventListener('scroll', saveScroll);
     };
@@ -88,22 +76,45 @@ export function useScrollRestoration(key?: string) {
       hasRestoredRef.current = true;
       isRestoringRef.current = true;
       
-      // Use requestAnimationFrame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        window.scrollTo(0, savedPosition);
-        
-        // Multiple attempts for lazy-loaded content
-        const attempts = [50, 150, 300];
-        attempts.forEach(delay => {
-          setTimeout(() => {
-            window.scrollTo(0, savedPosition);
-          }, delay);
-        });
-        
-        setTimeout(() => {
-          isRestoringRef.current = false;
-        }, 400);
+      // Function to attempt scroll restoration
+      const attemptScroll = () => {
+        window.scrollTo({ top: savedPosition, behavior: 'instant' });
+      };
+      
+      // Immediate attempt
+      attemptScroll();
+      
+      // Multiple staggered attempts for lazy-loaded content
+      const attempts = [0, 50, 100, 200, 400, 800];
+      const timeouts: NodeJS.Timeout[] = [];
+      
+      attempts.forEach(delay => {
+        const timeout = setTimeout(attemptScroll, delay);
+        timeouts.push(timeout);
       });
+      
+      // Use MutationObserver to detect when content is added to DOM
+      // This handles lazy-loaded feed items
+      mutationObserverRef.current = new MutationObserver(() => {
+        attemptScroll();
+      });
+      
+      mutationObserverRef.current.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+      
+      // Clean up after restoration period
+      const cleanupTimeout = setTimeout(() => {
+        isRestoringRef.current = false;
+        mutationObserverRef.current?.disconnect();
+      }, 1000);
+      
+      return () => {
+        timeouts.forEach(clearTimeout);
+        clearTimeout(cleanupTimeout);
+        mutationObserverRef.current?.disconnect();
+      };
     }
   }, [storageKey, isBackNavigation]);
   
@@ -111,7 +122,7 @@ export function useScrollRestoration(key?: string) {
     isBackNavigation,
     resetScroll: useCallback(() => {
       scrollPositions.delete(storageKey);
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }, [storageKey]),
     saveScroll: useCallback(() => {
       scrollPositions.set(storageKey, window.scrollY);
@@ -125,4 +136,18 @@ export function useScrollRestoration(key?: string) {
 export function useIsBackNavigation(): boolean {
   const navigationType = useNavigationType();
   return navigationType === 'POP';
+}
+
+/**
+ * Check if we came from a specific path pattern
+ * Note: This is a simple check based on saved positions, not a full navigation stack
+ */
+export function cameFromPath(pattern: string | RegExp): boolean {
+  const keys = Array.from(scrollPositions.keys());
+  if (keys.length < 2) return false;
+  const prevPath = keys[keys.length - 2];
+  if (typeof pattern === 'string') {
+    return prevPath?.startsWith(pattern) ?? false;
+  }
+  return pattern.test(prevPath || '');
 }
