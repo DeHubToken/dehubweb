@@ -333,7 +333,10 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
     },
     initialPageParam: 0,
     enabled,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 10, // 10 minutes - keep data fresh longer
+    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false, // Don't refetch on tab focus
+    refetchOnMount: false, // Don't refetch when component remounts
     retry: 2,
   });
 }
@@ -402,7 +405,10 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
       return undefined;
     },
     initialPageParam: 0,
-    staleTime: 1000 * 30, // 30 seconds for live content (more frequent updates)
+    staleTime: 1000 * 60 * 2, // 2 minutes for live (more frequent but not too much)
+    gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: 1,
   });
 }

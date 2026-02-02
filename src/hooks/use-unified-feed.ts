@@ -433,7 +433,10 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     },
     initialPageParam: 1,
     enabled,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 10, // 10 minutes - keep data fresh longer
+    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false, // Don't refetch on tab focus
+    refetchOnMount: false, // Don't refetch when component remounts
     retry: 2,
   });
 }

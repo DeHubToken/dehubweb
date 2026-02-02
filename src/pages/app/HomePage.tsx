@@ -3,6 +3,7 @@
  * =========
  * Main feed page with tab-based navigation between content types.
  * Features swipe gestures for mobile navigation and pull-to-refresh.
+ * Prefetches all feed tabs in background for instant switching.
  * 
  * @module pages/app/HomePage
  */
@@ -16,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
+import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 
 // Feed components
 import {
@@ -140,6 +142,9 @@ export default function HomePage() {
     
     setIsRefreshing(true);
     
+    // Clear prefetch state so feeds will be re-fetched
+    clearPrefetchState();
+    
     // Scroll to top
     document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
     document.body.scrollTo({ top: 0, behavior: 'smooth' });
@@ -153,6 +158,20 @@ export default function HomePage() {
       }, 300);
     }, 800);
   }, [isRefreshing]);
+  
+  // Track when home feed has loaded for prefetching other tabs
+  const [isHomeFeedLoaded, setIsHomeFeedLoaded] = useState(false);
+  
+  // Prefetch all other feeds in background once home feed loads
+  useFeedPrefetch(isHomeFeedLoaded);
+  
+  // Mark home feed as loaded after initial render (slight delay to prioritize home)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsHomeFeedLoaded(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // --------------------------------------------------------------------------
   // PULL-TO-REFRESH HOOK
