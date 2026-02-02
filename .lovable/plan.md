@@ -1,115 +1,77 @@
 
-# Fix: Staking Badges Showing Tortoise for Everyone
+# Fix: Badge System Using Wrong Field (Staked vs Holdings)
 
-## Problem Analysis
+## Problem Identified
 
-The staking tier badge always shows "Tortoise" (the lowest tier) because:
+The badge system is showing incorrect tiers because:
 
-1. **Leaderboard**: The DeHub `/api/leaderboard` endpoint does NOT include staking data in its response. The cached data only contains: `account`, `total`, `username`, `userDisplayName`, `avatarUrl`, `sentTips`, `receivedTips`. Since `staked` is undefined, the badge utility defaults to Tortoise.
+1. **Wrong field being used**: The badge is calculated from `entry.staked` but the screenshot clearly shows badges are based on **$DHB token holdings** (which is `entry.total`)
+2. **Data mismatch example**: User "7RB" displays 50.9M DHB (their `total` holdings) but their `staked` is only 6.78M. The badge is showing based on 6.78M instead of 50.9M
 
-2. **Feeds**: The feed API DOES return `minterStaked`, and this is being correctly mapped. However, many users on the platform have `0` DHB staked, which legitimately puts them in the Tortoise tier.
+## Root Cause
 
-## Solution: Enrich Leaderboard Cache with Staking Data
-
-Update the `refresh-leaderboard-cache` edge function to fetch staking data for each user during the cache refresh process.
-
-### Implementation Details
-
-#### 1. Add Staking Data Fetcher
-Create a helper function to fetch staking data from the account info endpoint:
-
-```typescript
-async function fetchUserStaking(account: string): Promise<number> {
-  try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${account}`);
-    if (!response.ok) return 0;
-    
-    const data = await response.json();
-    const user = data.result || data;
-    
-    // Check balanceData array first, then direct staked field
-    if (user.balanceData?.length > 0) {
-      return user.balanceData.reduce((sum, b) => sum + (b.staked || 0), 0);
-    }
-    return user.staked || 0;
-  } catch {
-    return 0;
-  }
-}
+In `LeaderboardPage.tsx` line 312:
+```tsx
+{getBadgeUrl(entry.staked) && (
 ```
 
-#### 2. Batch Process for Efficiency
-Since leaderboards can have hundreds of entries, process users in parallel batches:
-
-```typescript
-async function enrichWithStaking(entries: LeaderboardEntry[]): Promise<LeaderboardEntry[]> {
-  const BATCH_SIZE = 10; // Process 10 users at a time
-  const enriched: LeaderboardEntry[] = [];
-  
-  for (let i = 0; i < entries.length; i += BATCH_SIZE) {
-    const batch = entries.slice(i, i + BATCH_SIZE);
-    const results = await Promise.allSettled(
-      batch.map(async (entry) => {
-        // Skip wallet-only entries (no username)
-        if (!entry.username) return entry;
-        const staked = await fetchUserStaking(entry.account);
-        return { ...entry, staked };
-      })
-    );
-    
-    // Collect successful results
-    results.forEach((result) => {
-      if (result.status === 'fulfilled') {
-        enriched.push(result.value);
-      }
-    });
-  }
-  
-  return enriched;
-}
+Should be:
+```tsx
+{getBadgeUrl(entry.total) && (
 ```
 
-#### 3. Integrate into Cache Refresh Flow
-Modify the main caching logic to enrich data before storing:
+The UI displays `total` holdings but passes `staked` to the badge function. Since many users have significantly less staked than their total holdings, they appear at lower tiers.
 
-```typescript
-// After fetching leaderboard data
-const rawData = await fetchLeaderboard(sort, period);
-const entries = rawData?.result?.byWalletBalance || [];
+## Solution
 
-// Enrich with staking data
-const enrichedEntries = await enrichWithStaking(entries);
-
-// Store enriched data
-const enrichedData = {
-  ...rawData,
-  result: { byWalletBalance: enrichedEntries }
-};
-
-await supabase.from("leaderboard_cache").upsert({
-  sort_mode: sort,
-  period: period,
-  data: enrichedData,
-  updated_at: new Date().toISOString(),
-});
-```
+Update all badge references to use **total holdings** instead of **staked amount**:
 
 ### File Changes
 
 | File | Change |
 |------|--------|
-| `supabase/functions/refresh-leaderboard-cache/index.ts` | Add staking enrichment logic with batch processing |
+| `src/pages/app/LeaderboardPage.tsx` | Use `entry.total` instead of `entry.staked` for badge calculation |
+| `src/lib/staking-badges.ts` | Rename functions and comments to clarify this is "holdings-based" not "staking-based" |
+| `src/pages/app/ProfilePage.tsx` | Verify using correct holdings field (may need adjustment) |
+| `src/components/app/cards/CardHeader.tsx` | Verify using correct holdings field (may need adjustment) |
 
-### Performance Considerations
+### Code Changes
 
-- **Batch size of 10**: Balances speed with avoiding rate limits
-- **Background process**: Runs during 6-hour cache refresh, not on page load
-- **Graceful failures**: If staking fetch fails for a user, they keep `0` (Tortoise) - acceptable fallback
-- **Only enrich users with usernames**: Skip wallet-only entries to save API calls
+**LeaderboardPage.tsx**
+```tsx
+// Before
+{getBadgeUrl(entry.staked) && (
+  <img src={getBadgeUrl(entry.staked)!} ... />
+)}
 
-### Testing Plan
+// After  
+{getBadgeUrl(entry.total) && (
+  <img src={getBadgeUrl(entry.total)!} ... />
+)}
+```
 
-1. Deploy the updated edge function
-2. Manually trigger a cache refresh
-3. Query the database to verify `staked` values are now present in cached entries
-4. Check the leaderboard page to confirm badges reflect actual staking tiers
+**staking-badges.ts** (documentation update)
+```typescript
+/**
+ * Holdings Badge Utility
+ * ======================
+ * Determines user tier badges based on DHB token holdings (total balance).
+ * NOT based on staked amount - uses total holdings including liquid + staked.
+ */
+```
+
+### Verification
+
+After fix, users should show badges matching their displayed holdings value:
+- 50M+ DHB holdings → Megalodon
+- 25M+ DHB holdings → Blue Whale  
+- 10M+ DHB holdings → Great White Shark
+- etc.
+
+### Additional Consideration
+
+For Profile and Feed cards, need to verify which field is available:
+- Feed responses have `minterStaked` - may need to also fetch total holdings
+- Profile pages may need to use total balance from account info API
+
+This may require additional changes to ensure consistency across the entire app.
