@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
 import { Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
@@ -17,8 +17,9 @@ interface AppLayoutContentProps {
   children?: ReactNode;
 }
 
-// Session storage key for tracking navigation origin
+// Session storage keys
 const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
+const HOME_SCROLL_POSITION_KEY = 'home-scroll-position';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -34,20 +35,24 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(false);
   const prevPathRef = useRef<string | null>(null);
+  const savedScrollRef = useRef<number>(0);
   
-  // Detect navigation from home to post
+  // Detect navigation from home to post and save scroll position
   useEffect(() => {
     const currentPath = location.pathname;
     const prevPath = prevPathRef.current;
     
-    // Navigating TO a post route
+    // Navigating TO a post route FROM home - save scroll position
     if (isPostRoute && prevPath === '/app') {
       setCameFromHome(true);
       sessionStorage.setItem(POST_OVERLAY_ORIGIN_KEY, 'home');
+      // Save current scroll position
+      savedScrollRef.current = window.scrollY;
+      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(window.scrollY));
     }
     
     // Navigating AWAY from post route (back to home or elsewhere)
-    if (!isPostRoute && prevPath?.startsWith('/app/post/') || prevPath?.startsWith('/app/video/')) {
+    if (!isPostRoute && (prevPath?.startsWith('/app/post/') || prevPath?.startsWith('/app/video/'))) {
       setCameFromHome(false);
       sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
     }
@@ -57,11 +62,35 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       const storedOrigin = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY);
       if (storedOrigin === 'home') {
         setCameFromHome(true);
+        // Restore saved scroll position from session
+        const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
+        if (savedScroll) {
+          savedScrollRef.current = parseInt(savedScroll, 10);
+        }
       }
     }
     
     prevPathRef.current = currentPath;
   }, [location.pathname, isPostRoute, cameFromHome]);
+  
+  // Restore scroll position when returning to home from post overlay
+  useLayoutEffect(() => {
+    const isHomePage = location.pathname === '/app';
+    const wasPostOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
+    
+    // When we navigate back to /app and we were in overlay mode, restore scroll
+    if (isHomePage && prevPathRef.current?.startsWith('/app/post/') || 
+        isHomePage && prevPathRef.current?.startsWith('/app/video/')) {
+      const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
+      if (savedScroll) {
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          window.scrollTo(0, parseInt(savedScroll, 10));
+        });
+        sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
+      }
+    }
+  }, [location.pathname]);
   
   // Clear overlay state when navigating away from post
   useEffect(() => {
@@ -83,14 +112,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
           {/* Keep HomePage mounted when viewing post from home (overlay pattern) */}
+          {/* CRITICAL: Use 'hidden' class instead of height:0 to preserve scroll position */}
           {(isHomePage || showHomePagePersisted) && (
-            <div style={{ 
-              visibility: showHomePagePersisted ? 'hidden' : 'visible',
-              position: showHomePagePersisted ? 'absolute' : 'static',
-              width: '100%',
-              height: showHomePagePersisted ? 0 : 'auto',
-              overflow: showHomePagePersisted ? 'hidden' : 'visible',
-            }}>
+            <div className={showHomePagePersisted ? 'invisible absolute inset-0 pointer-events-none' : ''}>
               <HomePage />
             </div>
           )}
