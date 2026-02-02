@@ -20,12 +20,13 @@ import {
   Sparkles,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
+import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
 
 export const NAV_ITEMS: NavItem[] = [
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
-  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
+  { icon: MessageSquare, label: 'Messages', path: '/app/messages', customIcon: messagesBubbleIcon },
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
