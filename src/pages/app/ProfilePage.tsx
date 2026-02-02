@@ -12,6 +12,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { AppLayout } from '@/components/app/AppLayout';
+import { LoginModal } from '@/components/app/LoginModal';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { CreatePlanModal, PlanCard } from '@/components/app/subscriptions';
 import { FollowersListDrawer } from '@/components/app/profile';
@@ -670,19 +671,49 @@ export default function ProfilePage() {
     return loadingContent;
   }
 
-  // Show error/not found state when profile is undefined
+  // State for login modal on username available page
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+  // Show "Username available" state when visiting /{username} route with no profile found
   if (!profile) {
+    // If we're visiting a /{username} route, show the "Username available" prompt
+    const isUsernameRoute = !!routeUsername;
+    const displayUsername = routeUsername || '';
+    
     const notFoundContent = (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4 text-center">
-        <div className="w-20 h-20 rounded-xl bg-zinc-800 flex items-center justify-center">
-          <AtSign className="w-10 h-10 text-zinc-500" />
-        </div>
-        <h2 className="text-xl font-bold text-white">Profile Not Found</h2>
-        <p className="text-zinc-400 max-w-md">
-          {isProfileError 
-            ? "Unable to load profile. Please try again later."
-            : "This user doesn't exist or you need to log in to view your profile."}
-        </p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
+        {isUsernameRoute && !isProfileError ? (
+          <>
+            <div className="w-20 h-20 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+              <AtSign className="w-10 h-10 text-emerald-400" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-white">Username available!</h2>
+              <p className="text-zinc-400 max-w-md">
+                Sign up today to claim <span className="text-white font-medium">dehub.io/{displayUsername}</span>
+              </p>
+            </div>
+            <Button
+              onClick={() => setLoginModalOpen(true)}
+              className="h-12 px-8 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+            >
+              Sign Up
+            </Button>
+            <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
+          </>
+        ) : (
+          <>
+            <div className="w-20 h-20 rounded-xl bg-zinc-800 flex items-center justify-center">
+              <AtSign className="w-10 h-10 text-zinc-500" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Profile Not Found</h2>
+            <p className="text-zinc-400 max-w-md">
+              {isProfileError 
+                ? "Unable to load profile. Please try again later."
+                : "This user doesn't exist or you need to log in to view your profile."}
+            </p>
+          </>
+        )}
       </div>
     );
     
