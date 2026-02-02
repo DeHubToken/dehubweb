@@ -1,9 +1,9 @@
 /**
- * AudioSpacesModal - Twitter Spaces-like audio rooms
+ * AudioSpacesModal - Twitter Spaces-like audio rooms (Stages)
  * 
  * MVP Features:
- * - Create a new audio space
- * - Browse live spaces
+ * - Create a new audio stage
+ * - Browse live stages
  * - Join as listener
  * - Host controls for speakers
  * - Raise hand to become speaker
@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { 
-  Mic, MicOff, Radio, Users, Hand, X, 
+  Mic, MicOff, Users, Hand, X, 
   Loader2, Phone, PhoneOff, Crown, Volume2 
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -23,6 +23,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { useAudioSpaces } from '@/hooks/use-audio-spaces';
 import { useAuth } from '@/contexts/AuthContext';
+import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import type { AudioSpace, SpaceParticipant, RaiseHandRequest } from '@/types/audio-spaces.types';
 
 interface AudioSpacesModalProps {
@@ -60,8 +61,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
   const handleClose = () => {
     if (currentSpace) {
-      // Confirm before leaving
-      if (window.confirm('Leave this space?')) {
+      if (window.confirm('Leave this stage?')) {
         leaveSpace();
         setView('browse');
         onClose();
@@ -92,7 +92,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
   const handleEndOrLeave = () => {
     if (myRole === 'host') {
-      if (window.confirm('End this space for everyone?')) {
+      if (window.confirm('End this stage for everyone?')) {
         endSpace();
         setView('browse');
       }
@@ -108,14 +108,14 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DrawerContent className="bg-zinc-900 border-zinc-800 max-h-[90vh]">
-        <DrawerHeader className="border-b border-zinc-800">
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh]">
+        <DrawerHeader className="border-b-0 pb-2">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white flex items-center gap-2">
-              <Radio className="w-5 h-5 text-purple-400" />
-              {currentSpace ? currentSpace.title : 'Audio Spaces'}
+              <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
+              {currentSpace ? currentSpace.title : 'Stages'}
             </DrawerTitle>
-            <Button variant="ghost" size="icon" onClick={handleClose}>
+            <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
               <X className="w-5 h-5" />
             </Button>
           </div>
@@ -125,26 +125,26 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
           {/* Browse View */}
           {view === 'browse' && !currentSpace && (
             <div className="space-y-4">
-              {/* Start Space Button */}
+              {/* Start Stage Button */}
               {isAuthenticated && (
                 <Button 
                   onClick={() => setView('create')}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
                 >
-                  <Radio className="w-4 h-4 mr-2" />
-                  Start a Space
+                  <Mic className="w-4 h-4 mr-2" />
+                  Start a Stage
                 </Button>
               )}
 
-              {/* Live Spaces */}
+              {/* Live Stages */}
               <div className="space-y-2">
-                <h3 className="text-sm font-medium text-zinc-400">Live Now</h3>
+                <h3 className="text-sm font-medium text-white/60">Live Now</h3>
                 
                 {liveSpaces.length === 0 ? (
-                  <div className="text-center py-8 text-zinc-500">
-                    <Radio className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                    <p>No live spaces right now</p>
-                    <p className="text-sm">Be the first to start one!</p>
+                  <div className="text-center py-8 text-white/50">
+                    <img src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-white">No stages</p>
+                    <p className="text-sm text-white/50">Be the first to start one!</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -168,30 +168,30 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
               <Button 
                 variant="ghost" 
                 onClick={() => setView('browse')}
-                className="text-zinc-400"
+                className="text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
               >
                 ← Back
               </Button>
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm text-zinc-400">Space Title *</label>
+                  <label className="text-sm text-white/60">Stage Title *</label>
                   <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="What's this space about?"
-                    className="bg-zinc-800 border-zinc-700"
+                    placeholder="What's this stage about?"
+                    className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
                     maxLength={100}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm text-zinc-400">Description (optional)</label>
+                  <label className="text-sm text-white/60">Description (optional)</label>
                   <Textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Add more details..."
-                    className="bg-zinc-800 border-zinc-700 resize-none"
+                    className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl resize-none"
                     rows={3}
                     maxLength={280}
                   />
@@ -200,12 +200,12 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                 <Button
                   onClick={handleCreate}
                   disabled={!title.trim() || isLoading}
-                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
                 >
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   ) : (
-                    <Radio className="w-4 h-4 mr-2" />
+                    <Mic className="w-4 h-4 mr-2" />
                   )}
                   Go Live
                 </Button>
@@ -215,21 +215,21 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
           {/* Live View */}
           {(view === 'live' || currentSpace) && currentSpace && (
-            <div className="space-y-4">
-              {/* Space Info */}
-              <div className="text-center pb-4 border-b border-zinc-800">
-                <div className="flex items-center justify-center gap-2 text-purple-400 mb-1">
+            <div className="space-y-4 pb-20">
+              {/* Stage Info */}
+              <div className="text-center pb-4">
+                <div className="flex items-center justify-center gap-2 text-white mb-1">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
-                  LIVE
+                  <span className="text-xs font-medium">LIVE</span>
                 </div>
                 <h2 className="text-lg font-semibold text-white">{currentSpace.title}</h2>
                 {currentSpace.description && (
-                  <p className="text-sm text-zinc-400 mt-1">{currentSpace.description}</p>
+                  <p className="text-sm text-white/60 mt-1">{currentSpace.description}</p>
                 )}
-                <div className="flex items-center justify-center gap-4 mt-2 text-sm text-zinc-500">
+                <div className="flex items-center justify-center gap-4 mt-2 text-sm text-white/50">
                   <span className="flex items-center gap-1">
                     <Volume2 className="w-4 h-4" />
                     {speakers.length} speaking
@@ -243,7 +243,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
               {/* Speakers Section */}
               <div className="space-y-2">
-                <h3 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+                <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
                   <Volume2 className="w-4 h-4" />
                   Speakers
                 </h3>
@@ -262,8 +262,8 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
 
               {/* Hand Requests (Host only) */}
               {myRole === 'host' && handRequests.length > 0 && (
-                <div className="space-y-2 p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
-                  <h3 className="text-sm font-medium text-purple-400 flex items-center gap-2">
+                <div className="space-y-2 p-3 bg-white/5 rounded-xl border border-white/10">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2">
                     <Hand className="w-4 h-4" />
                     Requests to Speak ({handRequests.length})
                   </h3>
@@ -282,7 +282,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
               {/* Listeners Section */}
               {listeners.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+                  <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
                     <Users className="w-4 h-4" />
                     Listeners ({listeners.length})
                   </h3>
@@ -290,13 +290,13 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                     {listeners.slice(0, 20).map((listener) => (
                       <Avatar key={listener.id} className="w-8 h-8">
                         <AvatarImage src={listener.avatar || undefined} />
-                        <AvatarFallback className="bg-zinc-700 text-xs">
+                        <AvatarFallback className="bg-white/10 text-white text-xs">
                           {listener.username?.[0]?.toUpperCase() || '?'}
                         </AvatarFallback>
                       </Avatar>
                     ))}
                     {listeners.length > 20 && (
-                      <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs text-zinc-400">
+                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/60">
                         +{listeners.length - 20}
                       </div>
                     )}
@@ -305,7 +305,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
               )}
 
               {/* Controls */}
-              <div className="fixed bottom-0 left-0 right-0 p-4 bg-zinc-900 border-t border-zinc-800">
+              <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-[24px] border-t border-white/10">
                 <div className="flex items-center justify-center gap-4 max-w-md mx-auto">
                   {/* Mute Button (speakers only) */}
                   {(myRole === 'host' || myRole === 'speaker') && (
@@ -315,8 +315,8 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                       className={cn(
                         "rounded-full w-14 h-14",
                         isMuted 
-                          ? "bg-zinc-700 hover:bg-zinc-600" 
-                          : "bg-purple-600 hover:bg-purple-700"
+                          ? "bg-white/10 hover:bg-white/20 text-white" 
+                          : "bg-white/20 hover:bg-white/30 text-white"
                       )}
                     >
                       {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
@@ -329,7 +329,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                       onClick={raiseHand}
                       size="lg"
                       variant="outline"
-                      className="rounded-full"
+                      className="rounded-full bg-white/10 hover:bg-white/20 border-white/10 text-white"
                     >
                       <Hand className="w-5 h-5 mr-2" />
                       Raise Hand
@@ -340,7 +340,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                   <Button
                     onClick={handleEndOrLeave}
                     size="lg"
-                    className="rounded-full bg-red-600 hover:bg-red-700 w-14 h-14"
+                    className="rounded-full bg-red-500/80 hover:bg-red-500 w-14 h-14 text-white"
                   >
                     {myRole === 'host' ? (
                       <PhoneOff className="w-6 h-6" />
@@ -369,21 +369,21 @@ function SpaceCard({
   isLoading: boolean;
 }) {
   return (
-    <div className="p-4 bg-zinc-800 rounded-xl border border-zinc-700 hover:border-purple-500/50 transition-colors">
+    <div className="p-4 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-colors">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
-            <span className="text-xs text-purple-400 font-medium">LIVE</span>
+            <span className="text-xs text-white font-medium">LIVE</span>
           </div>
           <h4 className="font-medium text-white truncate">{space.title}</h4>
           {space.description && (
-            <p className="text-sm text-zinc-400 line-clamp-2 mt-1">{space.description}</p>
+            <p className="text-sm text-white/50 line-clamp-2 mt-1">{space.description}</p>
           )}
-          <div className="flex items-center gap-3 mt-2 text-sm text-zinc-500">
+          <div className="flex items-center gap-3 mt-2 text-sm text-white/50">
             <span className="flex items-center gap-1">
               <Crown className="w-3 h-3" />
               {space.host_username || 'Anonymous'}
@@ -398,7 +398,7 @@ function SpaceCard({
           onClick={onJoin}
           disabled={isLoading}
           size="sm"
-          className="bg-purple-600 hover:bg-purple-700 shrink-0"
+          className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl shrink-0"
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Join'}
         </Button>
@@ -423,11 +423,11 @@ function ParticipantAvatar({
     <div className="flex flex-col items-center gap-1 group relative">
       <div className={cn(
         "relative rounded-full p-0.5",
-        !participant.is_muted && "ring-2 ring-purple-500 ring-offset-2 ring-offset-zinc-900"
+        !participant.is_muted && "ring-2 ring-white/50 ring-offset-2 ring-offset-black/60"
       )}>
         <Avatar className="w-12 h-12">
           <AvatarImage src={participant.avatar || undefined} />
-          <AvatarFallback className="bg-zinc-700">
+          <AvatarFallback className="bg-white/10 text-white">
             {participant.username?.[0]?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>
@@ -442,7 +442,7 @@ function ParticipantAvatar({
           </div>
         )}
       </div>
-      <span className="text-xs text-zinc-400 truncate max-w-full">
+      <span className="text-xs text-white/60 truncate max-w-full">
         {participant.username || 'Anonymous'}
       </span>
       {canRemove && (
@@ -466,17 +466,17 @@ function HandRequestItem({
   onApprove: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-2 p-2 bg-zinc-800 rounded-lg">
+    <div className="flex items-center justify-between gap-2 p-2 bg-white/5 rounded-xl">
       <div className="flex items-center gap-2">
         <Avatar className="w-8 h-8">
           <AvatarImage src={request.avatar || undefined} />
-          <AvatarFallback className="bg-zinc-700 text-xs">
+          <AvatarFallback className="bg-white/10 text-white text-xs">
             {request.username?.[0]?.toUpperCase() || '?'}
           </AvatarFallback>
         </Avatar>
         <span className="text-sm text-white">{request.username || 'Anonymous'}</span>
       </div>
-      <Button onClick={onApprove} size="sm" className="bg-purple-600 hover:bg-purple-700">
+      <Button onClick={onApprove} size="sm" className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl">
         Approve
       </Button>
     </div>
