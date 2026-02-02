@@ -1,94 +1,115 @@
 
-# Plan: Fix Followers/Likes/Subscribers Leaderboard Categories
+# Fix: Staking Badges Showing Tortoise for Everyone
 
-## Problem Identified
+## Problem Analysis
 
-The "Followers", "Likes", and "Subscribers" leaderboard tabs don't work correctly because:
+The staking tier badge always shows "Tortoise" (the lowest tier) because:
 
-1. **They use the wrong API sort** - All three categories use `apiSort: 'holdings'`, meaning they fetch Holdings data instead of data sorted by their respective metrics
-2. **The DeHub API only supports 3 sort modes** - `holdings`, `sentTips`, `receivedTips`
-3. **No client-side sorting** - Even if the entries contain `followers`/`likes`/`subscribers` fields, the list isn't re-sorted on the client
+1. **Leaderboard**: The DeHub `/api/leaderboard` endpoint does NOT include staking data in its response. The cached data only contains: `account`, `total`, `username`, `userDisplayName`, `avatarUrl`, `sentTips`, `receivedTips`. Since `staked` is undefined, the badge utility defaults to Tortoise.
 
-## Solution Options
+2. **Feeds**: The feed API DOES return `minterStaked`, and this is being correctly mapped. However, many users on the platform have `0` DHB staked, which legitimately puts them in the Tortoise tier.
 
-### Option A: Client-Side Re-Sorting (Quick Fix)
-If the API returns `followers`, `likes`, `subscribers` fields in the Holdings response, we can:
-- Keep fetching from Holdings endpoint
-- Re-sort the entries client-side based on the selected category
-- Filter out entries with 0 or undefined values for that metric
+## Solution: Enrich Leaderboard Cache with Staking Data
 
-### Option B: Check API for Additional Sort Modes
-The DeHub API may support `followers`, `likes`, `subscribers` as sort modes. We should:
-- Update `LeaderboardSortMode` type to include these
-- Update edge function to cache these combinations
-- Update category mappings to use correct `apiSort` values
+Update the `refresh-leaderboard-cache` edge function to fetch staking data for each user during the cache refresh process.
 
-### Option C: Remove Unsupported Categories (Safe Fix)
-If the API doesn't support these sort modes and doesn't return these fields reliably:
-- Remove "Followers", "Likes", "Subscribers" tabs
-- Only show the 3 working categories
+### Implementation Details
 
-## Recommended Approach: Option A + Validation
+#### 1. Add Staking Data Fetcher
+Create a helper function to fetch staking data from the account info endpoint:
 
-Since we're unsure what the API returns, implement client-side sorting first:
-
-### Changes Required
-
-**File: `src/pages/app/LeaderboardPage.tsx`**
-
-1. **Add client-side sorting logic** in the `entries` useMemo:
 ```typescript
-const entries = useMemo(() => {
-  let list = data?.result?.byWalletBalance || [];
-  
-  // Filter out wallet-only entries (no username)
-  list = list.filter(entry => entry.username);
-  
-  // Sort by selected category
-  if (category === 'followers') {
-    list = [...list].sort((a, b) => (b.followers ?? 0) - (a.followers ?? 0));
-  } else if (category === 'likes') {
-    list = [...list].sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0));
-  } else if (category === 'subscribers') {
-    list = [...list].sort((a, b) => (b.subscribers ?? 0) - (a.subscribers ?? 0));
+async function fetchUserStaking(account: string): Promise<number> {
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${account}`);
+    if (!response.ok) return 0;
+    
+    const data = await response.json();
+    const user = data.result || data;
+    
+    // Check balanceData array first, then direct staked field
+    if (user.balanceData?.length > 0) {
+      return user.balanceData.reduce((sum, b) => sum + (b.staked || 0), 0);
+    }
+    return user.staked || 0;
+  } catch {
+    return 0;
   }
-  
-  // Filter out entries with 0 value for the selected metric
-  if (['followers', 'likes', 'subscribers'].includes(category)) {
-    list = list.filter(entry => (entry[category as keyof LeaderboardEntry] ?? 0) > 0);
-  }
-  
-  // Apply search filter
-  if (searchQuery.trim()) {
-    const query = searchQuery.toLowerCase();
-    list = list.filter((entry) => 
-      entry.username?.toLowerCase().includes(query) ||
-      entry.userDisplayName?.toLowerCase().includes(query) ||
-      entry.account.toLowerCase().includes(query)
-    );
-  }
-  
-  return list;
-}, [data, searchQuery, category]);
+}
 ```
 
-2. **Disable time period filters for client-sorted categories** - Since the Holdings data is for "all time", time period filters won't work correctly for Followers/Likes/Subscribers when client-side sorting
+#### 2. Batch Process for Efficiency
+Since leaderboards can have hundreds of entries, process users in parallel batches:
 
-### Technical Details
+```typescript
+async function enrichWithStaking(entries: LeaderboardEntry[]): Promise<LeaderboardEntry[]> {
+  const BATCH_SIZE = 10; // Process 10 users at a time
+  const enriched: LeaderboardEntry[] = [];
+  
+  for (let i = 0; i < entries.length; i += BATCH_SIZE) {
+    const batch = entries.slice(i, i + BATCH_SIZE);
+    const results = await Promise.allSettled(
+      batch.map(async (entry) => {
+        // Skip wallet-only entries (no username)
+        if (!entry.username) return entry;
+        const staked = await fetchUserStaking(entry.account);
+        return { ...entry, staked };
+      })
+    );
+    
+    // Collect successful results
+    results.forEach((result) => {
+      if (result.status === 'fulfilled') {
+        enriched.push(result.value);
+      }
+    });
+  }
+  
+  return enriched;
+}
+```
 
-| Category | Current Behavior | Fixed Behavior |
-|----------|------------------|----------------|
-| Holdings | Works correctly | No change |
-| Sent Tips | Works correctly | No change |
-| Paid Tips | Works correctly | No change |
-| Followers | Shows Holdings data | Re-sorts by `followers` field |
-| Likes | Shows Holdings data | Re-sorts by `likes` field |
-| Subscribers | Shows Holdings data | Re-sorts by `subscribers` field |
+#### 3. Integrate into Cache Refresh Flow
+Modify the main caching logic to enrich data before storing:
 
-### Edge Cases to Handle
-- Entries with `undefined` or `0` values for the metric should be filtered out
-- Time period selector should be hidden/disabled for client-sorted categories
-- Show "No data available" if no entries have the required metric
+```typescript
+// After fetching leaderboard data
+const rawData = await fetchLeaderboard(sort, period);
+const entries = rawData?.result?.byWalletBalance || [];
 
-### Files to Modify
-1. `src/pages/app/LeaderboardPage.tsx` - Add client-side sorting and filtering logic
+// Enrich with staking data
+const enrichedEntries = await enrichWithStaking(entries);
+
+// Store enriched data
+const enrichedData = {
+  ...rawData,
+  result: { byWalletBalance: enrichedEntries }
+};
+
+await supabase.from("leaderboard_cache").upsert({
+  sort_mode: sort,
+  period: period,
+  data: enrichedData,
+  updated_at: new Date().toISOString(),
+});
+```
+
+### File Changes
+
+| File | Change |
+|------|--------|
+| `supabase/functions/refresh-leaderboard-cache/index.ts` | Add staking enrichment logic with batch processing |
+
+### Performance Considerations
+
+- **Batch size of 10**: Balances speed with avoiding rate limits
+- **Background process**: Runs during 6-hour cache refresh, not on page load
+- **Graceful failures**: If staking fetch fails for a user, they keep `0` (Tortoise) - acceptable fallback
+- **Only enrich users with usernames**: Skip wallet-only entries to save API calls
+
+### Testing Plan
+
+1. Deploy the updated edge function
+2. Manually trigger a cache refresh
+3. Query the database to verify `staked` values are now present in cached entries
+4. Check the leaderboard page to confirm badges reflect actual staking tiers
