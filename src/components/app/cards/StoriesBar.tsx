@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { Plus, Video, Mic, Camera } from 'lucide-react';
+import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Drawer,
@@ -19,6 +19,7 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
 import { StoryRecorderModal, StoryViewerModal } from '@/components/app/stories';
+import { PostModal } from '@/features/post';
 import { useStories, useUploadStory, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -41,6 +42,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
   const [isStoryRecorderOpen, setIsStoryRecorderOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
   const [viewerStartIndex, setViewerStartIndex] = useState(0);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
@@ -72,6 +74,13 @@ export function StoriesBar({ users }: StoriesBarProps) {
     setIsOpen(false);
     requireAuth(() => {
       setIsStoryRecorderOpen(true);
+    });
+  };
+
+  const handlePostSomething = () => {
+    setIsOpen(false);
+    requireAuth(() => {
+      setIsPostModalOpen(true);
     });
   };
 
@@ -114,6 +123,15 @@ export function StoriesBar({ users }: StoriesBarProps) {
           {isUploading ? 'Uploading...' : 'Add Story'}
         </span>
       </button>
+      <button
+        onClick={handlePostSomething}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+      >
+        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+          <PenSquare className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-white font-medium">Post Something</span>
+      </button>
     </div>
   );
 
@@ -155,7 +173,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
           </div>
         </div>
       </div>
-      <span className="text-xs text-zinc-400 truncate w-16 text-center">Live/Story</span>
+      <span className="text-xs text-zinc-400 truncate w-16 text-center">Create</span>
     </div>
   );
 
@@ -198,6 +216,10 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClose={() => setIsStoryViewerOpen(false)}
         stories={stories}
         initialIndex={viewerStartIndex}
+      />
+      <PostModal
+        isOpen={isPostModalOpen}
+        onClose={() => setIsPostModalOpen(false)}
       />
       <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
         <div className="relative">

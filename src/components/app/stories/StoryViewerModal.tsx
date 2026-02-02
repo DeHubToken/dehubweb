@@ -63,9 +63,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       setCurrentIndex((prev) => prev + 1);
       setProgress(0);
     } else {
-      onClose();
+      // Loop randomly when out of stories
+      const randomIndex = Math.floor(Math.random() * stories.length);
+      setCurrentIndex(randomIndex);
+      setProgress(0);
     }
-  }, [currentIndex, stories.length, onClose]);
+  }, [currentIndex, stories.length]);
 
   const goPrev = useCallback(() => {
     if (currentIndex > 0) {
@@ -297,14 +300,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </div>
       )}
 
-      {/* Story counter */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-        <div className="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10">
-          <p className="text-white/80 text-xs font-medium">
-            {currentIndex + 1} / {stories.length}
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
