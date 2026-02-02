@@ -9,7 +9,8 @@
  * ```
  */
 
-import { useState, memo, useEffect } from 'react';
+import { useState, memo, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
@@ -54,12 +55,25 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
+  const navigate = useNavigate();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
 
+  // Navigate to single post page when clicking non-interactive areas
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+    if (isInteractive) return;
+    navigate(`/app/post/${post.id}`);
+  }, [navigate, post.id]);
+
   return (
-    <div ref={viewRef} className="bg-zinc-900 rounded-2xl overflow-hidden relative">
+    <div 
+      ref={viewRef} 
+      onClick={handleCardClick}
+      className="bg-zinc-900 rounded-2xl overflow-hidden relative cursor-pointer hover:bg-zinc-800/50 transition-colors duration-200"
+    >
       <CardHeader
         username={post.author.name}
         handle={post.author.handle}

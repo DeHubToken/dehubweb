@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -62,6 +63,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
+  const navigate = useNavigate();
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -728,8 +730,16 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         
       </div>
 
-      {/* Info & Actions */}
-      <div className="p-3">
+      {/* Info & Actions - clickable area for navigation */}
+      <div 
+        className="p-3 cursor-pointer hover:bg-zinc-800/50 transition-colors duration-200"
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+          if (isInteractive) return;
+          navigate(`/app/post/${video.id}`);
+        }}
+      >
         <TranslatableText text={video.title} className="text-white text-sm font-medium mb-2" as="h3" />
         <div className="mb-3">
           <PostMetadata 
