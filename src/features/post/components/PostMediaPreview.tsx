@@ -78,6 +78,8 @@ export function PostMediaPreview({
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
+  const [videoFrames, setVideoFrames] = useState<Map<number, string[]>>(new Map());
+  const [extractingFrames, setExtractingFrames] = useState<Set<number>>(new Set());
   const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
   const [audioTrimmerData, setAudioTrimmerData] = useState<{
@@ -273,6 +275,90 @@ export function PostMediaPreview({
     pendingThumbnailIndex.current = index;
     thumbnailInputRef.current?.click();
   };
+
+  // Extract frames from video for thumbnail selection
+  const extractVideoFrames = useCallback(async (videoUrl: string, index: number) => {
+    if (extractingFrames.has(index)) return;
+    
+    setExtractingFrames(prev => new Set(prev).add(index));
+    
+    try {
+      const video = document.createElement('video');
+      video.src = videoUrl;
+      video.crossOrigin = 'anonymous';
+      video.preload = 'metadata';
+      
+      await new Promise<void>((resolve, reject) => {
+        video.onloadedmetadata = () => resolve();
+        video.onerror = () => reject(new Error('Failed to load video'));
+        setTimeout(() => reject(new Error('Video load timeout')), 10000);
+      });
+      
+      const duration = video.duration;
+      if (!duration || duration <= 0) {
+        throw new Error('Invalid video duration');
+      }
+      
+      const frameCount = 20;
+      const frames: string[] = [];
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        throw new Error('Failed to get canvas context');
+      }
+      
+      canvas.width = 160;
+      canvas.height = 90;
+      
+      for (let i = 0; i < frameCount; i++) {
+        const time = (duration / (frameCount + 1)) * (i + 1);
+        video.currentTime = time;
+        
+        await new Promise<void>((resolve) => {
+          video.onseeked = () => resolve();
+        });
+        
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        const blob = await new Promise<Blob | null>(resolve => 
+          canvas.toBlob(resolve, 'image/jpeg', 0.7)
+        );
+        
+        if (blob) {
+          frames.push(URL.createObjectURL(blob));
+        }
+      }
+      
+      setVideoFrames(prev => new Map(prev).set(index, frames));
+    } catch (error) {
+      console.error('Failed to extract video frames:', error);
+    } finally {
+      setExtractingFrames(prev => {
+        const next = new Set(prev);
+        next.delete(index);
+        return next;
+      });
+    }
+  }, [extractingFrames]);
+
+  // Trigger frame extraction when video is added
+  useEffect(() => {
+    media.forEach((m, index) => {
+      if (m.type === 'video' && !videoFrames.has(index) && !extractingFrames.has(index)) {
+        extractVideoFrames(m.preview, index);
+      }
+    });
+  }, [media, extractVideoFrames, videoFrames, extractingFrames]);
+
+  // Cleanup blob URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      videoFrames.forEach(frames => {
+        frames.forEach(url => URL.revokeObjectURL(url));
+      });
+    };
+  }, []);
 
   if (media.length === 0) return null;
 
@@ -492,8 +578,8 @@ export function PostMediaPreview({
                     </div>
                   </div>
                 ) : m.type === 'video' ? (
-                  /* ==================== VIDEO + THUMBNAIL SIDE BY SIDE ==================== */
-                  <div className="flex gap-2">
+                  /* ==================== VIDEO + THUMBNAIL STACKED ==================== */
+                  <div className="flex flex-col gap-3">
                     {/* Video preview container */}
                     <div className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900">
                       {/* Processing overlay */}
@@ -661,8 +747,9 @@ export function PostMediaPreview({
                       </button>
                     </div>
                     
-                    {/* Separate Thumbnail preview card */}
-                    <div className="relative w-[100px] sm:w-[120px] md:w-[140px] aspect-[9/16] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
+                    {/* Thumbnail preview - same dimensions as video */}
+                    <div 
+                      className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
                       onClick={() => triggerThumbnailUpload(index)}
                     >
                       {m.thumbnail ? (
@@ -676,31 +763,60 @@ export function PostMediaPreview({
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Upload className="w-6 h-6 text-white" />
                           </div>
-                          {/* Auto-generated badge */}
-                          {m.isAutoThumbnail && (
-                            <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-black/70 backdrop-blur-sm rounded">
-                              <span className="text-[8px] text-white/70 font-medium">Auto</span>
-                            </div>
-                          )}
                           {/* Remove thumbnail */}
                           <button
                             type="button"
                             onClick={(e) => { e.stopPropagation(); onRemoveThumbnail?.(index); }}
-                            className="absolute top-1 right-1 p-1 bg-black/70 hover:bg-red-500/80 rounded-lg transition-colors"
+                            className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
                           >
-                            <Trash2 className="w-3 h-3 text-white" />
+                            <Trash2 className="w-4 h-4 text-white" />
                           </button>
                         </>
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
-                          <Upload className="w-6 h-6" />
-                          <span className="text-[10px] text-center px-2">Add Cover</span>
+                          <Upload className="w-8 h-8" />
+                          <span className="text-sm">Add Thumbnail</span>
                         </div>
                       )}
                       {/* Label */}
-                      <div className="absolute bottom-1 left-1 right-1 text-center">
-                        <span className="text-[9px] text-white/60 font-medium bg-black/50 px-1.5 py-0.5 rounded">Cover</span>
+                      <div className="absolute bottom-2 left-2">
+                        <span className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">Thumbnail</span>
                       </div>
+                    </div>
+                    
+                    {/* Frame Selection Strip */}
+                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 w-[280px] sm:w-[320px] md:w-[380px]">
+                      {/* Upload button */}
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
+                        className="flex-shrink-0 w-16 h-9 rounded-lg bg-zinc-800 border border-white/20 hover:border-white/40 flex items-center justify-center transition-colors"
+                      >
+                        <Upload className="w-4 h-4 text-white/60" />
+                      </button>
+                      
+                      {/* Loading indicator */}
+                      {extractingFrames.has(index) && (
+                        <div className="flex-shrink-0 w-16 h-9 rounded-lg bg-zinc-800 border border-white/20 flex items-center justify-center">
+                          <Loader2 className="w-4 h-4 text-white/60 animate-spin" />
+                        </div>
+                      )}
+                      
+                      {/* Frame thumbnails */}
+                      {videoFrames.get(index)?.map((frameUrl, frameIndex) => (
+                        <button
+                          key={frameIndex}
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); onAddThumbnail?.(index, frameUrl); }}
+                          className={`flex-shrink-0 w-16 h-9 rounded-lg overflow-hidden border-2 transition-colors ${
+                            m.thumbnail === frameUrl 
+                              ? 'border-white' 
+                              : 'border-transparent hover:border-white/50'
+                          }`}
+                        >
+                          <img src={frameUrl} alt={`Frame ${frameIndex + 1}`} className="w-full h-full object-cover" />
+                        </button>
+                      ))}
                     </div>
                   </div>
                 ) : null}
