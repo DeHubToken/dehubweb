@@ -578,8 +578,8 @@ export function PostMediaPreview({
                     </div>
                   </div>
                 ) : m.type === 'video' ? (
-                  /* ==================== VIDEO + THUMBNAIL (side-by-side on desktop, stacked on mobile/tablet) ==================== */
-                  <div className="flex flex-col md:flex-row gap-3">
+                  /* ==================== VIDEO + THUMBNAIL STACKED ==================== */
+                  <div className="flex flex-col gap-3">
                     {/* Video preview container */}
                     <div className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900">
                       {/* Processing overlay */}
