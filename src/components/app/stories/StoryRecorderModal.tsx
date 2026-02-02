@@ -278,21 +278,23 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
               )}
             </button>
           ) : (
-            // Preview controls - same size liquid glass buttons
-            <>
+            // Preview controls - wide buttons filling screen on mobile
+            <div className="flex items-center gap-4 w-full">
               <button
                 onClick={retake}
-                className="w-16 h-16 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all"
+                className="flex-1 h-14 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center gap-2 hover:bg-white/20 transition-all"
               >
-                <RotateCcw className="w-6 h-6 text-white" />
+                <RotateCcw className="w-5 h-5 text-white" />
+                <span className="text-white font-medium">Restart</span>
               </button>
               <button
                 onClick={confirmStory}
-                className="w-16 h-16 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all"
+                className="flex-1 h-14 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center gap-2 hover:bg-white/20 transition-all"
               >
-                <Check className="w-6 h-6 text-white" />
+                <Check className="w-5 h-5 text-white" />
+                <span className="text-white font-medium">Confirm</span>
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
