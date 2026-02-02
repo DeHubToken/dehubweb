@@ -312,7 +312,7 @@ function ProfileSettings() {
         <Button
           onClick={handleSave}
           disabled={updateMutation.isPending}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
+          className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-white/10 rounded-xl"
         >
           {updateMutation.isPending ? (
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
