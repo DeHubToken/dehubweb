@@ -159,14 +159,14 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {/* Comments - Drawer for tablet/mobile, inline for desktop */}
         {isTabletOrMobile ? (
           <Drawer open={showComments} onOpenChange={setShowComments}>
-            <DrawerContent glass className="max-h-[70vh] overflow-hidden">
-              <DrawerHeader className="border-b border-white/10 pb-3">
+            <DrawerContent glass className="max-h-[70vh] flex flex-col overflow-hidden">
+              <DrawerHeader className="border-b border-white/10 pb-3 flex-shrink-0">
                 <DrawerTitle className="text-white font-semibold flex items-center gap-2">
                   <MessageSquare className="w-5 h-5" />
                   Comments
                 </DrawerTitle>
               </DrawerHeader>
-              <div className="flex-1 overflow-y-auto px-4 pb-4">
+              <div className="flex-1 min-h-0 px-4 pb-4">
                 <CommentsSection
                   tokenId={post.id}
                   onClose={() => setShowComments(false)}
