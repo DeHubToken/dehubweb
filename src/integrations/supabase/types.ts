@@ -79,6 +79,54 @@ export type Database = {
           },
         ]
       }
+      audio_spaces: {
+        Row: {
+          channel_name: string
+          created_at: string
+          description: string | null
+          ended_at: string | null
+          host_avatar: string | null
+          host_username: string | null
+          host_wallet_address: string
+          id: string
+          listener_count: number
+          speaker_count: number
+          started_at: string
+          status: string
+          title: string
+        }
+        Insert: {
+          channel_name: string
+          created_at?: string
+          description?: string | null
+          ended_at?: string | null
+          host_avatar?: string | null
+          host_username?: string | null
+          host_wallet_address: string
+          id?: string
+          listener_count?: number
+          speaker_count?: number
+          started_at?: string
+          status?: string
+          title: string
+        }
+        Update: {
+          channel_name?: string
+          created_at?: string
+          description?: string | null
+          ended_at?: string | null
+          host_avatar?: string | null
+          host_username?: string | null
+          host_wallet_address?: string
+          id?: string
+          listener_count?: number
+          speaker_count?: number
+          started_at?: string
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       creator_applications: {
         Row: {
           created_at: string
@@ -165,6 +213,94 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      raise_hand_requests: {
+        Row: {
+          avatar: string | null
+          created_at: string
+          id: string
+          resolved_at: string | null
+          space_id: string
+          status: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string
+          id?: string
+          resolved_at?: string | null
+          space_id: string
+          status?: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string
+          id?: string
+          resolved_at?: string | null
+          space_id?: string
+          status?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raise_hand_requests_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      space_participants: {
+        Row: {
+          avatar: string | null
+          hand_raised: boolean
+          id: string
+          is_muted: boolean
+          joined_at: string
+          left_at: string | null
+          role: string
+          space_id: string
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar?: string | null
+          hand_raised?: boolean
+          id?: string
+          is_muted?: boolean
+          joined_at?: string
+          left_at?: string | null
+          role?: string
+          space_id: string
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar?: string | null
+          hand_raised?: boolean
+          id?: string
+          is_muted?: boolean
+          joined_at?: string
+          left_at?: string | null
+          role?: string
+          space_id?: string
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "space_participants_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_privacy_settings: {
         Row: {
