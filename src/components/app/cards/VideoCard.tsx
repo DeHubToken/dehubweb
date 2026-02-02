@@ -387,9 +387,19 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFocused, isPlaying, handlePlayClick, seekBy, adjustVolume]);
+  // Navigate to single post page when clicking non-interactive areas (header only)
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+    if (isInteractive) return;
+    navigate(`/app/post/${video.id}`);
+  }, [navigate, video.id]);
   
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div 
+      onClick={handleCardClick}
+      className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors duration-200"
+    >
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
         <CardHeader
@@ -464,6 +474,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
       <div 
         ref={containerRef}
         tabIndex={0}
+        data-no-navigate
         className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
         onClick={isTouchDevice ? undefined : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
@@ -730,16 +741,8 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         
       </div>
 
-      {/* Info & Actions - clickable area for navigation */}
-      <div 
-        className="p-3 cursor-pointer hover:bg-zinc-800/50 transition-colors duration-200"
-        onClick={(e) => {
-          const target = e.target as HTMLElement;
-          const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
-          if (isInteractive) return;
-          navigate(`/app/post/${video.id}`);
-        }}
-      >
+      {/* Info & Actions */}
+      <div className="p-3">
         <TranslatableText text={video.title} className="text-white text-sm font-medium mb-2" as="h3" />
         <div className="mb-3">
           <PostMetadata 
