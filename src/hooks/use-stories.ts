@@ -3,12 +3,15 @@
  * ============
  * Manages story uploads, fetching, and real-time updates.
  * Stories expire after 24 hours.
+ * Avatars are fetched fresh from user profiles to stay current.
  */
 
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { getAccountInfo } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 export interface Story {
   id: string;
@@ -64,6 +67,19 @@ async function extractFirstFrame(videoBlob: Blob): Promise<Blob | null> {
   });
 }
 
+/**
+ * Fetch fresh avatar for a user from DeHub API
+ */
+async function fetchFreshAvatar(walletAddress: string): Promise<string | null> {
+  try {
+    const user = await getAccountInfo(walletAddress);
+    const rawAvatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
+    return buildAvatarUrl(walletAddress, rawAvatar);
+  } catch {
+    return null;
+  }
+}
+
 export function useStories() {
   const queryClient = useQueryClient();
 
@@ -78,7 +94,26 @@ export function useStories() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as Story[];
+      
+      const rawStories = data as Story[];
+      
+      // Get unique wallet addresses
+      const uniqueAddresses = [...new Set(rawStories.map(s => s.wallet_address))];
+      
+      // Fetch fresh avatars for all unique users in parallel
+      const avatarMap = new Map<string, string | null>();
+      await Promise.all(
+        uniqueAddresses.map(async (address) => {
+          const freshAvatar = await fetchFreshAvatar(address);
+          avatarMap.set(address.toLowerCase(), freshAvatar);
+        })
+      );
+      
+      // Enrich stories with fresh avatars
+      return rawStories.map(story => ({
+        ...story,
+        avatar: avatarMap.get(story.wallet_address.toLowerCase()) || story.avatar,
+      }));
     },
     staleTime: 1000 * 60, // 1 minute
   });
