@@ -110,12 +110,9 @@ export function StoriesBar({ users }: StoriesBarProps) {
         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
           <Camera className="w-4 h-4 text-white" />
         </div>
-        <div>
-          <span className="text-white font-medium block">
-            {isUploading ? 'Uploading...' : 'Add Story'}
-          </span>
-          <span className="text-zinc-400 text-xs">Record up to 30 seconds</span>
-        </div>
+        <span className="text-white font-medium">
+          {isUploading ? 'Uploading...' : 'Add Story'}
+        </span>
       </button>
     </div>
   );
