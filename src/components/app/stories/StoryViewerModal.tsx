@@ -28,6 +28,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [videoDuration, setVideoDuration] = useState(30); // Default 30s, updated when video loads
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
   
@@ -46,16 +47,21 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
 
     // Reset progress when story changes
     setProgress(0);
+    setVideoDuration(30); // Reset to default until video loads
 
-    // Auto-advance progress
-    if (!isPaused) {
+    // Auto-advance progress based on actual video duration
+    if (!isPaused && videoDuration > 0) {
+      const ticksPerSecond = 10; // 100ms intervals
+      const totalTicks = videoDuration * ticksPerSecond;
+      const incrementPerTick = 100 / totalTicks;
+
       progressRef.current = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 100) {
             goNext();
             return 0;
           }
-          return prev + (100 / 300); // ~30 seconds (300 ticks at 100ms)
+          return prev + incrementPerTick;
         });
       }, 100);
     }
@@ -65,7 +71,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         clearInterval(progressRef.current);
       }
     };
-  }, [isOpen, currentIndex, isPaused]);
+  }, [isOpen, currentIndex, isPaused, videoDuration]);
 
   const goNext = () => {
     if (currentIndex < stories.length - 1) {
@@ -176,7 +182,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="w-8 h-8 rounded-full bg-red-500/80 backdrop-blur-sm flex items-center justify-center disabled:opacity-50"
+              className="w-9 h-9 rounded-xl bg-red-500/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center disabled:opacity-50"
             >
               {isDeleting ? (
                 <Loader2 className="w-4 h-4 text-white animate-spin" />
@@ -187,7 +193,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           )}
           <button
             onClick={togglePause}
-            className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+            className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
           >
             {isPaused ? (
               <Play className="w-4 h-4 text-white" />
@@ -197,7 +203,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           </button>
           <button
             onClick={handleClose}
-            className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+            className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
           >
             <X className="w-4 h-4 text-white" />
           </button>
@@ -214,6 +220,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           muted={false}
           className="w-full h-full object-contain"
           onEnded={goNext}
+          onLoadedMetadata={(e) => {
+            const video = e.currentTarget;
+            if (video.duration && isFinite(video.duration)) {
+              setVideoDuration(video.duration);
+            }
+          }}
         />
       </div>
 
