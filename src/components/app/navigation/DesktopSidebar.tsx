@@ -155,7 +155,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             {isAuthenticated ? (
               <>
                 <PenSquare className="w-[18px] h-[18px]" />
-                Post
+                Create
               </>
             ) : isConnecting ? (
               <>
