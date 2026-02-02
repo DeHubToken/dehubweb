@@ -170,6 +170,7 @@ export default function ProfilePage() {
   const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   
   // Refs for pull-to-refresh
   const profileContainerRef = useRef<HTMLDivElement>(null);
@@ -671,8 +672,6 @@ export default function ProfilePage() {
     return loadingContent;
   }
 
-  // State for login modal on username available page
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   // Show "Username available" state when visiting /{username} route with no profile found
   if (!profile) {
