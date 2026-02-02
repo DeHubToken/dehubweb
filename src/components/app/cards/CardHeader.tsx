@@ -125,11 +125,13 @@ export function CardHeader({
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="font-semibold text-white text-sm truncate max-w-[100px] sm:max-w-none">{username}</span>
           {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
-          <img 
-            src={stakingBadgeUrl} 
-            alt="Staking tier" 
-            className="w-4 h-4 object-contain shrink-0"
-          />
+          {stakingBadgeUrl && (
+            <img 
+              src={stakingBadgeUrl} 
+              alt="Holdings tier" 
+              className="w-4 h-4 object-contain shrink-0"
+            />
+          )}
           {formattedHandle && (
             <span className="text-zinc-500 text-sm truncate max-w-[100px] sm:max-w-none">{formattedHandle}</span>
           )}
