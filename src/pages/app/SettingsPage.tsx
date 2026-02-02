@@ -166,6 +166,20 @@ function ProfileSettings() {
   const [telegramLink, setTelegramLink] = useState('');
   const [facebookLink, setFacebookLink] = useState('');
   
+  // Original values to compare against
+  const [originalValues, setOriginalValues] = useState({
+    displayName: '',
+    username: '',
+    bio: '',
+    twitterLink: '',
+    discordLink: '',
+    instagramLink: '',
+    tiktokLink: '',
+    youtubeLink: '',
+    telegramLink: '',
+    facebookLink: '',
+  });
+  
   // Image state
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>();
   const [coverPreview, setCoverPreview] = useState<string | undefined>();
@@ -174,7 +188,6 @@ function ProfileSettings() {
   
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
-  const [hasChanges, setHasChanges] = useState(false);
   
   // Refs for file inputs
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -190,19 +203,44 @@ function ProfileSettings() {
         const userData = await getAccountInfo(authUser.address);
         
         // Populate form fields
-        setDisplayName(userData.displayName || userData.display_name || '');
-        setUsername(userData.username || '');
-        setBio(userData.aboutMe || userData.bio || '');
+        const loadedDisplayName = userData.displayName || userData.display_name || '';
+        const loadedUsername = userData.username || '';
+        const loadedBio = userData.aboutMe || userData.bio || '';
         
         // Social links from customs or direct fields
         const customs = userData.customs as Record<string, string> | undefined;
-        setTwitterLink(customs?.twitterLink || '');
-        setDiscordLink(customs?.discordLink || '');
-        setInstagramLink(customs?.instagramLink || '');
-        setTiktokLink(customs?.tiktokLink || '');
-        setYoutubeLink(customs?.youtubeLink || '');
-        setTelegramLink(customs?.telegramLink || '');
-        setFacebookLink(customs?.facebookLink || '');
+        const loadedTwitter = customs?.twitterLink || '';
+        const loadedDiscord = customs?.discordLink || '';
+        const loadedInstagram = customs?.instagramLink || '';
+        const loadedTiktok = customs?.tiktokLink || '';
+        const loadedYoutube = customs?.youtubeLink || '';
+        const loadedTelegram = customs?.telegramLink || '';
+        const loadedFacebook = customs?.facebookLink || '';
+        
+        setDisplayName(loadedDisplayName);
+        setUsername(loadedUsername);
+        setBio(loadedBio);
+        setTwitterLink(loadedTwitter);
+        setDiscordLink(loadedDiscord);
+        setInstagramLink(loadedInstagram);
+        setTiktokLink(loadedTiktok);
+        setYoutubeLink(loadedYoutube);
+        setTelegramLink(loadedTelegram);
+        setFacebookLink(loadedFacebook);
+        
+        // Store original values
+        setOriginalValues({
+          displayName: loadedDisplayName,
+          username: loadedUsername,
+          bio: loadedBio,
+          twitterLink: loadedTwitter,
+          discordLink: loadedDiscord,
+          instagramLink: loadedInstagram,
+          tiktokLink: loadedTiktok,
+          youtubeLink: loadedYoutube,
+          telegramLink: loadedTelegram,
+          facebookLink: loadedFacebook,
+        });
         
         // Set avatar/cover preview from existing URLs
         const address = userData.address || userData.wallet_address || '';
@@ -221,10 +259,20 @@ function ProfileSettings() {
     loadProfile();
   }, [authUser?.address]);
   
-  // Track changes
-  useEffect(() => {
-    setHasChanges(true);
-  }, [displayName, username, bio, twitterLink, discordLink, instagramLink, tiktokLink, youtubeLink, telegramLink, facebookLink, avatarFile, coverFile]);
+  // Compute hasChanges by comparing current values to original
+  const hasChanges = 
+    displayName !== originalValues.displayName ||
+    username !== originalValues.username ||
+    bio !== originalValues.bio ||
+    twitterLink !== originalValues.twitterLink ||
+    discordLink !== originalValues.discordLink ||
+    instagramLink !== originalValues.instagramLink ||
+    tiktokLink !== originalValues.tiktokLink ||
+    youtubeLink !== originalValues.youtubeLink ||
+    telegramLink !== originalValues.telegramLink ||
+    facebookLink !== originalValues.facebookLink ||
+    !!avatarFile ||
+    !!coverFile;
   
   // Update mutation
   const updateMutation = useMutation({
@@ -233,11 +281,27 @@ function ProfileSettings() {
     },
     onSuccess: async () => {
       toast.success('Profile updated successfully');
-      setHasChanges(false);
       setAvatarFile(undefined);
       setCoverFile(undefined);
       // Refresh AuthContext user to update sidebar avatar
       await refreshUser();
+      // Reload profile to update original values
+      if (authUser?.address) {
+        const userData = await getAccountInfo(authUser.address);
+        const customs = userData.customs as Record<string, string> | undefined;
+        setOriginalValues({
+          displayName: userData.displayName || userData.display_name || '',
+          username: userData.username || '',
+          bio: userData.aboutMe || userData.bio || '',
+          twitterLink: customs?.twitterLink || '',
+          discordLink: customs?.discordLink || '',
+          instagramLink: customs?.instagramLink || '',
+          tiktokLink: customs?.tiktokLink || '',
+          youtubeLink: customs?.youtubeLink || '',
+          telegramLink: customs?.telegramLink || '',
+          facebookLink: customs?.facebookLink || '',
+        });
+      }
       // Invalidate profile queries to refresh data everywhere
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
@@ -309,18 +373,20 @@ function ProfileSettings() {
           <User className="w-5 h-5 text-zinc-400" />
           <h2 className="text-lg font-semibold text-white">Profile Settings</h2>
         </div>
-        <Button
-          onClick={handleSave}
-          disabled={updateMutation.isPending}
-          className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-white/10 rounded-xl"
-        >
-          {updateMutation.isPending ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Save className="w-4 h-4 mr-2" />
-          )}
-          Save Changes
-        </Button>
+        {hasChanges && (
+          <Button
+            onClick={handleSave}
+            disabled={updateMutation.isPending}
+            className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-white/10 rounded-xl"
+          >
+            {updateMutation.isPending ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4 mr-2" />
+            )}
+            Save Changes
+          </Button>
+        )}
       </div>
 
       {/* Cover Image - same aspect ratio as Profile page */}
