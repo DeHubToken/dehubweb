@@ -1,18 +1,19 @@
 /**
  * Story Viewer Modal
  * ==================
- * Full-screen viewer for watching stories with auto-progress.
- * Allows users to delete their own stories.
+ * TikTok-style full-screen vertical scroll viewer for stories.
+ * Scroll/swipe up for next, down for previous. Progress synced to video.
  */
 
-import { useState, useRef, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, Pause, Play, Trash2, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { X, Pause, Play, Trash2, Loader2, ChevronUp, ChevronDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { motion, type PanInfo } from 'framer-motion';
 import type { Story } from '@/hooks/use-stories';
 import { buildAvatarUrl } from '@/lib/media-url';
 
@@ -28,9 +29,9 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [videoDuration, setVideoDuration] = useState(30); // Default 30s, updated when video loads
+  const [isScrolling, setIsScrolling] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const progressRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
@@ -38,7 +39,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const currentStory = stories[currentIndex];
   const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
 
-  // Reset to initialIndex when modal opens or initialIndex changes
+  // Reset to initialIndex when modal opens
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
@@ -47,52 +48,90 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   }, [isOpen, initialIndex]);
 
+  // Lock body scroll when open
   useEffect(() => {
-    if (!isOpen || !currentStory) return;
-
-    // Reset progress when story changes
-    setProgress(0);
-    setVideoDuration(30); // Reset to default until video loads
-
-    // Auto-advance progress based on actual video duration
-    if (!isPaused && videoDuration > 0) {
-      const ticksPerSecond = 10; // 100ms intervals
-      const totalTicks = videoDuration * ticksPerSecond;
-      const incrementPerTick = 100 / totalTicks;
-
-      progressRef.current = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            goNext();
-            return 0;
-          }
-          return prev + incrementPerTick;
-        });
-      }, 100);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
     }
+  }, [isOpen]);
 
-    return () => {
-      if (progressRef.current) {
-        clearInterval(progressRef.current);
-      }
-    };
-  }, [isOpen, currentIndex, isPaused, videoDuration]);
-
-  const goNext = () => {
+  const goNext = useCallback(() => {
     if (currentIndex < stories.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       setProgress(0);
     } else {
       onClose();
     }
-  };
+  }, [currentIndex, stories.length, onClose]);
 
-  const goPrev = () => {
+  const goPrev = useCallback(() => {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
       setProgress(0);
     }
-  };
+  }, [currentIndex]);
+
+  // Mouse wheel handler
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isScrolling) return;
+      if (Math.abs(e.deltaY) < 50) return;
+
+      setIsScrolling(true);
+      if (e.deltaY > 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+      setTimeout(() => setIsScrolling(false), 500);
+    };
+
+    const container = containerRef.current;
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [isOpen, isScrolling, goNext, goPrev]);
+
+  // Keyboard handler
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+        case 'ArrowRight':
+          e.preventDefault();
+          goNext();
+          break;
+        case 'ArrowUp':
+        case 'ArrowLeft':
+          e.preventDefault();
+          goPrev();
+          break;
+        case 'Escape':
+          e.preventDefault();
+          onClose();
+          break;
+        case ' ':
+          e.preventDefault();
+          togglePause();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, goNext, goPrev, onClose]);
 
   const togglePause = () => {
     setIsPaused((prev) => !prev);
@@ -105,12 +144,26 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   };
 
+  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (isScrolling) return;
+    
+    const threshold = 100;
+    if (info.offset.y < -threshold) {
+      setIsScrolling(true);
+      goNext();
+      setTimeout(() => setIsScrolling(false), 500);
+    } else if (info.offset.y > threshold) {
+      setIsScrolling(true);
+      goPrev();
+      setTimeout(() => setIsScrolling(false), 500);
+    }
+  };
+
   const handleDelete = async () => {
     if (!currentStory || !isOwnStory || !walletAddress) return;
 
     setIsDeleting(true);
     try {
-      // Delete from database with wallet header for RLS
       const { error } = await supabase
         .from('stories')
         .delete()
@@ -119,12 +172,9 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
 
       if (error) throw error;
 
-      // Invalidate cache
       queryClient.invalidateQueries({ queryKey: ['stories'] });
-
       toast.success('Story deleted');
 
-      // Navigate to next story or close
       if (stories.length === 1) {
         onClose();
       } else if (currentIndex >= stories.length - 1) {
@@ -138,33 +188,32 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   };
 
-  const handleClose = () => {
-    if (progressRef.current) {
-      clearInterval(progressRef.current);
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    if (video.duration && isFinite(video.duration)) {
+      setProgress((video.currentTime / video.duration) * 100);
     }
-    onClose();
   };
 
   if (!isOpen || !currentStory) return null;
 
   return (
-    <div className="fixed inset-0 z-[70] bg-black flex flex-col">
-      {/* Progress bars */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-2">
-        {stories.map((_, index) => (
-          <div key={index} className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-white transition-all duration-100 ease-linear"
-              style={{
-                width: index < currentIndex ? '100%' : index === currentIndex ? `${progress}%` : '0%',
-              }}
-            />
-          </div>
-        ))}
+    <div 
+      ref={containerRef}
+      className="fixed inset-0 z-[70] bg-black flex flex-col touch-none"
+    >
+      {/* Single progress bar for current story */}
+      <div className="absolute top-0 left-0 right-0 z-20 p-2">
+        <div className="h-1 bg-white/30 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-white transition-[width] duration-100 ease-linear"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
 
       {/* Header */}
-      <div className="absolute top-6 left-0 right-0 z-10 flex items-center justify-between px-4">
+      <div className="absolute top-6 left-0 right-0 z-20 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10 border-2 border-white">
             <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
@@ -183,7 +232,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Delete button - only show for own stories */}
           {isOwnStory && (
             <button
               onClick={handleDelete}
@@ -208,7 +256,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
             )}
           </button>
           <button
-            onClick={handleClose}
+            onClick={onClose}
             className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
           >
             <X className="w-4 h-4 text-white" />
@@ -216,48 +264,47 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </div>
       </div>
 
-      {/* Story content */}
-      <div className="flex-1 flex items-center justify-center">
+      {/* Story content with drag gesture */}
+      <motion.div
+        className="flex-1 flex items-center justify-center"
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+      >
         <video
+          key={currentStory.id}
           ref={videoRef}
           src={currentStory.video_url}
           autoPlay
           playsInline
           muted={false}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain pointer-events-none"
           onEnded={goNext}
-          onLoadedMetadata={(e) => {
-            const video = e.currentTarget;
-            if (video.duration && isFinite(video.duration)) {
-              setVideoDuration(video.duration);
-            }
-          }}
+          onTimeUpdate={handleTimeUpdate}
         />
-      </div>
-
-      {/* Navigation areas */}
-      <button
-        onClick={goPrev}
-        className="absolute left-0 top-20 bottom-20 w-1/3 z-10"
-        aria-label="Previous story"
-      />
-      <button
-        onClick={goNext}
-        className="absolute right-0 top-20 bottom-20 w-1/3 z-10"
-        aria-label="Next story"
-      />
+      </motion.div>
 
       {/* Navigation hints */}
       {currentIndex > 0 && (
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-          <ChevronLeft className="w-8 h-8 text-white/50" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+120px)] z-10 pointer-events-none">
+          <ChevronUp className="w-6 h-6 text-white/30 animate-pulse" />
         </div>
       )}
       {currentIndex < stories.length - 1 && (
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
-          <ChevronRight className="w-8 h-8 text-white/50" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%-120px)] z-10 pointer-events-none">
+          <ChevronDown className="w-6 h-6 text-white/30 animate-pulse" />
         </div>
       )}
+
+      {/* Story counter */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
+        <div className="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10">
+          <p className="text-white/80 text-xs font-medium">
+            {currentIndex + 1} / {stories.length}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
