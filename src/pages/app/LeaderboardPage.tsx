@@ -79,17 +79,45 @@ export default function LeaderboardPage() {
     staleTime: 60_000, // 1 minute
   });
 
+  // Categories that require client-side sorting (not natively supported by API)
+  const clientSortedCategories: CategoryType[] = ['followers', 'likes', 'subscribers'];
+  const isClientSorted = clientSortedCategories.includes(category);
+
   const entries = useMemo(() => {
-    const list = data?.result?.byWalletBalance || [];
-    if (!searchQuery.trim()) return list;
+    let list = data?.result?.byWalletBalance || [];
     
-    const query = searchQuery.toLowerCase();
-    return list.filter((entry) => 
-      entry.username?.toLowerCase().includes(query) ||
-      entry.userDisplayName?.toLowerCase().includes(query) ||
-      entry.account.toLowerCase().includes(query)
-    );
-  }, [data, searchQuery]);
+    // Filter out wallet-only entries (no username)
+    list = list.filter(entry => entry.username);
+    
+    // Client-side sorting for social metrics
+    if (category === 'followers') {
+      list = [...list].sort((a, b) => (b.followers ?? 0) - (a.followers ?? 0));
+    } else if (category === 'likes') {
+      list = [...list].sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0));
+    } else if (category === 'subscribers') {
+      list = [...list].sort((a, b) => (b.subscribers ?? 0) - (a.subscribers ?? 0));
+    }
+    
+    // Filter out entries with 0 value for client-sorted categories
+    if (isClientSorted) {
+      list = list.filter(entry => {
+        const value = entry[category as keyof LeaderboardEntry];
+        return typeof value === 'number' && value > 0;
+      });
+    }
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      list = list.filter((entry) => 
+        entry.username?.toLowerCase().includes(query) ||
+        entry.userDisplayName?.toLowerCase().includes(query) ||
+        entry.account.toLowerCase().includes(query)
+      );
+    }
+    
+    return list;
+  }, [data, searchQuery, category, isClientSorted]);
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
@@ -172,26 +200,28 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Time Period Tabs */}
-        <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
-          {timePeriods.map((period) => {
-            const isActive = timePeriod === period.id;
-            return (
-              <button
-                key={period.id}
-                type="button"
-                onClick={() => setTimePeriod(period.id)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                  isActive
-                    ? 'bg-zinc-700 text-white'
-                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-                }`}
-              >
-                {period.label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Time Period Tabs - Hidden for client-sorted categories */}
+        {!isClientSorted && (
+          <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
+            {timePeriods.map((period) => {
+              const isActive = timePeriod === period.id;
+              return (
+                <button
+                  key={period.id}
+                  type="button"
+                  onClick={() => setTimePeriod(period.id)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive
+                      ? 'bg-zinc-700 text-white'
+                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                  }`}
+                >
+                  {period.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Search */}
         <div className="relative">
