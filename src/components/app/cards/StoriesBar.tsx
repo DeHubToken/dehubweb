@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/drawer';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { GoLiveModal } from '@/components/app/modals';
 
 interface StoryUser {
   name: string;
@@ -35,12 +36,13 @@ interface StoriesBarProps {
 
 export function StoriesBar({ users }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
 
   const handleGoLive = () => {
     setIsOpen(false);
     requireAuth(() => {
-      // TODO: Implement live streaming
+      setIsGoLiveOpen(true);
     });
   };
 
@@ -90,6 +92,10 @@ export function StoriesBar({ users }: StoriesBarProps) {
   return (
     <>
       <AuthPromptComponent />
+      <GoLiveModal 
+        isOpen={isGoLiveOpen} 
+        onClose={() => setIsGoLiveOpen(false)} 
+      />
       <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="relative">
         {/* Right fade only */}

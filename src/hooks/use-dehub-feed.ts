@@ -9,7 +9,15 @@
 
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE, type DeHubNFT, type SearchNFTsParams } from '@/lib/api/dehub';
+import { 
+  searchNFTs, 
+  getMediaUrl, 
+  DEHUB_CDN_BASE, 
+  getLiveStreams,
+  type DeHubNFT, 
+  type SearchNFTsParams,
+  type LiveStream as ApiLiveStream,
+} from '@/lib/api/dehub';
 import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
@@ -352,23 +360,82 @@ export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = 
 
 /**
  * Hook to fetch live content specifically
- * NOTE: Currently returns empty as there are no live streams available
+ * Uses /api/live endpoint
  */
-export function useDeHubLive(_options: Omit<UseDeHubFeedOptions, 'media_type'> = {}) {
-  // Return empty result - no live streams currently available from API
+export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'recent' | 'popular'; category?: string } = {}) {
   return useInfiniteQuery({
-    queryKey: ['dehub-live-empty'],
-    queryFn: async () => ({
-      data: [],
-      page: 1,
-      has_more: false,
-      total: 0,
-      limit: 15,
-    }),
-    getNextPageParam: () => undefined,
-    initialPageParam: 1,
-    staleTime: Infinity,
+    queryKey: ['dehub-live', options],
+    queryFn: async ({ pageParam = 0 }) => {
+      try {
+        const response = await getLiveStreams({
+          page: pageParam,
+          unit: options.unit || 15,
+          sortMode: options.sortMode,
+          category: options.category,
+        });
+        
+        const streams = response.result || [];
+        
+        return {
+          data: streams,
+          page: pageParam,
+          has_more: streams.length >= (options.unit || 15),
+          total: streams.length,
+          limit: options.unit || 15,
+        };
+      } catch (error) {
+        console.warn('[Live] Failed to fetch live streams:', error);
+        // Return empty result on error
+        return {
+          data: [],
+          page: pageParam,
+          has_more: false,
+          total: 0,
+          limit: options.unit || 15,
+        };
+      }
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.has_more) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+    staleTime: 1000 * 30, // 30 seconds for live content (more frequent updates)
+    retry: 1,
   });
+}
+
+/**
+ * Map API LiveStream to local LiveStream format
+ */
+export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): LiveStream {
+  const thumbnail = stream.thumbnailUrl || 
+                    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+  
+  const streamerName = stream.streamer?.displayName || 
+                       stream.streamer?.username || 
+                       'Unknown Streamer';
+  
+  const avatar = stream.streamer 
+    ? buildAvatarUrl(stream.streamer.address, stream.streamer.avatarImageUrl || stream.streamer.avatarUrl) 
+    : '';
+  
+  return {
+    id: stream.streamId,
+    type: 'live',
+    streamer: streamerName,
+    avatar,
+    title: stream.title,
+    game: stream.category || 'Just Chatting',
+    viewers: formatViews(stream.viewerCount).replace(' views', ''),
+    thumbnail,
+    tags: [],
+    isLive: stream.status === 'live',
+    creatorId: stream.address,
+    creatorUsername: stream.streamer?.username,
+  };
 }
 
 /**
