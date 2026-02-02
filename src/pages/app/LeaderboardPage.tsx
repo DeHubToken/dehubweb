@@ -165,8 +165,8 @@ export default function LeaderboardPage() {
       {/* Header */}
       <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src={trophyIcon} alt="Trophy" className="w-10 h-10 object-contain" />
+          <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden">
+            <img src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">DHB Leaderboard</h1>
