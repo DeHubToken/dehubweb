@@ -14,16 +14,21 @@ export {
   getERC20Balance,
   getERC20Allowance,
   parseTxError,
+  switchChain,
   type AAWriteResult,
 } from './aa-utils';
 
-// DHB Token
+// DHB Token & Chain Configs
 export { 
   DHB_TOKEN, 
-  BASE_CHAIN_ID, 
+  BASE_CHAIN_ID,
+  BNB_CHAIN_ID,
+  CHAIN_CONFIGS,
+  getChainConfig,
   ERC20_ABI, 
   toWei, 
-  fromWei 
+  fromWei,
+  type ChainConfig,
 } from './dhb-token';
 
 // StreamCollection (NFT minting)

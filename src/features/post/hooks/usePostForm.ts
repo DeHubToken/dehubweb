@@ -785,6 +785,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           bountyAmount: parseFloat(w2eTotal),
           countOfViewers: parseInt(w2eViews) || 10,
           countOfCommentors: parseInt(w2eComments) || 0,
+          chainId,
         });
       } else {
         // Use StreamCollection for standard minting
@@ -794,6 +795,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           v: mintResponse.v,
           r: mintResponse.r,
           s: mintResponse.s,
+          chainId,
         });
       }
 

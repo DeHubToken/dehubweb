@@ -1,13 +1,59 @@
 /**
  * DHB Token Configuration
  * =======================
- * DeHub token on Base Mainnet for PPV, Bounties, and Token Gating.
+ * DeHub token configuration for Base and BNB Chain.
  */
 
-// Base Mainnet chain ID
-export const BASE_CHAIN_ID = 8453;
+import type { ChainId } from '@/components/app/ChainSelector';
 
-// DHB Token on Base Mainnet
+// Chain IDs
+export const BASE_CHAIN_ID = 8453;
+export const BNB_CHAIN_ID = 56;
+
+// Chain-specific configurations
+export interface ChainConfig {
+  chainId: ChainId;
+  name: string;
+  rpcUrl: string;
+  explorerUrl: string;
+  dhbToken: string;
+  streamCollection: string;
+  streamController: string;
+}
+
+export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
+  [BASE_CHAIN_ID]: {
+    chainId: BASE_CHAIN_ID,
+    name: 'Base',
+    rpcUrl: 'https://mainnet.base.org',
+    explorerUrl: 'https://basescan.org',
+    dhbToken: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
+    streamCollection: '0x9f8012074d27F8596C0E5038477ACB52057BC934',
+    streamController: '0x4fa30dAef50c6dc8593470750F3c721CA3275581',
+  },
+  [BNB_CHAIN_ID]: {
+    chainId: BNB_CHAIN_ID,
+    name: 'BNB',
+    rpcUrl: 'https://bsc-dataseed.binance.org',
+    explorerUrl: 'https://bscscan.com',
+    dhbToken: '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7', // DHB on BNB
+    streamCollection: '0x1065F5922a336C75623B55D22c4a0C760efCe947',
+    streamController: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Uses same as collection on BNB
+  },
+};
+
+/**
+ * Get chain configuration by chain ID
+ */
+export function getChainConfig(chainId: ChainId): ChainConfig {
+  const config = CHAIN_CONFIGS[chainId];
+  if (!config) {
+    throw new Error(`Unsupported chain ID: ${chainId}`);
+  }
+  return config;
+}
+
+// DHB Token on Base Mainnet (default for backward compatibility)
 export const DHB_TOKEN = {
   value: 'dhb',
   label: 'DHB',

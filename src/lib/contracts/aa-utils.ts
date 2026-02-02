@@ -4,13 +4,76 @@
  * AA-aware contract write helper that handles both:
  * - Web3Auth smart accounts (AA via Pimlico)
  * - EOA wallets (direct ethers calls)
+ * Supports multi-chain (Base and BNB).
  */
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
 import { getWeb3AuthProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
+import type { ChainId } from '@/components/app/ChainSelector';
+import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
+
+/**
+ * Convert chain ID to hex format
+ */
+function chainIdToHex(chainId: ChainId): Hex {
+  return `0x${chainId.toString(16)}` as Hex;
+}
+
+/**
+ * Switch the wallet to a different chain
+ */
+export async function switchChain(chainId: ChainId): Promise<void> {
+  const provider = getWeb3AuthProvider();
+  if (!provider) {
+    throw new Error('Web3Auth not connected. Please sign in first.');
+  }
+  
+  const chainConfig = CHAIN_CONFIGS[chainId];
+  if (!chainConfig) {
+    throw new Error(`Unsupported chain ID: ${chainId}`);
+  }
+  
+  const targetChainHex = chainIdToHex(chainId);
+  
+  try {
+    // First try to switch to the chain
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: targetChainHex }],
+    });
+    console.log('[AA] Switched to chain:', chainConfig.name);
+  } catch (switchError: any) {
+    // If chain doesn't exist, try to add it
+    if (switchError?.code === 4902 || switchError?.message?.includes('Unrecognized chain')) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: targetChainHex,
+            chainName: chainConfig.name,
+            nativeCurrency: {
+              name: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
+              symbol: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
+              decimals: 18,
+            },
+            rpcUrls: [chainConfig.rpcUrl],
+            blockExplorerUrls: [chainConfig.explorerUrl],
+          }],
+        });
+        console.log('[AA] Added and switched to chain:', chainConfig.name);
+      } catch (addError) {
+        console.error('[AA] Failed to add chain:', addError);
+        throw new Error(`Failed to add ${chainConfig.name} network to wallet`);
+      }
+    } else {
+      console.error('[AA] Failed to switch chain:', switchError);
+      throw new Error(`Failed to switch to ${chainConfig.name} network`);
+    }
+  }
+}
 
 /**
  * Check if the current session is a Web3Auth embedded wallet (smart account)

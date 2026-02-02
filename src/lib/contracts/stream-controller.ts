@@ -1,8 +1,8 @@
 /**
  * StreamController Smart Contract Integration
  * ============================================
- * Handles bounty minting and other controller functions on Base Mainnet.
- * Uses AA-aware utilities for gasless transactions.
+ * Handles bounty minting and other controller functions.
+ * Supports Base and BNB chains with chain-specific contract addresses.
  */
 
 import { Interface } from 'ethers';
@@ -13,10 +13,12 @@ import {
   getERC20Balance, 
   getERC20Allowance,
   parseTxError,
+  switchChain,
 } from './aa-utils';
-import { DHB_TOKEN, toWei } from './dhb-token';
+import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from './dhb-token';
+import type { ChainId } from '@/components/app/ChainSelector';
 
-// StreamController contract address on Base Mainnet
+// StreamController contract address on Base Mainnet (default for backward compatibility)
 export const STREAM_CONTROLLER_ADDRESS = '0x4fa30dAef50c6dc8593470750F3c721CA3275581';
 
 // ABI for StreamController - mintWithBounty(id, timestamp, v, r, s, uri, bountyAmount, countOfViewers, countOfCommentors, tokenAddress)
@@ -41,29 +43,33 @@ export interface MintWithBountyParams {
   bountyAmount: number; // Human-readable DHB amount per person
   countOfViewers: number;
   countOfCommentors: number;
+  chainId?: ChainId;
 }
 
 /**
  * Check DHB token balance
  */
-export async function getDHBBalance(address: string): Promise<bigint> {
-  return getERC20Balance(DHB_TOKEN.address, address);
+export async function getDHBBalance(address: string, chainId: ChainId = BASE_CHAIN_ID): Promise<bigint> {
+  const chainConfig = getChainConfig(chainId);
+  return getERC20Balance(chainConfig.dhbToken, address);
 }
 
 /**
  * Check DHB allowance for StreamController
  */
-export async function getDHBAllowance(owner: string): Promise<bigint> {
-  return getERC20Allowance(DHB_TOKEN.address, owner, STREAM_CONTROLLER_ADDRESS);
+export async function getDHBAllowance(owner: string, chainId: ChainId = BASE_CHAIN_ID): Promise<bigint> {
+  const chainConfig = getChainConfig(chainId);
+  return getERC20Allowance(chainConfig.dhbToken, owner, chainConfig.streamController);
 }
 
 /**
  * Approve DHB tokens for StreamController spending
  */
-export async function approveDHB(amount: bigint): Promise<string> {
-  console.log('[StreamController] Approving DHB:', amount.toString());
+export async function approveDHB(amount: bigint, chainId: ChainId = BASE_CHAIN_ID): Promise<string> {
+  const chainConfig = getChainConfig(chainId);
+  console.log('[StreamController] Approving DHB:', amount.toString(), 'on', chainConfig.name);
   
-  const result = await approveERC20(DHB_TOKEN.address, STREAM_CONTROLLER_ADDRESS, amount);
+  const result = await approveERC20(chainConfig.dhbToken, chainConfig.streamController, amount);
   
   console.log('[StreamController] Approval tx submitted:', result.hash);
   const receipt = await result.wait(1);
@@ -89,7 +95,13 @@ export function calculateTotalBounty(
  * Requires prior DHB approval for the total bounty amount
  */
 export async function mintWithBounty(params: MintWithBountyParams): Promise<string> {
-  console.log('[StreamController] Starting mintWithBounty with params:', params);
+  const chainId = params.chainId || BASE_CHAIN_ID;
+  const chainConfig = getChainConfig(chainId);
+  
+  console.log('[StreamController] Starting mintWithBounty with params:', { ...params, chain: chainConfig.name });
+  
+  // Switch to the correct chain first
+  await switchChain(chainId);
   
   const signerAddress = await getWalletAddress();
   console.log('[StreamController] Signer address:', signerAddress);
@@ -105,7 +117,7 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
   console.log('[StreamController] Total bounty needed:', totalBounty, 'DHB (', totalBountyWei.toString(), 'wei)');
   
   // Check balance
-  const balance = await getDHBBalance(signerAddress);
+  const balance = await getDHBBalance(signerAddress, chainId);
   console.log('[StreamController] DHB balance:', balance.toString());
   
   if (balance < totalBountyWei) {
@@ -113,14 +125,14 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
   }
   
   // Check allowance and approve if needed
-  const allowance = await getDHBAllowance(signerAddress);
+  const allowance = await getDHBAllowance(signerAddress, chainId);
   console.log('[StreamController] Current allowance:', allowance.toString());
   
   if (allowance < totalBountyWei) {
     console.log('[StreamController] Approving DHB tokens...');
     // Approve max uint256 to avoid repeated approvals
     const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-    await approveDHB(maxApproval);
+    await approveDHB(maxApproval, chainId);
   }
   
   // Prepare parameters
@@ -133,6 +145,8 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
   const bountyAmountWei = toWei(params.bountyAmount, DHB_TOKEN.decimals);
   
   console.log('[StreamController] Calling mintWithBounty:', {
+    contract: chainConfig.streamController,
+    chain: chainConfig.name,
     tokenId: tokenId.toString(),
     timestamp: timestamp.toString(),
     v,
@@ -142,13 +156,13 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
     bountyAmount: bountyAmountWei.toString(),
     countOfViewers: params.countOfViewers,
     countOfCommentors: params.countOfCommentors,
-    tokenAddress: DHB_TOKEN.address,
+    tokenAddress: chainConfig.dhbToken,
   });
   
   try {
-    // Use AA-aware write
+    // Use AA-aware write with chain-specific contract address
     const result = await writeContractAA(
-      STREAM_CONTROLLER_ADDRESS,
+      chainConfig.streamController,
       streamControllerInterface,
       'mintWithBounty',
       [
@@ -161,7 +175,7 @@ export async function mintWithBounty(params: MintWithBountyParams): Promise<stri
         bountyAmountWei,
         params.countOfViewers,
         params.countOfCommentors,
-        DHB_TOKEN.address,
+        chainConfig.dhbToken,
       ],
       { context: 'mint with bounty' }
     );
