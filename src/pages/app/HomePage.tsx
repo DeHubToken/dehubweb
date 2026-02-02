@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -50,24 +50,9 @@ const GESTURE_LOCK_DURATION = 400;
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
   
   // Scroll restoration - preserves position when navigating back from post
-  const { resetScroll } = useScrollRestoration('/app');
-  
-  // Track if we're coming back from a post page (to skip scroll-to-top)
-  const prevPathRef = useRef<string | null>(null);
-  const isReturningFromPost = useRef(false);
-  
-  useEffect(() => {
-    // Check if we're returning from a post page
-    if (prevPathRef.current?.startsWith('/app/post/') || prevPathRef.current?.startsWith('/app/video/')) {
-      isReturningFromPost.current = true;
-    } else {
-      isReturningFromPost.current = false;
-    }
-    prevPathRef.current = location.pathname;
-  }, [location.pathname]);
+  const { isBackNavigation } = useScrollRestoration('/app');
   
   // Extract pinned post ID from URL params (one-time view)
   const pinnedPostId = searchParams.get('post') || undefined;
@@ -238,14 +223,20 @@ export default function HomePage() {
    * Reset scroll position when tab changes (but not when returning from post page).
    */
   const prevTabRef = useRef<string | null>(null);
+  const hasInitializedRef = useRef(false);
   
   useEffect(() => {
     // Skip scroll-to-top if:
-    // 1. First mount (prevTabRef is null) AND we're returning from a post
+    // 1. First mount AND we're returning via back navigation (browser back button)
     // 2. Tab hasn't actually changed
-    if (prevTabRef.current === null && isReturningFromPost.current) {
+    if (!hasInitializedRef.current) {
+      hasInitializedRef.current = true;
       prevTabRef.current = activeTab;
-      return;
+      
+      // On back navigation, don't scroll to top - let scroll restoration handle it
+      if (isBackNavigation) {
+        return;
+      }
     }
     
     if (prevTabRef.current === activeTab) {
@@ -263,7 +254,7 @@ export default function HomePage() {
     if (mainContent) {
       mainContent.scrollTop = 0;
     }
-  }, [activeTab]);
+  }, [activeTab, isBackNavigation]);
 
   // --------------------------------------------------------------------------
   // SWIPE GESTURE HANDLERS
