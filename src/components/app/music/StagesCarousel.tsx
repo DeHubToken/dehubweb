@@ -28,7 +28,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
   return (
     <button
       onClick={onClick}
-      className="flex-shrink-0 w-[260px] bg-gradient-to-br from-purple-900/40 to-zinc-900 rounded-2xl p-4 text-left border border-purple-500/20 hover:border-purple-500/40 transition-all group"
+      className="flex-shrink-0 w-[260px] bg-zinc-800/80 rounded-2xl p-4 text-left border border-white/10 hover:border-white/20 transition-all group"
     >
       {/* Live badge and listeners */}
       <div className="flex items-center justify-between mb-3">
@@ -48,9 +48,9 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
           <img
             src={space.host_avatar || `https://api.dicebear.com/7.x/identicon/svg?seed=${space.host_wallet_address}`}
             alt=""
-            className="w-10 h-10 rounded-full object-cover ring-2 ring-purple-500/50"
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-white/20"
           />
-          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center">
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-700 rounded-full flex items-center justify-center">
             <Mic2 className="w-3 h-3 text-white" />
           </div>
         </div>
@@ -62,7 +62,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
       </div>
       
       {/* Title */}
-      <h4 className="text-white font-semibold text-sm line-clamp-2 group-hover:text-purple-300 transition-colors">
+      <h4 className="text-white font-semibold text-sm line-clamp-2 group-hover:text-zinc-300 transition-colors">
         {space.title}
       </h4>
       

@@ -416,9 +416,9 @@ function AllSection({
 }) {
   return (
     <div className="space-y-4 pb-32">
-      <StagesCarousel onOpenStages={onOpenStages} />
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
+      <StagesCarousel onOpenStages={onOpenStages} />
       <TracksCarousel />
       <PodcastsCarousel />
     </div>
