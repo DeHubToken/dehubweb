@@ -30,6 +30,7 @@ import PostInfoPage from "./pages/app/PostInfoPage";
 import SinglePostPage from "./pages/app/SinglePostPage";
 import AssistantPage from "./pages/app/AssistantPage";
 import BuyCoinsPage from "./pages/app/BuyCoinsPage";
+import AgentsPage from "./pages/app/AgentsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,6 +75,7 @@ function AppContent() {
               <Route path="command-centre" element={<CommandCentrePage />} />
               <Route path="music" element={<MusicPage />} />
               <Route path="buy" element={<BuyCoinsPage />} />
+              <Route path="agents" element={<AgentsPage />} />
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />
