@@ -15,9 +15,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, UserCircle, LogOut, AlertCircle, Check, X } from 'lucide-react';
+import { Loader2, LogOut, AlertCircle, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import profileIcon from '@/assets/profile-icon.png';
 
 // Debounce helper
 function useDebounce<T>(value: T, delay: number): T {
@@ -199,11 +200,13 @@ export function UsernameRequiredModal() {
         hideCloseButton
       >
         <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-            <UserCircle className="h-8 w-8 text-primary" />
-          </div>
-          <DialogTitle className="text-xl text-white">Complete Your Profile</DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          <img 
+            src={profileIcon} 
+            alt="Profile" 
+            className="mx-auto mb-4 h-20 w-20 object-contain"
+          />
+          <DialogTitle className="text-xl text-white text-center">Complete Your Profile</DialogTitle>
+          <DialogDescription className="text-zinc-400 text-center">
             Choose a username and display name to get started on DeHub.
           </DialogDescription>
         </DialogHeader>
