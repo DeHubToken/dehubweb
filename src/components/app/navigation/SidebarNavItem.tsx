@@ -72,11 +72,7 @@ export function SidebarNavItem({
           "rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0",
           isDesktop ? "w-9 h-9" : "w-10 h-10"
         )}>
-          {item.customIcon ? (
-            <img src={item.customIcon} alt={item.label} className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]", "object-contain")} />
-          ) : (
-            <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
-          )}
+          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
         <span className="truncate">{item.label}</span>
       </a>
@@ -119,11 +115,7 @@ export function SidebarNavItem({
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isActive ? "bg-zinc-700" : "bg-zinc-800"
         )}>
-          {item.customIcon ? (
-            <img src={item.customIcon} alt={item.label} className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]", "object-contain")} />
-          ) : (
-            <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
-          )}
+          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
           {notificationCount !== undefined && notificationCount > 0 && (
             <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full">
               {notificationCount > 99 ? '99+' : notificationCount}

@@ -5,12 +5,11 @@ import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
-import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
 
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
-  { icon: MessageSquare, label: 'Messages', path: '/app/messages', customIcon: messagesBubbleIcon },
+  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
 ];
 
 // Right side: Explore, AI link
@@ -106,29 +105,15 @@ export function MobileBottomNav() {
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
-                    {item.customIcon ? (
-                      <img 
-                        src={item.customIcon} 
-                        alt={item.label}
-                        className={cn(
-                          'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 object-contain',
-                          isActive 
-                            ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                            : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                          item.label === 'Messages' && '-ml-[8px] lg:ml-0'
-                        )} 
-                      />
-                    ) : (
-                      <item.icon 
-                        className={cn(
-                          'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
-                          isActive 
-                            ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                            : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                          item.label === 'Messages' && '-ml-[8px] lg:ml-0'
-                        )} 
-                      />
-                    )}
+                    <item.icon 
+                      className={cn(
+                        'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                        isActive 
+                          ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
+                          : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
+                        item.label === 'Messages' && '-ml-[8px] lg:ml-0'
+                      )} 
+                    />
                   </NavLink>
                 );
               })}
