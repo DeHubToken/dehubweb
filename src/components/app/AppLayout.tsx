@@ -121,7 +121,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           
           {/* Post overlay - renders on top when viewing a post from home */}
           {showHomePagePersisted && (
-            <div className="w-full min-h-0">
+            <div className="w-full">
               <SinglePostPage />
             </div>
           )}

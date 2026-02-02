@@ -1,91 +1,94 @@
 
-# Fix: Single Post Page Layout Issues
+# Plan: Fix Followers/Likes/Subscribers Leaderboard Categories
 
-## Problems Identified
+## Problem Identified
 
-### 1. Excessive Empty Space Below Post Content
-The main content area has `min-h-screen` which forces the entire viewport height even when the post content is short. This creates a large empty black area below the post.
+The "Followers", "Likes", and "Subscribers" leaderboard tabs don't work correctly because:
 
-### 2. Post Button Cut Off in Sidebar
-The desktop sidebar has `h-screen` with hidden scrollbar (`scrollbar-invisible`), but when the navigation items + post button exceed viewport height, the Post button gets clipped at the bottom with no visual indication of scrolling.
+1. **They use the wrong API sort** - All three categories use `apiSort: 'holdings'`, meaning they fetch Holdings data instead of data sorted by their respective metrics
+2. **The DeHub API only supports 3 sort modes** - `holdings`, `sentTips`, `receivedTips`
+3. **No client-side sorting** - Even if the entries contain `followers`/`likes`/`subscribers` fields, the list isn't re-sorted on the client
 
----
+## Solution Options
 
-## Solution
+### Option A: Client-Side Re-Sorting (Quick Fix)
+If the API returns `followers`, `likes`, `subscribers` fields in the Holdings response, we can:
+- Keep fetching from Holdings endpoint
+- Re-sort the entries client-side based on the selected category
+- Filter out entries with 0 or undefined values for that metric
 
-### Fix 1: Remove min-height from main on Single Post Page
+### Option B: Check API for Additional Sort Modes
+The DeHub API may support `followers`, `likes`, `subscribers` as sort modes. We should:
+- Update `LeaderboardSortMode` type to include these
+- Update edge function to cache these combinations
+- Update category mappings to use correct `apiSort` values
 
-Update `SinglePostPage.tsx` to not fill the full screen height - let content determine the height naturally.
+### Option C: Remove Unsupported Categories (Safe Fix)
+If the API doesn't support these sort modes and doesn't return these fields reliably:
+- Remove "Followers", "Likes", "Subscribers" tabs
+- Only show the 3 working categories
 
-**File: `src/pages/app/SinglePostPage.tsx`**
-- Change the outer container from `flex flex-col` to include explicit height control
-- The post content should flow naturally without forcing full viewport height
+## Recommended Approach: Option A + Validation
 
-### Fix 2: Adjust Sidebar Layout for Post Button Visibility
+Since we're unsure what the API returns, implement client-side sorting first:
 
-Update `DesktopSidebar.tsx` to ensure the Post button is always visible:
-- Add `pb-4` (padding-bottom) to the sidebar to ensure the bottom button has spacing
-- Consider using `flex flex-col` with proper `flex-grow` on navigation section so Post button stays at bottom
+### Changes Required
 
----
+**File: `src/pages/app/LeaderboardPage.tsx`**
 
-## Technical Changes
-
-| File | Change |
-|------|--------|
-| `src/pages/app/SinglePostPage.tsx` | Change wrapper to use natural height instead of flex-fill behavior |
-| `src/components/app/AppLayout.tsx` | Remove `min-h-screen` from main element when showing SinglePostPage overlay |
-| `src/components/app/navigation/DesktopSidebar.tsx` | Add bottom padding and improve flex layout to keep Post button visible |
-
----
-
-## Implementation Details
-
-### SinglePostPage.tsx
-```tsx
-// Before
-<div className="flex flex-col">
-
-// After - allow natural height
-<div className="flex flex-col min-h-0">
+1. **Add client-side sorting logic** in the `entries` useMemo:
+```typescript
+const entries = useMemo(() => {
+  let list = data?.result?.byWalletBalance || [];
+  
+  // Filter out wallet-only entries (no username)
+  list = list.filter(entry => entry.username);
+  
+  // Sort by selected category
+  if (category === 'followers') {
+    list = [...list].sort((a, b) => (b.followers ?? 0) - (a.followers ?? 0));
+  } else if (category === 'likes') {
+    list = [...list].sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0));
+  } else if (category === 'subscribers') {
+    list = [...list].sort((a, b) => (b.subscribers ?? 0) - (a.subscribers ?? 0));
+  }
+  
+  // Filter out entries with 0 value for the selected metric
+  if (['followers', 'likes', 'subscribers'].includes(category)) {
+    list = list.filter(entry => (entry[category as keyof LeaderboardEntry] ?? 0) > 0);
+  }
+  
+  // Apply search filter
+  if (searchQuery.trim()) {
+    const query = searchQuery.toLowerCase();
+    list = list.filter((entry) => 
+      entry.username?.toLowerCase().includes(query) ||
+      entry.userDisplayName?.toLowerCase().includes(query) ||
+      entry.account.toLowerCase().includes(query)
+    );
+  }
+  
+  return list;
+}, [data, searchQuery, category]);
 ```
 
-### AppLayout.tsx
-The overlay container for SinglePostPage should not inherit min-h-screen:
-```tsx
-// Before
-{showHomePagePersisted && (
-  <div className="w-full">
-    <SinglePostPage />
-  </div>
-)}
+2. **Disable time period filters for client-sorted categories** - Since the Holdings data is for "all time", time period filters won't work correctly for Followers/Likes/Subscribers when client-side sorting
 
-// After - remove height forcing
-{showHomePagePersisted && (
-  <div className="w-full min-h-0">
-    <SinglePostPage />
-  </div>
-)}
-```
+### Technical Details
 
-### DesktopSidebar.tsx
-Ensure Post button is always visible with proper spacing:
-```tsx
-// Before
-<aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible">
+| Category | Current Behavior | Fixed Behavior |
+|----------|------------------|----------------|
+| Holdings | Works correctly | No change |
+| Sent Tips | Works correctly | No change |
+| Paid Tips | Works correctly | No change |
+| Followers | Shows Holdings data | Re-sorts by `followers` field |
+| Likes | Shows Holdings data | Re-sorts by `likes` field |
+| Subscribers | Shows Holdings data | Re-sorts by `subscribers` field |
 
-// After - add bottom padding for button visibility
-<aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-[2px] pb-4 flex-col overflow-y-auto scrollbar-invisible">
-```
+### Edge Cases to Handle
+- Entries with `undefined` or `0` values for the metric should be filtered out
+- Time period selector should be hidden/disabled for client-sorted categories
+- Show "No data available" if no entries have the required metric
 
-Also adjust the inner layout to use flexbox properly:
-- Navigation bento box should be `flex-1` or have `flex-grow`
-- Post button bento should have `flex-shrink-0` to prevent compression
-
----
-
-## Expected Result
-
-After these changes:
-1. Single post pages will show the post content at natural height without excessive empty space below
-2. The Post button in the sidebar will always be visible and have proper spacing from the viewport bottom
+### Files to Modify
+1. `src/pages/app/LeaderboardPage.tsx` - Add client-side sorting and filtering logic
