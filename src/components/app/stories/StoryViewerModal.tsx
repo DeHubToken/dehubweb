@@ -14,6 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { Story } from '@/hooks/use-stories';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 interface StoryViewerModalProps {
   isOpen: boolean;
@@ -154,7 +155,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       <div className="absolute top-6 left-0 right-0 z-10 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10 border-2 border-white">
-            <AvatarImage src={currentStory.avatar || undefined} />
+            <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
             <AvatarFallback className="bg-zinc-700 text-white">
               {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
             </AvatarFallback>

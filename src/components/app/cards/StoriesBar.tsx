@@ -21,6 +21,7 @@ import { AudioSpacesModal } from '@/components/app/spaces';
 import { StoryRecorderModal, StoryViewerModal } from '@/components/app/stories';
 import { useStories, useUploadStory, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 interface StoryUser {
   name: string;
@@ -167,7 +168,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
       type: 'story' as const,
       story,
       name: story.username ? `@${story.username}` : `${story.wallet_address.slice(0, 6)}...`,
-      avatar: story.avatar || '',
+      avatar: buildAvatarUrl(story.wallet_address, story.avatar) || '',
       thumbnail: story.thumbnail_url || '',
     })),
     ...users.map((user) => ({
