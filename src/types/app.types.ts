@@ -5,6 +5,8 @@ export interface NavItem {
   label: string;
   path: string;
   external?: boolean;
+  /** Custom image source to use instead of Lucide icon */
+  customIcon?: string;
 }
 
 export interface User {
