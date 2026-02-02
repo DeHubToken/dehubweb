@@ -296,11 +296,6 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
           )}
         </div>
         
-        {!recordedBlob && !isRecording && (
-          <p className="text-center text-white/60 text-sm mt-4">
-            Tap to record up to 30 seconds
-          </p>
-        )}
       </div>
     </div>
   );
