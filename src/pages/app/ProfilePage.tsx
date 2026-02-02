@@ -755,14 +755,14 @@ export default function ProfilePage() {
                     <img 
                       src={profile.avatarUrl} 
                       alt={profile.name} 
-                      className="w-full h-full rounded-xl object-cover"
+                      className="w-full h-full rounded-lg object-cover"
                     />
                   ) : (
                     <UserAvatar 
                       name={profile.name} 
                       handle={profile.handle} 
                       size="lg" 
-                      className="w-full h-full rounded-xl"
+                      className="w-full h-full rounded-lg"
                     />
                   )}
                 </button>
