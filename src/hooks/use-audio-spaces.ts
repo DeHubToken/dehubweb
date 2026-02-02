@@ -52,7 +52,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
   const localAudioTrackRef = useRef<any>(null);
   const channelRef = useRef<any>(null);
 
-  // Fetch live spaces
+  // Fetch live stages
   const refreshSpaces = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -64,13 +64,13 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       if (error) throw error;
       setLiveSpaces((data as AudioSpace[]) || []);
     } catch (err) {
-      console.error('Error fetching spaces:', err);
+      console.error('Error fetching stages:', err);
     }
   }, []);
 
   // Generate unique channel name
   const generateChannelName = () => {
-    return `space_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    return `stage_${Date.now()}_${Math.random().toString(36).substring(7)}`;
   };
 
   // Get Agora token
@@ -146,7 +146,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
     }
   };
 
-  // Create a new space
+  // Create a new stage
   const createSpace = useCallback(async (title: string, description?: string): Promise<AudioSpace | null> => {
     if (!walletAddress) {
       toast.error('Please connect your wallet first');
@@ -157,7 +157,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
     try {
       const channelName = generateChannelName();
 
-      // Create space in database
+      // Create stage in database
       const { data: space, error } = await supabase
         .from('audio_spaces')
         .insert({
@@ -198,18 +198,18 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       setCurrentSpace(space as AudioSpace);
       setMyRole('host');
       
-      toast.success('Space created! You\'re now live.');
+      toast.success('Stage created! You\'re now live.');
       return space as AudioSpace;
     } catch (err) {
-      console.error('Error creating space:', err);
-      toast.error('Failed to create space');
+      console.error('Error creating stage:', err);
+      toast.error('Failed to create stage');
       return null;
     } finally {
       setIsLoading(false);
     }
   }, [walletAddress, user]);
 
-  // Join an existing space
+  // Join an existing stage
   const joinSpace = useCallback(async (spaceId: string): Promise<boolean> => {
     if (!walletAddress) {
       toast.error('Please connect your wallet first');
@@ -218,14 +218,14 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
 
     setIsLoading(true);
     try {
-      // Get space details
+      // Get stage details
       const { data: space, error: spaceError } = await supabase
         .from('audio_spaces')
         .select('*')
         .eq('id', spaceId)
         .single();
 
-      if (spaceError || !space) throw new Error('Space not found');
+      if (spaceError || !space) throw new Error('Stage not found');
 
       // Add as participant (listener by default)
       const { error: participantError } = await supabase
@@ -260,18 +260,18 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       setCurrentSpace(space as AudioSpace);
       setMyRole('listener');
       
-      toast.success('Joined the space!');
+      toast.success('Joined the stage!');
       return true;
     } catch (err) {
-      console.error('Error joining space:', err);
-      toast.error('Failed to join space');
+      console.error('Error joining stage:', err);
+      toast.error('Failed to join stage');
       return false;
     } finally {
       setIsLoading(false);
     }
   }, [walletAddress, user]);
 
-  // Leave space
+  // Leave stage
   const leaveSpace = useCallback(async () => {
     if (!currentSpace || !walletAddress) return;
 
@@ -308,13 +308,13 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       setMyRole(null);
       setParticipants([]);
       
-      toast.success('Left the space');
+      toast.success('Left the stage');
     } catch (err) {
-      console.error('Error leaving space:', err);
+      console.error('Error leaving stage:', err);
     }
   }, [currentSpace, walletAddress, myRole]);
 
-  // End space (host only)
+  // End stage (host only)
   const endSpace = useCallback(async () => {
     if (!currentSpace || myRole !== 'host') return;
 
@@ -328,9 +328,9 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
         .eq('id', currentSpace.id);
 
       await leaveSpace();
-      toast.success('Space ended');
+      toast.success('Stage ended');
     } catch (err) {
-      console.error('Error ending space:', err);
+      console.error('Error ending stage:', err);
     }
   }, [currentSpace, myRole, leaveSpace]);
 
@@ -505,7 +505,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       })
       .subscribe();
 
-    // Subscribe to space updates (for end detection)
+    // Subscribe to stage updates (for end detection)
     const spaceChannel = supabase
       .channel(`space:${currentSpace.id}`)
       .on('postgres_changes', {
@@ -516,7 +516,7 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
       }, (payload) => {
         const updated = payload.new as AudioSpace;
         if (updated.status === 'ended') {
-          toast.info('The host ended this space');
+          toast.info('The host ended this stage');
           leaveSpace();
         } else {
           setCurrentSpace(updated);
@@ -552,11 +552,11 @@ export function useAudioSpaces(): UseAudioSpacesReturn {
     };
   }, [currentSpace?.id, myRole, leaveSpace]);
 
-  // Fetch live spaces on mount
+  // Fetch live stages on mount
   useEffect(() => {
     refreshSpaces();
     
-    // Subscribe to new spaces
+    // Subscribe to new stages
     const channel = supabase
       .channel('live_spaces')
       .on('postgres_changes', {
