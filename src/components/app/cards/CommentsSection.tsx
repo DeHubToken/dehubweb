@@ -541,7 +541,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.2 }}
-      className="mt-3 pt-3"
+      className="flex flex-col h-full"
     >
 
       {/* Tab Switcher - 4 Icons: Replies, Quotes, Search, Sort */}
@@ -601,8 +601,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         />
       </div>
 
-      {/* Content Area - fixed height to prevent drawer resizing */}
-      <div className={`relative ${activeTab === 'search' ? 'h-[272px]' : 'h-80'}`}>
+      {/* Content Area - scrollable, takes remaining space */}
+      <div className={`relative flex-1 min-h-0 ${activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
           <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
@@ -719,8 +719,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         )}
       </div>
 
-        {/* New Comment Input - at the bottom */}
-        <div className="mt-4 pt-4">
+        {/* New Comment Input - sticky at bottom */}
+        <div className="mt-auto pt-4 border-t border-zinc-800 bg-inherit">
           {/* Reply indicator */}
           {replyTo && (
             <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
