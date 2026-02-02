@@ -2,16 +2,48 @@
  * Scroll Restoration Hook
  * =======================
  * Preserves and restores scroll position when navigating between pages.
- * Uses sessionStorage to persist scroll positions across navigation.
+ * Uses a global navigation stack to detect back navigation.
  * 
  * @module hooks/use-scroll-restoration
  */
 
-import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useRef, useCallback } from 'react';
+import { useLocation, useNavigationType } from 'react-router-dom';
+
+// Global navigation stack to track history
+const navigationStack: string[] = [];
 
 // Store scroll positions keyed by pathname
 const scrollPositions = new Map<string, number>();
+
+/**
+ * Update navigation stack when route changes
+ */
+function updateNavigationStack(pathname: string, navigationType: string): boolean {
+  const isBackNavigation = navigationType === 'POP';
+  
+  if (isBackNavigation) {
+    // Pop the current page from stack (we're going back)
+    navigationStack.pop();
+  } else {
+    // Push new page to stack
+    navigationStack.push(pathname);
+  }
+  
+  return isBackNavigation;
+}
+
+/**
+ * Check if we came from a specific path pattern
+ */
+export function cameFromPath(pattern: string | RegExp): boolean {
+  if (navigationStack.length < 1) return false;
+  const prevPath = navigationStack[navigationStack.length - 1];
+  if (typeof pattern === 'string') {
+    return prevPath?.startsWith(pattern) ?? false;
+  }
+  return pattern.test(prevPath || '');
+}
 
 /**
  * Hook to save and restore scroll position for the current route.
@@ -19,10 +51,15 @@ const scrollPositions = new Map<string, number>();
  */
 export function useScrollRestoration(key?: string) {
   const location = useLocation();
+  const navigationType = useNavigationType();
   const storageKey = key || location.pathname;
   const isRestoringRef = useRef(false);
+  const hasRestoredRef = useRef(false);
   
-  // Save scroll position before navigating away
+  // Detect if this is a back navigation
+  const isBackNavigation = navigationType === 'POP';
+  
+  // Save scroll position continuously
   useEffect(() => {
     const saveScroll = () => {
       if (!isRestoringRef.current) {
@@ -30,65 +67,62 @@ export function useScrollRestoration(key?: string) {
       }
     };
     
-    // Save on scroll (debounced via passive listener)
     window.addEventListener('scroll', saveScroll, { passive: true });
     
-    // Save before unload or navigation
     return () => {
       saveScroll();
       window.removeEventListener('scroll', saveScroll);
     };
   }, [storageKey]);
   
-  // Restore scroll position when returning to this page
+  // Restore scroll position when returning via back navigation
   useEffect(() => {
+    // Only restore on back navigation and only once per mount
+    if (!isBackNavigation || hasRestoredRef.current) {
+      return;
+    }
+    
     const savedPosition = scrollPositions.get(storageKey);
     
     if (savedPosition !== undefined && savedPosition > 0) {
+      hasRestoredRef.current = true;
       isRestoringRef.current = true;
       
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
         window.scrollTo(0, savedPosition);
         
-        // Double-check after a short delay (for lazy-loaded content)
+        // Multiple attempts for lazy-loaded content
+        const attempts = [50, 150, 300];
+        attempts.forEach(delay => {
+          setTimeout(() => {
+            window.scrollTo(0, savedPosition);
+          }, delay);
+        });
+        
         setTimeout(() => {
-          window.scrollTo(0, savedPosition);
           isRestoringRef.current = false;
-        }, 100);
+        }, 400);
       });
     }
-  }, [storageKey]);
+  }, [storageKey, isBackNavigation]);
   
-  // Return a function to manually reset scroll position
   return {
-    resetScroll: () => {
+    isBackNavigation,
+    resetScroll: useCallback(() => {
       scrollPositions.delete(storageKey);
       window.scrollTo(0, 0);
-    },
-    saveScroll: () => {
+    }, [storageKey]),
+    saveScroll: useCallback(() => {
       scrollPositions.set(storageKey, window.scrollY);
-    },
+    }, [storageKey]),
   };
 }
 
 /**
- * Check if we're navigating back (vs forward/direct navigation)
+ * Hook to check if current navigation is a back navigation
  */
-export function useIsBackNavigation() {
-  const location = useLocation();
-  const prevPathRef = useRef<string | null>(null);
-  const isBackRef = useRef(false);
-  
-  useEffect(() => {
-    // Simple heuristic: if going from /app/post/* to /app, it's likely a back navigation
-    if (prevPathRef.current?.startsWith('/app/post/') && location.pathname === '/app') {
-      isBackRef.current = true;
-    } else {
-      isBackRef.current = false;
-    }
-    prevPathRef.current = location.pathname;
-  }, [location.pathname]);
-  
-  return isBackRef.current;
+export function useIsBackNavigation(): boolean {
+  const navigationType = useNavigationType();
+  return navigationType === 'POP';
 }
