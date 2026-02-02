@@ -1,163 +1,125 @@
 
-# Single Post/Video Page Implementation Plan
+# Clickable Post Cards Implementation Plan
 
 ## Overview
-Create dedicated pages for viewing individual posts, videos, and images with the full app layout (sidebars on both sides, header navigation). This enables shareable links like `/app/post/2687` that load as standalone content pages similar to how Twitter/X displays individual tweets.
+Make all feed cards (PostCard, ImageCard, VideoCard, LiveCard) clickable to seamlessly navigate to the individual post page (`/app/post/:postId`) when users tap/click on non-interactive areas. This creates a smooth, app-like experience similar to Twitter/X.
 
 ---
 
-## Current State
-- **PostPage.tsx**: Currently redirects `/app/post/:postId` to `/app?post=postId` which pins the post at the top of the home feed
-- **PostInfoPage.tsx**: Shows NFT/blockchain metadata for a post (transaction hash, token ID, etc.)
-- **No dedicated single-post view page** exists that shows just the content with the full layout
+## Approach
+
+The key challenge is distinguishing between:
+- **Navigation intent**: Clicking on blank/content areas should open the post
+- **Interaction intent**: Clicking buttons, menus, action bars, etc. should NOT navigate
+
+**Solution**: Wrap the card container with navigation logic and use `e.stopPropagation()` on interactive elements to prevent navigation bubbling.
 
 ---
 
-## Proposed Solution
+## Files to Modify
 
-### 1. Create New Route Structure
-
-| Route | Component | Content Type |
-|-------|-----------|--------------|
-| `/app/post/:postId` | `SinglePostPage.tsx` | Text posts, Images, Videos (auto-detected) |
-| `/app/video/:tokenId` | Alias to SinglePostPage | Direct video links |
-
-The page will:
-- Fetch the post data using `getNFTInfo(tokenId)`
-- Auto-detect content type (video, image, text) based on `postType` field
-- Render the appropriate card component (VideoCard, ImageCard, PostCard)
-- Display within the existing AppLayout (sidebars + header preserved)
+| File | Change |
+|------|--------|
+| `src/components/app/cards/PostCard.tsx` | Add click-to-navigate wrapper |
+| `src/components/app/cards/ImageCard.tsx` | Add click-to-navigate wrapper |
+| `src/components/app/cards/VideoCard.tsx` | Add click-to-navigate wrapper |
+| `src/components/app/cards/LiveCard.tsx` | Add click-to-navigate wrapper |
 
 ---
 
-### 2. Page Layout (Twitter-Style)
+## Implementation Details
 
-```
-+------------------+------------------------+------------------+
-|                  |  <- Back    Post       |                  |
-|   Left Sidebar   +------------------------+  Right Sidebar   |
-|   (AppSidebar)   |                        |  (Search, etc)   |
-|                  |   [Post Card Content]  |                  |
-|                  |                        |                  |
-|                  |   Comments Section     |                  |
-|                  |   (Always visible)     |                  |
-+------------------+------------------------+------------------+
-```
+### 1. Navigation Handler Pattern
 
-Key differences from feed view:
-- Single post centered in main content area
-- Comments section always expanded below the post
-- PageHeader with back button and "Post" title
-- Reply input at the bottom
-
----
-
-### 3. Files to Create/Modify
-
-#### New Files:
-1. **`src/pages/app/SinglePostPage.tsx`** - Main single post view page
-   - Fetches post data via `getNFTInfo`
-   - Detects content type and renders appropriate card
-   - Shows comments section inline
-   - Reply composer at bottom
-
-#### Modified Files:
-1. **`src/App.tsx`** - Update routing
-   - Change `/app/post/:postId` to use `SinglePostPage` instead of redirect
-   - Add `/app/video/:tokenId` route alias
-
-2. **`src/pages/app/PostPage.tsx`** - Remove (replaced by SinglePostPage)
-
----
-
-### 4. Component Structure
-
-```
-SinglePostPage
-├── PageHeader (Back button + "Post" title)
-├── Loading State (centered spinner)
-├── Error State (not found message)
-└── Content Area
-    ├── Post Card (VideoCard | ImageCard | PostCard)
-    │   └── Based on postType from API response
-    └── CommentsSection (always visible, not drawer)
-        ├── Comments list
-        └── Reply input
-```
-
----
-
-## Technical Details
-
-### Data Fetching
-```typescript
-// Use existing getNFTInfo function
-const { data: post, isLoading, error } = useQuery({
-  queryKey: ['single-post', postId],
-  queryFn: () => getNFTInfo(postId!),
-  enabled: !!postId,
-  staleTime: 5 * 60 * 1000,
-});
-```
-
-### Content Type Detection
-```typescript
-// Determine card type based on API response
-const getContentType = (post: DeHubNFT) => {
-  if (post.postType === 'video' || post.videoUrl) return 'video';
-  if (post.postType === 'image' || (post.imageUrls?.length && !post.videoUrl)) return 'image';
-  return 'post'; // Text post
-};
-```
-
-### Card Rendering
-The page will use the existing card components directly:
-- `VideoCard` for videos (with full video player)
-- `ImageCard` for image posts (with carousel if multiple images)
-- `PostCard` for text-only posts
-
-These cards are already styled correctly and include all functionality (likes, comments, AI chat, etc.).
-
----
-
-## Mobile Considerations
-
-- On mobile (< 1024px), the sidebars are already hidden by AppLayout
-- PageHeader will show the back button prominently
-- Comments section remains inline (not drawer) for single post view to match Twitter behavior
-- Bottom nav remains visible for navigation
-
----
-
-## Route Configuration
+Each card will get a navigation wrapper that:
+- Uses `useNavigate` from react-router-dom
+- Navigates to `/app/post/${post.id}` on click
+- Checks if the click target or its parents contain interactive elements
 
 ```typescript
-// In App.tsx
-<Route path="app" element={<AppLayout />}>
-  {/* ... existing routes ... */}
-  <Route path="post/:postId" element={<SinglePostPage />} />
-  <Route path="video/:tokenId" element={<SinglePostPage />} />
-  <Route path="post/:postId/info" element={<PostInfoPage />} />
-</Route>
+const navigate = useNavigate();
+
+const handleCardClick = useCallback((e: React.MouseEvent) => {
+  // Don't navigate if clicking on interactive elements
+  const target = e.target as HTMLElement;
+  const isInteractive = target.closest('button, a, input, [role="button"], [data-no-navigate]');
+  if (isInteractive) return;
+  
+  navigate(`/app/post/${post.id}`);
+}, [navigate, post.id]);
 ```
 
+### 2. Card Container Wrapper
+
+The outer div of each card gets the click handler and cursor styling:
+
+```typescript
+<div 
+  onClick={handleCardClick}
+  className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors"
+>
+  {/* Card content */}
+</div>
+```
+
+### 3. Protected Interactive Zones
+
+Elements that should NOT trigger navigation are already using `<button>`, `<a>`, or have click handlers. Key areas:
+- Header buttons (AI sparkle, options menu)
+- Action bar (like, comment, share, bookmark)
+- Comments section
+- Video player controls
+- Image carousel navigation arrows
+
+These naturally prevent bubbling due to the `closest()` check.
+
+### 4. Special Case: VideoCard
+
+The VideoCard has complex click handling for:
+- Play/pause
+- Double-tap seek zones
+- Fullscreen toggle
+
+For VideoCard, we'll add navigation only to non-video areas (the footer/info section), keeping the video player behavior intact.
+
 ---
 
-## Edge Cases Handled
+## Visual Feedback
 
-1. **Optimistic posts** (still minting): Show processing state like PostInfoPage does
-2. **Invalid post ID**: Show error state with back button
-3. **Private/hidden posts**: Respect visibility settings from API
-4. **Deep linking**: Full URL like `dehub.io/app/post/2687` works directly
+Add subtle hover states to indicate clickability:
+- Background lightens slightly on hover: `hover:bg-zinc-800/50`
+- Cursor changes to pointer: `cursor-pointer`
+- Smooth transition: `transition-colors duration-200`
 
 ---
 
-## Summary of Changes
+## Component-Specific Changes
 
-| Action | File | Description |
-|--------|------|-------------|
-| Create | `src/pages/app/SinglePostPage.tsx` | New single post view page |
-| Modify | `src/App.tsx` | Update routes to use new page |
-| Delete | `src/pages/app/PostPage.tsx` | Remove redirect logic (now handled by SinglePostPage) |
+### PostCard
+- Wrap entire card with click handler
+- Content area and whitespace become clickable
+- Header, buttons, and action bar remain interactive-only
 
-This implementation reuses all existing card components and styling, ensuring the single post page matches the exact look and feel of posts in the feed while providing a dedicated shareable URL.
+### ImageCard  
+- Clicking on padding/text areas navigates
+- Clicking images opens fullscreen viewer (existing behavior)
+- Carousel controls remain functional
+
+### VideoCard
+- Only the footer section (title, description, metadata) becomes clickable for navigation
+- Video player area retains existing play/pause/seek behavior
+- Header buttons remain functional
+
+### LiveCard
+- Same pattern as PostCard
+- Thumbnail clicks navigate to the live stream page
+
+---
+
+## Summary
+
+This implementation creates a Twitter-like experience where:
+1. Tapping anywhere on a post opens it in dedicated view
+2. All interactive elements (buttons, controls) remain functional
+3. Smooth visual feedback indicates clickability
+4. Navigation uses React Router for instant, app-like transitions
