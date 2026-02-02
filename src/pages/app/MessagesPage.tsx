@@ -12,7 +12,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesIcon from '@/assets/icons/messages-icon.png';
-import dehubLogoCircle from '@/assets/dehub-logo-circle.png';
+import dehubLogo from '@/assets/dehub-logo.png';
 
 function ConversationsSkeleton() {
   return (
@@ -182,11 +182,13 @@ export default function MessagesPage() {
               onClick={() => setShowPublicChat(true)}
               className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left border-b border-zinc-800"
             >
-              <img 
-                src={dehubLogoCircle} 
-                alt="Public Chat" 
-                className="w-12 h-12 object-contain"
-              />
+              <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center flex-shrink-0">
+                <img 
+                  src={dehubLogo} 
+                  alt="Public Chat" 
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
               <div className="flex-1 min-w-0">
                 <span className="font-semibold text-white truncate block">Public Chat</span>
                 <p className="text-zinc-500 text-sm truncate">Join the community conversation</p>
