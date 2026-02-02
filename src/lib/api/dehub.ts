@@ -2460,6 +2460,13 @@ export async function updateTokenVisibility(
     throw new Error("Authentication required");
   }
 
+  // Convert visibility string to numeric status code (API expects numbers)
+  const visibilityToStatus: Record<TokenVisibility, number> = {
+    'public': 0,
+    'private': 1,
+    'unlisted': 2,
+  };
+
   const response = await fetch(`${DEHUB_API_BASE}/api/token_visibility`, {
     method: 'POST',
     headers: {
@@ -2468,7 +2475,7 @@ export async function updateTokenVisibility(
     },
     body: JSON.stringify({
       tokenId: Number(tokenId),
-      status: visibility,
+      status: visibilityToStatus[visibility],
     }),
   });
 
