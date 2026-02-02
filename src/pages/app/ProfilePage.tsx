@@ -80,6 +80,22 @@ export default function ProfilePage() {
   const userId = searchParams.get('id');
   const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
+  // ALL useState hooks MUST be at the top, before any conditional returns
+  const [activeTab, setActiveTab] = useState<TabValue>('home');
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
+  const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
+  const [offerAmount, setOfferAmount] = useState('');
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
+  const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  
+  // Refs for pull-to-refresh
+  const profileContainerRef = useRef<HTMLDivElement>(null);
+  
   // Reset scroll position on mount
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -159,21 +175,6 @@ export default function ProfilePage() {
     { icon: Radio, label: 'Live', value: 'live', count: 0 },
     { icon: PieChart, label: 'Fractions', value: 'fractions', count: 0 },
   ];
-  
-  const [activeTab, setActiveTab] = useState<TabValue>('home');
-  const [shareSheetOpen, setShareSheetOpen] = useState(false);
-  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
-  const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
-  const [offerAmount, setOfferAmount] = useState('');
-  const [isFollowLoading, setIsFollowLoading] = useState(false);
-  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
-  const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
-  const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  
-  // Refs for pull-to-refresh
-  const profileContainerRef = useRef<HTMLDivElement>(null);
   
   // Fetch subscription plans for this profile
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress);
