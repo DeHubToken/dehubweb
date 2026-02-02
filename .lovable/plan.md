@@ -1,136 +1,171 @@
 
-# Story Viewer: TikTok-Style Vertical Scroll Feed
+
+# Upgrade DeHub to a Proper MCP Server with SSE Transport
 
 ## Overview
-Transform the story viewer from horizontal tap navigation to a full-screen vertical scroll feed like TikTok. Users scroll down to see the next story, one video per screen.
 
----
+Transform the current HTTP-based "skill server" into a **fully compliant MCP (Model Context Protocol) server** that Claude, GPT, and other AI agents can connect to natively using the standard MCP transport.
 
-## Current Behavior
-- Opens as full-screen modal
-- Tap left/right sides to navigate between stories
-- Progress bar timer at top for each story
-- Horizontal-style navigation with chevron hints
+## Current State
 
-## New Behavior
-- Full-screen vertical scroll feed
-- Swipe/scroll up to see next story, down for previous
-- One video fills the screen at a time with snap scrolling
-- Keyboard (Arrow Up/Down) and mouse wheel support
-- Progress bar synced to actual video playback
-- Same liquid glass header with user info and controls
+The existing `dehub-mcp` edge function uses:
+- Simple HTTP POST with JSON-RPC 2.0
+- Stateless request/response pattern  
+- Custom `x-dehub-api-key` header for auth
 
----
+This works, but isn't a "proper" MCP server that AI clients can discover and connect to automatically.
 
-## Technical Implementation
+## What Changes
 
-### 1. Replace Navigation Model
-**File: `src/components/app/stories/StoryViewerModal.tsx`**
+### 1. Use mcp-lite Library
 
-Remove:
-- Horizontal tap zones (left/right 1/3 click areas)
-- ChevronLeft/ChevronRight navigation hints
-- Interval-based progress timer
+We'll use **mcp-lite** (the recommended library from the useful context) to implement proper MCP protocol with SSE (Server-Sent Events) transport.
 
-Add:
-- Vertical scroll/swipe navigation using Framer Motion drag
-- Mouse wheel handler with debounce (similar to ShortsViewer)
-- Video `onTimeUpdate` for real-time progress sync
-- Snap-to-story scrolling behavior
+```text
++-------------------+     SSE Connection     +------------------+
+|   Claude/GPT      | <------------------->  |  DeHub MCP       |
+|   AI Agent        |     Bidirectional      |  Edge Function   |
++-------------------+                        +------------------+
+                                                     |
+                                                     v
+                                            +------------------+
+                                            |   DeHub API      |
+                                            |  (api.dehub.io)  |
+                                            +------------------+
+```
 
-### 2. Update Video Progress Bar
-Instead of a separate interval timer that estimates progress:
-```tsx
-onTimeUpdate={(e) => {
-  const video = e.currentTarget;
-  if (video.duration && isFinite(video.duration)) {
-    setProgress((video.currentTime / video.duration) * 100);
+### 2. MCP Protocol Features
+
+| Feature | Current | After Upgrade |
+|---------|---------|---------------|
+| Transport | HTTP POST | SSE (Streamable HTTP) |
+| Discovery | Manual skill.md | Native MCP introspection |
+| Tools | JSON-RPC methods | Proper MCP tool definitions |
+| Claude/GPT native | No | Yes - can add as MCP server |
+
+### 3. SSE Transport Endpoints
+
+The MCP server will handle:
+- `POST /` - Initialize SSE connection  
+- `GET /` - SSE event stream  
+- `DELETE /` - Close connection
+
+## Implementation Steps
+
+### Step 1: Create deno.json with mcp-lite dependency
+
+Add `supabase/functions/dehub-mcp/deno.json`:
+
+```json
+{
+  "imports": {
+    "hono": "jsr:@hono/hono@^4",
+    "mcp-lite": "npm:mcp-lite@^0.10.0"
   }
-}}
+}
 ```
 
-This keeps the progress bar perfectly synced with actual playback.
+### Step 2: Rewrite edge function with mcp-lite
 
-### 3. Scroll Navigation Logic
-Add these handlers (pattern from ShortsViewer):
+Replace the current implementation with:
 
-```tsx
-// Mouse wheel
-const handleWheel = (e: WheelEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-  if (isScrolling) return;
-  if (Math.abs(e.deltaY) < 50) return;
-  
-  setIsScrolling(true);
-  if (e.deltaY > 0) goNext();
-  else goPrev();
-  setTimeout(() => setIsScrolling(false), 500);
-};
+```typescript
+import { Hono } from "hono";
+import { McpServer, StreamableHttpTransport } from "mcp-lite";
 
-// Touch swipe via Framer Motion
-const handleDragEnd = (_, info: PanInfo) => {
-  if (info.offset.y < -100) goNext();
-  else if (info.offset.y > 100) goPrev();
-};
+const app = new Hono();
+
+const mcpServer = new McpServer({
+  name: "dehub-mcp",
+  version: "1.0.0",
+});
+
+// Define all tools with proper MCP schema
+mcpServer.tool({
+  name: "dehub_feed",
+  description: "Get posts from the DeHub feed",
+  inputSchema: {
+    type: "object",
+    properties: {
+      sort: { type: "string", enum: ["new", "hot", "trending"] },
+      limit: { type: "number", maximum: 50 },
+    },
+  },
+  handler: async (params) => {
+    // ... existing feed logic
+    return { content: [{ type: "text", text: JSON.stringify(result) }] };
+  },
+});
+
+// ... define all other tools
+
+const transport = new StreamableHttpTransport();
+
+app.all("/*", async (c) => {
+  return await transport.handleRequest(c.req.raw, mcpServer);
+});
+
+Deno.serve(app.fetch);
 ```
 
-### 4. Keyboard Support
-Add Arrow Up/Down and Escape key handlers for desktop users.
+### Step 3: Update skill.md
 
-### 5. Lock Body Scroll
-Prevent background page scrolling when viewer is open:
-```tsx
-useEffect(() => {
-  document.body.style.overflow = 'hidden';
-  return () => { document.body.style.overflow = ''; };
-}, []);
+Fix the duplicate `---` and update the documentation to reflect the proper MCP server:
+
+- Remove duplicate delimiter (line 8)
+- Update support URLs from `cosmic-echo-hero.lovable.app` to `dehub.io`
+- Add MCP connection instructions for Claude/GPT users
+
+### Step 4: Keep backward compatibility (optional)
+
+We can keep the JSON-RPC endpoint working alongside MCP by detecting the request type, so existing integrations don't break.
+
+## Tools to Implement
+
+All existing tools will be converted to proper MCP format:
+
+| Tool | Description | Auth Required |
+|------|-------------|---------------|
+| `dehub_register` | Register AI agent, get API key | No |
+| `dehub_tools` | List available tools | No |
+| `dehub_feed` | Get posts from feed | Optional |
+| `dehub_post` | Get single post | Optional |
+| `dehub_search` | Search content | Optional |
+| `dehub_profile` | Get user profile | Optional |
+| `dehub_post_create` | Create a post | Yes |
+| `dehub_vote` | Like/dislike post | Yes |
+| `dehub_comment` | Comment on post | Yes |
+| `dehub_follow` | Follow/unfollow user | Yes |
+
+## How AI Agents Will Connect
+
+After this upgrade, agents can connect natively:
+
+**Claude Desktop (claude_desktop_config.json):**
+```json
+{
+  "mcpServers": {
+    "dehub": {
+      "url": "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp",
+      "headers": {
+        "x-dehub-api-key": "dehub_your_key_here"
+      }
+    }
+  }
+}
 ```
 
-### 6. Video Key for Clean Transitions
-Force video remount on story change to ensure clean playback:
-```tsx
-<video key={currentStory.id} ... />
-```
+## Technical Notes
 
----
+- **mcp-lite version**: Must use `^0.10.0` or higher (earlier versions have TypeScript issues)
+- **Hono**: Used for routing (standard pattern for Supabase edge functions)
+- **Rate limiting**: Will continue to work through the same database tables
+- **Authentication**: API key passed via headers, validated in tool handlers
 
-## UI Changes
+## Benefits
 
-### Remove
-- Left/right tap zones
-- ChevronLeft/ChevronRight icons
-- Multi-story progress segments at top
+1. **Native Claude/GPT support** - Add DeHub as an MCP server directly
+2. **Auto-discovery** - Agents can list available tools automatically  
+3. **Streaming** - SSE enables real-time updates if needed later
+4. **Standard protocol** - Future-proof for the MCP ecosystem
 
-### Keep
-- Header with avatar, username, timestamp
-- Pause/Play button
-- Delete button (for own stories)
-- Close (X) button
-
-### Modify
-- Single progress bar (for current story only)
-- Add subtle up/down chevron hints on sides
-
----
-
-## State Changes
-
-```tsx
-// Remove
-const [videoDuration, setVideoDuration] = useState(30);
-const progressRef = useRef<NodeJS.Timeout | null>(null);
-
-// Add
-const [isScrolling, setIsScrolling] = useState(false);
-```
-
----
-
-## Files to Modify
-1. **`src/components/app/stories/StoryViewerModal.tsx`** - Complete refactor to vertical scroll pattern
-
----
-
-## Summary
-The story viewer will feel just like scrolling through TikTok or Instagram Reels - one story per screen, scroll down for more, with smooth snap transitions and real-time progress tracking synced to video playback.
