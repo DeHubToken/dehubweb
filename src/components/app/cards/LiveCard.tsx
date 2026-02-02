@@ -11,9 +11,8 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, MessageSquare } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
@@ -116,23 +115,15 @@ export function LiveCard({ stream }: LiveCardProps) {
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
 
-      {/* Comments - Always use drawer for consistent UX */}
-      <Drawer open={showComments} onOpenChange={setShowComments}>
-        <DrawerContent glass className="max-h-[70vh] overflow-hidden">
-          <DrawerHeader className="border-b border-white/10 pb-3">
-            <DrawerTitle className="text-white font-semibold flex items-center gap-2">
-              <MessageSquare className="w-5 h-5" />
-              Comments
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="flex-1 overflow-y-auto px-4 pb-4">
-            <CommentsSection
-              tokenId={stream.id}
-              onClose={() => setShowComments(false)}
-            />
-          </div>
-        </DrawerContent>
-      </Drawer>
+      {/* Comments Section */}
+      <AnimatePresence>
+        {showComments && (
+          <CommentsSection
+            tokenId={stream.id}
+            onClose={() => setShowComments(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* AI Chat */}
       <PostAIChat
