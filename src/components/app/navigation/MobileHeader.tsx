@@ -27,10 +27,14 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (location.pathname.startsWith('/app')) {
-      window.dispatchEvent(new CustomEvent('home-refresh'));
+    
+    if (location.pathname === '/app') {
+      // Already on home - just scroll to top, don't trigger full refresh
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Coming from another app page - navigate without refresh
+      navigate('/app');
     }
-    navigate('/app');
   };
 
   const isNotificationsActive = location.pathname === '/app/notifications';
