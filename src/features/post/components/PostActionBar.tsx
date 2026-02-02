@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
+import { AudioSpacesModal } from '@/components/app/spaces';
 import type { LiveMode } from '../types';
 
 interface PostActionBarProps {
@@ -60,13 +61,18 @@ export function PostActionBar({
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
+  const [audioSpacesModalOpen, setAudioSpacesModalOpen] = useState(false);
   const isLive = liveMode !== null;
 
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
     setLivePopoverOpen(false);
-    // Open the Go Live modal immediately
-    setGoLiveModalOpen(true);
+    // Open the appropriate modal based on mode
+    if (mode === 'townhall') {
+      setAudioSpacesModalOpen(true);
+    } else {
+      setGoLiveModalOpen(true);
+    }
   };
 
   const handleSpellCheck = () => {
@@ -159,11 +165,22 @@ export function PostActionBar({
     onCloseModal?.();
   };
 
+  const handleAudioSpacesModalClose = () => {
+    setAudioSpacesModalOpen(false);
+    setLiveMode(null);
+    // Close the parent post modal if provided
+    onCloseModal?.();
+  };
+
   return (
     <>
       <GoLiveModal
         isOpen={goLiveModalOpen}
         onClose={handleGoLiveModalClose}
+      />
+      <AudioSpacesModal
+        isOpen={audioSpacesModalOpen}
+        onClose={handleAudioSpacesModalClose}
       />
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
