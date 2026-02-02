@@ -110,18 +110,6 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
     <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] [&>div:first-child]:hidden">
         <DrawerHeader className="border-b-0 pb-2">
-          {/* Back button above title when in create view */}
-          {view === 'create' && (
-            <Button 
-              variant="ghost" 
-              onClick={() => setView('browse')}
-              className="self-start text-white/60 hover:text-white hover:bg-white/10 rounded-xl -ml-2 mb-2"
-              size="sm"
-            >
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Back
-            </Button>
-          )}
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white flex items-center gap-2">
               <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
@@ -211,6 +199,15 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                   <Mic className="w-4 h-4 mr-2" />
                 )}
                 Go Live
+              </Button>
+
+              <Button 
+                variant="ghost" 
+                onClick={() => setView('browse')}
+                className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Back
               </Button>
             </div>
           )}
