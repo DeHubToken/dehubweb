@@ -1,125 +1,123 @@
 
-# Clickable Post Cards Implementation Plan
+# Plan: Fix Feed Scroll Restoration and Prevent Refresh on Back Navigation
 
-## Overview
-Make all feed cards (PostCard, ImageCard, VideoCard, LiveCard) clickable to seamlessly navigate to the individual post page (`/app/post/:postId`) when users tap/click on non-interactive areas. This creates a smooth, app-like experience similar to Twitter/X.
+## Problem Summary
+When clicking on a post and then pressing the back button, the feed:
+1. Shows a refresh/loading indicator
+2. Scrolls to the top instead of maintaining position
+3. Re-fetches data even though it's cached
+
+## Root Cause Analysis
+The issue stems from **component unmounting**. When navigating from `/app` to `/app/post/:id`:
+- `HomePage` unmounts completely
+- All local state (scroll position, tab state) is lost
+- When navigating back, `HomePage` remounts fresh
+- React Query still has cached data but the component rebuilds from scratch
+- The `isLoading` state briefly flashes even with cached data
+
+## Solution: Multi-Part Fix
+
+### Part 1: Prevent Loading State Flash with Cached Data
+**File:** `src/components/app/feeds/HomeFeed.tsx`
+
+Modify the loading check to only show the loader when there's no cached data at all. React Query's `isLoading` is `true` only on initial load (no cache), while `isFetching` includes background refetches. We need to distinguish:
+- First load (no data): Show skeleton
+- Returning with cache: Show cached data immediately, no loader
+
+```typescript
+// Change from showing loader on isLoading to only when data is empty
+const showInitialLoader = isLoading && !feedData?.pages?.length;
+```
+
+### Part 2: Persist Tab and Filter State Across Navigation
+**File:** `src/pages/app/HomePage.tsx`
+
+Use `sessionStorage` to persist the active tab when navigating away and restore it on return:
+- Save `activeTab` to sessionStorage before navigation
+- Restore from sessionStorage on mount (only for back navigation)
+
+### Part 3: Improve Scroll Restoration Timing
+**File:** `src/hooks/use-scroll-restoration.ts`
+
+Current implementation has timing issues. Improve by:
+- Use `scrollRestoration: 'manual'` on the browser's history API
+- Increase restoration attempts for lazy-loaded content
+- Add a `MutationObserver` to detect when content has been rendered before scrolling
+
+### Part 4: Skip Scroll-to-Top on Component Mount for Back Navigation
+**File:** `src/pages/app/HomePage.tsx`
+
+The current logic already attempts this but has a race condition. Fix by:
+- Checking `isBackNavigation` before any scroll-to-top logic runs
+- Using a ref to track if scroll restoration should be skipped entirely
+
+### Part 5: Prevent useEffect Reset Triggers
+**File:** `src/pages/app/HomePage.tsx`
+
+The `useEffect` that resets scroll on tab change fires on mount. Ensure it:
+- Skips entirely on first mount when returning via back navigation
+- Only triggers on actual tab changes, not component remounts
 
 ---
 
-## Approach
+## Technical Details
 
-The key challenge is distinguishing between:
-- **Navigation intent**: Clicking on blank/content areas should open the post
-- **Interaction intent**: Clicking buttons, menus, action bars, etc. should NOT navigate
+### Updated Hook Logic (`use-scroll-restoration.ts`)
+```typescript
+// Add browser-level scroll restoration control
+useEffect(() => {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+}, []);
 
-**Solution**: Wrap the card container with navigation logic and use `e.stopPropagation()` on interactive elements to prevent navigation bubbling.
+// Use longer delays and more attempts for lazy content
+const attempts = [0, 50, 100, 200, 400, 800];
+```
+
+### HomePage State Persistence
+```typescript
+const STORAGE_KEY = 'home-feed-state';
+
+// On mount, restore state if back navigation
+useEffect(() => {
+  if (isBackNavigation) {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const { tab } = JSON.parse(saved);
+      setActiveTab(tab);
+    }
+  }
+}, []);
+
+// On navigation away, save state
+useEffect(() => {
+  return () => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ tab: activeTab }));
+  };
+}, [activeTab]);
+```
+
+### HomeFeed Loader Check
+```typescript
+// Only show skeleton loader when truly loading fresh (no cached data)
+if (isLoading && !feedData?.pages?.length) {
+  return <SkeletonLoader />;
+}
+
+// For background refetches, show existing content with optional subtle indicator
+```
 
 ---
 
 ## Files to Modify
+1. `src/hooks/use-scroll-restoration.ts` - Improve restoration timing
+2. `src/pages/app/HomePage.tsx` - Persist tab state, skip scroll reset on back
+3. `src/components/app/feeds/HomeFeed.tsx` - Fix loading state to use cached data
 
-| File | Change |
-|------|--------|
-| `src/components/app/cards/PostCard.tsx` | Add click-to-navigate wrapper |
-| `src/components/app/cards/ImageCard.tsx` | Add click-to-navigate wrapper |
-| `src/components/app/cards/VideoCard.tsx` | Add click-to-navigate wrapper |
-| `src/components/app/cards/LiveCard.tsx` | Add click-to-navigate wrapper |
-
----
-
-## Implementation Details
-
-### 1. Navigation Handler Pattern
-
-Each card will get a navigation wrapper that:
-- Uses `useNavigate` from react-router-dom
-- Navigates to `/app/post/${post.id}` on click
-- Checks if the click target or its parents contain interactive elements
-
-```typescript
-const navigate = useNavigate();
-
-const handleCardClick = useCallback((e: React.MouseEvent) => {
-  // Don't navigate if clicking on interactive elements
-  const target = e.target as HTMLElement;
-  const isInteractive = target.closest('button, a, input, [role="button"], [data-no-navigate]');
-  if (isInteractive) return;
-  
-  navigate(`/app/post/${post.id}`);
-}, [navigate, post.id]);
-```
-
-### 2. Card Container Wrapper
-
-The outer div of each card gets the click handler and cursor styling:
-
-```typescript
-<div 
-  onClick={handleCardClick}
-  className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors"
->
-  {/* Card content */}
-</div>
-```
-
-### 3. Protected Interactive Zones
-
-Elements that should NOT trigger navigation are already using `<button>`, `<a>`, or have click handlers. Key areas:
-- Header buttons (AI sparkle, options menu)
-- Action bar (like, comment, share, bookmark)
-- Comments section
-- Video player controls
-- Image carousel navigation arrows
-
-These naturally prevent bubbling due to the `closest()` check.
-
-### 4. Special Case: VideoCard
-
-The VideoCard has complex click handling for:
-- Play/pause
-- Double-tap seek zones
-- Fullscreen toggle
-
-For VideoCard, we'll add navigation only to non-video areas (the footer/info section), keeping the video player behavior intact.
-
----
-
-## Visual Feedback
-
-Add subtle hover states to indicate clickability:
-- Background lightens slightly on hover: `hover:bg-zinc-800/50`
-- Cursor changes to pointer: `cursor-pointer`
-- Smooth transition: `transition-colors duration-200`
-
----
-
-## Component-Specific Changes
-
-### PostCard
-- Wrap entire card with click handler
-- Content area and whitespace become clickable
-- Header, buttons, and action bar remain interactive-only
-
-### ImageCard  
-- Clicking on padding/text areas navigates
-- Clicking images opens fullscreen viewer (existing behavior)
-- Carousel controls remain functional
-
-### VideoCard
-- Only the footer section (title, description, metadata) becomes clickable for navigation
-- Video player area retains existing play/pause/seek behavior
-- Header buttons remain functional
-
-### LiveCard
-- Same pattern as PostCard
-- Thumbnail clicks navigate to the live stream page
-
----
-
-## Summary
-
-This implementation creates a Twitter-like experience where:
-1. Tapping anywhere on a post opens it in dedicated view
-2. All interactive elements (buttons, controls) remain functional
-3. Smooth visual feedback indicates clickability
-4. Navigation uses React Router for instant, app-like transitions
+## Expected Outcome
+- Clicking a post then pressing back will:
+  - Show the cached feed content **instantly** (no loader)
+  - Restore to the exact scroll position
+  - Maintain the same tab selection
+  - Feel like a native app with no visible refresh
