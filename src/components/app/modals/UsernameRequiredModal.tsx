@@ -8,7 +8,6 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateProfile, checkUsernameAvailability } from '@/lib/api/dehub';
@@ -34,8 +33,6 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export function UsernameRequiredModal() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const queryClient = useQueryClient();
   const { requiresUsername, disconnect, refreshUser, setRequiresUsername, walletAddress } = useAuth();
   const [username, setUsername] = useState('');
@@ -165,8 +162,8 @@ export function UsernameRequiredModal() {
       setRequiresUsername(false);
       
       // Navigate to home feed if not already there (avoid staying on settings after profile creation)
-      if (location.pathname !== '/app') {
-        navigate('/app', { replace: true });
+      if (window.location.pathname !== '/app') {
+        window.location.href = '/app';
       }
       
       toast.success('Profile created successfully!');
