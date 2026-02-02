@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { 
-  Mic, MicOff, Users, Hand, X, 
+  Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Phone, PhoneOff, Crown, Volume2 
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -110,6 +110,18 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
     <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh]">
         <DrawerHeader className="border-b-0 pb-2">
+          {/* Back button above title when in create view */}
+          {view === 'create' && (
+            <Button 
+              variant="ghost" 
+              onClick={() => setView('browse')}
+              className="self-start text-white/60 hover:text-white hover:bg-white/10 rounded-xl -ml-2 mb-2"
+              size="sm"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Back
+            </Button>
+          )}
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white flex items-center gap-2">
               <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
@@ -149,7 +161,7 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
                 ) : (
                   <div className="space-y-2">
                     {liveSpaces.map((space) => (
-                      <SpaceCard
+                      <StageCard
                         key={space.id}
                         space={space}
                         onJoin={() => handleJoin(space.id)}
@@ -165,51 +177,41 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
           {/* Create View */}
           {view === 'create' && (
             <div className="space-y-4">
-              <Button 
-                variant="ghost" 
-                onClick={() => setView('browse')}
-                className="text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
-              >
-                ← Back
-              </Button>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm text-white/60">Stage Title *</label>
-                  <Input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="What's this stage about?"
-                    className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
-                    maxLength={100}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm text-white/60">Description (optional)</label>
-                  <Textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Add more details..."
-                    className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl resize-none"
-                    rows={3}
-                    maxLength={280}
-                  />
-                </div>
-
-                <Button
-                  onClick={handleCreate}
-                  disabled={!title.trim() || isLoading}
-                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Mic className="w-4 h-4 mr-2" />
-                  )}
-                  Go Live
-                </Button>
+              <div className="space-y-2">
+                <label className="text-sm text-white/60">Stage Title *</label>
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="What's this stage about?"
+                  className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
+                  maxLength={100}
+                />
               </div>
+
+              <div className="space-y-2">
+                <label className="text-sm text-white/60">Description (optional)</label>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Add more details..."
+                  className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl resize-none"
+                  rows={3}
+                  maxLength={280}
+                />
+              </div>
+
+              <Button
+                onClick={handleCreate}
+                disabled={!title.trim() || isLoading}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Mic className="w-4 h-4 mr-2" />
+                )}
+                Go Live
+              </Button>
             </div>
           )}
 
@@ -358,8 +360,8 @@ export function AudioSpacesModal({ isOpen, onClose }: AudioSpacesModalProps) {
   );
 }
 
-// Space Card Component
-function SpaceCard({ 
+// Stage Card Component
+function StageCard({ 
   space, 
   onJoin, 
   isLoading 
