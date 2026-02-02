@@ -166,14 +166,16 @@ export function StoriesBar({ users }: StoriesBarProps) {
     ...storyUsers.map((story) => ({
       type: 'story' as const,
       story,
-      name: story.username || `${story.wallet_address.slice(0, 6)}...`,
+      name: story.username ? `@${story.username}` : `${story.wallet_address.slice(0, 6)}...`,
       avatar: story.avatar || '',
+      thumbnail: story.thumbnail_url || '',
     })),
     ...users.map((user) => ({
       type: 'placeholder' as const,
       story: null as Story | null,
-      name: user.name,
+      name: user.name.startsWith('@') ? user.name : `@${user.name}`,
       avatar: user.avatar,
+      thumbnail: '',
     })),
   ];
 
@@ -237,13 +239,24 @@ export function StoriesBar({ users }: StoriesBarProps) {
               >
                 {item.type === 'story' ? (
                   <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                    <div className="p-0.5 bg-zinc-900 rounded-xl">
-                      <Avatar className="w-14 h-14">
-                        <AvatarImage src={item.avatar} className="object-cover" />
-                        <AvatarFallback className="bg-zinc-700">
-                          {item.name[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                    <div className="p-0.5 bg-zinc-900 rounded-xl overflow-hidden">
+                      {/* Show thumbnail if available, otherwise avatar */}
+                      {item.thumbnail ? (
+                        <div className="w-14 h-14 rounded-xl overflow-hidden">
+                          <img 
+                            src={item.thumbnail} 
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <Avatar className="w-14 h-14">
+                          <AvatarImage src={item.avatar} className="object-cover" />
+                          <AvatarFallback className="bg-zinc-700">
+                            {item.name[0]?.toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
                     </div>
                   </div>
                 ) : (
