@@ -32,8 +32,7 @@ import {
 } from '@/components/app/feeds';
 
 // Modal components
-
-
+import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 // ============================================================================
 // CONSTANTS
 // ============================================================================
@@ -99,6 +98,7 @@ export default function HomePage() {
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
+  const [showStagesModal, setShowStagesModal] = useState(false);
   
   // Save tab state to sessionStorage whenever it changes
   useEffect(() => {
@@ -457,7 +457,7 @@ export default function HomePage() {
       case 'live':
         return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
       case 'music':
-        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
+        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} onOpenStages={() => setShowStagesModal(true)} />;
       default:
         return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />;
     }
@@ -518,6 +518,8 @@ export default function HomePage() {
         {renderFeed()}
       </div>
 
+      {/* Stages Modal */}
+      <AudioSpacesModal isOpen={showStagesModal} onClose={() => setShowStagesModal(false)} />
     </div>
   );
 }
