@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Pause, Play, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
@@ -35,6 +36,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const currentStory = stories[currentIndex];
   const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
@@ -217,14 +219,23 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
 
       {/* Header - overlaid on video */}
       <div className="absolute top-[env(safe-area-inset-top,0px)] left-0 right-0 z-20 flex items-center justify-between px-4 pt-3">
-        <div className="flex items-center gap-3">
+        <button 
+          onClick={() => {
+            const profilePath = currentStory.username 
+              ? `/${currentStory.username}` 
+              : `/app/profile?id=${currentStory.wallet_address}`;
+            onClose();
+            navigate(profilePath);
+          }}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
           <Avatar className="w-10 h-10 border-2 border-white">
             <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
             <AvatarFallback className="bg-zinc-700 text-white">
               {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="text-left">
             <p className="text-white font-medium text-sm">
               {currentStory.username ? `@${currentStory.username}` : `${currentStory.wallet_address.slice(0, 6)}...`}
             </p>
@@ -232,7 +243,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
               {formatDistanceToNow(new Date(currentStory.created_at), { addSuffix: true })}
             </p>
           </div>
-        </div>
+        </button>
 
         <div className="flex items-center gap-2">
           {isOwnStory && (
