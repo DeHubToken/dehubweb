@@ -134,7 +134,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div className="relative" onWheel={handleWheel}>
+    <div className="relative" onWheel={handleWheel} data-no-navigate>
       {/* Carousel container */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
@@ -142,7 +142,10 @@ function ImageCarousel({
             <div key={idx} className="flex-[0_0_100%] min-w-0">
               <div 
                 className="aspect-square bg-zinc-800 cursor-pointer"
-                onClick={() => onImageClick(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onImageClick(idx);
+                }}
               >
                 <img 
                   src={img} 

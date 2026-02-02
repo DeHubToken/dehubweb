@@ -97,7 +97,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       </div>
 
       {/* Thumbnail */}
-      <div className="aspect-video bg-zinc-800">
+      <div className="aspect-video bg-zinc-800" data-no-navigate>
         <img src={stream.thumbnail} alt="" className="w-full h-full object-cover" />
       </div>
 

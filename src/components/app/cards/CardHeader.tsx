@@ -101,7 +101,7 @@ export function CardHeader({
   const formattedHandle = handle ? (handle.startsWith('@') ? handle : `@${handle}`) : null;
 
   return (
-    <div className="flex items-center gap-3 p-3">
+    <div className="flex items-center gap-3 p-3 flex-1 min-w-0">
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
