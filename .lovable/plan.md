@@ -1,97 +1,163 @@
 
-# Fix: Post Visibility Update API - Numeric Status Values
+# Single Post/Video Page Implementation Plan
 
-## Problem Analysis
-The DeHub API `/api/token_visibility` endpoint is rejecting our request with "Invalid data provided" error.
-
-**What we've tried:**
-- Original: `{ tokenId: 2687, visibility: "private" }` → Failed
-- Change 1: `{ tokenId: 2687, status: "private" }` → Still failed
-
-**Network request captured:**
-```
-POST https://api.dehub.io/api/token_visibility
-Request Body: {"tokenId":2687,"status":"private"}
-Response: {"result":false,"error":"Invalid data provided"}
-```
-
-## Root Cause
-The API likely expects **numeric values** for visibility status rather than string values. This is a common pattern in REST APIs where:
-- `0` or `1` = Public
-- `1` or `2` = Private  
-- `2` or `3` = Unlisted
-
-Since the string field name changes haven't worked, the issue is almost certainly the **value format**.
+## Overview
+Create dedicated pages for viewing individual posts, videos, and images with the full app layout (sidebars on both sides, header navigation). This enables shareable links like `/app/post/2687` that load as standalone content pages similar to how Twitter/X displays individual tweets.
 
 ---
 
-## Proposed Fix
+## Current State
+- **PostPage.tsx**: Currently redirects `/app/post/:postId` to `/app?post=postId` which pins the post at the top of the home feed
+- **PostInfoPage.tsx**: Shows NFT/blockchain metadata for a post (transaction hash, token ID, etc.)
+- **No dedicated single-post view page** exists that shows just the content with the full layout
 
-### Strategy
-Update the `updateTokenVisibility` function to convert string visibility values to numeric codes. Try the most common mapping first:
+---
 
+## Proposed Solution
+
+### 1. Create New Route Structure
+
+| Route | Component | Content Type |
+|-------|-----------|--------------|
+| `/app/post/:postId` | `SinglePostPage.tsx` | Text posts, Images, Videos (auto-detected) |
+| `/app/video/:tokenId` | Alias to SinglePostPage | Direct video links |
+
+The page will:
+- Fetch the post data using `getNFTInfo(tokenId)`
+- Auto-detect content type (video, image, text) based on `postType` field
+- Render the appropriate card component (VideoCard, ImageCard, PostCard)
+- Display within the existing AppLayout (sidebars + header preserved)
+
+---
+
+### 2. Page Layout (Twitter-Style)
+
+```
++------------------+------------------------+------------------+
+|                  |  <- Back    Post       |                  |
+|   Left Sidebar   +------------------------+  Right Sidebar   |
+|   (AppSidebar)   |                        |  (Search, etc)   |
+|                  |   [Post Card Content]  |                  |
+|                  |                        |                  |
+|                  |   Comments Section     |                  |
+|                  |   (Always visible)     |                  |
++------------------+------------------------+------------------+
+```
+
+Key differences from feed view:
+- Single post centered in main content area
+- Comments section always expanded below the post
+- PageHeader with back button and "Post" title
+- Reply input at the bottom
+
+---
+
+### 3. Files to Create/Modify
+
+#### New Files:
+1. **`src/pages/app/SinglePostPage.tsx`** - Main single post view page
+   - Fetches post data via `getNFTInfo`
+   - Detects content type and renders appropriate card
+   - Shows comments section inline
+   - Reply composer at bottom
+
+#### Modified Files:
+1. **`src/App.tsx`** - Update routing
+   - Change `/app/post/:postId` to use `SinglePostPage` instead of redirect
+   - Add `/app/video/:tokenId` route alias
+
+2. **`src/pages/app/PostPage.tsx`** - Remove (replaced by SinglePostPage)
+
+---
+
+### 4. Component Structure
+
+```
+SinglePostPage
+├── PageHeader (Back button + "Post" title)
+├── Loading State (centered spinner)
+├── Error State (not found message)
+└── Content Area
+    ├── Post Card (VideoCard | ImageCard | PostCard)
+    │   └── Based on postType from API response
+    └── CommentsSection (always visible, not drawer)
+        ├── Comments list
+        └── Reply input
+```
+
+---
+
+## Technical Details
+
+### Data Fetching
 ```typescript
-const visibilityMap: Record<TokenVisibility, number> = {
-  'public': 0,
-  'private': 1,
-  'unlisted': 2,
+// Use existing getNFTInfo function
+const { data: post, isLoading, error } = useQuery({
+  queryKey: ['single-post', postId],
+  queryFn: () => getNFTInfo(postId!),
+  enabled: !!postId,
+  staleTime: 5 * 60 * 1000,
+});
+```
+
+### Content Type Detection
+```typescript
+// Determine card type based on API response
+const getContentType = (post: DeHubNFT) => {
+  if (post.postType === 'video' || post.videoUrl) return 'video';
+  if (post.postType === 'image' || (post.imageUrls?.length && !post.videoUrl)) return 'image';
+  return 'post'; // Text post
 };
 ```
 
-### File to Modify
-`src/lib/api/dehub.ts` (lines 2453-2481)
+### Card Rendering
+The page will use the existing card components directly:
+- `VideoCard` for videos (with full video player)
+- `ImageCard` for image posts (with carousel if multiple images)
+- `PostCard` for text-only posts
 
-### Code Changes
+These cards are already styled correctly and include all functionality (likes, comments, AI chat, etc.).
 
-**Current code:**
+---
+
+## Mobile Considerations
+
+- On mobile (< 1024px), the sidebars are already hidden by AppLayout
+- PageHeader will show the back button prominently
+- Comments section remains inline (not drawer) for single post view to match Twitter behavior
+- Bottom nav remains visible for navigation
+
+---
+
+## Route Configuration
+
 ```typescript
-body: JSON.stringify({
-  tokenId: Number(tokenId),
-  status: visibility,
-}),
+// In App.tsx
+<Route path="app" element={<AppLayout />}>
+  {/* ... existing routes ... */}
+  <Route path="post/:postId" element={<SinglePostPage />} />
+  <Route path="video/:tokenId" element={<SinglePostPage />} />
+  <Route path="post/:postId/info" element={<PostInfoPage />} />
+</Route>
 ```
 
-**Updated code:**
-```typescript
-// Convert visibility string to numeric status code
-const visibilityToStatus: Record<TokenVisibility, number> = {
-  'public': 0,
-  'private': 1,
-  'unlisted': 2,
-};
+---
 
-body: JSON.stringify({
-  tokenId: Number(tokenId),
-  status: visibilityToStatus[visibility],
-}),
-```
+## Edge Cases Handled
+
+1. **Optimistic posts** (still minting): Show processing state like PostInfoPage does
+2. **Invalid post ID**: Show error state with back button
+3. **Private/hidden posts**: Respect visibility settings from API
+4. **Deep linking**: Full URL like `dehub.io/app/post/2687` works directly
 
 ---
 
-## Alternative Mappings to Try
+## Summary of Changes
 
-If `0/1/2` doesn't work, here are common alternatives:
+| Action | File | Description |
+|--------|------|-------------|
+| Create | `src/pages/app/SinglePostPage.tsx` | New single post view page |
+| Modify | `src/App.tsx` | Update routes to use new page |
+| Delete | `src/pages/app/PostPage.tsx` | Remove redirect logic (now handled by SinglePostPage) |
 
-| Pattern | Public | Private | Unlisted |
-|---------|--------|---------|----------|
-| Zero-indexed | 0 | 1 | 2 |
-| One-indexed | 1 | 2 | 3 |
-| Boolean-ish | 1 | 0 | 2 |
-| Inverted | 2 | 1 | 0 |
-
----
-
-## Testing Plan
-
-1. Apply the numeric mapping change
-2. Test changing visibility from Public → Private
-3. If still fails, try alternative mappings (1/2/3 or 1/0/2)
-4. Verify all three visibility options work (Public, Unlisted, Private)
-5. Also update the batch visibility endpoint in SettingsPage.tsx to match
-
----
-
-## Additional Improvement
-Once the correct format is confirmed, we should also:
-- Add the `visibility` field to the `DeHubNFT` interface so TypeScript knows about it
-- Update the batch visibility API in SettingsPage.tsx to use the same format
+This implementation reuses all existing card components and styling, ensuring the single post page matches the exact look and feel of posts in the feed while providing a dedicated shareable URL.
