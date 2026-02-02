@@ -1,126 +1,77 @@
 
-# Fix: AI Chat Closing Unexpectedly After Multiple Opens/Closes
+# Fix: Post Visibility Update API Mismatch
 
-## Problem Identified
+## Problem Analysis
+When changing post visibility from the Post Info page, the API returns:
+```json
+{"result":false,"error":"Invalid data provided"}
+```
 
-The AI chat closes unexpectedly after many open/close cycles due to two related issues:
+The current request sends:
+```json
+{"tokenId":2687,"visibility":"private"}
+```
 
-1. **Unstable Chat IDs**: `useId()` generates a new ID every time the component mounts. This causes:
-   - Orphaned entries accumulating in sessionStorage
-   - The minimized state check (`isMinimized(chatId)`) never matching after remount
-   - State synchronization problems between the global minimized chats manager and individual chat instances
+## Root Cause
+The DeHub API `/api/token_visibility` endpoint expects a different request format than what we're sending. Based on common API patterns and the error message, the issue is likely one of these:
 
-2. **Dialog/Drawer Modal Interference**: The Radix Dialog and Vaul Drawer components have `onOpenChange` callbacks that fire when the modal is dismissed. With stale state or orphan entries, the open/close logic can behave unexpectedly.
+1. **Field name mismatch**: The API may expect `status` instead of `visibility`
+2. **Value format mismatch**: The API may expect numeric values (e.g., `0`, `1`, `2`) instead of strings
+3. **Case sensitivity**: The API may expect different casing
 
-## Solution
+## Proposed Fix
+Update the `updateTokenVisibility` function in `src/lib/api/dehub.ts` to match the API's expected format. The most likely fix based on similar APIs is:
 
-### 1. Use Stable Post-Based IDs Instead of React's `useId()`
+### Change 1: Update Request Body Format
+```typescript
+// Current (not working):
+body: JSON.stringify({
+  tokenId: Number(tokenId),
+  visibility,
+}),
 
-Replace the dynamic `useId()` with a stable ID derived from the post context:
+// Fixed - try with 'status' field name:
+body: JSON.stringify({
+  tokenId: Number(tokenId),
+  status: visibility,
+}),
+```
+
+### Change 2: If status field doesn't work, try numeric values
+Some APIs use numeric visibility codes:
+- `0` = public
+- `1` = private  
+- `2` = unlisted
 
 ```typescript
-// Before (unstable - new ID each mount)
-const chatId = useId();
+const visibilityMap: Record<TokenVisibility, number> = {
+  'public': 0,
+  'private': 1,
+  'unlisted': 2,
+};
 
-// After (stable - same ID for same post)
-const chatId = useMemo(() => 
-  `ai-chat-${postContext.type}-${postContext.author || 'unknown'}-${postContext.title || postContext.caption || 'untitled'}`.replace(/\s+/g, '-').toLowerCase(),
-  [postContext.type, postContext.author, postContext.title, postContext.caption]
-);
+body: JSON.stringify({
+  tokenId: Number(tokenId),
+  status: visibilityMap[visibility],
+}),
 ```
 
-### 2. Clean Up Orphaned Entries
+---
 
-Add cleanup logic to the minimized chats hook to remove stale entries on page load:
+## Technical Implementation
 
-```typescript
-// In use-minimized-chats.ts
-// Add a maximum age check or clear on visibility change
-```
+### File to Modify
+- `src/lib/api/dehub.ts` (lines 2463-2473)
 
-### 3. Prevent Accidental Closes with Better Event Handling
+### Testing Plan
+1. First try changing `visibility` → `status` field name
+2. If that fails, try numeric status values
+3. Verify the API response contains the updated visibility
+4. Test on Post Info page with all three visibility options (Public, Unlisted, Private)
 
-Add `onInteractOutside` and `onEscapeKeyDown` handlers to prevent unintended closes:
+---
 
-```typescript
-// For Dialog
-<DialogContent 
-  onInteractOutside={(e) => e.preventDefault()} // Only close via X button
-  onEscapeKeyDown={(e) => e.preventDefault()}
->
-
-// For Drawer
-<Drawer 
-  dismissible={false} // Disable swipe-to-dismiss
->
-```
-
-### 4. Separate Close and Minimize Logic
-
-Make the close button explicitly close, and only allow the dialog to close through user action, not automatic state changes.
-
-## Files to Modify
-
-1. **`src/components/app/cards/PostAIChat.tsx`**
-   - Replace `useId()` with stable ID based on post context
-   - Add event handlers to prevent accidental dismissal
-   - Improve the close/minimize state management
-
-2. **`src/hooks/use-minimized-chats.ts`**
-   - Add cleanup for orphan entries
-   - Add a mechanism to clear stale entries older than the session
-
-## Technical Details
-
-### Stable ID Generation
-```typescript
-const chatId = useMemo(() => {
-  const baseId = `${postContext.type}-${postContext.author || 'anon'}`;
-  // Hash the title/caption for uniqueness without length issues
-  const contentHash = (postContext.title || postContext.caption || '').slice(0, 20);
-  return `ai-chat-${baseId}-${contentHash}`.replace(/[^a-zA-Z0-9-]/g, '');
-}, [postContext]);
-```
-
-### Event Prevention
-```tsx
-// Dialog (desktop)
-<Dialog open={isOpen && !isThisMinimized}>
-  <DialogContent 
-    onInteractOutside={(e) => e.preventDefault()}
-    onEscapeKeyDown={(e) => e.preventDefault()}
-    onPointerDownOutside={(e) => e.preventDefault()}
-  >
-    ...
-  </DialogContent>
-</Dialog>
-
-// Drawer (mobile)  
-<Drawer 
-  open={isOpen && !isThisMinimized} 
-  dismissible={false}
->
-  ...
-</Drawer>
-```
-
-### Orphan Cleanup
-```typescript
-// Clear all minimized chats on component unmount or when detected stale
-useEffect(() => {
-  return () => {
-    // On unmount, if this chat is in minimized list but we're unmounting, remove it
-    if (isMinimized(chatId)) {
-      removeChat(chatId);
-    }
-  };
-}, [chatId]);
-```
-
-## Expected Outcome
-
-After these changes:
-- The AI chat will only close when you explicitly click the X button
-- Clicking outside, pressing Escape, or swiping will not close the chat
-- The minimize feature will work consistently across open/close cycles
-- No more orphaned entries accumulating in storage
+## Notes
+- The fix requires testing against the live API to determine the exact expected format
+- Once the correct format is identified, we should also update the batch visibility endpoint in `SettingsPage.tsx` to match
+- The `DeHubNFT` interface should be updated to include the `visibility` field once we confirm the API response format
