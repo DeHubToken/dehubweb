@@ -187,7 +187,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
         <button
           onClick={handleClose}
-          className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+          className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
         >
           <X className="w-5 h-5 text-white" />
         </button>
@@ -207,7 +207,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
           <button
             onClick={flipCamera}
             disabled={isRecording}
-            className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center disabled:opacity-50"
+            className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center disabled:opacity-50"
           >
             <RotateCcw className="w-5 h-5 text-white" />
           </button>
@@ -251,6 +251,8 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             autoPlay
             loop
             playsInline
+            muted={false}
+            controls
             className="w-full h-full object-cover"
           />
         )}
@@ -282,15 +284,15 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             <>
               <button
                 onClick={retake}
-                className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
+                className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
               >
                 <RotateCcw className="w-6 h-6 text-white" />
               </button>
               <button
                 onClick={confirmStory}
-                className="w-20 h-20 rounded-full bg-white flex items-center justify-center"
+                className="w-14 h-14 rounded-xl bg-white/90 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center"
               >
-                <Check className="w-8 h-8 text-black" />
+                <Check className="w-6 h-6 text-black" />
               </button>
             </>
           )}
