@@ -309,13 +309,6 @@ export default function LeaderboardPage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
-                        {getBadgeUrl(entry.staked) && (
-                          <img 
-                            src={getBadgeUrl(entry.staked)!} 
-                            alt="Holdings badge" 
-                            className="w-4 h-4 flex-shrink-0"
-                          />
-                        )}
                       </div>
                       <span className="text-zinc-500 text-sm">{getHandle(entry)}</span>
                     </div>
