@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Pause, Play, Trash2, Loader2, ChevronUp, ChevronDown } from 'lucide-react';
+import { X, Pause, Play, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
@@ -287,18 +287,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           onTimeUpdate={handleTimeUpdate}
         />
       </motion.div>
-
-      {/* Navigation hints */}
-      {currentIndex > 0 && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+120px)] z-10 pointer-events-none">
-          <ChevronUp className="w-6 h-6 text-white/30 animate-pulse" />
-        </div>
-      )}
-      {currentIndex < stories.length - 1 && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%-120px)] z-10 pointer-events-none">
-          <ChevronDown className="w-6 h-6 text-white/30 animate-pulse" />
-        </div>
-      )}
 
     </div>
   );
