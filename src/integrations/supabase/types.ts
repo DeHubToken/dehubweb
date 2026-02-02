@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_agent_rate_limits: {
+        Row: {
+          action_type: string
+          agent_id: string
+          count: number | null
+          window_start: string | null
+        }
+        Insert: {
+          action_type: string
+          agent_id: string
+          count?: number | null
+          window_start?: string | null
+        }
+        Update: {
+          action_type?: string
+          agent_id?: string
+          count?: number | null
+          window_start?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_rate_limits_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_agents: {
+        Row: {
+          api_key: string
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          last_active_at: string | null
+          metadata: Json | null
+          name: string
+          owner_wallet_address: string
+          updated_at: string | null
+        }
+        Insert: {
+          api_key: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_active_at?: string | null
+          metadata?: Json | null
+          name: string
+          owner_wallet_address: string
+          updated_at?: string | null
+        }
+        Update: {
+          api_key?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_active_at?: string | null
+          metadata?: Json | null
+          name?: string
+          owner_wallet_address?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ai_conversations: {
         Row: {
           created_at: string
