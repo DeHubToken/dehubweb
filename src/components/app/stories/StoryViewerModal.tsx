@@ -38,9 +38,14 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const currentStory = stories[currentIndex];
   const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
 
+  // Reset to initialIndex when modal opens or initialIndex changes
   useEffect(() => {
-    setCurrentIndex(initialIndex);
-  }, [initialIndex]);
+    if (isOpen) {
+      setCurrentIndex(initialIndex);
+      setProgress(0);
+      setIsPaused(false);
+    }
+  }, [isOpen, initialIndex]);
 
   useEffect(() => {
     if (!isOpen || !currentStory) return;
