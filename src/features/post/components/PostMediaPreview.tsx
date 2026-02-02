@@ -311,8 +311,9 @@ export function PostMediaPreview({
       canvas.width = 160;
       canvas.height = 90;
       
-      for (let i = 0; i < frameCount; i++) {
-        const time = (duration / (frameCount + 1)) * (i + 1);
+  for (let i = 0; i < frameCount; i++) {
+    // Include first frame (time 0) and distribute remaining frames evenly
+    const time = i === 0 ? 0 : (duration / (frameCount - 1)) * i;
         video.currentTime = time;
         
         await new Promise<void>((resolve) => {
