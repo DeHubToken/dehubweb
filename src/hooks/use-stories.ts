@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -16,8 +16,52 @@ export interface Story {
   username: string | null;
   avatar: string | null;
   video_url: string;
+  thumbnail_url: string | null;
   created_at: string;
   expires_at: string;
+}
+
+/**
+ * Extract the first frame from a video blob as a JPEG image
+ */
+async function extractFirstFrame(videoBlob: Blob): Promise<Blob | null> {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+
+    video.onloadeddata = () => {
+      // Seek to first frame
+      video.currentTime = 0;
+    };
+
+    video.onseeked = () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx?.drawImage(video, 0, 0);
+
+      canvas.toBlob(
+        (blob) => {
+          URL.revokeObjectURL(video.src);
+          resolve(blob);
+        },
+        'image/jpeg',
+        0.85
+      );
+    };
+
+    video.onerror = () => {
+      URL.revokeObjectURL(video.src);
+      resolve(null);
+    };
+
+    video.src = URL.createObjectURL(videoBlob);
+    video.load();
+  });
 }
 
 export function useStories() {
@@ -68,28 +112,52 @@ export function useUploadStory() {
     setProgress(10);
 
     try {
-      // Generate unique filename
       const timestamp = Date.now();
-      const filename = `${userInfo.walletAddress}/${timestamp}.webm`;
+      const videoFilename = `${userInfo.walletAddress}/${timestamp}.webm`;
+      const thumbFilename = `${userInfo.walletAddress}/${timestamp}-thumb.jpg`;
 
-      setProgress(30);
+      // Extract first frame as thumbnail
+      setProgress(20);
+      const thumbnailBlob = await extractFirstFrame(videoBlob);
 
-      // Upload to storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      setProgress(40);
+
+      // Upload video
+      const { error: videoError } = await supabase.storage
         .from('stories')
-        .upload(filename, videoBlob, {
+        .upload(videoFilename, videoBlob, {
           contentType: 'video/webm',
           upsert: false,
         });
 
-      if (uploadError) throw uploadError;
+      if (videoError) throw videoError;
 
-      setProgress(70);
+      setProgress(60);
 
-      // Get public URL
+      // Upload thumbnail if extracted
+      let thumbnailUrl: string | null = null;
+      if (thumbnailBlob) {
+        const { error: thumbError } = await supabase.storage
+          .from('stories')
+          .upload(thumbFilename, thumbnailBlob, {
+            contentType: 'image/jpeg',
+            upsert: false,
+          });
+
+        if (!thumbError) {
+          const { data: thumbUrlData } = supabase.storage
+            .from('stories')
+            .getPublicUrl(thumbFilename);
+          thumbnailUrl = thumbUrlData.publicUrl;
+        }
+      }
+
+      setProgress(80);
+
+      // Get video public URL
       const { data: urlData } = supabase.storage
         .from('stories')
-        .getPublicUrl(filename);
+        .getPublicUrl(videoFilename);
 
       const videoUrl = urlData.publicUrl;
 
@@ -99,6 +167,7 @@ export function useUploadStory() {
         username: userInfo.username || null,
         avatar: userInfo.avatar || null,
         video_url: videoUrl,
+        thumbnail_url: thumbnailUrl,
       });
 
       if (insertError) throw insertError;

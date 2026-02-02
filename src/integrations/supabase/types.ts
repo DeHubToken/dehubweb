@@ -308,6 +308,7 @@ export type Database = {
           created_at: string
           expires_at: string
           id: string
+          thumbnail_url: string | null
           username: string | null
           video_url: string
           wallet_address: string
@@ -317,6 +318,7 @@ export type Database = {
           created_at?: string
           expires_at?: string
           id?: string
+          thumbnail_url?: string | null
           username?: string | null
           video_url: string
           wallet_address: string
@@ -326,6 +328,7 @@ export type Database = {
           created_at?: string
           expires_at?: string
           id?: string
+          thumbnail_url?: string | null
           username?: string | null
           video_url?: string
           wallet_address?: string
