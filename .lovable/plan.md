@@ -1,36 +1,77 @@
 
-# Fix Story Thumbnail Size Mismatch
+# Fix Dead Avatar in Story Playback
 
-## Problem
-The create story button and story thumbnails are now different sizes because:
-- **Create button**: Has gradient → `p-0.5` dark layer → content (total ~61px)
-- **Story thumbnail**: Has gradient → content directly (total ~57px)
+## Root Cause
 
-When we removed the dark border from the thumbnail, we also removed the padding layer that gave it consistent sizing with the create button.
-
-## Solution
-Add back the padding layer to the story thumbnail, but make it transparent instead of dark. This preserves the sizing while keeping only the gradient border visible.
-
-## Changes
-
-**File: `src/components/app/cards/StoriesBar.tsx`**
-
-Update the story item rendering (lines 241-259) to include a transparent inner padding layer:
-
-```tsx
-<div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-  <div className="p-0.5 rounded-lg">  {/* Add transparent padding layer */}
-    {item.thumbnail ? (
-      <div className="w-14 h-14 rounded-lg overflow-hidden">
-        <img ... />
-      </div>
-    ) : (
-      <Avatar className="w-14 h-14 rounded-lg">
-        ...
-      </Avatar>
-    )}
-  </div>
-</div>
+The avatar stored in the database is a **relative path**:
+```
+avatars/0x742371a7cce6b068f3c6222016bf009d570d7d15.jpg
 ```
 
-This ensures both the create button and story thumbnails have identical outer dimensions while keeping the visual design (gradient border only on stories, gradient + dark on create button).
+This needs to be processed through `buildAvatarUrl()` to become a full CDN URL:
+```
+https://dehubcdn.../avatars/0x742371a7cce6b068f3c6222016bf009d570d7d15.jpg
+```
+
+Currently, both `StoriesBar.tsx` and `StoryViewerModal.tsx` pass the raw `story.avatar` value directly to `<AvatarImage>`, which breaks because relative paths don't load.
+
+---
+
+## Changes Required
+
+### 1. `src/components/app/cards/StoriesBar.tsx`
+
+**Import the utility:**
+```tsx
+import { buildAvatarUrl } from '@/lib/media-url';
+```
+
+**Update the story mapping (around line 166-172):**
+```tsx
+...storyUsers.map((story) => ({
+  type: 'story' as const,
+  story,
+  name: story.username ? `@${story.username}` : `${story.wallet_address.slice(0, 6)}...`,
+  avatar: buildAvatarUrl(story.wallet_address, story.avatar) || '',  // Process through utility
+  thumbnail: story.thumbnail_url || '',
+})),
+```
+
+---
+
+### 2. `src/components/app/stories/StoryViewerModal.tsx`
+
+**Import the utility:**
+```tsx
+import { buildAvatarUrl } from '@/lib/media-url';
+```
+
+**Update the avatar image (around line 156-157):**
+```tsx
+<Avatar className="w-10 h-10 border-2 border-white">
+  <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
+  <AvatarFallback className="bg-zinc-700 text-white">
+    {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
+  </AvatarFallback>
+</Avatar>
+```
+
+---
+
+## Technical Details
+
+The `buildAvatarUrl()` function (from `src/lib/media-url.ts`) handles:
+- Relative paths like `avatars/xxx.jpg` → converts to `https://dehubcdn.../avatars/{address}.{ext}`
+- Full URLs starting with `http` → returns as-is
+- `null`/`undefined` → returns `undefined` (triggers fallback)
+
+This is the same pattern used throughout the app for profile pages, feed cards, and search results per the established conventions in the codebase.
+
+---
+
+## Summary
+
+| File | Change |
+|------|--------|
+| `StoriesBar.tsx` | Add import + wrap `story.avatar` with `buildAvatarUrl()` |
+| `StoryViewerModal.tsx` | Add import + wrap `currentStory.avatar` with `buildAvatarUrl()` |
