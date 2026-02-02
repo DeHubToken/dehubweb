@@ -30,7 +30,10 @@ export function SidebarLeaderboard() {
     gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
   });
 
-  const entries = data?.result?.byWalletBalance?.slice(0, 50) || [];
+  // Only show users with usernames, filter out wallet-only entries
+  const entries = (data?.result?.byWalletBalance || [])
+    .filter((entry: LeaderboardEntry) => entry.username)
+    .slice(0, 50);
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
     if (entry.avatarUrl && entry.account) {
