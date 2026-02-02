@@ -45,6 +45,7 @@ export { useVideoViewTracking, useFeedViewTracking, useFeedViewTrackingCallback 
 export { useVoiceChat } from './use-voice-chat';
 export { RadioPlayerProvider, useRadioPlayer } from './use-radio-player';
 export { TVPlayerProvider, useTVPlayer } from './use-tv-player';
+export { useScrollRestoration, useIsBackNavigation } from './use-scroll-restoration';
 export { 
   useConversations, 
   useMessages, 

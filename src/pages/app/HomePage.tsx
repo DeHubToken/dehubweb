@@ -9,12 +9,13 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 
 // Feed components
 import {
@@ -49,6 +50,24 @@ const GESTURE_LOCK_DURATION = 400;
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  
+  // Scroll restoration - preserves position when navigating back from post
+  const { resetScroll } = useScrollRestoration('/app');
+  
+  // Track if we're coming back from a post page (to skip scroll-to-top)
+  const prevPathRef = useRef<string | null>(null);
+  const isReturningFromPost = useRef(false);
+  
+  useEffect(() => {
+    // Check if we're returning from a post page
+    if (prevPathRef.current?.startsWith('/app/post/') || prevPathRef.current?.startsWith('/app/video/')) {
+      isReturningFromPost.current = true;
+    } else {
+      isReturningFromPost.current = false;
+    }
+    prevPathRef.current = location.pathname;
+  }, [location.pathname]);
   
   // Extract pinned post ID from URL params (one-time view)
   const pinnedPostId = searchParams.get('post') || undefined;
@@ -216,9 +235,25 @@ export default function HomePage() {
   };
 
   /**
-   * Reset scroll position when tab changes.
+   * Reset scroll position when tab changes (but not when returning from post page).
    */
+  const prevTabRef = useRef<string | null>(null);
+  
   useEffect(() => {
+    // Skip scroll-to-top if:
+    // 1. First mount (prevTabRef is null) AND we're returning from a post
+    // 2. Tab hasn't actually changed
+    if (prevTabRef.current === null && isReturningFromPost.current) {
+      prevTabRef.current = activeTab;
+      return;
+    }
+    
+    if (prevTabRef.current === activeTab) {
+      return;
+    }
+    
+    prevTabRef.current = activeTab;
+    
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
