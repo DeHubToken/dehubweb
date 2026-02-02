@@ -317,8 +317,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   
   // State to trigger re-shuffle on pull-to-refresh
   const [shuffleTrigger, setShuffleTrigger] = useState(0);
+  
   // Track if we've pre-fetched enough pages for random mode
-  const [hasPreFetched, setHasPreFetched] = useState(false);
+  // Persist in sessionStorage to prevent loading flash on back navigation
+  const getInitialPreFetched = useCallback(() => {
+    try {
+      return sessionStorage.getItem('home-feed-prefetched') === 'true';
+    } catch {
+      return false;
+    }
+  }, []);
+  const [hasPreFetched, setHasPreFetched] = useState(getInitialPreFetched);
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -405,6 +414,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Trigger new shuffle and reset pre-fetch state
       setShuffleTrigger(prev => prev + 1);
       setHasPreFetched(false);
+      // Clear persisted pre-fetch state on explicit refresh
+      try {
+        sessionStorage.removeItem('home-feed-prefetched');
+      } catch {}
       // Clear optimistic posts on refresh since real data should be available
       clearOptimisticPosts();
       refetch();
@@ -425,6 +438,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       fetchNextPage();
     } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
       setHasPreFetched(true);
+      // Persist pre-fetch state so back navigation doesn't trigger loading
+      try {
+        sessionStorage.setItem('home-feed-prefetched', 'true');
+      } catch {}
     }
   }, [selectedSort.value, feedData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
@@ -690,8 +707,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // CRITICAL: Only show skeleton loader when we have NO cached data at all
   // This prevents the loading flash when returning from a post via back navigation
   // React Query keeps cached data, so we should show it immediately
-  const hasCachedData = feedData?.pages && feedData.pages.length > 0 && items.length > 0;
-  const isLoadingState = !hasCachedData && (isLoading || isPreFetchingRandom || (pinnedPostId && isPinnedLoading));
+  // Check feedData.pages directly as fallback if items is empty due to pre-fetch guard
+  const hasQueryData = feedData?.pages && feedData.pages.length > 0;
+  const hasCachedData = hasQueryData && items.length > 0;
+  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
