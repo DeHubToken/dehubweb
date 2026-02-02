@@ -239,23 +239,25 @@ export function StoriesBar({ users }: StoriesBarProps) {
               >
                 {item.type === 'story' ? (
                   <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                    {/* Show thumbnail if available, otherwise avatar */}
-                    {item.thumbnail ? (
-                      <div className="w-14 h-14 rounded-lg overflow-hidden">
-                        <img 
-                          src={item.thumbnail} 
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <Avatar className="w-14 h-14 rounded-lg">
-                        <AvatarImage src={item.avatar} className="object-cover rounded-lg" />
-                        <AvatarFallback className="bg-zinc-700 rounded-lg">
-                          {item.name[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
+                    <div className="p-0.5 rounded-lg">
+                      {/* Show thumbnail if available, otherwise avatar */}
+                      {item.thumbnail ? (
+                        <div className="w-14 h-14 rounded-lg overflow-hidden">
+                          <img 
+                            src={item.thumbnail} 
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <Avatar className="w-14 h-14 rounded-lg">
+                          <AvatarImage src={item.avatar} className="object-cover rounded-lg" />
+                          <AvatarFallback className="bg-zinc-700 rounded-lg">
+                            {item.name[0]?.toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <Avatar className="w-14 h-14">
