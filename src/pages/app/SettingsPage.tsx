@@ -572,7 +572,8 @@ function PrivacySettings() {
       updateSettings({ default_post_visibility: newVisibility });
       
       // Then call the API to update all existing posts visibility
-      const token = localStorage.getItem('dehub_jwt');
+      const { getAuthToken } = await import('@/lib/api/dehub');
+      const token = getAuthToken();
       if (token) {
         const response = await fetch('https://api.dehub.io/api/batch_token_visibility', {
           method: 'POST',
