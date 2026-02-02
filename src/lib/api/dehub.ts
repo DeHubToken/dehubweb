@@ -2468,7 +2468,7 @@ export async function updateTokenVisibility(
     },
     body: JSON.stringify({
       tokenId: Number(tokenId),
-      visibility,
+      status: visibility,
     }),
   });
 
