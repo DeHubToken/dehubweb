@@ -211,7 +211,7 @@ export default function SinglePostPage() {
 
   return (
     <div className="min-h-screen">
-      <PageHeader title="Post" showBack />
+      <PageHeader showBack />
       
       <div className="pb-8">
         {renderContent()}
