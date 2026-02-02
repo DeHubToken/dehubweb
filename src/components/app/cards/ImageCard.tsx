@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -345,6 +346,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
+  const navigate = useNavigate();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -376,8 +378,20 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     clearResult();
   }, [clearResult]);
 
+  // Navigate to single post page when clicking non-interactive areas
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+    if (isInteractive) return;
+    navigate(`/app/post/${post.id}`);
+  }, [navigate, post.id]);
+
   return (
-    <div ref={viewRef} className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div 
+      ref={viewRef} 
+      onClick={handleCardClick}
+      className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors duration-200"
+    >
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
         <CardHeader

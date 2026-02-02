@@ -9,7 +9,8 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { CardHeader } from './CardHeader';
@@ -33,9 +34,21 @@ export function LiveCard({ stream }: LiveCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const navigate = useNavigate();
+
+  // Navigate to single post page when clicking non-interactive areas
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+    if (isInteractive) return;
+    navigate(`/app/post/${stream.id}`);
+  }, [navigate, stream.id]);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div 
+      onClick={handleCardClick}
+      className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer hover:bg-zinc-800/50 transition-colors duration-200"
+    >
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
         <CardHeader
