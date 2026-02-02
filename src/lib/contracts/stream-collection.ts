@@ -1,15 +1,16 @@
 /**
  * StreamCollection Smart Contract Integration
  * ============================================
- * ERC1155 contract for minting DeHub content NFTs on Base Mainnet.
- * Uses AA-aware utilities for gasless transactions via Web3Auth + Pimlico.
+ * ERC1155 contract for minting DeHub content NFTs.
+ * Supports Base and BNB chains with chain-specific contract addresses.
  */
 
 import { Interface } from 'ethers';
-import { writeContractAA, getWalletAddress, parseTxError } from './aa-utils';
-import { BASE_CHAIN_ID } from './dhb-token';
+import { writeContractAA, getWalletAddress, parseTxError, switchChain } from './aa-utils';
+import { BASE_CHAIN_ID, getChainConfig } from './dhb-token';
+import type { ChainId } from '@/components/app/ChainSelector';
 
-// Contract address on Base Mainnet
+// Contract address on Base Mainnet (default for backward compatibility)
 export const STREAM_COLLECTION_ADDRESS = '0x9f8012074d27F8596C0E5038477ACB52057BC934';
 
 // Re-export chain ID for convenience
@@ -44,6 +45,7 @@ export interface MintParams {
   fees?: MintFee[];
   supply?: number;
   uri?: string;
+  chainId?: ChainId;
 }
 
 /**
@@ -59,7 +61,13 @@ export { getWalletAddress as getWeb3AuthSigner };
  * @returns Transaction hash
  */
 export async function mintOnChain(params: MintParams): Promise<string> {
-  console.log('[StreamCollection] Starting on-chain mint with params:', params);
+  const chainId = params.chainId || BASE_CHAIN_ID;
+  const chainConfig = getChainConfig(chainId);
+  
+  console.log('[StreamCollection] Starting on-chain mint with params:', { ...params, chain: chainConfig.name });
+  
+  // Switch to the correct chain first
+  await switchChain(chainId);
   
   const signerAddress = await getWalletAddress();
   console.log('[StreamCollection] Signer address:', signerAddress);
@@ -81,6 +89,8 @@ export async function mintOnChain(params: MintParams): Promise<string> {
   const uri = params.uri || `${params.tokenId}.json`;
 
   console.log('[StreamCollection] Calling mint with:', {
+    contract: chainConfig.streamCollection,
+    chain: chainConfig.name,
     tokenId: tokenId.toString(),
     timestamp: timestamp.toString(),
     v,
@@ -92,9 +102,9 @@ export async function mintOnChain(params: MintParams): Promise<string> {
   });
 
   try {
-    // Use AA-aware write with correct parameter order: id, timestamp, v, r, s, fees, supply, uri
+    // Use AA-aware write with chain-specific contract address
     const result = await writeContractAA(
-      STREAM_COLLECTION_ADDRESS,
+      chainConfig.streamCollection,
       streamCollectionInterface,
       'mint',
       [tokenId, timestamp, v, r, s, fees, supply, uri],
@@ -117,11 +127,12 @@ export async function mintOnChain(params: MintParams): Promise<string> {
 /**
  * Check if a token exists (has been minted)
  */
-export async function isTokenMinted(tokenId: string | number): Promise<boolean> {
+export async function isTokenMinted(tokenId: string | number, chainId: ChainId = BASE_CHAIN_ID): Promise<boolean> {
   try {
+    const chainConfig = getChainConfig(chainId);
     const { readContract } = await import('./aa-utils');
     const creator = await readContract<string>(
-      STREAM_COLLECTION_ADDRESS,
+      chainConfig.streamCollection,
       streamCollectionInterface,
       'creators',
       [BigInt(tokenId)]
@@ -137,11 +148,13 @@ export async function isTokenMinted(tokenId: string | number): Promise<boolean> 
  */
 export async function getTokenBalance(
   owner: string,
-  tokenId: string | number
+  tokenId: string | number,
+  chainId: ChainId = BASE_CHAIN_ID
 ): Promise<bigint> {
+  const chainConfig = getChainConfig(chainId);
   const { readContract } = await import('./aa-utils');
   return readContract<bigint>(
-    STREAM_COLLECTION_ADDRESS,
+    chainConfig.streamCollection,
     streamCollectionInterface,
     'balanceOf',
     [owner, BigInt(tokenId)]
