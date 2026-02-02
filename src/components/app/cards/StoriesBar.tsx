@@ -6,7 +6,9 @@
  */
 
 import { useState } from 'react';
-import { Plus, Video, Mic, Camera } from 'lucide-react';
+import { Plus, Camera } from 'lucide-react';
+import camera3dIcon from '@/assets/icons/camera-3d-icon.png';
+import mic3dIcon from '@/assets/icons/mic-3d-icon.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Drawer,
@@ -97,9 +99,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleShowLiveOptions}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-          <Video className="w-4 h-4 text-white" />
-        </div>
+        <img src={camera3dIcon} alt="Go Live" className="w-8 h-8 object-contain" />
         <span className="text-white font-medium">Go Live</span>
       </button>
       <button
@@ -123,9 +123,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleGoLiveVideo}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-          <Video className="w-4 h-4 text-white" />
-        </div>
+        <img src={camera3dIcon} alt="Video" className="w-8 h-8 object-contain" />
         <div>
           <span className="text-white font-medium block">Video</span>
           <span className="text-zinc-400 text-xs">Start a livestream</span>
@@ -135,9 +133,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
         onClick={handleGoLiveAudio}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-          <Mic className="w-4 h-4 text-white" />
-        </div>
+        <img src={mic3dIcon} alt="Audio" className="w-8 h-8 object-contain" />
         <div>
           <span className="text-white font-medium block">Audio</span>
           <span className="text-zinc-400 text-xs">Start a Stage</span>
