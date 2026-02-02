@@ -20,7 +20,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
-import aiStarIcon from '@/assets/icons/ai-star-icon.png';
+import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -1056,7 +1056,9 @@ export default function AssistantPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
-          <img src={aiStarIcon} alt="AI" className="w-8 h-8 object-contain" />
+          <div className="w-8 h-8 rounded-xl bg-zinc-700 flex items-center justify-center flex-shrink-0">
+            <img src={aiSparkleIcon} alt="AI" className="w-6 h-6 object-contain" />
+          </div>
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">AI Assistant</h1>
         </div>
 
