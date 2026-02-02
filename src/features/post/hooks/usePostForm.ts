@@ -338,21 +338,29 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
 
   const addThumbnailToMedia = useCallback(async (index: number, thumbnailUrl: string) => {
-    // Fetch the blob from URL for upload
+    // Fetch the blob from URL for upload and create a NEW blob URL
+    // This prevents issues where the original blob URL might be revoked elsewhere
     let thumbnailBlob: Blob | undefined;
+    let newThumbnailUrl = thumbnailUrl;
+    
     try {
       const response = await fetch(thumbnailUrl);
       thumbnailBlob = await response.blob();
+      // Create a new blob URL that we own and control
+      newThumbnailUrl = URL.createObjectURL(thumbnailBlob);
     } catch (err) {
       console.warn('[Thumbnail] Failed to fetch blob:', err);
     }
     
     setMedia(prev => prev.map((m, i) => {
       if (i === index && m.type === 'video') {
-        if (m.thumbnail) URL.revokeObjectURL(m.thumbnail);
+        // Only revoke if we have a previous thumbnail that we created
+        if (m.thumbnail && m.thumbnailBlob) {
+          URL.revokeObjectURL(m.thumbnail);
+        }
         return { 
           ...m, 
-          thumbnail: thumbnailUrl, 
+          thumbnail: newThumbnailUrl, 
           thumbnailBlob,
           isAutoThumbnail: false, // Custom upload, not auto-generated
         };
