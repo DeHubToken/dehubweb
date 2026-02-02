@@ -29,7 +29,7 @@ import { useDeHubProfile, useDeHubUserContent, separateUserContent, type Profile
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
-import { getBadgeUrl } from '@/lib/staking-badges';
+
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -839,11 +839,6 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-white">{profile.name}</h2>
                 {profile.verified && <VerifiedBadge className="w-5 h-5" />}
-                <img 
-                  src={getBadgeUrl(apiProfile?.staked)} 
-                  alt="Staking tier" 
-                  className="w-5 h-5 object-contain"
-                />
               </div>
               <div className="flex items-center gap-2">
                 <button
