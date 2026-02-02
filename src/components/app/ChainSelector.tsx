@@ -32,7 +32,7 @@ export const SUPPORTED_CHAINS: Chain[] = [
   },
   {
     id: 56,
-    name: 'BNB Chain',
+    name: 'BNB',
     symbol: 'BNB',
     icon: bnbLogo,
     explorerUrl: 'https://bscscan.com',
@@ -96,9 +96,9 @@ export function ChainSelector({
         </TooltipTrigger>
         <TooltipContent>{selectedChain.name}</TooltipContent>
       </Tooltip>
-      <DrawerContent glass className="border-t border-white/10">
+      <DrawerContent glass className="border-t border-white/10" hideHandle>
         <DrawerHeader className="border-b border-white/10">
-          <DrawerTitle className="text-white">Select Network</DrawerTitle>
+          <DrawerTitle className="text-white">Choose Decentralized Database</DrawerTitle>
         </DrawerHeader>
         <div className="p-4 space-y-2">
           {SUPPORTED_CHAINS.map((chain) => (
