@@ -343,11 +343,51 @@ export function PostMediaPreview({
     }
   }, [extractingFrames]);
 
-  // Trigger frame extraction when video is added
+  // Track video URLs to detect changes
+  const videoUrlsRef = useRef<Map<number, string>>(new Map());
+
+  // Trigger frame extraction when video is added or changed
   useEffect(() => {
+    const currentUrls = new Map<number, string>();
+    
     media.forEach((m, index) => {
-      if (m.type === 'video' && !videoFrames.has(index) && !extractingFrames.has(index)) {
-        extractVideoFrames(m.preview, index);
+      if (m.type === 'video') {
+        currentUrls.set(index, m.preview);
+        const previousUrl = videoUrlsRef.current.get(index);
+        
+        // If video changed or is new, clear old frames and extract new ones
+        if (previousUrl !== m.preview) {
+          // Revoke old frame URLs if they exist
+          const oldFrames = videoFrames.get(index);
+          if (oldFrames) {
+            oldFrames.forEach(url => URL.revokeObjectURL(url));
+            setVideoFrames(prev => {
+              const next = new Map(prev);
+              next.delete(index);
+              return next;
+            });
+          }
+        }
+        
+        // Extract frames if not already done
+        if (!videoFrames.has(index) && !extractingFrames.has(index)) {
+          extractVideoFrames(m.preview, index);
+        }
+      }
+    });
+    
+    // Update tracked URLs
+    videoUrlsRef.current = currentUrls;
+    
+    // Clean up frames for removed videos
+    videoFrames.forEach((frames, index) => {
+      if (!currentUrls.has(index)) {
+        frames.forEach(url => URL.revokeObjectURL(url));
+        setVideoFrames(prev => {
+          const next = new Map(prev);
+          next.delete(index);
+          return next;
+        });
       }
     });
   }, [media, extractVideoFrames, videoFrames, extractingFrames]);
@@ -748,10 +788,32 @@ export function PostMediaPreview({
                       </button>
                     </div>
                     
-                    {/* Thumbnail preview - same dimensions as video */}
+                    {/* Thumbnail preview - same dimensions as video with drag & drop */}
                     <div 
                       className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
                       onClick={() => triggerThumbnailUpload(index)}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.classList.add('border-white', 'bg-white/10');
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.classList.remove('border-white', 'bg-white/10');
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.classList.remove('border-white', 'bg-white/10');
+                        const file = e.dataTransfer.files?.[0];
+                        if (file && file.type.startsWith('image/')) {
+                          const url = URL.createObjectURL(file);
+                          onAddThumbnail?.(index, url);
+                        } else if (file) {
+                          toast.error('Please drop an image file');
+                        }
+                      }}
                     >
                       {m.thumbnail ? (
                         <>
@@ -776,7 +838,7 @@ export function PostMediaPreview({
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
                           <Upload className="w-8 h-8" />
-                          <span className="text-sm">Add Thumbnail</span>
+                          <span className="text-sm">Drop image or click</span>
                         </div>
                       )}
                       {/* Label */}
