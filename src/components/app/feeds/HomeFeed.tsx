@@ -711,7 +711,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Check feedData.pages directly as fallback if items is empty due to pre-fetch guard
   const hasQueryData = feedData?.pages && feedData.pages.length > 0;
   const hasCachedData = hasQueryData && items.length > 0;
-  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
+  // Show loading during initial load OR during random pre-fetch without cached items
+  const isLoadingState = (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading))) 
+    || (isPreFetchingRandom && !hasCachedData);
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -771,7 +773,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <StoriesBar users={storyUsers} />
           </div>
           
-          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 ? (
+          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !isPreFetchingRandom && !hasQueryData ? (
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
