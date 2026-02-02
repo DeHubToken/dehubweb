@@ -223,7 +223,7 @@ export default function SinglePostPage() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-[calc(100vh-2.75rem)] lg:min-h-screen bg-black">
       <PageHeader showBack />
       
       <div className="px-3 sm:px-4 pb-8">
