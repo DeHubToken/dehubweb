@@ -123,7 +123,7 @@ export function CardHeader({
           </Avatar>
         )}
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="font-semibold text-white text-sm truncate max-w-[100px]">{username}</span>
+          <span className="font-semibold text-white text-sm truncate max-w-[100px] sm:max-w-none">{username}</span>
           {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
           <img 
             src={stakingBadgeUrl} 
@@ -131,7 +131,7 @@ export function CardHeader({
             className="w-4 h-4 object-contain shrink-0"
           />
           {formattedHandle && (
-            <span className="text-zinc-500 text-sm truncate max-w-[100px]">{formattedHandle}</span>
+            <span className="text-zinc-500 text-sm truncate max-w-[100px] sm:max-w-none">{formattedHandle}</span>
           )}
           {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
         </div>
