@@ -204,10 +204,19 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     <div 
       ref={containerRef}
       className="fixed inset-0 z-[70] bg-black flex flex-col touch-none"
+      style={{ 
+        // Force true fullscreen on mobile - ignore safe areas
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: '100dvh',
+        width: '100vw',
+      }}
     >
 
-      {/* Header */}
-      <div className="absolute top-6 left-0 right-0 z-20 flex items-center justify-between px-4">
+      {/* Header - overlaid on video */}
+      <div className="absolute top-[env(safe-area-inset-top,0px)] left-0 right-0 z-20 flex items-center justify-between px-4 pt-3">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10 border-2 border-white">
             <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
@@ -258,9 +267,9 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </div>
       </div>
 
-      {/* Story content with drag gesture */}
+      {/* Story content with drag gesture - video covers full screen */}
       <motion.div
-        className="flex-1 flex items-center justify-center"
+        className="absolute inset-0"
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.2}
@@ -273,7 +282,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           autoPlay
           playsInline
           muted={false}
-          className="w-full h-full object-contain pointer-events-none"
+          className="w-full h-full object-cover pointer-events-none"
           onEnded={goNext}
           onTimeUpdate={handleTimeUpdate}
         />
