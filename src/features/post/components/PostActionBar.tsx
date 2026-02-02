@@ -164,7 +164,6 @@ export function PostActionBar({
       <GoLiveModal
         isOpen={goLiveModalOpen}
         onClose={handleGoLiveModalClose}
-        initialMode={liveMode}
       />
     <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
       <div className="flex items-center gap-0.5">
