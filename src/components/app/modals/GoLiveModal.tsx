@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { startLiveStream, type StartLiveStreamResponse } from '@/lib/api/dehub';
+import { createLiveStream, startLiveStream, type StartLiveStreamResponse } from '@/lib/api/dehub';
 import type { LiveMode } from '@/features/post/types';
 
 interface GoLiveModalProps {
@@ -52,18 +52,38 @@ export function GoLiveModal({ isOpen, onClose, initialMode = 'video' }: GoLiveMo
 
     setIsLoading(true);
     try {
-      const response = await startLiveStream({
+      // Step 1: Create the stream first
+      const createResponse = await createLiveStream({
         title: title.trim(),
         description: description.trim() || undefined,
         category: category.trim() || undefined,
       });
 
-      setStreamData(response.result);
+      const streamId = createResponse.result?.streamId;
+
+      if (!streamId) {
+        throw new Error('Failed to create stream - no stream ID returned');
+      }
+
+      // Step 2: Start the stream to get RTMP credentials
+      const startResponse = await startLiveStream({
+        streamId,
+      });
+
+      setStreamData(startResponse.result);
       setStep('ready');
       toast.success('Stream created! Copy your stream key to start broadcasting.');
     } catch (error) {
       console.error('Failed to start stream:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create stream');
+      const message = error instanceof Error ? error.message : 'Failed to create stream';
+      // Handle specific error cases
+      if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
+        toast.error('Session expired. Please log in again.');
+      } else if (message.includes('400')) {
+        toast.error('Invalid request. Please check your input.');
+      } else {
+        toast.error(message);
+      }
     } finally {
       setIsLoading(false);
     }
