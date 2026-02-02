@@ -686,7 +686,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Show loading while pre-fetching pages for random mode
   // Check !hasPreFetched directly to cover all fetch states (not just during active fetch)
   const isPreFetchingRandom = selectedSort.value === 'random' && !hasPreFetched;
-  const isLoadingState = isLoading || isRefreshing || (pinnedPostId && isPinnedLoading) || isPreFetchingRandom;
+  
+  // CRITICAL: Only show skeleton loader when we have NO cached data at all
+  // This prevents the loading flash when returning from a post via back navigation
+  // React Query keeps cached data, so we should show it immediately
+  const hasCachedData = feedData?.pages && feedData.pages.length > 0 && items.length > 0;
+  const isLoadingState = !hasCachedData && (isLoading || isPreFetchingRandom || (pinnedPostId && isPinnedLoading));
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
