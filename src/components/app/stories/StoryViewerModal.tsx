@@ -205,15 +205,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       ref={containerRef}
       className="fixed inset-0 z-[70] bg-black flex flex-col touch-none"
     >
-      {/* Single progress bar for current story */}
-      <div className="absolute top-0 left-0 right-0 z-20 p-2">
-        <div className="h-1 bg-white/30 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-white transition-[width] duration-100 ease-linear"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
 
       {/* Header */}
       <div className="absolute top-6 left-0 right-0 z-20 flex items-center justify-between px-4">
