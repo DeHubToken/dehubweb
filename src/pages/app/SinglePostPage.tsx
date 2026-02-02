@@ -213,8 +213,10 @@ export default function SinglePostPage() {
     <div className="min-h-screen">
       <PageHeader showBack />
       
-      <div className="pb-8">
-        {renderContent()}
+      <div className="px-3 sm:px-4 pb-8">
+        <div className="max-w-2xl mx-auto">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
