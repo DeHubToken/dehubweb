@@ -10,7 +10,7 @@
  */
 
 import { useState } from 'react';
-import { Plus, Video, Image } from 'lucide-react';
+import { Plus, Video, Image, Mic } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Drawer,
@@ -21,7 +21,7 @@ import {
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
-
+import { AudioSpacesModal } from '@/components/app/spaces';
 interface StoryUser {
   name: string;
   avatar: string;
@@ -37,13 +37,29 @@ interface StoriesBarProps {
 export function StoriesBar({ users }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
+  const [isStagesOpen, setIsStagesOpen] = useState(false);
+  const [showLiveOptions, setShowLiveOptions] = useState(false);
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
 
-  const handleGoLive = () => {
+  const handleGoLiveVideo = () => {
+    setShowLiveOptions(false);
     setIsOpen(false);
     requireAuth(() => {
       setIsGoLiveOpen(true);
     });
+  };
+
+  const handleGoLiveAudio = () => {
+    setShowLiveOptions(false);
+    setIsOpen(false);
+    requireAuth(() => {
+      setIsStagesOpen(true);
+    });
+  };
+
+  const handleShowLiveOptions = () => {
+    setIsOpen(false);
+    setShowLiveOptions(true);
   };
 
   const handleAddStory = () => {
@@ -56,7 +72,7 @@ export function StoriesBar({ users }: StoriesBarProps) {
   const menuContent = (
     <div className="space-y-1">
       <button
-        onClick={handleGoLive}
+        onClick={handleShowLiveOptions}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
       >
         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
@@ -72,6 +88,35 @@ export function StoriesBar({ users }: StoriesBarProps) {
           <Image className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Add Story</span>
+      </button>
+    </div>
+  );
+
+  const liveOptionsContent = (
+    <div className="space-y-1">
+      <button
+        onClick={handleGoLiveVideo}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+      >
+        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+          <Video className="w-4 h-4 text-white" />
+        </div>
+        <div>
+          <span className="text-white font-medium block">Video</span>
+          <span className="text-zinc-400 text-xs">Stream with RTMP</span>
+        </div>
+      </button>
+      <button
+        onClick={handleGoLiveAudio}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
+      >
+        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+          <Mic className="w-4 h-4 text-white" />
+        </div>
+        <div>
+          <span className="text-white font-medium block">Audio</span>
+          <span className="text-zinc-400 text-xs">Start a Stage</span>
+        </div>
       </button>
     </div>
   );
@@ -96,6 +141,10 @@ export function StoriesBar({ users }: StoriesBarProps) {
         isOpen={isGoLiveOpen} 
         onClose={() => setIsGoLiveOpen(false)} 
       />
+      <AudioSpacesModal
+        isOpen={isStagesOpen}
+        onClose={() => setIsStagesOpen(false)}
+      />
       <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
       <div className="relative">
         {/* Right fade only */}
@@ -112,6 +161,16 @@ export function StoriesBar({ users }: StoriesBarProps) {
                 <DrawerTitle className="text-white">Create</DrawerTitle>
               </DrawerHeader>
               {menuContent}
+            </DrawerContent>
+          </Drawer>
+
+          {/* Live Options Drawer (Video/Audio) */}
+          <Drawer open={showLiveOptions} onOpenChange={setShowLiveOptions}>
+            <DrawerContent glass className="px-4 pb-8" hideHandle>
+              <DrawerHeader className="mb-2">
+                <DrawerTitle className="text-white">Go Live</DrawerTitle>
+              </DrawerHeader>
+              {liveOptionsContent}
             </DrawerContent>
           </Drawer>
 
