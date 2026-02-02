@@ -144,9 +144,7 @@ export default function MessagesPage() {
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-zinc-700 flex items-center justify-center flex-shrink-0">
-                  <img src={messagesBubbleIcon} alt="Messages" className="w-6 h-6 object-contain" />
-                </div>
+                <img src={messagesBubbleIcon} alt="Messages" className="w-10 h-10 object-contain" />
                 <h1 className="text-xl font-bold text-white">Messages</h1>
               </div>
               <Button
