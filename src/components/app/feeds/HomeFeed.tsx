@@ -375,7 +375,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     limit: PAGE_SIZE,
     sortBy,
     sortOrder,
-    address: walletAddress || undefined,
+    // Note: Don't pass address here - that filters to only that user's posts.
+    // The auth token in the request header handles personalization (isLiked, etc.)
     range,
     // Only show minted content
     status: 'minted',
