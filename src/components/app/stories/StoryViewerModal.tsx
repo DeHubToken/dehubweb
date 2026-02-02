@@ -2,13 +2,17 @@
  * Story Viewer Modal
  * ==================
  * Full-screen viewer for watching stories with auto-progress.
+ * Allows users to delete their own stories.
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Pause, Play, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import type { Story } from '@/hooks/use-stories';
 
 interface StoryViewerModalProps {
@@ -22,10 +26,15 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
 
   const currentStory = stories[currentIndex];
+  const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
 
   useEffect(() => {
     setCurrentIndex(initialIndex);
@@ -84,6 +93,38 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   };
 
+  const handleDelete = async () => {
+    if (!currentStory || !isOwnStory) return;
+
+    setIsDeleting(true);
+    try {
+      // Delete from database
+      const { error } = await supabase
+        .from('stories')
+        .delete()
+        .eq('id', currentStory.id);
+
+      if (error) throw error;
+
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: ['stories'] });
+
+      toast.success('Story deleted');
+
+      // Navigate to next story or close
+      if (stories.length === 1) {
+        onClose();
+      } else if (currentIndex >= stories.length - 1) {
+        setCurrentIndex((prev) => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error('Failed to delete story:', error);
+      toast.error('Failed to delete story');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleClose = () => {
     if (progressRef.current) {
       clearInterval(progressRef.current);
@@ -120,7 +161,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           </Avatar>
           <div>
             <p className="text-white font-medium text-sm">
-              {currentStory.username || `${currentStory.wallet_address.slice(0, 6)}...`}
+              {currentStory.username ? `@${currentStory.username}` : `${currentStory.wallet_address.slice(0, 6)}...`}
             </p>
             <p className="text-white/60 text-xs">
               {formatDistanceToNow(new Date(currentStory.created_at), { addSuffix: true })}
@@ -129,6 +170,20 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Delete button - only show for own stories */}
+          {isOwnStory && (
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="w-8 h-8 rounded-full bg-red-500/80 backdrop-blur-sm flex items-center justify-center disabled:opacity-50"
+            >
+              {isDeleting ? (
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 text-white" />
+              )}
+            </button>
+          )}
           <button
             onClick={togglePause}
             className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
