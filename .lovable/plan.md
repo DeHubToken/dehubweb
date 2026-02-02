@@ -1,71 +1,91 @@
 
-# Plan: Fix "No Content Yet" Flash During Random Mode Pre-fetch
+# Plan: Fix Long Loading Time When Clicking Home Logo
 
-## Problem Identified
+## Root Cause Analysis
 
-The feed sometimes shows "No Content Yet" briefly because of a disconnect between two checks:
-
-1. **Loading State Check** (line 714): Correctly checks `hasQueryData` (if React Query has pages)
-2. **Empty State Check** (line 774): Incorrectly checks `items.length === 0` 
-
-When in "Random" sort mode (the default), the `items` array is deliberately kept empty until all 5 pages are pre-fetched (to enable cross-page shuffling). But the empty state check doesn't account for this - it sees `items.length === 0` and shows "No Content Yet" instead of showing a loading state.
-
-### The Race Condition Flow
+When clicking the home button/logo, the app dispatches a `home-refresh` event which triggers a **full feed reset**:
 
 ```
-Page loads with Random sort
-  → hasPreFetched = false (from state)
-  → feedData.pages starts populating from cache/API
-  → hasQueryData = true (pages exist)
-  → isLoadingState = false (has query data!)
-  → items = [] (guard returns empty during pre-fetch)
-  → Empty state check: items.length === 0 ✓
-  → Shows "No Content Yet" ❌
+Logo Click
+  → dispatches 'home-refresh' event
+  → triggerRefresh() called
+  → refreshKey increments
+  → HomeFeed receives new shuffleKey
+  → Resets hasPreFetched to false
+  → Clears sessionStorage cache marker
+  → Refetches data
+  → For "Random" mode: pre-fetches 5 pages sequentially!
 ```
 
-## Solution
+This causes a long loading spinner because:
+1. The feed completely resets its state
+2. Random mode requires pre-fetching 5 pages before showing content
+3. Each page fetch is sequential, not parallel
 
-Add an additional guard to the empty state check that accounts for the pre-fetching phase. The empty state should ONLY show when:
-1. Items is empty AND
-2. We're NOT pre-fetching random pages AND  
-3. We actually have no cached data
+## Solution: Smart Refresh Logic
 
-### Code Change
+Only trigger a full refresh when it makes sense:
 
-**File: `src/components/app/feeds/HomeFeed.tsx`**
+1. **If navigating TO home from another page**: Just navigate, don't refresh
+2. **If already on home and clicking logo**: Scroll to top, optionally refresh only if explicitly requested (e.g., long-press or pull-to-refresh)
 
-Update line 774 from:
+The current behavior always refreshes, even when just navigating to home. This is unnecessary and slow.
+
+## Implementation
+
+### 1. Update Logo Click Handlers
+
+**Files:** 
+- `src/components/app/navigation/MobileHeader.tsx`
+- `src/components/app/navigation/DesktopSidebar.tsx`
+
+Change the logo click behavior:
+- If NOT on `/app` → Just navigate to `/app` (no refresh)
+- If already on `/app` → Scroll to top only (no refresh), or dispatch refresh only on double-tap
+
 ```tsx
-{items.length === 0 && !pinnedItem && optimisticPosts.length === 0 ? (
+const handleLogoClick = (e: React.MouseEvent) => {
+  e.preventDefault();
+  
+  if (location.pathname === '/app') {
+    // Already on home - just scroll to top, don't trigger full refresh
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (location.pathname.startsWith('/app')) {
+    // Coming from another app page - navigate without refresh
+    navigate('/app');
+  } else {
+    // Coming from outside app - navigate normally
+    navigate('/app');
+  }
+};
 ```
 
-To:
-```tsx
-{items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !isPreFetchingRandom && !hasQueryData ? (
-```
+### 2. Remove Automatic Refresh on Navigation
 
-This ensures:
-- During pre-fetch: `isPreFetchingRandom` is true → Empty state won't show
-- After pre-fetch with data: `items.length > 0` → Empty state won't show
-- Truly empty (no data from API): Shows empty state correctly
+The `home-refresh` event should only be dispatched when explicitly requested (pull-to-refresh, double-tap on home tab, etc.), NOT on regular navigation.
 
-### Additional Safety Improvement
+### 3. Preserve Feed State
 
-We should also show a loading indicator during the pre-fetch phase. Currently, the loading state only shows when `!hasQueryData`, but during pre-fetch we want visual feedback even if we have some cached pages.
-
-Update the loading state logic:
-```tsx
-// Show loading during initial load OR during random pre-fetch
-const isLoadingState = (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading))) 
-  || (isPreFetchingRandom && !hasCachedData);
-```
-
-## Files to Modify
-
-- `src/components/app/feeds/HomeFeed.tsx` - Fix empty state condition
+When navigating back to home, the overlay pattern already preserves state. For other navigations, React Query's cache ensures fast loading. The pre-fetch state (`hasPreFetched`) should NOT be reset just from navigation.
 
 ## Expected Result
 
-- No more "No Content Yet" flash during random mode pre-fetch
-- Loading spinner shows appropriately during pre-fetch
-- Truly empty feeds still show the empty state correctly
+| Action | Before | After |
+|--------|--------|-------|
+| Click logo while on home | Full refresh, 5-page pre-fetch, long spinner | Scrolls to top instantly |
+| Click logo from /app/post/:id | Full refresh, 5-page pre-fetch, long spinner | Shows cached feed instantly |
+| Click logo from /app/settings | Full refresh, 5-page pre-fetch, long spinner | Shows cached feed instantly |
+| Pull-to-refresh on home | Full refresh | Full refresh (unchanged) |
+| Double-tap home tab | Toggles filters | Could trigger refresh (optional) |
+
+## Files to Modify
+
+1. **`src/components/app/navigation/MobileHeader.tsx`** - Update logo click handler
+2. **`src/components/app/navigation/DesktopSidebar.tsx`** - Update logo click handler
+
+## Technical Notes
+
+- React Query cache (`staleTime`) handles data freshness
+- The overlay pattern preserves state when navigating from posts
+- Pull-to-refresh remains the explicit way to force a refresh
+- The existing `home-refresh` event listener in HomePage can stay for pull-to-refresh, but won't be triggered by logo clicks
