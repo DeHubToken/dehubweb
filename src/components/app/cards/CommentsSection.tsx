@@ -718,11 +718,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         )}
       </div>
 
-        {/* New Comment Input - sticky at bottom */}
-        <div className="mt-auto pt-4 border-t border-zinc-800 bg-inherit">
+        {/* New Comment Input - sticky at bottom, clean minimal style */}
+        <div className="mt-auto pt-3 border-t border-zinc-800/50">
           {/* Reply indicator */}
           {replyTo && (
-            <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/50 rounded-lg">
+            <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-zinc-800 rounded-xl">
               <Reply className="w-3.5 h-3.5 text-zinc-400" />
               <span className="text-xs text-zinc-400">Replying to @{replyTo.username}</span>
               <button 
@@ -736,7 +736,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
           {/* Voice note preview with visualizer */}
           {voiceNote && (
-            <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800/50">
+            <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800">
               <AudioVisualizer
                 audioUrl={voiceNote.url}
                 isPlaying={isPlayingPreview}
@@ -744,7 +744,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                 className="w-full h-32"
                 showStylePicker={true}
               />
-              <div className="flex items-center justify-between px-3 py-2 bg-zinc-800/80">
+              <div className="flex items-center justify-between px-3 py-2 bg-zinc-800">
                 <span className="text-xs text-zinc-400">{voiceNote.duration}s voice note</span>
                 <button
                   onClick={removeVoiceNote}
@@ -757,43 +757,40 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             </div>
           )}
 
-          <div className="flex gap-2 pb-1.5">
-            <div className="flex-1 flex gap-2">
-              {isRecording ? (
-                /* Recording indicator inside input area */
-                <div className="flex-1 flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-lg px-3 h-9">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                  <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
-                  <button
-                    onClick={stopRecording}
-                    className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"
-                  >
-                    <Square className="w-3 h-3 fill-current" />
-                    Stop
-                  </button>
-                </div>
-              ) : (
-                <>
+          <div className="flex items-center gap-2 pb-1">
+            {isRecording ? (
+              /* Recording indicator */
+              <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
+                <button
+                  onClick={stopRecording}
+                  className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"
+                >
+                  <Square className="w-3 h-3 fill-current" />
+                  Stop
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex-1 flex items-center bg-zinc-800 rounded-xl px-3 min-h-[40px]">
                   <textarea
                     ref={inputRef}
                     placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    className="flex-1 bg-white/5 border border-white/10 text-white text-sm rounded-md px-3 py-2 min-h-[36px] max-h-[120px] resize-none focus:outline-none focus:ring-0 placeholder:text-zinc-500"
+                    className="flex-1 bg-transparent text-white text-sm py-2.5 min-h-[40px] max-h-[120px] resize-none focus:outline-none placeholder:text-zinc-500"
                     rows={1}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
-                        // Enter without Shift = submit
                         e.preventDefault();
                         if (canPost) handlePostComment();
                       } else if (e.key === 'Escape') {
                         handleClearReply();
                         (e.target as HTMLTextAreaElement).blur();
                       }
-                      // Shift+Enter = default behavior (new line)
                     }}
                     onInput={(e) => {
-                      // Auto-resize textarea
                       const target = e.target as HTMLTextAreaElement;
                       target.style.height = 'auto';
                       target.style.height = Math.min(target.scrollHeight, 120) + 'px';
@@ -804,30 +801,30 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                       }, 100);
                     }}
                   />
-                  {!voiceNote && (
-                    <button
-                      onClick={startRecording}
-                      className="w-9 h-9 flex-shrink-0 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg text-zinc-400 hover:text-red-400 hover:border-red-500/50 transition-colors"
-                      aria-label="Record voice note"
-                    >
-                      <Mic className="w-4 h-4" />
-                    </button>
-                  )}
-                </>
-              )}
-              <button
-                onClick={handlePostComment}
-                disabled={!canPost}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex-shrink-0 border",
-                  canPost
-                    ? "bg-white/10 border-white/10 text-white hover:bg-white/15"
-                    : "bg-white/5 border-white/10 text-zinc-500 cursor-not-allowed"
+                </div>
+                {!voiceNote && (
+                  <button
+                    onClick={startRecording}
+                    className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 rounded-xl text-zinc-400 hover:text-red-400 transition-colors"
+                    aria-label="Record voice note"
+                  >
+                    <Mic className="w-5 h-5" />
+                  </button>
                 )}
-              >
-                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
-              </button>
-            </div>
+              </>
+            )}
+            <button
+              onClick={handlePostComment}
+              disabled={!canPost}
+              className={cn(
+                "h-10 px-4 rounded-xl text-sm font-medium transition-colors flex-shrink-0",
+                canPost
+                  ? "bg-white text-black hover:bg-zinc-200"
+                  : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+              )}
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Post'}
+            </button>
           </div>
         </div>
     </motion.div>
