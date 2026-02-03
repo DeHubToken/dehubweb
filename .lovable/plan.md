@@ -1,133 +1,113 @@
 
-# Fix: Scroll Position Restoration on Back Navigation
 
-## Root Cause Analysis (Final)
+# Story Editor: Emoji & Text Overlays
 
-After extensive debugging, including live browser testing, the **true root cause** has been identified:
+## Overview
+Add the ability for users to place draggable emoji stickers and text overlays on their recorded story videos before confirming. This will create an editing experience similar to Instagram/TikTok stories.
 
-### The Problem: Render Timing Race Condition
+---
 
-When navigating from home to a post:
+## What You'll Get
 
-1. Route changes to `/app/post/123`
-2. AppLayout re-renders with new location
-3. **CRITICAL**: On this FIRST render:
-   - `isPostRoute = true`
-   - `cameFromHome = false` (state hasn't updated yet!)
-   - `showHomePagePersisted = true && false = false`
-4. Since `showHomePagePersisted` is false, the condition `(isHomePage || showHomePagePersisted)` becomes `(false || false) = false`
-5. **HomePage UNMOUNTS** - losing all its state and scroll position
-6. **THEN** the `useEffect` runs and sets `setCameFromHome(true)`
-7. This triggers a re-render, but it's too late - HomePage has already unmounted
+### Emoji Stickers
+- Tap an emoji button to open an emoji picker (reusing the existing emoji categories)
+- Select an emoji and it appears on the video
+- Drag emojis anywhere on the screen
+- Pinch to resize emojis
+- Tap the X on a selected emoji to delete it
 
-The overlay pattern is broken because the state update happens **after** the render, not before.
+### Text Overlays  
+- Tap a text button to add text
+- Opens a text input with styling options
+- Choose from different text styles (bold, outlined, etc.)
+- Drag text anywhere on the screen
+- Tap on text to edit or delete it
 
-## Solution
+---
 
-Initialize `cameFromHome` synchronously based on what we can detect during the initial render:
+## How It Will Look
 
-### Approach: Use Lazy State Initialization
+The preview screen will have a new toolbar at the top with:
+- **Emoji button** - Opens the emoji picker
+- **Text button** - Opens text input mode
 
-React's `useState` accepts an initializer function that runs only once during component mount. We can check sessionStorage AND detect if we're on a post route with a valid "came from home" flag to initialize the state correctly.
+Stickers and text will float on top of the video, with visual handles when selected for repositioning or deletion.
 
-Additionally, we need to save the scroll position **before** navigation happens, not after. This requires capturing it during the click event, before React Router processes the navigation.
+---
 
-## Implementation
+## Technical Details
 
-### File 1: `src/components/app/AppLayout.tsx`
+### New Components
 
-**Change 1: Initialize `cameFromHome` synchronously using lazy state initialization**
+**1. StoryOverlayEditor.tsx**
+A new component that manages all overlays on the story preview:
+- Renders emoji and text elements as draggable overlays
+- Handles touch/mouse events for dragging and repositioning
+- Manages selection state for editing/deleting overlays
 
-Replace line 44:
-```typescript
-// Before:
-const [cameFromHome, setCameFromHome] = useState(false);
+**2. StoryEmojiPicker.tsx**
+A fullscreen-friendly emoji picker adapted from the existing EmojiPicker:
+- Bottom sheet/drawer style for mobile
+- Category tabs (Smileys, Gestures, Hearts, Objects)
+- Large touch-friendly emoji buttons
 
-// After: Initialize synchronously from sessionStorage
-const [cameFromHome, setCameFromHome] = useState(() => {
-  // Check sessionStorage on INITIAL RENDER to handle post routes correctly
-  const storedOrigin = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY);
-  return storedOrigin === 'home';
-});
-```
+**3. StoryTextInput.tsx**
+Text input overlay for adding/editing text:
+- Text input field with live preview
+- Style buttons (bold, outlined, colored background)
+- Color picker for text color
+- Done/Cancel buttons
 
-**Change 2: Save scroll position synchronously BEFORE navigation**
+### Data Structure
+Each overlay will be stored as an object with:
+- Type (emoji or text)
+- Content (the emoji character or text string)
+- Position (x, y as percentages)
+- Scale (for pinch-to-zoom resize)
+- Style (for text: color, background, font style)
 
-The scroll position must be saved BEFORE React Router processes the navigation, not after. We need to use a global click listener or save on scroll events.
+### Touch Handling
+- Single finger drag: Move overlay position
+- Pinch gesture: Resize overlay
+- Tap on overlay: Select it (show delete button)
+- Tap elsewhere: Deselect
 
-Add a scroll position tracker that saves continuously:
+### Integration with Story Confirmation
+When the user clicks "Confirm":
+- Overlays are rendered onto the video using canvas compositing
+- The final video blob includes all stickers and text burned in
+- Uses similar canvas approach as the existing watermark.ts utility
 
-```typescript
-// Save home scroll position continuously when on home page
-useEffect(() => {
-  const isHome = location.pathname === '/app';
-  if (!isHome) return;
-  
-  const saveScroll = () => {
-    sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(window.scrollY));
-  };
-  
-  // Save immediately
-  saveScroll();
-  
-  // Save on every scroll
-  window.addEventListener('scroll', saveScroll, { passive: true });
-  
-  return () => {
-    window.removeEventListener('scroll', saveScroll);
-  };
-}, [location.pathname]);
-```
+---
 
-**Change 3: Set the origin flag when clicking to navigate TO a post**
+## Files to Create/Modify
 
-Modify the effect that detects navigation to set the flag IMMEDIATELY when detecting a post route (for initial render cases):
+| File | Action | Purpose |
+|------|--------|---------|
+| `src/components/app/stories/StoryOverlayEditor.tsx` | Create | Main overlay management component |
+| `src/components/app/stories/StoryEmojiPicker.tsx` | Create | Fullscreen emoji picker for stories |
+| `src/components/app/stories/StoryTextInput.tsx` | Create | Text input with styling options |
+| `src/components/app/stories/StoryRecorderModal.tsx` | Modify | Add overlay editor to preview screen |
+| `src/components/app/stories/index.ts` | Modify | Export new components |
+| `src/lib/story-compositor.ts` | Create | Utility to burn overlays into video |
 
-```typescript
-// Detect navigation from home to post
-useEffect(() => {
-  const currentPath = location.pathname;
-  const prevPath = prevPathRef.current;
-  
-  // Navigating TO a post route FROM home - mark origin
-  if (isPostRoute && prevPath === '/app') {
-    setCameFromHome(true);
-    sessionStorage.setItem(POST_OVERLAY_ORIGIN_KEY, 'home');
-    // Scroll is already saved by continuous tracker above
-  }
-  
-  // Update ref AFTER all checks
-  prevPathRef.current = currentPath;
-}, [location.pathname, isPostRoute]);
-```
+---
 
-**Change 4: Simplify the restoration logic**
+## Implementation Phases
 
-Keep the existing `useLayoutEffect` for restoration, but remove the redundant sessionStorage check from the first useEffect.
+**Phase 1: Emoji Stickers**
+- Create overlay data structure and state management
+- Build draggable emoji rendering
+- Create emoji picker adapted for fullscreen
+- Add emoji toolbar button to preview screen
 
-## Technical Summary
+**Phase 2: Text Overlays**
+- Create text input component with styling
+- Add text overlay rendering with drag support
+- Integrate text button into toolbar
 
-| Issue | Current Behavior | Fix |
-|-------|-----------------|-----|
-| `cameFromHome` initialized to `false` | HomePage unmounts on first render | Initialize from sessionStorage |
-| Scroll saved after navigation | Position may be 0 after route change | Save continuously while on home |
-| State update in useEffect | Runs after render | Use lazy state initializer |
+**Phase 3: Polish & Compositing**
+- Implement canvas compositing to burn overlays into final video
+- Add delete functionality for selected overlays
+- Fine-tune touch handling and visual feedback
 
-## Expected Result
-
-1. User scrolls to position 1500 on home feed
-2. Scroll is continuously saved to sessionStorage
-3. User clicks a post
-4. AppLayout re-renders with `cameFromHome = true` (from sessionStorage init)
-5. `showHomePagePersisted = true` immediately
-6. HomePage stays mounted with `hidden` class
-7. User presses back
-8. Scroll restored to 1500
-
-## Code Changes Summary
-
-File: `src/components/app/AppLayout.tsx`
-
-1. Change `useState(false)` to `useState(() => sessionStorage.getItem('post-overlay-origin') === 'home')`
-2. Add continuous scroll position saving effect when on home page
-3. Simplify the navigation detection effect (remove redundant checks)
