@@ -643,7 +643,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       <div className={`relative flex-1 min-h-0 ${activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
-          <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
@@ -695,7 +695,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* Quotes Tab */}
         {activeTab === 'quotes' && (
-          <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -708,7 +708,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
         {/* Search Tab */}
         {activeTab === 'search' && (
-          <div className="absolute inset-0 overflow-y-auto divide-y divide-zinc-800 pt-2 pb-2">
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
