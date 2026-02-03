@@ -67,17 +67,21 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   const prefetchPromises: Promise<void>[] = [];
   
   // 1. Videos Feed - matches VideosFeed component's useUnifiedFeed call
-  // VideosFeed default sort is SORT_OPTIONS[0] = 'random', but getUnifiedSortBy('random') doesn't exist
-  // Looking at VideosFeed: selectedSort defaults to SORT_OPTIONS[0] which is 'random'
-  // getUnifiedSortBy('random') falls through to default case and returns 'createdAt'
-  // Actually, checking the switch: 'random' is not handled, so it falls to default = 'createdAt'
-  // Query key: ['unified-feed', params, limit]
+  // CRITICAL: Query key must match EXACTLY what VideosFeed passes to useUnifiedFeed
+  // useUnifiedFeed destructures: { enabled = true, limit = 20, ...params } = options
+  // So the query key is: ['unified-feed', params, limit]
+  // VideosFeed passes: postType, sortBy, sortOrder, range, address, isPPV, hasBounty, isLocked, status
+  // Even if these are undefined, they become keys in the params object
   const videosParams = {
     postType: 'video' as const,
     sortBy: 'createdAt' as const, // Default for 'random' → falls through to 'createdAt'
     sortOrder: 'desc' as const,
+    range: undefined, // VideosFeed passes this even when undefined
+    address: walletAddress || undefined,
+    isPPV: undefined, // VideosFeed passes contentFilters.ppv || undefined
+    hasBounty: undefined, // VideosFeed passes contentFilters.w2e || undefined
+    isLocked: undefined, // VideosFeed passes contentFilters.locked || undefined
     status: 'minted' as const,
-    address: walletAddress || undefined, // Always include address key
   };
   prefetchPromises.push(
     queryClient.prefetchInfiniteQuery({
@@ -100,15 +104,15 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   
   // 2. Images Feed - matches ImagesFeed's useDeHubImages call
   // useDeHubImages({ unit: 15, sortMode, address }) -> useDeHubFeed with postType: 'feed-images'
+  // useDeHubFeed query key: ['dehub-feed', { ...searchParams, status }]
   // Default sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new'
   // Default selectedSort is SORT_OPTIONS[0] = 'random', so sortMode = 'new'
-  // Query key: ['dehub-feed', { postType, status, unit, sortMode?, address? }]
-  const imagesParams: { postType: 'feed-images'; status: 'minted'; unit: number; sortMode: 'new'; address: string | undefined } = {
-    postType: 'feed-images',
-    status: 'minted',
+  const imagesParams = {
     unit: 15,
-    sortMode: 'new', // Default: 'random' maps to 'new'
-    address: walletAddress || undefined, // Always include address key
+    sortMode: 'new' as const, // Default: 'random' maps to 'new'
+    address: walletAddress || undefined,
+    postType: 'feed-images' as const, // Added by useDeHubImages
+    status: 'minted' as const, // Added by useDeHubFeed default
   };
   prefetchPromises.push(
     queryClient.prefetchInfiniteQuery({
@@ -127,14 +131,15 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   );
   
   // 3. Shorts Feed - matches ShortsFeed's useDeHubVideos call
-  // useDeHubVideos({ unit: 15, sortMode, category?, address }) -> useDeHubFeed with no postType
-  // Default sortMode: getApiSortMode('random') = 'new'
-  // Query key: ['dehub-feed', { status, unit, sortMode?, category?, address? }]
-  const shortsParams: { status: 'minted'; unit: number; sortMode: 'new'; address: string | undefined } = {
-    status: 'minted',
+  // useDeHubVideos({ unit: 15, sortMode, category?, address }) -> useDeHubFeed with no postType override
+  // Default sortMode: getApiSortMode('random') = 'new', default category: undefined
+  // Query key: ['dehub-feed', { unit, sortMode, category, address, status }]
+  const shortsParams = {
     unit: 15,
-    sortMode: 'new', // Default: 'random' maps to 'new' via getApiSortMode
-    address: walletAddress || undefined, // Always include address key
+    sortMode: 'new' as const, // Default: 'random' maps to 'new' via getApiSortMode
+    category: undefined, // ShortsFeed starts with null → undefined
+    address: walletAddress || undefined,
+    status: 'minted' as const, // Added by useDeHubFeed default
   };
   prefetchPromises.push(
     queryClient.prefetchInfiniteQuery({
@@ -154,6 +159,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   
   // 4. Music Feed - matches MusicFeed's inline useInfiniteQuery
   // Query key: ['music-videos-infinite', walletAddress]
+  // Note: MusicFeed uses walletAddress directly (not || undefined), and null if not logged in
   prefetchPromises.push(
     queryClient.prefetchInfiniteQuery({
       queryKey: ['music-videos-infinite', walletAddress || null],
@@ -184,14 +190,18 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   );
   
   // 5. Live Feed - matches LiveFeed's useDeHubLive call
-  // Query key: ['dehub-live', { unit?, sortMode?, category? }]
-  const liveParams = {};
+  // LiveFeed calls: useDeHubLive({ unit: 15, sortMode: 'recent' })
+  // Query key: ['dehub-live', options] where options = { unit: 15, sortMode: 'recent' }
+  const liveParams = {
+    unit: 15,
+    sortMode: 'recent' as const,
+  };
   prefetchPromises.push(
     queryClient.prefetchInfiniteQuery({
       queryKey: ['dehub-live', liveParams],
       queryFn: async () => {
         try {
-          const response = await getLiveStreams({ page: 0, unit: 15 });
+          const response = await getLiveStreams({ page: 0, unit: 15, sortMode: 'recent' });
           const streams = response.result || [];
           return { data: streams, page: 0, has_more: streams.length >= 15, total: streams.length, limit: 15 };
         } catch {
