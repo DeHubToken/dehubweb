@@ -1,204 +1,160 @@
 
-# Fix: Tab Switching Causes Feed Refresh (Complete Solution)
 
-## Problem Summary
+# Fix: Tab Switching Feed Refresh (Root Cause Found)
 
-When switching between tabs (Home, Videos, Images, Shorts, Music, Live), each feed refreshes instead of loading instantly from cache. The user sees a loading state every time they switch tabs.
+## Problem
 
-## Root Cause Analysis
+When switching between tabs (Home → Videos/Images/Shorts), the feeds refresh instead of loading instantly from cache. The user sees loading states and network requests fire.
 
-After investigating the network requests, I found **two distinct issues**:
+## Root Cause
 
-### Issue 1: Wallet Address Timing Mismatch
+**The "Random" sort mode pre-fetches 5 pages to enable cross-page shuffling.**
 
-Network logs show:
-- **Prefetch call**: `GET /api/feed?...&status=minted` (NO address)
-- **VideosFeed call**: `GET /api/feed?...&status=minted&address=0x8fa51...` (WITH address)
+When VideosFeed/ImagesFeed/ShortsFeed mounts with "Random" as the default sort:
 
-The prefetch runs with `walletAddress = null/undefined`, but when VideosFeed renders, the user is logged in and has a walletAddress. React Query sees these as **completely different queries** because the query keys don't match.
-
-**Timeline:**
-```
-0ms     - HomePage mounts
-500ms   - isHomeFeedLoaded = true
-1500ms  - useFeedPrefetch runs, walletAddress might still be null
-???ms   - Web3Auth finishes, walletAddress = "0x..."
-         - User switches to Videos tab
-         - VideosFeed uses walletAddress = "0x..." 
-         - CACHE MISS! Different query key
-```
-
-### Issue 2: Inconsistent Query Key Structure
-
-Even when walletAddress matches, the query key objects may have different structures:
+1. Page 1 loads from cache (if prefetched) ✓
+2. The random prefetch effect immediately triggers, fetching pages 2, 3, 4, 5
+3. This causes the loading spinner and network requests
 
 ```typescript
-// Prefetch creates:
-{ postType: 'video', sortBy: 'createdAt', status: 'minted' }
-
-// VideosFeed creates (includes undefined keys):
-{ postType: 'video', sortBy: 'createdAt', sortOrder: 'desc', 
-  range: undefined, address: undefined, isPPV: undefined, 
-  hasBounty: undefined, isLocked: undefined, status: 'minted' }
+// VideosFeed.tsx lines 444-459
+useEffect(() => {
+  if (selectedSort.value !== 'random') {
+    setHasPreFetched(true);
+    return;
+  }
+  
+  const currentPageCount = apiData?.pages?.length || 0;
+  
+  // This triggers IMMEDIATELY when page 1 is from cache
+  if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
+    fetchNextPage(); // Triggers network requests!
+  }
+}, [...]);
 ```
-
-React Query's deep equality check fails because `{ a: undefined }` ≠ `{}`.
 
 ## Solution
 
-### Part 1: Wait for Wallet State to Stabilize
+**Change the default sort from "Random" to "Latest"** for Videos, Images, and Shorts feeds.
 
-Before prefetching, we need to ensure the wallet state is stable. If the user is in the process of connecting, wait for that to complete.
+### Why This Works
 
-### Part 2: Prefetch Without User-Specific Params
+- "Latest" sort only needs page 1 initially
+- No multi-page prefetch is triggered
+- Page 1 comes from cache = instant display
+- User can still select "Random" if desired (will then prefetch 5 pages)
 
-For feeds that support it (Videos, Images, Shorts), prefetch the **public feed** (without address). Then, if the user IS logged in, also prefetch WITH their address.
+### Alternative Considered (Not Recommended)
 
-This ensures:
-- Logged-out users get instant cache hits
-- Logged-in users get instant cache hits
+Prefetching 5 pages for each feed would mean:
+- 5 pages × 3 feeds (Videos, Images, Shorts) × 2 variants (public + auth) = **30 API calls**
+- This is excessive and would slow initial load significantly
 
-### Part 3: Match Query Keys Exactly
+## File Changes
 
-Ensure every prefetch query key **exactly** matches what the feed component generates, including all `undefined` values.
+### 1. `src/components/app/feeds/VideosFeed.tsx`
 
-## Implementation Changes
-
-### File: `src/hooks/use-feed-prefetch.ts`
+**Change default sort from SORT_OPTIONS[0] ("Random") to SORT_OPTIONS[1] ("Latest"):**
 
 ```typescript
-// Key changes:
+// Line ~369
+// Before:
+const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
 
-// 1. Track if wallet is ready (not in a connecting state)
-const { walletAddress, isConnecting } = useAuth();
-
-// 2. Wait for wallet state to be stable before prefetching
-useEffect(() => {
-  if (!isHomeFeedLoaded) return;
-  if (isConnecting) return; // Wait for wallet connection to finish
-  // ... rest of prefetch logic
-}, [isHomeFeedLoaded, queryClient, walletAddress, isConnecting]);
-
-// 3. Prefetch BOTH logged-out AND logged-in variants for each feed
-async function prefetchAllFeeds(queryClient, walletAddress) {
-  // Videos - prefetch WITHOUT address (public feed)
-  const videosParamsPublic = {
-    postType: 'video',
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
-    range: undefined,
-    address: undefined,  // Public feed
-    isPPV: undefined,
-    hasBounty: undefined,
-    isLocked: undefined,
-    status: 'minted',
-  };
-  prefetchPromises.push(prefetchVideos(videosParamsPublic));
-  
-  // Videos - if logged in, ALSO prefetch WITH address
-  if (walletAddress) {
-    const videosParamsAuth = {
-      ...videosParamsPublic,
-      address: walletAddress,
-    };
-    prefetchPromises.push(prefetchVideos(videosParamsAuth));
-  }
-  
-  // Same pattern for Images, Shorts...
-}
+// After:
+const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]); // Default to Latest
 ```
 
-### File: `src/contexts/AuthContext.tsx` (if needed)
+### 2. `src/components/app/feeds/ImagesFeed.tsx`
 
-Export `isConnecting` state so prefetch can wait:
+**Same change:**
+
 ```typescript
-export const useAuth = () => {
-  // ...existing code
-  return { walletAddress, isConnecting, /* ... */ };
+// Line ~267
+// Before:
+const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
+
+// After:
+const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]); // Default to Latest
+```
+
+### 3. `src/components/app/feeds/ShortsFeed.tsx`
+
+**Same change:**
+
+```typescript
+// Line ~217
+// Before:
+const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
+
+// After:
+const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]); // Default to Latest
+```
+
+### 4. `src/hooks/use-feed-prefetch.ts`
+
+**Update prefetch to use "Latest" sort parameters to match the new default:**
+
+For Videos:
+```typescript
+const videosParamsPublic = {
+  postType: 'video' as const,
+  sortBy: 'createdAt' as const,  // Already correct for "Latest"
+  // ...rest unchanged
 };
 ```
 
-## Detailed Changes by Feed
+For Images (update to match "Latest"):
+```typescript
+// sortMode should be 'new' which is already correct for Latest
+```
 
-| Feed | Query Key Pattern | Fix |
-|------|-------------------|-----|
-| **Videos** | `['unified-feed', params, 20]` | Prefetch both `address: undefined` AND `address: walletAddress` variants. Include all `undefined` keys. |
-| **Images** | `['dehub-feed', params]` | Prefetch both variants. Include `postType: 'feed-images'`. |
-| **Shorts** | `['dehub-feed', params]` | Prefetch both variants. Include `category: undefined`. |
-| **Music** | `['music-videos-infinite', walletAddress]` | Use exact `walletAddress` value (null vs undefined matters). |
-| **Live** | `['dehub-live', params]` | No address needed - just match options exactly. |
+For Shorts:
+```typescript
+// sortMode should be 'new' which is already correct for Latest  
+```
+
+**Note:** The prefetch is already using `sortBy: 'createdAt'` and `sortMode: 'new'` which matches "Latest" sort. No changes needed in prefetch.
 
 ## Technical Details
 
-### VideosFeed Query Key (lines 417-428)
+### SORT_OPTIONS Reference
+
 ```typescript
-useUnifiedFeed({
-  limit: 20,
-  postType: 'video',
-  sortBy: getUnifiedSortBy(selectedSort.value), // 'random' → 'createdAt'
-  sortOrder: 'desc',
-  range: getUnifiedRange(selectedUploadDate.value), // 'all' → undefined
-  address: walletAddress || undefined,
-  isPPV: contentFilters.ppv || undefined,     // false → undefined
-  hasBounty: contentFilters.w2e || undefined, // false → undefined
-  isLocked: contentFilters.locked || undefined, // false → undefined
-  status: 'minted',
-})
-// Query key: ['unified-feed', { postType, sortBy, sortOrder, range, address, isPPV, hasBounty, isLocked, status }, 20]
+// src/lib/feed-utils.ts
+export const SORT_OPTIONS = [
+  { label: 'Random', value: 'random' as const },      // Index 0
+  { label: 'Latest', value: 'latest' as const },      // Index 1 ← NEW DEFAULT
+  { label: 'Most Viewed', value: 'most-viewed' as const },
+  { label: 'Most Liked', value: 'most-liked' as const },
+  { label: 'Most Comments', value: 'most-comments' as const },
+] as const;
 ```
 
-Prefetch must generate: `['unified-feed', { exactly same object }, 20]`
+### Why "Latest" Instead of Another Sort
 
-### ImagesFeed Query Key (lines 295-299)
-```typescript
-useDeHubImages({
-  unit: 15,
-  sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new', // 'random' → 'new'
-  address: walletAddress || undefined,
-})
-// useDeHubImages adds postType: 'feed-images'
-// useDeHubFeed adds status: 'minted'
-// Query key: ['dehub-feed', { unit, sortMode, address, postType: 'feed-images', status: 'minted' }]
-```
-
-### ShortsFeed Query Key (lines 253-258)
-```typescript
-useDeHubVideos({
-  unit: 15,
-  sortMode: getApiSortMode(selectedSort.value), // 'random' → 'new'
-  category: selectedCategory || undefined, // null → undefined
-  address: walletAddress || undefined,
-})
-// Query key: ['dehub-feed', { unit, sortMode, category, address, status: 'minted' }]
-```
-
-### MusicFeed Query Key (line 440)
-```typescript
-queryKey: ['music-videos-infinite', walletAddress]
-// Note: walletAddress can be null, not undefined
-```
-
-### LiveFeed Query Key (lines 63-66)
-```typescript
-useDeHubLive({ unit: 15, sortMode: 'recent' })
-// Query key: ['dehub-live', { unit: 15, sortMode: 'recent' }]
-```
+- "Latest" (`sortBy: 'createdAt'`) is already what the prefetch uses
+- It's the most intuitive default for social media feeds
+- Users see newest content first
+- No multi-page prefetch needed
 
 ## Expected Result
 
 After this fix:
-1. User loads the app → Home feed loads
-2. Wallet connects (if returning user)
-3. Prefetch runs AFTER wallet state is stable
-4. Prefetch warms cache for BOTH public AND authenticated variants
-5. User clicks any tab → **Instant load** from cache
-6. No loading spinners or data refetching on tab switch
+
+1. User loads app → Home feed loads
+2. Prefetch runs in background (page 1 of each feed with "Latest" sort params)
+3. User switches to Videos/Images/Shorts tab
+4. **Feed loads INSTANTLY from cache** - no network requests, no spinner
+5. Content displays immediately
+6. If user wants Random sort, they can select it (will then trigger 5-page prefetch)
 
 ## Verification Steps
 
-1. Open browser DevTools → Network tab
-2. Load the app on Home feed
-3. Wait for prefetch to complete (watch for multiple API calls)
+1. Open DevTools → Network tab
+2. Load app on Home feed
+3. Wait 2 seconds for prefetch to complete
 4. Switch to Videos tab
-5. **Expected**: NO new network requests, instant content display
-6. Repeat for Images, Shorts, Music, Live tabs
+5. **Expected**: No new network requests, instant content display
+6. Repeat for Images and Shorts tabs
+
