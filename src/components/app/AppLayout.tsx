@@ -27,6 +27,14 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // Disable browser's automatic scroll restoration globally
+  // This is CRITICAL - browsers default to 'auto' which fights our custom logic
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+  }, []);
+  
   // Track if we're on a post overlay route
   const postMatch = useMatch('/app/post/:postId');
   const videoMatch = useMatch('/app/video/:tokenId');
@@ -79,22 +87,33 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       const scrollValue = savedScroll ? parseInt(savedScroll, 10) : savedScrollRef.current;
       
       if (scrollValue > 0) {
+        // Attempt scroll restoration function
+        const attemptScroll = () => {
+          window.scrollTo(0, scrollValue);
+        };
+        
         // Immediate attempt
-        window.scrollTo(0, scrollValue);
+        attemptScroll();
+        
+        // Use requestAnimationFrame for after-paint timing
+        requestAnimationFrame(() => {
+          attemptScroll();
+          requestAnimationFrame(attemptScroll);
+        });
         
         // Extended staggered attempts for lazy-loaded content
         const attempts = [16, 50, 100, 200, 400, 800];
-        const timeouts: NodeJS.Timeout[] = [];
+        const timeouts = attempts.map(delay => 
+          setTimeout(attemptScroll, delay)
+        );
         
-        attempts.forEach(delay => {
-          const timeout = setTimeout(() => {
-            window.scrollTo(0, scrollValue);
-          }, delay);
-          timeouts.push(timeout);
-        });
+        // MutationObserver to catch content loading
+        const observer = new MutationObserver(attemptScroll);
+        observer.observe(document.body, { childList: true, subtree: true });
         
-        // Clear sessionStorage AFTER all restoration attempts complete (with buffer)
-        setTimeout(() => {
+        // Cleanup after restoration window
+        const cleanupTimeout = setTimeout(() => {
+          observer.disconnect();
           sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
           sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
           setCameFromHome(false);
@@ -103,6 +122,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         // Cleanup timeouts if component unmounts
         return () => {
           timeouts.forEach(clearTimeout);
+          clearTimeout(cleanupTimeout);
+          observer.disconnect();
         };
       }
     }
