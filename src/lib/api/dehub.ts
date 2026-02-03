@@ -278,14 +278,21 @@ export interface PaginatedResponse<T> {
   has_more: boolean;
 }
 
-// Store auth token
-let authToken: string | null = null;
+/**
+ * Custom error class for authentication failures.
+ * Thrown when API calls fail due to expired tokens, 401/403 responses, etc.
+ */
+export class AuthenticationError extends Error {
+  constructor(message: string = 'Session expired. Please sign in again.') {
+    super(message);
+    this.name = 'AuthenticationError';
+  }
+}
 
 // Token expiry duration in milliseconds (24 hours)
 const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
 
 export const setAuthToken = (token: string | null) => {
-  authToken = token;
   if (token) {
     localStorage.setItem("dehub_token", token);
     localStorage.setItem("dehub_token_timestamp", String(Date.now()));
@@ -295,11 +302,12 @@ export const setAuthToken = (token: string | null) => {
   }
 };
 
+/**
+ * Get the current auth token from localStorage.
+ * Always reads fresh from localStorage to avoid stale token issues.
+ */
 export const getAuthToken = (): string | null => {
-  if (!authToken) {
-    authToken = localStorage.getItem("dehub_token");
-  }
-  return authToken;
+  return localStorage.getItem("dehub_token");
 };
 
 export const isTokenExpired = (): boolean => {
@@ -311,7 +319,6 @@ export const isTokenExpired = (): boolean => {
 };
 
 export const clearAuthSession = () => {
-  authToken = null;
   localStorage.removeItem("dehub_token");
   localStorage.removeItem("dehub_token_timestamp");
   localStorage.removeItem("dehub_wallet");
@@ -360,6 +367,22 @@ async function apiCall<T>(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    
+    // Detect auth failures (401 Unauthorized, 403 Forbidden, or auth-related messages)
+    const errorMessage = (errorData.message || errorData.error || '').toLowerCase();
+    if (
+      response.status === 401 || 
+      response.status === 403 || 
+      errorMessage.includes('unauthorized') ||
+      errorMessage.includes('invalid token') ||
+      errorMessage.includes('token expired') ||
+      errorMessage.includes('jwt')
+    ) {
+      // Clear stale session
+      clearAuthSession();
+      throw new AuthenticationError('Session expired. Please sign in again.');
+    }
+    
     throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
   }
 

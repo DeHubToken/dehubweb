@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { searchNFTs, followUser, getAccountInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 
 interface UniqueUser {
@@ -61,6 +62,7 @@ async function fetchUserBatch(batchIndex: number): Promise<{ users: UniqueUser[]
 export function WhoToFollow() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
+  const { handleApiError } = useReauthHandler();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -199,8 +201,7 @@ export function WhoToFollow() {
       setFollowedUsers(prev => new Set(prev).add(user.address));
       toast.success(`Following ${getDisplayName(user)}!`);
     } catch (error) {
-      console.error('Failed to follow user:', error);
-      toast.error('Failed to follow user');
+      handleApiError(error, 'Failed to follow user');
     } finally {
       setLoadingUsers(prev => {
         const next = new Set(prev);

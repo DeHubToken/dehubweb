@@ -29,6 +29,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent, type ProfileData } from '@/hooks/use-dehub-profile';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
+import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
@@ -188,6 +189,9 @@ export default function ProfilePage() {
   // Fetch privacy settings for the profile being viewed
   const { showFollowersFollowing, hideFollowerCounts } = useUserPrivacySettings(apiProfile?.walletAddress);
   
+  // Re-auth handler for API error handling
+  const { handleApiError } = useReauthHandler();
+  
   // Use API's isFollowing status
   const isFollowing = apiProfile?.isFollowing ?? false;
   
@@ -276,7 +280,7 @@ export default function ProfilePage() {
     } catch (error) {
       // Revert on error
       setFollowStatus(true);
-      toast.error('Failed to unfollow. Please try again.');
+      handleApiError(error, 'Failed to unfollow. Please try again.');
     } finally {
       setIsFollowLoading(false);
       setShareSheetOpen(false);
@@ -304,7 +308,7 @@ export default function ProfilePage() {
     } catch (error) {
       // Revert on error
       setFollowStatus(false);
-      toast.error('Failed to follow. Please try again.');
+      handleApiError(error, 'Failed to follow. Please try again.');
     } finally {
       setIsFollowLoading(false);
     }
