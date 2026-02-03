@@ -293,7 +293,7 @@ export function ImagesFeed({
     isError,
     refetch,
   } = useDeHubImages({
-    unit: 15,
+    unit: 12,
     sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new',
     address: walletAddress || undefined,
   });

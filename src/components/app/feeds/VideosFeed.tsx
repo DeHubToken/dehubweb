@@ -415,7 +415,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     isError,
     refetch,
   } = useUnifiedFeed({
-    limit: 20,
+    limit: 12,
     postType: 'video',
     sortBy: getUnifiedSortBy(selectedSort.value),
     sortOrder: 'desc',

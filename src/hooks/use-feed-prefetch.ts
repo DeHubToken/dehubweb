@@ -96,11 +96,11 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   };
   prefetchPromises.push(
     queryClient.prefetchInfiniteQuery({
-      queryKey: ['unified-feed', videosParamsPublic, 20],
+      queryKey: ['unified-feed', videosParamsPublic, 12],
       queryFn: async () => {
         const response = await fetchUnifiedFeed({
           postType: 'video',
-          limit: 20,
+          limit: 12,
           sortBy: 'createdAt',
           sortOrder: 'desc',
           status: 'minted',
@@ -131,11 +131,11 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
     };
     prefetchPromises.push(
       queryClient.prefetchInfiniteQuery({
-        queryKey: ['unified-feed', videosParamsAuth, 20],
+        queryKey: ['unified-feed', videosParamsAuth, 12],
         queryFn: async () => {
           const response = await fetchUnifiedFeed({
             postType: 'video',
-            limit: 20,
+            limit: 12,
             sortBy: 'createdAt',
             sortOrder: 'desc',
             status: 'minted',
@@ -162,7 +162,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   
   // 2a. Images - PUBLIC feed (address: undefined)
   const imagesParamsPublic = {
-    unit: 15,
+    unit: 12,
     sortMode: 'new' as const,
     address: undefined,
     postType: 'feed-images' as const,
@@ -173,14 +173,14 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
       queryKey: ['dehub-feed', imagesParamsPublic],
       queryFn: async () => {
         const response = await searchNFTs({
-          unit: 15,
+          unit: 12,
           sortMode: 'new',
           postType: 'feed-images',
           status: 'minted',
           page: 0,
         });
         const data = (response as any).result || response.data || [];
-        return { data, page: 0, has_more: data.length >= 15, total: data.length, unit: 15 };
+        return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
       },
       initialPageParam: 0,
       staleTime: 1000 * 60 * 10,
@@ -190,7 +190,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   // 2b. Images - AUTHENTICATED feed (if user is logged in)
   if (walletAddress) {
     const imagesParamsAuth = {
-      unit: 15,
+      unit: 12,
       sortMode: 'new' as const,
       address: walletAddress,
       postType: 'feed-images' as const,
@@ -201,7 +201,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
         queryKey: ['dehub-feed', imagesParamsAuth],
         queryFn: async () => {
           const response = await searchNFTs({
-            unit: 15,
+            unit: 12,
             sortMode: 'new',
             address: walletAddress,
             postType: 'feed-images',
@@ -209,7 +209,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
             page: 0,
           });
           const data = (response as any).result || response.data || [];
-          return { data, page: 0, has_more: data.length >= 15, total: data.length, unit: 15 };
+          return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
         },
         initialPageParam: 0,
         staleTime: 1000 * 60 * 10,
@@ -226,7 +226,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   
   // 3a. Shorts - PUBLIC feed (address: undefined, category: undefined)
   const shortsParamsPublic = {
-    unit: 15,
+    unit: 12,
     sortMode: 'new' as const,
     category: undefined,
     address: undefined,
@@ -237,13 +237,13 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
       queryKey: ['dehub-feed', shortsParamsPublic],
       queryFn: async () => {
         const response = await searchNFTs({
-          unit: 15,
+          unit: 12,
           sortMode: 'new',
           status: 'minted',
           page: 0,
         });
         const data = (response as any).result || response.data || [];
-        return { data, page: 0, has_more: data.length >= 15, total: data.length, unit: 15 };
+        return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
       },
       initialPageParam: 0,
       staleTime: 1000 * 60 * 10,
@@ -253,7 +253,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
   // 3b. Shorts - AUTHENTICATED feed (if user is logged in)
   if (walletAddress) {
     const shortsParamsAuth = {
-      unit: 15,
+      unit: 12,
       sortMode: 'new' as const,
       category: undefined,
       address: walletAddress,
@@ -264,14 +264,14 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
         queryKey: ['dehub-feed', shortsParamsAuth],
         queryFn: async () => {
           const response = await searchNFTs({
-            unit: 15,
+            unit: 12,
             sortMode: 'new',
             address: walletAddress,
             status: 'minted',
             page: 0,
           });
           const data = (response as any).result || response.data || [];
-          return { data, page: 0, has_more: data.length >= 15, total: data.length, unit: 15 };
+          return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
         },
         initialPageParam: 0,
         staleTime: 1000 * 60 * 10,
