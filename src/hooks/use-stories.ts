@@ -83,7 +83,7 @@ async function fetchFreshAvatar(walletAddress: string): Promise<string | null> {
 export function useStories() {
   const queryClient = useQueryClient();
 
-  // Fetch active (non-expired) stories
+  // Fetch active (non-expired) stories - FAST: just DB query, no avatar fetching
   const { data: stories = [], isLoading, refetch } = useQuery({
     queryKey: ['stories'],
     queryFn: async () => {
@@ -95,10 +95,20 @@ export function useStories() {
 
       if (error) throw error;
       
-      const rawStories = data as Story[];
+      return data as Story[];
+    },
+    staleTime: 1000 * 60, // 1 minute
+  });
+
+  // Lazy-load fresh avatars in the background (non-blocking)
+  // This runs after initial render, so StoriesBar shows immediately with cached avatars
+  const { data: enrichedStories = stories } = useQuery({
+    queryKey: ['stories-with-avatars', stories.map(s => s.id).join(',')],
+    queryFn: async () => {
+      if (stories.length === 0) return [];
       
       // Get unique wallet addresses
-      const uniqueAddresses = [...new Set(rawStories.map(s => s.wallet_address))];
+      const uniqueAddresses = [...new Set(stories.map(s => s.wallet_address))];
       
       // Fetch fresh avatars for all unique users in parallel
       const avatarMap = new Map<string, string | null>();
@@ -110,16 +120,17 @@ export function useStories() {
       );
       
       // Enrich stories with fresh avatars
-      return rawStories.map(story => ({
+      return stories.map(story => ({
         ...story,
         avatar: avatarMap.get(story.wallet_address.toLowerCase()) || story.avatar,
       }));
     },
-    staleTime: 1000 * 60, // 1 minute
+    enabled: stories.length > 0,
+    staleTime: 1000 * 60 * 5, // 5 minutes - avatars don't change often
   });
 
   // Group stories by user (most recent story per user shown in bar)
-  const storyUsers = stories.reduce((acc, story) => {
+  const storyUsers = enrichedStories.reduce((acc, story) => {
     if (!acc.find((s) => s.wallet_address === story.wallet_address)) {
       acc.push(story);
     }
@@ -127,7 +138,7 @@ export function useStories() {
   }, [] as Story[]);
 
   return {
-    stories,
+    stories: enrichedStories,
     storyUsers,
     isLoading,
     refetch,
