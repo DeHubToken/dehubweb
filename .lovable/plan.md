@@ -1,55 +1,118 @@
 
+# Investigation: Text Overlays Not Appearing on Story Video
 
-# Fix: Text Overlays Not Appearing on Story Video
+## Root Cause Analysis
 
-## Problem Identified
+After extensive code review, I've traced the complete flow and identified **the actual root cause**:
 
-After analyzing the code flow, I found that the text overlay **is being added to state correctly**, but there are several visual issues that could make it invisible:
+### The Problem
 
-### Issue 1: Text Visibility on Video
-The default text color is white (`#FFFFFF`), and with the "normal" style, it may be hard to see against a bright video. Additionally, the font size (`text-xl` = 20px) is relatively small.
+Looking at the `StoryTextInput` component and how it passes data back:
 
-### Issue 2: Outlined Text Style Bug
-The outlined text style sets `color: 'transparent'` with only a 1px stroke, which is barely visible:
 ```tsx
-case 'outlined':
-  return {
-    WebkitTextStroke: `1px ${overlay.style.color}`,
-    color: 'transparent',  // Hard to see!
-  };
+// StoryTextInput.tsx - handleSubmit
+const handleSubmit = () => {
+  if (text.trim()) {
+    onTextSubmit(text.trim(), {
+      color: textColor,
+      backgroundColor: textStyle === 'background' ? textColor : undefined,
+      textStyle,
+    });
+  }
+  onClose();  // Closes immediately after submit
+};
 ```
 
-### Issue 3: Missing Text Shadow
-Unlike emoji overlays that are inherently visible, text needs a shadow or stroke to stand out against any video background.
+The flow is:
+1. User clicks Text button → `showTextInput = true`
+2. User types text and clicks Done → `handleSubmit()` runs
+3. `onTextSubmit()` calls `handleEditText()` → `addText()`
+4. `addText()` calls `onOverlaysChange([...overlays, newOverlay])`
+5. `onClose()` runs, setting `showTextInput = false`
+
+The state update in `addText` uses the `overlays` value from when the callback was created. Due to React's state batching and how `useCallback` captures the `overlays` array, there might be a **stale closure issue**.
+
+### Why This Happens
+
+The `addText` function has `overlays` in its dependency array:
+
+```tsx
+const addText = useCallback((text: string, style: {...}) => {
+  // ...
+  onOverlaysChange([...overlays, newOverlay]);  // Uses captured 'overlays'
+}, [overlays, onOverlaysChange]);  // Re-created when overlays changes
+```
+
+When `StoryTextInput` is open for an extended period, the `handleEditText` function passed to it still references an older version of `addText` that has `overlays = []`.
+
+### Solution
+
+Use the **functional update pattern** for state updates to ensure we always get the latest state:
+
+```tsx
+const addText = useCallback((text: string, style: {...}) => {
+  const newOverlay: StoryOverlay = {
+    id: generateId(),
+    type: 'text',
+    content: text,
+    x: 50,
+    y: 50,
+    scale: 1,
+    rotation: 0,
+    style,
+  };
+  // Use functional update to avoid stale closure
+  onOverlaysChange(prev => [...prev, newOverlay]);
+  setSelectedId(newOverlay.id);
+}, [onOverlaysChange]);  // Remove 'overlays' from dependencies
+```
+
+Wait - but `onOverlaysChange` is just `setOverlays` from the parent, which doesn't support functional updates in this pattern.
+
+**Alternative solution:** We need to ensure fresh callbacks by either:
+1. Restructuring the callback chain
+2. Using a ref to always access the latest overlays
+3. Adding console logging first to verify the issue
 
 ---
 
-## Solution
+## Proposed Fix
 
-### 1. Add Text Shadow for Visibility
-Add a drop shadow to all text overlays so they're visible regardless of video background:
+### Step 1: Add Debug Logging (to confirm the issue)
+
+Add `console.log` statements to trace the flow:
+
 ```tsx
-textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)'
+// In addText
+console.log('[StoryOverlay] addText called with:', text);
+console.log('[StoryOverlay] Current overlays:', overlays);
+console.log('[StoryOverlay] New overlay:', newOverlay);
 ```
 
-### 2. Fix Outlined Style
-Increase the stroke width and add a contrasting fill:
+### Step 2: Use Ref for Latest Overlays
+
+Use a ref to always access the current overlays value:
+
 ```tsx
-case 'outlined':
-  return {
-    WebkitTextStroke: `2px ${overlay.style.color}`,
-    color: 'black',  // or a contrasting color
-    fontWeight: 700,
-  };
+const overlaysRef = useRef(overlays);
+overlaysRef.current = overlays;
+
+const addText = useCallback((text: string, style: {...}) => {
+  const newOverlay = {...};
+  onOverlaysChange([...overlaysRef.current, newOverlay]);
+  setSelectedId(newOverlay.id);
+}, [onOverlaysChange]);  // No dependency on 'overlays'
 ```
 
-### 3. Increase Base Font Size
-Change from `text-xl` (20px) to `text-2xl` (24px) for better visibility.
+### Step 3: Also Update Parent State Handler
 
-### 4. Add Debug Logging (Temporary)
-Add a console log in `addText` to confirm the overlay is being added:
+In `StoryRecorderModal.tsx`, change to functional updates:
+
 ```tsx
-console.log('Adding text overlay:', newOverlay);
+// Instead of passing setOverlays directly:
+onOverlaysChange={(newOverlays) => setOverlays(newOverlays)}
+
+// Could also update to use functional pattern if needed
 ```
 
 ---
@@ -58,58 +121,63 @@ console.log('Adding text overlay:', newOverlay);
 
 | File | Changes |
 |------|---------|
-| `src/components/app/stories/StoryOverlayEditor.tsx` | Update `getTextStyle()` to add shadows; increase font size; fix outlined style |
+| `src/components/app/stories/StoryOverlayEditor.tsx` | Add `overlaysRef`, update `addText`, `addEmoji`, `updateOverlay`, `deleteOverlay` to use ref; Add debug logging |
 
 ---
 
-## Updated getTextStyle Function
+## Technical Implementation
+
+### Updated StoryOverlayEditor.tsx
 
 ```tsx
-const getTextStyle = (overlay: StoryOverlay): React.CSSProperties => {
-  if (!overlay.style) return { textShadow: '0 2px 4px rgba(0,0,0,0.5)' };
-  
-  // Base shadow for visibility on any background
-  const baseShadow = '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)';
-  
-  const baseStyle: React.CSSProperties = {
-    color: overlay.style.textStyle === 'background' 
-      ? (overlay.style.color === '#FFFFFF' ? '#000000' : '#FFFFFF')
-      : overlay.style.color,
-    textShadow: overlay.style.textStyle !== 'background' ? baseShadow : undefined,
+// Add near the top of the component, after the state declarations:
+const overlaysRef = useRef(overlays);
+overlaysRef.current = overlays;
+
+// Update addEmoji to use ref:
+const addEmoji = useCallback((emoji: string) => {
+  const newOverlay: StoryOverlay = {
+    id: generateId(),
+    type: 'emoji',
+    content: emoji,
+    x: 50,
+    y: 50,
+    scale: 1,
+    rotation: 0,
   };
+  console.log('[StoryOverlay] Adding emoji overlay:', newOverlay);
+  onOverlaysChange([...overlaysRef.current, newOverlay]);
+  setSelectedId(newOverlay.id);
+}, [onOverlaysChange]);
 
-  switch (overlay.style.textStyle) {
-    case 'bold':
-      return { ...baseStyle, fontWeight: 700 };
-    case 'outlined':
-      return {
-        WebkitTextStroke: `2px ${overlay.style.color}`,
-        color: overlay.style.color === '#FFFFFF' ? '#000000' : '#FFFFFF',
-        fontWeight: 700,
-        textShadow: baseShadow,
-      };
-    case 'background':
-      return {
-        ...baseStyle,
-        backgroundColor: overlay.style.color,
-        padding: '4px 12px',
-        borderRadius: '8px',
-        textShadow: undefined,
-      };
-    default:
-      return baseStyle;
-  }
-};
+// Update addText to use ref:
+const addText = useCallback((text: string, style: { color: string; backgroundColor?: string; textStyle: TextStyle }) => {
+  const newOverlay: StoryOverlay = {
+    id: generateId(),
+    type: 'text',
+    content: text,
+    x: 50,
+    y: 50,
+    scale: 1,
+    rotation: 0,
+    style,
+  };
+  console.log('[StoryOverlay] Adding text overlay:', newOverlay);
+  console.log('[StoryOverlay] Current overlays:', overlaysRef.current);
+  onOverlaysChange([...overlaysRef.current, newOverlay]);
+  setSelectedId(newOverlay.id);
+}, [onOverlaysChange]);
+
+// Update updateOverlay to use ref:
+const updateOverlay = useCallback((id: string, updates: Partial<StoryOverlay>) => {
+  onOverlaysChange(overlaysRef.current.map((o) => (o.id === id ? { ...o, ...updates } : o)));
+}, [onOverlaysChange]);
+
+// Update deleteOverlay to use ref:
+const deleteOverlay = useCallback((id: string) => {
+  onOverlaysChange(overlaysRef.current.filter((o) => o.id !== id));
+  setSelectedId(null);
+}, [onOverlaysChange]);
 ```
 
-## Updated Text Span
-
-```tsx
-<span 
-  className="text-2xl whitespace-pre-wrap max-w-[80vw] text-center font-semibold"
-  style={getTextStyle(overlay)}
->
-  {overlay.content}
-</span>
-```
-
+This ensures that all callback functions always access the **latest** value of `overlays` via the ref, eliminating any stale closure issues.
