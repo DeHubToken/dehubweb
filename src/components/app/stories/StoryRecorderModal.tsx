@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Camera, Trash2, Square, Check, Loader2, RotateCcw } from 'lucide-react';
+import { X, Camera, Trash2, Square, Check, Loader2, RotateCcw, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -25,6 +25,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const previewRef = useRef<HTMLVideoElement>(null);
@@ -149,6 +150,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
   const retake = () => {
     setRecordedBlob(null);
     setRecordingTime(0);
+    setIsPreviewPlaying(false);
     initCamera();
   };
 
@@ -169,6 +171,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
     setRecordedBlob(null);
     setRecordingTime(0);
     setIsRecording(false);
+    setIsPreviewPlaying(false);
     onClose();
   };
 
@@ -245,19 +248,28 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             )}
           />
         ) : (
-          <video
-            ref={previewRef}
-            src={URL.createObjectURL(recordedBlob)}
-            autoPlay
-            loop
-            playsInline
-            muted
-            onPlay={(e) => {
-              // Unmute after autoplay starts to bypass browser restrictions
-              (e.target as HTMLVideoElement).muted = false;
-            }}
-            className="w-full h-full object-cover"
-          />
+          <div className="relative w-full h-full">
+            <video
+              ref={previewRef}
+              src={URL.createObjectURL(recordedBlob)}
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+              onPlay={() => setIsPreviewPlaying(true)}
+              onPause={() => setIsPreviewPlaying(false)}
+            />
+            {/* Play button overlay */}
+            {!isPreviewPlaying && (
+              <button
+                onClick={() => previewRef.current?.play()}
+                className="absolute inset-0 flex items-center justify-center bg-black/30"
+              >
+                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-[24px] border border-white/30 flex items-center justify-center">
+                  <Play className="w-10 h-10 text-white fill-white ml-1" />
+                </div>
+              </button>
+            )}
+          </div>
         )}
       </div>
 
