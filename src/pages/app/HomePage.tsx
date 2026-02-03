@@ -177,7 +177,7 @@ export default function HomePage() {
   // PULL-TO-REFRESH HOOK
   // --------------------------------------------------------------------------
 
-  const { pullDistance, handlers: pullHandlers } = usePullToRefresh({
+  const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
@@ -515,6 +515,49 @@ export default function HomePage() {
         onMouseUp={pullHandlers.onMouseUp}
         onMouseLeave={pullHandlers.onMouseLeave}
       >
+        {/* Pull-to-refresh indicator with hold progress */}
+        {pullDistance > 0 && (
+          <div 
+            className="flex items-center justify-center transition-all duration-150"
+            style={{ height: pullDistance, minHeight: pullDistance > 0 ? 20 : 0 }}
+          >
+            <div className="relative">
+              {/* Background circle (track) */}
+              <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="14"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.2)"
+                  strokeWidth="2"
+                />
+                {/* Progress arc - shows hold progress when at threshold */}
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="14"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 14}
+                  strokeDashoffset={2 * Math.PI * 14 * (1 - (isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1)))}
+                  className="transition-all duration-75"
+                />
+              </svg>
+              {/* Center dot that appears when holding */}
+              {isHoldingAtThreshold && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div 
+                    className="w-3 h-3 bg-white rounded-full animate-pulse"
+                    style={{ opacity: holdProgress }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         {renderFeed()}
       </div>
 
