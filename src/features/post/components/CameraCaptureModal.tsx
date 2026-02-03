@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Square, RotateCcw, Check, Loader2, Trash2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -231,7 +232,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
 
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
@@ -363,4 +364,6 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
