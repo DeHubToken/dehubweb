@@ -9,7 +9,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, Search, MoreHorizontal } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -802,12 +802,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {/* Mobile top header controls - TikTok style */}
       {isMobile && (
         <>
-          {/* Search button - top left */}
+          {/* Back button - top left */}
           <button
             onClick={onClose}
             className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
           >
-            <Search className="w-5 h-5 text-white" />
+            <ChevronLeft className="w-6 h-6 text-white" />
           </button>
           
           {/* Right side controls */}
