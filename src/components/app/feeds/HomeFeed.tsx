@@ -84,7 +84,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 /** Maximum posts from the same creator in random mode to ensure diversity */
-const MAX_POSTS_PER_CREATOR = 3;
+const MAX_POSTS_PER_CREATOR = 1;
 
 /**
  * Get creator ID from a FeedItemType
