@@ -5,6 +5,7 @@ import { usePostForm } from './hooks/usePostForm';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
+import { CameraCaptureModal } from './components/CameraCaptureModal';
 
 interface PostModalProps {
   isOpen: boolean;
@@ -128,13 +129,21 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
 
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
-    <Drawer open={isOpen} onOpenChange={handleClose}>
-      <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
-        <VisuallyHidden>
-          <DrawerTitle>Create a post</DrawerTitle>
-        </VisuallyHidden>
-        {modalContent}
-      </DrawerContent>
-    </Drawer>
+    <>
+      <Drawer open={isOpen} onOpenChange={handleClose}>
+        <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+          <VisuallyHidden>
+            <DrawerTitle>Create a post</DrawerTitle>
+          </VisuallyHidden>
+          {modalContent}
+        </DrawerContent>
+      </Drawer>
+
+      <CameraCaptureModal
+        isOpen={state.isCameraModalOpen}
+        onClose={actions.closeCameraCapture}
+        onVideoRecorded={actions.handleCameraVideoRecorded}
+      />
+    </>
   );
 }
