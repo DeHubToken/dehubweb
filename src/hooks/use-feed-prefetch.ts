@@ -17,8 +17,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
-// Delay before starting prefetch (let home feed render first)
-const PREFETCH_DELAY_MS = 1000;
+// No delay - start prefetching immediately when home feed loads
+const PREFETCH_DELAY_MS = 0;
 
 // Session storage key to track if prefetch was already done this session
 const PREFETCH_DONE_KEY = 'feeds-prefetched';
