@@ -57,3 +57,4 @@ export {
   useTotalUnreadCount,
   messagesKeys,
 } from './use-messages';
+export { useReauthHandler } from './use-reauth-handler';

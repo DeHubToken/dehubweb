@@ -16,6 +16,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { getAccountInfo, followUser, unfollowUser } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -53,6 +54,7 @@ export function FollowersListDrawer({
 }: FollowersListDrawerProps) {
   const navigate = useNavigate();
   const { walletAddress: currentUserAddress, isAuthenticated } = useAuth();
+  const { handleApiError } = useReauthHandler();
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -188,7 +190,7 @@ export function FollowersListDrawer({
         toast.success(`Following ${user.displayName || user.username || 'user'}`);
       }
     } catch (error) {
-      toast.error('Failed to update follow status');
+      handleApiError(error, 'Failed to update follow status');
     } finally {
       setLoadingFollows(prev => {
         const next = new Set(prev);
