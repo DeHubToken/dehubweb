@@ -9,7 +9,8 @@
 
 import { useEffect, useRef, useMemo, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, RefreshCw, Radio, ChevronRight } from 'lucide-react';
+import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
+import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, POST_TYPE_FILTERS, formatCount, formatViews, formatDuration, formatTimeAgo, type SortOption, type DateFilterOption, type ContentTypeFilters, type PostTypeFilterValue } from '@/lib/feed-utils';
@@ -780,9 +781,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
       {isLoadingState ? (
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-        </div>
+        <HomeFeedSkeleton />
       ) : (
         <>
           {/* Filters */}
@@ -838,7 +837,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <div ref={loaderRef} className="py-4 flex justify-center">
                 {isFetchingNextPage && (
                   <div className="flex items-center gap-2 text-zinc-400">
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
                     <span className="text-sm">Loading more...</span>
                   </div>
                 )}

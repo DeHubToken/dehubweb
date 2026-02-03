@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
+import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Drawer,
@@ -32,9 +33,10 @@ interface StoryUser {
 
 interface StoriesBarProps {
   users: StoryUser[];
+  isLoading?: boolean;
 }
 
-export function StoriesBar({ users }: StoriesBarProps) {
+export function StoriesBar({ users, isLoading: externalLoading }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
   const [isStagesOpen, setIsStagesOpen] = useState(false);
@@ -46,8 +48,11 @@ export function StoriesBar({ users }: StoriesBarProps) {
   
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
-  const { storyUsers, stories } = useStories();
+  const { storyUsers, stories, isLoading: storiesLoading } = useStories();
   const { uploadStory, isUploading } = useUploadStory();
+  
+  // Show skeleton if external loading OR stories are loading
+  const showSkeleton = externalLoading || storiesLoading;
 
   const handleGoLiveVideo = () => {
     setShowLiveOptions(false);
@@ -192,6 +197,11 @@ export function StoriesBar({ users }: StoriesBarProps) {
       thumbnail: '',
     })),
   ];
+
+  // Show skeleton while loading
+  if (showSkeleton) {
+    return <StoriesBarSkeleton />;
+  }
 
   return (
     <>
