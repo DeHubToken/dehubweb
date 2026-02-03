@@ -1,184 +1,204 @@
 
-# Fix: Tab Switching Causes Feed Refresh (Cache Key Mismatch)
+# Fix: Tab Switching Causes Feed Refresh (Complete Solution)
 
 ## Problem Summary
 
-When switching between tabs (Home, Videos, Images, Shorts, Music, Live), each feed refreshes instead of loading instantly from the prefetched cache. This happens because React Query uses **deep equality** to match cache keys, and the prefetch hook is generating query keys that don't exactly match what the feed components generate.
+When switching between tabs (Home, Videos, Images, Shorts, Music, Live), each feed refreshes instead of loading instantly from cache. The user sees a loading state every time they switch tabs.
 
 ## Root Cause Analysis
 
-React Query's cache lookup requires **exact** key matching. Even if a key has `{ address: undefined }` vs `{ address: walletAddress || undefined }` where walletAddress is null, these may serialize differently. More critically:
+After investigating the network requests, I found **two distinct issues**:
 
-1. **VideosFeed** passes 10 parameters to `useUnifiedFeed`, but prefetch may be missing some or have different values
-2. **ImagesFeed** uses `useDeHubImages` which wraps `useDeHubFeed` with specific params
-3. **ShortsFeed** uses `useDeHubVideos` which also wraps `useDeHubFeed`
-4. **MusicFeed** uses a custom inline `useInfiniteQuery` with `walletAddress` directly (not `walletAddress || null`)
-5. **LiveFeed** uses `useDeHubLive` which has its own query key format
+### Issue 1: Wallet Address Timing Mismatch
 
-## Solution: Exact Query Key Matching
+Network logs show:
+- **Prefetch call**: `GET /api/feed?...&status=minted` (NO address)
+- **VideosFeed call**: `GET /api/feed?...&status=minted&address=0x8fa51...` (WITH address)
 
-For each feed, trace the exact parameters passed to the hook and the exact query key generated, then replicate that precisely in the prefetch.
+The prefetch runs with `walletAddress = null/undefined`, but when VideosFeed renders, the user is logged in and has a walletAddress. React Query sees these as **completely different queries** because the query keys don't match.
 
-### 1. Videos Feed Fix
+**Timeline:**
+```
+0ms     - HomePage mounts
+500ms   - isHomeFeedLoaded = true
+1500ms  - useFeedPrefetch runs, walletAddress might still be null
+???ms   - Web3Auth finishes, walletAddress = "0x..."
+         - User switches to Videos tab
+         - VideosFeed uses walletAddress = "0x..." 
+         - CACHE MISS! Different query key
+```
 
-**Component calls** (VideosFeed.tsx lines 417-428):
+### Issue 2: Inconsistent Query Key Structure
+
+Even when walletAddress matches, the query key objects may have different structures:
+
+```typescript
+// Prefetch creates:
+{ postType: 'video', sortBy: 'createdAt', status: 'minted' }
+
+// VideosFeed creates (includes undefined keys):
+{ postType: 'video', sortBy: 'createdAt', sortOrder: 'desc', 
+  range: undefined, address: undefined, isPPV: undefined, 
+  hasBounty: undefined, isLocked: undefined, status: 'minted' }
+```
+
+React Query's deep equality check fails because `{ a: undefined }` ≠ `{}`.
+
+## Solution
+
+### Part 1: Wait for Wallet State to Stabilize
+
+Before prefetching, we need to ensure the wallet state is stable. If the user is in the process of connecting, wait for that to complete.
+
+### Part 2: Prefetch Without User-Specific Params
+
+For feeds that support it (Videos, Images, Shorts), prefetch the **public feed** (without address). Then, if the user IS logged in, also prefetch WITH their address.
+
+This ensures:
+- Logged-out users get instant cache hits
+- Logged-in users get instant cache hits
+
+### Part 3: Match Query Keys Exactly
+
+Ensure every prefetch query key **exactly** matches what the feed component generates, including all `undefined` values.
+
+## Implementation Changes
+
+### File: `src/hooks/use-feed-prefetch.ts`
+
+```typescript
+// Key changes:
+
+// 1. Track if wallet is ready (not in a connecting state)
+const { walletAddress, isConnecting } = useAuth();
+
+// 2. Wait for wallet state to be stable before prefetching
+useEffect(() => {
+  if (!isHomeFeedLoaded) return;
+  if (isConnecting) return; // Wait for wallet connection to finish
+  // ... rest of prefetch logic
+}, [isHomeFeedLoaded, queryClient, walletAddress, isConnecting]);
+
+// 3. Prefetch BOTH logged-out AND logged-in variants for each feed
+async function prefetchAllFeeds(queryClient, walletAddress) {
+  // Videos - prefetch WITHOUT address (public feed)
+  const videosParamsPublic = {
+    postType: 'video',
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    range: undefined,
+    address: undefined,  // Public feed
+    isPPV: undefined,
+    hasBounty: undefined,
+    isLocked: undefined,
+    status: 'minted',
+  };
+  prefetchPromises.push(prefetchVideos(videosParamsPublic));
+  
+  // Videos - if logged in, ALSO prefetch WITH address
+  if (walletAddress) {
+    const videosParamsAuth = {
+      ...videosParamsPublic,
+      address: walletAddress,
+    };
+    prefetchPromises.push(prefetchVideos(videosParamsAuth));
+  }
+  
+  // Same pattern for Images, Shorts...
+}
+```
+
+### File: `src/contexts/AuthContext.tsx` (if needed)
+
+Export `isConnecting` state so prefetch can wait:
+```typescript
+export const useAuth = () => {
+  // ...existing code
+  return { walletAddress, isConnecting, /* ... */ };
+};
+```
+
+## Detailed Changes by Feed
+
+| Feed | Query Key Pattern | Fix |
+|------|-------------------|-----|
+| **Videos** | `['unified-feed', params, 20]` | Prefetch both `address: undefined` AND `address: walletAddress` variants. Include all `undefined` keys. |
+| **Images** | `['dehub-feed', params]` | Prefetch both variants. Include `postType: 'feed-images'`. |
+| **Shorts** | `['dehub-feed', params]` | Prefetch both variants. Include `category: undefined`. |
+| **Music** | `['music-videos-infinite', walletAddress]` | Use exact `walletAddress` value (null vs undefined matters). |
+| **Live** | `['dehub-live', params]` | No address needed - just match options exactly. |
+
+## Technical Details
+
+### VideosFeed Query Key (lines 417-428)
 ```typescript
 useUnifiedFeed({
   limit: 20,
   postType: 'video',
-  sortBy: 'createdAt',      // getUnifiedSortBy('random') returns 'createdAt'
+  sortBy: getUnifiedSortBy(selectedSort.value), // 'random' → 'createdAt'
   sortOrder: 'desc',
-  range: undefined,          // getUnifiedRange('all') returns undefined
+  range: getUnifiedRange(selectedUploadDate.value), // 'all' → undefined
   address: walletAddress || undefined,
-  isPPV: undefined,          // contentFilters.ppv || undefined where ppv=false
-  hasBounty: undefined,      // contentFilters.w2e || undefined where w2e=false
-  isLocked: undefined,       // contentFilters.locked || undefined where locked=false
+  isPPV: contentFilters.ppv || undefined,     // false → undefined
+  hasBounty: contentFilters.w2e || undefined, // false → undefined
+  isLocked: contentFilters.locked || undefined, // false → undefined
   status: 'minted',
 })
+// Query key: ['unified-feed', { postType, sortBy, sortOrder, range, address, isPPV, hasBounty, isLocked, status }, 20]
 ```
 
-**Query key generated** (use-unified-feed.ts line 404):
-```typescript
-['unified-feed', { postType, sortBy, sortOrder, range, address, isPPV, hasBounty, isLocked, status }, 20]
-```
+Prefetch must generate: `['unified-feed', { exactly same object }, 20]`
 
-**Prefetch must use**: Same exact object structure
-
-### 2. Images Feed Fix
-
-**Component calls** (ImagesFeed.tsx lines 295-299):
+### ImagesFeed Query Key (lines 295-299)
 ```typescript
 useDeHubImages({
   unit: 15,
-  sortMode: 'new',           // selectedSort.value='random' → 'new'
+  sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new', // 'random' → 'new'
   address: walletAddress || undefined,
 })
+// useDeHubImages adds postType: 'feed-images'
+// useDeHubFeed adds status: 'minted'
+// Query key: ['dehub-feed', { unit, sortMode, address, postType: 'feed-images', status: 'minted' }]
 ```
 
-**useDeHubImages adds** `postType: 'feed-images'`
-**useDeHubFeed generates key** (line 303):
-```typescript
-['dehub-feed', { unit: 15, sortMode: 'new', address, postType: 'feed-images', status: 'minted' }]
-```
-
-### 3. Shorts Feed Fix
-
-**Component calls** (ShortsFeed.tsx lines 253-258):
+### ShortsFeed Query Key (lines 253-258)
 ```typescript
 useDeHubVideos({
   unit: 15,
-  sortMode: 'new',           // getApiSortMode('random') returns 'new'
-  category: undefined,        // selectedCategory || undefined where selectedCategory=null
+  sortMode: getApiSortMode(selectedSort.value), // 'random' → 'new'
+  category: selectedCategory || undefined, // null → undefined
   address: walletAddress || undefined,
 })
+// Query key: ['dehub-feed', { unit, sortMode, category, address, status: 'minted' }]
 ```
 
-**useDeHubVideos** just calls useDeHubFeed without postType
-**Query key**: `['dehub-feed', { unit: 15, sortMode: 'new', category: undefined, address, status: 'minted' }]`
-
-### 4. Music Feed Fix
-
-**Component uses inline query** (MusicFeed.tsx line 440):
+### MusicFeed Query Key (line 440)
 ```typescript
 queryKey: ['music-videos-infinite', walletAddress]
+// Note: walletAddress can be null, not undefined
 ```
 
-Note: Uses `walletAddress` directly, which could be `null` not `undefined`. Prefetch must match exactly.
-
-### 5. Live Feed Fix
-
-**Component calls** (LiveFeed.tsx):
+### LiveFeed Query Key (lines 63-66)
 ```typescript
 useDeHubLive({ unit: 15, sortMode: 'recent' })
-```
-
-**Query key** (use-dehub-feed.ts line 370):
-```typescript
-['dehub-live', { unit: 15, sortMode: 'recent' }]
-```
-
-## File Changes
-
-**File: `src/hooks/use-feed-prefetch.ts`**
-
-Complete rewrite of the prefetch parameters to exactly match each feed component's query keys:
-
-| Feed | Query Key | Current Prefetch Issue | Fix |
-|------|-----------|------------------------|-----|
-| Videos | `['unified-feed', params, 20]` | Missing/wrong params | Match VideosFeed's exact useUnifiedFeed call |
-| Images | `['dehub-feed', params]` | Wrong structure | Match ImagesFeed → useDeHubImages → useDeHubFeed chain |
-| Shorts | `['dehub-feed', params]` | Wrong structure | Match ShortsFeed → useDeHubVideos → useDeHubFeed chain |
-| Music | `['music-videos-infinite', walletAddress]` | Using `\|\| null` but component uses raw value | Use `walletAddress` directly (null if not logged in) |
-| Live | `['dehub-live', options]` | Check exact options object | Match `{ unit: 15, sortMode: 'recent' }` |
-
-## Implementation Details
-
-### Key Insight: Object Spreading Order Matters
-
-When `useDeHubFeed` does:
-```typescript
-const { enabled = true, status = 'minted', ...searchParams } = options;
-queryKey: ['dehub-feed', { ...searchParams, status }]
-```
-
-The key contains `searchParams` spread first, then `status`. This means the prefetch must pass params that will spread into the same structure.
-
-### Prefetch Code Structure
-
-```typescript
-// Videos - must match useUnifiedFeed query key exactly
-const videosParams = {
-  postType: 'video',
-  sortBy: 'createdAt',
-  sortOrder: 'desc',
-  range: undefined,
-  address: walletAddress || undefined,
-  isPPV: undefined,
-  hasBounty: undefined,
-  isLocked: undefined,
-  status: 'minted',
-};
-queryKey: ['unified-feed', videosParams, 20]
-
-// Images - must match useDeHubFeed query key after useDeHubImages processing
-// useDeHubImages adds postType: 'feed-images', useDeHubFeed adds status: 'minted'
-const imagesSearchParams = {
-  unit: 15,
-  sortMode: 'new',
-  address: walletAddress || undefined,
-  postType: 'feed-images',
-};
-queryKey: ['dehub-feed', { ...imagesSearchParams, status: 'minted' }]
-
-// Shorts - must match useDeHubFeed query key after useDeHubVideos processing
-// useDeHubVideos doesn't add postType, useDeHubFeed adds status: 'minted'
-const shortsSearchParams = {
-  unit: 15,
-  sortMode: 'new',
-  category: undefined,
-  address: walletAddress || undefined,
-};
-queryKey: ['dehub-feed', { ...shortsSearchParams, status: 'minted' }]
-
-// Music - exact match
-queryKey: ['music-videos-infinite', walletAddress ?? null]
-
-// Live - exact match
-queryKey: ['dehub-live', { unit: 15, sortMode: 'recent' }]
+// Query key: ['dehub-live', { unit: 15, sortMode: 'recent' }]
 ```
 
 ## Expected Result
 
 After this fix:
 1. User loads the app → Home feed loads
-2. Background prefetch runs with **exactly matching** query keys  
-3. User clicks any tab (Videos, Images, Shorts, Music, Live) → **Instant load** from cache
-4. No loading spinners or data refetching on tab switch
+2. Wallet connects (if returning user)
+3. Prefetch runs AFTER wallet state is stable
+4. Prefetch warms cache for BOTH public AND authenticated variants
+5. User clicks any tab → **Instant load** from cache
+6. No loading spinners or data refetching on tab switch
 
 ## Verification Steps
 
-1. Open browser dev tools → Network tab
+1. Open browser DevTools → Network tab
 2. Load the app on Home feed
-3. Wait 1-2 seconds for prefetch to complete
-4. Switch to Videos tab → Should see NO new network requests for feed data
-5. Repeat for Images, Shorts, Music, Live tabs
+3. Wait for prefetch to complete (watch for multiple API calls)
+4. Switch to Videos tab
+5. **Expected**: NO new network requests, instant content display
+6. Repeat for Images, Shorts, Music, Live tabs
