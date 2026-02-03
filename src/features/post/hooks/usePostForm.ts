@@ -70,6 +70,7 @@ interface UsePostFormReturn {
     openCameraCapture: () => void;
     closeCameraCapture: () => void;
     handleCameraVideoRecorded: (videoBlob: Blob) => void;
+    handleCameraPhotoCaptured: (imageBlob: Blob) => void;
   };
   computed: PostFormComputed;
   refs: {
@@ -526,6 +527,14 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     });
     await processVideoFile(videoFile);
   }, [processVideoFile]);
+
+  const handleCameraPhotoCaptured = useCallback((imageBlob: Blob) => {
+    // Create a File from the blob for processImageFiles
+    const imageFile = new File([imageBlob], `camera-photo-${Date.now()}.png`, { 
+      type: 'image/png' 
+    });
+    processImageFiles([imageFile]);
+  }, [processImageFiles]);
 
   const resetForm = useCallback(() => {
     setText('');
@@ -1031,6 +1040,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       openCameraCapture,
       closeCameraCapture,
       handleCameraVideoRecorded,
+      handleCameraPhotoCaptured,
     },
     computed: {
       hasVideo,
