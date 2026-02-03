@@ -1,113 +1,115 @@
 
 
-# Story Editor: Emoji & Text Overlays
+# Fix: Text Overlays Not Appearing on Story Video
 
-## Overview
-Add the ability for users to place draggable emoji stickers and text overlays on their recorded story videos before confirming. This will create an editing experience similar to Instagram/TikTok stories.
+## Problem Identified
 
----
+After analyzing the code flow, I found that the text overlay **is being added to state correctly**, but there are several visual issues that could make it invisible:
 
-## What You'll Get
+### Issue 1: Text Visibility on Video
+The default text color is white (`#FFFFFF`), and with the "normal" style, it may be hard to see against a bright video. Additionally, the font size (`text-xl` = 20px) is relatively small.
 
-### Emoji Stickers
-- Tap an emoji button to open an emoji picker (reusing the existing emoji categories)
-- Select an emoji and it appears on the video
-- Drag emojis anywhere on the screen
-- Pinch to resize emojis
-- Tap the X on a selected emoji to delete it
+### Issue 2: Outlined Text Style Bug
+The outlined text style sets `color: 'transparent'` with only a 1px stroke, which is barely visible:
+```tsx
+case 'outlined':
+  return {
+    WebkitTextStroke: `1px ${overlay.style.color}`,
+    color: 'transparent',  // Hard to see!
+  };
+```
 
-### Text Overlays  
-- Tap a text button to add text
-- Opens a text input with styling options
-- Choose from different text styles (bold, outlined, etc.)
-- Drag text anywhere on the screen
-- Tap on text to edit or delete it
-
----
-
-## How It Will Look
-
-The preview screen will have a new toolbar at the top with:
-- **Emoji button** - Opens the emoji picker
-- **Text button** - Opens text input mode
-
-Stickers and text will float on top of the video, with visual handles when selected for repositioning or deletion.
+### Issue 3: Missing Text Shadow
+Unlike emoji overlays that are inherently visible, text needs a shadow or stroke to stand out against any video background.
 
 ---
 
-## Technical Details
+## Solution
 
-### New Components
+### 1. Add Text Shadow for Visibility
+Add a drop shadow to all text overlays so they're visible regardless of video background:
+```tsx
+textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)'
+```
 
-**1. StoryOverlayEditor.tsx**
-A new component that manages all overlays on the story preview:
-- Renders emoji and text elements as draggable overlays
-- Handles touch/mouse events for dragging and repositioning
-- Manages selection state for editing/deleting overlays
+### 2. Fix Outlined Style
+Increase the stroke width and add a contrasting fill:
+```tsx
+case 'outlined':
+  return {
+    WebkitTextStroke: `2px ${overlay.style.color}`,
+    color: 'black',  // or a contrasting color
+    fontWeight: 700,
+  };
+```
 
-**2. StoryEmojiPicker.tsx**
-A fullscreen-friendly emoji picker adapted from the existing EmojiPicker:
-- Bottom sheet/drawer style for mobile
-- Category tabs (Smileys, Gestures, Hearts, Objects)
-- Large touch-friendly emoji buttons
+### 3. Increase Base Font Size
+Change from `text-xl` (20px) to `text-2xl` (24px) for better visibility.
 
-**3. StoryTextInput.tsx**
-Text input overlay for adding/editing text:
-- Text input field with live preview
-- Style buttons (bold, outlined, colored background)
-- Color picker for text color
-- Done/Cancel buttons
-
-### Data Structure
-Each overlay will be stored as an object with:
-- Type (emoji or text)
-- Content (the emoji character or text string)
-- Position (x, y as percentages)
-- Scale (for pinch-to-zoom resize)
-- Style (for text: color, background, font style)
-
-### Touch Handling
-- Single finger drag: Move overlay position
-- Pinch gesture: Resize overlay
-- Tap on overlay: Select it (show delete button)
-- Tap elsewhere: Deselect
-
-### Integration with Story Confirmation
-When the user clicks "Confirm":
-- Overlays are rendered onto the video using canvas compositing
-- The final video blob includes all stickers and text burned in
-- Uses similar canvas approach as the existing watermark.ts utility
+### 4. Add Debug Logging (Temporary)
+Add a console log in `addText` to confirm the overlay is being added:
+```tsx
+console.log('Adding text overlay:', newOverlay);
+```
 
 ---
 
-## Files to Create/Modify
+## Files to Modify
 
-| File | Action | Purpose |
-|------|--------|---------|
-| `src/components/app/stories/StoryOverlayEditor.tsx` | Create | Main overlay management component |
-| `src/components/app/stories/StoryEmojiPicker.tsx` | Create | Fullscreen emoji picker for stories |
-| `src/components/app/stories/StoryTextInput.tsx` | Create | Text input with styling options |
-| `src/components/app/stories/StoryRecorderModal.tsx` | Modify | Add overlay editor to preview screen |
-| `src/components/app/stories/index.ts` | Modify | Export new components |
-| `src/lib/story-compositor.ts` | Create | Utility to burn overlays into video |
+| File | Changes |
+|------|---------|
+| `src/components/app/stories/StoryOverlayEditor.tsx` | Update `getTextStyle()` to add shadows; increase font size; fix outlined style |
 
 ---
 
-## Implementation Phases
+## Updated getTextStyle Function
 
-**Phase 1: Emoji Stickers**
-- Create overlay data structure and state management
-- Build draggable emoji rendering
-- Create emoji picker adapted for fullscreen
-- Add emoji toolbar button to preview screen
+```tsx
+const getTextStyle = (overlay: StoryOverlay): React.CSSProperties => {
+  if (!overlay.style) return { textShadow: '0 2px 4px rgba(0,0,0,0.5)' };
+  
+  // Base shadow for visibility on any background
+  const baseShadow = '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)';
+  
+  const baseStyle: React.CSSProperties = {
+    color: overlay.style.textStyle === 'background' 
+      ? (overlay.style.color === '#FFFFFF' ? '#000000' : '#FFFFFF')
+      : overlay.style.color,
+    textShadow: overlay.style.textStyle !== 'background' ? baseShadow : undefined,
+  };
 
-**Phase 2: Text Overlays**
-- Create text input component with styling
-- Add text overlay rendering with drag support
-- Integrate text button into toolbar
+  switch (overlay.style.textStyle) {
+    case 'bold':
+      return { ...baseStyle, fontWeight: 700 };
+    case 'outlined':
+      return {
+        WebkitTextStroke: `2px ${overlay.style.color}`,
+        color: overlay.style.color === '#FFFFFF' ? '#000000' : '#FFFFFF',
+        fontWeight: 700,
+        textShadow: baseShadow,
+      };
+    case 'background':
+      return {
+        ...baseStyle,
+        backgroundColor: overlay.style.color,
+        padding: '4px 12px',
+        borderRadius: '8px',
+        textShadow: undefined,
+      };
+    default:
+      return baseStyle;
+  }
+};
+```
 
-**Phase 3: Polish & Compositing**
-- Implement canvas compositing to burn overlays into final video
-- Add delete functionality for selected overlays
-- Fine-tune touch handling and visual feedback
+## Updated Text Span
+
+```tsx
+<span 
+  className="text-2xl whitespace-pre-wrap max-w-[80vw] text-center font-semibold"
+  style={getTextStyle(overlay)}
+>
+  {overlay.content}
+</span>
+```
 
