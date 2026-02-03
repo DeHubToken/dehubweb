@@ -223,17 +223,15 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
         </button>
       </div>
 
-      {/* Overlay layer */}
+      {/* Overlay layer - pointer-events-none so it doesn't block other controls */}
       <div 
-        className="absolute inset-0 z-10"
-        onClick={handleBackgroundTap}
-        onTouchStart={handleBackgroundTap}
+        className="absolute inset-0 z-10 pointer-events-none"
       >
         {overlays.map((overlay) => (
           <div
             key={overlay.id}
             className={cn(
-              'absolute cursor-move select-none touch-none',
+              'absolute cursor-move select-none touch-none pointer-events-auto',
               selectedId === overlay.id && 'ring-2 ring-white ring-offset-2 ring-offset-transparent rounded-lg'
             )}
             style={{
