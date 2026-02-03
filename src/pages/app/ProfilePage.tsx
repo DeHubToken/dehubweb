@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, ChevronLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,6 +76,7 @@ type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'song
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
   const userId = searchParams.get('id');
@@ -792,6 +793,21 @@ export default function ProfilePage() {
       )}
       
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
+        {/* Back button - show when navigated from another page (not direct URL access) */}
+        {location.key !== 'default' && (
+          <div className="flex items-center gap-2 mb-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="rounded-xl text-white hover:bg-white/10 gap-2 px-3"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span>Back</span>
+            </Button>
+          </div>
+        )}
+        
         {/* Profile Card Bento */}
         <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
           
