@@ -605,83 +605,79 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Expanded description overlay */}
-              {isDescriptionExpanded && currentShort.description && (
-                <button
+              {/* Expanded description backdrop - tap to close */}
+              {isDescriptionExpanded && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
                   onClick={() => setIsDescriptionExpanded(false)}
-                  className="absolute inset-0 z-20 bg-gradient-to-t from-black via-black/80 to-transparent"
-                >
-                  <div className="absolute bottom-6 left-4 right-4 max-h-[50vh] flex flex-col">
-                    {/* Creator info row */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="relative flex-shrink-0">
-                        <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
-                          <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                        </Avatar>
-                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
-                          <span className="text-white text-xs font-bold">+</span>
-                        </div>
-                      </div>
-                      <span className="text-white font-semibold text-base drop-shadow-lg">
-                        {currentShort.creatorUsername || currentShort.username}
-                      </span>
+                  className="absolute inset-0 z-15 bg-gradient-to-t from-black/90 via-black/60 to-transparent"
+                />
+              )}
+
+              {/* Bottom Left - Creator Info & Description */}
+              <motion.div
+                className="absolute left-4 right-20 z-20"
+                initial={false}
+                animate={{
+                  bottom: isDescriptionExpanded ? '50%' : 24,
+                  y: isDescriptionExpanded ? '50%' : 0
+                }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              >
+                {/* Creator info row */}
+                <div className="flex items-center gap-2 mb-3">
+                  <button
+                    onClick={() => handleNavigateToProfile()}
+                    className="relative flex-shrink-0"
+                  >
+                    <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
+                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    {/* Follow badge */}
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
+                      <span className="text-white text-xs font-bold">+</span>
                     </div>
-                    
-                    {/* Scrollable description */}
-                    <div className="overflow-y-auto max-h-[40vh] scrollbar-hide">
+                  </button>
+                  <button
+                    onClick={() => handleNavigateToProfile()}
+                    className="text-white font-semibold text-base drop-shadow-lg"
+                  >
+                    {currentShort.creatorUsername || currentShort.username}
+                  </button>
+                </div>
+                
+                {/* Description - tap to expand/collapse */}
+                {currentShort.description && (
+                  <button
+                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                    className="text-left w-full"
+                  >
+                    <motion.div
+                      initial={false}
+                      animate={{ maxHeight: isDescriptionExpanded ? '40vh' : '3rem' }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      className={cn(
+                        "overflow-hidden",
+                        isDescriptionExpanded && "overflow-y-auto scrollbar-hide"
+                      )}
+                    >
                       <p className="text-white text-sm leading-relaxed drop-shadow-lg whitespace-pre-wrap">
                         {currentShort.description}
                       </p>
-                    </div>
-                    
-                    <span className="text-white/60 text-xs mt-2">Tap to close</span>
-                  </div>
-                </button>
-              )}
-
-              {/* Bottom Left - Creator Info & Description (collapsed state) */}
-              {!isDescriptionExpanded && (
-                <div className="absolute bottom-6 left-4 right-20 z-10">
-                  {/* Creator info row */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <button
-                      onClick={() => handleNavigateToProfile()}
-                      className="relative flex-shrink-0"
-                    >
-                      <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
-                        <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                        <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                      </Avatar>
-                      {/* Follow badge */}
-                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
-                        <span className="text-white text-xs font-bold">+</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleNavigateToProfile()}
-                      className="text-white font-semibold text-base drop-shadow-lg"
-                    >
-                      {currentShort.creatorUsername || currentShort.username}
-                    </button>
-                  </div>
-                  
-                  {/* Description - tap to expand */}
-                  {currentShort.description && (
-                    <button
-                      onClick={() => setIsDescriptionExpanded(true)}
-                      className="text-left w-full"
-                    >
-                      <p className="text-white text-sm leading-relaxed drop-shadow-lg line-clamp-2">
-                        {currentShort.description}
-                      </p>
-                      {currentShort.description.length > 80 && (
-                        <span className="text-white/60 text-xs mt-1">more</span>
-                      )}
-                    </button>
-                  )}
-                </div>
-              )}
+                    </motion.div>
+                    {!isDescriptionExpanded && currentShort.description.length > 80 && (
+                      <span className="text-white/60 text-xs mt-1 block">more</span>
+                    )}
+                    {isDescriptionExpanded && (
+                      <span className="text-white/60 text-xs mt-2 block">Tap to close</span>
+                    )}
+                  </button>
+                )}
+              </motion.div>
 
               {/* Right Side Action Buttons - Vertical stack */}
               <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5">
