@@ -87,6 +87,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [inlineCommentText, setInlineCommentText] = useState('');
   const [isPostingComment, setIsPostingComment] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   
   // Voting state - synced with API
   const [isLiked, setIsLiked] = useState(false);
@@ -167,6 +168,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setLocalDislikeCount(0);
     setShowComments(false);
     setInlineCommentText('');
+    setIsDescriptionExpanded(false);
   }, [currentIndex, currentShort?.likes]);
   
   // Handle voting - same logic as ActionBar
@@ -603,38 +605,83 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Bottom Left - Creator Info & Description */}
-              <div className="absolute bottom-6 left-4 right-20 z-10">
-                {/* Creator info row */}
-                <div className="flex items-center gap-2 mb-3">
-                  <button
-                    onClick={() => handleNavigateToProfile()}
-                    className="relative flex-shrink-0"
-                  >
-                    <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
-                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    {/* Follow badge */}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
-                      <span className="text-white text-xs font-bold">+</span>
+              {/* Expanded description overlay */}
+              {isDescriptionExpanded && currentShort.description && (
+                <button
+                  onClick={() => setIsDescriptionExpanded(false)}
+                  className="absolute inset-0 z-20 bg-gradient-to-t from-black via-black/80 to-transparent"
+                >
+                  <div className="absolute bottom-6 left-4 right-4 max-h-[50vh] flex flex-col">
+                    {/* Creator info row */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="relative flex-shrink-0">
+                        <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
+                          <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
+                          <span className="text-white text-xs font-bold">+</span>
+                        </div>
+                      </div>
+                      <span className="text-white font-semibold text-base drop-shadow-lg">
+                        {currentShort.creatorUsername || currentShort.username}
+                      </span>
                     </div>
-                  </button>
-                  <button
-                    onClick={() => handleNavigateToProfile()}
-                    className="text-white font-semibold text-base drop-shadow-lg"
-                  >
-                    {currentShort.creatorUsername || currentShort.username}
-                  </button>
+                    
+                    {/* Scrollable description */}
+                    <div className="overflow-y-auto max-h-[40vh] scrollbar-hide">
+                      <p className="text-white text-sm leading-relaxed drop-shadow-lg whitespace-pre-wrap">
+                        {currentShort.description}
+                      </p>
+                    </div>
+                    
+                    <span className="text-white/60 text-xs mt-2">Tap to close</span>
+                  </div>
+                </button>
+              )}
+
+              {/* Bottom Left - Creator Info & Description (collapsed state) */}
+              {!isDescriptionExpanded && (
+                <div className="absolute bottom-6 left-4 right-20 z-10">
+                  {/* Creator info row */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <button
+                      onClick={() => handleNavigateToProfile()}
+                      className="relative flex-shrink-0"
+                    >
+                      <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
+                        <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                        <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      {/* Follow badge */}
+                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
+                        <span className="text-white text-xs font-bold">+</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNavigateToProfile()}
+                      className="text-white font-semibold text-base drop-shadow-lg"
+                    >
+                      {currentShort.creatorUsername || currentShort.username}
+                    </button>
+                  </div>
+                  
+                  {/* Description - tap to expand */}
+                  {currentShort.description && (
+                    <button
+                      onClick={() => setIsDescriptionExpanded(true)}
+                      className="text-left w-full"
+                    >
+                      <p className="text-white text-sm leading-relaxed drop-shadow-lg line-clamp-2">
+                        {currentShort.description}
+                      </p>
+                      {currentShort.description.length > 80 && (
+                        <span className="text-white/60 text-xs mt-1">more</span>
+                      )}
+                    </button>
+                  )}
                 </div>
-                
-                {/* Description */}
-                {currentShort.description && (
-                  <p className="text-white text-sm leading-relaxed drop-shadow-lg line-clamp-2">
-                    {currentShort.description}
-                  </p>
-                )}
-              </div>
+              )}
 
               {/* Right Side Action Buttons - Vertical stack */}
               <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5">
