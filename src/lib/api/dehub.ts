@@ -2895,3 +2895,201 @@ export async function isSubscribedToCreator(creatorAddress: string): Promise<boo
     return false;
   }
 }
+
+// ============================================================================
+// REACTIONS API - Comments, Votes, Follows
+// ============================================================================
+
+/**
+ * Comment response from API
+ */
+export interface CommentResponse {
+  id: string;
+  tokenId: number;
+  content: string;
+  imageUrl?: string;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+  user?: DeHubUser;
+  likeCount?: number;
+  replyIds?: string[];
+  parentId?: string | null;
+}
+
+/**
+ * Add a text comment to a video/post
+ * POST /api/request_comment
+ */
+export async function addComment(params: {
+  tokenId: number;
+  content: string;
+  parentId?: string; // For replies
+}): Promise<CommentResponse> {
+  const response = await apiCall<{ result: CommentResponse } | CommentResponse>("/api/request_comment", {
+    method: "POST",
+    body: {
+      tokenId: params.tokenId,
+      content: params.content,
+      parentId: params.parentId,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as CommentResponse;
+}
+
+/**
+ * Add a comment with an image attachment
+ * POST /api/comment_image
+ */
+export async function addCommentWithImage(params: {
+  tokenId: number;
+  content?: string;
+  imageUrl: string; // URL or base64 of the image
+  parentId?: string;
+}): Promise<CommentResponse> {
+  const response = await apiCall<{ result: CommentResponse } | CommentResponse>("/api/comment_image", {
+    method: "POST",
+    body: {
+      tokenId: params.tokenId,
+      content: params.content || '',
+      imageUrl: params.imageUrl,
+      parentId: params.parentId,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as CommentResponse;
+}
+
+/**
+ * Vote response from API
+ */
+export interface VoteResponse {
+  success: boolean;
+  tokenId: number;
+  voteType: 'for' | 'against' | null; // null means vote removed
+  totalVotes?: {
+    for: number;
+    against: number;
+  };
+}
+
+/**
+ * Like or dislike a video/post (toggleable)
+ * POST /api/request_vote
+ * 
+ * If user already voted the same way, the vote is removed (toggle off)
+ * If user voted differently, the vote is switched
+ */
+export async function voteOnPost(params: {
+  tokenId: number;
+  voteType: 'for' | 'against'; // 'for' = like, 'against' = dislike
+}): Promise<VoteResponse> {
+  const response = await apiCall<{ result: VoteResponse; success?: boolean } | VoteResponse>("/api/request_vote", {
+    method: "POST",
+    body: {
+      tokenId: params.tokenId,
+      voteType: params.voteType,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response && typeof response.result === 'object') {
+    return response.result;
+  }
+  return response as VoteResponse;
+}
+
+/**
+ * Follow response from API
+ */
+export interface FollowResponse {
+  success: boolean;
+  isFollowing: boolean; // true if now following, false if unfollowed
+  followerCount?: number;
+}
+
+/**
+ * Follow or unfollow a user (toggleable)
+ * POST /api/request_follow
+ */
+export async function toggleFollow(params: {
+  targetAddress: string;
+}): Promise<FollowResponse> {
+  const response = await apiCall<{ result: FollowResponse } | FollowResponse>("/api/request_follow", {
+    method: "POST",
+    body: {
+      address: params.targetAddress.toLowerCase(),
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as FollowResponse;
+}
+
+/**
+ * Comment like response from API
+ */
+export interface CommentLikeResponse {
+  success: boolean;
+  commentId: string;
+  isLiked: boolean; // true if now liked, false if unliked
+  likeCount?: number;
+}
+
+/**
+ * Like or unlike a comment (toggleable)
+ * POST /api/like_comment
+ */
+export async function toggleCommentLike(params: {
+  commentId: string;
+}): Promise<CommentLikeResponse> {
+  const response = await apiCall<{ result: CommentLikeResponse } | CommentLikeResponse>("/api/like_comment", {
+    method: "POST",
+    body: {
+      commentId: params.commentId,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as CommentLikeResponse;
+}
+
+/**
+ * Edit comment response from API
+ */
+export interface EditCommentResponse {
+  success: boolean;
+  comment: CommentResponse;
+}
+
+/**
+ * Edit an existing comment
+ * POST /api/edit_comment
+ */
+export async function editComment(params: {
+  commentId: string;
+  content: string;
+}): Promise<EditCommentResponse> {
+  const response = await apiCall<{ result: EditCommentResponse } | EditCommentResponse>("/api/edit_comment", {
+    method: "POST",
+    body: {
+      commentId: params.commentId,
+      content: params.content,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as EditCommentResponse;
+}
