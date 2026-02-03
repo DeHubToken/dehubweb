@@ -251,7 +251,11 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             autoPlay
             loop
             playsInline
-            muted={false}
+            muted
+            onPlay={(e) => {
+              // Unmute after autoplay starts to bypass browser restrictions
+              (e.target as HTMLVideoElement).muted = false;
+            }}
             className="w-full h-full object-cover"
           />
         )}
