@@ -1,171 +1,162 @@
 
 
-# Upgrade DeHub to a Proper MCP Server with SSE Transport
+## Re-Sign Prompt on Authentication Failure
 
-## Overview
+When an authenticated API call fails due to an expired or invalid token, instead of silently failing, the app will prompt the user to re-authenticate.
 
-Transform the current HTTP-based "skill server" into a **fully compliant MCP (Model Context Protocol) server** that Claude, GPT, and other AI agents can connect to natively using the standard MCP transport.
+---
 
-## Current State
+### Problem Summary
 
-The existing `dehub-mcp` edge function uses:
-- Simple HTTP POST with JSON-RPC 2.0
-- Stateless request/response pattern  
-- Custom `x-dehub-api-key` header for auth
+Currently, when an API call like `followUser` fails due to authentication issues:
+1. The error is caught in the component (e.g., `ProfilePage.tsx`)
+2. A generic "Failed to follow" toast is shown
+3. The user has no clear path to fix the issue without manually logging out and back in
 
-This works, but isn't a "proper" MCP server that AI clients can discover and connect to automatically.
+---
 
-## What Changes
+### Solution Overview
 
-### 1. Use mcp-lite Library
+Implement a **re-authentication prompt system** that:
+1. Detects when an API call fails due to authentication (401/403 or token issues)
+2. Prompts the user with an actionable toast to re-sign
+3. Opens the login modal when the user clicks to re-authenticate
 
-We'll use **mcp-lite** (the recommended library from the useful context) to implement proper MCP protocol with SSE (Server-Sent Events) transport.
+---
 
-```text
-+-------------------+     SSE Connection     +------------------+
-|   Claude/GPT      | <------------------->  |  DeHub MCP       |
-|   AI Agent        |     Bidirectional      |  Edge Function   |
-+-------------------+                        +------------------+
-                                                     |
-                                                     v
-                                            +------------------+
-                                            |   DeHub API      |
-                                            |  (api.dehub.io)  |
-                                            +------------------+
-```
+### Technical Implementation
 
-### 2. MCP Protocol Features
+#### 1. Add Auth Error Detection in API Layer
 
-| Feature | Current | After Upgrade |
-|---------|---------|---------------|
-| Transport | HTTP POST | SSE (Streamable HTTP) |
-| Discovery | Manual skill.md | Native MCP introspection |
-| Tools | JSON-RPC methods | Proper MCP tool definitions |
-| Claude/GPT native | No | Yes - can add as MCP server |
-
-### 3. SSE Transport Endpoints
-
-The MCP server will handle:
-- `POST /` - Initialize SSE connection  
-- `GET /` - SSE event stream  
-- `DELETE /` - Close connection
-
-## Implementation Steps
-
-### Step 1: Create deno.json with mcp-lite dependency
-
-Add `supabase/functions/dehub-mcp/deno.json`:
-
-```json
-{
-  "imports": {
-    "hono": "jsr:@hono/hono@^4",
-    "mcp-lite": "npm:mcp-lite@^0.10.0"
-  }
-}
-```
-
-### Step 2: Rewrite edge function with mcp-lite
-
-Replace the current implementation with:
+Update `src/lib/api/dehub.ts` to export a custom error class for authentication failures:
 
 ```typescript
-import { Hono } from "hono";
-import { McpServer, StreamableHttpTransport } from "mcp-lite";
-
-const app = new Hono();
-
-const mcpServer = new McpServer({
-  name: "dehub-mcp",
-  version: "1.0.0",
-});
-
-// Define all tools with proper MCP schema
-mcpServer.tool({
-  name: "dehub_feed",
-  description: "Get posts from the DeHub feed",
-  inputSchema: {
-    type: "object",
-    properties: {
-      sort: { type: "string", enum: ["new", "hot", "trending"] },
-      limit: { type: "number", maximum: 50 },
-    },
-  },
-  handler: async (params) => {
-    // ... existing feed logic
-    return { content: [{ type: "text", text: JSON.stringify(result) }] };
-  },
-});
-
-// ... define all other tools
-
-const transport = new StreamableHttpTransport();
-
-app.all("/*", async (c) => {
-  return await transport.handleRequest(c.req.raw, mcpServer);
-});
-
-Deno.serve(app.fetch);
-```
-
-### Step 3: Update skill.md
-
-Fix the duplicate `---` and update the documentation to reflect the proper MCP server:
-
-- Remove duplicate delimiter (line 8)
-- Update support URLs from `cosmic-echo-hero.lovable.app` to `dehub.io`
-- Add MCP connection instructions for Claude/GPT users
-
-### Step 4: Keep backward compatibility (optional)
-
-We can keep the JSON-RPC endpoint working alongside MCP by detecting the request type, so existing integrations don't break.
-
-## Tools to Implement
-
-All existing tools will be converted to proper MCP format:
-
-| Tool | Description | Auth Required |
-|------|-------------|---------------|
-| `dehub_register` | Register AI agent, get API key | No |
-| `dehub_tools` | List available tools | No |
-| `dehub_feed` | Get posts from feed | Optional |
-| `dehub_post` | Get single post | Optional |
-| `dehub_search` | Search content | Optional |
-| `dehub_profile` | Get user profile | Optional |
-| `dehub_post_create` | Create a post | Yes |
-| `dehub_vote` | Like/dislike post | Yes |
-| `dehub_comment` | Comment on post | Yes |
-| `dehub_follow` | Follow/unfollow user | Yes |
-
-## How AI Agents Will Connect
-
-After this upgrade, agents can connect natively:
-
-**Claude Desktop (claude_desktop_config.json):**
-```json
-{
-  "mcpServers": {
-    "dehub": {
-      "url": "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp",
-      "headers": {
-        "x-dehub-api-key": "dehub_your_key_here"
-      }
-    }
+// New class to identify auth-specific errors
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthenticationError';
   }
 }
 ```
 
-## Technical Notes
+Update `apiCall()` to detect 401/403 responses and throw `AuthenticationError`:
 
-- **mcp-lite version**: Must use `^0.10.0` or higher (earlier versions have TypeScript issues)
-- **Hono**: Used for routing (standard pattern for Supabase edge functions)
-- **Rate limiting**: Will continue to work through the same database tables
-- **Authentication**: API key passed via headers, validated in tool handlers
+```typescript
+if (!response.ok) {
+  const errorData = await response.json().catch(() => ({}));
+  
+  // Detect auth failures (401 Unauthorized, 403 Forbidden, or auth-related messages)
+  if (response.status === 401 || response.status === 403 || 
+      errorData.message?.toLowerCase().includes('unauthorized') ||
+      errorData.message?.toLowerCase().includes('invalid token')) {
+    // Clear stale session
+    clearAuthSession();
+    throw new AuthenticationError('Session expired. Please sign in again.');
+  }
+  
+  throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
+}
+```
 
-## Benefits
+---
 
-1. **Native Claude/GPT support** - Add DeHub as an MCP server directly
-2. **Auto-discovery** - Agents can list available tools automatically  
-3. **Streaming** - SSE enables real-time updates if needed later
-4. **Standard protocol** - Future-proof for the MCP ecosystem
+#### 2. Create a Re-Auth Hook
+
+Create `src/hooks/use-reauth-handler.ts` to provide a reusable handler for components:
+
+```typescript
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthenticationError } from '@/lib/api/dehub';
+import { toast } from 'sonner';
+
+export function useReauthHandler() {
+  const { openLoginModal } = useAuth();
+
+  const handleApiError = (error: unknown, fallbackMessage: string) => {
+    if (error instanceof AuthenticationError) {
+      toast.error('Session expired', {
+        description: 'Please sign in again to continue',
+        action: {
+          label: 'Sign in',
+          onClick: openLoginModal,
+        },
+        duration: 8000,
+      });
+      return true; // Indicates auth error was handled
+    }
+    
+    // Not an auth error, show fallback message
+    toast.error(fallbackMessage);
+    return false;
+  };
+
+  return { handleApiError };
+}
+```
+
+---
+
+#### 3. Update Components to Use the Handler
+
+Update `src/pages/app/ProfilePage.tsx` follow handlers:
+
+```typescript
+const { handleApiError } = useReauthHandler();
+
+const handleFollow = async () => {
+  // ... existing validation ...
+  
+  try {
+    await followUser(profile.walletAddress);
+    toast.success(`Following ${profile.name}`);
+  } catch (error) {
+    setFollowStatus(false); // Revert optimistic update
+    handleApiError(error, 'Failed to follow. Please try again.');
+  } finally {
+    setIsFollowLoading(false);
+  }
+};
+```
+
+Apply similar updates to:
+- `src/components/app/WhoToFollow.tsx`
+- `src/components/app/profile/FollowersListDrawer.tsx`
+- Any other components that call authenticated API endpoints
+
+---
+
+#### 4. Fix the Stale Token Caching Issue
+
+While implementing re-auth prompts, also fix the root cause in `src/lib/api/dehub.ts`:
+
+```typescript
+// Change getAuthToken to always read fresh from localStorage
+export const getAuthToken = (): string | null => {
+  return localStorage.getItem("dehub_token");
+};
+```
+
+Remove the module-level `authToken` variable caching that was causing the original stale token issue.
+
+---
+
+### Files to Modify
+
+| File | Change |
+|------|--------|
+| `src/lib/api/dehub.ts` | Add `AuthenticationError` class, update `apiCall()` to detect auth failures, fix token caching |
+| `src/hooks/use-reauth-handler.ts` | New file - reusable hook for handling auth errors with re-sign prompts |
+| `src/hooks/index.ts` | Export the new hook |
+| `src/pages/app/ProfilePage.tsx` | Use `useReauthHandler` for follow/unfollow errors |
+| `src/components/app/WhoToFollow.tsx` | Use `useReauthHandler` for follow errors |
+| `src/components/app/profile/FollowersListDrawer.tsx` | Use `useReauthHandler` for follow/unfollow errors |
+
+---
+
+### User Experience
+
+**Before**: Follow fails → Generic "Failed to follow" toast → User confused
+
+**After**: Follow fails due to auth → Toast with "Session expired" message + "Sign in" button → User clicks → Login modal opens → User re-authenticates → Can retry action
 
