@@ -537,11 +537,11 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="flex flex-col h-full"
+      className="flex flex-col min-h-[400px] max-h-[600px] bg-zinc-900/50 rounded-2xl p-4 mt-3"
     >
 
       {/* Tab Switcher - 4 Icons: Replies, Quotes, Search, Sort */}
