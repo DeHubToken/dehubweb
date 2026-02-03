@@ -545,7 +545,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       className="flex flex-col min-h-[400px] max-h-[600px] bg-zinc-900/50 rounded-2xl p-4 mt-3"
     >
 
-      {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Share (desktop/tablet only) */}
+      {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
       <div className="flex justify-between items-center gap-1 mb-3">
         {/* Left side - Tab buttons */}
         <div className="flex gap-1">
@@ -609,6 +609,13 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
               aria-label="Dislike post"
             >
               <ThumbsDown className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Bookmark post"
+            >
+              <Bookmark className="w-5 h-5" />
             </button>
             <button
               type="button"
