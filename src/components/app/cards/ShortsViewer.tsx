@@ -31,6 +31,12 @@ interface ShortsViewerProps {
   shorts: ShortVideo[];
   initialIndex: number;
   onClose: () => void;
+  /** Callback to load more shorts when reaching near the end */
+  onLoadMore?: () => void;
+  /** Whether there are more shorts to load */
+  hasMore?: boolean;
+  /** Whether currently loading more shorts */
+  isLoadingMore?: boolean;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -70,7 +76,7 @@ function mapApiCommentToInline(apiComment: ApiCommentResponse): InlineComment {
   };
 }
 
-export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProps) {
+export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -263,17 +269,21 @@ export function ShortsViewer({ shorts, initialIndex, onClose }: ShortsViewerProp
     }
   }, []);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     if (currentIndex < shorts.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
-  };
+    // Load more when within 3 items of the end
+    if (currentIndex >= shorts.length - 4 && hasMore && !isLoadingMore && onLoadMore) {
+      onLoadMore();
+    }
+  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore]);
 
-  const goToPrev = () => {
+  const goToPrev = useCallback(() => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
-  };
+  }, [currentIndex]);
 
   // Handle mouse wheel scrolling
   useEffect(() => {
