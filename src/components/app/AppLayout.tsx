@@ -112,16 +112,16 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         
         <main className="flex-1 min-h-screen pt-11 pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black">
           {/* Keep HomePage mounted when viewing post from home (overlay pattern) */}
-          {/* CRITICAL: Use 'hidden' class instead of height:0 to preserve scroll position */}
+          {/* CRITICAL: Use overflow-hidden to prevent hidden content from affecting scroll height */}
           {(isHomePage || showHomePagePersisted) && (
-            <div className={showHomePagePersisted ? 'invisible absolute inset-0 pointer-events-none' : ''}>
+            <div className={showHomePagePersisted ? 'hidden' : ''}>
               <HomePage />
             </div>
           )}
           
           {/* Post overlay - renders on top when viewing a post from home */}
           {showHomePagePersisted && (
-            <div className="w-full">
+            <div className="w-full min-h-screen">
               <SinglePostPage />
             </div>
           )}
