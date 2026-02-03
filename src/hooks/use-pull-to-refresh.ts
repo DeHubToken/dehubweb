@@ -5,12 +5,17 @@
  * Supports touch, mouse, and wheel gestures.
  * Only triggers when interacting within the specified container.
  * 
+ * IMPORTANT: Uses a "hold-to-refresh" mechanism - user must hold at threshold
+ * for HOLD_DURATION_MS before refresh triggers. This prevents accidental 
+ * refreshes when users just want to scroll to top quickly.
+ * 
  * @module hooks/use-pull-to-refresh
  */
 
 import { useState, useRef, useEffect, useCallback, RefObject } from 'react';
 
 const DEFAULT_PULL_THRESHOLD = 80;
+const HOLD_DURATION_MS = 420; // Time to hold at threshold before triggering
 
 interface UsePullToRefreshOptions {
   /** Distance required to trigger refresh */
@@ -26,6 +31,10 @@ interface UsePullToRefreshOptions {
 interface UsePullToRefreshReturn {
   pullDistance: number;
   isPulling: boolean;
+  /** Whether user is holding at threshold (waiting for timer) */
+  isHoldingAtThreshold: boolean;
+  /** Progress of hold timer (0-1) */
+  holdProgress: number;
   handlers: {
     onTouchStart: (e: React.TouchEvent) => void;
     onTouchMove: (e: React.TouchEvent) => void;
@@ -45,11 +54,19 @@ export function usePullToRefresh({
 }: UsePullToRefreshOptions): UsePullToRefreshReturn {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
+  const [isHoldingAtThreshold, setIsHoldingAtThreshold] = useState(false);
+  const [holdProgress, setHoldProgress] = useState(0);
+  
   const pullStartY = useRef<number | null>(null);
   const wasAtTopOnStart = useRef<boolean>(false);
   const wheelAccumulator = useRef<number>(0);
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null);
   const isHoveringContainer = useRef<boolean>(false);
+  
+  // Hold timer refs
+  const holdStartTime = useRef<number | null>(null);
+  const holdAnimationFrame = useRef<number | null>(null);
+  const holdTimerActive = useRef<boolean>(false);
   
   // Synchronous lock to prevent race conditions with rapid events
   const hasTriggeredRef = useRef<boolean>(false);
@@ -62,6 +79,15 @@ export function usePullToRefresh({
       hasTriggeredRef.current = false;
     }
   }, [isRefreshing]);
+
+  // Clean up animation frame on unmount
+  useEffect(() => {
+    return () => {
+      if (holdAnimationFrame.current) {
+        cancelAnimationFrame(holdAnimationFrame.current);
+      }
+    };
+  }, []);
 
   // Helper to check if we're truly at the top (both window AND container)
   const isAtTop = useCallback(() => {
@@ -105,6 +131,46 @@ export function usePullToRefresh({
     onRefresh();
   }, [isRefreshing, onRefresh]);
 
+  // Start the hold timer when threshold is reached
+  const startHoldTimer = useCallback(() => {
+    if (holdTimerActive.current || hasTriggeredRef.current || isRefreshing) return;
+    
+    holdTimerActive.current = true;
+    holdStartTime.current = Date.now();
+    setIsHoldingAtThreshold(true);
+    
+    const updateProgress = () => {
+      if (!holdTimerActive.current || !holdStartTime.current) return;
+      
+      const elapsed = Date.now() - holdStartTime.current;
+      const progress = Math.min(elapsed / HOLD_DURATION_MS, 1);
+      setHoldProgress(progress);
+      
+      if (progress >= 1) {
+        // Timer complete - trigger refresh
+        triggerRefresh();
+        cancelHoldTimer();
+      } else {
+        holdAnimationFrame.current = requestAnimationFrame(updateProgress);
+      }
+    };
+    
+    holdAnimationFrame.current = requestAnimationFrame(updateProgress);
+  }, [isRefreshing, triggerRefresh]);
+
+  // Cancel the hold timer
+  const cancelHoldTimer = useCallback(() => {
+    holdTimerActive.current = false;
+    holdStartTime.current = null;
+    setIsHoldingAtThreshold(false);
+    setHoldProgress(0);
+    
+    if (holdAnimationFrame.current) {
+      cancelAnimationFrame(holdAnimationFrame.current);
+      holdAnimationFrame.current = null;
+    }
+  }, []);
+
   // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     // Only allow pull-to-refresh if we're at the very top when touch starts
@@ -123,6 +189,7 @@ export function usePullToRefresh({
       wasAtTopOnStart.current = false;
       setPullDistance(0);
       setIsPulling(false);
+      cancelHoldTimer();
       return;
     }
 
@@ -134,23 +201,31 @@ export function usePullToRefresh({
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
+      
+      // Start hold timer when threshold is reached
+      if (resistedDistance >= pullThreshold) {
+        startHoldTimer();
+      } else {
+        // Dropped below threshold - cancel timer
+        cancelHoldTimer();
+      }
     } else {
       // Moving up while at top, don't show indicator
       setPullDistance(0);
       setIsPulling(false);
+      cancelHoldTimer();
     }
-  }, [isAtTop, pullThreshold]);
+  }, [isAtTop, pullThreshold, startHoldTimer, cancelHoldTimer]);
 
   const handleTouchEnd = useCallback(() => {
-    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
-      triggerRefresh();
-    }
+    // Cancel timer on release - refresh only triggers if timer completed
+    cancelHoldTimer();
     
     setPullDistance(0);
     setIsPulling(false);
     pullStartY.current = null;
     wasAtTopOnStart.current = false;
-  }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
+  }, [cancelHoldTimer]);
 
   // Mouse handlers for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -167,6 +242,7 @@ export function usePullToRefresh({
       wasAtTopOnStart.current = false;
       setPullDistance(0);
       setIsPulling(false);
+      cancelHoldTimer();
       return;
     }
 
@@ -175,31 +251,39 @@ export function usePullToRefresh({
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
+      
+      // Start hold timer when threshold is reached
+      if (resistedDistance >= pullThreshold) {
+        startHoldTimer();
+      } else {
+        cancelHoldTimer();
+      }
     } else {
       setPullDistance(0);
       setIsPulling(false);
+      cancelHoldTimer();
     }
-  }, [isAtTop, pullThreshold]);
+  }, [isAtTop, pullThreshold, startHoldTimer, cancelHoldTimer]);
 
   const handleMouseUp = useCallback(() => {
-    if (isPulling && pullDistance >= pullThreshold && wasAtTopOnStart.current) {
-      triggerRefresh();
-    }
+    // Cancel timer on release - refresh only triggers if timer completed
+    cancelHoldTimer();
     
     setPullDistance(0);
     setIsPulling(false);
     pullStartY.current = null;
     wasAtTopOnStart.current = false;
-  }, [isPulling, pullDistance, pullThreshold, triggerRefresh]);
+  }, [cancelHoldTimer]);
 
   const handleMouseLeave = useCallback(() => {
     if (isPulling) {
+      cancelHoldTimer();
       setPullDistance(0);
       setIsPulling(false);
       pullStartY.current = null;
       wasAtTopOnStart.current = false;
     }
-  }, [isPulling]);
+  }, [isPulling, cancelHoldTimer]);
 
   // Track hover state over container for wheel events
   useEffect(() => {
@@ -248,12 +332,21 @@ export function usePullToRefresh({
           clearTimeout(wheelTimeout.current);
         }
         
+        // Start hold timer when threshold is reached (for wheel)
         if (resistedDistance >= pullThreshold) {
-          triggerRefresh();
-          wheelAccumulator.current = 0;
-          setPullDistance(0);
-          setIsPulling(false);
+          startHoldTimer();
+          // Keep checking while wheel is active
+          wheelTimeout.current = setTimeout(() => {
+            // If user stops scrolling before timer completes, cancel
+            if (!hasTriggeredRef.current) {
+              cancelHoldTimer();
+            }
+            wheelAccumulator.current = 0;
+            setPullDistance(0);
+            setIsPulling(false);
+          }, 500); // Give more time for wheel-based hold
         } else {
+          cancelHoldTimer();
           wheelTimeout.current = setTimeout(() => {
             wheelAccumulator.current = 0;
             setPullDistance(0);
@@ -263,6 +356,7 @@ export function usePullToRefresh({
       } else {
         // Not at top or scrolling down - reset
         wheelAccumulator.current = 0;
+        cancelHoldTimer();
         if (isPulling && !isRefreshing) {
           setPullDistance(0);
           setIsPulling(false);
@@ -277,11 +371,13 @@ export function usePullToRefresh({
         clearTimeout(wheelTimeout.current);
       }
     };
-  }, [isPulling, isRefreshing, pullThreshold, triggerRefresh, isAtTop, containerRef]);
+  }, [isPulling, isRefreshing, pullThreshold, isAtTop, containerRef, startHoldTimer, cancelHoldTimer]);
 
   return {
     pullDistance,
     isPulling,
+    isHoldingAtThreshold,
+    holdProgress,
     handlers: {
       onTouchStart: handleTouchStart,
       onTouchMove: handleTouchMove,
