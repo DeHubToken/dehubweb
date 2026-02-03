@@ -603,7 +603,7 @@ export function PostContentArea({
               }
             }}
             data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
-            className="bg-transparent text-white text-base font-semibold resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
+            className="bg-transparent text-white text-base resize-none outline-none min-h-[48px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/50 empty:before:pointer-events-none"
             style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
           />
         </div>
@@ -632,7 +632,7 @@ export function PostContentArea({
                 }
               }}
               data-placeholder={hasVideo ? "Add a title..." : "What's happening?"}
-              className="w-full bg-transparent text-white text-lg font-semibold resize-none outline-none min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
+              className="w-full bg-transparent text-white text-lg resize-none outline-none min-h-[60px] empty:before:content-[attr(data-placeholder)] empty:before:text-white/70 empty:before:pointer-events-none"
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
             />
           </div>
