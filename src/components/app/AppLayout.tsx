@@ -76,28 +76,41 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Restore scroll position when returning to home from post overlay
   useLayoutEffect(() => {
     const isHomePage = location.pathname === '/app';
-    const wasPostOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
+    const wasInPostOverlay = prevPathRef.current?.startsWith('/app/post/') || 
+                             prevPathRef.current?.startsWith('/app/video/');
     
-    // When we navigate back to /app and we were in overlay mode, restore scroll
-    if (isHomePage && prevPathRef.current?.startsWith('/app/post/') || 
-        isHomePage && prevPathRef.current?.startsWith('/app/video/')) {
+    if (isHomePage && wasInPostOverlay) {
       const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
-      if (savedScroll) {
-        // Use requestAnimationFrame to ensure DOM is ready
-        requestAnimationFrame(() => {
-          window.scrollTo(0, parseInt(savedScroll, 10));
+      const scrollValue = savedScroll ? parseInt(savedScroll, 10) : savedScrollRef.current;
+      
+      if (scrollValue > 0) {
+        // Immediate attempt
+        window.scrollTo(0, scrollValue);
+        
+        // Staggered attempts for lazy-loaded content
+        const attempts = [50, 100, 200, 400];
+        const timeouts: NodeJS.Timeout[] = [];
+        
+        attempts.forEach(delay => {
+          const timeout = setTimeout(() => {
+            window.scrollTo(0, scrollValue);
+          }, delay);
+          timeouts.push(timeout);
         });
-        sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
+        
+        // Clear sessionStorage after restoration attempts complete
+        setTimeout(() => {
+          sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
+          sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
+        }, 500);
+        
+        // Cleanup timeouts if component unmounts
+        return () => {
+          timeouts.forEach(clearTimeout);
+        };
       }
     }
   }, [location.pathname]);
-  
-  // Clear overlay state when navigating away from post
-  useEffect(() => {
-    if (!isPostRoute) {
-      sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
-    }
-  }, [isPostRoute]);
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   
