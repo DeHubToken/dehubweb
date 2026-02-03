@@ -251,7 +251,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     isError,
     refetch,
   } = useDeHubVideos({
-    unit: 15,
+    unit: 12,
     sortMode: getApiSortMode(selectedSort.value),
     category: selectedCategory || undefined,
     address: walletAddress || undefined,
