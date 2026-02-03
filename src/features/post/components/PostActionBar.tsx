@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Bold, Italic, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip } from 'lucide-react';
+import { Image, Film, Radio, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -333,26 +333,12 @@ export function PostActionBar({
           <TooltipTrigger asChild>
             <button 
               type="button" 
-              onClick={() => onInsertFormatting('bold')} 
               className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
             >
-              <Bold className="w-4 h-4 text-zinc-400" />
+              <Smile className="w-4 h-4 text-zinc-400" />
             </button>
           </TooltipTrigger>
-          <TooltipContent>Bold</TooltipContent>
-        </Tooltip>
-        
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              type="button" 
-              onClick={() => onInsertFormatting('italic')} 
-              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Italic className="w-4 h-4 text-zinc-400" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Italic</TooltipContent>
+          <TooltipContent>Emoji</TooltipContent>
         </Tooltip>
 
         <Tooltip>
