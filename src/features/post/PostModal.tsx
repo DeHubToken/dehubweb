@@ -110,6 +110,9 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         liveMode={state.liveMode}
         setLiveMode={actions.setLiveMode}
         onInsertFormatting={actions.insertFormatting}
+        onInsertEmoji={actions.insertEmoji}
+        onInsertGif={actions.insertGif}
+        onCameraCapture={actions.openCameraCapture}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={actions.handlePost}
         canPost={computed.canPost}
