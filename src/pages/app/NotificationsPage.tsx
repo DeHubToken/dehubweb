@@ -17,6 +17,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
 
@@ -158,7 +159,7 @@ function NotificationItem({
     : undefined;
     
   const postThumbnail = notification.tokenThumbnail 
-    ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `https://dehubcdn.dehub.io/${notification.tokenThumbnail}`)
+    ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
     : null;
   
   const profileLink = notification.actorUsername 
