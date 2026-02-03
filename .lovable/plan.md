@@ -1,87 +1,65 @@
 
+# Fix: Broken Video Thumbnail in Notifications
 
-# Fix: Scroll Position Restoration on Back Navigation
+## Problem
 
-## Problem Identified
+The video thumbnail for "chads here" shows as broken because the notification is using an incorrect CDN URL:
 
-When you scroll down the home feed, click a post, and use the browser's back button, the feed jumps back to the top instead of restoring your scroll position.
+**Current (broken):** `https://dehubcdn.dehub.io/images/2706.jpg`
+**Correct:** `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/2706.jpg`
 
-The root cause involves several timing issues:
+## Root Cause
 
-1. **Early sessionStorage cleanup**: The `POST_OVERLAY_ORIGIN_KEY` is being removed in an `useEffect` when `!isPostRoute`, which runs BEFORE the `useLayoutEffect` that tries to use it
-2. **prevPathRef timing**: The restoration logic checks `prevPathRef.current` but this is updated at the end of another effect, causing a race condition
-3. **Overlay pattern complication**: Since HomePage stays mounted (just hidden), the restoration logic in AppLayout needs to be more robust
+In `NotificationsPage.tsx`, the thumbnail URL construction uses a typo in the CDN domain:
+
+```typescript
+const postThumbnail = notification.tokenThumbnail 
+  ? (notification.tokenThumbnail.startsWith('http') 
+      ? notification.tokenThumbnail 
+      : `https://dehubcdn.dehub.io/${notification.tokenThumbnail}`)  // ← Wrong URL!
+  : null;
+```
+
+The correct CDN base is `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/` which is already defined as `DEHUB_CDN_BASE` in `src/lib/api/dehub.ts`.
 
 ## Solution
 
-Improve the scroll restoration logic in `AppLayout.tsx`:
-
-1. **Use the ref value directly** instead of relying on effect ordering
-2. **Delay the cleanup of sessionStorage** until after restoration completes
-3. **Add multiple restoration attempts** to handle lazy-loaded content (similar to the scroll restoration hook)
+Update the thumbnail URL construction to use the proper CDN base constant or the existing `buildImageUrl` utility.
 
 ## Implementation
 
-### File: `src/components/app/AppLayout.tsx`
+### File: `src/pages/app/NotificationsPage.tsx`
 
-**Changes:**
+**Change 1: Import the CDN constant**
 
-1. **Refactor the scroll restoration logic**
-   - Move restoration logic to run BEFORE cleanup effects
-   - Use `savedScrollRef` directly for more reliable restoration
-   - Add multiple staggered scroll attempts for lazy-loaded content
+Add import at the top:
+```typescript
+import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+```
 
-2. **Fix the restoration useLayoutEffect**
-   ```typescript
-   // Restore scroll position when returning to home from post overlay
-   useLayoutEffect(() => {
-     const isHomePage = location.pathname === '/app';
-     const wasInPostOverlay = prevPathRef.current?.startsWith('/app/post/') || 
-                              prevPathRef.current?.startsWith('/app/video/');
-     
-     if (isHomePage && wasInPostOverlay) {
-       const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
-       if (savedScroll) {
-         const scrollValue = parseInt(savedScroll, 10);
-         
-         // Immediate attempt
-         window.scrollTo(0, scrollValue);
-         
-         // Staggered attempts for lazy-loaded content
-         const attempts = [0, 50, 100, 200, 400];
-         attempts.forEach(delay => {
-           setTimeout(() => window.scrollTo(0, scrollValue), delay);
-         });
-         
-         // Clear after restoration attempts complete
-         setTimeout(() => {
-           sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
-         }, 500);
-       }
-     }
-   }, [location.pathname]);
-   ```
+**Change 2: Fix the thumbnail URL construction**
 
-3. **Prevent early cleanup of overlay origin key**
-   - Don't clear `POST_OVERLAY_ORIGIN_KEY` immediately when leaving post route
-   - Clear it only after scroll restoration is complete
+Replace lines 160-162:
+```typescript
+// Before (broken)
+const postThumbnail = notification.tokenThumbnail 
+  ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `https://dehubcdn.dehub.io/${notification.tokenThumbnail}`)
+  : null;
 
-4. **Use the savedScrollRef for backup**
-   - If sessionStorage is cleared too early, fall back to the ref value
+// After (fixed)
+const postThumbnail = notification.tokenThumbnail 
+  ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
+  : null;
+```
 
-### Technical Details
+## Technical Details
 
-| Issue | Fix |
-|-------|-----|
-| Effect order race condition | Use `useLayoutEffect` with direct ref access |
-| SessionStorage cleared too early | Delay cleanup until restoration completes |
-| Single scroll attempt fails | Multiple staggered attempts (0-400ms) |
-| Lazy-loaded content changes height | MutationObserver or timeout-based retries |
+| Item | Value |
+|------|-------|
+| Incorrect domain | `dehubcdn.dehub.io` |
+| Correct domain | `dehubcdn.ams3.cdn.digitaloceanspaces.com` |
+| Constant to use | `DEHUB_CDN_BASE` from `@/lib/api/dehub` |
 
-### Expected Result
+## Result
 
-- Scroll down the home feed to any position
-- Click on any post to view it
-- Press browser back button
-- Feed restores to the exact scroll position you were at
-
+After this fix, video thumbnails in notifications will correctly display instead of showing broken image icons.
