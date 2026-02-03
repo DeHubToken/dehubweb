@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Camera, RotateCcw, Square, Check, Loader2 } from 'lucide-react';
+import { X, Camera, Trash2, Square, Check, Loader2, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -283,10 +283,10 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             <div className="flex items-center gap-4 w-full">
               <button
                 onClick={retake}
-                className="flex-1 h-14 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center gap-2 hover:bg-white/20 transition-all"
+                className="flex-1 h-14 rounded-xl bg-red-500/20 backdrop-blur-[24px] saturate-[180%] border border-red-500/40 flex items-center justify-center gap-2 hover:bg-red-500/30 transition-all"
               >
-                <RotateCcw className="w-5 h-5 text-white" />
-                <span className="text-white font-medium">Restart</span>
+                <Trash2 className="w-5 h-5 text-red-400" />
+                <span className="text-red-400 font-medium">Delete</span>
               </button>
               <button
                 onClick={confirmStory}
