@@ -128,9 +128,12 @@ function ContentTypeFilterSection({
 interface CollageViewProps {
   posts: ImagePost[];
   onImageClick: (postId: string) => void;
+  loaderRef: React.RefObject<HTMLDivElement>;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
 }
 
-function CollageView({ posts, onImageClick }: CollageViewProps) {
+function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNextPage }: CollageViewProps) {
   return (
     <div className="p-1 sm:p-2 pt-0 sm:pt-0">
       <div 
@@ -168,6 +171,19 @@ function CollageView({ posts, onImageClick }: CollageViewProps) {
             </div>
           );
         })}
+      </div>
+      
+      {/* Infinite scroll loader for collage */}
+      <div ref={loaderRef} className="py-4 flex justify-center">
+        {isFetchingNextPage && (
+          <div className="flex items-center gap-2 text-zinc-400">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="text-sm">Loading more...</span>
+          </div>
+        )}
+        {!hasNextPage && posts.length > 0 && (
+          <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+        )}
       </div>
     </div>
   );
@@ -354,9 +370,9 @@ export function ImagesFeed({
   };
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
+  // Now works in BOTH collage and feed view
   useEffect(() => {
-    // Don't observe in collage mode
-    if (!loaderRef.current || !hasNextPage || (showCollage && !selectedPostId)) return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -368,12 +384,12 @@ export function ImagesFeed({
           });
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: '200px' }
     );
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, showCollage, selectedPostId]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
   
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
@@ -461,7 +477,13 @@ export function ImagesFeed({
           onBackToCollage={onBackToCollage}
         />
       ) : (
-        <CollageView posts={imagePosts} onImageClick={handleImageClick} />
+        <CollageView 
+          posts={imagePosts} 
+          onImageClick={handleImageClick}
+          loaderRef={loaderRef}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage ?? false}
+        />
       )}
     </div>
   );
