@@ -173,13 +173,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   
   // Handle voting - same logic as ActionBar
   const handleVote = useCallback(async (vote: boolean) => {
-    if (!currentShort?.id || isVoting || isLiked || isDisliked) return;
+    const tokenId = String(currentShort?.id);
+    
+    if (!tokenId || tokenId === 'undefined' || isVoting || isLiked || isDisliked) {
+      console.log('[ShortsViewer] Vote blocked:', { tokenId, isVoting, isLiked, isDisliked });
+      return;
+    }
     
     if (!isAuthenticated) {
       toast.error('Log in to engage');
       return;
     }
 
+    console.log('[ShortsViewer] Voting:', { tokenId, vote });
     setIsVoting(true);
     
     // Optimistic update with animation trigger
@@ -196,8 +202,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setTimeout(() => setJustVoted(null), 400);
 
     try {
-      await voteOnNFT(currentShort.id, vote);
+      await voteOnNFT(tokenId, vote);
+      console.log('[ShortsViewer] Vote successful');
     } catch (error: unknown) {
+      console.error('[ShortsViewer] Vote failed:', error);
       // Revert optimistic update on error
       if (vote) {
         setIsLiked(false);
