@@ -41,40 +41,50 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const isPostRoute = !!(postMatch || videoMatch);
   
   // Track if we came from home page (for overlay behavior)
-  const [cameFromHome, setCameFromHome] = useState(false);
+  // CRITICAL: Initialize synchronously from sessionStorage to prevent HomePage unmounting on first render
+  const [cameFromHome, setCameFromHome] = useState(() => {
+    return sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
+  });
   const prevPathRef = useRef<string | null>(null);
   const savedScrollRef = useRef<number>(0);
   
-  // Detect navigation from home to post and save scroll position
+  // Save home scroll position continuously when on home page
+  // This ensures we capture the position BEFORE navigation happens
+  useEffect(() => {
+    const isHome = location.pathname === '/app';
+    if (!isHome) return;
+    
+    const saveScroll = () => {
+      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(window.scrollY));
+      savedScrollRef.current = window.scrollY;
+    };
+    
+    // Save immediately
+    saveScroll();
+    
+    // Save on every scroll
+    window.addEventListener('scroll', saveScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', saveScroll);
+    };
+  }, [location.pathname]);
+  
+  // Detect navigation from home to post - set the origin flag
   useEffect(() => {
     const currentPath = location.pathname;
     const prevPath = prevPathRef.current;
     
-    // Navigating TO a post route FROM home - save scroll position
+    // Navigating TO a post route FROM home - mark origin
     if (isPostRoute && prevPath === '/app') {
       setCameFromHome(true);
       sessionStorage.setItem(POST_OVERLAY_ORIGIN_KEY, 'home');
-      // Save current scroll position
-      savedScrollRef.current = window.scrollY;
-      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(window.scrollY));
-    }
-    
-    // Check sessionStorage on mount (for page refreshes mid-navigation)
-    if (isPostRoute && !cameFromHome) {
-      const storedOrigin = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY);
-      if (storedOrigin === 'home') {
-        setCameFromHome(true);
-        // Restore saved scroll position from session
-        const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
-        if (savedScroll) {
-          savedScrollRef.current = parseInt(savedScroll, 10);
-        }
-      }
+      // Scroll position is already saved by continuous tracker above
     }
     
     // Update ref AFTER all checks
     prevPathRef.current = currentPath;
-  }, [location.pathname, isPostRoute, cameFromHome]);
+  }, [location.pathname, isPostRoute]);
   
   // Restore scroll position when returning to home from post overlay
   // Use sessionStorage flag directly since it's more reliable than refs across effect cycles
