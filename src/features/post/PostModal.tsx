@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -6,6 +6,7 @@ import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
+import { cn } from '@/lib/utils';
 
 interface PostModalProps {
   isOpen: boolean;
@@ -16,22 +17,6 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
-  
-  // Track modal state with delay to allow camera modal to fully close first
-  const [drawerModalDisabled, setDrawerModalDisabled] = useState(false);
-  
-  useEffect(() => {
-    if (state.isCameraModalOpen) {
-      // Immediately disable modal when camera opens
-      setDrawerModalDisabled(true);
-    } else if (drawerModalDisabled) {
-      // Re-enable modal after a short delay to let camera fully unmount
-      const timer = setTimeout(() => {
-        setDrawerModalDisabled(false);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [state.isCameraModalOpen, drawerModalDisabled]);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
@@ -143,11 +128,24 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
     </>
   );
 
+  // Prevent drawer from closing when camera is open
+  const handleDrawerChange = (open: boolean) => {
+    if (!open && state.isCameraModalOpen) return; // Don't close if camera is active
+    if (!open) handleClose();
+  };
+
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
     <>
-      <Drawer open={isOpen} onOpenChange={handleClose} modal={!drawerModalDisabled}>
-        <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
+      <Drawer open={isOpen} onOpenChange={handleDrawerChange}>
+        <DrawerContent 
+          glass 
+          hideHandle 
+          className={cn(
+            "max-h-[90vh] max-h-[90dvh]",
+            state.isCameraModalOpen && "invisible pointer-events-none"
+          )}
+        >
           <VisuallyHidden>
             <DrawerTitle>Create a post</DrawerTitle>
           </VisuallyHidden>
