@@ -48,6 +48,18 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const prevPathRef = useRef<string | null>(null);
   const savedScrollRef = useRef<number>(0);
   
+  // Helper to get scroll position (works for both window and documentElement)
+  const getScrollPosition = () => {
+    return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  };
+  
+  // Helper to set scroll position
+  const setScrollPosition = (value: number) => {
+    window.scrollTo(0, value);
+    document.documentElement.scrollTop = value;
+    document.body.scrollTop = value;
+  };
+  
   // Save home scroll position continuously when on home page
   // This ensures we capture the position BEFORE navigation happens
   useEffect(() => {
@@ -55,18 +67,26 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     if (!isHome) return;
     
     const saveScroll = () => {
-      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(window.scrollY));
-      savedScrollRef.current = window.scrollY;
+      const scrollPos = getScrollPosition();
+      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(scrollPos));
+      savedScrollRef.current = scrollPos;
     };
     
     // Save immediately
     saveScroll();
     
-    // Save on every scroll
+    // Save on every scroll - listen to both window and document
     window.addEventListener('scroll', saveScroll, { passive: true });
+    document.addEventListener('scroll', saveScroll, { passive: true });
+    
+    // Also save on any click (captures position right before link clicks)
+    const handleClick = () => saveScroll();
+    document.addEventListener('click', handleClick, { capture: true, passive: true });
     
     return () => {
       window.removeEventListener('scroll', saveScroll);
+      document.removeEventListener('scroll', saveScroll);
+      document.removeEventListener('click', handleClick, { capture: true });
     };
   }, [location.pathname]);
   
@@ -79,7 +99,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     if (isPostRoute && prevPath === '/app') {
       setCameFromHome(true);
       sessionStorage.setItem(POST_OVERLAY_ORIGIN_KEY, 'home');
-      // Scroll position is already saved by continuous tracker above
     }
     
     // Update ref AFTER all checks
@@ -87,7 +106,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   }, [location.pathname, isPostRoute]);
   
   // Restore scroll position when returning to home from post overlay
-  // Use sessionStorage flag directly since it's more reliable than refs across effect cycles
   useLayoutEffect(() => {
     const isHomePage = location.pathname === '/app';
     const wasInPostOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
@@ -97,9 +115,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       const scrollValue = savedScroll ? parseInt(savedScroll, 10) : savedScrollRef.current;
       
       if (scrollValue > 0) {
-        // Attempt scroll restoration function
         const attemptScroll = () => {
-          window.scrollTo(0, scrollValue);
+          setScrollPosition(scrollValue);
         };
         
         // Immediate attempt
