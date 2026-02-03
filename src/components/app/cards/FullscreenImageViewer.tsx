@@ -183,7 +183,7 @@ export function FullscreenImageViewer({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
             aria-label="Close fullscreen"
           >
             <X className="w-5 h-5" />
@@ -195,7 +195,7 @@ export function FullscreenImageViewer({
               e.stopPropagation();
               handleTranslateImage();
             }}
-            className="absolute top-4 right-16 z-10 w-10 h-10 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+            className="absolute top-4 right-16 z-10 w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
             aria-label="Translate image text"
           >
             <Languages className="w-5 h-5" />
@@ -203,7 +203,7 @@ export function FullscreenImageViewer({
 
           {/* Image counter */}
           {hasMultiple && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-full bg-zinc-800/80 text-white text-sm font-medium">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 text-white text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -216,7 +216,6 @@ export function FullscreenImageViewer({
               transform: `translateY(${dragOffset}px)`,
               opacity: Math.max(0.5, 1 - dragOffset / 200)
             }}
-            onClick={(e) => e.stopPropagation()}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -230,12 +229,14 @@ export function FullscreenImageViewer({
                 <div 
                   key={idx} 
                   className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+                  onClick={onClose}
                 >
                   <img
                     src={img}
                     alt=""
-                    className="max-w-full max-h-full object-contain select-none pointer-events-none"
+                    className="max-w-full max-h-full object-contain select-none"
                     draggable={false}
+                    onClick={(e) => e.stopPropagation()}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}
@@ -254,7 +255,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollPrev();
                   }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -266,7 +267,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollNext();
                   }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-zinc-800/80 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Next image"
                 >
                   <ChevronRight className="w-6 h-6" />
