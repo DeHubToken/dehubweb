@@ -158,28 +158,17 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           />
         </div>
 
-        {/* Comments - Drawer for tablet/mobile, inline for desktop */}
-        {isTabletOrMobile ? (
-          <Drawer open={showComments} onOpenChange={setShowComments}>
-            <DrawerContent glass className="max-h-[70vh] flex flex-col overflow-hidden">
-              <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
-                <CommentsSection
-                  tokenId={post.id}
-                  onClose={() => setShowComments(false)}
-                />
-              </div>
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          <AnimatePresence>
-            {showComments && (
+        {/* Comments - Always use Drawer for consistent liquid glass style */}
+        <Drawer open={showComments} onOpenChange={setShowComments}>
+          <DrawerContent glass className="max-h-[70vh] flex flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
               <CommentsSection
                 tokenId={post.id}
                 onClose={() => setShowComments(false)}
               />
-            )}
-          </AnimatePresence>
-        )}
+            </div>
+          </DrawerContent>
+        </Drawer>
       </div>
 
       {/* AI Chat */}
