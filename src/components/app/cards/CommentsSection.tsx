@@ -29,6 +29,7 @@ import {
 import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
@@ -281,6 +282,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated } = useAuth();
+  const isMobile = useIsMobile();
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
   const [searchQuery, setSearchQuery] = useState('');
@@ -543,50 +545,80 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       className="flex flex-col min-h-[400px] max-h-[600px] bg-zinc-900/50 rounded-2xl p-4 mt-3"
     >
 
-      {/* Tab Switcher - 4 Icons: Replies, Quotes, Search, Sort */}
-      <div className="flex justify-start gap-1 mb-3">
-        <button
-          type="button"
-          onClick={() => setActiveTab('replies')}
-          className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
-            activeTab === 'replies'
-              ? 'text-white bg-zinc-800'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-          }`}
-        >
-          <MessageSquare className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('quotes')}
-          className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
-            activeTab === 'quotes'
-              ? 'text-white bg-zinc-800'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-          }`}
-        >
-          <Quote className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('search')}
-          className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
-            activeTab === 'search'
-              ? 'text-white bg-zinc-800'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-          }`}
-        >
-          <Search className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
-          className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
-          title={sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}
-        >
-          <ArrowUpDown className="w-5 h-5" />
-          <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
-        </button>
+      {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Share (desktop/tablet only) */}
+      <div className="flex justify-between items-center gap-1 mb-3">
+        {/* Left side - Tab buttons */}
+        <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('replies')}
+            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+              activeTab === 'replies'
+                ? 'text-white bg-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+            }`}
+          >
+            <MessageSquare className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('quotes')}
+            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+              activeTab === 'quotes'
+                ? 'text-white bg-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+            }`}
+          >
+            <Quote className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('search')}
+            className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
+              activeTab === 'search'
+                ? 'text-white bg-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+            }`}
+          >
+            <Search className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
+            className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+            title={sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}
+          >
+            <ArrowUpDown className="w-5 h-5" />
+            <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
+          </button>
+        </div>
+
+        {/* Right side - Post action buttons (desktop/tablet only) */}
+        {!isMobile && (
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Like post"
+            >
+              <ThumbsUp className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Dislike post"
+            >
+              <ThumbsDown className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 flex items-center justify-center transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              aria-label="Share post"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
