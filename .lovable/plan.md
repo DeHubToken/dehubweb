@@ -1,125 +1,192 @@
 
-# Immediate Feed Prefetching After Home Feed Loads
+# Fix: True Parallel Feed Prefetching
 
-## Problem
+## Root Cause Analysis
 
-Currently, when the user loads the home page:
-1. Home feed renders and fetches data
-2. After 500ms, `isHomeFeedLoaded` is set to `true`
-3. After another 1000ms delay (`PREFETCH_DELAY_MS`), prefetch starts
-4. Prefetch makes API calls for Videos, Images, Shorts, Music, Live
+From the network logs, the feed requests are clearly **sequential**:
+- **09:20:29Z** - Videos feed prefetch
+- **09:20:31Z** - Images feed prefetch (2 seconds later!)
 
-**Total delay before prefetch starts: ~1.5 seconds**
+Even though the code uses `Promise.allSettled`, the actual HTTP requests fire one after another. This is because `queryClient.prefetchInfiniteQuery` may internally await or schedule queries, causing them to execute in sequence rather than truly parallel.
 
-By the time prefetch completes, the user may have already clicked another tab, causing a loading spinner instead of instant content.
+## Solution: Fire All Fetch Calls in Parallel First
 
-## Solution
+Instead of relying on `prefetchInfiniteQuery` to run in parallel, we'll:
+1. **Fire all raw fetch calls immediately in parallel** using `Promise.all`
+2. **Then populate the React Query cache** with the results
 
-Start prefetching **immediately** after the home feed's first page loads, with no artificial delays. This ensures other feeds are cached before the user even thinks about switching tabs.
+This ensures the browser sends all HTTP requests simultaneously.
 
 ## Implementation
 
 ### File: `src/hooks/use-feed-prefetch.ts`
 
-**Remove the 1000ms delay and trigger prefetch instantly:**
+**Restructure `prefetchAllFeeds` to fetch data first, then populate cache:**
 
 ```typescript
-// BEFORE (line 21):
-const PREFETCH_DELAY_MS = 1000;
-
-// AFTER:
-const PREFETCH_DELAY_MS = 0; // Start immediately
-```
-
-### File: `src/pages/app/HomePage.tsx`
-
-**Trigger prefetch as soon as home feed data is available, not after an arbitrary 500ms timeout:**
-
-```typescript
-// BEFORE (lines 169-174):
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setIsHomeFeedLoaded(true);
-  }, 500);
-  return () => clearTimeout(timer);
-}, []);
-
-// AFTER:
-// Remove this useEffect entirely.
-// Instead, pass the home feed's isSuccess/data state to useFeedPrefetch
-```
-
-**Better approach - use the actual feed loading state:**
-
-```typescript
-// In HomePage, we need to know when HomeFeed's data arrives.
-// Option 1: Lift the isSuccess state up from HomeFeed
-// Option 2: Use a callback from HomeFeed when data loads
-// Option 3: Keep it simple - just remove the delays
-
-// SIMPLEST FIX: Just set isHomeFeedLoaded to true immediately on mount
-// and let the prefetch hook handle the timing via React Query's staleTime
-useEffect(() => {
-  setIsHomeFeedLoaded(true);
-}, []);
-```
-
-### File: `src/hooks/use-feed-prefetch.ts` (complete update)
-
-```typescript
-// Key changes:
-// 1. Remove PREFETCH_DELAY_MS or set to 0
-// 2. Run prefetch immediately when isHomeFeedLoaded is true
-
-const PREFETCH_DELAY_MS = 0; // No delay - start immediately
-
-export function useFeedPrefetch(isHomeFeedLoaded: boolean) {
-  const queryClient = useQueryClient();
-  const { walletAddress, isConnecting } = useAuth();
-  const hasPrefetchedRef = useRef(false);
+async function prefetchAllFeeds(
+  queryClient: ReturnType<typeof useQueryClient>, 
+  walletAddress: string | null
+) {
+  console.log('[Prefetch] Starting PARALLEL feed prefetch');
   
-  useEffect(() => {
-    if (!isHomeFeedLoaded) return;
-    if (isConnecting) return;
-    if (hasPrefetchedRef.current) return;
-    
-    const alreadyPrefetched = sessionStorage.getItem(PREFETCH_DONE_KEY);
-    if (alreadyPrefetched) {
-      hasPrefetchedRef.current = true;
-      return;
-    }
-    
-    // No delay - start immediately (or minimal 50ms to let home render)
-    const timeoutId = setTimeout(() => {
-      hasPrefetchedRef.current = true;
-      sessionStorage.setItem(PREFETCH_DONE_KEY, 'true');
-      prefetchAllFeeds(queryClient, walletAddress);
-    }, PREFETCH_DELAY_MS);
-    
-    return () => clearTimeout(timeoutId);
-  }, [isHomeFeedLoaded, queryClient, walletAddress, isConnecting]);
+  // 1. FIRE ALL FETCH CALLS IN PARALLEL
+  // These promises start their HTTP requests immediately
+  const videosFetchPromise = fetchUnifiedFeed({
+    postType: 'video',
+    limit: 12,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    status: 'minted',
+    address: walletAddress || undefined,
+  });
+  
+  const imagesFetchPromise = searchNFTs({
+    unit: 12,
+    sortMode: 'new',
+    postType: 'feed-images',
+    status: 'minted',
+    address: walletAddress || undefined,
+    page: 0,
+  });
+  
+  const shortsFetchPromise = searchNFTs({
+    unit: 12,
+    sortMode: 'new',
+    status: 'minted',
+    address: walletAddress || undefined,
+    page: 0,
+  });
+  
+  const musicFetchPromise = searchNFTs({
+    category: 'Music',
+    postType: 'video',
+    unit: 10,
+    page: 1,
+    sortMode: 'new',
+    address: walletAddress || undefined,
+  });
+  
+  const liveFetchPromise = getLiveStreams({ 
+    page: 0, 
+    unit: 15, 
+    sortMode: 'recent' 
+  });
+  
+  // 2. WAIT FOR ALL TO COMPLETE (truly parallel!)
+  const [
+    videosResult, 
+    imagesResult, 
+    shortsResult, 
+    musicResult, 
+    liveResult
+  ] = await Promise.allSettled([
+    videosFetchPromise,
+    imagesFetchPromise,
+    shortsFetchPromise,
+    musicFetchPromise,
+    liveFetchPromise,
+  ]);
+  
+  // 3. POPULATE REACT QUERY CACHE with results
+  // Videos
+  if (videosResult.status === 'fulfilled') {
+    const response = videosResult.value;
+    const videosParams = {
+      postType: 'video' as const,
+      sortBy: 'createdAt' as const,
+      sortOrder: 'desc' as const,
+      range: undefined,
+      address: walletAddress || undefined,
+      isPPV: undefined,
+      hasBounty: undefined,
+      isLocked: undefined,
+      status: 'minted' as const,
+    };
+    queryClient.setQueryData(
+      ['unified-feed', videosParams, 12], 
+      {
+        pages: [{
+          items: response.result || [],
+          pagination: response.pagination,
+          page: 1,
+        }],
+        pageParams: [1],
+      }
+    );
+  }
+  
+  // Images - similar pattern
+  if (imagesResult.status === 'fulfilled') {
+    const data = imagesResult.value.result || imagesResult.value.data || [];
+    const imagesParams = {
+      unit: 12,
+      sortMode: 'new' as const,
+      address: walletAddress || undefined,
+      postType: 'feed-images' as const,
+      status: 'minted' as const,
+    };
+    queryClient.setQueryData(
+      ['dehub-feed', imagesParams],
+      {
+        pages: [{
+          data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12
+        }],
+        pageParams: [0],
+      }
+    );
+  }
+  
+  // ... similar for Shorts, Music, Live
+  
+  console.log('[Prefetch] Complete - all feeds cached');
 }
 ```
 
-## Summary of Changes
+## Key Changes Summary
 
-| File | Change |
-|------|--------|
-| `src/hooks/use-feed-prefetch.ts` | Set `PREFETCH_DELAY_MS = 0` to remove artificial delay |
-| `src/pages/app/HomePage.tsx` | Remove 500ms timeout; set `isHomeFeedLoaded = true` immediately on mount |
+| Before | After |
+|--------|-------|
+| `prefetchInfiniteQuery` calls pushed to array | Raw `fetch` calls started immediately |
+| Each query's `queryFn` awaited in sequence | All HTTP requests fire simultaneously |
+| ~10 second total prefetch time | ~2-3 seconds total (parallel) |
+| `Promise.allSettled` on prefetch promises | `Promise.allSettled` on raw fetch promises |
+| Cache populated during prefetch | Cache populated with `setQueryData` after |
+
+## Technical Details
+
+### Why `setQueryData` Instead of `prefetchInfiniteQuery`
+
+- `prefetchInfiniteQuery` internally manages async execution
+- `setQueryData` directly writes to the cache synchronously
+- The data format must match infinite query structure: `{ pages: [...], pageParams: [...] }`
+
+### Query Key Matching (Critical!)
+
+The query keys used in `setQueryData` must **exactly match** what the feed components use:
+
+```typescript
+// Videos: ['unified-feed', params, 12]
+// Images: ['dehub-feed', { unit: 12, sortMode: 'new', ... }]
+// Shorts: ['dehub-feed', { unit: 12, sortMode: 'new', ... }]
+// Music:  ['music-videos-infinite', walletAddress]
+// Live:   ['dehub-live', { unit: 15, sortMode: 'recent' }]
+```
+
+### Handling Authenticated vs Public Feeds
+
+For logged-in users, we'll prefetch with `walletAddress` included. The query key will include the address, matching what the feed components use when a user is logged in.
 
 ## Expected Behavior After Fix
 
 1. User opens app → HomePage mounts
-2. `isHomeFeedLoaded` is immediately `true`
-3. Prefetch waits for `isConnecting` to be `false` (wallet state stable)
-4. Prefetch runs immediately (0ms delay)
-5. By the time home feed content is visible, other tabs are already being fetched
-6. User clicks Videos/Images/Shorts → **Instant load from cache**
+2. Prefetch fires **5 HTTP requests simultaneously**
+3. All requests complete in ~2-3 seconds (parallel)
+4. Cache is populated with `setQueryData`
+5. User clicks any tab → **Instant load from cache**
 
-## Technical Notes
+## Network Tab Verification
 
-- React Query's `staleTime: 10 * 60 * 1000` (10 minutes) means prefetched data stays fresh
-- Prefetch uses `prefetchInfiniteQuery` which won't block the UI
-- Session storage prevents re-prefetching on back navigation
-- The wallet `isConnecting` check ensures we prefetch with the correct user context
+After this fix, you should see in the Network tab:
+- All 5 feed requests starting at the **same time** (within 50ms of each other)
+- Total prefetch time reduced from ~10s to ~2-3s
