@@ -172,7 +172,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex gap-3 py-3", isReply && "ml-8")}
+      className={cn("flex items-start gap-3 py-3", isReply && "ml-8")}
     >
       <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
