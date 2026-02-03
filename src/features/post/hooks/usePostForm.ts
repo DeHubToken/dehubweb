@@ -55,6 +55,7 @@ interface UsePostFormReturn {
     isRecording: boolean;
     recordingTime: number;
     chainId: ChainId;
+    isCameraModalOpen: boolean;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -67,6 +68,8 @@ interface UsePostFormReturn {
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
     openCameraCapture: () => void;
+    closeCameraCapture: () => void;
+    handleCameraVideoRecorded: (videoBlob: Blob) => void;
   };
   computed: PostFormComputed;
   refs: {
@@ -505,22 +508,23 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // TODO: Download GIF and add as media
   }, []);
 
+  // Camera modal state
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+
   const openCameraCapture = useCallback(() => {
-    // Create a temporary file input with capture attribute for camera
-    const cameraInput = document.createElement('input');
-    cameraInput.type = 'file';
-    cameraInput.accept = 'video/*';
-    cameraInput.capture = 'environment'; // Use back camera, 'user' for front camera
-    
-    cameraInput.onchange = async (e) => {
-      const target = e.target as HTMLInputElement;
-      const files = target.files;
-      if (files && files.length > 0) {
-        await processVideoFile(files[0]);
-      }
-    };
-    
-    cameraInput.click();
+    setIsCameraModalOpen(true);
+  }, []);
+
+  const closeCameraCapture = useCallback(() => {
+    setIsCameraModalOpen(false);
+  }, []);
+
+  const handleCameraVideoRecorded = useCallback(async (videoBlob: Blob) => {
+    // Create a File from the blob for processVideoFile
+    const videoFile = new File([videoBlob], `camera-recording-${Date.now()}.webm`, { 
+      type: videoBlob.type || 'video/webm' 
+    });
+    await processVideoFile(videoFile);
   }, [processVideoFile]);
 
   const resetForm = useCallback(() => {
@@ -976,6 +980,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       isRecording,
       recordingTime,
       chainId,
+      isCameraModalOpen,
     },
     actions: {
       setText,
@@ -1024,6 +1029,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       insertEmoji,
       insertGif,
       openCameraCapture,
+      closeCameraCapture,
+      handleCameraVideoRecorded,
     },
     computed: {
       hasVideo,
