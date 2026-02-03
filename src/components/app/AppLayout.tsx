@@ -51,12 +51,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(window.scrollY));
     }
     
-    // Navigating AWAY from post route (back to home or elsewhere)
-    if (!isPostRoute && (prevPath?.startsWith('/app/post/') || prevPath?.startsWith('/app/video/'))) {
-      setCameFromHome(false);
-      sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
-    }
-    
     // Check sessionStorage on mount (for page refreshes mid-navigation)
     if (isPostRoute && !cameFromHome) {
       const storedOrigin = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY);
@@ -70,14 +64,15 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       }
     }
     
+    // Update ref AFTER all checks
     prevPathRef.current = currentPath;
   }, [location.pathname, isPostRoute, cameFromHome]);
   
   // Restore scroll position when returning to home from post overlay
+  // Use sessionStorage flag directly since it's more reliable than refs across effect cycles
   useLayoutEffect(() => {
     const isHomePage = location.pathname === '/app';
-    const wasInPostOverlay = prevPathRef.current?.startsWith('/app/post/') || 
-                             prevPathRef.current?.startsWith('/app/video/');
+    const wasInPostOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
     
     if (isHomePage && wasInPostOverlay) {
       const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
@@ -102,6 +97,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         setTimeout(() => {
           sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
           sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
+          setCameFromHome(false);
         }, 500);
         
         // Cleanup timeouts if component unmounts
