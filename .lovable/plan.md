@@ -1,80 +1,81 @@
 
 
-## Re-Sign Prompt on Authentication Failure
+## Seamless Re-Authentication (No Full Sign-In Required)
 
-When an authenticated API call fails due to an expired or invalid token, instead of silently failing, the app will prompt the user to re-authenticate.
-
----
-
-### Problem Summary
-
-Currently, when an API call like `followUser` fails due to authentication issues:
-1. The error is caught in the component (e.g., `ProfilePage.tsx`)
-2. A generic "Failed to follow" toast is shown
-3. The user has no clear path to fix the issue without manually logging out and back in
+Instead of prompting users to click "Sign in" and go through the login modal, we can **automatically request a new signature** using the still-connected Web3Auth provider and refresh the token seamlessly.
 
 ---
 
-### Solution Overview
+### Current vs Improved Flow
 
-Implement a **re-authentication prompt system** that:
-1. Detects when an API call fails due to authentication (401/403 or token issues)
-2. Prompts the user with an actionable toast to re-sign
-3. Opens the login modal when the user clicks to re-authenticate
+**Current Implementation:**
+1. API call fails (401/403)
+2. Toast: "Session expired" + "Sign in" button
+3. User clicks → Full login modal opens
+4. User selects provider again → Signs message → Gets new token
+
+**Improved Implementation:**
+1. API call fails (401/403)
+2. Toast: "Session expired" + "Refresh" button (or auto-refresh)
+3. App detects Web3Auth is still connected
+4. Automatically requests new signature from existing provider
+5. Gets fresh JWT → User continues seamlessly
 
 ---
 
 ### Technical Implementation
 
-#### 1. Add Auth Error Detection in API Layer
+#### 1. Add Re-Signature Function to AuthContext
 
-Update `src/lib/api/dehub.ts` to export a custom error class for authentication failures:
-
-```typescript
-// New class to identify auth-specific errors
-export class AuthenticationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'AuthenticationError';
-  }
-}
-```
-
-Update `apiCall()` to detect 401/403 responses and throw `AuthenticationError`:
+Create a new `refreshSession` function that:
+- Checks if Web3Auth is still connected
+- Gets the existing provider
+- Requests a new signature
+- Calls `authenticateWallet()` to get fresh JWT
+- Updates the stored token
 
 ```typescript
-if (!response.ok) {
-  const errorData = await response.json().catch(() => ({}));
+// In AuthContext.tsx
+const refreshSession = useCallback(async (): Promise<boolean> => {
+  const web3authInstance = await getOrInitWeb3Auth();
   
-  // Detect auth failures (401 Unauthorized, 403 Forbidden, or auth-related messages)
-  if (response.status === 401 || response.status === 403 || 
-      errorData.message?.toLowerCase().includes('unauthorized') ||
-      errorData.message?.toLowerCase().includes('invalid token')) {
-    // Clear stale session
-    clearAuthSession();
-    throw new AuthenticationError('Session expired. Please sign in again.');
+  // Check if still connected to wallet
+  if (!web3authInstance.connected || !web3authInstance.provider) {
+    console.log('[Auth] Not connected, cannot refresh - need full sign in');
+    return false;
   }
   
-  throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
-}
+  try {
+    // Re-run the signature flow with existing provider
+    await completeDeHubAuth(web3authInstance.provider);
+    return true;
+  } catch (error) {
+    console.error('[Auth] Session refresh failed:', error);
+    return false;
+  }
+}, []);
 ```
 
----
-
-#### 2. Create a Re-Auth Hook
-
-Create `src/hooks/use-reauth-handler.ts` to provide a reusable handler for components:
+#### 2. Update useReauthHandler to Try Seamless Refresh First
 
 ```typescript
-import { useAuth } from '@/contexts/AuthContext';
-import { AuthenticationError } from '@/lib/api/dehub';
-import { toast } from 'sonner';
-
 export function useReauthHandler() {
-  const { openLoginModal } = useAuth();
+  const { openLoginModal, refreshSession } = useAuth();
 
-  const handleApiError = (error: unknown, fallbackMessage: string) => {
+  const handleApiError = async (error: unknown, fallbackMessage: string): Promise<boolean> => {
     if (error instanceof AuthenticationError) {
+      // Try seamless refresh first
+      const toastId = toast.loading('Refreshing session...');
+      
+      const refreshed = await refreshSession();
+      toast.dismiss(toastId);
+      
+      if (refreshed) {
+        toast.success('Session refreshed');
+        return true; // Caller can retry the action
+      }
+      
+      // Fallback to full sign-in if refresh fails
       toast.error('Session expired', {
         description: 'Please sign in again to continue',
         action: {
@@ -83,10 +84,9 @@ export function useReauthHandler() {
         },
         duration: 8000,
       });
-      return true; // Indicates auth error was handled
+      return true;
     }
     
-    // Not an auth error, show fallback message
     toast.error(fallbackMessage);
     return false;
   };
@@ -95,49 +95,24 @@ export function useReauthHandler() {
 }
 ```
 
----
+#### 3. Update Components to Retry After Successful Refresh
 
-#### 3. Update Components to Use the Handler
-
-Update `src/pages/app/ProfilePage.tsx` follow handlers:
+Components can check if the session was refreshed and automatically retry the action:
 
 ```typescript
-const { handleApiError } = useReauthHandler();
-
 const handleFollow = async () => {
-  // ... existing validation ...
-  
   try {
     await followUser(profile.walletAddress);
     toast.success(`Following ${profile.name}`);
   } catch (error) {
-    setFollowStatus(false); // Revert optimistic update
-    handleApiError(error, 'Failed to follow. Please try again.');
-  } finally {
-    setIsFollowLoading(false);
+    setFollowStatus(false);
+    const wasAuthError = await handleApiError(error, 'Failed to follow');
+    
+    // If session was refreshed, the user can click follow again
+    // (or we could auto-retry here)
   }
 };
 ```
-
-Apply similar updates to:
-- `src/components/app/WhoToFollow.tsx`
-- `src/components/app/profile/FollowersListDrawer.tsx`
-- Any other components that call authenticated API endpoints
-
----
-
-#### 4. Fix the Stale Token Caching Issue
-
-While implementing re-auth prompts, also fix the root cause in `src/lib/api/dehub.ts`:
-
-```typescript
-// Change getAuthToken to always read fresh from localStorage
-export const getAuthToken = (): string | null => {
-  return localStorage.getItem("dehub_token");
-};
-```
-
-Remove the module-level `authToken` variable caching that was causing the original stale token issue.
 
 ---
 
@@ -145,18 +120,16 @@ Remove the module-level `authToken` variable caching that was causing the origin
 
 | File | Change |
 |------|--------|
-| `src/lib/api/dehub.ts` | Add `AuthenticationError` class, update `apiCall()` to detect auth failures, fix token caching |
-| `src/hooks/use-reauth-handler.ts` | New file - reusable hook for handling auth errors with re-sign prompts |
-| `src/hooks/index.ts` | Export the new hook |
-| `src/pages/app/ProfilePage.tsx` | Use `useReauthHandler` for follow/unfollow errors |
-| `src/components/app/WhoToFollow.tsx` | Use `useReauthHandler` for follow errors |
-| `src/components/app/profile/FollowersListDrawer.tsx` | Use `useReauthHandler` for follow/unfollow errors |
+| `src/contexts/AuthContext.tsx` | Add `refreshSession` function, export it in context |
+| `src/hooks/use-reauth-handler.ts` | Call `refreshSession()` before showing "Sign in" prompt |
 
 ---
 
 ### User Experience
 
-**Before**: Follow fails → Generic "Failed to follow" toast → User confused
+**Before**: Token expires → Toast with "Sign in" → Full modal flow → Re-authenticate from scratch
 
-**After**: Follow fails due to auth → Toast with "Session expired" message + "Sign in" button → User clicks → Login modal opens → User re-authenticates → Can retry action
+**After**: Token expires → "Refreshing session..." → Signature popup → Done! (≈2-3 seconds)
+
+If the wallet is disconnected (user closed browser, cleared session, etc.), it falls back to the full sign-in flow.
 
