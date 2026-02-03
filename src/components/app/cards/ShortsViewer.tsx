@@ -638,7 +638,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   >
                     <div 
                       className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
-                        isDescriptionExpanded ? 'max-h-[calc(2.5rem+69px)]' : 'max-h-[2.5rem]'
+                        isDescriptionExpanded ? 'max-h-[calc(2.5rem+200px)]' : 'max-h-[2.5rem]'
                       }`}
                     >
                       <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
