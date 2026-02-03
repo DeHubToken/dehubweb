@@ -361,6 +361,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // State to trigger re-shuffle on pull-to-refresh
   const [shuffleTrigger, setShuffleTrigger] = useState(0);
   
+  // Stable shuffle refs - persist shuffled items to prevent re-shuffling on new pages
+  const stableShuffledRef = useRef<FeedItemType[]>([]);
+  const processedIdsRef = useRef<Set<string>>(new Set());
+  
   // Track if we've pre-fetched enough pages for random mode
   // Persist in sessionStorage to prevent loading flash on back navigation
   const getInitialPreFetched = useCallback(() => {
@@ -462,6 +466,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       try {
         sessionStorage.removeItem('home-feed-prefetched');
       } catch {}
+      // Reset stable shuffle refs for fresh shuffle
+      stableShuffledRef.current = [];
+      processedIdsRef.current = new Set();
       // Clear optimistic posts on refresh since real data should be available
       clearOptimisticPosts();
       refetch();
@@ -595,6 +602,20 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
   }, [pinnedPost]);
 
+  // Helper to get unique ID from a feed item
+  const getItemId = useCallback((item: FeedItemType): string => {
+    switch (item.type) {
+      case 'video':
+      case 'image':
+      case 'post':
+        return item.data.id;
+      case 'shorts':
+        return `shorts-${item.data.map(s => s.id).join('-')}`;
+      default:
+        return `unknown-${Math.random()}`;
+    }
+  }, []);
+
   // Map unified feed items to component-ready data (excluding pinned post)
   const items = useMemo((): FeedItemType[] => {
     // Don't compute until pre-fetch is complete for random mode
@@ -631,16 +652,38 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     });
     
-    // Only shuffle when "random" is selected - use balanced shuffle for true randomness
-    // The shuffleTrigger changes on refresh, causing useMemo to re-run and produce new order
-    if (selectedSort.value === 'random') {
-      // shuffleTrigger is included in deps to force new shuffle on refresh
-      void shuffleTrigger; // Reference to satisfy linter but signal intent
-      return balancedShuffle(mappedItems);
+    // For non-random modes, return as-is
+    if (selectedSort.value !== 'random') {
+      return mappedItems;
     }
     
-    return mappedItems;
-  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, hasPreFetched]);
+    // STABLE SHUFFLE: Only shuffle NEW items and append to existing stable list
+    // This prevents re-shuffling when loading more pages (looping issue)
+    
+    // Find items not yet processed
+    const newItems = mappedItems.filter(item => {
+      const id = getItemId(item);
+      return !processedIdsRef.current.has(id);
+    });
+    
+    // If no new items, return existing stable list
+    if (newItems.length === 0) {
+      return stableShuffledRef.current;
+    }
+    
+    // Shuffle only the new items using balanced shuffle
+    const shuffledNew = balancedShuffle(newItems);
+    
+    // Mark new items as processed
+    shuffledNew.forEach(item => {
+      processedIdsRef.current.add(getItemId(item));
+    });
+    
+    // Append to stable list
+    stableShuffledRef.current = [...stableShuffledRef.current, ...shuffledNew];
+    
+    return stableShuffledRef.current;
+  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, hasPreFetched, getItemId]);
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
