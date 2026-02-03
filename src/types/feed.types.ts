@@ -48,6 +48,10 @@ export interface TextPost extends BaseFeedItem {
     reposts: number;
     likes: number;
   };
+  /** Whether the current user has liked this item */
+  isLiked?: boolean;
+  /** Whether the current user has disliked this item */
+  isDisliked?: boolean;
 }
 
 /**
@@ -188,6 +192,10 @@ export interface ShortVideo extends BaseFeedItem {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Whether the current user has liked this item */
+  isLiked?: boolean;
+  /** Whether the current user has disliked this item */
+  isDisliked?: boolean;
 }
 
 /**
