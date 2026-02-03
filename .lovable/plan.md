@@ -1,65 +1,126 @@
 
-# Fix: Broken Video Thumbnail in Notifications
+# Fix: Scroll Position Restoration on Back Navigation
 
-## Problem
+## Root Cause Analysis
 
-The video thumbnail for "chads here" shows as broken because the notification is using an incorrect CDN URL:
+Three issues are causing the scroll to jump to top:
 
-**Current (broken):** `https://dehubcdn.dehub.io/images/2706.jpg`
-**Correct:** `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/2706.jpg`
+1. **SinglePostPage scrolls to top unconditionally** - The `useEffect` in SinglePostPage (line 188-190) calls `window.scrollTo(0, 0)` whenever the component mounts or the ID changes. This fires even when the component is unmounting during back navigation.
 
-## Root Cause
+2. **Two competing scroll restoration systems** - The codebase has both:
+   - `use-scroll-restoration.ts` (in-memory Map)
+   - `AppLayout.tsx` (sessionStorage)
+   
+   These fight each other and aren't coordinated.
 
-In `NotificationsPage.tsx`, the thumbnail URL construction uses a typo in the CDN domain:
-
-```typescript
-const postThumbnail = notification.tokenThumbnail 
-  ? (notification.tokenThumbnail.startsWith('http') 
-      ? notification.tokenThumbnail 
-      : `https://dehubcdn.dehub.io/${notification.tokenThumbnail}`)  // ← Wrong URL!
-  : null;
-```
-
-The correct CDN base is `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/` which is already defined as `DEHUB_CDN_BASE` in `src/lib/api/dehub.ts`.
+3. **Overlay pattern timing** - When navigating back, `SinglePostPage` briefly remains mounted before `showHomePagePersisted` becomes false, allowing its scroll-to-top effect to fire.
 
 ## Solution
 
-Update the thumbnail URL construction to use the proper CDN base constant or the existing `buildImageUrl` utility.
+Consolidate to a single, robust scroll restoration approach in `AppLayout.tsx` and prevent `SinglePostPage` from interfering during back navigation.
 
 ## Implementation
 
-### File: `src/pages/app/NotificationsPage.tsx`
+### File 1: `src/pages/app/SinglePostPage.tsx`
 
-**Change 1: Import the CDN constant**
+**Change:** Only scroll to top when navigating TO a post (not back FROM it)
 
-Add import at the top:
 ```typescript
-import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { useNavigationType } from 'react-router-dom';
+
+// Inside component:
+const navigationType = useNavigationType();
+
+// Only scroll to top when PUSHING to a post page, not when POP (back navigation)
+useEffect(() => {
+  if (navigationType === 'PUSH') {
+    window.scrollTo(0, 0);
+  }
+}, [id, navigationType]);
 ```
 
-**Change 2: Fix the thumbnail URL construction**
+### File 2: `src/components/app/AppLayout.tsx`
 
-Replace lines 160-162:
+**Change 1:** Prevent state from being cleared prematurely
+
+The current logic clears `cameFromHome` and sessionStorage in the same effect that does restoration. This can cause issues if React re-renders. Move cleanup to a separate, delayed effect.
+
+**Change 2:** Add a flag to prevent competing scroll operations
+
 ```typescript
-// Before (broken)
-const postThumbnail = notification.tokenThumbnail 
-  ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `https://dehubcdn.dehub.io/${notification.tokenThumbnail}`)
-  : null;
+// Add a restoration-in-progress flag
+const isRestoringScrollRef = useRef(false);
 
-// After (fixed)
-const postThumbnail = notification.tokenThumbnail 
-  ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
-  : null;
+useLayoutEffect(() => {
+  const isHomePage = location.pathname === '/app';
+  const wasInPostOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
+  
+  if (isHomePage && wasInPostOverlay) {
+    isRestoringScrollRef.current = true;
+    
+    const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
+    const scrollValue = savedScroll ? parseInt(savedScroll, 10) : 0;
+    
+    if (scrollValue > 0) {
+      // Immediate + staggered attempts
+      window.scrollTo(0, scrollValue);
+      
+      const attempts = [16, 50, 100, 200, 400, 800];
+      const timeouts = attempts.map(delay => 
+        setTimeout(() => window.scrollTo(0, scrollValue), delay)
+      );
+      
+      // Only clean up AFTER all restoration attempts complete
+      setTimeout(() => {
+        sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
+        sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
+        setCameFromHome(false);
+        isRestoringScrollRef.current = false;
+      }, 1000);
+      
+      return () => timeouts.forEach(clearTimeout);
+    }
+  }
+}, [location.pathname]);
 ```
 
-## Technical Details
+### File 3: `src/pages/app/HomePage.tsx`
 
-| Item | Value |
-|------|-------|
-| Incorrect domain | `dehubcdn.dehub.io` |
-| Correct domain | `dehubcdn.ams3.cdn.digitaloceanspaces.com` |
-| Constant to use | `DEHUB_CDN_BASE` from `@/lib/api/dehub` |
+**Change:** Respect ongoing scroll restoration
 
-## Result
+The effect at lines 272-301 that resets scroll should also check if restoration is in progress:
 
-After this fix, video thumbnails in notifications will correctly display instead of showing broken image icons.
+```typescript
+useEffect(() => {
+  // Skip if first mount with back navigation
+  if (!hasInitializedRef.current) {
+    hasInitializedRef.current = true;
+    prevTabRef.current = activeTab;
+    if (isBackNavigation) return;
+  }
+  
+  if (prevTabRef.current === activeTab) return;
+  prevTabRef.current = activeTab;
+  
+  // Only reset scroll if we're actually changing tabs (not on back nav)
+  window.scrollTo(0, 0);
+}, [activeTab, isBackNavigation]);
+```
+
+This is already mostly correct, but we need to ensure `isBackNavigation` is properly detected on the first render.
+
+## Technical Summary
+
+| File | Change | Purpose |
+|------|--------|---------|
+| `SinglePostPage.tsx` | Check `navigationType !== 'POP'` before scrolling | Prevent scroll-to-top on back nav |
+| `AppLayout.tsx` | Delay cleanup to 1000ms, add more staggered attempts | Ensure restoration completes before cleanup |
+| `HomePage.tsx` | Already has `isBackNavigation` check | Verify it works correctly |
+
+## Expected Result
+
+1. Scroll down the home feed
+2. Click on any post
+3. Post page opens, scrolls to top (correct)
+4. Press browser back button
+5. Home feed restores to exact scroll position (fixed!)
