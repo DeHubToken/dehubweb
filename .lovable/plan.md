@@ -1,118 +1,85 @@
 
 
-## Seamless Re-Authentication (No Full Sign-In Required)
+## Fix: Hold-to-Refresh Not Working for Fast Scrolls
 
-Instead of prompting users to click "Sign in" and go through the login modal, we can **automatically request a new signature** using the still-connected Web3Auth provider and refresh the token seamlessly.
+### Root Cause
+
+The hold timer mechanism is working, but **wheel/trackpad inertia defeats it**. Here's what happens:
+
+1. User does a fast upward scroll gesture
+2. Wheel events start firing rapidly (trackpad momentum)
+3. `pullDistance` crosses threshold almost instantly
+4. Hold timer starts and runs for 420ms
+5. **Wheel events keep firing during those 420ms** due to trackpad inertia
+6. Timer completes → Refresh triggers
+7. User perceives this as "instant refresh on fast scroll"
+
+The timer IS running for 420ms - but the continuous wheel events during inertia make the gesture appear "active" the whole time.
 
 ---
 
-### Current vs Improved Flow
+### Solution: Velocity-Based Detection
 
-**Current Implementation:**
-1. API call fails (401/403)
-2. Toast: "Session expired" + "Sign in" button
-3. User clicks → Full login modal opens
-4. User selects provider again → Signs message → Gets new token
+Instead of (or in addition to) a hold timer, we need to detect the **speed** of the gesture. Fast, aggressive scrolls should NOT trigger refresh, only slow, deliberate pulls.
 
-**Improved Implementation:**
-1. API call fails (401/403)
-2. Toast: "Session expired" + "Refresh" button (or auto-refresh)
-3. App detects Web3Auth is still connected
-4. Automatically requests new signature from existing provider
-5. Gets fresh JWT → User continues seamlessly
+**Implementation:**
+
+1. Track the velocity of the pull gesture
+2. Only start the hold timer if velocity drops below a threshold (slow pull)
+3. Fast swipes will never meet the velocity requirement
 
 ---
 
 ### Technical Implementation
 
-#### 1. Add Re-Signature Function to AuthContext
-
-Create a new `refreshSession` function that:
-- Checks if Web3Auth is still connected
-- Gets the existing provider
-- Requests a new signature
-- Calls `authenticateWallet()` to get fresh JWT
-- Updates the stored token
+**Add velocity tracking to `use-pull-to-refresh.ts`:**
 
 ```typescript
-// In AuthContext.tsx
-const refreshSession = useCallback(async (): Promise<boolean> => {
-  const web3authInstance = await getOrInitWeb3Auth();
-  
-  // Check if still connected to wallet
-  if (!web3authInstance.connected || !web3authInstance.provider) {
-    console.log('[Auth] Not connected, cannot refresh - need full sign in');
-    return false;
-  }
-  
-  try {
-    // Re-run the signature flow with existing provider
-    await completeDeHubAuth(web3authInstance.provider);
-    return true;
-  } catch (error) {
-    console.error('[Auth] Session refresh failed:', error);
-    return false;
-  }
-}, []);
+// New constants
+const HOLD_DURATION_MS = 420;
+const MAX_VELOCITY_FOR_REFRESH = 0.5; // pixels per millisecond - slow pulls only
+const VELOCITY_SAMPLE_MS = 100; // How often to sample velocity
+
+// New refs
+const lastPullDistance = useRef<number>(0);
+const lastPullTime = useRef<number>(0);
+const currentVelocity = useRef<number>(0);
 ```
 
-#### 2. Update useReauthHandler to Try Seamless Refresh First
+**Velocity calculation in touch/wheel handlers:**
 
 ```typescript
-export function useReauthHandler() {
-  const { openLoginModal, refreshSession } = useAuth();
+// In handleTouchMove/handleWheel:
+const now = Date.now();
+const timeDelta = now - lastPullTime.current;
 
-  const handleApiError = async (error: unknown, fallbackMessage: string): Promise<boolean> => {
-    if (error instanceof AuthenticationError) {
-      // Try seamless refresh first
-      const toastId = toast.loading('Refreshing session...');
-      
-      const refreshed = await refreshSession();
-      toast.dismiss(toastId);
-      
-      if (refreshed) {
-        toast.success('Session refreshed');
-        return true; // Caller can retry the action
-      }
-      
-      // Fallback to full sign-in if refresh fails
-      toast.error('Session expired', {
-        description: 'Please sign in again to continue',
-        action: {
-          label: 'Sign in',
-          onClick: openLoginModal,
-        },
-        duration: 8000,
-      });
-      return true;
-    }
-    
-    toast.error(fallbackMessage);
-    return false;
-  };
+if (timeDelta > 0) {
+  const distanceDelta = resistedDistance - lastPullDistance.current;
+  currentVelocity.current = Math.abs(distanceDelta / timeDelta);
+}
 
-  return { handleApiError };
+lastPullDistance.current = resistedDistance;
+lastPullTime.current = now;
+
+// Only start hold timer if:
+// 1. At threshold
+// 2. Velocity is LOW (user is pulling slowly/deliberately)
+if (resistedDistance >= pullThreshold && currentVelocity.current < MAX_VELOCITY_FOR_REFRESH) {
+  startHoldTimer();
+} else {
+  cancelHoldTimer();
 }
 ```
 
-#### 3. Update Components to Retry After Successful Refresh
+**For wheel events specifically - disable entirely or add stricter velocity check:**
 
-Components can check if the session was refreshed and automatically retry the action:
+The wheel handler is particularly problematic because trackpad inertia creates a stream of events. Options:
 
-```typescript
-const handleFollow = async () => {
-  try {
-    await followUser(profile.walletAddress);
-    toast.success(`Following ${profile.name}`);
-  } catch (error) {
-    setFollowStatus(false);
-    const wasAuthError = await handleApiError(error, 'Failed to follow');
-    
-    // If session was refreshed, the user can click follow again
-    // (or we could auto-retry here)
-  }
-};
-```
+- **Option A**: Disable wheel-based pull-to-refresh entirely (touch-only)
+- **Option B**: Require wheel velocity to stay low for the full 420ms
+- **Option C**: Require the wheel to "pause" (no events for 200ms) while at threshold
+
+I recommend **Option A + velocity check for touch** - this removes the most problematic trigger (trackpad) while keeping intentional touch pulls.
 
 ---
 
@@ -120,16 +87,32 @@ const handleFollow = async () => {
 
 | File | Change |
 |------|--------|
-| `src/contexts/AuthContext.tsx` | Add `refreshSession` function, export it in context |
-| `src/hooks/use-reauth-handler.ts` | Call `refreshSession()` before showing "Sign in" prompt |
+| `src/hooks/use-pull-to-refresh.ts` | Add velocity tracking, disable wheel-based refresh, only trigger on slow deliberate pulls |
 
 ---
 
-### User Experience
+### Updated Logic Flow
 
-**Before**: Token expires → Toast with "Sign in" → Full modal flow → Re-authenticate from scratch
+```text
+User pulls down
+    ↓
+Is velocity < 0.5 px/ms? (slow, deliberate)
+    ├─ No → Do nothing, just show visual feedback
+    └─ Yes → Start 420ms hold timer
+                ↓
+         User keeps holding slowly for 420ms?
+              ├─ No (velocity increases or releases early) → Cancel, no refresh
+              └─ Yes → Trigger refresh
+```
 
-**After**: Token expires → "Refreshing session..." → Signature popup → Done! (≈2-3 seconds)
+---
 
-If the wallet is disconnected (user closed browser, cleared session, etc.), it falls back to the full sign-in flow.
+### Code Changes Summary
+
+1. **Add velocity tracking** - measure how fast the user is pulling
+2. **Only start hold timer on slow pulls** - fast scrolls never start the timer
+3. **Disable wheel-based refresh** - remove the wheel handler entirely (touch only)
+4. **Reset velocity on release** - clean state for next gesture
+
+This ensures that aggressive "scroll to top" gestures will never trigger refresh, only slow deliberate "pull and hold" gestures will.
 
