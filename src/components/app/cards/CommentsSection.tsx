@@ -834,11 +834,6 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                       target.style.height = 'auto';
                       target.style.height = Math.min(target.scrollHeight, 120) + 'px';
                     }}
-                    onFocus={(e) => {
-                      setTimeout(() => {
-                        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }, 100);
-                    }}
                   />
                 </div>
                 {!voiceNote && (
