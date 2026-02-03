@@ -505,32 +505,23 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // TODO: Download GIF and add as media
   }, []);
 
-  const openCameraCapture = useCallback(async () => {
-    // Request camera access and capture video
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'user' }, 
-        audio: true 
-      });
-      
-      // Create a video element to show preview
-      // For now, we'll just use the file input with capture
-      stream.getTracks().forEach(track => track.stop());
-      
-      // Trigger video input with capture attribute
-      if (videoInputRef.current) {
-        videoInputRef.current.setAttribute('capture', 'user');
-        videoInputRef.current.click();
-        // Remove capture attribute after click to allow normal file selection next time
-        setTimeout(() => {
-          videoInputRef.current?.removeAttribute('capture');
-        }, 1000);
+  const openCameraCapture = useCallback(() => {
+    // Create a temporary file input with capture attribute for camera
+    const cameraInput = document.createElement('input');
+    cameraInput.type = 'file';
+    cameraInput.accept = 'video/*';
+    cameraInput.capture = 'environment'; // Use back camera, 'user' for front camera
+    
+    cameraInput.onchange = async (e) => {
+      const target = e.target as HTMLInputElement;
+      const files = target.files;
+      if (files && files.length > 0) {
+        await processVideoFile(files[0]);
       }
-    } catch (err) {
-      console.error('Camera access error:', err);
-      toast.error('Could not access camera. Please check permissions.');
-    }
-  }, []);
+    };
+    
+    cameraInput.click();
+  }, [processVideoFile]);
 
   const resetForm = useCallback(() => {
     setText('');
