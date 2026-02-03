@@ -361,15 +361,40 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // State to trigger re-shuffle on pull-to-refresh
   const [shuffleTrigger, setShuffleTrigger] = useState(0);
   
-  // Stable shuffle refs - persist shuffled items to prevent re-shuffling on new pages
-  const stableShuffledRef = useRef<FeedItemType[]>([]);
-  const processedIdsRef = useRef<Set<string>>(new Set());
+  // SessionStorage keys for persisting shuffle state across tab switches
+  const STORAGE_KEY_ITEMS = 'home-feed-shuffled-items';
+  const STORAGE_KEY_IDS = 'home-feed-processed-ids';
+  const STORAGE_KEY_PREFETCHED = 'home-feed-prefetched';
+  
+  // Helper to load initial shuffled items from sessionStorage
+  const getInitialShuffledItems = useCallback((): FeedItemType[] => {
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY_ITEMS);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }, []);
+  
+  // Helper to load initial processed IDs from sessionStorage
+  const getInitialProcessedIds = useCallback((): Set<string> => {
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY_IDS);
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  }, []);
+  
+  // Stable shuffle refs - initialized from sessionStorage if available
+  const stableShuffledRef = useRef<FeedItemType[]>(getInitialShuffledItems());
+  const processedIdsRef = useRef<Set<string>>(getInitialProcessedIds());
   
   // Track if we've pre-fetched enough pages for random mode
   // Persist in sessionStorage to prevent loading flash on back navigation
   const getInitialPreFetched = useCallback(() => {
     try {
-      return sessionStorage.getItem('home-feed-prefetched') === 'true';
+      return sessionStorage.getItem(STORAGE_KEY_PREFETCHED) === 'true';
     } catch {
       return false;
     }
@@ -462,9 +487,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Trigger new shuffle and reset pre-fetch state
       setShuffleTrigger(prev => prev + 1);
       setHasPreFetched(false);
-      // Clear persisted pre-fetch state on explicit refresh
+      // Clear ALL persisted shuffle state on explicit refresh
       try {
-        sessionStorage.removeItem('home-feed-prefetched');
+        sessionStorage.removeItem(STORAGE_KEY_PREFETCHED);
+        sessionStorage.removeItem(STORAGE_KEY_ITEMS);
+        sessionStorage.removeItem(STORAGE_KEY_IDS);
       } catch {}
       // Reset stable shuffle refs for fresh shuffle
       stableShuffledRef.current = [];
@@ -479,6 +506,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   useEffect(() => {
     if (selectedSort.value !== 'random') {
       setHasPreFetched(true); // Non-random modes don't need pre-fetch
+      // Clear shuffle state when switching away from random mode
+      try {
+        sessionStorage.removeItem(STORAGE_KEY_ITEMS);
+        sessionStorage.removeItem(STORAGE_KEY_IDS);
+      } catch {}
+      stableShuffledRef.current = [];
+      processedIdsRef.current = new Set();
       return;
     }
     
@@ -491,7 +525,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       setHasPreFetched(true);
       // Persist pre-fetch state so back navigation doesn't trigger loading
       try {
-        sessionStorage.setItem('home-feed-prefetched', 'true');
+        sessionStorage.setItem(STORAGE_KEY_PREFETCHED, 'true');
       } catch {}
     }
   }, [selectedSort.value, feedData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
@@ -681,6 +715,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     
     // Append to stable list
     stableShuffledRef.current = [...stableShuffledRef.current, ...shuffledNew];
+    
+    // Persist shuffle state to sessionStorage for tab-switch persistence
+    try {
+      sessionStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(stableShuffledRef.current));
+      sessionStorage.setItem(STORAGE_KEY_IDS, JSON.stringify([...processedIdsRef.current]));
+    } catch {}
     
     return stableShuffledRef.current;
   }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, hasPreFetched, getItemId]);
