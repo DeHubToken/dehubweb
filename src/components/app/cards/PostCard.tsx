@@ -150,6 +150,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             postId={post.id} 
             className="p-0"
             onComment={() => setShowComments(prev => !prev)}
+            isLiked={post.isLiked}
+            isDisliked={post.isDisliked}
             likeCount={post.stats.likes}
             commentCount={post.stats.comments}
             isOptimistic={post.isOptimistic}

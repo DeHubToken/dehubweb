@@ -95,6 +95,8 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
     minter: post.author.id,
     status: post.status || 'minted',
     views: parseInt(post.views || '0') || 0,
+    isLiked: post.isLiked,
+    isDisliked: post.isDisliked,
     totalVotes: {
       for: post.stats.likes || 0,
       against: 0,

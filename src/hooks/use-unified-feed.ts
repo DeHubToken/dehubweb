@@ -85,6 +85,7 @@ export interface UnifiedFeedItem {
     alreadySubscribed?: boolean;
   }>;
   isLiked?: boolean;
+  isDisliked?: boolean;
   isSaved?: boolean;
   createdAt: string;
   updatedAt?: string;
@@ -164,6 +165,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
+    isDisliked: item.isDisliked ?? false,
     likeCount: item.totalVotes?.for || 0,
     dislikeCount: item.totalVotes?.against || 0,
     commentCount: item.commentCount || 0,
@@ -219,6 +221,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
+    isDisliked: item.isDisliked ?? false,
   };
 }
 
@@ -254,6 +257,8 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       reposts: 0,
       likes: item.totalVotes?.for || 0,
     },
+    isLiked: item.isLiked ?? false,
+    isDisliked: item.isDisliked ?? false,
   };
 }
 

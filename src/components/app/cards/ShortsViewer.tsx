@@ -156,10 +156,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
   }, [inlineCommentText, currentShort?.id, isPostingComment, isAuthenticated, queryClient]);
   
-  // Reset voting state when changing videos
+  // Sync voting state from short data when changing videos
   useEffect(() => {
-    setIsLiked(false);
-    setIsDisliked(false);
+    // Read initial vote state from the short's data
+    setIsLiked(currentShort?.isLiked ?? false);
+    setIsDisliked(currentShort?.isDisliked ?? false);
     // Parse likes from string if needed
     const likes = typeof currentShort?.likes === 'string' 
       ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0 
@@ -169,7 +170,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setShowComments(false);
     setInlineCommentText('');
     setIsDescriptionExpanded(false);
-  }, [currentIndex, currentShort?.likes]);
+  }, [currentIndex, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
   // Handle voting - same logic as ActionBar
   const handleVote = useCallback(async (vote: boolean) => {
