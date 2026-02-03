@@ -82,8 +82,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         // Immediate attempt
         window.scrollTo(0, scrollValue);
         
-        // Staggered attempts for lazy-loaded content
-        const attempts = [50, 100, 200, 400];
+        // Extended staggered attempts for lazy-loaded content
+        const attempts = [16, 50, 100, 200, 400, 800];
         const timeouts: NodeJS.Timeout[] = [];
         
         attempts.forEach(delay => {
@@ -93,12 +93,12 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           timeouts.push(timeout);
         });
         
-        // Clear sessionStorage after restoration attempts complete
+        // Clear sessionStorage AFTER all restoration attempts complete (with buffer)
         setTimeout(() => {
           sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
           sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
           setCameFromHome(false);
-        }, 500);
+        }, 1000);
         
         // Cleanup timeouts if component unmounts
         return () => {

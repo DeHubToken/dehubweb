@@ -11,7 +11,7 @@
  * @module pages/app/SinglePostPage
  */
 
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigationType } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Loader2, AlertCircle, Clock } from 'lucide-react';
@@ -183,11 +183,14 @@ function LoadingState() {
 export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const id = postId || tokenId;
+  const navigationType = useNavigationType();
 
-  // Scroll to top when post page mounts
+  // Only scroll to top when PUSHING to the post page (not on back navigation)
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]);
+    if (navigationType === 'PUSH') {
+      window.scrollTo(0, 0);
+    }
+  }, [id, navigationType]);
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['single-post', id],
