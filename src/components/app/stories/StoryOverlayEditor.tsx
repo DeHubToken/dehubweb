@@ -172,12 +172,16 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
   };
 
   const getTextStyle = (overlay: StoryOverlay): React.CSSProperties => {
-    if (!overlay.style) return {};
+    // Base shadow for visibility on any video background
+    const baseShadow = '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)';
+    
+    if (!overlay.style) return { textShadow: baseShadow };
     
     const baseStyle: React.CSSProperties = {
       color: overlay.style.textStyle === 'background' 
         ? (overlay.style.color === '#FFFFFF' ? '#000000' : '#FFFFFF')
         : overlay.style.color,
+      textShadow: overlay.style.textStyle !== 'background' ? baseShadow : undefined,
     };
 
     switch (overlay.style.textStyle) {
@@ -185,10 +189,10 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
         return { ...baseStyle, fontWeight: 700 };
       case 'outlined':
         return {
-          ...baseStyle,
-          WebkitTextStroke: `1px ${overlay.style.color}`,
-          color: 'transparent',
+          WebkitTextStroke: `2px ${overlay.style.color}`,
+          color: overlay.style.color === '#FFFFFF' ? '#000000' : '#FFFFFF',
           fontWeight: 700,
+          textShadow: baseShadow,
         };
       case 'background':
         return {
@@ -196,6 +200,7 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
           backgroundColor: overlay.style.color,
           padding: '4px 12px',
           borderRadius: '8px',
+          textShadow: undefined,
         };
       default:
         return baseStyle;
@@ -254,7 +259,7 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
               <span className="text-5xl">{overlay.content}</span>
             ) : (
               <span 
-                className="text-xl whitespace-pre-wrap max-w-[80vw] text-center"
+                className="text-2xl whitespace-pre-wrap max-w-[80vw] text-center font-semibold"
                 style={getTextStyle(overlay)}
               >
                 {overlay.content}
