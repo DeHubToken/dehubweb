@@ -285,17 +285,38 @@ export function PostMediaPreview({
     try {
       const video = document.createElement('video');
       video.src = videoUrl;
-      video.crossOrigin = 'anonymous';
-      video.preload = 'metadata';
+      // Only set crossOrigin for non-blob URLs (external resources)
+      // Blob URLs are same-origin and don't need CORS handling
+      if (!videoUrl.startsWith('blob:')) {
+        video.crossOrigin = 'anonymous';
+      }
+      video.preload = 'auto'; // Use 'auto' instead of 'metadata' for better compatibility
+      video.muted = true; // Required for autoplay policies
       
+      // Wait for video to be ready to play (better for WebM/recorded videos)
       await new Promise<void>((resolve, reject) => {
-        video.onloadedmetadata = () => resolve();
-        video.onerror = () => reject(new Error('Failed to load video'));
-        setTimeout(() => reject(new Error('Video load timeout')), 10000);
+        const handleCanPlay = () => {
+          video.removeEventListener('canplaythrough', handleCanPlay);
+          video.removeEventListener('error', handleError);
+          resolve();
+        };
+        const handleError = () => {
+          video.removeEventListener('canplaythrough', handleCanPlay);
+          video.removeEventListener('error', handleError);
+          reject(new Error('Failed to load video'));
+        };
+        video.addEventListener('canplaythrough', handleCanPlay);
+        video.addEventListener('error', handleError);
+        video.load();
+        setTimeout(() => {
+          video.removeEventListener('canplaythrough', handleCanPlay);
+          video.removeEventListener('error', handleError);
+          reject(new Error('Video load timeout'));
+        }, 15000);
       });
       
       const duration = video.duration;
-      if (!duration || duration <= 0) {
+      if (!duration || duration <= 0 || !isFinite(duration)) {
         throw new Error('Invalid video duration');
       }
       
@@ -311,27 +332,45 @@ export function PostMediaPreview({
       canvas.width = 640;
       canvas.height = 360;
       
-  for (let i = 0; i < frameCount; i++) {
-    // Include first frame (time 0) and distribute remaining frames evenly
-    const time = i === 0 ? 0 : (duration / (frameCount - 1)) * i;
-        video.currentTime = time;
+      for (let i = 0; i < frameCount; i++) {
+        // Include first frame (time 0) and distribute remaining frames evenly
+        const time = i === 0 ? 0.01 : (duration / (frameCount - 1)) * i; // Use 0.01 instead of 0 for better compatibility
+        video.currentTime = Math.min(time, duration - 0.1); // Don't seek past the end
         
         await new Promise<void>((resolve) => {
-          video.onseeked = () => resolve();
+          const handleSeeked = () => {
+            video.removeEventListener('seeked', handleSeeked);
+            // Small delay to ensure frame is rendered
+            setTimeout(resolve, 50);
+          };
+          video.addEventListener('seeked', handleSeeked);
+          // Fallback timeout in case seeked never fires (common with some WebM)
+          setTimeout(() => {
+            video.removeEventListener('seeked', handleSeeked);
+            resolve();
+          }, 500);
         });
         
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        const blob = await new Promise<Blob | null>(resolve => 
-          canvas.toBlob(resolve, 'image/jpeg', 0.7)
-        );
-        
-        if (blob) {
-          frames.push(URL.createObjectURL(blob));
+        // Check if video has valid dimensions
+        if (video.videoWidth > 0 && video.videoHeight > 0) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          
+          const blob = await new Promise<Blob | null>(resolve => 
+            canvas.toBlob(resolve, 'image/jpeg', 0.7)
+          );
+          
+          if (blob && blob.size > 1000) { // Only add if blob has actual content
+            frames.push(URL.createObjectURL(blob));
+          }
         }
       }
       
-      setVideoFrames(prev => new Map(prev).set(index, frames));
+      // Only set frames if we got at least some
+      if (frames.length > 0) {
+        setVideoFrames(prev => new Map(prev).set(index, frames));
+      } else {
+        console.warn('No frames could be extracted from video');
+      }
     } catch (error) {
       console.error('Failed to extract video frames:', error);
     } finally {
