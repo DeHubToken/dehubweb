@@ -611,12 +611,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     onClick={() => handleNavigateToProfile()}
                     className="relative flex-shrink-0"
                   >
-                    <Avatar className="w-12 h-12 border-2 border-white rounded-full" key={currentShort.avatar || currentShort.id}>
-                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-full" />
-                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-full">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                    <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
+                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                     </Avatar>
                     {/* Follow badge */}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-black">
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
                       <span className="text-white text-xs font-bold">+</span>
                     </div>
                   </button>
@@ -805,7 +805,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Search button - top left */}
           <button
             onClick={onClose}
-            className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-full flex items-center justify-center z-20"
+            className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
           >
             <Search className="w-5 h-5 text-white" />
           </button>
@@ -815,7 +815,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {/* Mute button */}
             <button
               onClick={toggleMute}
-              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-full flex items-center justify-center"
+              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
             >
               {isMuted ? (
                 <VolumeX className="w-5 h-5 text-white" />
@@ -827,7 +827,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {/* More options button */}
             <button
               onClick={() => setShareSheetOpen(true)}
-              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-full flex items-center justify-center"
+              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
             >
               <MoreHorizontal className="w-5 h-5 text-white" />
             </button>
