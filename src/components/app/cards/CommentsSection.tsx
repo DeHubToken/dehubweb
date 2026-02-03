@@ -751,7 +751,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       </div>
 
         {/* New Comment Input - sticky at bottom, clean minimal style */}
-        <div className="mt-auto pt-3 border-t border-zinc-800/50">
+        <div className="mt-auto pt-3">
           {/* Reply indicator */}
           {replyTo && (
             <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-zinc-800 rounded-xl">
