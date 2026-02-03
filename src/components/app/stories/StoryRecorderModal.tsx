@@ -251,6 +251,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             autoPlay
             loop
             playsInline
+            muted={false}
             className="w-full h-full object-cover"
           />
         )}
