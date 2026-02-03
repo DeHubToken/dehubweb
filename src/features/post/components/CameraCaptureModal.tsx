@@ -65,13 +65,16 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        // Enable buttons as soon as video can play
+        videoRef.current.oncanplay = () => {
+          setIsInitializing(false);
+        };
       }
     } catch (error) {
       console.error('Camera access error:', error);
       toast.error('Could not access camera. Please check permissions.');
-      onClose();
-    } finally {
       setIsInitializing(false);
+      onClose();
     }
   }, [facingMode, onClose]);
 
