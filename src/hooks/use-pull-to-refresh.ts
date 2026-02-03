@@ -17,7 +17,7 @@ import { useState, useRef, useEffect, useCallback, RefObject } from 'react';
 
 const DEFAULT_PULL_THRESHOLD = 80;
 const HOLD_DURATION_MS = 420; // Time to hold at threshold before triggering
-const MAX_VELOCITY_FOR_REFRESH = 0.8; // pixels per millisecond - only slow pulls trigger refresh
+const MAX_VELOCITY_FOR_REFRESH = 0.4; // pixels per millisecond - stricter threshold for deliberate pulls only
 
 interface UsePullToRefreshOptions {
   /** Distance required to trigger refresh */
@@ -67,8 +67,8 @@ export function usePullToRefresh({
   const holdAnimationFrame = useRef<number | null>(null);
   const holdTimerActive = useRef<boolean>(false);
   
-  // Velocity tracking refs
-  const lastPullDistance = useRef<number>(0);
+  // Velocity tracking refs - use RAW touch coordinates, not resisted distance
+  const lastRawTouchY = useRef<number>(0);
   const lastPullTime = useRef<number>(0);
   const currentVelocity = useRef<number>(0);
   
@@ -177,22 +177,24 @@ export function usePullToRefresh({
 
   // Reset velocity tracking
   const resetVelocityTracking = useCallback(() => {
-    lastPullDistance.current = 0;
+    lastRawTouchY.current = 0;
     lastPullTime.current = 0;
     currentVelocity.current = 0;
   }, []);
 
-  // Update velocity based on pull movement
-  const updateVelocity = useCallback((resistedDistance: number) => {
+  // Update velocity using RAW touch coordinates (not resisted/capped distance)
+  // This ensures fast swipes register as fast even when visual indicator is capped
+  const updateVelocity = useCallback((rawTouchY: number) => {
     const now = Date.now();
     const timeDelta = now - lastPullTime.current;
     
     if (timeDelta > 0 && lastPullTime.current > 0) {
-      const distanceDelta = Math.abs(resistedDistance - lastPullDistance.current);
-      currentVelocity.current = distanceDelta / timeDelta;
+      // Use RAW touch delta - a 300px swipe should register as fast
+      const rawDelta = Math.abs(rawTouchY - lastRawTouchY.current);
+      currentVelocity.current = rawDelta / timeDelta;
     }
     
-    lastPullDistance.current = resistedDistance;
+    lastRawTouchY.current = rawTouchY;
     lastPullTime.current = now;
   }, []);
 
@@ -201,10 +203,14 @@ export function usePullToRefresh({
     // Only allow pull-to-refresh if we're at the very top when touch starts
     wasAtTopOnStart.current = isAtTop();
     if (wasAtTopOnStart.current) {
-      pullStartY.current = e.touches[0].clientY;
-      resetVelocityTracking();
+      const startY = e.touches[0].clientY;
+      pullStartY.current = startY;
+      // Initialize raw touch tracking for velocity calculation
+      lastRawTouchY.current = startY;
+      lastPullTime.current = Date.now();
+      currentVelocity.current = 0;
     }
-  }, [isAtTop, resetVelocityTracking]);
+  }, [isAtTop]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     // Only process if we started at the top AND we're still at the top
@@ -229,8 +235,9 @@ export function usePullToRefresh({
       setPullDistance(resistedDistance);
       setIsPulling(true);
       
-      // Update velocity tracking
-      updateVelocity(resistedDistance);
+      // Update velocity using RAW touch position (not resisted distance)
+      // This ensures fast swipes are detected correctly
+      updateVelocity(currentY);
       
       // Only start hold timer if:
       // 1. At threshold
@@ -265,10 +272,14 @@ export function usePullToRefresh({
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     wasAtTopOnStart.current = isAtTop();
     if (wasAtTopOnStart.current) {
-      pullStartY.current = e.clientY;
-      resetVelocityTracking();
+      const startY = e.clientY;
+      pullStartY.current = startY;
+      // Initialize raw position tracking for velocity calculation
+      lastRawTouchY.current = startY;
+      lastPullTime.current = Date.now();
+      currentVelocity.current = 0;
     }
-  }, [isAtTop, resetVelocityTracking]);
+  }, [isAtTop]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!wasAtTopOnStart.current || pullStartY.current === null) return;
@@ -282,14 +293,15 @@ export function usePullToRefresh({
       return;
     }
 
-    const distance = e.clientY - pullStartY.current;
+    const currentY = e.clientY;
+    const distance = currentY - pullStartY.current;
     if (distance > 0) {
       const resistedDistance = Math.min(distance * 0.5, pullThreshold * 1.5);
       setPullDistance(resistedDistance);
       setIsPulling(true);
       
-      // Update velocity tracking
-      updateVelocity(resistedDistance);
+      // Update velocity using RAW mouse position (not resisted distance)
+      updateVelocity(currentY);
       
       // Only start hold timer if at threshold AND moving slowly
       if (resistedDistance >= pullThreshold && currentVelocity.current < MAX_VELOCITY_FOR_REFRESH) {
