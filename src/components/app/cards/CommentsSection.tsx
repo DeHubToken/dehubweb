@@ -30,7 +30,7 @@ import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -291,6 +291,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
+  // Track like/dislike state overrides for optimistic updates
+  const [likeOverrides, setLikeOverrides] = useState<Map<string, { isLiked: boolean; isDisliked: boolean; likes: number }>>(new Map());
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -313,13 +315,22 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     staleTime: 30000,
   });
 
-  // Combine API comments with optimistic ones
+  // Combine API comments with optimistic ones and apply like overrides
   const allComments = useMemo(() => {
     const mapped = apiComments?.map(mapApiComment) || [];
     const apiIds = new Set(mapped.map(c => c.id));
     const pending = optimisticComments.filter(c => !apiIds.has(c.id) && c.id.startsWith('temp-'));
-    return [...pending, ...mapped];
-  }, [apiComments, optimisticComments]);
+    const combined = [...pending, ...mapped];
+    
+    // Apply like/dislike overrides
+    return combined.map(c => {
+      const override = likeOverrides.get(c.id);
+      if (override) {
+        return { ...c, ...override };
+      }
+      return c;
+    });
+  }, [apiComments, optimisticComments, likeOverrides]);
 
   // Group comments: top-level and replies
   const groupedComments = useMemo(() => {
@@ -456,12 +467,65 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     navigate(`/${username}`);
   }, [navigate, onClose]);
 
-  const handleLike = (commentId: string) => {
-    // Optimistic update for local state
+  const handleLike = async (commentId: string) => {
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to like comments');
+      return;
+    }
+    
+    // Find current comment state
+    const comment = allComments.find(c => c.id === commentId);
+    if (!comment) return;
+    
+    const wasLiked = comment.isLiked;
+    const newLikes = wasLiked ? comment.likes - 1 : comment.likes + 1;
+    
+    // Optimistic update using overrides
+    setLikeOverrides(prev => {
+      const next = new Map(prev);
+      next.set(commentId, {
+        isLiked: !wasLiked,
+        isDisliked: false,
+        likes: newLikes,
+      });
+      return next;
+    });
+    
+    try {
+      await toggleCommentLike({ commentId });
+    } catch (error) {
+      // Revert on error
+      setLikeOverrides(prev => {
+        const next = new Map(prev);
+        next.delete(commentId);
+        return next;
+      });
+      toast.error('Failed to like comment');
+    }
   };
 
   const handleDislike = (commentId: string) => {
-    // Optimistic update for local state
+    if (!isAuthenticated) {
+      toast.error('Please connect your wallet to dislike comments');
+      return;
+    }
+    
+    // Find current comment state
+    const comment = allComments.find(c => c.id === commentId);
+    if (!comment) return;
+    
+    // Optimistic update - toggle dislike state
+    setLikeOverrides(prev => {
+      const next = new Map(prev);
+      next.set(commentId, {
+        isLiked: false,
+        isDisliked: !comment.isDisliked,
+        likes: comment.isLiked ? comment.likes - 1 : comment.likes, // Decrease if was liked
+      });
+      return next;
+    });
+    // Note: DeHub API doesn't have a separate dislike_comment endpoint
+    // This is UI-only for now
   };
 
   const handleReply = (commentId: string) => {
