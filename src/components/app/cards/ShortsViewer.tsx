@@ -613,7 +613,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     onClick={() => handleNavigateToProfile()}
                     className="relative flex-shrink-0"
                   >
-                    <Avatar className="w-12 h-12 border-2 border-white rounded-xl" key={currentShort.avatar || currentShort.id}>
+                    <Avatar className="w-12 h-12 rounded-xl" key={currentShort.avatar || currentShort.id}>
                       <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                       <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                     </Avatar>
