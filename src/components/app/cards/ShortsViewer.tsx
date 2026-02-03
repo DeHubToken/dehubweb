@@ -9,7 +9,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, Search, MoreHorizontal } from 'lucide-react';
 import { motion, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -600,138 +600,129 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             )}
           </motion.div>
 
-          {/* Mobile-only overlays */}
+          {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Creator Info - Top Left */}
-              <div className="absolute top-4 left-4 z-10 max-w-[50vw]">
-                <div className="flex items-center gap-2 bg-zinc-800/70 backdrop-blur-sm rounded-xl pl-1 pr-3 py-1">
+              {/* Bottom Left - Creator Info & Description */}
+              <div className="absolute bottom-24 left-4 right-20 z-10">
+                {/* Creator info row */}
+                <div className="flex items-center gap-2 mb-3">
                   <button
                     onClick={() => handleNavigateToProfile()}
-                    className="flex items-center gap-2 min-w-0 flex-1"
+                    className="relative flex-shrink-0"
                   >
-                    <Avatar className="w-8 h-8 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
-                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                    <Avatar className="w-12 h-12 border-2 border-white rounded-full" key={currentShort.avatar || currentShort.id}>
+                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-full" />
+                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-full">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    <span className="text-white text-sm font-medium truncate min-w-0 flex-1">@{currentShort.creatorUsername || currentShort.username}</span>
+                    {/* Follow badge */}
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-black">
+                      <span className="text-white text-xs font-bold">+</span>
+                    </div>
                   </button>
-                  <button className="ml-2 bg-white text-black text-xs font-semibold px-3 py-1 rounded-xl flex-shrink-0">
-                    Follow
+                  <button
+                    onClick={() => handleNavigateToProfile()}
+                    className="text-white font-semibold text-base drop-shadow-lg"
+                  >
+                    {currentShort.creatorUsername || currentShort.username}
                   </button>
                 </div>
+                
+                {/* Description */}
+                {currentShort.description && (
+                  <p className="text-white text-sm leading-relaxed drop-shadow-lg line-clamp-2">
+                    {currentShort.description}
+                  </p>
+                )}
               </div>
 
-              {/* Right Side Action Buttons */}
-              <div className="absolute right-3 top-[52%] z-10 flex flex-col items-center gap-3">
+              {/* Right Side Action Buttons - Vertical stack */}
+              <div className="absolute right-3 bottom-28 z-10 flex flex-col items-center gap-5">
                 {/* Like */}
                 <motion.button
                   onClick={() => handleVote(true)}
                   disabled={hasVoted || isVoting}
-                  className={cn(
-                    "flex flex-col items-center gap-0.5 transition-colors",
-                    hasVoted && !isLiked && "opacity-50"
-                  )}
+                  className="flex flex-col items-center gap-1"
                   animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
-                  <div className={cn(
-                    "w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center",
-                    isLiked && "text-white"
-                  )}>
-                    <ThumbsUp className={cn("w-5 h-5", isLiked ? "fill-current text-white" : "text-white")} />
-                  </div>
-                  <span className="text-white text-[10px] font-medium">{formatCount(localLikeCount)}</span>
+                  <ThumbsUp className={cn(
+                    "w-8 h-8 drop-shadow-lg",
+                    isLiked ? "fill-white text-white" : "text-white",
+                    hasVoted && !isLiked && "opacity-50"
+                  )} />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localLikeCount)}</span>
                 </motion.button>
                 
                 {/* Dislike */}
                 <motion.button
                   onClick={() => handleVote(false)}
                   disabled={hasVoted || isVoting}
-                  className={cn(
-                    "flex flex-col items-center gap-0.5 transition-colors",
-                    hasVoted && !isDisliked && "opacity-50"
-                  )}
+                  className="flex flex-col items-center gap-1"
                   animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
-                  <div className={cn(
-                    "w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center"
-                  )}>
-                    <ThumbsDown className={cn("w-5 h-5", isDisliked ? "fill-current text-white" : "text-white")} />
-                  </div>
-                  <span className="text-white text-[10px] font-medium">{formatCount(localDislikeCount)}</span>
+                  <ThumbsDown className={cn(
+                    "w-8 h-8 drop-shadow-lg",
+                    isDisliked ? "fill-white text-white" : "text-white",
+                    hasVoted && !isDisliked && "opacity-50"
+                  )} />
                 </motion.button>
 
                 {/* Comments */}
                 <button
                   onClick={() => setShowComments(true)}
-                  className="flex flex-col items-center gap-0.5"
+                  className="flex flex-col items-center gap-1"
                 >
-                  <div className="w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white text-[10px] font-medium">{formatCount(currentShort.comments || 0)}</span>
-                </button>
-                
-                {/* Share */}
-                <button
-                  onClick={() => setShareSheetOpen(true)}
-                  className="flex flex-col items-center gap-0.5"
-                >
-                  <div className="w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <Share2 className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white text-[10px] font-medium">Share</span>
+                  <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
                 </button>
                 
                 {/* Bookmark */}
                 <motion.button
                   onClick={toggleBookmark}
                   disabled={isBookmarkLoading}
-                  className={cn(
-                    "flex flex-col items-center gap-0.5",
-                    isBookmarkLoading && "opacity-50"
-                  )}
+                  className="flex flex-col items-center gap-1"
                   animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                 >
-                  <div className="w-11 h-11 bg-zinc-800/70 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <Bookmark className={cn("w-5 h-5", isBookmarked ? "fill-current text-yellow-500" : "text-white")} />
-                  </div>
-                  <span className="text-white text-[10px] font-medium">Save</span>
+                  <Bookmark className={cn(
+                    "w-8 h-8 drop-shadow-lg",
+                    isBookmarked ? "fill-white text-white" : "text-white"
+                  )} />
                 </motion.button>
+                
+                {/* Share */}
+                <button
+                  onClick={() => setShareSheetOpen(true)}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <Share2 className="w-8 h-8 text-white drop-shadow-lg" />
+                </button>
               </div>
 
-              {/* Bottom Comments Preview - Fading Recent Comments */}
-              <button
-                onClick={() => setShowComments(true)}
-                className="absolute bottom-20 left-4 right-20 z-10 text-left"
-              >
-                <div className="space-y-2">
-                  {inlineComments.slice(0, 3).map((comment, index) => (
-                    <div 
-                      key={comment.id} 
-                      className="flex items-center gap-2"
-                      style={{ opacity: 1 - (index * 0.25) }}
-                    >
-                      <Avatar className="w-6 h-6 flex-shrink-0 rounded-lg">
-                        {comment.avatar && <AvatarImage src={comment.avatar} className="rounded-lg" />}
-                        <AvatarFallback className="bg-zinc-700 text-white text-xs rounded-lg">
-                          {comment.username?.[0]?.toUpperCase() || '?'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="text-white text-sm flex-1 min-w-0">
-                        <span className="font-semibold mr-1.5">{comment.username}</span>
-                        <span className="text-white/90 line-clamp-1">{comment.text}</span>
-                      </p>
-                    </div>
-                  ))}
-                  {inlineComments.length === 0 && (
-                    <p className="text-white/50 text-sm">No comments yet. Be the first!</p>
-                  )}
+              {/* Bottom Bar - Likes, Bookmark, Comments in horizontal layout */}
+              <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  {/* Like count display */}
+                  <div className="flex items-center gap-1.5">
+                    <ThumbsUp className="w-5 h-5 text-white drop-shadow-lg" />
+                    <span className="text-white text-sm font-medium drop-shadow-lg">{formatCount(localLikeCount)}</span>
+                  </div>
+                  
+                  {/* Bookmark indicator */}
+                  <Bookmark className={cn(
+                    "w-5 h-5 drop-shadow-lg",
+                    isBookmarked ? "fill-white text-white" : "text-white"
+                  )} />
+                  
+                  {/* Comments count */}
+                  <div className="flex items-center gap-1.5">
+                    <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
+                    <span className="text-white text-sm font-medium drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                  </div>
                 </div>
-              </button>
+              </div>
             </>
           )}
         </div>
@@ -831,25 +822,49 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         )}
       </div>
 
-      {/* Close button - always visible */}
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 w-8 h-8 lg:w-10 lg:h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center z-20 transition-colors"
-      >
-        <X className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
-      </button>
-
-      {/* Mobile header controls */}
+      {/* Mobile top header controls - TikTok style */}
       {isMobile && (
+        <>
+          {/* Search button - top left */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-full flex items-center justify-center z-20"
+          >
+            <Search className="w-5 h-5 text-white" />
+          </button>
+          
+          {/* Right side controls */}
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+            {/* Mute button */}
+            <button
+              onClick={toggleMute}
+              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-full flex items-center justify-center"
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white" />
+              )}
+            </button>
+            
+            {/* More options button */}
+            <button
+              onClick={() => setShareSheetOpen(true)}
+              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-full flex items-center justify-center"
+            >
+              <MoreHorizontal className="w-5 h-5 text-white" />
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* Desktop close button */}
+      {!isMobile && (
         <button
-          onClick={toggleMute}
-          className="absolute top-4 right-16 w-8 h-8 bg-zinc-800/80 rounded-xl flex items-center justify-center z-20"
+          onClick={onClose}
+          className="absolute top-4 right-4 w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center z-20 transition-colors"
         >
-          {isMuted ? (
-            <VolumeX className="w-4 h-4 text-white" />
-          ) : (
-            <Volume2 className="w-4 h-4 text-white" />
-          )}
+          <X className="w-5 h-5 text-white" />
         </button>
       )}
 
