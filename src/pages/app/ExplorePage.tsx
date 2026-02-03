@@ -280,6 +280,24 @@ export default function ExplorePage() {
   // Search analytics mutation
   const { mutate: logSearch } = useSearchAnalytics();
 
+  // Scroll to top on mount unless there's an active search with cached scroll
+  useEffect(() => {
+    const urlQuery = searchParams.get('q') || '';
+    const cachedScroll = sessionStorage.getItem('EXPLORE_SCROLL_POSITION');
+    
+    if (urlQuery && cachedScroll) {
+      // Restore scroll only if there's an active search query
+      const scrollY = parseInt(cachedScroll, 10);
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollY);
+      });
+    } else {
+      // Always start at top when no search query
+      window.scrollTo(0, 0);
+      sessionStorage.removeItem('EXPLORE_SCROLL_POSITION');
+    }
+  }, []); // Only run on mount
+
   // Sync search query with URL
   useEffect(() => {
     const urlQuery = searchParams.get('q') || '';
@@ -315,6 +333,21 @@ export default function ExplorePage() {
   }, [stableQuery, activeTab, addToHistory, logSearch]);
 
   const isSearching = searchQuery.trim().length >= 3;
+
+  // Save scroll position only when there's an active search
+  useEffect(() => {
+    if (!isSearching) {
+      sessionStorage.removeItem('EXPLORE_SCROLL_POSITION');
+      return;
+    }
+
+    const handleScroll = () => {
+      sessionStorage.setItem('EXPLORE_SCROLL_POSITION', String(window.scrollY));
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isSearching]);
 
   // API search hook - using new universal search
   const {
