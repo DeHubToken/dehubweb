@@ -525,6 +525,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
             shorts={shorts}
             initialIndex={selectedIndex}
             onClose={() => setViewerOpen(false)}
+            onLoadMore={() => fetchNextPage()}
+            hasMore={hasNextPage ?? false}
+            isLoadingMore={isFetchingNextPage}
           />
         )}
       </AnimatePresence>
