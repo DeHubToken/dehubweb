@@ -56,6 +56,7 @@ interface AuthContextType {
   connectWithWallet: (wallet: WalletProvider) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  refreshSession: () => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
   // Login modal state
   isLoginModalOpen: boolean;
@@ -552,6 +553,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [walletAddress, disconnect]);
 
+  /**
+   * Seamlessly refresh the session by requesting a new signature
+   * from the still-connected Web3Auth provider.
+   * Returns true if refresh succeeded, false if full sign-in is needed.
+   */
+  const refreshSession = useCallback(async (): Promise<boolean> => {
+    console.log('[Auth] Attempting seamless session refresh...');
+    
+    try {
+      const web3authInstance = await getOrInitWeb3Auth();
+      
+      // Check if still connected to wallet
+      if (!web3authInstance.connected || !web3authInstance.provider) {
+        console.log('[Auth] Not connected, cannot refresh - need full sign in');
+        return false;
+      }
+      
+      console.log('[Auth] Web3Auth still connected, requesting new signature...');
+      
+      // Re-run the signature flow with existing provider
+      await completeDeHubAuth(web3authInstance.provider);
+      
+      console.log('[Auth] ✓ Session refreshed successfully');
+      return true;
+    } catch (error) {
+      console.error('[Auth] Session refresh failed:', error);
+      return false;
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -570,6 +601,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         connectWithWallet,
         disconnect,
         refreshUser,
+        refreshSession,
         setRequiresUsername,
         isLoginModalOpen,
         openLoginModal,
