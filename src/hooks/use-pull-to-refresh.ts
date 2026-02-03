@@ -135,9 +135,13 @@ export function usePullToRefresh({
     onRefresh();
   }, [isRefreshing, onRefresh]);
 
-  // Start the hold timer when threshold is reached
+  // Start the hold timer when threshold is reached AND velocity is low
   const startHoldTimer = useCallback(() => {
-    if (holdTimerActive.current || hasTriggeredRef.current || isRefreshing) return;
+    // Don't start if already triggered or refreshing
+    if (hasTriggeredRef.current || isRefreshing) return;
+    
+    // If timer already active, let it continue (velocity check happens in move handler)
+    if (holdTimerActive.current) return;
     
     holdTimerActive.current = true;
     holdStartTime.current = Date.now();
@@ -146,12 +150,20 @@ export function usePullToRefresh({
     const updateProgress = () => {
       if (!holdTimerActive.current || !holdStartTime.current) return;
       
+      // RE-CHECK velocity on each frame - cancel if user speeds up
+      if (currentVelocity.current >= MAX_VELOCITY_FOR_REFRESH) {
+        console.log('[PTR] Timer cancelled - velocity too high:', currentVelocity.current);
+        cancelHoldTimer();
+        return;
+      }
+      
       const elapsed = Date.now() - holdStartTime.current;
       const progress = Math.min(elapsed / HOLD_DURATION_MS, 1);
       setHoldProgress(progress);
       
       if (progress >= 1) {
         // Timer complete - trigger refresh
+        console.log('[PTR] Timer complete - triggering refresh');
         triggerRefresh();
         cancelHoldTimer();
       } else {
@@ -188,10 +200,18 @@ export function usePullToRefresh({
     const now = Date.now();
     const timeDelta = now - lastPullTime.current;
     
-    if (timeDelta > 0 && lastPullTime.current > 0) {
+    // Only calculate if we have a previous sample and reasonable time passed
+    if (timeDelta > 10 && lastPullTime.current > 0) {
       // Use RAW touch delta - a 300px swipe should register as fast
       const rawDelta = Math.abs(rawTouchY - lastRawTouchY.current);
-      currentVelocity.current = rawDelta / timeDelta;
+      const velocity = rawDelta / timeDelta;
+      
+      // Use exponential moving average to smooth velocity (prevents single-frame spikes/dips)
+      currentVelocity.current = currentVelocity.current === 0 
+        ? velocity 
+        : currentVelocity.current * 0.3 + velocity * 0.7;
+      
+      console.log('[PTR] Velocity:', currentVelocity.current.toFixed(3), 'px/ms, threshold:', MAX_VELOCITY_FOR_REFRESH);
     }
     
     lastRawTouchY.current = rawTouchY;
