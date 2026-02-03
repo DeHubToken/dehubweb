@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
@@ -16,6 +16,22 @@ interface PostModalProps {
 
 export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
+  
+  // Track modal state with delay to allow camera modal to fully close first
+  const [drawerModalDisabled, setDrawerModalDisabled] = useState(false);
+  
+  useEffect(() => {
+    if (state.isCameraModalOpen) {
+      // Immediately disable modal when camera opens
+      setDrawerModalDisabled(true);
+    } else if (drawerModalDisabled) {
+      // Re-enable modal after a short delay to let camera fully unmount
+      const timer = setTimeout(() => {
+        setDrawerModalDisabled(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [state.isCameraModalOpen, drawerModalDisabled]);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
@@ -130,7 +146,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
     <>
-      <Drawer open={isOpen} onOpenChange={handleClose} modal={!state.isCameraModalOpen}>
+      <Drawer open={isOpen} onOpenChange={handleClose} modal={!drawerModalDisabled}>
         <DrawerContent glass hideHandle className="max-h-[90vh] max-h-[90dvh]">
           <VisuallyHidden>
             <DrawerTitle>Create a post</DrawerTitle>
