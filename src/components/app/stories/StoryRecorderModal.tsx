@@ -357,7 +357,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCa
                 onClick={capturePhoto}
                 disabled={isInitializing || isRecording}
                 className={cn(
-                  'w-14 h-14 rounded-xl flex items-center justify-center transition-all',
+                  'w-16 h-16 rounded-xl flex items-center justify-center transition-all',
                   'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
                   'hover:bg-white/20 disabled:opacity-50'
                 )}
