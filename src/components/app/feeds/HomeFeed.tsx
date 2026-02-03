@@ -82,22 +82,64 @@ function shuffleArray<T>(array: T[]): T[] {
   return result;
 }
 
+/** Maximum posts from the same creator in random mode to ensure diversity */
+const MAX_POSTS_PER_CREATOR = 3;
+
+/**
+ * Get creator ID from a FeedItemType
+ */
+function getCreatorId(item: FeedItemType): string {
+  switch (item.type) {
+    case 'video':
+      return item.data.creatorId || 'unknown';
+    case 'image':
+      return item.data.creatorId || 'unknown';
+    case 'post':
+      return item.data.author?.id || 'unknown';
+    case 'shorts':
+      return 'shorts'; // Shorts carousel is a special case
+    default:
+      return 'unknown';
+  }
+}
+
+/**
+ * Limit posts per creator to ensure feed diversity.
+ * Returns items with at most MAX_POSTS_PER_CREATOR from each creator.
+ */
+function limitPostsPerCreator(items: FeedItemType[]): FeedItemType[] {
+  const creatorCounts = new Map<string, number>();
+  return items.filter(item => {
+    const creatorId = getCreatorId(item);
+    const count = creatorCounts.get(creatorId) || 0;
+    if (count >= MAX_POSTS_PER_CREATOR) {
+      return false;
+    }
+    creatorCounts.set(creatorId, count + 1);
+    return true;
+  });
+}
+
 /**
  * Balanced shuffle: ensures ~1 text post for every 3 media posts
  * Uses true Math.random() for genuine randomness on every call.
  * Interleaves text posts throughout the feed at regular intervals.
+ * Also ensures no creator dominates the feed.
  */
-function balancedShuffle<T extends { type: string }>(items: T[]): T[] {
+function balancedShuffle(items: FeedItemType[]): FeedItemType[] {
+  // First, limit posts per creator to prevent spam
+  const diverseItems = limitPostsPerCreator(items);
+  
   // Separate text posts from media posts
-  const textPosts = items.filter(item => item.type === 'post');
-  const mediaPosts = items.filter(item => item.type !== 'post');
+  const textPosts = diverseItems.filter(item => item.type === 'post');
+  const mediaPosts = diverseItems.filter(item => item.type !== 'post');
   
   // Shuffle both arrays with true randomness
   const shuffledText = shuffleArray(textPosts);
   const shuffledMedia = shuffleArray(mediaPosts);
   
   // Interleave: insert 1 text post after every 3 media posts
-  const result: T[] = [];
+  const result: FeedItemType[] = [];
   let textIndex = 0;
   let mediaIndex = 0;
   
