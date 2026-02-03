@@ -165,12 +165,9 @@ export default function HomePage() {
   // Prefetch all other feeds in background once home feed loads
   useFeedPrefetch(isHomeFeedLoaded);
   
-  // Mark home feed as loaded after initial render (slight delay to prioritize home)
+  // Trigger prefetch immediately on mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsHomeFeedLoaded(true);
-    }, 500);
-    return () => clearTimeout(timer);
+    setIsHomeFeedLoaded(true);
   }, []);
 
   // --------------------------------------------------------------------------
