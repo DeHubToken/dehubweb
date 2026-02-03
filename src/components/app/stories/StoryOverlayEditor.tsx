@@ -25,6 +25,10 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
   const [editingOverlay, setEditingOverlay] = useState<StoryOverlay | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ x: number; y: number; overlayX: number; overlayY: number } | null>(null);
+  
+  // Use ref to always access the latest overlays - fixes stale closure issue
+  const overlaysRef = useRef(overlays);
+  overlaysRef.current = overlays;
 
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -38,9 +42,10 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
       scale: 1,
       rotation: 0,
     };
-    onOverlaysChange([...overlays, newOverlay]);
+    console.log('[StoryOverlay] Adding emoji:', newOverlay);
+    onOverlaysChange([...overlaysRef.current, newOverlay]);
     setSelectedId(newOverlay.id);
-  }, [overlays, onOverlaysChange]);
+  }, [onOverlaysChange]);
 
   const addText = useCallback((text: string, style: { color: string; backgroundColor?: string; textStyle: TextStyle }) => {
     const newOverlay: StoryOverlay = {
@@ -53,18 +58,20 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
       rotation: 0,
       style,
     };
-    onOverlaysChange([...overlays, newOverlay]);
+    console.log('[StoryOverlay] Adding text:', newOverlay);
+    console.log('[StoryOverlay] Current overlays:', overlaysRef.current);
+    onOverlaysChange([...overlaysRef.current, newOverlay]);
     setSelectedId(newOverlay.id);
-  }, [overlays, onOverlaysChange]);
+  }, [onOverlaysChange]);
 
   const updateOverlay = useCallback((id: string, updates: Partial<StoryOverlay>) => {
-    onOverlaysChange(overlays.map((o) => (o.id === id ? { ...o, ...updates } : o)));
-  }, [overlays, onOverlaysChange]);
+    onOverlaysChange(overlaysRef.current.map((o) => (o.id === id ? { ...o, ...updates } : o)));
+  }, [onOverlaysChange]);
 
   const deleteOverlay = useCallback((id: string) => {
-    onOverlaysChange(overlays.filter((o) => o.id !== id));
+    onOverlaysChange(overlaysRef.current.filter((o) => o.id !== id));
     setSelectedId(null);
-  }, [overlays, onOverlaysChange]);
+  }, [onOverlaysChange]);
 
   const handleOverlayTap = (overlay: StoryOverlay, e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
