@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import searchIcon from '@/assets/icons/search-icon.png';
 import search3dIcon from '@/assets/icons/search-3d-icon.png';
@@ -281,20 +281,31 @@ export default function ExplorePage() {
   const { mutate: logSearch } = useSearchAnalytics();
 
   // Scroll to top on mount unless there's an active search with cached scroll
-  useEffect(() => {
+  // CRITICAL: Use useLayoutEffect to reset scroll BEFORE browser paints (prevents flash of wrong position)
+  useLayoutEffect(() => {
     const urlQuery = searchParams.get('q') || '';
     const cachedScroll = sessionStorage.getItem('EXPLORE_SCROLL_POSITION');
+    
+    // Helper to reset all scroll contexts
+    const scrollTo = (value: number) => {
+      window.scrollTo(0, value);
+      document.documentElement.scrollTop = value;
+      document.body.scrollTop = value;
+    };
     
     if (urlQuery && cachedScroll) {
       // Restore scroll only if there's an active search query
       const scrollY = parseInt(cachedScroll, 10);
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollY);
-      });
+      scrollTo(scrollY);
+      // Extra attempt after paint for lazy content
+      requestAnimationFrame(() => scrollTo(scrollY));
     } else {
       // Always start at top when no search query
-      window.scrollTo(0, 0);
+      scrollTo(0);
       sessionStorage.removeItem('EXPLORE_SCROLL_POSITION');
+      // Extra attempts to fight browser restoration
+      requestAnimationFrame(() => scrollTo(0));
+      setTimeout(() => scrollTo(0), 0);
     }
   }, []); // Only run on mount
 
