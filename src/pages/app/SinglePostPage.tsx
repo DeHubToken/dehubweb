@@ -77,6 +77,10 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   const imageUrls = nft.imageUrls?.map(url => getMediaUrl(url) || '') || [];
   const primaryImage = getMediaUrl(nft.imageUrl) || '/placeholder.svg';
   
+  const title = nft.title || nft.name;
+  // Only use description if it's different from title (avoid duplicates)
+  const description = nft.description && nft.description !== title ? nft.description : undefined;
+  
   return {
     id: String(nft.tokenId),
     type: 'image',
@@ -85,10 +89,10 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     avatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
     image: primaryImage,
     imageUrls: imageUrls.length > 0 ? imageUrls : [primaryImage],
-    title: nft.title || nft.name,
-    description: nft.description,
+    title,
+    description,
     likes: nft.totalVotes?.for || 0,
-    caption: nft.description || '',
+    caption: description || '',
     comments: nft.commentCount || nft.comment_count || 0,
     status: nft.status,
     stakedAmount: undefined,
