@@ -213,8 +213,8 @@ interface ShortsFeedProps {
 }
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
-  // Sort is now client-side
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
+  // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]);
   // Duration and upload date are client-side filters
   const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);

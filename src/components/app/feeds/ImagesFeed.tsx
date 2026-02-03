@@ -263,8 +263,8 @@ export function ImagesFeed({
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
-  // Filter states
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
+  // Filter states - default to "Latest" instead of "Random" to avoid 5-page prefetch
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]);
   const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
     ppv: false,
