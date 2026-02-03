@@ -101,24 +101,56 @@ export function ActionBar({
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
   
   const handleVote = useCallback(async (vote: boolean) => {
-    if (!postId || isVoting || isLiked || isDisliked) return;
+    if (!postId || isVoting) return;
     
     if (!isAuthenticated) {
       toast.error('Log in to engage');
       return;
     }
 
+    // If clicking the same vote again, it's a toggle (remove vote)
+    const isRemovingVote = (vote && isLiked) || (!vote && isDisliked);
+    // If switching from one vote to another
+    const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
+
     setIsVoting(true);
     
     // Optimistic update with animation trigger
-    if (vote) {
-      setIsLiked(true);
-      setLocalLikeCount(prev => prev + 1);
-      setJustVoted('like');
+    if (isRemovingVote) {
+      // Removing current vote
+      if (vote) {
+        setIsLiked(false);
+        setLocalLikeCount(prev => Math.max(0, prev - 1));
+      } else {
+        setIsDisliked(false);
+        setLocalDislikeCount(prev => Math.max(0, prev - 1));
+      }
+    } else if (isSwitchingVote) {
+      // Switching vote
+      if (vote) {
+        setIsLiked(true);
+        setIsDisliked(false);
+        setLocalLikeCount(prev => prev + 1);
+        setLocalDislikeCount(prev => Math.max(0, prev - 1));
+        setJustVoted('like');
+      } else {
+        setIsDisliked(true);
+        setIsLiked(false);
+        setLocalDislikeCount(prev => prev + 1);
+        setLocalLikeCount(prev => Math.max(0, prev - 1));
+        setJustVoted('dislike');
+      }
     } else {
-      setIsDisliked(true);
-      setLocalDislikeCount(prev => prev + 1);
-      setJustVoted('dislike');
+      // New vote
+      if (vote) {
+        setIsLiked(true);
+        setLocalLikeCount(prev => prev + 1);
+        setJustVoted('like');
+      } else {
+        setIsDisliked(true);
+        setLocalDislikeCount(prev => prev + 1);
+        setJustVoted('dislike');
+      }
     }
     
     // Reset animation state after animation completes
@@ -129,26 +161,37 @@ export function ActionBar({
       // No toast on success - animation is enough feedback
     } catch (error: unknown) {
       // Revert optimistic update on error
-      if (vote) {
-        setIsLiked(false);
-        setLocalLikeCount(prev => prev - 1);
-      } else {
-        setIsDisliked(false);
-        setLocalDislikeCount(prev => prev - 1);
-      }
-      
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      if (errorMessage.includes('409') || errorMessage.includes('already')) {
-        toast.error('You have already voted on this content');
-        // Set the vote state since they already voted
+      if (isRemovingVote) {
         if (vote) {
           setIsLiked(true);
+          setLocalLikeCount(prev => prev + 1);
         } else {
           setIsDisliked(true);
+          setLocalDislikeCount(prev => prev + 1);
+        }
+      } else if (isSwitchingVote) {
+        if (vote) {
+          setIsLiked(false);
+          setIsDisliked(true);
+          setLocalLikeCount(prev => Math.max(0, prev - 1));
+          setLocalDislikeCount(prev => prev + 1);
+        } else {
+          setIsDisliked(false);
+          setIsLiked(true);
+          setLocalDislikeCount(prev => Math.max(0, prev - 1));
+          setLocalLikeCount(prev => prev + 1);
         }
       } else {
-        toast.error('Failed to vote. Please try again.');
+        if (vote) {
+          setIsLiked(false);
+          setLocalLikeCount(prev => Math.max(0, prev - 1));
+        } else {
+          setIsDisliked(false);
+          setLocalDislikeCount(prev => Math.max(0, prev - 1));
+        }
       }
+      
+      toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
@@ -222,11 +265,10 @@ export function ActionBar({
             onClick={() => handleVote(true)}
             className={cn(
               "flex items-center gap-1 transition-colors text-white",
-              hasVoted && !isLiked && "text-zinc-600 cursor-not-allowed",
               isVoting && "opacity-50"
             )}
             aria-label="Like"
-            disabled={hasVoted || isVoting}
+            disabled={isVoting}
             animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
@@ -238,11 +280,10 @@ export function ActionBar({
               onClick={() => handleVote(false)}
               className={cn(
                 "flex items-center gap-1 transition-colors text-white",
-                hasVoted && !isDisliked && "text-zinc-600 cursor-not-allowed",
                 isVoting && "opacity-50"
               )}
               aria-label="Dislike"
-              disabled={hasVoted || isVoting}
+              disabled={isVoting}
               animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >

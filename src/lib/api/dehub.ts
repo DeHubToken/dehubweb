@@ -730,25 +730,25 @@ export async function getUserNFTs(
 
 // Interaction functions
 export interface VoteResponse {
-  success: boolean;
-  message?: string;
+  result: boolean;
+  action?: 'added' | 'removed' | 'changed';
+  currentVote?: boolean | null;
 }
 
 /**
- * Cast a vote (like or dislike) on a video
- * Uses GET /api/request_vote?streamTokenId={tokenId}&vote={true|false}
+ * Cast a vote (like or dislike) on a video - toggleable
+ * Uses POST /api/request_vote with body { streamTokenId, vote }
  * 
  * @param tokenId - The token ID of the video to vote on
  * @param vote - true for like, false for dislike
- * @returns VoteResponse with success status
- * @throws Error with message "already_voted" if user has already voted (409)
+ * @returns VoteResponse with result, action, and currentVote
  */
 export async function voteOnNFT(tokenId: string, vote: boolean): Promise<VoteResponse> {
   return apiCall<VoteResponse>("/api/request_vote", {
-    method: "GET",
-    params: {
+    method: "POST",
+    body: {
       streamTokenId: tokenId,
-      vote: String(vote),
+      vote: vote,
     },
     requiresAuth: true,
   });

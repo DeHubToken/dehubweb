@@ -172,12 +172,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setIsDescriptionExpanded(false);
   }, [currentIndex, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
-  // Handle voting - same logic as ActionBar
+  // Handle voting - toggleable like ActionBar
   const handleVote = useCallback(async (vote: boolean) => {
     const tokenId = String(currentShort?.id);
     
-    if (!tokenId || tokenId === 'undefined' || isVoting || isLiked || isDisliked) {
-      console.log('[ShortsViewer] Vote blocked:', { tokenId, isVoting, isLiked, isDisliked });
+    if (!tokenId || tokenId === 'undefined' || isVoting) {
+      console.log('[ShortsViewer] Vote blocked:', { tokenId, isVoting });
       return;
     }
     
@@ -186,18 +186,47 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       return;
     }
 
-    console.log('[ShortsViewer] Voting:', { tokenId, vote });
+    // If clicking the same vote again, it's a toggle (remove vote)
+    const isRemovingVote = (vote && isLiked) || (!vote && isDisliked);
+    // If switching from one vote to another
+    const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
+
+    console.log('[ShortsViewer] Voting:', { tokenId, vote, isRemovingVote, isSwitchingVote });
     setIsVoting(true);
     
     // Optimistic update with animation trigger
-    if (vote) {
-      setIsLiked(true);
-      setLocalLikeCount(prev => prev + 1);
-      setJustVoted('like');
+    if (isRemovingVote) {
+      if (vote) {
+        setIsLiked(false);
+        setLocalLikeCount(prev => Math.max(0, prev - 1));
+      } else {
+        setIsDisliked(false);
+        setLocalDislikeCount(prev => Math.max(0, prev - 1));
+      }
+    } else if (isSwitchingVote) {
+      if (vote) {
+        setIsLiked(true);
+        setIsDisliked(false);
+        setLocalLikeCount(prev => prev + 1);
+        setLocalDislikeCount(prev => Math.max(0, prev - 1));
+        setJustVoted('like');
+      } else {
+        setIsDisliked(true);
+        setIsLiked(false);
+        setLocalDislikeCount(prev => prev + 1);
+        setLocalLikeCount(prev => Math.max(0, prev - 1));
+        setJustVoted('dislike');
+      }
     } else {
-      setIsDisliked(true);
-      setLocalDislikeCount(prev => prev + 1);
-      setJustVoted('dislike');
+      if (vote) {
+        setIsLiked(true);
+        setLocalLikeCount(prev => prev + 1);
+        setJustVoted('like');
+      } else {
+        setIsDisliked(true);
+        setLocalDislikeCount(prev => prev + 1);
+        setJustVoted('dislike');
+      }
     }
     
     setTimeout(() => setJustVoted(null), 400);
@@ -208,22 +237,37 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } catch (error: unknown) {
       console.error('[ShortsViewer] Vote failed:', error);
       // Revert optimistic update on error
-      if (vote) {
-        setIsLiked(false);
-        setLocalLikeCount(prev => prev - 1);
+      if (isRemovingVote) {
+        if (vote) {
+          setIsLiked(true);
+          setLocalLikeCount(prev => prev + 1);
+        } else {
+          setIsDisliked(true);
+          setLocalDislikeCount(prev => prev + 1);
+        }
+      } else if (isSwitchingVote) {
+        if (vote) {
+          setIsLiked(false);
+          setIsDisliked(true);
+          setLocalLikeCount(prev => Math.max(0, prev - 1));
+          setLocalDislikeCount(prev => prev + 1);
+        } else {
+          setIsDisliked(false);
+          setIsLiked(true);
+          setLocalDislikeCount(prev => Math.max(0, prev - 1));
+          setLocalLikeCount(prev => prev + 1);
+        }
       } else {
-        setIsDisliked(false);
-        setLocalDislikeCount(prev => prev - 1);
+        if (vote) {
+          setIsLiked(false);
+          setLocalLikeCount(prev => Math.max(0, prev - 1));
+        } else {
+          setIsDisliked(false);
+          setLocalDislikeCount(prev => Math.max(0, prev - 1));
+        }
       }
       
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      if (errorMessage.includes('409') || errorMessage.includes('already')) {
-        toast.error('You have already voted on this content');
-        if (vote) setIsLiked(true);
-        else setIsDisliked(true);
-      } else {
-        toast.error('Failed to vote. Please try again.');
-      }
+      toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
@@ -477,7 +521,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 onClick={() => handleVote(true)}
                 active={isLiked}
                 activeColor="text-white"
-                disabled={hasVoted || isVoting}
+                disabled={isVoting}
                 animate={justVoted === 'like'}
               />
               
@@ -487,7 +531,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 onClick={() => handleVote(false)}
                 active={isDisliked}
                 activeColor="text-white"
-                disabled={hasVoted || isVoting}
+                disabled={isVoting}
                 animate={justVoted === 'dislike'}
               />
 
@@ -670,15 +714,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {/* Like */}
                 <motion.button
                   onClick={() => handleVote(true)}
-                  disabled={hasVoted || isVoting}
+                  disabled={isVoting}
                   className="flex flex-col items-center gap-1"
                   animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   <ThumbsUp className={cn(
                     "w-8 h-8 drop-shadow-lg",
-                    isLiked ? "fill-white text-white" : "text-white",
-                    hasVoted && !isLiked && "opacity-50"
+                    isLiked ? "fill-white text-white" : "text-white"
                   )} />
                   <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localLikeCount)}</span>
                 </motion.button>
@@ -686,15 +729,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {/* Dislike */}
                 <motion.button
                   onClick={() => handleVote(false)}
-                  disabled={hasVoted || isVoting}
+                  disabled={isVoting}
                   className="flex flex-col items-center gap-1"
                   animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   <ThumbsDown className={cn(
                     "w-8 h-8 drop-shadow-lg",
-                    isDisliked ? "fill-white text-white" : "text-white",
-                    hasVoted && !isDisliked && "opacity-50"
+                    isDisliked ? "fill-white text-white" : "text-white"
                   )} />
                 </motion.button>
 
