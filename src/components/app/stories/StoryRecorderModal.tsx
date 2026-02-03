@@ -26,6 +26,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const previewRef = useRef<HTMLVideoElement>(null);
@@ -113,6 +114,9 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
     mediaRecorder.onstop = () => {
       const blob = new Blob(chunksRef.current, { type: mimeType });
       setRecordedBlob(blob);
+      // Create stable URL for preview
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
       
       // Stop camera stream
       if (streamRef.current) {
@@ -148,6 +152,11 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
   };
 
   const retake = () => {
+    // Revoke old URL to prevent memory leak
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
     setRecordedBlob(null);
     setRecordingTime(0);
     setIsPreviewPlaying(false);
@@ -168,6 +177,11 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
+    // Revoke URL to prevent memory leak
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
     setRecordedBlob(null);
     setRecordingTime(0);
     setIsRecording(false);
@@ -247,30 +261,35 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
               facingMode === 'user' && 'scale-x-[-1]'
             )}
           />
-        ) : (
+        ) : previewUrl ? (
           <div className="relative w-full h-full">
             <video
               ref={previewRef}
-              src={URL.createObjectURL(recordedBlob)}
+              src={previewUrl}
               loop
               playsInline
               className="w-full h-full object-cover"
               onPlay={() => setIsPreviewPlaying(true)}
               onPause={() => setIsPreviewPlaying(false)}
+              onEnded={() => setIsPreviewPlaying(false)}
             />
-            {/* Play button overlay */}
+            {/* Play button overlay - positioned to account for bottom controls */}
             {!isPreviewPlaying && (
               <button
-                onClick={() => previewRef.current?.play()}
-                className="absolute inset-0 flex items-center justify-center bg-black/30"
+                onClick={() => {
+                  if (previewRef.current) {
+                    previewRef.current.play().catch(console.error);
+                  }
+                }}
+                className="absolute inset-0 bottom-32 flex items-center justify-center"
               >
-                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-[24px] border border-white/30 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full bg-black/40 backdrop-blur-[24px] border border-white/30 flex items-center justify-center">
                   <Play className="w-10 h-10 text-white fill-white ml-1" />
                 </div>
               </button>
             )}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Controls */}
