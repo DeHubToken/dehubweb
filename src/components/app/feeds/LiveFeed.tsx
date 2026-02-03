@@ -8,7 +8,8 @@
  */
 
 import { useEffect, useRef, useMemo, useState } from 'react';
-import { Loader2, RefreshCw, Radio, Eye } from 'lucide-react';
+import { RefreshCw, Radio, Eye, Loader2 } from 'lucide-react';
+import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
@@ -150,9 +151,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
       {activeSubTab === 'streams' && (
         <>
           {isLoading ? (
-            <div className="flex items-center justify-center py-32">
-              <Loader2 className="w-10 h-10 text-white animate-spin" />
-            </div>
+            <LiveFeedSkeleton />
           ) : (
             <>
               {/* Live Channels */}

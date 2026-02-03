@@ -8,7 +8,8 @@
 
 import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Music, Mic2, Radio, Disc3, Loader2, ChevronRight, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio';
@@ -492,8 +493,10 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <Loader2 className="w-8 h-8 text-white animate-spin" />
+      <div className="space-y-3 pb-32">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <MusicVideoCardSkeleton key={i} />
+        ))}
       </div>
     );
   }
@@ -511,7 +514,7 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
       {/* Infinite scroll trigger */}
       <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
         {isFetchingNextPage && (
-          <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+          <div className="w-6 h-6 border-2 border-zinc-600 border-t-white rounded-full animate-spin" />
         )}
       </div>
     </div>
@@ -580,8 +583,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, onOpenSta
 
   if (isRefreshing) {
     return (
-      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
-        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      <div className="p-2 sm:p-3">
+        <MusicFeedSkeleton />
       </div>
     );
   }

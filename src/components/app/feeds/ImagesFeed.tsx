@@ -8,7 +8,8 @@
  */
 
 import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
-import { Heart, MessageCircle, Loader2, RefreshCw, ImageIcon, Grid3x3 } from 'lucide-react';
+import { Heart, MessageCircle, RefreshCw, ImageIcon, Grid3x3, Loader2 } from 'lucide-react';
+import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ImageCard } from '@/components/app/cards';
@@ -410,9 +411,7 @@ export function ImagesFeed({
   if (isLoading) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
-        </div>
+        <ImagesFeedSkeleton />
       </div>
     );
   }

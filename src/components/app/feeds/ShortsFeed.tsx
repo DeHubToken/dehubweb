@@ -7,7 +7,8 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Loader2, RefreshCw, Play, Filter, Eye } from 'lucide-react';
+import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
+import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -363,8 +364,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   if (isLoading) {
     return (
-      <div className="p-2 sm:p-3 flex items-center justify-center py-32">
-        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+        <ShortsFeedSkeleton />
       </div>
     );
   }

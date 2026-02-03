@@ -10,7 +10,8 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye } from 'lucide-react';
+import { RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye, Loader2 } from 'lucide-react';
+import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -580,8 +581,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   // Show loading during initial load OR during random mode pre-fetch
   if (isRefreshing || isApiLoading || (selectedSort.value === 'random' && !hasPreFetched)) {
     return (
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0 flex items-center justify-center py-32">
-        <Loader2 className="w-10 h-10 text-white animate-spin" />
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+        <VideosFeedSkeleton />
       </div>
     );
   }
