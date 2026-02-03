@@ -3,17 +3,20 @@
  * ====================
  * Full-screen camera interface for recording 30-second stories.
  * Supports both mobile and desktop cameras with front/back switching on mobile.
+ * Includes overlay editor for emoji stickers and text overlays.
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Camera, Trash2, Square, Check, Loader2, RotateCcw, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { StoryOverlayEditor } from './StoryOverlayEditor';
+import { StoryOverlay } from './types';
 
 interface StoryRecorderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onStoryRecorded: (videoBlob: Blob) => void;
+  onStoryRecorded: (videoBlob: Blob, overlays?: StoryOverlay[]) => void;
 }
 
 const MAX_DURATION = 30; // seconds
@@ -27,9 +30,11 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [overlays, setOverlays] = useState<StoryOverlay[]>([]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const previewRef = useRef<HTMLVideoElement>(null);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -160,12 +165,13 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
     setRecordedBlob(null);
     setRecordingTime(0);
     setIsPreviewPlaying(false);
+    setOverlays([]); // Clear overlays on retake
     initCamera();
   };
 
   const confirmStory = () => {
     if (recordedBlob) {
-      onStoryRecorded(recordedBlob);
+      onStoryRecorded(recordedBlob, overlays.length > 0 ? overlays : undefined);
       handleClose();
     }
   };
@@ -186,6 +192,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
     setRecordingTime(0);
     setIsRecording(false);
     setIsPreviewPlaying(false);
+    setOverlays([]); // Clear overlays on close
     onClose();
   };
 
@@ -262,7 +269,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
             )}
           />
         ) : previewUrl ? (
-          <div className="relative w-full h-full">
+          <div ref={previewContainerRef} className="relative w-full h-full">
             <video
               ref={previewRef}
               src={previewUrl}
@@ -273,15 +280,23 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded }: StoryRe
               onPause={() => setIsPreviewPlaying(false)}
               onEnded={() => setIsPreviewPlaying(false)}
             />
+            
+            {/* Overlay Editor - for adding emoji and text */}
+            <StoryOverlayEditor
+              overlays={overlays}
+              onOverlaysChange={setOverlays}
+              containerRef={previewContainerRef}
+            />
+            
             {/* Play button overlay - positioned to account for bottom controls */}
-            {!isPreviewPlaying && (
+            {!isPreviewPlaying && overlays.length === 0 && (
               <button
                 onClick={() => {
                   if (previewRef.current) {
                     previewRef.current.play().catch(console.error);
                   }
                 }}
-                className="absolute inset-0 bottom-32 flex items-center justify-center"
+                className="absolute inset-0 bottom-32 flex items-center justify-center z-5"
               >
                 <div className="w-20 h-20 rounded-full bg-black/40 backdrop-blur-[24px] border border-white/30 flex items-center justify-center">
                   <Play className="w-10 h-10 text-white fill-white ml-1" />
