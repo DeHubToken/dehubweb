@@ -7,6 +7,9 @@
  * CRITICAL: Query keys MUST exactly match what the actual feed components use!
  * React Query uses deep equality for cache key matching.
  * 
+ * ARCHITECTURE: Fire all raw fetch() calls simultaneously, then populate cache
+ * with setQueryData. This ensures TRUE parallel HTTP requests.
+ * 
  * @module hooks/use-feed-prefetch
  */
 
@@ -60,64 +63,158 @@ async function fetchUnifiedFeed(params: {
 }
 
 /**
- * Prefetch all feed types to warm up React Query caches
+ * Prefetch all feed types using TRUE parallel HTTP requests.
  * 
- * CRITICAL: Query keys MUST match exactly what each feed component uses!
- * This includes all keys with undefined values - React Query does deep comparison.
+ * Strategy:
+ * 1. Fire ALL fetch() calls immediately (they start HTTP requests instantly)
+ * 2. Wait for all to complete with Promise.allSettled
+ * 3. Populate React Query cache with setQueryData
  * 
- * For feeds with user-specific variants (Videos, Images, Shorts), we prefetch BOTH:
- * 1. Public feed (address: undefined) - for logged-out or before wallet connects
- * 2. Authenticated feed (address: walletAddress) - for logged-in users
+ * This ensures all HTTP requests go out at the same time instead of sequentially.
  */
 async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, walletAddress: string | null) {
-  console.log('[Prefetch] Starting background feed prefetch, walletAddress:', walletAddress ? 'present' : 'null');
-  
-  const prefetchPromises: Promise<void>[] = [];
+  console.log('[Prefetch] Starting TRUE PARALLEL feed prefetch, walletAddress:', walletAddress ? 'present' : 'null');
+  const startTime = Date.now();
   
   // ============================================================================
-  // 1. Videos Feed - matches VideosFeed component's useUnifiedFeed call
+  // STEP 1: FIRE ALL FETCH CALLS IMMEDIATELY (TRUE PARALLEL)
   // ============================================================================
-  // VideosFeed.tsx line 417-428 calls useUnifiedFeed with exact params
-  // useUnifiedFeed.ts line 404: queryKey: ['unified-feed', params, limit]
-  // 
-  // IMPORTANT: Prefetch BOTH public and authenticated variants
+  // These promises start their HTTP requests the moment they're created
   
-  // 1a. Videos - PUBLIC feed (address: undefined)
-  const videosParamsPublic = {
-    postType: 'video' as const,
-    sortBy: 'createdAt' as const,
-    sortOrder: 'desc' as const,
-    range: undefined,
-    address: undefined,
-    isPPV: undefined,
-    hasBounty: undefined,
-    isLocked: undefined,
-    status: 'minted' as const,
-  };
-  prefetchPromises.push(
-    queryClient.prefetchInfiniteQuery({
-      queryKey: ['unified-feed', videosParamsPublic, 12],
-      queryFn: async () => {
-        const response = await fetchUnifiedFeed({
-          postType: 'video',
-          limit: 12,
-          sortBy: 'createdAt',
-          sortOrder: 'desc',
-          status: 'minted',
-        });
-        return {
+  // Videos - PUBLIC
+  const videosPublicPromise = fetchUnifiedFeed({
+    postType: 'video',
+    limit: 12,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    status: 'minted',
+  });
+  
+  // Videos - AUTHENTICATED (if logged in)
+  const videosAuthPromise = walletAddress
+    ? fetchUnifiedFeed({
+        postType: 'video',
+        limit: 12,
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
+        status: 'minted',
+        address: walletAddress,
+      })
+    : Promise.resolve(null);
+  
+  // Images - PUBLIC
+  const imagesPublicPromise = searchNFTs({
+    unit: 12,
+    sortMode: 'new',
+    postType: 'feed-images',
+    status: 'minted',
+    page: 0,
+  });
+  
+  // Images - AUTHENTICATED (if logged in)
+  const imagesAuthPromise = walletAddress
+    ? searchNFTs({
+        unit: 12,
+        sortMode: 'new',
+        address: walletAddress,
+        postType: 'feed-images',
+        status: 'minted',
+        page: 0,
+      })
+    : Promise.resolve(null);
+  
+  // Shorts - PUBLIC
+  const shortsPublicPromise = searchNFTs({
+    unit: 12,
+    sortMode: 'new',
+    status: 'minted',
+    page: 0,
+  });
+  
+  // Shorts - AUTHENTICATED (if logged in)
+  const shortsAuthPromise = walletAddress
+    ? searchNFTs({
+        unit: 12,
+        sortMode: 'new',
+        address: walletAddress,
+        status: 'minted',
+        page: 0,
+      })
+    : Promise.resolve(null);
+  
+  // Music - uses walletAddress directly (can be null)
+  const musicPromise = searchNFTs({
+    category: 'Music',
+    postType: 'video',
+    unit: 10,
+    page: 1,
+    sortMode: 'new',
+    address: walletAddress || undefined,
+  });
+  
+  // Live - no auth needed
+  const livePromise = getLiveStreams({ page: 0, unit: 15, sortMode: 'recent' }).catch(() => ({ result: [] }));
+  
+  // ============================================================================
+  // STEP 2: WAIT FOR ALL TO COMPLETE (TRULY PARALLEL!)
+  // ============================================================================
+  const [
+    videosPublicResult,
+    videosAuthResult,
+    imagesPublicResult,
+    imagesAuthResult,
+    shortsPublicResult,
+    shortsAuthResult,
+    musicResult,
+    liveResult,
+  ] = await Promise.allSettled([
+    videosPublicPromise,
+    videosAuthPromise,
+    imagesPublicPromise,
+    imagesAuthPromise,
+    shortsPublicPromise,
+    shortsAuthPromise,
+    musicPromise,
+    livePromise,
+  ]);
+  
+  console.log(`[Prefetch] All HTTP requests completed in ${Date.now() - startTime}ms`);
+  
+  // ============================================================================
+  // STEP 3: POPULATE REACT QUERY CACHE
+  // ============================================================================
+  
+  // Videos - PUBLIC
+  if (videosPublicResult.status === 'fulfilled') {
+    const response = videosPublicResult.value;
+    const videosParamsPublic = {
+      postType: 'video' as const,
+      sortBy: 'createdAt' as const,
+      sortOrder: 'desc' as const,
+      range: undefined,
+      address: undefined,
+      isPPV: undefined,
+      hasBounty: undefined,
+      isLocked: undefined,
+      status: 'minted' as const,
+    };
+    queryClient.setQueryData(
+      ['unified-feed', videosParamsPublic, 12],
+      {
+        pages: [{
           items: response.result || [],
           pagination: response.pagination,
           page: 1,
-        };
-      },
-      initialPageParam: 1,
-      staleTime: 1000 * 60 * 10,
-    }).catch(err => console.warn('[Prefetch] Videos (public) failed:', err))
-  );
+        }],
+        pageParams: [1],
+      }
+    );
+    console.log('[Prefetch] Videos (public) cached:', (response.result || []).length, 'items');
+  }
   
-  // 1b. Videos - AUTHENTICATED feed (if user is logged in)
-  if (walletAddress) {
+  // Videos - AUTHENTICATED
+  if (videosAuthResult.status === 'fulfilled' && videosAuthResult.value !== null) {
+    const response = videosAuthResult.value;
     const videosParamsAuth = {
       postType: 'video' as const,
       sortBy: 'createdAt' as const,
@@ -129,66 +226,51 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
       isLocked: undefined,
       status: 'minted' as const,
     };
-    prefetchPromises.push(
-      queryClient.prefetchInfiniteQuery({
-        queryKey: ['unified-feed', videosParamsAuth, 12],
-        queryFn: async () => {
-          const response = await fetchUnifiedFeed({
-            postType: 'video',
-            limit: 12,
-            sortBy: 'createdAt',
-            sortOrder: 'desc',
-            status: 'minted',
-            address: walletAddress,
-          });
-          return {
-            items: response.result || [],
-            pagination: response.pagination,
-            page: 1,
-          };
-        },
-        initialPageParam: 1,
-        staleTime: 1000 * 60 * 10,
-      }).catch(err => console.warn('[Prefetch] Videos (auth) failed:', err))
+    queryClient.setQueryData(
+      ['unified-feed', videosParamsAuth, 12],
+      {
+        pages: [{
+          items: response.result || [],
+          pagination: response.pagination,
+          page: 1,
+        }],
+        pageParams: [1],
+      }
     );
+    console.log('[Prefetch] Videos (auth) cached:', (response.result || []).length, 'items');
   }
   
-  // ============================================================================
-  // 2. Images Feed - matches ImagesFeed's useDeHubImages call
-  // ============================================================================
-  // ImagesFeed.tsx line 295-299: useDeHubImages({ unit: 15, sortMode: 'new', address })
-  // useDeHubImages adds postType: 'feed-images'
-  // useDeHubFeed line 303: queryKey: ['dehub-feed', { ...searchParams, status }]
-  
-  // 2a. Images - PUBLIC feed (address: undefined)
-  const imagesParamsPublic = {
-    unit: 12,
-    sortMode: 'new' as const,
-    address: undefined,
-    postType: 'feed-images' as const,
-    status: 'minted' as const,
-  };
-  prefetchPromises.push(
-    queryClient.prefetchInfiniteQuery({
-      queryKey: ['dehub-feed', imagesParamsPublic],
-      queryFn: async () => {
-        const response = await searchNFTs({
-          unit: 12,
-          sortMode: 'new',
-          postType: 'feed-images',
-          status: 'minted',
+  // Images - PUBLIC
+  if (imagesPublicResult.status === 'fulfilled') {
+    const response = imagesPublicResult.value as any;
+    const data = response.result || response.data || [];
+    const imagesParamsPublic = {
+      unit: 12,
+      sortMode: 'new' as const,
+      address: undefined,
+      postType: 'feed-images' as const,
+      status: 'minted' as const,
+    };
+    queryClient.setQueryData(
+      ['dehub-feed', imagesParamsPublic],
+      {
+        pages: [{
+          data,
           page: 0,
-        });
-        const data = (response as any).result || response.data || [];
-        return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
-      },
-      initialPageParam: 0,
-      staleTime: 1000 * 60 * 10,
-    }).catch(err => console.warn('[Prefetch] Images (public) failed:', err))
-  );
+          has_more: data.length >= 12,
+          total: data.length,
+          unit: 12,
+        }],
+        pageParams: [0],
+      }
+    );
+    console.log('[Prefetch] Images (public) cached:', data.length, 'items');
+  }
   
-  // 2b. Images - AUTHENTICATED feed (if user is logged in)
-  if (walletAddress) {
+  // Images - AUTHENTICATED
+  if (imagesAuthResult.status === 'fulfilled' && imagesAuthResult.value !== null) {
+    const response = imagesAuthResult.value as any;
+    const data = response.result || response.data || [];
     const imagesParamsAuth = {
       unit: 12,
       sortMode: 'new' as const,
@@ -196,62 +278,53 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
       postType: 'feed-images' as const,
       status: 'minted' as const,
     };
-    prefetchPromises.push(
-      queryClient.prefetchInfiniteQuery({
-        queryKey: ['dehub-feed', imagesParamsAuth],
-        queryFn: async () => {
-          const response = await searchNFTs({
-            unit: 12,
-            sortMode: 'new',
-            address: walletAddress,
-            postType: 'feed-images',
-            status: 'minted',
-            page: 0,
-          });
-          const data = (response as any).result || response.data || [];
-          return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
-        },
-        initialPageParam: 0,
-        staleTime: 1000 * 60 * 10,
-      }).catch(err => console.warn('[Prefetch] Images (auth) failed:', err))
+    queryClient.setQueryData(
+      ['dehub-feed', imagesParamsAuth],
+      {
+        pages: [{
+          data,
+          page: 0,
+          has_more: data.length >= 12,
+          total: data.length,
+          unit: 12,
+        }],
+        pageParams: [0],
+      }
     );
+    console.log('[Prefetch] Images (auth) cached:', data.length, 'items');
   }
   
-  // ============================================================================
-  // 3. Shorts Feed - matches ShortsFeed's useDeHubVideos call
-  // ============================================================================
-  // ShortsFeed.tsx line 253-258: useDeHubVideos({ unit: 15, sortMode, category, address })
-  // useDeHubVideos just calls useDeHubFeed without postType
-  // useDeHubFeed line 303: queryKey: ['dehub-feed', { ...searchParams, status }]
-  
-  // 3a. Shorts - PUBLIC feed (address: undefined, category: undefined)
-  const shortsParamsPublic = {
-    unit: 12,
-    sortMode: 'new' as const,
-    category: undefined,
-    address: undefined,
-    status: 'minted' as const,
-  };
-  prefetchPromises.push(
-    queryClient.prefetchInfiniteQuery({
-      queryKey: ['dehub-feed', shortsParamsPublic],
-      queryFn: async () => {
-        const response = await searchNFTs({
-          unit: 12,
-          sortMode: 'new',
-          status: 'minted',
+  // Shorts - PUBLIC
+  if (shortsPublicResult.status === 'fulfilled') {
+    const response = shortsPublicResult.value as any;
+    const data = response.result || response.data || [];
+    const shortsParamsPublic = {
+      unit: 12,
+      sortMode: 'new' as const,
+      category: undefined,
+      address: undefined,
+      status: 'minted' as const,
+    };
+    queryClient.setQueryData(
+      ['dehub-feed', shortsParamsPublic],
+      {
+        pages: [{
+          data,
           page: 0,
-        });
-        const data = (response as any).result || response.data || [];
-        return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
-      },
-      initialPageParam: 0,
-      staleTime: 1000 * 60 * 10,
-    }).catch(err => console.warn('[Prefetch] Shorts (public) failed:', err))
-  );
+          has_more: data.length >= 12,
+          total: data.length,
+          unit: 12,
+        }],
+        pageParams: [0],
+      }
+    );
+    console.log('[Prefetch] Shorts (public) cached:', data.length, 'items');
+  }
   
-  // 3b. Shorts - AUTHENTICATED feed (if user is logged in)
-  if (walletAddress) {
+  // Shorts - AUTHENTICATED
+  if (shortsAuthResult.status === 'fulfilled' && shortsAuthResult.value !== null) {
+    const response = shortsAuthResult.value as any;
+    const data = response.result || response.data || [];
     const shortsParamsAuth = {
       unit: 12,
       sortMode: 'new' as const,
@@ -259,90 +332,71 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
       address: walletAddress,
       status: 'minted' as const,
     };
-    prefetchPromises.push(
-      queryClient.prefetchInfiniteQuery({
-        queryKey: ['dehub-feed', shortsParamsAuth],
-        queryFn: async () => {
-          const response = await searchNFTs({
-            unit: 12,
-            sortMode: 'new',
-            address: walletAddress,
-            status: 'minted',
-            page: 0,
-          });
-          const data = (response as any).result || response.data || [];
-          return { data, page: 0, has_more: data.length >= 12, total: data.length, unit: 12 };
-        },
-        initialPageParam: 0,
-        staleTime: 1000 * 60 * 10,
-      }).catch(err => console.warn('[Prefetch] Shorts (auth) failed:', err))
+    queryClient.setQueryData(
+      ['dehub-feed', shortsParamsAuth],
+      {
+        pages: [{
+          data,
+          page: 0,
+          has_more: data.length >= 12,
+          total: data.length,
+          unit: 12,
+        }],
+        pageParams: [0],
+      }
     );
+    console.log('[Prefetch] Shorts (auth) cached:', data.length, 'items');
   }
   
-  // ============================================================================
-  // 4. Music Feed - matches MusicFeed's inline useInfiniteQuery
-  // ============================================================================
-  // MusicFeed.tsx line 440: queryKey: ['music-videos-infinite', walletAddress]
-  // Note: Uses walletAddress directly - can be null, not undefined
-  prefetchPromises.push(
-    queryClient.prefetchInfiniteQuery({
-      queryKey: ['music-videos-infinite', walletAddress],
-      queryFn: async () => {
-        const response = await searchNFTs({
-          category: 'Music',
-          postType: 'video',
-          unit: 10,
-          page: 1,
-          sortMode: 'new',
-          address: walletAddress || undefined,
-        });
-        const filteredData = (response.data || []).filter((nft: any) => {
-          const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
-          const username = (nft.creator?.username || '').toLowerCase();
-          const blocked = ['monkey d luffy', 'monkey d. luffy', 'monkeydluffy', 'monkey_d_luffy'];
-          return !blocked.some(b => displayName.includes(b) || username.includes(b));
-        });
-        return {
+  // Music
+  if (musicResult.status === 'fulfilled') {
+    const response = musicResult.value as any;
+    const data = response.result || response.data || [];
+    // Filter blocked creators
+    const filteredData = data.filter((nft: any) => {
+      const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
+      const username = (nft.creator?.username || '').toLowerCase();
+      const blocked = ['monkey d luffy', 'monkey d. luffy', 'monkeydluffy', 'monkey_d_luffy'];
+      return !blocked.some(b => displayName.includes(b) || username.includes(b));
+    });
+    queryClient.setQueryData(
+      ['music-videos-infinite', walletAddress],
+      {
+        pages: [{
           items: filteredData,
-          nextPage: (response.data?.length ?? 0) >= 10 ? 2 : undefined,
-        };
-      },
-      getNextPageParam: (lastPage: any) => lastPage.nextPage,
-      initialPageParam: 1,
-      staleTime: 5 * 60 * 1000,
-    }).catch(err => console.warn('[Prefetch] Music failed:', err))
-  );
+          nextPage: data.length >= 10 ? 2 : undefined,
+        }],
+        pageParams: [1],
+      }
+    );
+    console.log('[Prefetch] Music cached:', filteredData.length, 'items');
+  }
   
-  // ============================================================================
-  // 5. Live Feed - matches LiveFeed's useDeHubLive call
-  // ============================================================================
-  // LiveFeed.tsx line 63-66: useDeHubLive({ unit: 15, sortMode: 'recent' })
-  // useDeHubLive line 370: queryKey: ['dehub-live', options]
-  const liveParams = {
-    unit: 15,
-    sortMode: 'recent' as const,
-  };
-  prefetchPromises.push(
-    queryClient.prefetchInfiniteQuery({
-      queryKey: ['dehub-live', liveParams],
-      queryFn: async () => {
-        try {
-          const response = await getLiveStreams({ page: 0, unit: 15, sortMode: 'recent' });
-          const streams = response.result || [];
-          return { data: streams, page: 0, has_more: streams.length >= 15, total: streams.length, limit: 15 };
-        } catch {
-          return { data: [], page: 0, has_more: false, total: 0, limit: 15 };
-        }
-      },
-      initialPageParam: 0,
-      staleTime: 1000 * 30,
-    }).catch(err => console.warn('[Prefetch] Live failed:', err))
-  );
+  // Live
+  if (liveResult.status === 'fulfilled') {
+    const response = liveResult.value as any;
+    const streams = response.result || [];
+    const liveParams = {
+      unit: 15,
+      sortMode: 'recent' as const,
+    };
+    queryClient.setQueryData(
+      ['dehub-live', liveParams],
+      {
+        pages: [{
+          data: streams,
+          page: 0,
+          has_more: streams.length >= 15,
+          total: streams.length,
+          limit: 15,
+        }],
+        pageParams: [0],
+      }
+    );
+    console.log('[Prefetch] Live cached:', streams.length, 'items');
+  }
   
-  // Wait for all prefetches to complete (don't block on errors)
-  await Promise.allSettled(prefetchPromises);
-  
-  console.log('[Prefetch] Background feed prefetch complete');
+  console.log(`[Prefetch] Complete - total time: ${Date.now() - startTime}ms`);
 }
 
 /**
