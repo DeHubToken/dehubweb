@@ -20,7 +20,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { MessageCircle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -545,25 +544,25 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     >
 
       {/* Tab Switcher - 4 Icons: Replies, Quotes, Search, Sort */}
-      <div className="flex mb-3">
+      <div className="flex justify-start gap-1 mb-3">
         <button
           type="button"
           onClick={() => setActiveTab('replies')}
-          className={`flex-1 py-3 flex items-center justify-center transition-colors ${
+          className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
             activeTab === 'replies'
-              ? 'text-white'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'text-white bg-zinc-800'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
           }`}
         >
-          <MessageCircle className="w-5 h-5" />
+          <MessageSquare className="w-5 h-5" />
         </button>
         <button
           type="button"
           onClick={() => setActiveTab('quotes')}
-          className={`flex-1 py-3 flex items-center justify-center transition-colors ${
+          className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
             activeTab === 'quotes'
-              ? 'text-white'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'text-white bg-zinc-800'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
           }`}
         >
           <Quote className="w-5 h-5" />
@@ -571,10 +570,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         <button
           type="button"
           onClick={() => setActiveTab('search')}
-          className={`flex-1 py-3 flex items-center justify-center transition-colors ${
+          className={`px-4 py-2 flex items-center justify-center transition-colors rounded-lg ${
             activeTab === 'search'
-              ? 'text-white'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'text-white bg-zinc-800'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
           }`}
         >
           <Search className="w-5 h-5" />
@@ -582,7 +581,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
         <button
           type="button"
           onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
-          className="flex-1 py-3 flex items-center justify-center gap-2 transition-colors text-zinc-400 hover:text-white"
+          className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
           title={sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}
         >
           <ArrowUpDown className="w-5 h-5" />
