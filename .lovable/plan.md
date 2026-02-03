@@ -1,160 +1,125 @@
 
-
-# Fix: Tab Switching Feed Refresh (Root Cause Found)
+# Immediate Feed Prefetching After Home Feed Loads
 
 ## Problem
 
-When switching between tabs (Home → Videos/Images/Shorts), the feeds refresh instead of loading instantly from cache. The user sees loading states and network requests fire.
+Currently, when the user loads the home page:
+1. Home feed renders and fetches data
+2. After 500ms, `isHomeFeedLoaded` is set to `true`
+3. After another 1000ms delay (`PREFETCH_DELAY_MS`), prefetch starts
+4. Prefetch makes API calls for Videos, Images, Shorts, Music, Live
 
-## Root Cause
+**Total delay before prefetch starts: ~1.5 seconds**
 
-**The "Random" sort mode pre-fetches 5 pages to enable cross-page shuffling.**
-
-When VideosFeed/ImagesFeed/ShortsFeed mounts with "Random" as the default sort:
-
-1. Page 1 loads from cache (if prefetched) ✓
-2. The random prefetch effect immediately triggers, fetching pages 2, 3, 4, 5
-3. This causes the loading spinner and network requests
-
-```typescript
-// VideosFeed.tsx lines 444-459
-useEffect(() => {
-  if (selectedSort.value !== 'random') {
-    setHasPreFetched(true);
-    return;
-  }
-  
-  const currentPageCount = apiData?.pages?.length || 0;
-  
-  // This triggers IMMEDIATELY when page 1 is from cache
-  if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
-    fetchNextPage(); // Triggers network requests!
-  }
-}, [...]);
-```
+By the time prefetch completes, the user may have already clicked another tab, causing a loading spinner instead of instant content.
 
 ## Solution
 
-**Change the default sort from "Random" to "Latest"** for Videos, Images, and Shorts feeds.
+Start prefetching **immediately** after the home feed's first page loads, with no artificial delays. This ensures other feeds are cached before the user even thinks about switching tabs.
 
-### Why This Works
+## Implementation
 
-- "Latest" sort only needs page 1 initially
-- No multi-page prefetch is triggered
-- Page 1 comes from cache = instant display
-- User can still select "Random" if desired (will then prefetch 5 pages)
+### File: `src/hooks/use-feed-prefetch.ts`
 
-### Alternative Considered (Not Recommended)
-
-Prefetching 5 pages for each feed would mean:
-- 5 pages × 3 feeds (Videos, Images, Shorts) × 2 variants (public + auth) = **30 API calls**
-- This is excessive and would slow initial load significantly
-
-## File Changes
-
-### 1. `src/components/app/feeds/VideosFeed.tsx`
-
-**Change default sort from SORT_OPTIONS[0] ("Random") to SORT_OPTIONS[1] ("Latest"):**
+**Remove the 1000ms delay and trigger prefetch instantly:**
 
 ```typescript
-// Line ~369
-// Before:
-const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
+// BEFORE (line 21):
+const PREFETCH_DELAY_MS = 1000;
 
-// After:
-const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]); // Default to Latest
+// AFTER:
+const PREFETCH_DELAY_MS = 0; // Start immediately
 ```
 
-### 2. `src/components/app/feeds/ImagesFeed.tsx`
+### File: `src/pages/app/HomePage.tsx`
 
-**Same change:**
+**Trigger prefetch as soon as home feed data is available, not after an arbitrary 500ms timeout:**
 
 ```typescript
-// Line ~267
-// Before:
-const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
+// BEFORE (lines 169-174):
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsHomeFeedLoaded(true);
+  }, 500);
+  return () => clearTimeout(timer);
+}, []);
 
-// After:
-const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]); // Default to Latest
+// AFTER:
+// Remove this useEffect entirely.
+// Instead, pass the home feed's isSuccess/data state to useFeedPrefetch
 ```
 
-### 3. `src/components/app/feeds/ShortsFeed.tsx`
-
-**Same change:**
+**Better approach - use the actual feed loading state:**
 
 ```typescript
-// Line ~217
-// Before:
-const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
+// In HomePage, we need to know when HomeFeed's data arrives.
+// Option 1: Lift the isSuccess state up from HomeFeed
+// Option 2: Use a callback from HomeFeed when data loads
+// Option 3: Keep it simple - just remove the delays
 
-// After:
-const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]); // Default to Latest
+// SIMPLEST FIX: Just set isHomeFeedLoaded to true immediately on mount
+// and let the prefetch hook handle the timing via React Query's staleTime
+useEffect(() => {
+  setIsHomeFeedLoaded(true);
+}, []);
 ```
 
-### 4. `src/hooks/use-feed-prefetch.ts`
-
-**Update prefetch to use "Latest" sort parameters to match the new default:**
-
-For Videos:
-```typescript
-const videosParamsPublic = {
-  postType: 'video' as const,
-  sortBy: 'createdAt' as const,  // Already correct for "Latest"
-  // ...rest unchanged
-};
-```
-
-For Images (update to match "Latest"):
-```typescript
-// sortMode should be 'new' which is already correct for Latest
-```
-
-For Shorts:
-```typescript
-// sortMode should be 'new' which is already correct for Latest  
-```
-
-**Note:** The prefetch is already using `sortBy: 'createdAt'` and `sortMode: 'new'` which matches "Latest" sort. No changes needed in prefetch.
-
-## Technical Details
-
-### SORT_OPTIONS Reference
+### File: `src/hooks/use-feed-prefetch.ts` (complete update)
 
 ```typescript
-// src/lib/feed-utils.ts
-export const SORT_OPTIONS = [
-  { label: 'Random', value: 'random' as const },      // Index 0
-  { label: 'Latest', value: 'latest' as const },      // Index 1 ← NEW DEFAULT
-  { label: 'Most Viewed', value: 'most-viewed' as const },
-  { label: 'Most Liked', value: 'most-liked' as const },
-  { label: 'Most Comments', value: 'most-comments' as const },
-] as const;
+// Key changes:
+// 1. Remove PREFETCH_DELAY_MS or set to 0
+// 2. Run prefetch immediately when isHomeFeedLoaded is true
+
+const PREFETCH_DELAY_MS = 0; // No delay - start immediately
+
+export function useFeedPrefetch(isHomeFeedLoaded: boolean) {
+  const queryClient = useQueryClient();
+  const { walletAddress, isConnecting } = useAuth();
+  const hasPrefetchedRef = useRef(false);
+  
+  useEffect(() => {
+    if (!isHomeFeedLoaded) return;
+    if (isConnecting) return;
+    if (hasPrefetchedRef.current) return;
+    
+    const alreadyPrefetched = sessionStorage.getItem(PREFETCH_DONE_KEY);
+    if (alreadyPrefetched) {
+      hasPrefetchedRef.current = true;
+      return;
+    }
+    
+    // No delay - start immediately (or minimal 50ms to let home render)
+    const timeoutId = setTimeout(() => {
+      hasPrefetchedRef.current = true;
+      sessionStorage.setItem(PREFETCH_DONE_KEY, 'true');
+      prefetchAllFeeds(queryClient, walletAddress);
+    }, PREFETCH_DELAY_MS);
+    
+    return () => clearTimeout(timeoutId);
+  }, [isHomeFeedLoaded, queryClient, walletAddress, isConnecting]);
+}
 ```
 
-### Why "Latest" Instead of Another Sort
+## Summary of Changes
 
-- "Latest" (`sortBy: 'createdAt'`) is already what the prefetch uses
-- It's the most intuitive default for social media feeds
-- Users see newest content first
-- No multi-page prefetch needed
+| File | Change |
+|------|--------|
+| `src/hooks/use-feed-prefetch.ts` | Set `PREFETCH_DELAY_MS = 0` to remove artificial delay |
+| `src/pages/app/HomePage.tsx` | Remove 500ms timeout; set `isHomeFeedLoaded = true` immediately on mount |
 
-## Expected Result
+## Expected Behavior After Fix
 
-After this fix:
+1. User opens app → HomePage mounts
+2. `isHomeFeedLoaded` is immediately `true`
+3. Prefetch waits for `isConnecting` to be `false` (wallet state stable)
+4. Prefetch runs immediately (0ms delay)
+5. By the time home feed content is visible, other tabs are already being fetched
+6. User clicks Videos/Images/Shorts → **Instant load from cache**
 
-1. User loads app → Home feed loads
-2. Prefetch runs in background (page 1 of each feed with "Latest" sort params)
-3. User switches to Videos/Images/Shorts tab
-4. **Feed loads INSTANTLY from cache** - no network requests, no spinner
-5. Content displays immediately
-6. If user wants Random sort, they can select it (will then trigger 5-page prefetch)
+## Technical Notes
 
-## Verification Steps
-
-1. Open DevTools → Network tab
-2. Load app on Home feed
-3. Wait 2 seconds for prefetch to complete
-4. Switch to Videos tab
-5. **Expected**: No new network requests, instant content display
-6. Repeat for Images and Shorts tabs
-
+- React Query's `staleTime: 10 * 60 * 1000` (10 minutes) means prefetched data stays fresh
+- Prefetch uses `prefetchInfiniteQuery` which won't block the UI
+- Session storage prevents re-prefetching on back navigation
+- The wallet `isConnecting` check ensures we prefetch with the correct user context
