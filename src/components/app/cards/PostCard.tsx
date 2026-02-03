@@ -160,7 +160,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
         {/* Comments - Always use Drawer for consistent liquid glass style */}
         <Drawer open={showComments} onOpenChange={setShowComments}>
-          <DrawerContent glass className="max-h-[70vh] flex flex-col overflow-hidden">
+          <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
             <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
               <CommentsSection
                 tokenId={post.id}
