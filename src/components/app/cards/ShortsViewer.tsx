@@ -604,7 +604,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {isMobile && (
             <>
               {/* Bottom Left - Creator Info & Description */}
-              <div className="absolute bottom-24 left-4 right-20 z-10">
+              <div className="absolute bottom-6 left-4 right-20 z-10">
                 {/* Creator info row */}
                 <div className="flex items-center gap-2 mb-3">
                   <button
@@ -637,7 +637,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </div>
 
               {/* Right Side Action Buttons - Vertical stack */}
-              <div className="absolute right-3 bottom-28 z-10 flex flex-col items-center gap-5">
+              <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5">
                 {/* Like */}
                 <motion.button
                   onClick={() => handleVote(true)}
@@ -697,31 +697,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   onClick={() => setShareSheetOpen(true)}
                   className="flex flex-col items-center gap-1"
                 >
-                  <Share2 className="w-8 h-8 text-white drop-shadow-lg" />
+                  <Share2 className="w-8 h-8 drop-shadow-lg" />
                 </button>
-              </div>
-
-              {/* Bottom Bar - Likes, Bookmark, Comments in horizontal layout */}
-              <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  {/* Like count display */}
-                  <div className="flex items-center gap-1.5">
-                    <ThumbsUp className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-white text-sm font-medium drop-shadow-lg">{formatCount(localLikeCount)}</span>
-                  </div>
-                  
-                  {/* Bookmark indicator */}
-                  <Bookmark className={cn(
-                    "w-5 h-5 drop-shadow-lg",
-                    isBookmarked ? "fill-white text-white" : "text-white"
-                  )} />
-                  
-                  {/* Comments count */}
-                  <div className="flex items-center gap-1.5">
-                    <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-white text-sm font-medium drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
-                  </div>
-                </div>
               </div>
             </>
           )}
