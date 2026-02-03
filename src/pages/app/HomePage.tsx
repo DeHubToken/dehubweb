@@ -10,13 +10,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigationType } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
-import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 
 // Feed components
@@ -55,8 +54,10 @@ const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   
-  // Scroll restoration - preserves position when navigating back from post
-  const { isBackNavigation } = useScrollRestoration('/app');
+  // Detect back navigation for tab-change scroll logic
+  // Note: Actual scroll position restoration is handled by AppLayout
+  const navigationType = useNavigationType();
+  const isBackNavigation = navigationType === 'POP';
   
   // Extract pinned post ID from URL params (one-time view)
   const pinnedPostId = searchParams.get('post') || undefined;
