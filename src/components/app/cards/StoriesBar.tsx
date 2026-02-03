@@ -166,8 +166,8 @@ export function StoriesBar({ users }: StoriesBarProps) {
 
   const triggerButton = (
     <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer -ml-[7.5px]">
-      <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-        <div className="p-0.5 bg-zinc-900 rounded-xl">
+      <div className="p-px rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+        <div className="p-px bg-zinc-900 rounded-xl">
           <div className="w-14 h-14 rounded-xl bg-zinc-900/50 backdrop-blur-sm flex items-center justify-center">
             <Plus className="w-6 h-6 text-white" />
           </div>
@@ -258,11 +258,11 @@ export function StoriesBar({ users }: StoriesBarProps) {
                 onClick={() => item.story && handleViewStory(item.story)}
               >
                 {item.type === 'story' ? (
-                  <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-                    <div className="p-0.5 rounded-lg">
+                  <div className="p-px rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+                    <div className="p-px bg-zinc-900 rounded-xl">
                       {/* Show thumbnail if available, otherwise avatar */}
                       {item.thumbnail ? (
-                        <div className="w-14 h-14 rounded-lg overflow-hidden">
+                        <div className="w-14 h-14 rounded-xl overflow-hidden">
                           <img 
                             src={item.thumbnail} 
                             alt={item.name}
@@ -270,9 +270,9 @@ export function StoriesBar({ users }: StoriesBarProps) {
                           />
                         </div>
                       ) : (
-                        <Avatar className="w-14 h-14 rounded-lg">
-                          <AvatarImage src={item.avatar} className="object-cover rounded-lg" />
-                          <AvatarFallback className="bg-zinc-700 rounded-lg">
+                        <Avatar className="w-14 h-14 rounded-xl">
+                          <AvatarImage src={item.avatar} className="object-cover rounded-xl" />
+                          <AvatarFallback className="bg-zinc-700 rounded-xl">
                             {item.name[0]?.toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
