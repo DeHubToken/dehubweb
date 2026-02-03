@@ -143,6 +143,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         isOpen={state.isCameraModalOpen}
         onClose={actions.closeCameraCapture}
         onVideoRecorded={actions.handleCameraVideoRecorded}
+        onPhotoCaptured={actions.handleCameraPhotoCaptured}
       />
     </>
   );

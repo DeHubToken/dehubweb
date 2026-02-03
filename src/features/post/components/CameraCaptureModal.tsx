@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Square, RotateCcw, Check, Loader2, Trash2 } from 'lucide-react';
+import { X, Square, RotateCcw, Check, Loader2, Trash2, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -14,11 +14,12 @@ interface CameraCaptureModalProps {
   isOpen: boolean;
   onClose: () => void;
   onVideoRecorded: (videoBlob: Blob) => void;
+  onPhotoCaptured?: (imageBlob: Blob) => void;
 }
 
 const MAX_DURATION = 180; // 3 minutes max
 
-export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded }: CameraCaptureModalProps) {
+export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCaptured }: CameraCaptureModalProps) {
   const [isInitializing, setIsInitializing] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -91,6 +92,44 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded }: CameraC
   const flipCamera = () => {
     setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
   };
+
+  const capturePhoto = useCallback(() => {
+    if (!videoRef.current || !streamRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) return;
+    
+    // Flip horizontally if using front camera
+    if (facingMode === 'user') {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    
+    ctx.drawImage(video, 0, 0);
+    
+    canvas.toBlob((blob) => {
+      if (blob) {
+        if (onPhotoCaptured) {
+          onPhotoCaptured(blob);
+          handleClose();
+        } else {
+          // Fallback: download the image
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `camera-photo-${Date.now()}.png`;
+          a.click();
+          URL.revokeObjectURL(url);
+          toast.success('Photo captured!');
+        }
+      }
+    }, 'image/png');
+  }, [facingMode, onPhotoCaptured]);
 
   const startRecording = () => {
     if (!streamRef.current) return;
@@ -198,7 +237,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded }: CameraC
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
         <button
           onClick={handleClose}
-          className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+          className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-sm flex items-center justify-center"
         >
           <X className="w-5 h-5 text-white" />
         </button>
@@ -218,7 +257,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded }: CameraC
           <button
             onClick={flipCamera}
             disabled={isRecording}
-            className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center disabled:opacity-50"
+            className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-sm flex items-center justify-center disabled:opacity-50"
           >
             <RotateCcw className="w-5 h-5 text-white" />
           </button>
@@ -270,22 +309,38 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded }: CameraC
       <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent">
         <div className="flex items-center justify-center gap-6">
           {!recordedBlob ? (
-            <button
-              onClick={isRecording ? stopRecording : startRecording}
-              disabled={isInitializing}
-              className={cn(
-                'w-16 h-16 rounded-xl flex items-center justify-center transition-all',
-                'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
-                'hover:bg-white/20 disabled:opacity-50',
-                isRecording && 'bg-red-500/20 border-red-500/40'
-              )}
-            >
-              {isRecording ? (
-                <Square className="w-6 h-6 text-white fill-white" />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-red-500" />
-              )}
-            </button>
+            <div className="flex items-center gap-4">
+              {/* Capture photo button */}
+              <button
+                onClick={capturePhoto}
+                disabled={isInitializing || isRecording}
+                className={cn(
+                  'w-14 h-14 rounded-xl flex items-center justify-center transition-all',
+                  'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
+                  'hover:bg-white/20 disabled:opacity-50'
+                )}
+              >
+                <Camera className="w-6 h-6 text-white" />
+              </button>
+              
+              {/* Record video button */}
+              <button
+                onClick={isRecording ? stopRecording : startRecording}
+                disabled={isInitializing}
+                className={cn(
+                  'w-16 h-16 rounded-xl flex items-center justify-center transition-all',
+                  'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
+                  'hover:bg-white/20 disabled:opacity-50',
+                  isRecording && 'bg-red-500/20 border-red-500/40'
+                )}
+              >
+                {isRecording ? (
+                  <Square className="w-6 h-6 text-white fill-white" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-red-500" />
+                )}
+              </button>
+            </div>
           ) : (
             <div className="flex items-center gap-4 w-full">
               <button
