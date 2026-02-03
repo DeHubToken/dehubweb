@@ -216,24 +216,6 @@ export function StoryOverlayEditor({ overlays, onOverlaysChange, containerRef }:
 
   return (
     <>
-      {/* Toolbar */}
-      <div className="absolute top-20 right-4 z-20 flex flex-col gap-2">
-        <button
-          onClick={() => setShowEmojiPicker(true)}
-          className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] border border-white/20 flex items-center justify-center hover:bg-black/60 transition-all"
-        >
-          <Smile className="w-6 h-6 text-white" />
-        </button>
-        <button
-          onClick={() => {
-            setEditingOverlay(null);
-            setShowTextInput(true);
-          }}
-          className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] border border-white/20 flex items-center justify-center hover:bg-black/60 transition-all"
-        >
-          <Type className="w-6 h-6 text-white" />
-        </button>
-      </div>
 
       {/* Overlay layer - pointer-events-none so it doesn't block other controls */}
       <div 
