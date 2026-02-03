@@ -64,6 +64,9 @@ interface UsePostFormReturn {
     startRecording: () => void;
     stopRecording: () => void;
     setChainId: (chainId: ChainId) => void;
+    insertEmoji: (emoji: string) => void;
+    insertGif: (gifUrl: string) => void;
+    openCameraCapture: () => void;
   };
   computed: PostFormComputed;
   refs: {
@@ -476,6 +479,57 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     // Update the text state with plain text
     const plainText = editor.innerText;
     setText(plainText);
+  }, []);
+
+  const insertEmoji = useCallback((emoji: string) => {
+    const editor = editorRef.current;
+    if (!editor) {
+      // Fallback: just append to text
+      setText(prev => prev + emoji);
+      return;
+    }
+
+    // Focus and insert at cursor position
+    editor.focus();
+    document.execCommand('insertText', false, emoji);
+
+    // Update the text state
+    const plainText = editor.innerText;
+    setText(plainText);
+  }, []);
+
+  const insertGif = useCallback((gifUrl: string) => {
+    // For now, GIFs can be added as media attachments
+    // We'll create a temporary image file from the GIF URL
+    toast.info('GIF support coming soon!');
+    // TODO: Download GIF and add as media
+  }, []);
+
+  const openCameraCapture = useCallback(async () => {
+    // Request camera access and capture video
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'user' }, 
+        audio: true 
+      });
+      
+      // Create a video element to show preview
+      // For now, we'll just use the file input with capture
+      stream.getTracks().forEach(track => track.stop());
+      
+      // Trigger video input with capture attribute
+      if (videoInputRef.current) {
+        videoInputRef.current.setAttribute('capture', 'user');
+        videoInputRef.current.click();
+        // Remove capture attribute after click to allow normal file selection next time
+        setTimeout(() => {
+          videoInputRef.current?.removeAttribute('capture');
+        }, 1000);
+      }
+    } catch (err) {
+      console.error('Camera access error:', err);
+      toast.error('Could not access camera. Please check permissions.');
+    }
   }, []);
 
   const resetForm = useCallback(() => {
@@ -976,6 +1030,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       startRecording,
       stopRecording,
       setChainId,
+      insertEmoji,
+      insertGif,
+      openCameraCapture,
     },
     computed: {
       hasVideo,

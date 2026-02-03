@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Smile, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Paperclip, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -9,6 +9,7 @@ import { GLASS_STYLES } from '@/constants/app.constants';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
+import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode } from '../types';
 
 interface PostActionBarProps {
@@ -22,6 +23,9 @@ interface PostActionBarProps {
   liveMode: LiveMode;
   setLiveMode: (value: LiveMode) => void;
   onInsertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
+  onInsertEmoji: (emoji: string) => void;
+  onInsertGif: (gifUrl: string) => void;
+  onCameraCapture: () => void;
   onEnhanceWithAI: (mode: 'spellcheck' | 'grammar' | 'style', style?: string) => void;
   onPost: () => void;
   canPost: boolean;
@@ -45,6 +49,9 @@ export function PostActionBar({
   liveMode,
   setLiveMode,
   onInsertFormatting,
+  onInsertEmoji,
+  onInsertGif,
+  onCameraCapture,
   onEnhanceWithAI,
   onPost,
   canPost,
@@ -188,6 +195,22 @@ export function PostActionBar({
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
         <input ref={audioInputRef} type="file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/*" onChange={onAudioSelect} className="hidden" />
         
+        {/* Camera button for recording - leftmost position */}
+        {!isLive && !hasVideo && !hasImage && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                type="button" 
+                onClick={onCameraCapture} 
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Camera className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Record video</TooltipContent>
+          </Tooltip>
+        )}
+
         {/* Mobile: Combined attachment button for image/video */}
         {!isLive && !hasVideo && !hasImage && (
           <Tooltip>
@@ -329,29 +352,11 @@ export function PostActionBar({
 
         <div className="w-px h-4 bg-white/10 mx-1" />
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              type="button" 
-              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Smile className="w-4 h-4 text-zinc-400" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Emoji</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              type="button" 
-              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <Smile className="w-4 h-4 text-zinc-400" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Emoji</TooltipContent>
-        </Tooltip>
+        {/* Emoji/GIF picker - single working button */}
+        <EmojiGifPicker 
+          onEmojiSelect={onInsertEmoji}
+          onGifSelect={onInsertGif}
+        />
       </div>
 
       <div className="flex items-center gap-2">
