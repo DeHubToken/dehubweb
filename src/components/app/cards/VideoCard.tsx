@@ -862,7 +862,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         {video.description && video.description !== video.title && (
           <TranslatableText 
             text={video.description} 
-            className="text-zinc-400 text-sm mb-2 line-clamp-2" 
+            className="text-zinc-400 text-sm mb-2 line-clamp-1" 
             as="p" 
           />
         )}
