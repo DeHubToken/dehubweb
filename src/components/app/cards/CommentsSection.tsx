@@ -533,9 +533,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     if (found) {
       setReplyTo(found);
       setNewComment(`@${found.username} `);
+      // Just focus - let mobile browsers handle keyboard viewport adjustment natively
+      // Manual scrollIntoView causes ugly content cutoff on mobile
       setTimeout(() => {
         inputRef.current?.focus();
-        inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
     }
   };
