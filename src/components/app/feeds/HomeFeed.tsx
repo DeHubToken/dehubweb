@@ -26,6 +26,8 @@ import {
   CONTENT_PATTERN,
   interleaveByPattern,
   calculateTrendingScore,
+  limitCreatorDiversity,
+  DEFAULT_MAX_POSTS_PER_CREATOR,
   type SortOption, 
   type DateFilterOption, 
   type ContentTypeFilters, 
@@ -611,8 +613,32 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return sortedItems.map(mapItem);
   }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value, classicsFeed.data]);
 
-  // Final items to render
-  const items = useInterleavedFeed ? interleavedItems : singleFeedItems;
+  // Final items to render with creator diversity limiting
+  // This ensures users see content from a variety of creators (max 2 per creator in view)
+  const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
+  
+  const items = useMemo(() => {
+    return limitCreatorDiversity(
+      rawItems,
+      DEFAULT_MAX_POSTS_PER_CREATOR,
+      (item) => {
+        // Extract creator ID based on item type
+        switch (item.type) {
+          case 'post':
+            return item.data.author?.id;
+          case 'video':
+            return item.data.creatorId;
+          case 'image':
+            return item.data.creatorId;
+          case 'shorts':
+            // Shorts are a bundle, no single creator
+            return undefined;
+          default:
+            return undefined;
+        }
+      }
+    );
+  }, [rawItems]);
 
   // ============================================================================
   // INFINITE SCROLL
