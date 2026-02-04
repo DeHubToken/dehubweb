@@ -11,10 +11,10 @@
  * @module pages/app/SinglePostPage
  */
 
-import { useParams, useNavigationType } from 'react-router-dom';
+import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useLayoutEffect } from 'react';
-import { Loader2, AlertCircle, Clock } from 'lucide-react';
+import { useLayoutEffect, useEffect } from 'react';
+import { Loader2, AlertCircle, Clock, ArrowLeft } from 'lucide-react';
 import { getNFTInfo, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -215,6 +215,32 @@ function LoadingState() {
   );
 }
 
+/**
+ * Immersive back button for video posts - floats on top of the video
+ */
+function ImmersiveBackButton({ fallbackRoute = '/app' }: { fallbackRoute?: string }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBack = () => {
+    if (location.key && location.key !== 'default') {
+      navigate(-1);
+    } else {
+      navigate(fallbackRoute, { replace: true });
+    }
+  };
+
+  return (
+    <button
+      onClick={handleBack}
+      className="absolute top-3 left-3 z-20 p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 hover:bg-black/80 transition-colors"
+      aria-label="Go back"
+    >
+      <ArrowLeft className="w-5 h-5 text-white" />
+    </button>
+  );
+}
+
 export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const id = postId || tokenId;
@@ -251,6 +277,20 @@ export default function SinglePostPage() {
   // Check if we have cached data (from feed navigation) to show immediately
   const hasCachedData = !!post;
   
+  // Determine content type
+  const contentType = post ? getContentType(post) : null;
+  const isVideoPost = contentType === 'video';
+  
+  // Hide mobile header for video posts by adding a class to the body
+  useEffect(() => {
+    if (isVideoPost) {
+      document.body.classList.add('immersive-video-mode');
+    }
+    return () => {
+      document.body.classList.remove('immersive-video-mode');
+    };
+  }, [isVideoPost]);
+  
   // Determine content type and render appropriate card
   const renderContent = () => {
     // Only show loading if we have no data at all (not even cached)
@@ -262,11 +302,9 @@ export default function SinglePostPage() {
       return <ProcessingState />;
     }
 
-    const contentType = getContentType(post);
-
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} />;
+        return <VideoCard video={toVideoItem(post)} isImmersive />;
       case 'image':
         return <ImageCard post={toImagePost(post)} />;
       case 'live':
@@ -276,6 +314,19 @@ export default function SinglePostPage() {
     }
   };
 
+  // Immersive layout for videos
+  if (isVideoPost) {
+    return (
+      <div className="flex flex-col -mt-11 lg:mt-0">
+        <div className="relative">
+          <ImmersiveBackButton />
+          {renderContent()}
+        </div>
+      </div>
+    );
+  }
+
+  // Standard layout for other content types
   return (
     <div className="flex flex-col">
       <PageHeader showBack />

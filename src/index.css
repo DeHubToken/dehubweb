@@ -520,3 +520,8 @@ body > iframe[style*="height: 0"],
 body > div[style*="position: fixed"][style*="height: 0"] {
   display: none !important;
 }
+
+/* Immersive video mode - hide mobile header */
+body.immersive-video-mode header.lg\\:hidden {
+  display: none !important;
+}

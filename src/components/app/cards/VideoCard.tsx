@@ -55,9 +55,11 @@ function useIsTabletOrMobile() {
 
 interface VideoCardProps {
   video: VideoItem;
+  /** When true, renders full-width without rounded corners or header for immersive view */
+  isImmersive?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, isImmersive = false }: VideoCardProps) {
   const instanceId = useId();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -404,77 +406,82 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   
   return (
     <div 
-      onClick={handleCardClick}
-      className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer"
+      onClick={isImmersive ? undefined : handleCardClick}
+      className={isImmersive 
+        ? "bg-black overflow-hidden" 
+        : "bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer"
+      }
     >
-      {/* Header with AI and menu buttons */}
-      <div className="flex items-center justify-between">
-        <CardHeader
-          username={video.channel}
-          handle={video.creatorUsername}
-          avatarSeed={video.channelAvatar}
-          verified={video.verified}
-          contentType="video"
-          creatorId={video.creatorId}
-          creatorUsername={video.creatorUsername}
-        />
-        <div className="flex items-center gap-1 pr-3">
-          <motion.button
-            onClick={() => setShowAIChat(true)}
-            className="text-zinc-400 hover:text-white transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Ask AI about this video"
-          >
-            <Sparkles className="w-5 h-5" />
-          </motion.button>
-          <Drawer>
-            <DrawerTrigger asChild>
-              <button className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </DrawerTrigger>
-            <DrawerContent glass className="px-4 pb-6">
-              <DrawerHeader className="pb-2">
-                <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
-              </DrawerHeader>
-              <div className="flex flex-col gap-1">
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
+      {/* Header with AI and menu buttons - hidden in immersive mode */}
+      {!isImmersive && (
+        <div className="flex items-center justify-between">
+          <CardHeader
+            username={video.channel}
+            handle={video.creatorUsername}
+            avatarSeed={video.channelAvatar}
+            verified={video.verified}
+            contentType="video"
+            creatorId={video.creatorId}
+            creatorUsername={video.creatorUsername}
+          />
+          <div className="flex items-center gap-1 pr-3">
+            <motion.button
+              onClick={() => setShowAIChat(true)}
+              className="text-zinc-400 hover:text-white transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Ask AI about this video"
+            >
+              <Sparkles className="w-5 h-5" />
+            </motion.button>
+            <Drawer>
+              <DrawerTrigger asChild>
+                <button className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                  <MoreVertical className="w-5 h-5" />
                 </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <ListPlus className="w-5 h-5" /> Queue
-                </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Clock className="w-5 h-5" /> Watch List
-                </button>
-                <button 
-                  onClick={() => setShowReportModal(true)}
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Flag className="w-5 h-5" /> Report
-                </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Download className="w-5 h-5" /> Download
-                </button>
-                <button 
-                  onClick={() => {
-                    const url = `${window.location.origin}/app/post/${video.id}`;
-                    navigator.clipboard.writeText(url);
-                    toast.success('Post URL copied to clipboard');
-                  }}
-                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-                >
-                  <Link2 className="w-5 h-5" /> Copy Post URL
-                </button>
-                <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                  <Ban className="w-5 h-5" /> Block Creator
-                </button>
-              </div>
-            </DrawerContent>
-          </Drawer>
+              </DrawerTrigger>
+              <DrawerContent glass className="px-4 pb-6">
+                <DrawerHeader className="pb-2">
+                  <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+                </DrawerHeader>
+                <div className="flex flex-col gap-1">
+                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
+                  </button>
+                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <ListPlus className="w-5 h-5" /> Queue
+                  </button>
+                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <Clock className="w-5 h-5" /> Watch List
+                  </button>
+                  <button 
+                    onClick={() => setShowReportModal(true)}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Flag className="w-5 h-5" /> Report
+                  </button>
+                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <Download className="w-5 h-5" /> Download
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const url = `${window.location.origin}/app/post/${video.id}`;
+                      navigator.clipboard.writeText(url);
+                      toast.success('Post URL copied to clipboard');
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Link2 className="w-5 h-5" /> Copy Post URL
+                  </button>
+                  <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                    <Ban className="w-5 h-5" /> Block Creator
+                  </button>
+                </div>
+              </DrawerContent>
+            </Drawer>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Video Player / Thumbnail */}
       <div 
