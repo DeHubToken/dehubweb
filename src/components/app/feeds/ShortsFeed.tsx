@@ -94,7 +94,10 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 // Map video NFT to ShortVideo format
 function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSeconds: number; uploadedAgo: string } {
   const id = String(nft.tokenId || nft.id || nft.token_id);
-  const durationStr = nft.duration || '0:30';
+  // Use videoDuration (number in seconds) directly if available, fallback to string parsing
+  const durationSeconds = typeof nft.videoDuration === 'number' 
+    ? nft.videoDuration 
+    : parseDurationToSeconds(nft.duration || '0:00');
   const viewCount = nft.views || nft.view_count || 0;
   const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
   
@@ -121,7 +124,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
     shares: '0',
     views: formatLikes(viewCount),
-    durationSeconds: parseDurationToSeconds(durationStr),
+    durationSeconds: Math.round(durationSeconds),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
     creatorUsername: nft.mintername || nft.creator?.username || 'user',
   } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
