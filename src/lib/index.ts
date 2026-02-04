@@ -15,7 +15,6 @@ export { cn } from './utils';
 
 // Feed utilities
 export { 
-  getViewCount, 
   shuffleArray, 
   formatCount, 
   formatDuration, 

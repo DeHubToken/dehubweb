@@ -10,7 +10,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
-import { getViewCount } from '@/lib/feed-utils';
+
 
 /**
  * Convert VideoItem back to partial DeHubNFT format for caching

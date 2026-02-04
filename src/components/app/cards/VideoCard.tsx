@@ -27,7 +27,7 @@ import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getViewCount } from '@/lib/feed-utils';
+
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
@@ -760,7 +760,7 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
         <div className="mb-3">
           <PostMetadata 
             timestamp={video.uploadedAgo} 
-            viewCount={video.views?.replace(' views', '') || getViewCount(video.id)} 
+            viewCount={video.views?.replace(' views', '') || '0'} 
           />
         </div>
         <ActionBar
