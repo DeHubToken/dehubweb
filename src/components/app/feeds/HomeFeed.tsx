@@ -14,6 +14,7 @@ import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import { 
   SORT_OPTIONS, 
   DATE_FILTER_OPTIONS, 
@@ -51,7 +52,7 @@ import {
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
-import { getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
+import { getMediaUrl, getNFTInfo, getAccountInfo } from '@/lib/api/dehub';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -272,17 +273,51 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
   };
 
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
   const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
 
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
+
+  // Fetch current user's following list for "Following" feed filter
+  const { data: currentUserData } = useQuery({
+    queryKey: ['current-user-followings', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return null;
+      return getAccountInfo(walletAddress);
+    },
+    enabled: isAuthenticated && !!walletAddress && selectedSort.value === 'following',
+    staleTime: 30000,
+  });
+
+  // Get following list as a Set for O(1) lookups
+  const followingSet = useMemo(() => {
+    const followings = currentUserData?.followings;
+    if (!followings || !Array.isArray(followings)) return new Set<string>();
+    return new Set(followings.map(addr => addr.toLowerCase()));
+  }, [currentUserData?.followings]);
+
+  // Handle sort selection with special logic for "Subscribed" (coming soon)
+  const handleSortSelect = useCallback((option: SortOption) => {
+    if (option.value === 'subscribed') {
+      toast.info('Subscribed feed coming soon!', {
+        description: 'This feature is under development.',
+      });
+      return;
+    }
+    if (option.value === 'following' && !isAuthenticated) {
+      toast.info('Log in to see posts from creators you follow');
+      return;
+    }
+    setSelectedSort(option);
+  }, [isAuthenticated]);
 
   // Build API params from filters
   // For trending, we fetch by recency (last month) then sort client-side
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
       case 'trending':
+      case 'following': // Following uses latest sort, filtered client-side
         return 'createdAt' as const; // Fetch recent, apply trending score client-side
       case 'most-liked':
         return 'likes' as const;
@@ -298,10 +333,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
   
-  // For trending, don't limit range - let pagination go back in time naturally
+  // For trending and following, don't limit range - let pagination go back in time naturally
   // The trending algorithm's time decay will still prioritize recent content at the top
   const range = useMemo(() => {
-    if (selectedSort.value === 'trending') {
+    if (selectedSort.value === 'trending' || selectedSort.value === 'following') {
       return undefined; // No range limit - infinite scroll goes back in time
     }
     return getDateRange(selectedDate.value);
@@ -323,9 +358,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // THREE SEPARATE FEED QUERIES
   // ============================================================================
 
-  // For "Most Liked" or "Trending" sorting, we need global ranking across all types
+  // For "Most Liked", "Trending", or "Following" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
-  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'trending';
+  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'trending' || selectedSort.value === 'following';
   const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
 
   // Fetch videos
@@ -618,8 +653,31 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
   
   const items = useMemo(() => {
+    let filteredItems = rawItems;
+    
+    // For "Following" mode, filter to only show posts from followed creators
+    if (selectedSort.value === 'following' && followingSet.size > 0) {
+      filteredItems = rawItems.filter((item) => {
+        let creatorId: string | undefined;
+        switch (item.type) {
+          case 'post':
+            creatorId = item.data.author?.id;
+            break;
+          case 'video':
+            creatorId = item.data.creatorId;
+            break;
+          case 'image':
+            creatorId = item.data.creatorId;
+            break;
+          default:
+            return true; // Keep shorts bundles
+        }
+        return creatorId ? followingSet.has(creatorId.toLowerCase()) : false;
+      });
+    }
+    
     return limitCreatorDiversity(
-      rawItems,
+      filteredItems,
       DEFAULT_MAX_POSTS_PER_CREATOR,
       (item) => {
         // Extract creator ID based on item type
@@ -638,7 +696,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         }
       }
     );
-  }, [rawItems]);
+  }, [rawItems, selectedSort.value, followingSet]);
 
   // ============================================================================
   // INFINITE SCROLL
@@ -806,25 +864,42 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
-  const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-        <RefreshCw className="w-8 h-8 text-zinc-500" />
+  const EmptyState = () => {
+    // Custom message for Following feed
+    const isFollowingMode = selectedSort.value === 'following';
+    const hasNoFollowings = followingSet.size === 0;
+    
+    let title = 'No Content Yet';
+    let description = isError 
+      ? 'Unable to load feed. Please try again.'
+      : 'Be the first to share something amazing!';
+    
+    if (isFollowingMode) {
+      if (hasNoFollowings) {
+        title = 'No Followed Creators';
+        description = 'Follow some creators to see their posts here!';
+      } else {
+        title = 'No Posts Yet';
+        description = 'The creators you follow haven\'t posted anything recently.';
+      }
+    }
+    
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
+          <RefreshCw className="w-8 h-8 text-zinc-500" />
+        </div>
+        <h3 className="text-white font-semibold text-lg mb-2">{title}</h3>
+        <p className="text-zinc-400 text-sm max-w-xs mb-4">{description}</p>
+        <button 
+          onClick={refetch}
+          className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+        >
+          Refresh
+        </button>
       </div>
-      <h3 className="text-white font-semibold text-lg mb-2">No Content Yet</h3>
-      <p className="text-zinc-400 text-sm max-w-xs mb-4">
-        {isError 
-          ? 'Unable to load feed. Please try again.'
-          : 'Be the first to share something amazing!'}
-      </p>
-      <button 
-        onClick={refetch}
-        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
-      >
-        Refresh
-      </button>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
@@ -845,7 +920,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 <div className="bg-zinc-900 rounded-2xl p-4 mb-3">
                   <SortFilterSection 
                     selectedSort={selectedSort} 
-                    onSortSelect={setSelectedSort}
+                    onSortSelect={handleSortSelect}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
                     selectedPostType={selectedPostType}

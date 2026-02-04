@@ -135,6 +135,8 @@ export function interleaveByPattern<V, I, T>(
 
 export const SORT_OPTIONS = [
   { label: 'Trending', value: 'trending' as const },
+  { label: 'Following', value: 'following' as const },
+  { label: 'Subscribed', value: 'subscribed' as const },
   { label: 'Latest', value: 'latest' as const },
   { label: 'Most Viewed', value: 'most-viewed' as const },
   { label: 'Most Liked', value: 'most-liked' as const },
