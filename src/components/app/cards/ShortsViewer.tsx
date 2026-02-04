@@ -751,9 +751,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               
               {/* Comments list */}
               <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 min-h-0">
-                {inlineComments.length === 0 ? (
-                  <p className="text-white/40 text-sm text-center py-4">No comments yet</p>
-                ) : (
+                {inlineComments.length > 0 && (
                   inlineComments.slice(0, 10).map((comment) => (
                     <div key={comment.id} className="flex gap-2">
                       <Avatar className="w-6 h-6 flex-shrink-0 rounded-lg">
