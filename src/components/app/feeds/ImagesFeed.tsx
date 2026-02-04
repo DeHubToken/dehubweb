@@ -332,13 +332,17 @@ export function ImagesFeed({
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   // Now works in BOTH collage and feed view
+  // Store hasNextPage in a ref to avoid stale closures in the observer callback
+  const hasNextPageRef = useRef(hasNextPage);
+  hasNextPageRef.current = hasNextPage;
+  
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage) return;
+    if (!loaderRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Use ref for synchronous check - prevents multiple fetches from stale closures
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+        // Use refs for synchronous check - prevents multiple fetches from stale closures
+        if (entries[0].isIntersecting && hasNextPageRef.current && !isFetchingRef.current) {
           isFetchingRef.current = true;
           fetchNextPage().finally(() => {
             isFetchingRef.current = false;
@@ -350,7 +354,7 @@ export function ImagesFeed({
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [fetchNextPage]); // Only depend on fetchNextPage - refs handle the rest
   
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
