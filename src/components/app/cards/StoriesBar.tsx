@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -20,6 +21,7 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
 import { StoryRecorderModal, StoryViewerModal } from '@/components/app/stories';
+import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { PostModal } from '@/features/post';
 import { useStories, useUploadStory, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
@@ -34,9 +36,11 @@ interface StoryUser {
 interface StoriesBarProps {
   users: StoryUser[];
   isLoading?: boolean;
+  /** Shorts data for transitioning when stories end */
+  shorts?: import('@/types/feed.types').ShortVideo[];
 }
 
-export function StoriesBar({ users, isLoading: externalLoading }: StoriesBarProps) {
+export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: StoriesBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isGoLiveOpen, setIsGoLiveOpen] = useState(false);
   const [isStagesOpen, setIsStagesOpen] = useState(false);
@@ -45,6 +49,7 @@ export function StoriesBar({ users, isLoading: externalLoading }: StoriesBarProp
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
   const [viewerStartIndex, setViewerStartIndex] = useState(0);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isShortsViewerOpen, setIsShortsViewerOpen] = useState(false);
   
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
@@ -224,7 +229,26 @@ export function StoriesBar({ users, isLoading: externalLoading }: StoriesBarProp
         onClose={() => setIsStoryViewerOpen(false)}
         stories={stories}
         initialIndex={viewerStartIndex}
+        onSwitchToShorts={() => {
+          // Close stories and open shorts viewer
+          setIsStoryViewerOpen(false);
+          if (shorts.length > 0) {
+            setIsShortsViewerOpen(true);
+          }
+        }}
       />
+      
+      {/* Shorts Viewer - opens when transitioning from stories */}
+      <AnimatePresence>
+        {isShortsViewerOpen && shorts.length > 0 && (
+          <ShortsViewer
+            shorts={shorts}
+            initialIndex={0}
+            onClose={() => setIsShortsViewerOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      
       <PostModal
         isOpen={isPostModalOpen}
         onClose={() => setIsPostModalOpen(false)}
