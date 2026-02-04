@@ -815,7 +815,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </div>
               
               {/* Comment input */}
-              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/10 flex-shrink-0">
+              <div className="flex items-center gap-2 mt-3 flex-shrink-0">
                 <input
                   type="text"
                   value={inlineCommentText}
