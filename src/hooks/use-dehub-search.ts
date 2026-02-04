@@ -49,6 +49,8 @@ export interface UseDeHubSearchOptions {
   category?: string;
   /** Sort mode (for legacy compatibility) */
   sortMode?: 'new' | 'popular' | 'trending';
+  /** Minimum query length required (default: 3) */
+  minQueryLength?: number;
 }
 
 export interface SearchPageResult {
@@ -152,12 +154,13 @@ export function useDeHubSearch({
   enabled = true,
   address,
   limit = 15,
+  minQueryLength = 3,
 }: UseDeHubSearchOptions) {
   // Debounce the query to prevent excessive API calls
   const debouncedQuery = useDebouncedValue(query, 300);
 
-  // Only enable if query is at least 3 characters
-  const shouldFetch = enabled && debouncedQuery.trim().length >= 3;
+  // Only enable if query meets minimum length requirement
+  const shouldFetch = enabled && debouncedQuery.trim().length >= minQueryLength;
 
   return useInfiniteQuery({
     queryKey: ['dehub-search', debouncedQuery.trim(), type, postType],
