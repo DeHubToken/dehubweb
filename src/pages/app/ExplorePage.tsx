@@ -198,6 +198,9 @@ const UserResultCard = ({
   onProfileClick?: (handle: string) => void;
 }) => {
   const navigate = useNavigate();
+  const { walletAddress } = useAuth();
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
   const avatarUrl = user.avatar;
@@ -207,39 +210,64 @@ const UserResultCard = ({
     onProfileClick?.(cleanHandle);
     navigate(`/${cleanHandle}`);
   };
+
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!walletAddress) {
+      // Could show login modal here
+      return;
+    }
+
+    if (!user.id || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const { followUser } = await import('@/lib/api/dehub');
+      await followUser(user.id);
+      setIsFollowing(true);
+    } catch (error) {
+      console.error('Failed to follow:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   return (
     <div 
       className="flex items-center justify-between cursor-pointer hover:bg-zinc-800/50 rounded-lg p-2 -mx-2 transition-colors"
       onClick={handleClick}
     >
-      <div className="flex items-center gap-3">
-        <Avatar className="w-10 h-10 rounded-xl">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <Avatar className="w-10 h-10 rounded-xl flex-shrink-0">
           {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover rounded-xl" />}
           <AvatarFallback className="bg-zinc-700 rounded-xl">{user.name[0]}</AvatarFallback>
         </Avatar>
-        <div>
-          <p className="text-white font-medium flex items-center gap-1.5">
-            {user.name}
-            {user.verified && <VerifiedBadge className="w-3.5 h-3.5" />}
-            <span className="text-zinc-500 font-normal">{user.handle}</span>
-          </p>
+        <div className="min-w-0 flex-1">
+          {/* Mobile: stack vertically, Desktop: inline */}
+          <div className="flex items-center gap-1.5 md:flex-row flex-col md:items-center items-start">
+            <p className="text-white font-medium flex items-center gap-1.5 truncate max-w-full">
+              <span className="truncate">{user.name}</span>
+              {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+            </p>
+            <span className="text-zinc-500 font-normal text-sm truncate max-w-full md:text-base">{user.handle}</span>
+          </div>
           {user.bio && (
-            <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5">{user.bio}</p>
+            <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5 hidden md:block">{user.bio}</p>
           )}
         </div>
       </div>
-      <Button
-        variant="outline"
-        size="sm"
-        className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-        onClick={(e) => {
-          e.stopPropagation();
-          // TODO: Implement follow functionality
-        }}
-      >
-        Follow
-      </Button>
+      {!isFollowing && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex-shrink-0 ml-2"
+          onClick={handleFollow}
+          disabled={isLoading || !walletAddress}
+        >
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Follow'}
+        </Button>
+      )}
     </div>
   );
 };
