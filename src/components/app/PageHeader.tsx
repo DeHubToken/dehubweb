@@ -27,11 +27,13 @@ export function PageHeader({
    * - Otherwise, navigate to fallback route (handles direct URL access)
    */
   const handleBack = () => {
-    // 'default' key means this is the first entry (no history to go back to)
-    if (location.key !== 'default') {
+    // Check window.history.length for more reliable history detection
+    // history.length > 1 means there's at least one entry to go back to
+    // Combined with location.key check for robustness
+    if (window.history.length > 1 && location.key !== 'default') {
       navigate(-1);
     } else {
-      // Direct URL access - go to fallback route instead
+      // Direct URL access or first entry - go to fallback route
       navigate(fallbackRoute, { replace: true });
     }
   };
