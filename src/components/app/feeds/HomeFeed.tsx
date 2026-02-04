@@ -307,8 +307,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // THREE SEPARATE FEED QUERIES
   // ============================================================================
 
-  // Determine if we should use the interleaved pattern or single feed
-  const useInterleavedFeed = selectedPostType === 'all';
+  // For "Most Liked" sorting, we need global ranking across all types
+  // So we use a single unified feed instead of three separate type feeds
+  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked';
+  const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
 
   // Fetch videos
   const videosFeed = useUnifiedFeed({
