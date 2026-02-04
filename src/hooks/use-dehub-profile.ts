@@ -75,7 +75,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     name: user.displayName || user.display_name || user.username || 'Unknown User',
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
     verified: user.isVerified || user.is_verified || false,
-    bio: user.bio || '',
+    bio: user.bio || user.aboutMe || '',
     avatarUrl,
     coverUrl,
     joinedDate: joinDate,
