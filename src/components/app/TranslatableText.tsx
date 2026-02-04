@@ -21,8 +21,12 @@ import { getCachedLanguage, cacheLanguage } from '@/lib/language-detection-cache
 import { cn } from '@/lib/utils';
 
 // URL regex pattern for detecting links (with or without protocol)
-// Matches: https://..., http://..., www.domain.com, domain.com/path, etc.
-const URL_REGEX = /(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi;
+// Only matches common TLDs to avoid false positives like "higher.mp4"
+const COMMON_TLDS = 'com|org|net|io|ai|co|uk|de|fr|es|it|nl|be|ru|jp|cn|kr|in|au|ca|br|mx|app|dev|xyz|info|biz|me|tv|cc|gg|ly|to|fm|so|is|sh';
+const URL_REGEX = new RegExp(
+  `(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`,
+  'gi'
+);
 
 interface TranslatableTextProps {
   text: string;
