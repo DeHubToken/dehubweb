@@ -62,7 +62,11 @@ export const VideoSlide = memo(function VideoSlide({
     if (!video) return;
 
     if (isActive) {
-      video.currentTime = 0;
+      // Only reset if video hasn't played yet (first activation)
+      // This prevents the "shake" caused by seeking during transitions
+      if (video.currentTime === 0 || video.ended) {
+        video.currentTime = 0;
+      }
       video.play().catch(() => {});
     } else {
       video.pause();
@@ -88,7 +92,7 @@ export const VideoSlide = memo(function VideoSlide({
   }, [onTimeUpdate]);
 
   return (
-    <div className="absolute inset-0 bg-black">
+    <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass background for non-portrait videos */}
       {videoAspect !== 'portrait' && short.thumbnail && (
         <>
@@ -114,7 +118,8 @@ export const VideoSlide = memo(function VideoSlide({
           <video
             ref={videoRef}
             src={short.videoUrl}
-            className={`w-full h-full ${videoAspect === 'portrait' ? 'object-cover' : 'object-contain'}`}
+            className={`w-full h-full ${videoAspect === 'portrait' ? 'object-cover' : 'object-contain'} transition-none`}
+            style={{ willChange: 'transform' }}
             loop
             playsInline
             muted={isMuted}

@@ -75,11 +75,12 @@ function mapApiCommentToInline(apiComment: ApiCommentResponse): InlineComment {
   };
 }
 
-// Spring animation config for smooth carousel transitions
+// Spring animation config for smooth carousel transitions - reduced stiffness to prevent shake
 const SPRING_TRANSITION = {
   type: 'spring',
-  stiffness: 300,
-  damping: 30,
+  stiffness: 200,
+  damping: 35,
+  mass: 1,
 } as const;
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
