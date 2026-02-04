@@ -55,8 +55,6 @@ type FeedItemType =
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 15;
-/** Number of pages to pre-fetch for random mode cross-page shuffling */
-const RANDOM_PREFETCH_PAGES = 5;
 
 interface HomeFeedProps {
   shuffleKey: number;
@@ -69,97 +67,6 @@ interface HomeFeedProps {
 // ============================================================================
 // HELPERS
 // ============================================================================
-
-/**
- * Fisher-Yates shuffle using true Math.random() for genuine randomness
- * This is called fresh on every render/refresh for unique ordering
- */
-function shuffleArray<T>(array: T[]): T[] {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
-
-/** Maximum posts from the same creator in random mode to ensure diversity */
-const MAX_POSTS_PER_CREATOR = 1;
-
-/**
- * Get creator ID from a FeedItemType
- */
-function getCreatorId(item: FeedItemType): string {
-  switch (item.type) {
-    case 'video':
-      return item.data.creatorId || 'unknown';
-    case 'image':
-      return item.data.creatorId || 'unknown';
-    case 'post':
-      return item.data.author?.id || 'unknown';
-    case 'shorts':
-      return 'shorts'; // Shorts carousel is a special case
-    default:
-      return 'unknown';
-  }
-}
-
-/**
- * Limit posts per creator to ensure feed diversity.
- * Returns items with at most MAX_POSTS_PER_CREATOR from each creator.
- */
-function limitPostsPerCreator(items: FeedItemType[]): FeedItemType[] {
-  const creatorCounts = new Map<string, number>();
-  return items.filter(item => {
-    const creatorId = getCreatorId(item);
-    const count = creatorCounts.get(creatorId) || 0;
-    if (count >= MAX_POSTS_PER_CREATOR) {
-      return false;
-    }
-    creatorCounts.set(creatorId, count + 1);
-    return true;
-  });
-}
-
-/**
- * Balanced shuffle: ensures ~1 text post for every 3 media posts
- * Uses true Math.random() for genuine randomness on every call.
- * Interleaves text posts throughout the feed at regular intervals.
- * Also ensures no creator dominates the feed.
- */
-function balancedShuffle(items: FeedItemType[]): FeedItemType[] {
-  // First, limit posts per creator to prevent spam
-  const diverseItems = limitPostsPerCreator(items);
-  
-  // Separate text posts from media posts
-  const textPosts = diverseItems.filter(item => item.type === 'post');
-  const mediaPosts = diverseItems.filter(item => item.type !== 'post');
-  
-  // Shuffle both arrays with true randomness
-  const shuffledText = shuffleArray(textPosts);
-  const shuffledMedia = shuffleArray(mediaPosts);
-  
-  // Interleave: insert 1 text post after every 3 media posts
-  const result: FeedItemType[] = [];
-  let textIndex = 0;
-  let mediaIndex = 0;
-  
-  while (mediaIndex < shuffledMedia.length || textIndex < shuffledText.length) {
-    // Add up to 3 media posts
-    for (let i = 0; i < 3 && mediaIndex < shuffledMedia.length; i++) {
-      result.push(shuffledMedia[mediaIndex++]);
-    }
-    
-    // Add 1 text post if available
-    if (textIndex < shuffledText.length) {
-      result.push(shuffledText[textIndex++]);
-    }
-  }
-  
-  return result;
-}
-
-// Helper functions (formatCount, formatViews, formatDuration, formatTimeAgo) are now imported from @/lib/feed-utils
 
 function mapNFTToShortVideo(nft: any): ShortVideo {
   const id = String(nft.tokenId || nft.id || nft.token_id);
@@ -349,7 +256,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   // Default to Most Liked (all time)
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[3]); // Most Liked
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[2]); // Most Liked
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
@@ -357,49 +264,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     w2e: false,
     locked: false,
   });
-  
-  // State to trigger re-shuffle on pull-to-refresh
-  const [shuffleTrigger, setShuffleTrigger] = useState(0);
-  
-  // SessionStorage keys for persisting shuffle state across tab switches
-  const STORAGE_KEY_ITEMS = 'home-feed-shuffled-items';
-  const STORAGE_KEY_IDS = 'home-feed-processed-ids';
-  const STORAGE_KEY_PREFETCHED = 'home-feed-prefetched';
-  
-  // Helper to load initial shuffled items from sessionStorage
-  const getInitialShuffledItems = useCallback((): FeedItemType[] => {
-    try {
-      const stored = sessionStorage.getItem(STORAGE_KEY_ITEMS);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  }, []);
-  
-  // Helper to load initial processed IDs from sessionStorage
-  const getInitialProcessedIds = useCallback((): Set<string> => {
-    try {
-      const stored = sessionStorage.getItem(STORAGE_KEY_IDS);
-      return stored ? new Set(JSON.parse(stored)) : new Set();
-    } catch {
-      return new Set();
-    }
-  }, []);
-  
-  // Stable shuffle refs - initialized from sessionStorage if available
-  const stableShuffledRef = useRef<FeedItemType[]>(getInitialShuffledItems());
-  const processedIdsRef = useRef<Set<string>>(getInitialProcessedIds());
-  
-  // Track if we've pre-fetched enough pages for random mode
-  // Persist in sessionStorage to prevent loading flash on back navigation
-  const getInitialPreFetched = useCallback(() => {
-    try {
-      return sessionStorage.getItem(STORAGE_KEY_PREFETCHED) === 'true';
-    } catch {
-      return false;
-    }
-  }, []);
-  const [hasPreFetched, setHasPreFetched] = useState(getInitialPreFetched);
 
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -412,7 +276,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { storyUsers } = useDeHubStoryUsers(10);
 
   // Build API params from filters
-  // For 'random', we fetch latest and shuffle client-side
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
       case 'most-liked':
@@ -421,9 +284,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         return 'views' as const;
       case 'most-comments':
         return 'comments' as const;
-      case 'random':
-        // Fetch latest, shuffle client-side
-        return 'createdAt' as const;
       case 'latest':
       default:
         return 'createdAt' as const;
@@ -484,51 +344,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
-      // Trigger new shuffle and reset pre-fetch state
-      setShuffleTrigger(prev => prev + 1);
-      setHasPreFetched(false);
-      // Clear ALL persisted shuffle state on explicit refresh
-      try {
-        sessionStorage.removeItem(STORAGE_KEY_PREFETCHED);
-        sessionStorage.removeItem(STORAGE_KEY_ITEMS);
-        sessionStorage.removeItem(STORAGE_KEY_IDS);
-      } catch {}
-      // Reset stable shuffle refs for fresh shuffle
-      stableShuffledRef.current = [];
-      processedIdsRef.current = new Set();
       // Clear optimistic posts on refresh since real data should be available
       clearOptimisticPosts();
       refetch();
     }
   }, [shuffleKey, refetch, clearOptimisticPosts]);
-
-  // Pre-fetch multiple pages for random mode to enable cross-page shuffling
-  useEffect(() => {
-    if (selectedSort.value !== 'random') {
-      setHasPreFetched(true); // Non-random modes don't need pre-fetch
-      // Clear shuffle state when switching away from random mode
-      try {
-        sessionStorage.removeItem(STORAGE_KEY_ITEMS);
-        sessionStorage.removeItem(STORAGE_KEY_IDS);
-      } catch {}
-      stableShuffledRef.current = [];
-      processedIdsRef.current = new Set();
-      return;
-    }
-    
-    const currentPageCount = feedData?.pages?.length || 0;
-    
-    // If we have less than RANDOM_PREFETCH_PAGES and more are available, fetch next
-    if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
-      fetchNextPage();
-    } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
-      setHasPreFetched(true);
-      // Persist pre-fetch state so back navigation doesn't trigger loading
-      try {
-        sessionStorage.setItem(STORAGE_KEY_PREFETCHED, 'true');
-      } catch {}
-    }
-  }, [selectedSort.value, feedData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -652,12 +472,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Map unified feed items to component-ready data (excluding pinned post)
   const items = useMemo((): FeedItemType[] => {
-    // Don't compute until pre-fetch is complete for random mode
-    // This prevents multiple visual re-renders during sequential page fetches
-    if (selectedSort.value === 'random' && !hasPreFetched) {
-      return [];
-    }
-    
     if (!feedData?.pages) return [];
     
     const allItems = feedData.pages.flatMap(page => page.items || []);
@@ -667,7 +481,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
       : allItems;
     
-    const mappedItems = filteredItems.map((item, index): FeedItemType => {
+    return filteredItems.map((item, index): FeedItemType => {
       // Infer post type if not explicitly set by API
       const inferredType = item.postType || (
         item.videoUrl ? 'video' :
@@ -685,45 +499,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return { type: 'video', data: mapToVideoItem(item, index) };
       }
     });
-    
-    // For non-random modes, return as-is
-    if (selectedSort.value !== 'random') {
-      return mappedItems;
-    }
-    
-    // STABLE SHUFFLE: Only shuffle NEW items and append to existing stable list
-    // This prevents re-shuffling when loading more pages (looping issue)
-    
-    // Find items not yet processed
-    const newItems = mappedItems.filter(item => {
-      const id = getItemId(item);
-      return !processedIdsRef.current.has(id);
-    });
-    
-    // If no new items, return existing stable list
-    if (newItems.length === 0) {
-      return stableShuffledRef.current;
-    }
-    
-    // Shuffle only the new items using balanced shuffle
-    const shuffledNew = balancedShuffle(newItems);
-    
-    // Mark new items as processed
-    shuffledNew.forEach(item => {
-      processedIdsRef.current.add(getItemId(item));
-    });
-    
-    // Append to stable list
-    stableShuffledRef.current = [...stableShuffledRef.current, ...shuffledNew];
-    
-    // Persist shuffle state to sessionStorage for tab-switch persistence
-    try {
-      sessionStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(stableShuffledRef.current));
-      sessionStorage.setItem(STORAGE_KEY_IDS, JSON.stringify([...processedIdsRef.current]));
-    } catch {}
-    
-    return stableShuffledRef.current;
-  }, [feedData, pinnedPostId, shuffleTrigger, selectedSort.value, hasPreFetched, getItemId]);
+  }, [feedData, pinnedPostId]);
 
   // Infinite scroll observer - uses ref-based guard to prevent race conditions
   useEffect(() => {
@@ -827,19 +603,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return elements;
   };
 
-  // Show loading while pre-fetching pages for random mode
-  // Check !hasPreFetched directly to cover all fetch states (not just during active fetch)
-  const isPreFetchingRandom = selectedSort.value === 'random' && !hasPreFetched;
-  
   // CRITICAL: Only show skeleton loader when we have NO cached data at all
   // This prevents the loading flash when returning from a post via back navigation
   // React Query keeps cached data, so we should show it immediately
-  // Check feedData.pages directly as fallback if items is empty due to pre-fetch guard
   const hasQueryData = feedData?.pages && feedData.pages.length > 0;
   const hasCachedData = hasQueryData && items.length > 0;
-  // Show loading during initial load OR during random pre-fetch without cached items
-  const isLoadingState = (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading))) 
-    || (isPreFetchingRandom && !hasCachedData);
+  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -897,7 +666,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
           
-          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !isPreFetchingRandom && !hasQueryData ? (
+          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
