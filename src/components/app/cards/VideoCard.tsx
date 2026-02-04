@@ -76,11 +76,57 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
   const [volume, setVolume] = useState(1);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [detectedDuration, setDetectedDuration] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTouchDevice = useIsTouchDevice();
+  
+  // Detect duration from video metadata if API doesn't provide it
+  useEffect(() => {
+    const apiDuration = video.duration;
+    // Skip if we already have a valid duration from API
+    if (apiDuration && apiDuration !== '0:00' && apiDuration !== '00:00' && apiDuration !== '') {
+      setDetectedDuration(null);
+      return;
+    }
+
+    // Need a video URL to detect from
+    if (!video.videoUrl) return;
+
+    const hiddenVideo = document.createElement('video');
+    hiddenVideo.preload = 'metadata';
+    hiddenVideo.src = video.videoUrl;
+    
+    const handleMetadata = () => {
+      const seconds = Math.floor(hiddenVideo.duration);
+      if (seconds > 0) {
+        const hours = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        
+        if (hours > 0) {
+          setDetectedDuration(`${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`);
+        } else {
+          setDetectedDuration(`${mins}:${secs.toString().padStart(2, '0')}`);
+        }
+      }
+      hiddenVideo.remove();
+    };
+
+    hiddenVideo.addEventListener('loadedmetadata', handleMetadata);
+    
+    return () => {
+      hiddenVideo.removeEventListener('loadedmetadata', handleMetadata);
+      hiddenVideo.remove();
+    };
+  }, [video.videoUrl, video.duration]);
+
+  // Compute display duration - prefer API, fallback to detected
+  const displayDuration = (video.duration && video.duration !== '0:00' && video.duration !== '00:00' && video.duration !== '') 
+    ? video.duration 
+    : detectedDuration;
   
   // View tracking - fires view after watching threshold
   const { onTimeUpdate: trackView } = useVideoViewTracking(video.id);
@@ -738,10 +784,10 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
           </div>
         )}
         
-        {/* Duration badge - liquid glass - hide when progress bar visible */}
-        {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && (
+        {/* Duration badge - liquid glass - hide when progress bar visible, only show if valid duration */}
+        {!(isPlaying && duration > 0 && (showControls || isTouchDevice)) && displayDuration && (
           <div className="absolute bottom-2 right-2 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium">
-            {video.duration}
+            {displayDuration}
           </div>
         )}
         
