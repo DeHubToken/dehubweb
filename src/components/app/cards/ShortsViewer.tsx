@@ -15,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnNFT, getNFTComments, postComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnNFT, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -105,6 +105,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   
+  // Follow state
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [followedCreators, setFollowedCreators] = useState<Set<string>>(new Set());
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -132,6 +137,36 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       navigate(`/${username}`);
     }
   }, [currentShort?.creatorUsername, currentShort?.username, navigate, onClose]);
+  
+  // Handle follow creator
+  const handleFollow = useCallback(async () => {
+    const creatorAddress = currentShort?.creatorId;
+    if (!creatorAddress) {
+      toast.error('Unable to follow - creator not found');
+      return;
+    }
+    
+    if (!isAuthenticated) {
+      toast.error('Please log in to follow');
+      return;
+    }
+    
+    if (isFollowLoading || followedCreators.has(creatorAddress)) {
+      return;
+    }
+    
+    setIsFollowLoading(true);
+    try {
+      await followUser(creatorAddress);
+      setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+      toast.success(`Following ${currentShort.displayName || currentShort.creatorUsername || currentShort.username}!`);
+    } catch (error) {
+      console.error('Failed to follow:', error);
+      toast.error('Failed to follow user');
+    } finally {
+      setIsFollowLoading(false);
+    }
+  }, [currentShort, isAuthenticated, isFollowLoading, followedCreators]);
   
   // Bookmark hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
@@ -740,8 +775,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               {currentShort.description && (
                 <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
               )}
-              <button className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors">
-                Follow
+              <button 
+                onClick={handleFollow}
+                disabled={isFollowLoading || (currentShort.creatorId ? followedCreators.has(currentShort.creatorId) : false)}
+                className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isFollowLoading ? 'Following...' : (currentShort.creatorId && followedCreators.has(currentShort.creatorId)) ? 'Following' : 'Follow'}
               </button>
             </div>
 

@@ -119,6 +119,7 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     shares: '0',
     views: formatCount(viewCount),
     creatorUsername: nft.mintername || nft.creator?.username || 'user',
+    creatorId: minterAddress,
     displayName: nft.minterDisplayName || undefined,
   };
 }
