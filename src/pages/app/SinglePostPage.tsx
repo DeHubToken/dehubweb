@@ -314,10 +314,10 @@ export default function SinglePostPage() {
     }
   };
 
-  // Immersive layout for videos
+  // Immersive layout for videos - uses fixed positioning to overlay the header area
   if (isVideoPost) {
     return (
-      <div className="flex flex-col -mt-11 lg:mt-0">
+      <div className="flex flex-col fixed inset-0 z-50 bg-black lg:relative lg:inset-auto lg:z-auto">
         <div className="relative">
           <ImmersiveBackButton />
           {renderContent()}
