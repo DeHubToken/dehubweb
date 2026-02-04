@@ -72,31 +72,31 @@ Deno.serve(async (req) => {
         return errorResponse('Failed to fetch view count', 500);
       }
 
-      return successResponse({ count: count || 0 });
+      // Apply 7x view multiplier
+      const multipliedCount = (count || 0) * 7;
+      return successResponse({ count: multipliedCount });
     }
 
-    // POST /views - Record a view
+    // POST /views - Record a view (no auth required - anyone can view)
     if (req.method === 'POST' && pathname.endsWith('/views')) {
-      if (!walletAddress) {
-        return errorResponse('x-wallet-address header is required', 401);
-      }
-
       const body = await req.json();
+      // Use wallet address if provided, otherwise generate anonymous viewer ID
+      const viewerWallet = walletAddress || `anon-${crypto.randomUUID()}`;
       const { story_id } = body;
 
       if (!story_id) {
         return errorResponse('story_id is required');
       }
 
-      console.log(`[stories-api] POST record view for story: ${story_id} by ${walletAddress}`);
+      console.log(`[stories-api] POST record view for story: ${story_id} by ${viewerWallet}`);
 
-      // Upsert to avoid duplicate views per user
+      // Upsert to avoid duplicate views per user (or per anonymous session)
       const { error } = await supabase
         .from('story_views')
         .upsert(
           {
             story_id,
-            viewer_wallet_address: walletAddress,
+            viewer_wallet_address: viewerWallet,
           },
           { onConflict: 'story_id,viewer_wallet_address' }
         );

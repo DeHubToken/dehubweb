@@ -37,21 +37,25 @@ export function useStoryViews(storyId: string | undefined) {
     placeholderData: (previousData) => previousData ?? 0, // Keep previous data to prevent flash
   });
 
-  // Mutation to record a view via edge function
+  // Mutation to record a view via edge function (no auth required)
   const recordViewMutation = useMutation({
     mutationFn: async () => {
-      if (!storyId || !walletAddress) {
-        throw new Error('Missing story ID or wallet address');
+      if (!storyId) {
+        throw new Error('Missing story ID');
       }
 
-      const lowerWallet = walletAddress.toLowerCase();
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Include wallet address if logged in
+      if (walletAddress) {
+        headers['x-wallet-address'] = walletAddress.toLowerCase();
+      }
 
       const response = await fetch(`${STORIES_API_URL}/views`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-wallet-address': lowerWallet,
-        },
+        headers,
         body: JSON.stringify({ story_id: storyId }),
       });
 
@@ -72,8 +76,9 @@ export function useStoryViews(storyId: string | undefined) {
   });
 
   // Record view when story is viewed - tracks per session to avoid duplicates
+  // No login required - anyone can view
   const recordView = () => {
-    if (storyId && walletAddress && !recordedViews.current.has(storyId)) {
+    if (storyId && !recordedViews.current.has(storyId)) {
       recordedViews.current.add(storyId);
       recordViewMutation.mutate();
     }
