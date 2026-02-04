@@ -60,6 +60,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
@@ -938,6 +939,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div className="pt-2">
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
+          
+          {/* Mobile/Tablet: Who to Follow Carousel */}
+          <MobileWhoToFollowCarousel />
           
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
