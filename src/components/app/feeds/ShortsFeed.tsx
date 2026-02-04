@@ -127,6 +127,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     durationSeconds: Math.round(durationSeconds),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
     creatorUsername: nft.mintername || nft.creator?.username || 'user',
+    displayName: nft.minterDisplayName || undefined,
   } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
 }
 

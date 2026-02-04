@@ -197,6 +197,8 @@ export interface ShortVideo extends BaseFeedItem {
   creatorId?: string;
   /** Creator's username for URL-based navigation */
   creatorUsername?: string;
+  /** Creator's display name */
+  displayName?: string;
   /** Whether the current user has liked this item */
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
