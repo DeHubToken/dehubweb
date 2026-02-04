@@ -200,8 +200,16 @@ export function WhoToFollow() {
       await followUser(user.address);
       setFollowedUsers(prev => new Set(prev).add(user.address));
       toast.success(`Following ${getDisplayName(user)}!`);
-    } catch (error) {
-      handleApiError(error, 'Failed to follow user');
+    } catch (error: unknown) {
+      // Check if error indicates already following
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
+        toast.info(`You're already following ${getDisplayName(user)}`);
+        // Add to followed set to remove from suggestions
+        setFollowedUsers(prev => new Set(prev).add(user.address));
+      } else {
+        handleApiError(error, 'Failed to follow user');
+      }
     } finally {
       setLoadingUsers(prev => {
         const next = new Set(prev);
