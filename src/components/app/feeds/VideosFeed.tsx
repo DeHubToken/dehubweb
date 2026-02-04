@@ -461,6 +461,44 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return allVideos;
   }, [allVideos, selectedDuration]);
 
+  // Auto-fetch more pages when duration filter reduces visible items below threshold
+  const MIN_VISIBLE_VIDEOS = 8;
+  const MAX_AUTO_FETCH_ATTEMPTS = 5;
+  const autoFetchAttempts = useRef(0);
+
+  // Reset auto-fetch attempts when duration filter changes
+  useEffect(() => {
+    autoFetchAttempts.current = 0;
+  }, [selectedDuration]);
+
+  useEffect(() => {
+    const isDurationFilterActive = selectedDuration.min !== 0 || selectedDuration.max !== Infinity;
+    
+    if (
+      isDurationFilterActive &&
+      videos.length < MIN_VISIBLE_VIDEOS &&
+      hasNextPage &&
+      autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS &&
+      !isFetchingNextPage &&
+      !isApiLoading
+    ) {
+      console.log(`[VideosFeed] Auto-fetching more pages. Current: ${videos.length} videos, need ${MIN_VISIBLE_VIDEOS}`);
+      autoFetchAttempts.current += 1;
+      fetchNextPage();
+    }
+    
+    // Reset attempts when filter is removed
+    if (!isDurationFilterActive) {
+      autoFetchAttempts.current = 0;
+    }
+  }, [videos.length, selectedDuration, hasNextPage, isFetchingNextPage, isApiLoading, fetchNextPage]);
+
+  // Check if we're auto-fetching to fill the view
+  const isAutoFetching = 
+    (selectedDuration.min !== 0 || selectedDuration.max !== Infinity) &&
+    videos.length < MIN_VISIBLE_VIDEOS &&
+    (isFetchingNextPage || (hasNextPage && autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS));
+
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
     if (!shortsData?.pages) return [];
@@ -539,8 +577,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     </div>
   );
 
-  // Show loading during initial load
-  if (isRefreshing || isApiLoading) {
+  // Show loading during initial load or while auto-fetching for duration filter
+  if (isRefreshing || isApiLoading || isAutoFetching) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <VideosFeedSkeleton />
