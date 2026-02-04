@@ -43,6 +43,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const title = nft.title || nft.name || '';
   // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
+  // API may return createdAt (camelCase) or created_at (snake_case)
+  const timestamp = nft.createdAt || nft.created_at;
   
   return {
     id: String(nft.tokenId),
@@ -56,7 +58,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     channelAvatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
     verified: false,
     views,
-    uploadedAgo: formatTimeAgo(nft.createdAt),
+    uploadedAgo: formatTimeAgo(timestamp),
     status: nft.status,
     stakedAmount: undefined,
     creatorId: nft.minter,
@@ -87,6 +89,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   const title = nft.title || nft.name;
   // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
+  // API may return createdAt (camelCase) or created_at (snake_case)
+  const timestamp = nft.createdAt || nft.created_at;
   
   return {
     id: String(nft.tokenId),
@@ -104,7 +108,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     status: nft.status,
     stakedAmount: undefined,
     views,
-    timeAgo: formatTimeAgo(nft.createdAt),
+    timeAgo: formatTimeAgo(timestamp),
     creatorId: nft.minter,
     creatorUsername: nft.mintername,
     isLiked: nft.isLiked,
@@ -117,11 +121,13 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  */
 function toTextPost(nft: DeHubNFT): TextPost {
   const views = nft.views != null ? String(nft.views) : '0';
+  // API may return createdAt (camelCase) or created_at (snake_case)
+  const timestamp = nft.createdAt || nft.created_at;
   
   return {
     id: String(nft.tokenId),
     type: 'post',
-    createdAt: formatTimeAgo(nft.createdAt),
+    createdAt: formatTimeAgo(timestamp),
     views,
     status: nft.status,
     author: {
