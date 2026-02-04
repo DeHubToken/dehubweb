@@ -277,7 +277,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
       case 'most-liked':
-        return undefined; // API default (most liked)
+        return 'likes' as const; // Explicitly pass 'likes' to ensure proper sorting
       case 'most-viewed':
         return 'views' as const;
       case 'most-comments':
@@ -288,7 +288,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
   }, [selectedSort.value]);
 
-  const sortOrder: 'asc' | 'desc' | undefined = sortBy ? 'desc' : undefined;
+  const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
   const range = getDateRange(selectedDate.value);
 
   // Common API params for all three feeds
