@@ -13,7 +13,7 @@
  * ```
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -96,6 +96,23 @@ export function ActionBar({
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  
+  // Sync local state with props when they change (e.g., after data refetch or auth change)
+  useEffect(() => {
+    setIsLiked(initialIsLiked);
+  }, [initialIsLiked]);
+
+  useEffect(() => {
+    setIsDisliked(initialIsDisliked);
+  }, [initialIsDisliked]);
+
+  useEffect(() => {
+    setLocalLikeCount(likeCount ?? 0);
+  }, [likeCount]);
+
+  useEffect(() => {
+    setLocalDislikeCount(dislikeCount ?? 0);
+  }, [dislikeCount]);
   
   // Bookmark state from hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
