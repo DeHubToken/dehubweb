@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronLeft, MoreHorizontal, MessageSquare, Share2, Trash2, Loader2 } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronLeft, MoreHorizontal, ThumbsUp, ThumbsDown, Share2, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,10 +17,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { Repeat2, Quote, Link } from 'lucide-react';
+import { Repeat2, Link } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { Story } from '@/hooks/use-stories';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useStoryReactions } from '@/hooks/use-story-reactions';
 import { StorySlide } from './StorySlide';
 
 interface StoryViewerModalProps {
@@ -37,6 +39,13 @@ const SPRING_TRANSITION = {
   damping: 30,
 } as const;
 
+/** Format count for display */
+function formatCount(count: number): string {
+  if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return count.toString();
+}
+
 export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }: StoryViewerModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
@@ -44,6 +53,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const [dragOffset, setDragOffset] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const { walletAddress } = useAuth();
@@ -54,23 +64,24 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const currentStory = stories[currentIndex];
   const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
 
-  // Resolve avatar URL - story.avatar may already be processed or may be a raw path
+  // Story reactions hook
+  const { likes, dislikes, isLiked, isDisliked, isReacting, react } = useStoryReactions(currentStory?.id);
+
+  // Resolve avatar URL
   const resolvedAvatar = useMemo(() => {
     if (!currentStory) return undefined;
-    // If avatar is already a full URL, use it directly
     if (currentStory.avatar?.startsWith('http')) {
       return currentStory.avatar;
     }
-    // Otherwise build from wallet address
     return buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined;
   }, [currentStory]);
 
   // Compute visible indices for the 3-story window
   const visibleIndices = useMemo(() => {
     return [
-      currentIndex - 1, // Previous
-      currentIndex,     // Current
-      currentIndex + 1, // Next
+      currentIndex - 1,
+      currentIndex,
+      currentIndex + 1,
     ].filter(i => i >= 0 && i < stories.length);
   }, [currentIndex, stories.length]);
 
@@ -102,7 +113,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       setCurrentIndex((prev) => prev + 1);
       setTimeout(() => setIsTransitioning(false), 350);
     } else {
-      // Loop randomly when out of stories
       setIsTransitioning(true);
       const randomIndex = Math.floor(Math.random() * stories.length);
       setCurrentIndex(randomIndex);
@@ -176,7 +186,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, goNext, goPrev, onClose]);
 
-  // Handle drag for visual feedback during swipe
   const handleDrag = useCallback((_: any, info: PanInfo) => {
     setDragOffset(info.offset.y);
   }, []);
@@ -225,6 +234,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   };
 
+  const handleVote = useCallback((type: 'like' | 'dislike') => {
+    react(type);
+    setJustVoted(type);
+    setTimeout(() => setJustVoted(null), 400);
+  }, [react]);
+
   const handleNavigateToProfile = useCallback(() => {
     const profilePath = currentStory?.username 
       ? `/${currentStory.username}` 
@@ -245,12 +260,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     setShareSheetOpen(false);
   };
 
-  const handleQuote = () => {
-    toast.success('Quote created!');
-    setShareSheetOpen(false);
-  };
-
-  // Prevent touch events from bubbling
   const handleTouchStart = (e: React.TouchEvent) => {
     e.stopPropagation();
   };
@@ -303,11 +312,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
                 const offset = index - currentIndex;
                 const isActive = index === currentIndex;
                 
-                // Resolve avatar for this story
-                const storyAvatar = story.avatar?.startsWith('http') 
-                  ? story.avatar 
-                  : buildAvatarUrl(story.wallet_address, story.avatar) || undefined;
-                
                 return (
                   <motion.div
                     key={story.id}
@@ -333,12 +337,11 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
             </AnimatePresence>
           </motion.div>
 
-          {/* Mobile-only overlays - TikTok-style layout (matching ShortsViewer exactly) */}
+          {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
               {/* Bottom Left - Creator Info */}
               <div className="absolute bottom-6 left-4 right-20 z-10 pointer-events-auto">
-                {/* Creator info row */}
                 <div className="flex items-center gap-2 mb-3">
                   <button
                     onClick={handleNavigateToProfile}
@@ -367,10 +370,34 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
 
               {/* Right Side Action Buttons - Vertical stack (matching ShortsViewer) */}
               <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5 pointer-events-auto">
-                {/* Comments placeholder */}
-                <button className="flex flex-col items-center gap-1">
-                  <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
-                </button>
+                {/* Like */}
+                <motion.button
+                  onClick={() => handleVote('like')}
+                  disabled={isReacting}
+                  className="flex flex-col items-center gap-1"
+                  animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <ThumbsUp className={cn(
+                    "w-8 h-8 drop-shadow-lg",
+                    isLiked ? "fill-white text-white" : "text-white"
+                  )} />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(likes)}</span>
+                </motion.button>
+                
+                {/* Dislike */}
+                <motion.button
+                  onClick={() => handleVote('dislike')}
+                  disabled={isReacting}
+                  className="flex flex-col items-center gap-1"
+                  animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <ThumbsDown className={cn(
+                    "w-8 h-8 drop-shadow-lg",
+                    isDisliked ? "fill-white text-white" : "text-white"
+                  )} />
+                </motion.button>
                 
                 {/* Share */}
                 <button
@@ -432,6 +459,29 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
 
             {/* Actions panel */}
             <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col gap-3">
+              {/* Like/Dislike row */}
+              <div className="flex items-center gap-4 p-3">
+                <motion.button
+                  onClick={() => handleVote('like')}
+                  disabled={isReacting}
+                  className="flex items-center gap-2"
+                  animate={justVoted === 'like' ? { scale: [1, 1.2, 1] } : {}}
+                >
+                  <ThumbsUp className={cn("w-5 h-5", isLiked ? "fill-white text-white" : "text-white")} />
+                  <span className="text-white text-sm">{formatCount(likes)}</span>
+                </motion.button>
+                
+                <motion.button
+                  onClick={() => handleVote('dislike')}
+                  disabled={isReacting}
+                  className="flex items-center gap-2"
+                  animate={justVoted === 'dislike' ? { scale: [1, 1.2, 1] } : {}}
+                >
+                  <ThumbsDown className={cn("w-5 h-5", isDisliked ? "fill-white text-white" : "text-white")} />
+                  <span className="text-white text-sm">{formatCount(dislikes)}</span>
+                </motion.button>
+              </div>
+
               <button
                 onClick={() => setShareSheetOpen(true)}
                 className="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl transition-colors"
@@ -459,10 +509,9 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         )}
       </div>
 
-      {/* Mobile top header controls - TikTok style (matching ShortsViewer exactly) */}
+      {/* Mobile top header controls */}
       {isMobile && (
         <>
-          {/* Back button - top left */}
           <button
             onClick={onClose}
             className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
@@ -470,9 +519,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
             <ChevronLeft className="w-6 h-6 text-white" />
           </button>
           
-          {/* Right side controls */}
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
-            {/* Mute button */}
             <button
               onClick={() => setIsMuted(prev => !prev)}
               className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
@@ -484,7 +531,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
               )}
             </button>
             
-            {/* More options button */}
             <button
               onClick={() => setShareSheetOpen(true)}
               className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
@@ -505,7 +551,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </button>
       )}
 
-      {/* Share Drawer */}
+      {/* Share Drawer - Quote option removed */}
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="relative">
@@ -518,13 +564,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
             >
               <Repeat2 className="w-5 h-5" />
               <span className="font-medium">Repost</span>
-            </button>
-            <button
-              onClick={handleQuote}
-              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
-            >
-              <Quote className="w-5 h-5" />
-              <span className="font-medium">Quote</span>
             </button>
             <button
               onClick={handleCopyLink}
