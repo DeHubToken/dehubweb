@@ -262,7 +262,7 @@ export function WhoToFollow() {
               variant="outline"
               onClick={(e) => handleFollow(e, user)}
               disabled={loadingUsers.has(user.address)}
-              className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+              className="h-8 w-[72px] text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
             >
               {loadingUsers.has(user.address) ? (
                 <Loader2 className="w-3 h-3 animate-spin" />

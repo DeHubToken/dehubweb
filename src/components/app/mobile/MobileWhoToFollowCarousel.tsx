@@ -208,7 +208,7 @@ export function MobileWhoToFollowCarousel() {
                 variant="outline"
                 onClick={(e) => handleFollow(e, user)}
                 disabled={loadingUsers.has(user.address)}
-                className="w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+                className="w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
               >
                 {loadingUsers.has(user.address) ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
