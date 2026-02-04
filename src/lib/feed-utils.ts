@@ -7,6 +7,127 @@
  */
 
 import type { DeHubNFT } from '@/lib/api/dehub';
+import type { FeedItem, VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+
+// ============================================================================
+// CONTENT ORDERING PATTERN (50-item cycle for Home Feed)
+// ============================================================================
+
+/**
+ * Defines the exact sequence of content types in the home feed.
+ * The pattern repeats every 50 items.
+ * Total: 16 videos, 24 text posts, 10 images
+ */
+export const CONTENT_PATTERN: Array<'video' | 'text' | 'image'> = [
+  // 1-3: 3 videos
+  'video', 'video', 'video',
+  // 4-5: 2 text posts
+  'text', 'text',
+  // 6: 1 image
+  'image',
+  // 7-9: 3 text posts
+  'text', 'text', 'text',
+  // 10-12: 3 videos
+  'video', 'video', 'video',
+  // 13: 1 text post
+  'text',
+  // 14: 1 image
+  'image',
+  // 15-17: 3 text posts
+  'text', 'text', 'text',
+  // 18-19: 2 videos
+  'video', 'video',
+  // 20-21: 2 text posts
+  'text', 'text',
+  // 22: 1 image
+  'image',
+  // 23-24: 2 text posts
+  'text', 'text',
+  // 25: 1 image
+  'image',
+  // 26-28: 3 text posts
+  'text', 'text', 'text',
+  // 29-31: 3 videos
+  'video', 'video', 'video',
+  // 32: 1 video
+  'video',
+  // 33: 1 text
+  'text',
+  // 34: 1 image
+  'image',
+  // 35: 1 video
+  'video',
+  // 36: 1 text
+  'text',
+  // 37: 1 image
+  'image',
+  // 38-40: 3 text
+  'text', 'text', 'text',
+  // 41-44: 4 images
+  'image', 'image', 'image', 'image',
+  // 45-47: 3 videos
+  'video', 'video', 'video',
+  // 48-50: 3 text
+  'text', 'text', 'text',
+];
+
+export type ContentPatternType = 'video' | 'text' | 'image';
+
+/**
+ * Interleave content from three separate feeds according to the defined pattern.
+ * Each queue maintains "most liked" order within its type.
+ * If a queue is exhausted, that slot is skipped.
+ */
+export function interleaveByPattern<V, I, T>(
+  videos: V[],
+  images: I[],
+  texts: T[],
+  pattern: ContentPatternType[] = CONTENT_PATTERN
+): Array<{ type: 'video'; data: V } | { type: 'image'; data: I } | { type: 'text'; data: T }> {
+  const result: Array<{ type: 'video'; data: V } | { type: 'image'; data: I } | { type: 'text'; data: T }> = [];
+  
+  let videoIdx = 0;
+  let imageIdx = 0;
+  let textIdx = 0;
+  
+  // Calculate total available items
+  const totalAvailable = videos.length + images.length + texts.length;
+  if (totalAvailable === 0) return result;
+  
+  // Iterate through pattern, cycling if needed
+  let patternIdx = 0;
+  let safetyCounter = 0;
+  const maxIterations = totalAvailable + pattern.length; // Prevent infinite loops
+  
+  while (result.length < totalAvailable && safetyCounter < maxIterations) {
+    const contentType = pattern[patternIdx % pattern.length];
+    patternIdx++;
+    safetyCounter++;
+    
+    switch (contentType) {
+      case 'video':
+        if (videoIdx < videos.length) {
+          result.push({ type: 'video', data: videos[videoIdx] });
+          videoIdx++;
+        }
+        break;
+      case 'image':
+        if (imageIdx < images.length) {
+          result.push({ type: 'image', data: images[imageIdx] });
+          imageIdx++;
+        }
+        break;
+      case 'text':
+        if (textIdx < texts.length) {
+          result.push({ type: 'text', data: texts[textIdx] });
+          textIdx++;
+        }
+        break;
+    }
+  }
+  
+  return result;
+}
 
 // ============================================================================
 // SORT OPTIONS (Used across all feeds)

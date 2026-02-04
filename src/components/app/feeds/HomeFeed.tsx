@@ -1,8 +1,9 @@
 /**
  * Home Feed Component
  * ===================
- * Mixed content feed using the unified /api/feed endpoint.
- * Renders videos, images, and text posts based on postType.
+ * Mixed content feed with custom content ordering pattern.
+ * Fetches videos, images, and text posts separately then interleaves
+ * according to a 50-item repeating pattern.
  * 
  * @module components/app/feeds/HomeFeed
  */
@@ -13,7 +14,22 @@ import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, POST_TYPE_FILTERS, formatCount, formatViews, formatDuration, formatTimeAgo, type SortOption, type DateFilterOption, type ContentTypeFilters, type PostTypeFilterValue } from '@/lib/feed-utils';
+import { 
+  SORT_OPTIONS, 
+  DATE_FILTER_OPTIONS, 
+  CONTENT_TYPE_FILTERS, 
+  POST_TYPE_FILTERS, 
+  formatCount, 
+  formatViews, 
+  formatDuration, 
+  formatTimeAgo, 
+  CONTENT_PATTERN,
+  interleaveByPattern,
+  type SortOption, 
+  type DateFilterOption, 
+  type ContentTypeFilters, 
+  type PostTypeFilterValue 
+} from '@/lib/feed-utils';
 
 // Card components
 import { 
@@ -73,7 +89,6 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
   const viewCount = nft.views || nft.view_count || nft.nft?.views || nft.nft?.view_count || 0;
   const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
   
-  // Try all possible avatar fields - same pattern as leaderboard/profile
   const rawAvatarUrl = nft.minterAvatarUrl || nft.minterAvatarImg || nft.avatarUrl || nft.avatarImg ||
                        nft.creator?.avatar_url || nft.creator?.avatarImg || nft.creator?.avatarUrl;
   const avatarUrl = rawAvatarUrl?.startsWith('http') 
@@ -96,24 +111,6 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     views: formatCount(viewCount),
     creatorUsername: nft.mintername || nft.creator?.username || 'user',
   };
-}
-
-/**
- * Map API sortBy to our sort option value
- */
-function getSortByFromOption(sortValue: string): 'views' | 'likes' | 'createdAt' {
-  switch (sortValue) {
-    case 'most-viewed':
-      return 'views';
-    case 'most-liked':
-      return 'likes';
-    case 'most-comments':
-      // Not included in return union; handled by caller with sortBy override
-      return 'views';
-    case 'latest':
-    default:
-      return 'createdAt';
-  }
 }
 
 /**
@@ -254,7 +251,8 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
+  const isFetchingRef = useRef(false);
+  
   // Default to Most Liked (all time)
   const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[2]); // Most Liked
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
@@ -279,7 +277,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
       case 'most-liked':
-        return undefined; // API default
+        return undefined; // API default (most liked)
       case 'most-viewed':
         return 'views' as const;
       case 'most-comments':
@@ -290,34 +288,54 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
   }, [selectedSort.value]);
 
-  const sortOrder = sortBy ? 'desc' : undefined;
+  const sortOrder: 'asc' | 'desc' | undefined = sortBy ? 'desc' : undefined;
   const range = getDateRange(selectedDate.value);
 
-  // Fetch unified feed
-  const {
-    data: feedData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-    refetch,
-    error,
-  } = useUnifiedFeed({
+  // Common API params for all three feeds
+  const commonParams = useMemo(() => ({
     limit: PAGE_SIZE,
     sortBy,
     sortOrder,
-    // Note: Don't pass address here - that filters to only that user's posts.
-    // The auth token in the request header handles personalization (isLiked, etc.)
     range,
-    // Only show minted content
-    status: 'minted',
-    // Apply post type filter
-    postType: selectedPostType === 'all' ? undefined : selectedPostType,
-    // Apply content type filters
+    status: 'minted' as const,
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
     isLocked: contentFilters.locked ? true : undefined,
+  }), [sortBy, sortOrder, range, contentFilters]);
+
+  // ============================================================================
+  // THREE SEPARATE FEED QUERIES
+  // ============================================================================
+
+  // Determine if we should use the interleaved pattern or single feed
+  const useInterleavedFeed = selectedPostType === 'all';
+
+  // Fetch videos
+  const videosFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'video',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fetch images
+  const imagesFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-images',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fetch text posts
+  const textsFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-simple',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fallback: single unified feed when post type filter is active
+  const singleFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: selectedPostType === 'all' ? undefined : selectedPostType,
+    enabled: !useInterleavedFeed,
   });
 
   // Fetch shorts separately for the carousel
@@ -344,11 +362,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Refetch when shuffleKey changes (pull-to-refresh)
   useEffect(() => {
     if (shuffleKey > 0) {
-      // Clear optimistic posts on refresh since real data should be available
       clearOptimisticPosts();
-      refetch();
+      if (useInterleavedFeed) {
+        videosFeed.refetch();
+        imagesFeed.refetch();
+        textsFeed.refetch();
+      } else {
+        singleFeed.refetch();
+      }
     }
-  }, [shuffleKey, refetch, clearOptimisticPosts]);
+  }, [shuffleKey, useInterleavedFeed, clearOptimisticPosts]);
 
   // Map shorts data
   const shorts = useMemo((): ShortVideo[] => {
@@ -365,11 +388,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const views = pinnedPost.views || pinnedPost.view_count || 0;
     const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
     
-    // Determine post type - DeHubNFT uses "video" | "image" | "audio"
     const nftPostType = pinnedPost.postType || 'video';
     
     if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
-      // Image post
       const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
       const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
       const avatar = pinnedPost.minterAvatarUrl 
@@ -397,7 +418,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       };
       return { type: 'image', data: imagePost };
     } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
-      // Video post
       const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
       const videoUrl = buildVideoUrl(pinnedPost.tokenId);
       const channelAvatar = pinnedPost.minterAvatarUrl 
@@ -428,7 +448,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       };
       return { type: 'video', data: videoItem };
     } else {
-      // Text post
       const avatarUrl = pinnedPost.minterAvatarUrl 
         ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || pinnedPost.minter
         : pinnedPost.minter;
@@ -456,33 +475,61 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
   }, [pinnedPost]);
 
-  // Helper to get unique ID from a feed item
-  const getItemId = useCallback((item: FeedItemType): string => {
-    switch (item.type) {
-      case 'video':
-      case 'image':
-      case 'post':
-        return item.data.id;
-      case 'shorts':
-        return `shorts-${item.data.map(s => s.id).join('-')}`;
-      default:
-        return `unknown-${Math.random()}`;
-    }
-  }, []);
+  // ============================================================================
+  // INTERLEAVED ITEMS (from three separate feeds)
+  // ============================================================================
 
-  // Map unified feed items to component-ready data (excluding pinned post)
-  const items = useMemo((): FeedItemType[] => {
-    if (!feedData?.pages) return [];
+  const interleavedItems = useMemo((): FeedItemType[] => {
+    if (!useInterleavedFeed) return [];
     
-    const allItems = feedData.pages.flatMap(page => page.items || []);
+    // Extract all items from each feed
+    const allVideos = videosFeed.data?.pages.flatMap(page => page.items || []) || [];
+    const allImages = imagesFeed.data?.pages.flatMap(page => page.items || []) || [];
+    const allTexts = textsFeed.data?.pages.flatMap(page => page.items || []) || [];
     
-    // Filter out the pinned post from regular feed to avoid duplicate
+    // Filter out pinned post from all feeds
+    const filterPinned = (items: any[]) => 
+      pinnedPostId ? items.filter(item => String(item.tokenId) !== String(pinnedPostId)) : items;
+    
+    const filteredVideos = filterPinned(allVideos);
+    const filteredImages = filterPinned(allImages);
+    const filteredTexts = filterPinned(allTexts);
+    
+    // Map to component types
+    const mappedVideos = filteredVideos.map((item, i) => mapToVideoItem(item, i));
+    const mappedImages = filteredImages.map((item, i) => mapToImagePost(item, i));
+    const mappedTexts = filteredTexts.map((item, i) => mapToTextPost(item, i));
+    
+    // Interleave according to pattern
+    const interleaved = interleaveByPattern(mappedVideos, mappedImages, mappedTexts, CONTENT_PATTERN);
+    
+    // Convert to FeedItemType
+    return interleaved.map(item => {
+      switch (item.type) {
+        case 'video':
+          return { type: 'video' as const, data: item.data };
+        case 'image':
+          return { type: 'image' as const, data: item.data };
+        case 'text':
+          return { type: 'post' as const, data: item.data };
+      }
+    });
+  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, pinnedPostId]);
+
+  // ============================================================================
+  // SINGLE FEED ITEMS (when post type filter is active)
+  // ============================================================================
+
+  const singleFeedItems = useMemo((): FeedItemType[] => {
+    if (useInterleavedFeed || !singleFeed.data?.pages) return [];
+    
+    const allItems = singleFeed.data.pages.flatMap(page => page.items || []);
+    
     const filteredItems = pinnedPostId 
       ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
       : allItems;
     
     return filteredItems.map((item, index): FeedItemType => {
-      // Infer post type if not explicitly set by API
       const inferredType = item.postType || (
         item.videoUrl ? 'video' :
         (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
@@ -499,15 +546,71 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           return { type: 'video', data: mapToVideoItem(item, index) };
       }
     });
-  }, [feedData, pinnedPostId]);
+  }, [useInterleavedFeed, singleFeed.data, pinnedPostId]);
 
-  // Infinite scroll observer - uses ref-based guard to prevent race conditions
+  // Final items to render
+  const items = useInterleavedFeed ? interleavedItems : singleFeedItems;
+
+  // ============================================================================
+  // INFINITE SCROLL
+  // ============================================================================
+
+  // Determine if any feed has more content
+  const hasNextPage = useInterleavedFeed 
+    ? (videosFeed.hasNextPage || imagesFeed.hasNextPage || textsFeed.hasNextPage)
+    : singleFeed.hasNextPage;
+
+  const isFetchingNextPage = useInterleavedFeed
+    ? (videosFeed.isFetchingNextPage || imagesFeed.isFetchingNextPage || textsFeed.isFetchingNextPage)
+    : singleFeed.isFetchingNextPage;
+
+  const isLoading = useInterleavedFeed
+    ? (videosFeed.isLoading || imagesFeed.isLoading || textsFeed.isLoading)
+    : singleFeed.isLoading;
+
+  const isError = useInterleavedFeed
+    ? (videosFeed.isError || imagesFeed.isError || textsFeed.isError)
+    : singleFeed.isError;
+
+  const refetch = useCallback(() => {
+    if (useInterleavedFeed) {
+      videosFeed.refetch();
+      imagesFeed.refetch();
+      textsFeed.refetch();
+    } else {
+      singleFeed.refetch();
+    }
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
+
+  // Fetch next page from all feeds that have more content
+  const fetchNextPage = useCallback(() => {
+    const promises: Promise<any>[] = [];
+    
+    if (useInterleavedFeed) {
+      if (videosFeed.hasNextPage && !videosFeed.isFetchingNextPage) {
+        promises.push(videosFeed.fetchNextPage());
+      }
+      if (imagesFeed.hasNextPage && !imagesFeed.isFetchingNextPage) {
+        promises.push(imagesFeed.fetchNextPage());
+      }
+      if (textsFeed.hasNextPage && !textsFeed.isFetchingNextPage) {
+        promises.push(textsFeed.fetchNextPage());
+      }
+    } else {
+      if (singleFeed.hasNextPage && !singleFeed.isFetchingNextPage) {
+        promises.push(singleFeed.fetchNextPage());
+      }
+    }
+    
+    return Promise.all(promises);
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
+
+  // Infinite scroll observer
   useEffect(() => {
     if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Use ref for synchronous check - prevents multiple fetches from stale closures
         if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
           isFetchingRef.current = true;
           fetchNextPage().finally(() => {
@@ -521,6 +624,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
+
+  // ============================================================================
+  // RENDER HELPERS
+  // ============================================================================
 
   const renderFeedItem = (item: FeedItemType, index: number) => {
     switch (item.type) {
@@ -603,10 +710,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return elements;
   };
 
-  // CRITICAL: Only show skeleton loader when we have NO cached data at all
-  // This prevents the loading flash when returning from a post via back navigation
-  // React Query keeps cached data, so we should show it immediately
-  const hasQueryData = feedData?.pages && feedData.pages.length > 0;
+  // Determine loading state
+  const hasQueryData = useInterleavedFeed
+    ? (videosFeed.data?.pages?.length || imagesFeed.data?.pages?.length || textsFeed.data?.pages?.length)
+    : (singleFeed.data?.pages?.length);
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
@@ -618,11 +725,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       <h3 className="text-white font-semibold text-lg mb-2">No Content Yet</h3>
       <p className="text-zinc-400 text-sm max-w-xs mb-4">
         {isError 
-          ? `Unable to load feed. ${error?.message || 'Please try again.'}`
+          ? 'Unable to load feed. Please try again.'
           : 'Be the first to share something amazing!'}
       </p>
       <button 
-        onClick={() => refetch()}
+        onClick={refetch}
         className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
       >
         Refresh
@@ -669,7 +776,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
           ) : (
-            <div key={`${selectedSort.value}-${selectedDate.value}`} className="space-y-3">
+            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`} className="space-y-3">
               {/* Render optimistic posts first (newly created, not yet minted) */}
               {optimisticPosts.map((op) => {
                 const feedItem: FeedItemType = { 
