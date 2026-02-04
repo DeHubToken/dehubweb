@@ -165,7 +165,7 @@ export function RelatedVideosFeed({ currentVideoId }: RelatedVideosFeedProps) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4 pt-4">
       {/* Ad Video - First Slot */}
       {adVideo && (
         <div className="relative">
