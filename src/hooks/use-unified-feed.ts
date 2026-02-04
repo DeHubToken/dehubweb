@@ -416,7 +416,8 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
   const { enabled = true, limit = 20, ...params } = options;
   
   return useInfiniteQuery({
-    queryKey: ['unified-feed', params, limit],
+    // Include address in query key to force cache invalidation on login/logout
+    queryKey: ['unified-feed', params, limit, params.address],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await fetchUnifiedFeed({
         ...params,

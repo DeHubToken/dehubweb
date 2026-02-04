@@ -754,7 +754,9 @@ export async function voteOnNFT(tokenId: string, vote: boolean): Promise<VoteRes
     throw new Error(`Invalid token ID: ${tokenId}`);
   }
   
-  return apiCall<VoteResponse>("/api/request_vote", {
+  console.log('[Vote] Calling API:', { streamTokenId: numericTokenId, vote });
+  
+  const result = await apiCall<VoteResponse>("/api/request_vote", {
     method: "POST",
     body: {
       streamTokenId: numericTokenId,
@@ -762,6 +764,10 @@ export async function voteOnNFT(tokenId: string, vote: boolean): Promise<VoteRes
     },
     requiresAuth: true,
   });
+  
+  console.log('[Vote] API Response:', result);
+  
+  return result;
 }
 
 /**
