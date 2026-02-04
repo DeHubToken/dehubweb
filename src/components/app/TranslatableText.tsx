@@ -20,8 +20,9 @@ export { LANGUAGE_NAMES };
 import { getCachedLanguage, cacheLanguage } from '@/lib/language-detection-cache';
 import { cn } from '@/lib/utils';
 
-// URL regex pattern for detecting links
-const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+/gi;
+// URL regex pattern for detecting links (with or without protocol)
+// Matches: https://..., http://..., www.domain.com, domain.com/path, etc.
+const URL_REGEX = /(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi;
 
 interface TranslatableTextProps {
   text: string;
@@ -47,10 +48,12 @@ function renderTextWithLinks(text: string): ReactNode[] {
     
     // Add clickable link emoji
     const url = match[0];
+    // Ensure URL has protocol for the href
+    const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
     parts.push(
       <a
         key={`${url}-${match.index}`}
-        href={url}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center hover:scale-110 transition-transform"
