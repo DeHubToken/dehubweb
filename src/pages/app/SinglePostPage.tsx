@@ -46,12 +46,16 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   // API returns various timestamp fields - check all possibilities
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
+  // Get raw duration in seconds - prioritize numeric field
+  const durationSeconds = nft.videoDuration || nft.duration || 0;
+  
   return {
     id: String(nft.tokenId),
     type: 'video',
     thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
     videoUrl: getMediaUrl(nft.videoUrl),
-    duration: formatDuration(nft.videoDuration || nft.duration),
+    duration: formatDuration(durationSeconds),
+    durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,
     description,
     channel: nft.minterDisplayName || nft.mintername || 'Unknown',
