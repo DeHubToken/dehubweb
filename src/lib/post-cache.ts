@@ -46,6 +46,8 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     is_locked: video.isLocked,
     locked_price: video.lockedPrice,
     locked_currency: video.lockedCurrency,
+    // Preserve the original timestamp - uploadedAgo is already formatted, so we need to pass createdAt
+    createdAt: video.createdAt,
   };
 }
 
@@ -74,6 +76,8 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
       against: 0,
     },
     commentCount: post.comments || 0,
+    // Preserve the original timestamp - timeAgo is already formatted, so we need to pass createdAt
+    createdAt: post.createdAt,
   };
 }
 
@@ -102,6 +106,8 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
       against: 0,
     },
     commentCount: post.stats.comments || 0,
+    // Preserve the original timestamp
+    createdAt: post.createdAt,
   };
 }
 

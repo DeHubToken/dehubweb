@@ -181,6 +181,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
     bountyAmount: item.streamInfo?.addBountyAmount,
     bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
+    // Preserve raw timestamp for navigation caching
+    createdAt: item.createdAt,
   };
 }
 
@@ -223,6 +225,8 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
+    // Preserve raw timestamp for navigation caching
+    createdAt: item.createdAt,
   };
 }
 
@@ -250,7 +254,8 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       stakedAmount: item.minterStaked,
     },
     content: item.description || item.name || '',
-    createdAt: formatTimeAgo(item.createdAt),
+    // Store raw timestamp - PostMetadata handles formatting
+    createdAt: item.createdAt,
     views: formatViews(item.views).replace(' views', ''),
     status: item.status,
     stats: {
