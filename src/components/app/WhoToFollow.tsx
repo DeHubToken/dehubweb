@@ -69,13 +69,13 @@ export function WhoToFollow() {
   const isFetchingRef = useRef(false);
 
   // Fetch current user's following list
-  const { data: currentUserData } = useQuery({
+  const { data: currentUserData, isLoading: isLoadingFollowings } = useQuery({
     queryKey: ['current-user-followings', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return null;
       return getAccountInfo(walletAddress);
     },
-    enabled: !!walletAddress,
+    enabled: !!walletAddress && isAuthenticated,
     staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -84,6 +84,7 @@ export function WhoToFollow() {
   const followingSet = useMemo(() => {
     const followings = currentUserData?.followings;
     if (!followings || !Array.isArray(followings)) return new Set<string>();
+    console.log('[WhoToFollow] Following set size:', followings.length);
     return new Set(followings.map(addr => addr.toLowerCase()));
   }, [currentUserData?.followings]);
 
@@ -219,7 +220,8 @@ export function WhoToFollow() {
     }
   };
 
-  if (isLoadingInitial) {
+  // Show loading while fetching initial data OR while fetching followings for authenticated user
+  if (isLoadingInitial || (isAuthenticated && isLoadingFollowings)) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
