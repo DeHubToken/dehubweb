@@ -20,13 +20,16 @@ import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
+import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { formatTimeAgo, formatDuration } from '@/lib/feed-utils';
-import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 
 /**
  * Detect content type from API response
  */
-function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' {
+function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
+  // Check if this is a live stream post
+  if ((post as any).postType === 'live' || (post as any).isLive !== undefined) return 'live';
   if (post.postType === 'video' || post.videoUrl) return 'video';
   if (post.postType === 'image' || (post.imageUrl && !post.videoUrl)) return 'image';
   return 'post';
@@ -139,6 +142,28 @@ function toTextPost(nft: DeHubNFT): TextPost {
 }
 
 /**
+ * Transform API NFT data to LiveStream format
+ */
+function toLiveStream(nft: DeHubNFT): LiveStream {
+  return {
+    id: String(nft.tokenId),
+    type: 'live',
+    streamer: nft.minterDisplayName || nft.mintername || 'Unknown',
+    avatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
+    title: nft.title || nft.name || 'Live Stream',
+    game: nft.description || '',
+    viewers: String(nft.views || 0),
+    thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
+    tags: [],
+    isLive: (nft as any).isLive ?? false, // Default to not live (stream ended)
+    creatorId: nft.minter,
+    creatorUsername: nft.mintername,
+    likeCount: nft.totalVotes?.for || 0,
+    commentCount: nft.commentCount || nft.comment_count || 0,
+  };
+}
+
+/**
  * Processing state component for posts still being minted
  */
 function ProcessingState() {
@@ -238,6 +263,8 @@ export default function SinglePostPage() {
         return <VideoCard video={toVideoItem(post)} />;
       case 'image':
         return <ImageCard post={toImagePost(post)} />;
+      case 'live':
+        return <LiveStreamCard stream={toLiveStream(post)} />;
       default:
         return <PostCard post={toTextPost(post)} />;
     }
