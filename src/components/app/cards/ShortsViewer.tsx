@@ -719,31 +719,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
-              <div className="flex items-center gap-2 lg:gap-3">
-                <button
-                  onClick={() => handleNavigateToProfile()}
-                  className="flex items-center gap-2 lg:gap-3 min-w-0 flex-1 text-left"
-                >
-                  <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
-                    <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                    <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline">@{currentShort.creatorUsername || currentShort.username}</p>
-                    <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
-                      <span className="flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        {currentShort.views || '0'}
-                      </span>
-                      <span>•</span>
-                      <span>{formatCount(localLikeCount)} likes</span>
-                    </div>
-                  </div>
-                </button>
-                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0 max-w-[80px]">
-                  Follow
-                </button>
-              </div>
+              <button
+                onClick={() => handleNavigateToProfile()}
+                className="flex items-center gap-2 lg:gap-3 w-full text-left"
+              >
+                <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                  <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                  <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline flex-1 min-w-0">@{currentShort.creatorUsername || currentShort.username}</p>
+              </button>
+              <button className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors">
+                Follow
+              </button>
               {currentShort.description && (
                 <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
               )}
