@@ -194,10 +194,10 @@ export function MobileWhoToFollowCarousel() {
             onClick={() => handleUserClick(user)}
             className="flex-shrink-0 w-[130px] bg-zinc-900 rounded-xl p-3 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start"
           >
-            <div className="flex flex-col items-center text-center">
-              <Avatar className="w-12 h-12 mb-2">
+          <div className="flex flex-col items-center text-center">
+              <Avatar className="w-16 h-16 mb-2">
                 {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
-                <AvatarFallback className="bg-zinc-700 text-white font-medium text-sm">
+                <AvatarFallback className="bg-zinc-700 text-white font-medium text-base">
                   {getDisplayName(user).charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
