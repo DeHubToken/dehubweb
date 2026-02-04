@@ -231,48 +231,6 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
     }
   };
 
-  // Track actual duration from video metadata when API doesn't provide it
-  const [detectedDuration, setDetectedDuration] = useState<string | null>(null);
-  const hiddenVideoRef = useRef<HTMLVideoElement>(null);
-
-  // Detect duration from video metadata if not provided by API
-  useEffect(() => {
-    const apiDuration = video.duration;
-    if (apiDuration && apiDuration !== '0:00' && apiDuration !== '00:00') {
-      setDetectedDuration(null); // Use API duration
-      return;
-    }
-
-    // Load video metadata to get actual duration
-    if (!video.videoUrl) return;
-
-    const hiddenVideo = document.createElement('video');
-    hiddenVideo.preload = 'metadata';
-    hiddenVideo.src = video.videoUrl;
-    
-    const handleMetadata = () => {
-      const seconds = Math.floor(hiddenVideo.duration);
-      if (seconds > 0) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        setDetectedDuration(`${mins}:${secs.toString().padStart(2, '0')}`);
-      }
-      hiddenVideo.remove();
-    };
-
-    hiddenVideo.addEventListener('loadedmetadata', handleMetadata);
-    
-    return () => {
-      hiddenVideo.removeEventListener('loadedmetadata', handleMetadata);
-      hiddenVideo.remove();
-    };
-  }, [video.videoUrl, video.duration]);
-
-  // Use detected duration if API doesn't provide valid one
-  const displayDuration = (video.duration && video.duration !== '0:00' && video.duration !== '00:00') 
-    ? video.duration 
-    : detectedDuration;
-
   return (
     <div className="flex-shrink-0 w-[280px] text-left group">
       <div 
@@ -330,10 +288,10 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
           </button>
         )}
 
-        {/* Duration badge - shows API duration or detected duration */}
-        {!isPlaying && displayDuration && (
+        {/* Duration badge */}
+        {!isPlaying && video.duration && (
           <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
-            {displayDuration}
+            {video.duration}
           </div>
         )}
       </div>
