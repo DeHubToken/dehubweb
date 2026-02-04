@@ -1,84 +1,62 @@
 
-# Plan: Fix "Most Liked" Feed to Show Global Ranking
+# Fix Back Button on Dedicated Post Page
 
-## Problem
-Post 2008 (the platform's most-liked post with 199 likes) is not appearing at the top of the Home Feed when "Most Liked" sorting is selected. 
+## Problem Identified
+
+The back button on the single post page (`/app/post/:postId`) isn't navigating correctly. This is related to the interaction between:
+
+1. **The Overlay Pattern** - When navigating from the home feed to a post, the app keeps HomePage mounted but hidden, and renders SinglePostPage on top
+2. **PageHeader's Back Logic** - Uses `navigate(-1)` with fallback to `/app` based on history checks
+3. **Session State Management** - The `cameFromHome` state and session storage keys that track navigation origin
 
 ## Root Cause
-The Home Feed currently makes **three separate API calls** when showing "All" content:
-- `/api/feed?postType=video&sortBy=likes` - Gets most-liked **videos only**
-- `/api/feed?postType=feed-images&sortBy=likes` - Gets most-liked **images only**  
-- `/api/feed?postType=feed-simple&sortBy=likes` - Gets most-liked **text posts only**
 
-These results are then interleaved in a fixed pattern (video, video, image, video, text, etc.), which:
-1. Only ranks items within their own category (not globally)
-2. Rearranges the order based on the pattern, not by likes
+The PageHeader's `handleBack` function relies on `window.history.length > 1 && location.key !== 'default'` to decide whether to use `navigate(-1)` or fallback to `/app`. However, this check can be unreliable in the overlay pattern context where:
+
+- The history length check may not accurately reflect navigable history
+- The `location.key` may not reset properly across navigation states
 
 ## Solution
-When "Most Liked" is selected, use a **single unified feed** that fetches all content types together, globally sorted by likes.
 
-## Changes Required
+Improve the back navigation logic to be more reliable by:
 
-### File: `src/components/app/feeds/HomeFeed.tsx`
+1. **Use `navigate(-1)` with a fallback timeout** - If navigation doesn't happen within a short window, force navigate to fallback route
+2. **OR: Simplify the logic** - Since the overlay pattern already tracks `cameFromHome`, we could leverage that information
+3. **Preferred: Add explicit referrer tracking** - Store the previous pathname on navigation and use that for back navigation instead of relying on browser history state
 
-**Change 1:** Modify the interleaved feed logic to use single feed for "Most Liked"
+### Technical Details
 
-Current (around line 311):
+**Option 1: Add a try-catch and fallback (Simple fix)**
+- Use `navigate(-1)` inside a try-catch
+- Add a check after navigation to ensure location changed, fallback if not
+
+**Option 2: Track referrer explicitly (More robust)**
+- Store the previous route in session storage before navigating to a post
+- The back button reads from this storage to know exactly where to go back
+
+**Option 3: Remove history length check (Quickest fix)**
+- Since `location.key !== 'default'` is already a good indicator, the history length check might be causing false negatives
+- Just rely on `location.key`
+
+### Files to Modify
+
+1. `src/components/app/PageHeader.tsx` - Improve the `handleBack` function logic
+
+### Implementation
+
+Update `handleBack` to use a more reliable approach:
+
 ```typescript
-const useInterleavedFeed = selectedPostType === 'all';
+const handleBack = () => {
+  // location.key will be 'default' only when there's no history
+  // This is more reliable than window.history.length which can include entries
+  // from before the app was loaded
+  if (location.key && location.key !== 'default') {
+    navigate(-1);
+  } else {
+    navigate(fallbackRoute, { replace: true });
+  }
+};
 ```
 
-Updated:
-```typescript
-// For "Most Liked" sorting, we need global ranking across all types
-// So we use a single unified feed instead of three separate type feeds
-const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked';
-const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
-```
-
-**Change 2:** Update the single feed query to handle "All" post types
-
-Current (around lines 335-339):
-```typescript
-const singleFeed = useUnifiedFeed({
-  ...commonParams,
-  postType: selectedPostType === 'all' ? undefined : selectedPostType,
-  enabled: !useInterleavedFeed,
-});
-```
-
-Updated:
-```typescript
-const singleFeed = useUnifiedFeed({
-  ...commonParams,
-  // When using single feed for global sort OR specific type filter, pass appropriate postType
-  // undefined = fetch all types (what the API expects for "all")
-  postType: (useSingleFeedForGlobalSort && selectedPostType === 'all') 
-    ? undefined 
-    : (selectedPostType === 'all' ? undefined : selectedPostType),
-  enabled: !useInterleavedFeed,
-});
-```
-
-This can be simplified to:
-```typescript
-const singleFeed = useUnifiedFeed({
-  ...commonParams,
-  postType: selectedPostType === 'all' ? undefined : selectedPostType,
-  enabled: !useInterleavedFeed,
-});
-```
-
-Since `useSingleFeedForGlobalSort` already sets `useInterleavedFeed = false` when needed.
-
-## Result
-- When "Most Liked" is selected with "All" content types, the feed will make a single call: `/api/feed?sortBy=likes&sortOrder=desc`
-- This returns ALL content types globally sorted by likes
-- Post 2008 (199 likes) will appear first
-- The server-side cache (`feed_popular_page1`, etc.) will be used for faster loading
-- Other sort modes (Latest, Most Viewed, Most Comments) can continue using the interleaved pattern if desired, or you can apply the same logic to all sorts for consistency
-
-## Technical Notes
-- The `getCacheKey` function in `use-unified-feed.ts` already correctly maps `sortBy: 'likes'` to `feed_popular_page*` cache keys
-- The cache only works when `postType` is `'all'` (line 284), which aligns with our fix
-- No changes needed to the unified feed hook or cache refresh function
+The issue is likely that `window.history.length > 1` is returning `true` even when the navigation came from outside the app (e.g., direct URL access after already having other tabs/history). Removing this check and relying solely on React Router's `location.key` should be more accurate.
