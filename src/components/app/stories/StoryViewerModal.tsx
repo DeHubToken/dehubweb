@@ -3,12 +3,12 @@
  * ==================
  * TikTok-style full-screen vertical carousel viewer for stories.
  * Renders 3 stories (prev/current/next) for smooth transitions.
- * Matches ShortsViewer UI exactly.
+ * Matches ShortsViewer UI exactly with view counter and comments.
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronLeft, MoreHorizontal, ThumbsUp, ThumbsDown, Share2, Trash2, Loader2 } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronLeft, MoreHorizontal, ThumbsUp, ThumbsDown, Share2, Trash2, Loader2, MessageSquare, Eye } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
@@ -23,7 +23,10 @@ import type { Story } from '@/hooks/use-stories';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useStoryReactions } from '@/hooks/use-story-reactions';
+import { useStoryViews } from '@/hooks/use-story-views';
+import { useStoryComments } from '@/hooks/use-story-comments';
 import { StorySlide } from './StorySlide';
+import { StoryCommentsDrawer } from './StoryCommentsDrawer';
 
 interface StoryViewerModalProps {
   isOpen: boolean;
@@ -53,6 +56,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const [dragOffset, setDragOffset] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -66,6 +70,19 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
 
   // Story reactions hook
   const { likes, dislikes, isLiked, isDisliked, isReacting, react } = useStoryReactions(currentStory?.id);
+
+  // Story views hook
+  const { viewCount, recordView } = useStoryViews(currentStory?.id);
+
+  // Story comments hook (for count display)
+  const { commentCount } = useStoryComments(currentStory?.id);
+
+  // Record view when story is active
+  useEffect(() => {
+    if (isOpen && currentStory?.id) {
+      recordView();
+    }
+  }, [isOpen, currentStory?.id, recordView]);
 
   // Resolve avatar URL
   const resolvedAvatar = useMemo(() => {
@@ -90,6 +107,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     if (isOpen) {
       setCurrentIndex(initialIndex);
       setDragOffset(0);
+      setShowComments(false);
     }
   }, [isOpen, initialIndex]);
 
@@ -397,7 +415,23 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
                     "w-8 h-8 drop-shadow-lg",
                     isDisliked ? "fill-white text-white" : "text-white"
                   )} />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(dislikes)}</span>
                 </motion.button>
+
+                {/* Comments */}
+                <button
+                  onClick={() => setShowComments(true)}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(commentCount)}</span>
+                </button>
+
+                {/* View Count */}
+                <div className="flex flex-col items-center gap-1">
+                  <Eye className="w-8 h-8 text-white drop-shadow-lg" />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(viewCount)}</span>
+                </div>
                 
                 {/* Share */}
                 <button
@@ -482,6 +516,21 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
                 </motion.button>
               </div>
 
+              {/* Comments button */}
+              <button
+                onClick={() => setShowComments(true)}
+                className="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <MessageSquare className="w-5 h-5 text-white" />
+                <span className="text-white text-sm">Comments ({formatCount(commentCount)})</span>
+              </button>
+
+              {/* View count */}
+              <div className="flex items-center gap-3 p-3">
+                <Eye className="w-5 h-5 text-white" />
+                <span className="text-white text-sm">{formatCount(viewCount)} views</span>
+              </div>
+
               <button
                 onClick={() => setShareSheetOpen(true)}
                 className="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl transition-colors"
@@ -551,7 +600,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </button>
       )}
 
-      {/* Share Drawer - Quote option removed */}
+      {/* Share Drawer */}
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="relative">
@@ -575,6 +624,15 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Comments Drawer */}
+      {currentStory && (
+        <StoryCommentsDrawer
+          isOpen={showComments}
+          onClose={() => setShowComments(false)}
+          storyId={currentStory.id}
+        />
+      )}
     </motion.div>
   );
 }
