@@ -534,3 +534,49 @@ export function formatTimeAgo(dateString?: string): string {
   if (diffMins >= 1) return `${diffMins}m`;
   return 'Just now';
 }
+
+// ============================================================================
+// CREATOR DIVERSITY LIMITING
+// ============================================================================
+
+/**
+ * Limit how many posts from the same creator can appear consecutively in a feed.
+ * Posts exceeding the limit are pushed to the end of the feed.
+ * 
+ * This ensures variety in the feed without removing content - users still see
+ * the best content but from a wider variety of creators.
+ * 
+ * @param items - The sorted feed items to filter
+ * @param maxPerCreator - Maximum posts per creator in the main feed section (default: 2)
+ * @param getCreatorId - Function to extract creator ID from an item
+ * @returns Reordered items with diversity applied
+ */
+export function limitCreatorDiversity<T>(
+  items: T[],
+  maxPerCreator: number = 2,
+  getCreatorId: (item: T) => string | undefined
+): T[] {
+  if (items.length === 0 || maxPerCreator <= 0) return items;
+  
+  const creatorCounts = new Map<string, number>();
+  const result: T[] = [];
+  const deferred: T[] = [];
+  
+  for (const item of items) {
+    const creatorId = getCreatorId(item) || 'unknown';
+    const count = creatorCounts.get(creatorId) || 0;
+    
+    if (count < maxPerCreator) {
+      result.push(item);
+      creatorCounts.set(creatorId, count + 1);
+    } else {
+      deferred.push(item);
+    }
+  }
+  
+  // Append deferred items at the end - they still show, just later in the feed
+  return [...result, ...deferred];
+}
+
+/** Default max posts per creator in the home feed */
+export const DEFAULT_MAX_POSTS_PER_CREATOR = 2;
