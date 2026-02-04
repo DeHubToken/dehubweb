@@ -53,6 +53,70 @@ function useIsTabletOrMobile() {
   return isTabletOrMobile;
 }
 
+/**
+ * Mobile creator info component - shows avatar, display name, and handle
+ */
+interface MobileCreatorInfoProps {
+  channel?: string;
+  channelAvatar?: string;
+  creatorUsername?: string;
+  creatorId?: string;
+  verified?: boolean;
+}
+
+function MobileCreatorInfo({
+  channel,
+  channelAvatar,
+  creatorUsername,
+  creatorId,
+  verified = false,
+}: MobileCreatorInfoProps) {
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    if (creatorUsername) {
+      const cleanUsername = creatorUsername.replace('@', '');
+      navigate(`/${cleanUsername}`);
+    } else if (creatorId) {
+      navigate(`/app/profile?id=${creatorId}`);
+    }
+  };
+
+  const isClickable = !!(creatorId || creatorUsername);
+
+  if (!channel) return null;
+
+  return (
+    <button
+      onClick={handleProfileClick}
+      disabled={!isClickable}
+      className={`flex items-center gap-2 mb-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+    >
+      {channelAvatar && (
+        <img 
+          src={channelAvatar} 
+          alt={channel}
+          className="w-9 h-9 rounded-full object-cover shrink-0"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
+          }}
+        />
+      )}
+      <div className="flex items-center gap-1.5 min-w-0">
+        <span className="font-semibold text-white text-sm">{channel}</span>
+        {verified && (
+          <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+        )}
+        {creatorUsername && (
+          <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
+        )}
+      </div>
+    </button>
+  );
+}
+
 interface VideoCardProps {
   video: VideoItem;
   /** When true, renders full-width without rounded corners or header for immersive view */
@@ -756,6 +820,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
 
       {/* Info & Actions */}
       <div className="p-3">
+        {/* Creator info - mobile/tablet immersive view only */}
+        {isImmersive && (
+          <MobileCreatorInfo
+            channel={video.channel}
+            channelAvatar={video.channelAvatar}
+            creatorUsername={video.creatorUsername}
+            creatorId={video.creatorId}
+            verified={video.verified}
+          />
+        )}
         <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
         {video.description && video.description !== video.title && (
           <TranslatableText 
