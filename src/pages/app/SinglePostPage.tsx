@@ -318,15 +318,29 @@ export default function SinglePostPage() {
     }
   };
 
-  // Immersive layout for videos - uses fixed positioning to overlay the header area
+  // Immersive layout for videos - uses fixed positioning to overlay the header area on mobile/tablet
+  // Desktop gets standard layout with PageHeader
   if (isVideoPost) {
     return (
-      <div className="flex flex-col fixed inset-0 z-50 bg-black lg:relative lg:inset-auto lg:z-auto">
-        <div className="relative">
-          <ImmersiveBackButton />
-          {renderContent()}
+      <>
+        {/* Mobile/Tablet: Full immersive fixed overlay */}
+        <div className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden">
+          <div className="relative">
+            <ImmersiveBackButton />
+            {renderContent()}
+          </div>
         </div>
-      </div>
+        
+        {/* Desktop: Standard layout with header */}
+        <div className="hidden lg:flex lg:flex-col">
+          <PageHeader showBack />
+          <div className="px-3 sm:px-4 pb-8">
+            <div className="max-w-2xl mx-auto">
+              {renderContent()}
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
