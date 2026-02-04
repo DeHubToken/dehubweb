@@ -737,12 +737,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <p className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</p>
                 </div>
               </button>
-              <button className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors">
-                Follow
-              </button>
               {currentShort.description && (
                 <p className="text-white/80 text-xs lg:text-sm mt-2 lg:mt-3 line-clamp-2">{currentShort.description}</p>
               )}
+              <button className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors">
+                Follow
+              </button>
             </div>
 
             {/* Desktop: Inline comments */}
