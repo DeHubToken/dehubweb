@@ -609,9 +609,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </button>
                   <button
                     onClick={() => handleNavigateToProfile()}
-                    className="text-white font-semibold text-base drop-shadow-lg"
+                    className="text-left min-w-0"
                   >
-                    {currentShort.creatorUsername || currentShort.username}
+                    {currentShort.displayName && (
+                      <p className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</p>
+                    )}
+                    <p className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</p>
                   </button>
                 </div>
                 
@@ -727,7 +730,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                   <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline flex-1 min-w-0">@{currentShort.creatorUsername || currentShort.username}</p>
+                <div className="flex-1 min-w-0">
+                  {currentShort.displayName && (
+                    <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline">{currentShort.displayName}</p>
+                  )}
+                  <p className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</p>
+                </div>
               </button>
               <button className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors">
                 Follow
