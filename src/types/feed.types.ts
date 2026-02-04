@@ -63,6 +63,8 @@ export interface VideoItem extends BaseFeedItem {
   videoUrl?: string;
   duration: string;
   title: string;
+  /** Video description/body text */
+  description?: string;
   channel: string;
   channelAvatar: string;
   verified: boolean;
