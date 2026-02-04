@@ -63,15 +63,8 @@ const COUNTRY_OPTIONS = [
   'Zambia', 'Zimbabwe',
 ];
 
-// Brand account that should be pinned for brand-related searches
+// Brand-related search terms where @d should be pinned first
 const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
-const BRAND_ACCOUNT: SearchCreator = {
-  id: '0x02d946e4f06b5b0df9eb3baeae76c85e06cb7a80',
-  name: 'DeHub',
-  handle: '@d',
-  avatar: 'https://api.dehub.io/avatar/0x02d946e4f06b5b0df9eb3baeae76c85e06cb7a80/dehub_avatar.jpg',
-  verified: true,
-};
 
 type FilterState = {
   w2e: boolean;
@@ -426,6 +419,18 @@ export default function ExplorePage() {
     forceExactLookup: true, // Always try exact lookup to surface @username matches first
   });
 
+  // Check if this is a brand-related search term
+  const isBrandQuery = BRAND_QUERIES.includes(effectiveQuery.trim().toLowerCase());
+
+  // Always fetch @d specifically for brand queries (d, de, deh, dehu, dehub)
+  const {
+    data: brandUser,
+  } = useDeHubUserSearch({
+    query: 'd', // Always look up the actual @d account
+    enabled: isSearching && isBrandQuery && (activeTab === 'all' || activeTab === 'people'),
+    forceExactLookup: true,
+  });
+
   // Process search results from the new universal search API
   const searchResults = useMemo(() => {
     // Get accounts directly from universal search
@@ -457,16 +462,16 @@ export default function ExplorePage() {
     
     // Check if this is a brand-related search
     const queryLower = effectiveQuery.trim().toLowerCase();
-    const isBrandQuery = BRAND_QUERIES.includes(queryLower);
+    const isBrandQueryLocal = BRAND_QUERIES.includes(queryLower);
     
-    // For brand queries, ensure @d is at the top
-    if (isBrandQuery) {
+    // For brand queries, ensure the real @d (from brandUser lookup) is at the top
+    if (isBrandQueryLocal && brandUser && brandUser.id) {
       // Remove @d if already in results (to avoid duplicate)
-      peopleResults = peopleResults.filter(u => u.id !== BRAND_ACCOUNT.id);
-      // Pin brand account at the very top
-      peopleResults = [BRAND_ACCOUNT, ...peopleResults];
+      peopleResults = peopleResults.filter(u => u.id !== brandUser.id);
+      // Pin the real @d at the very top
+      peopleResults = [brandUser, ...peopleResults];
     } else {
-      // Normal sorting: exact username match first (e.g., @d when searching "d")
+      // Normal sorting: exact username match first
       peopleResults.sort((a, b) => {
         const aHandle = a.handle.replace('@', '').toLowerCase();
         const bHandle = b.handle.replace('@', '').toLowerCase();
@@ -485,7 +490,7 @@ export default function ExplorePage() {
       posts: videos.filter(p => p && (p.id || p.tokenId)),
       total: searchData?.pages?.[0]?.total || 0,
     };
-  }, [searchData, exactUser, isShortSearch, effectiveQuery]);
+  }, [searchData, exactUser, brandUser, isShortSearch, effectiveQuery]);
 
   const activeFilterCount = [
     filters.w2e,
