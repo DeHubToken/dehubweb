@@ -113,7 +113,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     handle: nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
     avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
-    likes: formatLikes(nft.totalVotes?.for || nft.like_count || 0),
+    likes: String(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
     description: nft.description || nft.name || nft.title || '',
