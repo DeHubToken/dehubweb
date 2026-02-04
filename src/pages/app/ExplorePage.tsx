@@ -402,6 +402,7 @@ export default function ExplorePage() {
     postType: isSingleLetterSearch ? undefined : getPostTypeForTab(activeTab),
     address: walletAddress || undefined,
     enabled: isSearching,
+    minQueryLength: isSingleLetterSearch ? 1 : 3,
   });
 
   // Exact username lookup for @username queries
