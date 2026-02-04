@@ -34,7 +34,7 @@ interface DeHubAccountResponse {
  */
 async function fetchAccount(address: string): Promise<AvatarResult> {
   try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/account/${address}`, {
+    const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${encodeURIComponent(address)}`, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
