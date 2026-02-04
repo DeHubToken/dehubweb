@@ -1,11 +1,12 @@
 /**
  * Story Viewer Modal
  * ==================
- * TikTok-style full-screen vertical scroll viewer for stories.
- * Scroll/swipe up for next, down for previous. Progress synced to video.
+ * TikTok-style full-screen vertical carousel viewer for stories.
+ * Renders 3 stories (prev/current/next) for smooth transitions.
+ * Scroll/swipe up for next, down for previous.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Pause, Play, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,9 +15,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { motion, type PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import type { Story } from '@/hooks/use-stories';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { StorySlide } from './StorySlide';
 
 interface StoryViewerModalProps {
   isOpen: boolean;
@@ -25,13 +27,20 @@ interface StoryViewerModalProps {
   initialIndex?: number;
 }
 
+// Spring animation config for smooth carousel transitions
+const SPRING_TRANSITION = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 30,
+} as const;
+
 export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }: StoryViewerModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const { walletAddress } = useAuth();
@@ -41,12 +50,22 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   const currentStory = stories[currentIndex];
   const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
 
+  // Compute visible indices for the 3-story window
+  const visibleIndices = useMemo(() => {
+    return [
+      currentIndex - 1, // Previous
+      currentIndex,     // Current
+      currentIndex + 1, // Next
+    ].filter(i => i >= 0 && i < stories.length);
+  }, [currentIndex, stories.length]);
+
   // Reset to initialIndex when modal opens
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
       setProgress(0);
       setIsPaused(false);
+      setDragOffset(0);
     }
   }, [isOpen, initialIndex]);
 
@@ -54,30 +73,42 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
       return () => {
         document.body.style.overflow = '';
+        document.body.style.touchAction = '';
       };
     }
   }, [isOpen]);
 
   const goNext = useCallback(() => {
+    if (isTransitioning) return;
+    
     if (currentIndex < stories.length - 1) {
+      setIsTransitioning(true);
       setCurrentIndex((prev) => prev + 1);
       setProgress(0);
+      setTimeout(() => setIsTransitioning(false), 350);
     } else {
       // Loop randomly when out of stories
+      setIsTransitioning(true);
       const randomIndex = Math.floor(Math.random() * stories.length);
       setCurrentIndex(randomIndex);
       setProgress(0);
+      setTimeout(() => setIsTransitioning(false), 350);
     }
-  }, [currentIndex, stories.length]);
+  }, [currentIndex, stories.length, isTransitioning]);
 
   const goPrev = useCallback(() => {
+    if (isTransitioning) return;
+    
     if (currentIndex > 0) {
+      setIsTransitioning(true);
       setCurrentIndex((prev) => prev - 1);
       setProgress(0);
+      setTimeout(() => setIsTransitioning(false), 350);
     }
-  }, [currentIndex]);
+  }, [currentIndex, isTransitioning]);
 
   // Mouse wheel handler
   useEffect(() => {
@@ -87,25 +118,23 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       e.preventDefault();
       e.stopPropagation();
       
-      if (isScrolling) return;
+      if (isTransitioning) return;
       if (Math.abs(e.deltaY) < 50) return;
 
-      setIsScrolling(true);
       if (e.deltaY > 0) {
         goNext();
       } else {
         goPrev();
       }
-      setTimeout(() => setIsScrolling(false), 500);
     };
 
     const container = containerRef.current;
-    container.addEventListener('wheel', handleWheel, { passive: false });
+    container.addEventListener('wheel', handleWheel, { passive: false, capture: true });
 
     return () => {
-      container.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('wheel', handleWheel, { capture: true });
     };
-  }, [isOpen, isScrolling, goNext, goPrev]);
+  }, [isOpen, isTransitioning, goNext, goPrev]);
 
   // Keyboard handler
   useEffect(() => {
@@ -138,31 +167,29 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, goNext, goPrev, onClose]);
 
-  const togglePause = () => {
+  const togglePause = useCallback(() => {
     setIsPaused((prev) => !prev);
-    if (videoRef.current) {
-      if (isPaused) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  };
+  }, []);
 
-  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (isScrolling) return;
+  // Handle drag for visual feedback during swipe
+  const handleDrag = useCallback((_: any, info: PanInfo) => {
+    setDragOffset(info.offset.y);
+  }, []);
+
+  const handleDragEnd = useCallback((_: any, info: PanInfo) => {
+    setDragOffset(0);
     
-    const threshold = 100;
-    if (info.offset.y < -threshold) {
-      setIsScrolling(true);
+    if (isTransitioning) return;
+    
+    const swipeThreshold = 80;
+    const velocityThreshold = 300;
+    
+    if (info.offset.y < -swipeThreshold || info.velocity.y < -velocityThreshold) {
       goNext();
-      setTimeout(() => setIsScrolling(false), 500);
-    } else if (info.offset.y > threshold) {
-      setIsScrolling(true);
+    } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       goPrev();
-      setTimeout(() => setIsScrolling(false), 500);
     }
-  };
+  }, [goNext, goPrev, isTransitioning]);
 
   const handleDelete = async () => {
     if (!currentStory || !isOwnStory || !walletAddress) return;
@@ -193,11 +220,23 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   };
 
-  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-    const video = e.currentTarget;
-    if (video.duration && isFinite(video.duration)) {
-      setProgress((video.currentTime / video.duration) * 100);
+  const handleTimeUpdate = useCallback((currentTime: number, duration: number) => {
+    if (duration > 0) {
+      setProgress((currentTime / duration) * 100);
     }
+  }, []);
+
+  // Prevent touch events from bubbling
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.stopPropagation();
   };
 
   if (!isOpen || !currentStory) return null;
@@ -207,7 +246,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       ref={containerRef}
       className="fixed inset-0 z-[70] bg-black flex flex-col touch-none"
       style={{ 
-        // Force true fullscreen on mobile - ignore safe areas
         top: 0,
         left: 0,
         right: 0,
@@ -215,8 +253,10 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         height: '100dvh',
         width: '100vw',
       }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
-
       {/* Header - overlaid on video */}
       <div className="absolute top-[env(safe-area-inset-top,0px)] left-0 right-0 z-20 flex items-center justify-between px-4 pt-3">
         <button 
@@ -278,27 +318,56 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
         </div>
       </div>
 
-      {/* Story content with drag gesture - video covers full screen */}
+      {/* Story content - Vertical Carousel Stack */}
       <motion.div
         className="absolute inset-0"
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.2}
+        dragElastic={0.15}
+        onDrag={handleDrag}
         onDragEnd={handleDragEnd}
       >
-        <video
-          key={currentStory.id}
-          ref={videoRef}
-          src={currentStory.video_url}
-          autoPlay
-          playsInline
-          muted={false}
-          className="w-full h-full object-cover pointer-events-none"
-          onEnded={goNext}
-          onTimeUpdate={handleTimeUpdate}
-        />
+        {/* Render window of 3 stories (prev/current/next) */}
+        <AnimatePresence initial={false}>
+          {visibleIndices.map(index => {
+            const story = stories[index];
+            const offset = index - currentIndex;
+            const isActive = index === currentIndex;
+            
+            return (
+              <motion.div
+                key={story.id}
+                className="absolute inset-0"
+                initial={false}
+                animate={{
+                  y: `${offset * 100}%`,
+                  translateY: isActive ? dragOffset : dragOffset * 0.3,
+                }}
+                transition={dragOffset === 0 ? SPRING_TRANSITION : { duration: 0 }}
+                style={{ zIndex: isActive ? 2 : 1 }}
+              >
+                <StorySlide
+                  story={story}
+                  isActive={isActive}
+                  isPaused={isPaused}
+                  onEnded={goNext}
+                  onTimeUpdate={isActive ? handleTimeUpdate : undefined}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </motion.div>
 
+      {/* Progress bar at bottom */}
+      <div className="absolute bottom-[env(safe-area-inset-bottom,0px)] left-0 right-0 z-20 px-4 pb-4">
+        <div className="h-1 bg-white/20 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-white transition-all duration-100"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
