@@ -56,13 +56,13 @@ export function MobileWhoToFollowCarousel() {
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
 
   // Fetch current user's following list
-  const { data: currentUserData } = useQuery({
+  const { data: currentUserData, isLoading: isLoadingFollowings } = useQuery({
     queryKey: ['current-user-followings', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return null;
       return getAccountInfo(walletAddress);
     },
-    enabled: !!walletAddress,
+    enabled: !!walletAddress && isAuthenticated,
     staleTime: 2 * 60 * 1000,
   });
 
@@ -151,7 +151,8 @@ export function MobileWhoToFollowCarousel() {
     }
   };
 
-  if (isLoading) {
+  // Wait for both suggestions and followings to load before showing
+  if (isLoading || (isAuthenticated && isLoadingFollowings)) {
     return (
       <div className="lg:hidden py-4">
         <div className="flex items-center justify-center py-8">
