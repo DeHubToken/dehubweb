@@ -13,7 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { searchNFTs, getNFTInfo, getMediaUrl } from '@/lib/api/dehub';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { VideoCard } from '@/components/app/cards/VideoCard';
-import { formatDuration, formatTimeAgo } from '@/lib/feed-utils';
+import { formatDuration, formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import type { VideoItem } from '@/types/feed.types';
 
 const AD_POST_ID = '2008';
@@ -42,7 +42,7 @@ function toVideoItem(nft: any): VideoItem {
     channel: nft.minterDisplayName || nft.mintername || 'Unknown',
     channelAvatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
     verified: false,
-    views: String(nft.views || 0),
+    views: formatViews(nft.views || 0),
     uploadedAgo: formatTimeAgo(timestamp),
     creatorId: nft.minter,
     creatorUsername: nft.mintername,
@@ -55,11 +55,11 @@ function toVideoItem(nft: any): VideoItem {
 }
 
 /**
- * Ad label overlay component - positioned on the video thumbnail area
+ * Ad label overlay component - positioned at bottom left of video thumbnail
  */
 function AdLabel() {
   return (
-    <div className="absolute top-14 left-6 z-10 px-2 py-1 bg-yellow-500 text-black text-xs font-bold rounded">
+    <div className="absolute bottom-16 left-6 z-10 px-2 py-1 bg-yellow-500 text-black text-xs font-bold rounded">
       AD
     </div>
   );
