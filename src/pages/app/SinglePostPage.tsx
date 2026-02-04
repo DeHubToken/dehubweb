@@ -13,7 +13,7 @@
 
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useLayoutEffect, useEffect, useState } from 'react';
+import { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import { Loader2, AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -384,6 +384,9 @@ export default function SinglePostPage() {
   const [showDesktopAIChat, setShowDesktopAIChat] = useState(false);
   const [showDesktopOptionsDrawer, setShowDesktopOptionsDrawer] = useState(false);
   const [showDesktopReportModal, setShowDesktopReportModal] = useState(false);
+  
+  // Ref for mobile scroll container (needed for IntersectionObserver)
+  const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Only scroll to top when PUSHING to the post page (not on back navigation)
   // useLayoutEffect runs before paint to prevent flash at wrong position
@@ -462,7 +465,10 @@ export default function SinglePostPage() {
     return (
       <>
         {/* Mobile/Tablet: Full immersive scrollable overlay */}
-        <div className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden overflow-y-auto">
+        <div 
+          ref={mobileScrollContainerRef}
+          className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden overflow-y-auto"
+        >
           <div className="relative">
             <ImmersiveVideoHeader
               channel={videoData.channel}
@@ -474,7 +480,7 @@ export default function SinglePostPage() {
             {renderContent()}
           </div>
           {/* Related Videos Feed */}
-          {id && <RelatedVideosFeed currentVideoId={id} />}
+          {id && <RelatedVideosFeed currentVideoId={id} scrollContainerRef={mobileScrollContainerRef} />}
         </div>
         
         {/* Desktop: Standard layout with header */}
