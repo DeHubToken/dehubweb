@@ -56,18 +56,21 @@ export const VideoSlide = memo(function VideoSlide({
     setIsVideoReady(true);
   }, []);
 
-  // Play/pause based on isActive state
+  // Play/pause based on isActive state - delay playback for buttery landing
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     if (isActive) {
-      // Only reset if video hasn't played yet (first activation)
-      // This prevents the "shake" caused by seeking during transitions
-      if (video.currentTime === 0 || video.ended) {
-        video.currentTime = 0;
-      }
-      video.play().catch(() => {});
+      // Delay playback slightly to let transition settle completely
+      const timer = setTimeout(() => {
+        if (video.currentTime === 0 || video.ended) {
+          video.currentTime = 0;
+        }
+        video.play().catch(() => {});
+      }, 50); // 50ms delay for buttery smooth landing
+      
+      return () => clearTimeout(timer);
     } else {
       video.pause();
     }

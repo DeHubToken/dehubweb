@@ -75,12 +75,11 @@ function mapApiCommentToInline(apiComment: ApiCommentResponse): InlineComment {
   };
 }
 
-// Spring animation config for smooth carousel transitions - reduced stiffness to prevent shake
-const SPRING_TRANSITION = {
-  type: 'spring',
-  stiffness: 200,
-  damping: 35,
-  mass: 1,
+// Smooth tween transition - eliminates spring overshoot for buttery landing
+const SMOOTH_TRANSITION = {
+  type: 'tween',
+  duration: 0.35,
+  ease: [0.25, 0.1, 0.25, 1], // CSS ease-out equivalent
 } as const;
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
@@ -575,7 +574,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       // Add drag offset to create the "train car" effect
                       translateY: isActive ? dragOffset : dragOffset * 0.3,
                     }}
-                    transition={dragOffset === 0 ? SPRING_TRANSITION : { duration: 0 }}
+                    transition={dragOffset === 0 ? SMOOTH_TRANSITION : { duration: 0 }}
                     style={{ zIndex: isActive ? 2 : 1 }}
                   >
                     <VideoSlide
