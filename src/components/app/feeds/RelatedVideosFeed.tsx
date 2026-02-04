@@ -59,7 +59,7 @@ function toVideoItem(nft: any): VideoItem {
  */
 function AdLabel() {
   return (
-    <div className="absolute bottom-[72px] left-5 z-10 px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
+    <div className="absolute bottom-[87px] left-5 z-10 px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
       AD
     </div>
   );
