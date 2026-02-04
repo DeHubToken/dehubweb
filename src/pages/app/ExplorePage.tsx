@@ -360,18 +360,18 @@ export default function ExplorePage() {
     }
   }, [stableQuery, activeTab, addToHistory, logSearch]);
 
-  // Debounced query for single-letter searches (1 second wait)
-  const debouncedSingleLetterQuery = useDebouncedValue(searchQuery, 1000);
+  // Debounced query for short searches (1 second wait for 1-2 chars)
+  const debouncedShortQuery = useDebouncedValue(searchQuery, 1000);
   
   // Determine search mode based on query length
   const trimmedQuery = searchQuery.trim();
-  const isSingleLetterSearch = trimmedQuery.length === 1 && debouncedSingleLetterQuery.trim().length === 1;
+  const isShortSearch = trimmedQuery.length >= 1 && trimmedQuery.length <= 2 && debouncedShortQuery.trim().length >= 1;
   const isFullSearch = trimmedQuery.length >= 3;
-  const isSearching = isFullSearch || isSingleLetterSearch;
+  const isSearching = isFullSearch || isShortSearch;
   
-  // For single letter, only search people
-  const effectiveSearchType = isSingleLetterSearch ? 'accounts' : getTypeForTab(activeTab);
-  const effectiveQuery = isSingleLetterSearch ? debouncedSingleLetterQuery : searchQuery;
+  // For short queries (1-2 chars), only search people
+  const effectiveSearchType = isShortSearch ? 'accounts' : getTypeForTab(activeTab);
+  const effectiveQuery = isShortSearch ? debouncedShortQuery : searchQuery;
 
   // Save scroll position only when there's an active search
   useEffect(() => {
@@ -399,34 +399,34 @@ export default function ExplorePage() {
   } = useDeHubSearch({
     query: effectiveQuery,
     type: effectiveSearchType,
-    postType: isSingleLetterSearch ? undefined : getPostTypeForTab(activeTab),
+    postType: isShortSearch ? undefined : getPostTypeForTab(activeTab),
     address: walletAddress || undefined,
     enabled: isSearching,
-    minQueryLength: isSingleLetterSearch ? 1 : 3,
+    minQueryLength: isShortSearch ? 1 : 3,
   });
 
-  // Exact username lookup for @username queries
+  // Exact username lookup - also try exact match for short queries
   const {
     data: exactUser,
     isLoading: isUserLoading,
     isUsernameQuery,
   } = useDeHubUserSearch({
     query: effectiveQuery,
-    enabled: isSearching && (activeTab === 'all' || activeTab === 'people' || isSingleLetterSearch),
+    enabled: isSearching && (activeTab === 'all' || activeTab === 'people' || isShortSearch),
   });
 
   // Process search results from the new universal search API
   const searchResults = useMemo(() => {
     // Get accounts directly from universal search
     const accounts = flattenSearchAccounts(searchData) || [];
-    // For single-letter search, don't include video results
-    const videos = isSingleLetterSearch ? [] : (flattenSearchVideos(searchData) || []);
+    // For short search, don't include video results
+    const videos = isShortSearch ? [] : (flattenSearchVideos(searchData) || []);
     
     // Map accounts to our SearchCreator format
     const accountCreators = accounts.map(mapAccountToCreator);
     
-    // Also extract creators from video results for backwards compatibility (not for single-letter)
-    const videoCreators = isSingleLetterSearch ? [] : extractUniqueCreators(videos) || [];
+    // Also extract creators from video results for backwards compatibility (not for short search)
+    const videoCreators = isShortSearch ? [] : extractUniqueCreators(videos) || [];
     
     // Combine and dedupe users: accounts first, then video creators
     const userMap = new Map<string, SearchCreator>();
@@ -444,12 +444,26 @@ export default function ExplorePage() {
       }
     }
     
+    // Sort: exact username match first (e.g., @d when searching "d")
+    const queryLower = effectiveQuery.trim().toLowerCase();
+    peopleResults.sort((a, b) => {
+      const aHandle = a.handle.replace('@', '').toLowerCase();
+      const bHandle = b.handle.replace('@', '').toLowerCase();
+      // Exact match goes first
+      if (aHandle === queryLower && bHandle !== queryLower) return -1;
+      if (bHandle === queryLower && aHandle !== queryLower) return 1;
+      // Then by handle starting with query
+      if (aHandle.startsWith(queryLower) && !bHandle.startsWith(queryLower)) return -1;
+      if (bHandle.startsWith(queryLower) && !aHandle.startsWith(queryLower)) return 1;
+      return 0;
+    });
+    
     return {
       users: peopleResults.filter(u => u && u.id),
       posts: videos.filter(p => p && (p.id || p.tokenId)),
       total: searchData?.pages?.[0]?.total || 0,
     };
-  }, [searchData, exactUser, isSingleLetterSearch]);
+  }, [searchData, exactUser, isShortSearch, effectiveQuery]);
 
   const activeFilterCount = [
     filters.w2e,
@@ -518,7 +532,6 @@ export default function ExplorePage() {
   const showLoading = isSearchLoading || isUserLoading;
   const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
   const showNoResults = isSearching && !showLoading && searchResults.users.length === 0 && searchResults.posts.length === 0;
-  const showMinCharsHint = searchQuery.length > 0 && searchQuery.length < 3;
 
   return (
     <div className="min-h-screen">
@@ -560,12 +573,6 @@ export default function ExplorePage() {
             </button>
           </div>
           
-          {/* Min chars hint */}
-          {showMinCharsHint && (
-            <p className="text-zinc-500 text-xs mt-2 pl-1">
-              Type at least 3 characters to search
-            </p>
-          )}
         </div>
 
         {/* Filters Panel */}
