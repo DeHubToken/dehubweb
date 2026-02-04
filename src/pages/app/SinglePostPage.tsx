@@ -324,15 +324,16 @@ export default function SinglePostPage() {
   if (isVideoPost) {
     return (
       <div className="flex flex-col fixed inset-0 z-50 bg-black lg:relative lg:inset-auto lg:z-auto lg:min-h-0 overflow-y-auto">
-        <div className="relative">
+        <div className="relative flex-shrink-0">
           <ImmersiveBackButton />
           {renderContent()}
         </div>
 
-        {/* Ad Space & Recommended Videos - only on desktop where scrollable */}
-        <div className="hidden lg:block px-4 pb-8 mt-6">
+        {/* Ad Space & Recommended Videos */}
+        <div className="px-3 sm:px-4 pb-8 mt-6 bg-background">
           <div className="max-w-6xl mx-auto space-y-8">
-            <AdSpace variant="leaderboard" />
+            <AdSpace variant="banner" className="lg:hidden" />
+            <AdSpace variant="leaderboard" className="hidden lg:flex" />
             <RecommendedVideosFeed excludePostId={id} />
           </div>
         </div>
