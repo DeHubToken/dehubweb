@@ -271,36 +271,6 @@ function ImmersiveVideoHeader({
       >
         <ArrowLeft className="w-5 h-5 text-white" />
       </button>
-      
-      {channel && (
-        <button
-          onClick={handleProfileClick}
-          disabled={!isClickable}
-          className={`flex items-center gap-2 min-w-0 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
-        >
-          {channelAvatar && (
-            <img 
-              src={channelAvatar} 
-              alt={channel}
-              className="w-8 h-8 rounded-full object-cover shrink-0"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/placeholder.svg';
-              }}
-            />
-          )}
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-semibold text-white text-sm truncate">{channel}</span>
-            {verified && (
-              <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-              </svg>
-            )}
-            {creatorUsername && (
-              <span className="text-zinc-400 text-sm truncate">@{creatorUsername.replace('@', '')}</span>
-            )}
-          </div>
-        </button>
-      )}
     </div>
   );
 }
