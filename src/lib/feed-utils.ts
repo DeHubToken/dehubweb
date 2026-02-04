@@ -286,15 +286,6 @@ export function shuffleArray<T>(array: T[], seed: number): T[] {
   return shuffled;
 }
 
-/**
- * Generate a deterministic view count based on an ID string.
- * Returns formatted string (e.g., "12.5K" or "450").
- */
-export function getViewCount(id: string, maxViews: number = 100000, minViews: number = 500): string {
-  const seed = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const views = Math.floor((seed * 1234) % maxViews) + minViews;
-  return formatCount(views);
-}
 
 /**
  * Format a large number with K/M suffix.

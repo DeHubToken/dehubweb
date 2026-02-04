@@ -20,7 +20,7 @@ import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
-import { formatTimeAgo, getViewCount, formatDuration } from '@/lib/feed-utils';
+import { formatTimeAgo, formatDuration } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
 /**
@@ -36,7 +36,7 @@ function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' {
  * Transform API NFT data to VideoItem format
  */
 function toVideoItem(nft: DeHubNFT): VideoItem {
-  const views = nft.views != null ? String(nft.views) : getViewCount(String(nft.tokenId));
+  const views = nft.views != null ? String(nft.views) : '0';
   const title = nft.title || nft.name || '';
   // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
@@ -77,7 +77,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
  * Transform API NFT data to ImagePost format
  */
 function toImagePost(nft: DeHubNFT): ImagePost {
-  const views = nft.views != null ? String(nft.views) : getViewCount(String(nft.tokenId));
+  const views = nft.views != null ? String(nft.views) : '0';
   const imageUrls = nft.imageUrls?.map(url => getMediaUrl(url) || '') || [];
   const primaryImage = getMediaUrl(nft.imageUrl) || '/placeholder.svg';
   
@@ -113,7 +113,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  * Transform API NFT data to TextPost format
  */
 function toTextPost(nft: DeHubNFT): TextPost {
-  const views = nft.views != null ? String(nft.views) : getViewCount(String(nft.tokenId));
+  const views = nft.views != null ? String(nft.views) : '0';
   
   return {
     id: String(nft.tokenId),
