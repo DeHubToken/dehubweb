@@ -600,16 +600,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <div className="flex items-center gap-2 mb-3">
                   <button
                     onClick={() => handleNavigateToProfile()}
-                    className="relative flex-shrink-0"
+                    className="flex-shrink-0"
                   >
                     <Avatar className="w-12 h-12 rounded-xl" key={currentShort.avatar || currentShort.id}>
                       <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                       <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    {/* Follow badge */}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 bg-red-500 rounded-md flex items-center justify-center border-2 border-black">
-                      <span className="text-white text-xs font-bold">+</span>
-                    </div>
                   </button>
                   <button
                     onClick={() => handleNavigateToProfile()}
