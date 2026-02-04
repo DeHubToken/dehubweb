@@ -132,6 +132,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     thumbnail,
     videoUrl,
     duration: formatDuration(duration),
+    durationSeconds: typeof duration === 'number' ? duration : 0,
     title: nft.name || nft.title || 'Untitled',
     channel,
     channelAvatar,

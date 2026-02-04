@@ -61,7 +61,10 @@ export interface VideoItem extends BaseFeedItem {
   type: 'video';
   thumbnail: string;
   videoUrl?: string;
+  /** Formatted duration string (e.g., "1:23") */
   duration: string;
+  /** Raw duration in seconds for caching/filtering */
+  durationSeconds?: number;
   title: string;
   /** Video description/body text */
   description?: string;

@@ -11,6 +11,22 @@ import { QueryClient } from '@tanstack/react-query';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
+/**
+ * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
+ */
+function parseDurationToSeconds(duration: string): number {
+  if (!duration || duration === '0:00') return 0;
+  const parts = duration.split(':').map(Number);
+  if (parts.length === 3) {
+    // HH:MM:SS
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  } else if (parts.length === 2) {
+    // MM:SS
+    return parts[0] * 60 + parts[1];
+  }
+  return 0;
+}
+
 
 /**
  * Convert VideoItem back to partial DeHubNFT format for caching
@@ -24,8 +40,8 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     description: video.description || video.title,
     imageUrl: video.thumbnail,
     videoUrl: video.videoUrl,
-    videoDuration: typeof video.duration === 'number' ? video.duration : 0,
-    duration: typeof video.duration === 'number' ? video.duration : 0,
+    videoDuration: video.durationSeconds || parseDurationToSeconds(video.duration),
+    duration: video.durationSeconds || parseDurationToSeconds(video.duration),
     minterDisplayName: video.channel,
     mintername: video.creatorUsername,
     minterAvatarUrl: video.channelAvatar,
