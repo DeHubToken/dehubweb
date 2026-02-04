@@ -46,6 +46,15 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   // API returns various timestamp fields - check all possibilities
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
+  // Debug: trace timestamp extraction
+  console.log('[toVideoItem] Timestamp extraction:', { 
+    tokenId: nft.tokenId,
+    rawCreatedAt: nft.createdAt, 
+    rawCreated_at: nft.created_at,
+    resolvedTimestamp: timestamp,
+    formatted: formatTimeAgo(timestamp)
+  });
+  
   return {
     id: String(nft.tokenId),
     type: 'video',
