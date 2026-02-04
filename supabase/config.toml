@@ -1,5 +1,8 @@
 project_id = "aigxuutjaqsywioxjefr"
 
+[functions.batch-avatars]
+verify_jwt = false
+
 [functions.enhance-text]
 verify_jwt = false
 
