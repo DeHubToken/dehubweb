@@ -20,10 +20,56 @@ export { LANGUAGE_NAMES };
 import { getCachedLanguage, cacheLanguage } from '@/lib/language-detection-cache';
 import { cn } from '@/lib/utils';
 
+// URL regex pattern for detecting links
+const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+/gi;
+
 interface TranslatableTextProps {
   text: string;
   className?: string;
   as?: 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3';
+}
+
+/**
+ * Renders text with URLs replaced by clickable link emojis
+ */
+function renderTextWithLinks(text: string): ReactNode[] {
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  
+  const regex = new RegExp(URL_REGEX.source, 'gi');
+  
+  while ((match = regex.exec(text)) !== null) {
+    // Add text before the URL
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    
+    // Add clickable link emoji
+    const url = match[0];
+    parts.push(
+      <a
+        key={`${url}-${match.index}`}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center hover:scale-110 transition-transform"
+        onClick={(e) => e.stopPropagation()}
+        title={url}
+      >
+        🔗
+      </a>
+    );
+    
+    lastIndex = regex.lastIndex;
+  }
+  
+  // Add remaining text after last URL
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  
+  return parts.length > 0 ? parts : [text];
 }
 
 // Translation cache to avoid repeat API calls
@@ -221,7 +267,7 @@ export function TranslatableText({
 
   // If no translation needed and not detecting, just render the text
   if (!shouldOfferTranslation && !isDetecting) {
-    return <Component className={cn("whitespace-pre-wrap", className)}>{text}</Component>;
+    return <Component className={cn("whitespace-pre-wrap", className)}>{renderTextWithLinks(text)}</Component>;
   }
 
   const renderTranslateControl = () => {
@@ -292,7 +338,7 @@ export function TranslatableText({
           transition={{ duration: 0.15 }}
         >
           <Component className={cn("whitespace-pre-wrap", className)}>
-            {isTranslated ? translatedText : text}
+            {renderTextWithLinks(isTranslated ? translatedText : text)}
           </Component>
         </motion.div>
       </AnimatePresence>
