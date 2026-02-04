@@ -572,7 +572,11 @@ export async function logSearchAnalytics(params: SearchLogParams): Promise<void>
 }
 
 export async function getNFTInfo(tokenId: string): Promise<DeHubNFT> {
-  const response = await apiCall<{ result: DeHubNFT } | DeHubNFT>(`/api/nft_info/${tokenId}`);
+  // Pass auth token so API returns isLiked/isDisliked for current user
+  const token = getAuthToken();
+  const response = await apiCall<{ result: DeHubNFT } | DeHubNFT>(`/api/nft_info/${tokenId}`, {
+    requiresAuth: !!token, // Only require auth if we have a token (allows unauthenticated viewing)
+  });
   // Handle wrapped response from API
   if (response && typeof response === 'object' && 'result' in response) {
     return response.result;
