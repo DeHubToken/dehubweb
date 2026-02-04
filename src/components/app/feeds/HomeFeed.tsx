@@ -185,7 +185,7 @@ function mapNFTToShortVideo(nft: any): ShortVideo {
     description: nft.description || nft.name || nft.title || '',
     sound: 'Original Sound',
     comments: formatCount(nft.commentCount || nft.comment_count || 0),
-    shares: formatCount(Math.floor(Math.random() * 1000)),
+    shares: '0',
     views: formatCount(viewCount),
     creatorUsername: nft.mintername || nft.creator?.username || 'user',
   };
