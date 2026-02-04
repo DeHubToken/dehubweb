@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -9,6 +9,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 interface UniqueUser {
   address: string;
@@ -156,15 +157,6 @@ export function MobileWhoToFollowCarousel() {
     return null;
   }
 
-  // Handle touch events to prevent horizontal scroll from triggering tab switch
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.stopPropagation();
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    e.stopPropagation();
-  };
-
   return (
     <div className="lg:hidden py-4 border-y border-zinc-800/50">
       {/* Header */}
@@ -182,12 +174,8 @@ export function MobileWhoToFollowCarousel() {
         </button>
       </div>
 
-      {/* Horizontal Carousel - touch-action pan-x prevents vertical swipe interference */}
-      <div 
-        className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory touch-pan-x"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-      >
+      {/* Horizontal Carousel - wrapped with SwipeableCarousel to prevent tab switch */}
+      <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory">
         {suggestions.map((user) => (
           <div
             key={user.address}
@@ -223,7 +211,7 @@ export function MobileWhoToFollowCarousel() {
             </div>
           </div>
         ))}
-      </div>
+      </SwipeableCarousel>
     </div>
   );
 }
