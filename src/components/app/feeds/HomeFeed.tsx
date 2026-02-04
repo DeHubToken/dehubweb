@@ -25,6 +25,7 @@ import {
   formatTimeAgo, 
   CONTENT_PATTERN,
   interleaveByPattern,
+  calculateTrendingScore,
   type SortOption, 
   type DateFilterOption, 
   type ContentTypeFilters, 
@@ -71,6 +72,8 @@ type FeedItemType =
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 15;
+/** Insert an all-time most-liked post every N items in trending feed */
+const CLASSIC_INSERT_INTERVAL = 6;
 
 interface HomeFeedProps {
   shuffleKey: number;
@@ -253,8 +256,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
   
-  // Default to Most Liked (all time)
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[2]); // Most Liked
+  // Default to Trending (first option)
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Trending
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
@@ -274,10 +277,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { storyUsers } = useDeHubStoryUsers(10);
 
   // Build API params from filters
+  // For trending, we fetch by recency (last month) then sort client-side
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
+      case 'trending':
+        return 'createdAt' as const; // Fetch recent, apply trending score client-side
       case 'most-liked':
-        return 'likes' as const; // Explicitly pass 'likes' to ensure proper sorting
+        return 'likes' as const;
       case 'most-viewed':
         return 'views' as const;
       case 'most-comments':
@@ -289,7 +295,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [selectedSort.value]);
 
   const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
-  const range = getDateRange(selectedDate.value);
+  
+  // For trending, use last month to get enough recent content
+  const range = useMemo(() => {
+    if (selectedSort.value === 'trending') {
+      return 'month' as const;
+    }
+    return getDateRange(selectedDate.value);
+  }, [selectedSort.value, selectedDate.value]);
 
   // Common API params for all three feeds
   const commonParams = useMemo(() => ({
@@ -307,9 +320,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // THREE SEPARATE FEED QUERIES
   // ============================================================================
 
-  // For "Most Liked" sorting, we need global ranking across all types
+  // For "Most Liked" or "Trending" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
-  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked';
+  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'trending';
   const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
 
   // Fetch videos
@@ -333,11 +346,20 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     enabled: useInterleavedFeed,
   });
 
-  // Fallback: single unified feed when post type filter is active
+  // Fallback: single unified feed when post type filter is active OR using global sort
   const singleFeed = useUnifiedFeed({
     ...commonParams,
     postType: selectedPostType === 'all' ? undefined : selectedPostType,
     enabled: !useInterleavedFeed,
+  });
+
+  // For trending: also fetch all-time most-liked to sprinkle in classic hits
+  const classicsFeed = useUnifiedFeed({
+    limit: PAGE_SIZE,
+    sortBy: 'likes',
+    sortOrder: 'desc',
+    status: 'minted' as const,
+    enabled: selectedSort.value === 'trending' && selectedPostType === 'all',
   });
 
   // Fetch shorts separately for the carousel
@@ -519,19 +541,29 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, pinnedPostId]);
 
   // ============================================================================
-  // SINGLE FEED ITEMS (when post type filter is active)
+  // SINGLE FEED ITEMS (when post type filter is active OR global sort mode)
   // ============================================================================
 
   const singleFeedItems = useMemo((): FeedItemType[] => {
     if (useInterleavedFeed || !singleFeed.data?.pages) return [];
     
-    const allItems = singleFeed.data.pages.flatMap(page => page.items || []);
+    let allItems = singleFeed.data.pages.flatMap(page => page.items || []);
     
+    // Filter out pinned post
     const filteredItems = pinnedPostId 
       ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
       : allItems;
     
-    return filteredItems.map((item, index): FeedItemType => {
+    // For trending mode: sort by trending score (recency + engagement)
+    let sortedItems = filteredItems;
+    if (selectedSort.value === 'trending') {
+      sortedItems = [...filteredItems].sort((a, b) => {
+        return calculateTrendingScore(b) - calculateTrendingScore(a);
+      });
+    }
+    
+    // Map to feed item types
+    const mapItem = (item: any, index: number): FeedItemType => {
       const inferredType = item.postType || (
         item.videoUrl ? 'video' :
         (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
@@ -547,8 +579,36 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         default:
           return { type: 'video', data: mapToVideoItem(item, index) };
       }
-    });
-  }, [useInterleavedFeed, singleFeed.data, pinnedPostId]);
+    };
+    
+    // For trending: blend in all-time most-liked posts every CLASSIC_INSERT_INTERVAL items
+    if (selectedSort.value === 'trending' && classicsFeed.data?.pages) {
+      const classicItems = classicsFeed.data.pages.flatMap(page => page.items || []);
+      // Filter out items already in trending feed and pinned post
+      const trendingIds = new Set(sortedItems.map(item => String(item.tokenId)));
+      const uniqueClassics = classicItems.filter(item => 
+        !trendingIds.has(String(item.tokenId)) && 
+        String(item.tokenId) !== String(pinnedPostId)
+      );
+      
+      const result: FeedItemType[] = [];
+      let classicIdx = 0;
+      
+      sortedItems.forEach((item, index) => {
+        result.push(mapItem(item, index));
+        
+        // Insert a classic post every CLASSIC_INSERT_INTERVAL items
+        if ((index + 1) % CLASSIC_INSERT_INTERVAL === 0 && classicIdx < uniqueClassics.length) {
+          result.push(mapItem(uniqueClassics[classicIdx], 1000 + classicIdx));
+          classicIdx++;
+        }
+      });
+      
+      return result;
+    }
+    
+    return sortedItems.map(mapItem);
+  }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value, classicsFeed.data]);
 
   // Final items to render
   const items = useInterleavedFeed ? interleavedItems : singleFeedItems;

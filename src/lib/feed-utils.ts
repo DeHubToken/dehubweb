@@ -134,6 +134,7 @@ export function interleaveByPattern<V, I, T>(
 // ============================================================================
 
 export const SORT_OPTIONS = [
+  { label: 'Trending', value: 'trending' as const },
   { label: 'Latest', value: 'latest' as const },
   { label: 'Most Viewed', value: 'most-viewed' as const },
   { label: 'Most Liked', value: 'most-liked' as const },
@@ -236,6 +237,55 @@ export function sortByMostComments<T extends DeHubNFT>(items: T[]): T[] {
   });
 }
 
+/** Fields needed for trending score calculation */
+interface TrendingScoreFields {
+  totalVotes?: { for?: number; against?: number };
+  like_count?: number;
+  views?: number;
+  view_count?: number;
+  commentCount?: number;
+  comment_count?: number;
+  createdAt?: string;
+  created_at?: string;
+}
+
+/**
+ * Calculate trending score for a post.
+ * Higher scores = more trending (recent + high engagement).
+ * 
+ * Formula: log10(1 + engagement) / (hoursAge + 2)^1.5
+ * - Logarithmic numerator prevents mega-popular posts from dominating
+ * - Time decay penalizes older content progressively
+ * - Comments weighted 2x (high engagement signal)
+ * - Views weighted 0.1x (low signal, easily inflated)
+ */
+export function calculateTrendingScore(item: TrendingScoreFields): number {
+  const likes = item.totalVotes?.for || item.like_count || 0;
+  const views = item.views || item.view_count || 0;
+  const comments = item.commentCount || item.comment_count || 0;
+  
+  // Weighted engagement: comments are high signal, views are low signal
+  const engagement = likes + (views * 0.1) + (comments * 2);
+  
+  // Hours since creation
+  const createdAt = new Date(item.createdAt || item.created_at || Date.now());
+  const hoursAge = Math.max(0, (Date.now() - createdAt.getTime()) / (1000 * 60 * 60));
+  
+  // Trending formula with time decay (exponent 1.5 = moderate decay)
+  const score = Math.log10(1 + engagement) / Math.pow(hoursAge + 2, 1.5);
+  
+  return score;
+}
+
+/**
+ * Sort NFTs by trending score (highest first)
+ */
+export function sortByTrending<T extends DeHubNFT>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    return calculateTrendingScore(b) - calculateTrendingScore(a);
+  });
+}
+
 /**
  * Apply sorting based on sort value
  * Note: For 'random', use shuffleArray separately with a seed
@@ -244,6 +294,8 @@ export function applySorting<T extends DeHubNFT>(items: T[], sortValue: SortValu
   if (items.length === 0) return items;
   
   switch (sortValue) {
+    case 'trending':
+      return sortByTrending(items);
     case 'most-viewed':
       return sortByMostViewed(items);
     case 'most-liked':
