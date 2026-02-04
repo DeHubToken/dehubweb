@@ -749,7 +749,14 @@ export const VideoCard = memo(function VideoCard({ video }: VideoCardProps) {
 
       {/* Info & Actions */}
       <div className="p-3">
-        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-2" as="h3" />
+        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
+        {video.description && video.description !== video.title && (
+          <TranslatableText 
+            text={video.description} 
+            className="text-zinc-400 text-sm mb-2 line-clamp-2" 
+            as="p" 
+          />
+        )}
         <div className="mb-3">
           <PostMetadata 
             timestamp={video.uploadedAgo} 

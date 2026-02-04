@@ -21,7 +21,7 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     postType: 'video',
     title: video.title,
     name: video.title,
-    description: video.title,
+    description: video.description || video.title,
     imageUrl: video.thumbnail,
     videoUrl: video.videoUrl,
     videoDuration: typeof video.duration === 'number' ? video.duration : 0,

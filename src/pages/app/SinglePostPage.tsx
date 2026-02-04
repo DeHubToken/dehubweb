@@ -37,6 +37,9 @@ function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' {
  */
 function toVideoItem(nft: DeHubNFT): VideoItem {
   const views = nft.views != null ? String(nft.views) : getViewCount(String(nft.tokenId));
+  const title = nft.title || nft.name || '';
+  // Only use description if it's different from title (avoid duplicates)
+  const description = nft.description && nft.description !== title ? nft.description : undefined;
   
   return {
     id: String(nft.tokenId),
@@ -44,7 +47,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
     videoUrl: getMediaUrl(nft.videoUrl),
     duration: formatDuration(nft.videoDuration || nft.duration),
-    title: nft.title || nft.name || '',
+    title,
+    description,
     channel: nft.minterDisplayName || nft.mintername || 'Unknown',
     channelAvatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
     verified: false,

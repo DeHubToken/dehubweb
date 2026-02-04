@@ -155,6 +155,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     videoUrl,
     duration: formatDuration(item.videoDuration),
     title: item.name || 'Untitled',
+    description: item.description,
     channel: item.minterDisplayName || item.minterUsername || 'Unknown Creator',
     channelAvatar,
     verified: false,
