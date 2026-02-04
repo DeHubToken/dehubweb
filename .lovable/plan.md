@@ -1,76 +1,71 @@
 
-# Buttery Smooth Shorts Transition Fix
+# Fix MetaMask Browser Layout Gap After Login
 
 ## Problem
-When flicking between shorts, there's a slight "jump" or "shake" at the end of the transition just as the new video starts. This is jarring and breaks the smooth scrolling experience.
-
-## Root Causes Identified
-1. **Spring animation overshoot** - The current spring physics (stiffness: 200, damping: 35) still allows some bounce/overshoot at the end of the animation
-2. **Dual transform issue** - The `translateY` for drag offset combines with the percentage-based `y` position, creating competing transforms
-3. **Video play timing** - Video starts playing immediately when `isActive` becomes true, which happens during the transition rather than after it settles
+After logging in on MetaMask Mobile browser, Web3Auth injects iframes that create an ugly gap above the top navigation bar, pushing all content down.
 
 ## Solution
-
-### 1. Switch to Tween Animation with Ease-Out
-Replace the spring transition with a tween-based transition using a smooth ease-out curve. This eliminates any bounce/overshoot and creates a predictable, buttery landing:
-
-```typescript
-const SMOOTH_TRANSITION = {
-  type: 'tween',
-  duration: 0.35,
-  ease: [0.25, 0.1, 0.25, 1], // CSS ease-out equivalent
-};
-```
-
-### 2. Delay Video Playback Until Animation Settles
-Add a small delay before starting video playback to ensure the transition has fully completed:
-
-```typescript
-// In VideoSlide.tsx
-useEffect(() => {
-  const video = videoRef.current;
-  if (!video) return;
-
-  if (isActive) {
-    // Delay playback slightly to let transition settle
-    const timer = setTimeout(() => {
-      if (video.currentTime === 0 || video.ended) {
-        video.currentTime = 0;
-      }
-      video.play().catch(() => {});
-    }, 50); // 50ms delay for buttery landing
-    
-    return () => clearTimeout(timer);
-  } else {
-    video.pause();
-  }
-}, [isActive]);
-```
-
-### 3. Use CSS Transform Instead of Framer Motion translateY
-Simplify the transform by only using the percentage-based `y` prop and removing the additional `translateY` during animation. The drag offset should only apply during active dragging:
-
-```typescript
-animate={{
-  y: `${offset * 100}%`,
-}}
-// Move translateY to a style prop that's conditionally applied
-style={{
-  transform: dragOffset !== 0 ? `translateY(${isActive ? dragOffset : dragOffset * 0.3}px)` : undefined,
-  zIndex: isActive ? 2 : 1,
-}}
-```
+Add comprehensive CSS rules to collapse all Web3Auth-injected iframes and ensure any remaining gaps are filled with black background color.
 
 ---
 
-## Files to Modify
+## Changes
 
-| File | Changes |
-|------|---------|
-| `src/components/app/cards/ShortsViewer.tsx` | Replace spring transition with smooth tween, simplify transform handling |
-| `src/components/app/cards/VideoSlide.tsx` | Add 50ms delay before video playback starts |
+### File: `src/index.css`
 
-## Expected Result
-- No visible bounce or overshoot at the end of transitions
-- Video starts playing only after the slide has fully settled
-- Smooth, predictable "slot into place" feel like TikTok/Instagram Reels
+Add the following CSS rules after the existing Web3Auth fixes (after line 476):
+
+```css
+/* Fix Web3Auth injected iframes causing layout gaps on MetaMask Mobile */
+/* These iframes have position: fixed; top: 0 which pushes content down */
+iframe[id*="auth-iframe"],
+iframe[id*="walletIframe"],
+iframe[id*="web3auth"],
+iframe[src*="web3auth"],
+#w3a-container,
+[id^="w3a-"] {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: none !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+/* Only show iframes when they contain visible content */
+iframe[id*="auth-iframe"][style*="display: block"],
+iframe[id*="walletIframe"][style*="display: block"],
+iframe[id*="web3auth"][style*="display: block"],
+iframe[src*="web3auth"][style*="display: block"] {
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: auto !important;
+}
+
+/* Fallback: ensure any injected elements at top of page match background */
+html, body {
+  background-color: #000 !important;
+}
+
+/* Extra fallback: force black background on root and any gaps */
+#root {
+  background-color: #000;
+}
+
+/* Hide any fixed-position empty elements that might cause gaps */
+body > iframe:not([src]),
+body > iframe[style*="height: 0"],
+body > div[style*="position: fixed"][style*="height: 0"] {
+  display: none !important;
+}
+```
+
+This approach:
+1. Collapses all Web3Auth-related iframes to zero dimensions by default
+2. Uses `position: absolute` instead of `fixed` to prevent layout interference
+3. Re-enables full-size display only when iframes are explicitly shown
+4. Sets black background on html/body/root as fallback so any gaps blend seamlessly
+5. Hides any empty fixed-position elements that might cause gaps
