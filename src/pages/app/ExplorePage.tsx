@@ -405,15 +405,15 @@ export default function ExplorePage() {
     minQueryLength: isShortSearch ? 1 : 3,
   });
 
-  // Exact username lookup - force exact lookup for short queries (1-2 chars)
+  // Exact username lookup - always try exact match to prioritize @username
   const {
     data: exactUser,
     isLoading: isUserLoading,
     isUsernameQuery,
   } = useDeHubUserSearch({
     query: effectiveQuery,
-    enabled: isSearching && (activeTab === 'all' || activeTab === 'people' || isShortSearch),
-    forceExactLookup: isShortSearch,
+    enabled: isSearching && (activeTab === 'all' || activeTab === 'people'),
+    forceExactLookup: true, // Always try exact lookup to surface @username matches first
   });
 
   // Process search results from the new universal search API
