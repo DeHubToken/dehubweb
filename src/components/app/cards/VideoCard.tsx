@@ -54,7 +54,7 @@ function useIsTabletOrMobile() {
 }
 
 /**
- * Mobile creator info component - shows avatar, display name, and handle
+ * Mobile creator info component - shows avatar, display name, handle, and action buttons
  */
 interface MobileCreatorInfoProps {
   channel?: string;
@@ -62,6 +62,8 @@ interface MobileCreatorInfoProps {
   creatorUsername?: string;
   creatorId?: string;
   verified?: boolean;
+  onAIClick?: () => void;
+  onMenuClick?: () => void;
 }
 
 function MobileCreatorInfo({
@@ -70,6 +72,8 @@ function MobileCreatorInfo({
   creatorUsername,
   creatorId,
   verified = false,
+  onAIClick,
+  onMenuClick,
 }: MobileCreatorInfoProps) {
   const navigate = useNavigate();
 
@@ -87,33 +91,54 @@ function MobileCreatorInfo({
   if (!channel) return null;
 
   return (
-    <button
-      onClick={handleProfileClick}
-      disabled={!isClickable}
-      className={`flex items-center gap-2 mb-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
-    >
-      {channelAvatar && (
-        <img 
-          src={channelAvatar} 
-          alt={channel}
-          className="w-9 h-9 rounded-full object-cover shrink-0"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-      )}
-      <div className="flex items-center gap-1.5 min-w-0">
-        <span className="font-semibold text-white text-sm">{channel}</span>
-        {verified && (
-          <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-          </svg>
+    <div className="flex items-center justify-between mb-3">
+      <button
+        onClick={handleProfileClick}
+        disabled={!isClickable}
+        className={`flex items-center gap-2 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+      >
+        {channelAvatar && (
+          <img 
+            src={channelAvatar} 
+            alt={channel}
+            className="w-9 h-9 rounded-full object-cover shrink-0"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/placeholder.svg';
+            }}
+          />
         )}
-        {creatorUsername && (
-          <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
-        )}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="font-semibold text-white text-sm">{channel}</span>
+          {verified && (
+            <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          )}
+          {creatorUsername && (
+            <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
+          )}
+        </div>
+      </button>
+      
+      {/* Action buttons */}
+      <div className="flex items-center gap-1">
+        <motion.button
+          onClick={onAIClick}
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Ask AI about this video"
+        >
+          <Sparkles className="w-5 h-5" />
+        </motion.button>
+        <button 
+          onClick={onMenuClick}
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+        >
+          <MoreVertical className="w-5 h-5" />
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -129,6 +154,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showComments, setShowComments] = useState(false);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -820,7 +846,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
 
       {/* Info & Actions */}
       <div className="p-3">
-        {/* Creator info - mobile/tablet immersive view only */}
+        {/* Creator info with action buttons - mobile/tablet immersive view only */}
         {isImmersive && (
           <MobileCreatorInfo
             channel={video.channel}
@@ -828,6 +854,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             creatorUsername={video.creatorUsername}
             creatorId={video.creatorId}
             verified={video.verified}
+            onAIClick={() => setShowAIChat(true)}
+            onMenuClick={() => setShowOptionsDrawer(true)}
           />
         )}
         <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
@@ -888,6 +916,49 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         tokenId={video.id}
         contentType="video"
       />
+
+      {/* Options Drawer for immersive mode */}
+      <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
+        <DrawerContent glass className="px-4 pb-6">
+          <DrawerHeader className="pb-2">
+            <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col gap-1">
+            <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+              <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
+            </button>
+            <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+              <ListPlus className="w-5 h-5" /> Queue
+            </button>
+            <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+              <Clock className="w-5 h-5" /> Watch List
+            </button>
+            <button 
+              onClick={() => {
+                setShowOptionsDrawer(false);
+                setShowReportModal(true);
+              }}
+              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+            >
+              <Flag className="w-5 h-5" /> Report
+            </button>
+            <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+              <Download className="w-5 h-5" /> Download
+            </button>
+            <button 
+              onClick={() => {
+                const url = `${window.location.origin}/app/post/${video.id}`;
+                navigator.clipboard.writeText(url);
+                toast.success('Link copied to clipboard');
+                setShowOptionsDrawer(false);
+              }}
+              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+            >
+              <Link2 className="w-5 h-5" /> Copy Link
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 });
