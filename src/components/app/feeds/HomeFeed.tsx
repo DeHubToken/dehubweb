@@ -29,6 +29,7 @@ import {
   calculateTrendingScore,
   limitCreatorDiversity,
   DEFAULT_MAX_POSTS_PER_CREATOR,
+  DEFAULT_MIN_CREATOR_SPACING,
   type SortOption, 
   type DateFilterOption, 
   type ContentTypeFilters, 
@@ -694,7 +695,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           default:
             return undefined;
         }
-      }
+      },
+      DEFAULT_MIN_CREATOR_SPACING
     );
   }, [rawItems, selectedSort.value, followingSet]);
 

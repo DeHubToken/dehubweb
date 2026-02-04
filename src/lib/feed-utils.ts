@@ -542,43 +542,75 @@ export function formatTimeAgo(dateString?: string): string {
 // ============================================================================
 
 /**
- * Limit how many posts from the same creator can appear consecutively in a feed.
- * Posts exceeding the limit are pushed to the end of the feed.
+ * Limit how many posts from the same creator can appear in the feed and ensure
+ * minimum spacing between posts from the same creator.
  * 
- * This ensures variety in the feed without removing content - users still see
- * the best content but from a wider variety of creators.
+ * This ensures variety in the feed by:
+ * 1. Limiting max posts per creator across the entire feed
+ * 2. Enforcing minimum spacing between posts from the same creator
  * 
  * @param items - The sorted feed items to filter
- * @param maxPerCreator - Maximum posts per creator in the main feed section (default: 2)
+ * @param maxPerCreator - Maximum posts per creator in the entire feed (default: 3)
+ * @param minSpacing - Minimum items between same-creator posts (default: 5)
  * @param getCreatorId - Function to extract creator ID from an item
  * @returns Reordered items with diversity applied
  */
 export function limitCreatorDiversity<T>(
   items: T[],
-  maxPerCreator: number = 2,
-  getCreatorId: (item: T) => string | undefined
+  maxPerCreator: number = 3,
+  getCreatorId: (item: T) => string | undefined,
+  minSpacing: number = 5
 ): T[] {
   if (items.length === 0 || maxPerCreator <= 0) return items;
   
   const creatorCounts = new Map<string, number>();
+  const creatorLastIndex = new Map<string, number>();
   const result: T[] = [];
-  const deferred: T[] = [];
+  const deferred: { item: T; creatorId: string }[] = [];
   
+  // First pass: place items that meet both count and spacing requirements
   for (const item of items) {
     const creatorId = getCreatorId(item) || 'unknown';
     const count = creatorCounts.get(creatorId) || 0;
+    const lastIndex = creatorLastIndex.get(creatorId);
+    const currentIndex = result.length;
     
-    if (count < maxPerCreator) {
+    // Check if we can place this item (within limit and spaced out)
+    const withinLimit = count < maxPerCreator;
+    const hasSpacing = lastIndex === undefined || (currentIndex - lastIndex) >= minSpacing;
+    
+    if (withinLimit && hasSpacing) {
       result.push(item);
       creatorCounts.set(creatorId, count + 1);
-    } else {
-      deferred.push(item);
+      creatorLastIndex.set(creatorId, currentIndex);
+    } else if (withinLimit) {
+      // Within limit but needs spacing - defer for later placement
+      deferred.push({ item, creatorId });
+    }
+    // If over limit, skip entirely (don't show same creator more than maxPerCreator times)
+  }
+  
+  // Second pass: try to place deferred items with spacing
+  for (const { item, creatorId } of deferred) {
+    const count = creatorCounts.get(creatorId) || 0;
+    if (count >= maxPerCreator) continue; // Skip if now over limit
+    
+    // Find a valid position with spacing
+    const lastIndex = creatorLastIndex.get(creatorId);
+    const minValidIndex = lastIndex !== undefined ? lastIndex + minSpacing : 0;
+    
+    if (result.length >= minValidIndex) {
+      result.push(item);
+      creatorCounts.set(creatorId, count + 1);
+      creatorLastIndex.set(creatorId, result.length - 1);
     }
   }
   
-  // Append deferred items at the end - they still show, just later in the feed
-  return [...result, ...deferred];
+  return result;
 }
 
 /** Default max posts per creator in the home feed */
-export const DEFAULT_MAX_POSTS_PER_CREATOR = 2;
+export const DEFAULT_MAX_POSTS_PER_CREATOR = 3;
+
+/** Default minimum spacing between same-creator posts */
+export const DEFAULT_MIN_CREATOR_SPACING = 5;
