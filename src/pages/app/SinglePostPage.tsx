@@ -21,8 +21,6 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
-import { AdSpace } from '@/components/app/ads/AdSpace';
-import { RecommendedVideosFeed } from '@/components/app/feeds/RecommendedVideosFeed';
 import { formatTimeAgo, formatDuration } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 
@@ -323,19 +321,10 @@ export default function SinglePostPage() {
   // Immersive layout for videos - uses fixed positioning to overlay the header area
   if (isVideoPost) {
     return (
-      <div className="flex flex-col fixed inset-0 z-50 bg-black lg:relative lg:inset-auto lg:z-auto lg:min-h-0 overflow-y-auto">
-        <div className="relative flex-shrink-0">
+      <div className="flex flex-col fixed inset-0 z-50 bg-black lg:relative lg:inset-auto lg:z-auto">
+        <div className="relative">
           <ImmersiveBackButton />
           {renderContent()}
-        </div>
-
-        {/* Ad Space & Recommended Videos */}
-        <div className="px-3 sm:px-4 pb-8 mt-6 bg-background">
-          <div className="max-w-6xl mx-auto space-y-8">
-            <AdSpace variant="banner" className="lg:hidden" />
-            <AdSpace variant="leaderboard" className="hidden lg:flex" />
-            <RecommendedVideosFeed excludePostId={id} />
-          </div>
         </div>
       </div>
     );
@@ -347,14 +336,8 @@ export default function SinglePostPage() {
       <PageHeader showBack />
       
       <div className="px-3 sm:px-4 pb-8">
-        <div className="max-w-2xl mx-auto space-y-8">
+        <div className="max-w-2xl mx-auto">
           {renderContent()}
-          
-          {/* Ad Space */}
-          <AdSpace variant="rectangle" className="mt-6" />
-          
-          {/* Recommended Videos Feed */}
-          <RecommendedVideosFeed excludePostId={id} />
         </div>
       </div>
     </div>
