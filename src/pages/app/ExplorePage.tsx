@@ -405,7 +405,7 @@ export default function ExplorePage() {
     minQueryLength: isShortSearch ? 1 : 3,
   });
 
-  // Exact username lookup - also try exact match for short queries
+  // Exact username lookup - force exact lookup for short queries (1-2 chars)
   const {
     data: exactUser,
     isLoading: isUserLoading,
@@ -413,6 +413,7 @@ export default function ExplorePage() {
   } = useDeHubUserSearch({
     query: effectiveQuery,
     enabled: isSearching && (activeTab === 'all' || activeTab === 'people' || isShortSearch),
+    forceExactLookup: isShortSearch,
   });
 
   // Process search results from the new universal search API
