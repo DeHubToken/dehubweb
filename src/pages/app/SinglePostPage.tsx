@@ -43,8 +43,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const title = nft.title || nft.name || '';
   // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  // API may return createdAt (camelCase) or created_at (snake_case)
-  const timestamp = nft.createdAt || nft.created_at;
+  // API returns various timestamp fields - check all possibilities
+  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
   return {
     id: String(nft.tokenId),
@@ -89,8 +89,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   const title = nft.title || nft.name;
   // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  // API may return createdAt (camelCase) or created_at (snake_case)
-  const timestamp = nft.createdAt || nft.created_at;
+  // API returns various timestamp fields - check all possibilities
+  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
   return {
     id: String(nft.tokenId),
@@ -121,8 +121,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  */
 function toTextPost(nft: DeHubNFT): TextPost {
   const views = nft.views != null ? String(nft.views) : '0';
-  // API may return createdAt (camelCase) or created_at (snake_case)
-  const timestamp = nft.createdAt || nft.created_at;
+  // API returns various timestamp fields - check all possibilities
+  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
   return {
     id: String(nft.tokenId),
@@ -256,6 +256,16 @@ export default function SinglePostPage() {
     // Only show loading if we have no data at all (not even cached)
     if (isLoading && !hasCachedData) return <LoadingState />;
     if (error || !post) return <NotFoundState />;
+    
+    // Debug: log the timestamp fields
+    console.log('[SinglePostPage] Post timestamp fields:', {
+      tokenId: post.tokenId,
+      createdAt: post.createdAt,
+      created_at: post.created_at,
+      mintedAt: (post as any).mintedAt,
+      updatedAt: (post as any).updatedAt,
+      allKeys: Object.keys(post).filter(k => k.toLowerCase().includes('at') || k.toLowerCase().includes('date') || k.toLowerCase().includes('time'))
+    });
     
     // Handle processing posts
     if (post.status === 'signed' || post.status === 'pending') {
