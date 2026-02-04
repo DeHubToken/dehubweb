@@ -142,6 +142,72 @@ function MobileCreatorInfo({
   );
 }
 
+/**
+ * Expandable description component for immersive video view
+ * Shows 4 lines with "see more" button, expands to full text on click
+ */
+interface ExpandableDescriptionProps {
+  description: string;
+  isImmersive: boolean;
+}
+
+function ExpandableDescription({ description, isImmersive }: ExpandableDescriptionProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [needsExpansion, setNeedsExpansion] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Check if text overflows (needs expansion) after render
+  useEffect(() => {
+    if (isImmersive && containerRef.current) {
+      const el = containerRef.current;
+      // Compare scrollHeight with clientHeight to detect overflow
+      setNeedsExpansion(el.scrollHeight > el.clientHeight);
+    }
+  }, [description, isImmersive]);
+
+  if (!isImmersive) {
+    // Non-immersive: simple 1-line truncation
+    return (
+      <TranslatableText 
+        text={description} 
+        className="text-zinc-400 text-sm mb-2 line-clamp-1"
+        as="p" 
+      />
+    );
+  }
+
+  return (
+    <div className="mb-2">
+      <div 
+        ref={containerRef}
+        className={isExpanded ? '' : 'line-clamp-4'}
+      >
+        <TranslatableText 
+          text={description} 
+          className="text-zinc-400 text-sm"
+          as="p" 
+        />
+      </div>
+      {needsExpansion && !isExpanded && (
+        <button
+          onClick={() => setIsExpanded(true)}
+          className="text-zinc-300 text-sm font-medium mt-1 hover:text-white transition-colors"
+        >
+          See more
+        </button>
+      )}
+      {isExpanded && (
+        <button
+          onClick={() => setIsExpanded(false)}
+          className="text-zinc-300 text-sm font-medium mt-1 hover:text-white transition-colors"
+        >
+          Show less
+        </button>
+      )}
+    </div>
+  );
+}
+
 interface VideoCardProps {
   video: VideoItem;
   /** When true, renders full-width without rounded corners or header for immersive view */
@@ -860,10 +926,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         )}
         <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
         {video.description && video.description !== video.title && (
-          <TranslatableText 
-            text={video.description} 
-            className={`text-zinc-400 text-sm mb-2 ${isImmersive ? 'line-clamp-4' : 'line-clamp-1'}`}
-            as="p" 
+          <ExpandableDescription 
+            description={video.description} 
+            isImmersive={isImmersive} 
           />
         )}
         <div className="mb-3">
