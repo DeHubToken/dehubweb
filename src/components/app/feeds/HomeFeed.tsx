@@ -348,8 +348,8 @@ function SortFilterSection({
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
-  // Default to Random (first option)
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Random
+  // Default to Most Liked (all time)
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[3]); // Most Liked
   const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
