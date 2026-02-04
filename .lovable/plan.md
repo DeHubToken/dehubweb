@@ -1,62 +1,112 @@
 
-# Fix Back Button on Dedicated Post Page
 
-## Problem Identified
+# Improve Home Feed Diversity
 
-The back button on the single post page (`/app/post/:postId`) isn't navigating correctly. This is related to the interaction between:
+## Current Situation
 
-1. **The Overlay Pattern** - When navigating from the home feed to a post, the app keeps HomePage mounted but hidden, and renders SinglePostPage on top
-2. **PageHeader's Back Logic** - Uses `navigate(-1)` with fallback to `/app` based on history checks
-3. **Session State Management** - The `cameFromHome` state and session storage keys that track navigation origin
+The home feed currently shows content sorted by:
+- **Trending** (default) - engagement + time decay algorithm
+- **Most Liked** - all-time popular posts
+- **Most Viewed** - highest view counts
+- **Most Comments** - most discussed
+- **Latest** - newest first
 
-## Root Cause
+The problem is that the same popular creators tend to dominate the feed, especially in "Most Liked" and "Most Viewed" modes, because their content consistently gets high engagement.
 
-The PageHeader's `handleBack` function relies on `window.history.length > 1 && location.key !== 'default'` to decide whether to use `navigate(-1)` or fallback to `/app`. However, this check can be unreliable in the overlay pattern context where:
+## Proposed Solutions
 
-- The history length check may not accurately reflect navigable history
-- The `location.key` may not reset properly across navigation states
+### 1. Creator Diversity Limiting (Recommended)
 
-## Solution
+Limit how many posts from the same creator can appear in a single feed page. This ensures variety without changing the sort order.
 
-Improve the back navigation logic to be more reliable by:
+**How it works:**
+- Maximum 2-3 posts per creator per page (configurable)
+- When a creator exceeds the limit, their extra posts are pushed to later pages
+- Users still see the best content, but from a wider variety of creators
 
-1. **Use `navigate(-1)` with a fallback timeout** - If navigation doesn't happen within a short window, force navigate to fallback route
-2. **OR: Simplify the logic** - Since the overlay pattern already tracks `cameFromHome`, we could leverage that information
-3. **Preferred: Add explicit referrer tracking** - Store the previous pathname on navigation and use that for back navigation instead of relying on browser history state
+### 2. "Discover" Mode
 
-### Technical Details
+Add a new sort option focused on surfacing content from creators you don't usually see:
+- Prioritize posts from creators with fewer followers
+- Weight content from accounts the user hasn't interacted with before
+- Boost posts from newer creators (accounts < 30 days old)
 
-**Option 1: Add a try-catch and fallback (Simple fix)**
-- Use `navigate(-1)` inside a try-catch
-- Add a check after navigation to ensure location changed, fallback if not
+### 3. "Following Only" Feed Tab
 
-**Option 2: Track referrer explicitly (More robust)**
-- Store the previous route in session storage before navigating to a post
-- The back button reads from this storage to know exactly where to go back
+Add a dedicated tab/filter to show only content from creators the user follows:
+- Requires user authentication
+- Uses the existing `address` API parameter to filter
+- Provides a personalized experience separate from the global discovery feed
 
-**Option 3: Remove history length check (Quickest fix)**
-- Since `location.key !== 'default'` is already a good indicator, the history length check might be causing false negatives
-- Just rely on `location.key`
+### 4. Enhanced Trending Algorithm
+
+Improve the current trending score to include diversity factors:
+- Penalize creators who already have posts in the feed
+- Boost posts from underrepresented categories
+- Factor in creator diversity score (variety of content types)
+
+## Implementation Approach
+
+I recommend implementing **Creator Diversity Limiting** first as it provides the most impact with least complexity:
+
+```text
++-------------------+     +------------------+     +----------------+
+|  API Response     | --> | Diversity Filter | --> | Rendered Feed  |
+| (sorted by score) |     | (max 2/creator)  |     | (varied content)|
++-------------------+     +------------------+     +----------------+
+```
 
 ### Files to Modify
 
-1. `src/components/app/PageHeader.tsx` - Improve the `handleBack` function logic
+1. **`src/lib/feed-utils.ts`**
+   - Add `limitCreatorDiversity()` function
+   - Configurable max posts per creator (default: 2)
 
-### Implementation
+2. **`src/components/app/feeds/HomeFeed.tsx`**
+   - Apply diversity filter after sorting
+   - Add optional "Discover" sort mode
 
-Update `handleBack` to use a more reliable approach:
+3. **`src/hooks/use-unified-feed.ts`**
+   - Add "Following" filter option that passes user's wallet address
+
+### Optional Additions
+
+- **"For You" personalized feed** - requires tracking user interactions (likes, views, follows) and building recommendation logic
+- **Category-based diversity** - ensure mix of video, image, and text posts from different topics
+
+## Technical Implementation
+
+### Creator Diversity Filter
 
 ```typescript
-const handleBack = () => {
-  // location.key will be 'default' only when there's no history
-  // This is more reliable than window.history.length which can include entries
-  // from before the app was loaded
-  if (location.key && location.key !== 'default') {
-    navigate(-1);
-  } else {
-    navigate(fallbackRoute, { replace: true });
+function limitCreatorDiversity<T extends { creatorId?: string }>(
+  items: T[],
+  maxPerCreator: number = 2
+): T[] {
+  const creatorCounts = new Map<string, number>();
+  const result: T[] = [];
+  const deferred: T[] = [];
+  
+  for (const item of items) {
+    const creatorId = item.creatorId || 'unknown';
+    const count = creatorCounts.get(creatorId) || 0;
+    
+    if (count < maxPerCreator) {
+      result.push(item);
+      creatorCounts.set(creatorId, count + 1);
+    } else {
+      deferred.push(item);
+    }
   }
-};
+  
+  // Append deferred items at the end
+  return [...result, ...deferred];
+}
 ```
 
-The issue is likely that `window.history.length > 1` is returning `true` even when the navigation came from outside the app (e.g., direct URL access after already having other tabs/history). Removing this check and relying solely on React Router's `location.key` should be more accurate.
+### UI Additions
+
+- Add "Discover" chip to sort options
+- Add "Following" toggle in filter section (requires login)
+- Show "Shuffle" button to randomize within current sort
+
