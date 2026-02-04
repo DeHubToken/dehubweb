@@ -1,63 +1,62 @@
 
-# Fix: Post Page Not Starting at Top
+# Fix: Batch Avatars Edge Function Using Wrong API Endpoint
 
 ## Problem
-When clicking on a post from the feed, the dedicated post page starts at a position slightly below the top instead of at the very top. This creates a jarring UX where users have to scroll up to see the full post.
+The `@viral` account (and all other accounts) are not loading profile pictures on the feed anymore. The batch-avatars system returns `HTTP 404` for every address.
 
 ## Root Cause
-The `SinglePostPage` component uses a regular `useEffect` to scroll to top, but this runs **after** the browser paints the page. Combined with the overlay pattern's scroll restoration logic in `AppLayout`, there's a timing conflict that prevents the scroll-to-top from working reliably.
+The `batch-avatars` edge function was created with an **incorrect API endpoint**:
+- **Currently using:** `https://api.dehub.io/api/account/{address}` → Returns 404
+- **Correct endpoint:** `https://api.dehub.io/api/account_info/{address}` → Returns user data
+
+This means every batch avatar request fails, returns `avatarUrl: null`, and the frontend falls back to showing nothing (or the fallback initial letter).
+
+## Evidence from Network Logs
+```json
+// Response from batch-avatars
+{
+  "avatars": {
+    "0x84b519...": { "avatarUrl": null, "error": "HTTP 404" },
+    "0xd627ad...": { "avatarUrl": null, "error": "HTTP 404" },
+    // ... ALL addresses returning 404
+  }
+}
+```
+
+---
 
 ## Solution
-Change the scroll-to-top logic in `SinglePostPage` to use `useLayoutEffect` (runs before paint) and apply a more aggressive multi-target scroll approach that matches the pattern used elsewhere in the app.
+Fix the API endpoint in the edge function from `/api/account/` to `/api/account_info/`.
 
 ---
 
 ## Changes Required
 
-### 1. Update `SinglePostPage.tsx`
+### 1. Update `supabase/functions/batch-avatars/index.ts`
 
-**Replace `useEffect` with `useLayoutEffect`** for the scroll-to-top logic, and use the same multi-target scroll approach that works in other parts of the app.
-
-```tsx
-// BEFORE (problematic)
-useEffect(() => {
-  if (navigationType === 'PUSH') {
-    window.scrollTo(0, 0);
-  }
-}, [id, navigationType]);
-
-// AFTER (fixed)
-useLayoutEffect(() => {
-  if (navigationType === 'PUSH') {
-    // Multi-target scroll for maximum compatibility
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    
-    // Extra RAF attempt to override browser restoration
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    });
-  }
-}, [id, navigationType]);
+Change line 37 from:
+```typescript
+const response = await fetch(`${DEHUB_API_BASE}/api/account/${address}`, {
 ```
 
-**Key changes:**
-- **`useLayoutEffect`** - Runs synchronously before the browser paints, preventing the flash at wrong scroll position
-- **Multi-target scroll** - Targets `window`, `documentElement`, and `body` to ensure compatibility across all browsers
-- **`requestAnimationFrame`** fallback - Extra attempt after the initial render to catch any browser restoration interference
+To:
+```typescript
+const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${encodeURIComponent(address)}`, {
+```
+
+This matches the working endpoint used in the main `getAccountInfo` function in `src/lib/api/dehub.ts`.
 
 ---
 
-## Why This Works
+## Technical Details
 
-1. **`useLayoutEffect` timing** - By running before paint, we scroll to top BEFORE the user sees anything, eliminating the visual jump
-2. **Multi-target approach** - Some browsers (especially Safari) respond differently to scroll targets, so hitting all three ensures it works everywhere
-3. **RAF fallback** - Catches edge cases where the browser's native scroll restoration fires slightly after our initial scroll
+| Aspect | Before | After |
+|--------|--------|-------|
+| Endpoint | `/api/account/{address}` | `/api/account_info/{address}` |
+| Response | HTTP 404 for all | Full user profile |
+| Avatar loading | Broken | Working |
 
 ---
 
 ## Files Modified
-- `src/pages/app/SinglePostPage.tsx` - Update scroll-to-top logic
+- `supabase/functions/batch-avatars/index.ts` - Fix API endpoint
