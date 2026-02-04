@@ -306,9 +306,31 @@ export function formatCount(count: number): string {
 
 /**
  * Format duration from seconds to MM:SS or HH:MM:SS
+ * Handles both number (seconds) and string ("MM:SS") inputs
  */
-export function formatDuration(seconds?: number): string {
-  if (!seconds) return '0:00';
+export function formatDuration(duration?: number | string): string {
+  if (duration === undefined || duration === null) return '';
+  
+  // If it's already a formatted string (contains ":"), validate and return as-is
+  if (typeof duration === 'string') {
+    // Check if it's a valid duration format (contains ":" and not just "0:00")
+    if (duration.includes(':')) {
+      // Return as-is if it's a valid non-zero duration
+      if (duration !== '0:00' && duration !== '00:00') {
+        return duration;
+      }
+      // If it's "0:00", return empty to hide the badge
+      return '';
+    }
+    // Try to parse as number
+    const parsed = parseFloat(duration);
+    if (isNaN(parsed) || parsed <= 0) return '';
+    duration = parsed;
+  }
+  
+  // Handle numeric duration (in seconds)
+  const seconds = typeof duration === 'number' ? duration : 0;
+  if (seconds <= 0) return '';
   
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);

@@ -288,8 +288,8 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
           </button>
         )}
 
-        {/* Duration badge */}
-        {!isPlaying && video.duration && (
+        {/* Duration badge - only show if valid duration exists */}
+        {!isPlaying && video.duration && video.duration !== '0:00' && (
           <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
             {video.duration}
           </div>
