@@ -521,7 +521,11 @@ body > div[style*="position: fixed"][style*="height: 0"] {
   display: none !important;
 }
 
-/* Immersive video mode - hide mobile header */
+/* Immersive video mode - hide mobile header and remove top padding */
 body.immersive-video-mode header.lg\\:hidden {
   display: none !important;
+}
+
+body.immersive-video-mode main {
+  padding-top: 0 !important;
 }
