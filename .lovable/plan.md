@@ -1,68 +1,92 @@
 
 
-# Fix Shorts Duration Filter
+# Plan: Fix Likes Not Registering
 
-## Problem Identified
+## Problem Diagnosis
 
-The shorts duration filter isn't working because the code is reading the wrong field from the API response.
+After thorough investigation, I found **two distinct issues** causing likes to not work:
 
-**Current code (line 97):**
-```typescript
-const durationStr = nft.duration || '0:30';
-```
+### Issue 1: Missing `address` Query Parameter
+The feed API requests are NOT including the user's wallet `address` as a query parameter:
+- **Current URL**: `GET /api/feed?page=1&limit=12&postType=video&sortBy=createdAt&sortOrder=desc&status=minted`
+- **Missing**: `&address=0xf3ede20ac...` 
 
-**What the API actually returns:**
-```json
-{
-  "videoDuration": 13.934,
-  "videoDuration": 242.021566,
-  "videoDuration": 87.539229,
-  ...
-}
-```
+Without the `address` parameter, the DeHub API cannot return personalized `isLiked`/`isDisliked` fields in the feed response. The JWT token alone contains the address but the API appears to require the explicit query parameter.
 
-The `duration` field doesn't exist - the API provides `videoDuration` as raw seconds (a number), not a formatted string. Since `nft.duration` is always `undefined`, every video gets a fallback of `'0:30'` (30 seconds), making all videos appear to be 30 seconds regardless of their actual length.
+### Issue 2: Feed Cache Not Invalidated on Auth Change
+When the user logs in, the feed data is cached by React Query. The cached data was fetched before authentication (without address), so it doesn't contain vote state. The cache isn't being invalidated when auth state changes.
 
 ## Solution
 
-Update `mapToShortVideo()` to use `videoDuration` directly instead of parsing a string:
+### Step 1: Force Address in Feed Queries
+Modify `VideosFeed.tsx` and other feed components to:
+- Only enable feed queries when authentication state is resolved
+- Include `walletAddress` in the query key so cache is invalidated on login/logout
+- Ensure the `address` parameter is always passed when user is authenticated
 
-### File to Modify
+### Step 2: Add Debug Logging to voteOnNFT
+Add console logging to the vote function to help debug any remaining issues:
+- Log the request being sent
+- Log the response received
+- Log any errors with full details
 
-**`src/components/app/feeds/ShortsFeed.tsx`**
+### Step 3: Invalidate Feed Cache on Auth Change
+Add cache invalidation in `AuthContext.tsx` to clear feed data when user logs in/out, ensuring fresh data with proper vote state.
 
-### Changes
+---
 
-1. **Read `videoDuration` directly as a number** (lines 96-97):
-   ```typescript
-   // Before:
-   const durationStr = nft.duration || '0:30';
-   
-   // After:
-   const durationSeconds = nft.videoDuration || nft.duration_seconds || 0;
-   ```
+## Technical Details
 
-2. **Remove the `parseDurationToSeconds` call** (line 124):
-   ```typescript
-   // Before:
-   durationSeconds: parseDurationToSeconds(durationStr),
-   
-   // After:
-   durationSeconds: Math.round(durationSeconds),
-   ```
+### Files to Modify
 
-3. **Keep `parseDurationToSeconds` function** for backwards compatibility in case some data still uses the old format, but add a fallback check:
-   ```typescript
-   const durationSeconds = typeof nft.videoDuration === 'number' 
-     ? nft.videoDuration 
-     : parseDurationToSeconds(nft.duration || '0:00');
-   ```
+1. **`src/components/app/feeds/VideosFeed.tsx`**
+   - Add `walletAddress` to the query key in `useUnifiedFeed`
+   - Ensure feed re-fetches when auth state changes
 
-### Result
+2. **`src/hooks/use-unified-feed.ts`**
+   - Add `address` to the query key
+   - Add debug logging for address parameter
 
-After this fix:
-- A video with `videoDuration: 13.934` will have `durationSeconds: 14`
-- The `< 15s` filter will correctly match videos under 15 seconds
-- The `15-30s` filter will correctly match videos between 15-30 seconds
-- etc.
+3. **`src/lib/api/dehub.ts`**
+   - Add debug logging to `voteOnNFT` function to trace API calls
+
+4. **`src/contexts/AuthContext.tsx`**
+   - Invalidate feed queries when user successfully authenticates
+
+### Key Code Changes
+
+**use-unified-feed.ts - Add address to query key:**
+```typescript
+return useInfiniteQuery({
+  queryKey: ['unified-feed', params, limit, params.address], // Include address for cache invalidation
+  ...
+});
+```
+
+**VideosFeed.tsx - Ensure address is passed:**
+```typescript
+const { walletAddress, isAuthenticated } = useAuth();
+
+// The hook already passes address, but ensure query key updates on auth change
+```
+
+**voteOnNFT - Add debug logging:**
+```typescript
+export async function voteOnNFT(tokenId: string, vote: boolean): Promise<VoteResponse> {
+  console.log('[Vote] Calling API:', { tokenId, vote });
+  const result = await apiCall<VoteResponse>(...);
+  console.log('[Vote] API Response:', result);
+  return result;
+}
+```
+
+---
+
+## Expected Outcome
+
+After these changes:
+1. Feed data will include `isLiked`/`isDisliked` for authenticated users
+2. Vote API calls will be properly logged for debugging
+3. Cache will be invalidated on login, fetching fresh personalized data
+4. Like button state will persist correctly after voting
 
