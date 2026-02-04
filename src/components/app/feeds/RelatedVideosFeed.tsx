@@ -22,6 +22,8 @@ const ITEMS_PER_PAGE = 10;
 interface RelatedVideosFeedProps {
   /** Current video ID to exclude from the feed */
   currentVideoId: string;
+  /** Optional scroll container ref for IntersectionObserver root (needed for fixed containers) */
+  scrollContainerRef?: React.RefObject<HTMLElement>;
 }
 
 /**
@@ -65,7 +67,7 @@ function AdLabel() {
   );
 }
 
-export function RelatedVideosFeed({ currentVideoId }: RelatedVideosFeedProps) {
+export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: RelatedVideosFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 
@@ -144,7 +146,10 @@ export function RelatedVideosFeed({ currentVideoId }: RelatedVideosFeedProps) {
           handleLoadMore();
         }
       },
-      { rootMargin: '200px' }
+      { 
+        rootMargin: '200px',
+        root: scrollContainerRef?.current || null
+      }
     );
 
     if (loadMoreRef.current) {
@@ -152,7 +157,7 @@ export function RelatedVideosFeed({ currentVideoId }: RelatedVideosFeedProps) {
     }
 
     return () => observer.disconnect();
-  }, [handleLoadMore]);
+  }, [handleLoadMore, scrollContainerRef]);
 
   const isLoading = adLoading || videosLoading;
 
