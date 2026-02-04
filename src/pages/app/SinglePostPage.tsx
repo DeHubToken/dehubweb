@@ -274,7 +274,7 @@ function ImmersiveVideoHeader({
   const isClickable = !!(creatorId || creatorUsername);
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-20 flex items-center gap-2 p-3 bg-gradient-to-b from-black/80 to-transparent">
+    <div className="absolute top-0 left-0 right-0 z-20 flex items-center gap-2 p-3">
       <button
         onClick={handleBack}
         className="p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 hover:bg-black/80 transition-colors shrink-0"
