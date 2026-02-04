@@ -63,6 +63,16 @@ const COUNTRY_OPTIONS = [
   'Zambia', 'Zimbabwe',
 ];
 
+// Brand account that should be pinned for brand-related searches
+const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
+const BRAND_ACCOUNT: SearchCreator = {
+  id: '0x02d946e4f06b5b0df9eb3baeae76c85e06cb7a80',
+  name: 'DeHub',
+  handle: '@d',
+  avatar: 'https://api.dehub.io/avatar/0x02d946e4f06b5b0df9eb3baeae76c85e06cb7a80/dehub_avatar.jpg',
+  verified: true,
+};
+
 type FilterState = {
   w2e: boolean;
   ppv: boolean;
@@ -445,19 +455,30 @@ export default function ExplorePage() {
       }
     }
     
-    // Sort: exact username match first (e.g., @d when searching "d")
+    // Check if this is a brand-related search
     const queryLower = effectiveQuery.trim().toLowerCase();
-    peopleResults.sort((a, b) => {
-      const aHandle = a.handle.replace('@', '').toLowerCase();
-      const bHandle = b.handle.replace('@', '').toLowerCase();
-      // Exact match goes first
-      if (aHandle === queryLower && bHandle !== queryLower) return -1;
-      if (bHandle === queryLower && aHandle !== queryLower) return 1;
-      // Then by handle starting with query
-      if (aHandle.startsWith(queryLower) && !bHandle.startsWith(queryLower)) return -1;
-      if (bHandle.startsWith(queryLower) && !aHandle.startsWith(queryLower)) return 1;
-      return 0;
-    });
+    const isBrandQuery = BRAND_QUERIES.includes(queryLower);
+    
+    // For brand queries, ensure @d is at the top
+    if (isBrandQuery) {
+      // Remove @d if already in results (to avoid duplicate)
+      peopleResults = peopleResults.filter(u => u.id !== BRAND_ACCOUNT.id);
+      // Pin brand account at the very top
+      peopleResults = [BRAND_ACCOUNT, ...peopleResults];
+    } else {
+      // Normal sorting: exact username match first (e.g., @d when searching "d")
+      peopleResults.sort((a, b) => {
+        const aHandle = a.handle.replace('@', '').toLowerCase();
+        const bHandle = b.handle.replace('@', '').toLowerCase();
+        // Exact match goes first
+        if (aHandle === queryLower && bHandle !== queryLower) return -1;
+        if (bHandle === queryLower && aHandle !== queryLower) return 1;
+        // Then by handle starting with query
+        if (aHandle.startsWith(queryLower) && !bHandle.startsWith(queryLower)) return -1;
+        if (bHandle.startsWith(queryLower) && !aHandle.startsWith(queryLower)) return 1;
+        return 0;
+      });
+    }
     
     return {
       users: peopleResults.filter(u => u && u.id),
