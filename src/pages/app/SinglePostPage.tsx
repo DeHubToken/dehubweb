@@ -13,7 +13,7 @@
 
 import { useParams, useNavigationType } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Loader2, AlertCircle, Clock } from 'lucide-react';
 import { getNFTInfo, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { PageHeader } from '@/components/app/PageHeader';
@@ -190,9 +190,19 @@ export default function SinglePostPage() {
   const navigationType = useNavigationType();
 
   // Only scroll to top when PUSHING to the post page (not on back navigation)
-  useEffect(() => {
+  // useLayoutEffect runs before paint to prevent flash at wrong position
+  useLayoutEffect(() => {
     if (navigationType === 'PUSH') {
-      window.scrollTo(0, 0);
+      // Multi-target scroll for maximum cross-browser compatibility
+      const scrollToTop = () => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      };
+      
+      scrollToTop();
+      // Extra RAF attempt to override browser restoration
+      requestAnimationFrame(scrollToTop);
     }
   }, [id, navigationType]);
 
