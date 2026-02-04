@@ -360,7 +360,18 @@ export default function ExplorePage() {
     }
   }, [stableQuery, activeTab, addToHistory, logSearch]);
 
-  const isSearching = searchQuery.trim().length >= 3;
+  // Debounced query for single-letter searches (1 second wait)
+  const debouncedSingleLetterQuery = useDebouncedValue(searchQuery, 1000);
+  
+  // Determine search mode based on query length
+  const trimmedQuery = searchQuery.trim();
+  const isSingleLetterSearch = trimmedQuery.length === 1 && debouncedSingleLetterQuery.trim().length === 1;
+  const isFullSearch = trimmedQuery.length >= 3;
+  const isSearching = isFullSearch || isSingleLetterSearch;
+  
+  // For single letter, only search people
+  const effectiveSearchType = isSingleLetterSearch ? 'accounts' : getTypeForTab(activeTab);
+  const effectiveQuery = isSingleLetterSearch ? debouncedSingleLetterQuery : searchQuery;
 
   // Save scroll position only when there's an active search
   useEffect(() => {
@@ -386,9 +397,9 @@ export default function ExplorePage() {
     isFetchingNextPage,
     error: searchError,
   } = useDeHubSearch({
-    query: searchQuery,
-    type: getTypeForTab(activeTab),
-    postType: getPostTypeForTab(activeTab),
+    query: effectiveQuery,
+    type: effectiveSearchType,
+    postType: isSingleLetterSearch ? undefined : getPostTypeForTab(activeTab),
     address: walletAddress || undefined,
     enabled: isSearching,
   });
@@ -399,21 +410,22 @@ export default function ExplorePage() {
     isLoading: isUserLoading,
     isUsernameQuery,
   } = useDeHubUserSearch({
-    query: searchQuery,
-    enabled: isSearching && (activeTab === 'all' || activeTab === 'people'),
+    query: effectiveQuery,
+    enabled: isSearching && (activeTab === 'all' || activeTab === 'people' || isSingleLetterSearch),
   });
 
   // Process search results from the new universal search API
   const searchResults = useMemo(() => {
     // Get accounts directly from universal search
     const accounts = flattenSearchAccounts(searchData) || [];
-    const videos = flattenSearchVideos(searchData) || [];
+    // For single-letter search, don't include video results
+    const videos = isSingleLetterSearch ? [] : (flattenSearchVideos(searchData) || []);
     
     // Map accounts to our SearchCreator format
     const accountCreators = accounts.map(mapAccountToCreator);
     
-    // Also extract creators from video results for backwards compatibility
-    const videoCreators = extractUniqueCreators(videos) || [];
+    // Also extract creators from video results for backwards compatibility (not for single-letter)
+    const videoCreators = isSingleLetterSearch ? [] : extractUniqueCreators(videos) || [];
     
     // Combine and dedupe users: accounts first, then video creators
     const userMap = new Map<string, SearchCreator>();
@@ -436,7 +448,7 @@ export default function ExplorePage() {
       posts: videos.filter(p => p && (p.id || p.tokenId)),
       total: searchData?.pages?.[0]?.total || 0,
     };
-  }, [searchData, exactUser]);
+  }, [searchData, exactUser, isSingleLetterSearch]);
 
   const activeFilterCount = [
     filters.w2e,
