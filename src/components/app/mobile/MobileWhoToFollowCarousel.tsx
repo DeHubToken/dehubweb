@@ -161,6 +161,10 @@ export function MobileWhoToFollowCarousel() {
     e.stopPropagation();
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="lg:hidden py-4 border-y border-zinc-800/50">
       {/* Header */}
@@ -182,6 +186,7 @@ export function MobileWhoToFollowCarousel() {
       <div 
         className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory touch-pan-x"
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
       >
         {suggestions.map((user) => (
           <div
