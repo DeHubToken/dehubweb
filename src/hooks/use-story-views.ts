@@ -1,42 +1,43 @@
 /**
  * Story Views Hook
  * ================
- * Tracks and fetches view counts for stories.
+ * Tracks and fetches view counts for stories via edge function.
+ * Uses keepPreviousData to prevent flashing to 0 during navigation.
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+
+const STORIES_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories-api`;
 
 export function useStoryViews(storyId: string | undefined) {
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
-  const hasRecordedView = useRef(false);
+  const recordedViews = useRef<Set<string>>(new Set());
 
-  // Fetch view count for this story
+  // Fetch view count for this story via edge function
   const { data: viewCount = 0, isLoading } = useQuery({
     queryKey: ['story-views', storyId],
     queryFn: async (): Promise<number> => {
       if (!storyId) return 0;
 
-      const { count, error } = await supabase
-        .from('story_views' as any)
-        .select('*', { count: 'exact', head: true })
-        .eq('story_id', storyId);
-
-      if (error) {
-        console.error('[story-views] Error fetching view count:', error);
+      const response = await fetch(`${STORIES_API_URL}/views?story_id=${storyId}`);
+      if (!response.ok) {
+        console.error('[story-views] Error fetching view count');
         return 0;
       }
 
-      return count || 0;
+      const data = await response.json();
+      return data.result?.count ?? 0;
     },
     enabled: !!storyId,
     staleTime: 30000,
+    placeholderData: (previousData) => previousData ?? 0, // Keep previous data to prevent flash
   });
 
-  // Mutation to record a view
+  // Mutation to record a view via edge function
   const recordViewMutation = useMutation({
     mutationFn: async () => {
       if (!storyId || !walletAddress) {
@@ -45,41 +46,38 @@ export function useStoryViews(storyId: string | undefined) {
 
       const lowerWallet = walletAddress.toLowerCase();
 
-      // Upsert to avoid duplicate views
-      const { error } = await supabase
-        .from('story_views' as any)
-        .upsert(
-          {
-            story_id: storyId,
-            viewer_wallet_address: lowerWallet,
-          },
-          { onConflict: 'story_id,viewer_wallet_address' }
-        )
-        .setHeader('x-wallet-address', lowerWallet);
+      const response = await fetch(`${STORIES_API_URL}/views`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-wallet-address': lowerWallet,
+        },
+        body: JSON.stringify({ story_id: storyId }),
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to record view');
+      }
+
+      return response.json();
     },
     onSuccess: () => {
-      // Invalidate to refetch count
-      queryClient.invalidateQueries({ queryKey: ['story-views', storyId] });
+      // Optimistically increment the cached count instead of refetching
+      queryClient.setQueryData(['story-views', storyId], (old: number | undefined) => (old ?? 0) + 1);
     },
     onError: (err) => {
       console.error('[story-views] Error recording view:', err);
     },
   });
 
-  // Record view when story is viewed
+  // Record view when story is viewed - tracks per session to avoid duplicates
   const recordView = () => {
-    if (!hasRecordedView.current && storyId && walletAddress) {
-      hasRecordedView.current = true;
+    if (storyId && walletAddress && !recordedViews.current.has(storyId)) {
+      recordedViews.current.add(storyId);
       recordViewMutation.mutate();
     }
   };
-
-  // Reset recorded flag when story changes
-  useEffect(() => {
-    hasRecordedView.current = false;
-  }, [storyId]);
 
   return {
     viewCount,
