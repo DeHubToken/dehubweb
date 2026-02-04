@@ -27,6 +27,7 @@ import {
   CONTENT_PATTERN,
   interleaveByPattern,
   calculateTrendingScore,
+  shuffleWithinBuckets,
   limitCreatorDiversity,
   DEFAULT_MAX_POSTS_PER_CREATOR,
   DEFAULT_MIN_CREATOR_SPACING,
@@ -594,12 +595,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
       : allItems;
     
-    // For trending mode: sort by trending score (recency + engagement)
+    // For trending mode: sort by trending score, then shuffle within buckets for variety
     let sortedItems = filteredItems;
     if (selectedSort.value === 'trending') {
-      sortedItems = [...filteredItems].sort((a, b) => {
+      const trendingSorted = [...filteredItems].sort((a, b) => {
         return calculateTrendingScore(b) - calculateTrendingScore(a);
       });
+      // Light shuffle: items with similar scores swap positions (bucket size of 5)
+      sortedItems = shuffleWithinBuckets(trendingSorted, 5);
     }
     
     // Map to feed item types

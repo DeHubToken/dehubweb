@@ -280,6 +280,35 @@ export function calculateTrendingScore(item: TrendingScoreFields): number {
 }
 
 /**
+ * Shuffle items within score buckets.
+ * Groups items with similar trending scores and shuffles within each bucket.
+ * This keeps genuinely trending content near the top while varying the order.
+ * 
+ * @param items - Items already sorted by trending score
+ * @param bucketSize - Number of items per bucket (default 5)
+ */
+export function shuffleWithinBuckets<T>(items: T[], bucketSize = 5): T[] {
+  if (items.length <= 1) return items;
+  
+  const result: T[] = [];
+  
+  // Process in buckets
+  for (let i = 0; i < items.length; i += bucketSize) {
+    const bucket = items.slice(i, Math.min(i + bucketSize, items.length));
+    
+    // Fisher-Yates shuffle within bucket
+    for (let j = bucket.length - 1; j > 0; j--) {
+      const k = Math.floor(Math.random() * (j + 1));
+      [bucket[j], bucket[k]] = [bucket[k], bucket[j]];
+    }
+    
+    result.push(...bucket);
+  }
+  
+  return result;
+}
+
+/**
  * Sort NFTs by trending score (highest first)
  */
 export function sortByTrending<T extends DeHubNFT>(items: T[]): T[] {
