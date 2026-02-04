@@ -275,6 +275,70 @@ function ImmersiveVideoHeader({
   );
 }
 
+/**
+ * Desktop creator info bar - shows avatar, display name, and handle above video
+ */
+interface DesktopCreatorInfoProps {
+  channel?: string;
+  channelAvatar?: string;
+  creatorUsername?: string;
+  creatorId?: string;
+  verified?: boolean;
+}
+
+function DesktopCreatorInfo({
+  channel,
+  channelAvatar,
+  creatorUsername,
+  creatorId,
+  verified = false,
+}: DesktopCreatorInfoProps) {
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    if (creatorUsername) {
+      const cleanUsername = creatorUsername.replace('@', '');
+      navigate(`/${cleanUsername}`);
+    } else if (creatorId) {
+      navigate(`/app/profile?id=${creatorId}`);
+    }
+  };
+
+  const isClickable = !!(creatorId || creatorUsername);
+
+  if (!channel) return null;
+
+  return (
+    <button
+      onClick={handleProfileClick}
+      disabled={!isClickable}
+      className={`flex items-center gap-3 mb-4 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+    >
+      {channelAvatar && (
+        <img 
+          src={channelAvatar} 
+          alt={channel}
+          className="w-10 h-10 rounded-full object-cover shrink-0"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
+          }}
+        />
+      )}
+      <div className="flex items-center gap-2 min-w-0">
+        <span className="font-semibold text-white text-base">{channel}</span>
+        {verified && (
+          <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+        )}
+        {creatorUsername && (
+          <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
+        )}
+      </div>
+    </button>
+  );
+}
+
 export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const id = postId || tokenId;
@@ -377,6 +441,14 @@ export default function SinglePostPage() {
           <PageHeader showBack />
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
+              {/* Creator info for desktop */}
+              <DesktopCreatorInfo
+                channel={videoData.channel}
+                channelAvatar={videoData.channelAvatar}
+                creatorUsername={videoData.creatorUsername}
+                creatorId={videoData.creatorId}
+                verified={videoData.verified}
+              />
               {renderContent()}
               {/* Related Videos Feed */}
               {id && <RelatedVideosFeed currentVideoId={id} />}
