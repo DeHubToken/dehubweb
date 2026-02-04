@@ -296,10 +296,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
   
-  // For trending, use last month to get enough recent content
+  // For trending, don't limit range - let pagination go back in time naturally
+  // The trending algorithm's time decay will still prioritize recent content at the top
   const range = useMemo(() => {
     if (selectedSort.value === 'trending') {
-      return 'month' as const;
+      return undefined; // No range limit - infinite scroll goes back in time
     }
     return getDateRange(selectedDate.value);
   }, [selectedSort.value, selectedDate.value]);
