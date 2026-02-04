@@ -1,16 +1,15 @@
 /**
  * Shorts Viewer Component
  * =======================
- * Full-screen shorts viewer with video playback and comments.
- * Uses the same ActionBar and CommentsSheet as regular posts.
- * Desktop: Centered portrait video with side panels.
- * Mobile: Full-screen video.
+ * Full-screen shorts viewer with TikTok-style vertical carousel.
+ * Renders 3 videos (prev/current/next) for smooth transitions.
+ * Uses Framer Motion for smooth translateY animations.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, ChevronUp, ChevronDown, Play, Pause, Eye, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal } from 'lucide-react';
-import { motion, PanInfo } from 'framer-motion';
+import { X, Volume2, VolumeX, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye } from 'lucide-react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
@@ -26,6 +25,7 @@ import type { ShortVideo } from '@/types/feed.types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { VideoSlide } from './VideoSlide';
 
 interface ShortsViewerProps {
   shorts: ShortVideo[];
@@ -41,7 +41,6 @@ interface ShortsViewerProps {
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
 function formatCount(count?: number | string): string {
-  // Handle string counts like "1.2K"
   if (typeof count === 'string') return count;
   const value = count ?? 0;
   if (value >= 1000000) return `${(value / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
@@ -76,18 +75,27 @@ function mapApiCommentToInline(apiComment: ApiCommentResponse): InlineComment {
   };
 }
 
+// Spring animation config for smooth carousel transitions
+const SPRING_TRANSITION = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 30,
+} as const;
+
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
-  const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const [showComments, setShowComments] = useState(false);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [inlineCommentText, setInlineCommentText] = useState('');
   const [isPostingComment, setIsPostingComment] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  
+  // Drag state for visual feedback
+  const [dragOffset, setDragOffset] = useState(0);
   
   // Voting state - synced with API
   const [isLiked, setIsLiked] = useState(false);
@@ -97,13 +105,24 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   
-  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
   const currentShort = shorts[currentIndex];
+  
+  // View tracking for the current short
+  const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
+  
+  // Compute visible indices for the 3-video window
+  const visibleIndices = useMemo(() => {
+    return [
+      currentIndex - 1, // Previous
+      currentIndex,     // Current
+      currentIndex + 1, // Next
+    ].filter(i => i >= 0 && i < shorts.length);
+  }, [currentIndex, shorts.length]);
   
   // Navigate to creator profile
   const handleNavigateToProfile = useCallback(() => {
@@ -114,15 +133,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
   }, [currentShort?.creatorUsername, currentShort?.username, navigate, onClose]);
   
-  // Bookmark hook - uses the same system as regular posts
+  // Bookmark hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
-  
-  // View tracking for the current short
-  const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
   
   const queryClient = useQueryClient();
   
-  // Fetch inline comments for all devices (mobile shows 3, desktop shows more)
+  // Fetch inline comments
   const { data: inlineComments = [] } = useQuery({
     queryKey: ['shorts-inline-comments', currentShort?.id],
     queryFn: async () => {
@@ -158,10 +174,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   
   // Sync voting state from short data when changing videos
   useEffect(() => {
-    // Read initial vote state from the short's data
     setIsLiked(currentShort?.isLiked ?? false);
     setIsDisliked(currentShort?.isDisliked ?? false);
-    // Parse likes from string if needed
     const likes = typeof currentShort?.likes === 'string' 
       ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0 
       : (currentShort?.likes as unknown as number) || 0;
@@ -170,31 +184,26 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setShowComments(false);
     setInlineCommentText('');
     setIsDescriptionExpanded(false);
+    setIsPaused(false);
   }, [currentIndex, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
-  // Handle voting - toggleable like ActionBar
+  // Handle voting
   const handleVote = useCallback(async (vote: boolean) => {
     const tokenId = String(currentShort?.id);
     
-    if (!tokenId || tokenId === 'undefined' || isVoting) {
-      console.log('[ShortsViewer] Vote blocked:', { tokenId, isVoting });
-      return;
-    }
+    if (!tokenId || tokenId === 'undefined' || isVoting) return;
     
     if (!isAuthenticated) {
       toast.error('Log in to engage');
       return;
     }
 
-    // If clicking the same vote again, it's a toggle (remove vote)
     const isRemovingVote = (vote && isLiked) || (!vote && isDisliked);
-    // If switching from one vote to another
     const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
 
-    console.log('[ShortsViewer] Voting:', { tokenId, vote, isRemovingVote, isSwitchingVote });
     setIsVoting(true);
     
-    // Optimistic update with animation trigger
+    // Optimistic update
     if (isRemovingVote) {
       if (vote) {
         setIsLiked(false);
@@ -233,10 +242,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     try {
       await voteOnNFT(tokenId, vote);
-      console.log('[ShortsViewer] Vote successful');
-    } catch (error: unknown) {
-      console.error('[ShortsViewer] Vote failed:', error);
-      // Revert optimistic update on error
+    } catch (error) {
+      // Revert on error
       if (isRemovingVote) {
         if (vote) {
           setIsLiked(true);
@@ -266,25 +273,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           setLocalDislikeCount(prev => Math.max(0, prev - 1));
         }
       }
-      
       toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
   }, [currentShort?.id, isVoting, isLiked, isDisliked, isAuthenticated]);
-
-  const hasVoted = isLiked || isDisliked;
-  
-  // Handle video time update for view tracking
-  const handleTimeUpdate = useCallback(() => {
-    if (videoRef.current) {
-      const ct = videoRef.current.currentTime;
-      const dur = videoRef.current.duration;
-      if (dur > 0) {
-        trackView(ct, dur);
-      }
-    }
-  }, [trackView]);
 
   // Lock body scroll when viewer is open
   useEffect(() => {
@@ -297,48 +290,25 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     };
   }, []);
 
-  useEffect(() => {
-    // Reset aspect ratio state when changing videos
-    setVideoAspect('portrait');
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    }
-    setIsPlaying(true);
-  }, [currentIndex]);
-
-  // Handle video metadata load to detect aspect ratio
-  const handleLoadedMetadata = useCallback(() => {
-    if (videoRef.current) {
-      const { videoWidth, videoHeight } = videoRef.current;
-      if (videoWidth && videoHeight) {
-        const ratio = videoWidth / videoHeight;
-        if (ratio > 1.1) {
-          setVideoAspect('landscape');
-        } else if (ratio < 0.9) {
-          setVideoAspect('portrait');
-        } else {
-          setVideoAspect('square');
-        }
-      }
-    }
-  }, []);
-
   const goToNext = useCallback(() => {
-    if (currentIndex < shorts.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if (currentIndex < shorts.length - 1 && !isTransitioning) {
+      setIsTransitioning(true);
+      setCurrentIndex(prev => prev + 1);
+      setTimeout(() => setIsTransitioning(false), 350);
     }
     // Load more when within 3 items of the end
     if (currentIndex >= shorts.length - 4 && hasMore && !isLoadingMore && onLoadMore) {
       onLoadMore();
     }
-  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore]);
+  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore, isTransitioning]);
 
   const goToPrev = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+    if (currentIndex > 0 && !isTransitioning) {
+      setIsTransitioning(true);
+      setCurrentIndex(prev => prev - 1);
+      setTimeout(() => setIsTransitioning(false), 350);
     }
-  }, [currentIndex]);
+  }, [currentIndex, isTransitioning]);
 
   // Handle mouse wheel scrolling
   useEffect(() => {
@@ -346,31 +316,24 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!container) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Stop propagation to prevent pull-to-refresh from triggering
       e.preventDefault();
       e.stopPropagation();
       
-      if (isScrolling) return;
+      if (isTransitioning) return;
       
       const threshold = 50;
       if (Math.abs(e.deltaY) < threshold) return;
 
-      setIsScrolling(true);
-      
       if (e.deltaY > 0) {
         goToNext();
       } else {
         goToPrev();
       }
-
-      // Debounce to prevent rapid scrolling
-      setTimeout(() => setIsScrolling(false), 500);
     };
 
-    // Use capture phase to intercept events before they reach the window listener
     container.addEventListener('wheel', handleWheel, { passive: false, capture: true });
     return () => container.removeEventListener('wheel', handleWheel, { capture: true });
-  }, [currentIndex, isScrolling]);
+  }, [goToNext, goToPrev, isTransitioning]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -378,7 +341,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       if (e.key === 'ArrowDown' || e.key === 'j') goToNext();
       else if (e.key === 'ArrowUp' || e.key === 'k') goToPrev();
       else if (e.key === 'Escape') onClose();
-      else if (e.key === 'm') toggleMute();
+      else if (e.key === 'm') setIsMuted(prev => !prev);
       else if (e.key === ' ') {
         e.preventDefault();
         togglePlayPause();
@@ -387,36 +350,39 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, isPlaying]);
+  }, [goToNext, goToPrev, onClose]);
 
-  const handleDragEnd = (_: any, info: PanInfo) => {
-    // Vertical swipe for navigation only - removed horizontal swipe to close
-    if (info.offset.y < -100) goToNext();
-    else if (info.offset.y > 100) goToPrev();
-  };
+  // Handle drag for visual feedback during swipe
+  const handleDrag = useCallback((_: any, info: PanInfo) => {
+    setDragOffset(info.offset.y);
+  }, []);
 
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
-
-  const togglePlayPause = () => {
-    if (!videoRef.current) return;
+  const handleDragEnd = useCallback((_: any, info: PanInfo) => {
+    setDragOffset(0);
     
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-      setShowPlayIndicator('pause');
-    } else {
-      videoRef.current.play().catch(() => {});
-      setIsPlaying(true);
-      setShowPlayIndicator('play');
-    }
+    // Navigate based on drag velocity and offset
+    const swipeThreshold = 80;
+    const velocityThreshold = 300;
     
-    setTimeout(() => setShowPlayIndicator(null), 500);
-  };
+    if (info.offset.y < -swipeThreshold || info.velocity.y < -velocityThreshold) {
+      goToNext();
+    } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
+      goToPrev();
+    }
+  }, [goToNext, goToPrev]);
+
+  // Toggle play/pause - only shows indicator on explicit tap
+  const togglePlayPause = useCallback(() => {
+    // Don't show indicator during transitions
+    if (isTransitioning) return;
+    
+    setIsPaused(prev => {
+      const newPaused = !prev;
+      setShowPlayIndicator(newPaused ? 'pause' : 'play');
+      setTimeout(() => setShowPlayIndicator(null), 500);
+      return newPaused;
+    });
+  }, [isTransitioning]);
 
   // Prevent touch events from bubbling to parent page
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -501,7 +467,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {/* Desktop Layout with Side Panels */}
       <div className={`relative flex items-center justify-center h-full ${isMobile ? 'w-full' : 'gap-4 px-4'}`}>
         
-        {/* Left Side Panel - Desktop/iPad Only: Action buttons */}
+        {/* Left Side Panel - Desktop Only: Action buttons */}
         {!isMobile && (
           <div className="w-[80px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col items-center justify-center gap-6">
             {/* Navigation */}
@@ -513,7 +479,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               <ChevronUp className="w-5 h-5 text-white" />
             </button>
 
-            {/* Action buttons - synced with API */}
+            {/* Action buttons */}
             <div className="flex flex-col items-center gap-4">
               <ActionButton
                 icon={ThumbsUp}
@@ -534,7 +500,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 disabled={isVoting}
                 animate={justVoted === 'dislike'}
               />
-
 
               {/* View count */}
               <div className="flex flex-col items-center gap-1">
@@ -559,7 +524,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               />
 
               <button
-                onClick={toggleMute}
+                onClick={() => setIsMuted(prev => !prev)}
                 className="w-12 h-12 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center transition-colors"
               >
                 {isMuted ? (
@@ -580,86 +545,57 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           </div>
         )}
 
-        {/* Video Container */}
+        {/* Video Container - Vertical Carousel Stack */}
         <div className={`relative ${isMobile ? 'w-full h-full bg-black' : 'w-[360px] h-[calc(100vh-80px)] max-h-[640px] bg-zinc-900'} rounded-none md:rounded-2xl overflow-hidden`}>
-          {/* Liquid glass background for non-portrait videos */}
-          {videoAspect !== 'portrait' && currentShort.thumbnail && (
-            <>
-              {/* Blurred thumbnail background */}
-              <div 
-                className="absolute inset-0 z-0"
-                style={{
-                  backgroundImage: `url(${currentShort.thumbnail})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  filter: 'blur(40px) saturate(150%)',
-                  transform: 'scale(1.1)',
-                }}
-              />
-              {/* Liquid glass overlay */}
-              <div className="absolute inset-0 z-[1] bg-black/40 backdrop-blur-[24px] saturate-[180%]" />
-            </>
-          )}
           
+          {/* Draggable carousel container */}
           <motion.div
-            className="absolute inset-0 z-[2]"
+            className="absolute inset-0"
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.2}
+            dragElastic={0.15}
+            onDrag={handleDrag}
             onDragEnd={handleDragEnd}
-            onTap={togglePlayPause}
           >
-            {currentShort.videoUrl ? (
-              <video
-                ref={videoRef}
-                src={currentShort.videoUrl}
-                className={`w-full h-full ${videoAspect === 'portrait' ? 'object-cover' : 'object-contain'}`}
-                loop
-                playsInline
-                autoPlay
-                muted={isMuted}
-                poster={currentShort.thumbnail}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata}
-                onError={() => console.error('Video load error:', currentShort.videoUrl)}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-zinc-900">
-                <img 
-                  src={currentShort.thumbnail} 
-                  alt={currentShort.description || 'Short video'}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                  <p className="text-white/70">Video unavailable</p>
-                </div>
-              </div>
-            )}
-            
-            {/* Play/Pause indicator */}
-            {showPlayIndicator && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center"
-                >
-                  {showPlayIndicator === 'play' ? (
-                    <Play className="w-8 h-8 text-white fill-white" />
-                  ) : (
-                    <Pause className="w-8 h-8 text-white" />
-                  )}
-                </motion.div>
-              </div>
-            )}
+            {/* Render window of 3 videos (prev/current/next) */}
+            <AnimatePresence initial={false}>
+              {visibleIndices.map(index => {
+                const short = shorts[index];
+                const offset = index - currentIndex;
+                const isActive = index === currentIndex;
+                
+                return (
+                  <motion.div
+                    key={short.id}
+                    className="absolute inset-0"
+                    initial={false}
+                    animate={{
+                      y: `${offset * 100}%`,
+                      // Add drag offset to create the "train car" effect
+                      translateY: isActive ? dragOffset : dragOffset * 0.3,
+                    }}
+                    transition={dragOffset === 0 ? SPRING_TRANSITION : { duration: 0 }}
+                    style={{ zIndex: isActive ? 2 : 1 }}
+                  >
+                    <VideoSlide
+                      short={short}
+                      isActive={isActive && !isPaused}
+                      isMuted={isMuted}
+                      onTimeUpdate={isActive ? trackView : undefined}
+                      onTap={togglePlayPause}
+                      showPlayIndicator={isActive ? showPlayIndicator : null}
+                    />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           </motion.div>
 
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
               {/* Bottom Left - Creator Info & Description */}
-              <div className="absolute bottom-6 left-4 right-20 z-10">
+              <div className="absolute bottom-6 left-4 right-20 z-10 pointer-events-auto">
                 {/* Creator info row */}
                 <div className="flex items-center gap-2 mb-3">
                   <button
@@ -710,7 +646,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </div>
 
               {/* Right Side Action Buttons - Vertical stack */}
-              <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5">
+              <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5 pointer-events-auto">
                 {/* Like */}
                 <motion.button
                   onClick={() => handleVote(true)}
@@ -775,7 +711,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           )}
         </div>
 
-        {/* Right Side Panel - Desktop/iPad Only: Creator info and comments */}
+        {/* Right Side Panel - Desktop Only: Creator info and comments */}
         {!isMobile && (
           <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
             {/* Creator Info - Top */}
@@ -885,7 +821,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
             {/* Mute button */}
             <button
-              onClick={toggleMute}
+              onClick={() => setIsMuted(prev => !prev)}
               className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
             >
               {isMuted ? (
@@ -916,8 +852,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         </button>
       )}
 
-
-      {/* Share Drawer - same style as ActionBar */}
+      {/* Share Drawer */}
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="relative">
@@ -949,7 +884,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         </DrawerContent>
       </Drawer>
 
-      {/* Comments - Always use Drawer for consistent liquid glass style */}
+      {/* Comments Drawer */}
       <Drawer open={showComments} onOpenChange={setShowComments}>
         <DrawerContent glass hideHandle className="max-h-[70vh] flex flex-col overflow-hidden">
           <div className="flex-1 min-h-0 px-4 pb-4 pt-2">
