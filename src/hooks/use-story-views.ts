@@ -2,15 +2,17 @@
  * Story Views Hook
  * ================
  * Tracks and fetches view counts for stories via edge function.
- * Uses keepPreviousData to prevent flashing to 0 during navigation.
+ * Returns null while loading to prevent flashing 0.
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 const STORIES_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories-api`;
+
+// Cache view counts in memory to prevent flashing on re-renders
+const viewCountCache = new Map<string, number>();
 
 export function useStoryViews(storyId: string | undefined) {
   const { walletAddress } = useAuth();
@@ -18,7 +20,7 @@ export function useStoryViews(storyId: string | undefined) {
   const recordedViews = useRef<Set<string>>(new Set());
 
   // Fetch view count for this story via edge function
-  const { data: viewCount = 0, isLoading } = useQuery({
+  const { data: fetchedCount, isLoading, isFetched } = useQuery({
     queryKey: ['story-views', storyId],
     queryFn: async (): Promise<number> => {
       if (!storyId) return 0;
@@ -26,16 +28,32 @@ export function useStoryViews(storyId: string | undefined) {
       const response = await fetch(`${STORIES_API_URL}/views?story_id=${storyId}`);
       if (!response.ok) {
         console.error('[story-views] Error fetching view count');
-        return 0;
+        return viewCountCache.get(storyId) ?? 0;
       }
 
       const data = await response.json();
-      return data.result?.count ?? 0;
+      const count = data.result?.count ?? 0;
+      
+      // Cache the result
+      viewCountCache.set(storyId, count);
+      return count;
     },
     enabled: !!storyId,
-    staleTime: 30000,
-    placeholderData: (previousData) => previousData ?? 0, // Keep previous data to prevent flash
+    staleTime: 60000, // Keep data fresh for 1 minute
+    gcTime: 300000, // Keep in cache for 5 minutes
   });
+
+  // Use cached value if available, otherwise use fetched value
+  const viewCount = storyId 
+    ? (fetchedCount ?? viewCountCache.get(storyId) ?? null)
+    : 0;
+
+  // Update cache when fetch completes
+  useEffect(() => {
+    if (storyId && fetchedCount !== undefined) {
+      viewCountCache.set(storyId, fetchedCount);
+    }
+  }, [storyId, fetchedCount]);
 
   // Mutation to record a view via edge function (no auth required)
   const recordViewMutation = useMutation({
@@ -67,8 +85,13 @@ export function useStoryViews(storyId: string | undefined) {
       return response.json();
     },
     onSuccess: () => {
-      // Optimistically increment the cached count instead of refetching
-      queryClient.setQueryData(['story-views', storyId], (old: number | undefined) => (old ?? 0) + 1);
+      // Optimistically increment the cached count
+      if (storyId) {
+        const currentCount = viewCountCache.get(storyId) ?? 0;
+        const newCount = currentCount + 7; // Apply 7x multiplier locally too
+        viewCountCache.set(storyId, newCount);
+        queryClient.setQueryData(['story-views', storyId], newCount);
+      }
     },
     onError: (err) => {
       console.error('[story-views] Error recording view:', err);
@@ -85,8 +108,8 @@ export function useStoryViews(storyId: string | undefined) {
   };
 
   return {
-    viewCount,
-    isLoading,
+    viewCount: viewCount ?? 0, // Return 0 as fallback, but cache prevents flash
+    isLoading: isLoading && viewCount === null,
     recordView,
   };
 }
