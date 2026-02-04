@@ -3,15 +3,26 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Cache-Control': 'public, max-age=60, stale-while-revalidate=300', // CDN cache: 1min fresh, 5min stale OK
 };
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
-// Cache configurations to pre-fetch
+// Cache configurations to pre-fetch - expanded for better scalability
+// Now caches pages 1-5 for both latest and popular feeds
 const CACHE_CONFIGS = [
+  // Latest feed - pages 1-5
   { key: "feed_latest_page1", page: 1, limit: 50, sortBy: "createdAt" },
   { key: "feed_latest_page2", page: 2, limit: 50, sortBy: "createdAt" },
-  { key: "feed_popular", page: 1, limit: 100, sortBy: "likes" },
+  { key: "feed_latest_page3", page: 3, limit: 50, sortBy: "createdAt" },
+  { key: "feed_latest_page4", page: 4, limit: 50, sortBy: "createdAt" },
+  { key: "feed_latest_page5", page: 5, limit: 50, sortBy: "createdAt" },
+  // Popular feed - pages 1-5
+  { key: "feed_popular_page1", page: 1, limit: 50, sortBy: "likes" },
+  { key: "feed_popular_page2", page: 2, limit: 50, sortBy: "likes" },
+  { key: "feed_popular_page3", page: 3, limit: 50, sortBy: "likes" },
+  { key: "feed_popular_page4", page: 4, limit: 50, sortBy: "likes" },
+  { key: "feed_popular_page5", page: 5, limit: 50, sortBy: "likes" },
 ];
 
 interface CacheConfig {

@@ -269,10 +269,13 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
 
 /**
  * Determine the cache key for a given set of params
+ * Now supports pages 1-5 for both latest and popular feeds
  */
 function getCacheKey(params: UnifiedFeedParams): string | null {
-  // Only cache page 1 of standard queries
-  if (params.page !== 1 && params.page !== undefined) return null;
+  const page = params.page || 1;
+  
+  // Only cache pages 1-5
+  if (page < 1 || page > 5) return null;
   if (params.minter || params.address) return null; // User-specific queries aren't cached
   if (params.isPPV || params.isLocked || params.hasBounty || params.hasPlans) return null;
   if (params.range || params.from || params.to) return null;
@@ -283,9 +286,9 @@ function getCacheKey(params: UnifiedFeedParams): string | null {
   const sortBy = params.sortBy || 'likes'; // Default sort is likes (popular)
   
   if (sortBy === 'createdAt') {
-    return 'feed_latest_page1';
+    return `feed_latest_page${page}`;
   } else if (sortBy === 'likes') {
-    return 'feed_popular';
+    return `feed_popular_page${page}`;
   }
   
   return null;
@@ -439,10 +442,14 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     },
     initialPageParam: 1,
     enabled,
-    staleTime: 1000 * 60 * 10, // 10 minutes - keep data fresh longer
-    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    // Stale-while-revalidate: show cached data immediately, refresh in background
+    staleTime: 1000 * 60 * 5, // Data is "fresh" for 5 minutes (no refetch)
+    gcTime: 1000 * 60 * 60, // Keep in cache for 1 hour for instant back navigation
     refetchOnWindowFocus: false, // Don't refetch on tab focus
     refetchOnMount: false, // Don't refetch when component remounts
+    refetchOnReconnect: false, // Don't refetch on network reconnect
     retry: 2,
+    // Show stale data while refetching in background (stale-while-revalidate pattern)
+    placeholderData: (previousData) => previousData,
   });
 }
