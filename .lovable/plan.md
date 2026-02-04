@@ -1,111 +1,84 @@
 
+# Plan: Fix "Most Liked" Feed to Show Global Ranking
 
-# Fix Single-Letter Username Search for @d
+## Problem
+Post 2008 (the platform's most-liked post with 199 likes) is not appearing at the top of the Home Feed when "Most Liked" sorting is selected. 
 
-## Problem Identified
+## Root Cause
+The Home Feed currently makes **three separate API calls** when showing "All" content:
+- `/api/feed?postType=video&sortBy=likes` - Gets most-liked **videos only**
+- `/api/feed?postType=feed-images&sortBy=likes` - Gets most-liked **images only**  
+- `/api/feed?postType=feed-simple&sortBy=likes` - Gets most-liked **text posts only**
 
-When searching for `d`, the user `@d` doesn't appear because:
-
-1. **Exact username lookup never fires**: The `useDeHubUserSearch` hook only triggers when the query starts with `@` (e.g., `@d`). When searching plain `d`, it skips the exact user lookup entirely.
-
-2. **API may not return exact matches**: The DeHub `/api/search?type=accounts&q=d` endpoint relies on its internal relevance algorithm, which may not prioritize or even include the exact username `d` in results.
-
-3. **The sorting logic helps, but only if `@d` is in the results**: The client-side sorting correctly prioritizes exact handle matches, but if `@d` never makes it into the results array, sorting can't help.
-
----
+These results are then interleaved in a fixed pattern (video, video, image, video, text, etc.), which:
+1. Only ranks items within their own category (not globally)
+2. Rearranges the order based on the pattern, not by likes
 
 ## Solution
+When "Most Liked" is selected, use a **single unified feed** that fetches all content types together, globally sorted by likes.
 
-Modify `useDeHubUserSearch` to perform exact username lookups for **all short queries (1-2 characters)**, not just queries starting with `@`. This will call the `/api/account_info/d` endpoint directly, which returns the exact user if they exist.
+## Changes Required
 
----
+### File: `src/components/app/feeds/HomeFeed.tsx`
 
-## Implementation Steps
+**Change 1:** Modify the interleaved feed logic to use single feed for "Most Liked"
 
-### 1. Update `useDeHubUserSearch` hook
-
-**File:** `src/hooks/use-dehub-user-search.ts`
-
-**Changes:**
-- Add a new optional parameter `forceExactLookup` that bypasses the `@` prefix requirement
-- When `forceExactLookup` is true, treat the raw query as a username and perform the exact lookup
-- Reduce minimum character requirement from 2 to 1 for exact lookups
-
+Current (around line 311):
 ```typescript
-export interface UseDeHubUserSearchOptions {
-  query: string;
-  enabled?: boolean;
-  forceExactLookup?: boolean; // NEW: bypass @ requirement
-}
-
-export function useDeHubUserSearch({ 
-  query, 
-  enabled = true,
-  forceExactLookup = false, // NEW
-}: UseDeHubUserSearchOptions) {
-  const debouncedQuery = useDebouncedValue(query, 300);
-  
-  const isUsernameQuery = debouncedQuery.trim().startsWith('@');
-  const cleanUsername = debouncedQuery.trim().replace(/^@/, '').trim();
-  
-  // Enable for @ queries with 1+ chars, OR for forced lookups with 1+ chars
-  const shouldFetch = enabled && cleanUsername.length >= 1 && (
-    isUsernameQuery || forceExactLookup
-  );
-  // ...
-}
+const useInterleavedFeed = selectedPostType === 'all';
 ```
 
-### 2. Update ExplorePage to use exact lookup for short queries
-
-**File:** `src/pages/app/ExplorePage.tsx`
-
-**Changes:**
-- Pass `forceExactLookup: true` when performing short searches (1-2 characters)
-- This ensures typing `d` will call `/api/account_info/d` to find `@d` directly
-
+Updated:
 ```typescript
-const {
-  data: exactUser,
-  isLoading: isUserLoading,
-  isUsernameQuery,
-} = useDeHubUserSearch({
-  query: effectiveQuery,
-  enabled: isSearching && (activeTab === 'all' || activeTab === 'people' || isShortSearch),
-  forceExactLookup: isShortSearch, // NEW: force exact lookup for 1-2 char queries
+// For "Most Liked" sorting, we need global ranking across all types
+// So we use a single unified feed instead of three separate type feeds
+const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked';
+const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
+```
+
+**Change 2:** Update the single feed query to handle "All" post types
+
+Current (around lines 335-339):
+```typescript
+const singleFeed = useUnifiedFeed({
+  ...commonParams,
+  postType: selectedPostType === 'all' ? undefined : selectedPostType,
+  enabled: !useInterleavedFeed,
 });
 ```
 
-### 3. Update hooks barrel export (if needed)
+Updated:
+```typescript
+const singleFeed = useUnifiedFeed({
+  ...commonParams,
+  // When using single feed for global sort OR specific type filter, pass appropriate postType
+  // undefined = fetch all types (what the API expects for "all")
+  postType: (useSingleFeedForGlobalSort && selectedPostType === 'all') 
+    ? undefined 
+    : (selectedPostType === 'all' ? undefined : selectedPostType),
+  enabled: !useInterleavedFeed,
+});
+```
 
-**File:** `src/hooks/index.ts`
+This can be simplified to:
+```typescript
+const singleFeed = useUnifiedFeed({
+  ...commonParams,
+  postType: selectedPostType === 'all' ? undefined : selectedPostType,
+  enabled: !useInterleavedFeed,
+});
+```
 
-No changes needed - the export already includes the hook.
+Since `useSingleFeedForGlobalSort` already sets `useInterleavedFeed = false` when needed.
 
----
+## Result
+- When "Most Liked" is selected with "All" content types, the feed will make a single call: `/api/feed?sortBy=likes&sortOrder=desc`
+- This returns ALL content types globally sorted by likes
+- Post 2008 (199 likes) will appear first
+- The server-side cache (`feed_popular_page1`, etc.) will be used for faster loading
+- Other sort modes (Latest, Most Viewed, Most Comments) can continue using the interleaved pattern if desired, or you can apply the same logic to all sorts for consistency
 
-## Technical Details
-
-### How it works after the fix:
-1. User types `d`
-2. After 1 second debounce, `isShortSearch` becomes true
-3. `useDeHubUserSearch` fires with `forceExactLookup: true`
-4. Hook calls `/api/account_info/d` 
-5. If user `@d` exists, they're returned as `exactUser`
-6. In `searchResults` memo, `exactUser` is added to `peopleResults`
-7. The sorting ensures `@d` appears at the top (exact match)
-
-### Edge cases handled:
-- User doesn't exist: API returns 404, query fails with `retry: false`, no result shown
-- User types `@d`: Works as before (isUsernameQuery is true)
-- User types `da`: Also triggers exact lookup for `@da` if it exists
-
----
-
-## Files to Modify
-
-| File | Change |
-|------|--------|
-| `src/hooks/use-dehub-user-search.ts` | Add `forceExactLookup` parameter, allow 1-char lookups |
-| `src/pages/app/ExplorePage.tsx` | Pass `forceExactLookup: isShortSearch` to the hook |
-
+## Technical Notes
+- The `getCacheKey` function in `use-unified-feed.ts` already correctly maps `sortBy: 'likes'` to `feed_popular_page*` cache keys
+- The cache only works when `postType` is `'all'` (line 284), which aligns with our fix
+- No changes needed to the unified feed hook or cache refresh function
