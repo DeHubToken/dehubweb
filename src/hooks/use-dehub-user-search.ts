@@ -34,13 +34,19 @@ export interface UseDeHubUserSearchOptions {
   query: string;
   /** Whether the search is enabled */
   enabled?: boolean;
+  /** Force exact lookup even without @ prefix (for short queries) */
+  forceExactLookup?: boolean;
 }
 
 /**
  * Hook to search for a user by exact username match
- * Only triggers when query starts with @ and has at least 2 characters after
+ * Triggers when query starts with @ OR when forceExactLookup is true
  */
-export function useDeHubUserSearch({ query, enabled = true }: UseDeHubUserSearchOptions) {
+export function useDeHubUserSearch({ 
+  query, 
+  enabled = true,
+  forceExactLookup = false,
+}: UseDeHubUserSearchOptions) {
   // Debounce the query
   const debouncedQuery = useDebouncedValue(query, 300);
   
@@ -48,8 +54,10 @@ export function useDeHubUserSearch({ query, enabled = true }: UseDeHubUserSearch
   const isUsernameQuery = debouncedQuery.trim().startsWith('@');
   const cleanUsername = debouncedQuery.trim().replace(/^@/, '').trim();
   
-  // Only enable if it's a username query with at least 2 characters
-  const shouldFetch = enabled && isUsernameQuery && cleanUsername.length >= 2;
+  // Enable for @ queries with 1+ chars, OR for forced lookups with 1+ chars
+  const shouldFetch = enabled && cleanUsername.length >= 1 && (
+    isUsernameQuery || forceExactLookup
+  );
 
   const result = useQuery({
     queryKey: ['dehub-user-search', cleanUsername],
