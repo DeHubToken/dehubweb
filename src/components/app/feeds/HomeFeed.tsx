@@ -829,9 +829,18 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     const elements: React.ReactNode[] = [];
     let shortsInserted = false;
     let radioInserted = false;
+    let whoToFollowInserted = false;
 
     items.forEach((item, index) => {
       elements.push(renderFeedItem(item, index));
+
+      // Insert Who to Follow carousel after 3 posts (mobile/tablet only)
+      if ((index + 1) === 3 && !whoToFollowInserted) {
+        elements.push(
+          <MobileWhoToFollowCarousel key={`who-to-follow-${index}`} />
+        );
+        whoToFollowInserted = true;
+      }
 
       // Insert shorts carousel after every SHORTS_INSERT_INTERVAL posts (5)
       if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
@@ -939,9 +948,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div className="pt-2">
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
-          
-          {/* Mobile/Tablet: Who to Follow Carousel */}
-          <MobileWhoToFollowCarousel />
           
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />

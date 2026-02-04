@@ -156,6 +156,11 @@ export function MobileWhoToFollowCarousel() {
     return null;
   }
 
+  // Handle touch events to prevent horizontal scroll from triggering tab switch
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="lg:hidden py-4 border-y border-zinc-800/50">
       {/* Header */}
@@ -173,8 +178,11 @@ export function MobileWhoToFollowCarousel() {
         </button>
       </div>
 
-      {/* Horizontal Carousel */}
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory">
+      {/* Horizontal Carousel - touch-action pan-x prevents vertical swipe interference */}
+      <div 
+        className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory touch-pan-x"
+        onTouchStart={handleTouchStart}
+      >
         {suggestions.map((user) => (
           <div
             key={user.address}
@@ -196,9 +204,10 @@ export function MobileWhoToFollowCarousel() {
               </span>
               <Button
                 size="sm"
+                variant="outline"
                 onClick={(e) => handleFollow(e, user)}
                 disabled={loadingUsers.has(user.address)}
-                className="w-full h-7 text-[10px] font-semibold rounded-lg bg-white text-black hover:bg-zinc-200"
+                className="w-full h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
               >
                 {loadingUsers.has(user.address) ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
