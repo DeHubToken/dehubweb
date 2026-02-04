@@ -17,7 +17,8 @@ import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { VideoCard } from '@/components/app/cards/VideoCard';
-import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
+import { searchNFTs, getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
+import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
@@ -547,6 +548,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, onOpenSta
   const { data: carouselVideosData, isLoading: isLoadingCarouselVideos } = useQuery({
     queryKey: ['music-videos-carousel', walletAddress],
     queryFn: async () => {
+      // Fetch API music videos
       const response = await searchNFTs({
         category: 'Music',
         postType: 'video',
@@ -554,8 +556,20 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, onOpenSta
         sortMode: 'popular',
         address: walletAddress || undefined,
       });
-      // Filter out blocked creators
-      return (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft));
+      
+      // Fetch manually tagged music tokens
+      const manualTokenPromises = MANUAL_MUSIC_TOKEN_IDS.map(tokenId => 
+        getNFTInfo(String(tokenId)).catch(() => null)
+      );
+      const manualTokens = (await Promise.all(manualTokenPromises)).filter(Boolean) as DeHubNFT[];
+      
+      // Merge: manual tokens first (so they appear at the front), then API results
+      // Filter out any duplicates (same tokenId) and blocked creators
+      const apiTokenIds = new Set(manualTokens.map(t => t.tokenId));
+      const filteredApiResults = (response.data || [])
+        .filter((nft: DeHubNFT) => !isBlockedCreator(nft) && !apiTokenIds.has(nft.tokenId));
+      
+      return [...manualTokens.filter(nft => !isBlockedCreator(nft)), ...filteredApiResults];
     },
     staleTime: 5 * 60 * 1000,
   });
