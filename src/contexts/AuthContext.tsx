@@ -10,6 +10,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { 
   authenticateWallet, 
@@ -116,6 +117,7 @@ function mapWalletProvider(wallet: WalletProvider): typeof WALLET_CONNECTORS[key
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<DeHubUser | null>(null);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -286,6 +288,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!normalizedUser.username) {
       setRequiresUsername(true);
     }
+    
+    // Invalidate all feed caches to fetch fresh data with user's vote state
+    console.log('[Auth] Invalidating feed caches for fresh personalized data');
+    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
     
     console.log('[Auth] ✓ DeHub authentication complete');
   };
