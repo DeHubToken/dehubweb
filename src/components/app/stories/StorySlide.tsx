@@ -7,23 +7,23 @@
  * @module components/app/stories/StorySlide
  */
 
-import { useRef, useEffect, useCallback, memo } from 'react';
+import { useRef, useEffect, memo } from 'react';
 import type { Story } from '@/hooks/use-stories';
 
 interface StorySlideProps {
   story: Story;
   isActive: boolean;
   isPaused: boolean;
+  isMuted?: boolean;
   onEnded?: () => void;
-  onTimeUpdate?: (currentTime: number, duration: number) => void;
 }
 
 export const StorySlide = memo(function StorySlide({
   story,
   isActive,
   isPaused,
+  isMuted = false,
   onEnded,
-  onTimeUpdate,
 }: StorySlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -40,15 +40,12 @@ export const StorySlide = memo(function StorySlide({
     }
   }, [isActive, isPaused]);
 
-  // Handle time update for progress tracking
-  const handleTimeUpdate = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
-    if (onTimeUpdate) {
-      const video = e.currentTarget;
-      if (video.duration && isFinite(video.duration)) {
-        onTimeUpdate(video.currentTime, video.duration);
-      }
+  // Update muted state
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
     }
-  }, [onTimeUpdate]);
+  }, [isMuted]);
 
   return (
     <div className="absolute inset-0 bg-black">
@@ -56,11 +53,10 @@ export const StorySlide = memo(function StorySlide({
         ref={videoRef}
         src={story.video_url}
         playsInline
-        muted={false}
+        muted={isMuted}
         preload={isActive ? 'auto' : 'metadata'}
         className="w-full h-full object-cover pointer-events-none"
         onEnded={isActive ? onEnded : undefined}
-        onTimeUpdate={isActive ? handleTimeUpdate : undefined}
       />
     </div>
   );

@@ -3,12 +3,12 @@
  * ==================
  * TikTok-style full-screen vertical carousel viewer for stories.
  * Renders 3 stories (prev/current/next) for smooth transitions.
- * Scroll/swipe up for next, down for previous.
+ * Matches ShortsViewer UI exactly.
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Pause, Play, Trash2, Loader2 } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronLeft, MoreHorizontal, MessageSquare, Share2, Trash2, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,8 +16,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Repeat2, Quote, Link } from 'lucide-react';
 import type { Story } from '@/hooks/use-stories';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { StorySlide } from './StorySlide';
 
 interface StoryViewerModalProps {
@@ -36,19 +39,31 @@ const SPRING_TRANSITION = {
 
 export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }: StoryViewerModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const currentStory = stories[currentIndex];
   const isOwnStory = currentStory && walletAddress?.toLowerCase() === currentStory.wallet_address.toLowerCase();
+
+  // Resolve avatar URL - story.avatar may already be processed or may be a raw path
+  const resolvedAvatar = useMemo(() => {
+    if (!currentStory) return undefined;
+    // If avatar is already a full URL, use it directly
+    if (currentStory.avatar?.startsWith('http')) {
+      return currentStory.avatar;
+    }
+    // Otherwise build from wallet address
+    return buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined;
+  }, [currentStory]);
 
   // Compute visible indices for the 3-story window
   const visibleIndices = useMemo(() => {
@@ -63,8 +78,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
-      setProgress(0);
-      setIsPaused(false);
       setDragOffset(0);
     }
   }, [isOpen, initialIndex]);
@@ -87,14 +100,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     if (currentIndex < stories.length - 1) {
       setIsTransitioning(true);
       setCurrentIndex((prev) => prev + 1);
-      setProgress(0);
       setTimeout(() => setIsTransitioning(false), 350);
     } else {
       // Loop randomly when out of stories
       setIsTransitioning(true);
       const randomIndex = Math.floor(Math.random() * stories.length);
       setCurrentIndex(randomIndex);
-      setProgress(0);
       setTimeout(() => setIsTransitioning(false), 350);
     }
   }, [currentIndex, stories.length, isTransitioning]);
@@ -105,7 +116,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     if (currentIndex > 0) {
       setIsTransitioning(true);
       setCurrentIndex((prev) => prev - 1);
-      setProgress(0);
       setTimeout(() => setIsTransitioning(false), 350);
     }
   }, [currentIndex, isTransitioning]);
@@ -156,9 +166,8 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
           e.preventDefault();
           onClose();
           break;
-        case ' ':
-          e.preventDefault();
-          togglePause();
+        case 'm':
+          setIsMuted(prev => !prev);
           break;
       }
     };
@@ -166,10 +175,6 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, goNext, goPrev, onClose]);
-
-  const togglePause = useCallback(() => {
-    setIsPaused((prev) => !prev);
-  }, []);
 
   // Handle drag for visual feedback during swipe
   const handleDrag = useCallback((_: any, info: PanInfo) => {
@@ -220,11 +225,30 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
     }
   };
 
-  const handleTimeUpdate = useCallback((currentTime: number, duration: number) => {
-    if (duration > 0) {
-      setProgress((currentTime / duration) * 100);
-    }
-  }, []);
+  const handleNavigateToProfile = useCallback(() => {
+    const profilePath = currentStory?.username 
+      ? `/${currentStory.username}` 
+      : `/app/profile?id=${currentStory?.wallet_address}`;
+    onClose();
+    navigate(profilePath);
+  }, [currentStory, navigate, onClose]);
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/app`;
+    navigator.clipboard.writeText(url);
+    toast.success('Link copied to clipboard');
+    setShareSheetOpen(false);
+  };
+
+  const handleRepost = () => {
+    toast.success('Reposted!');
+    setShareSheetOpen(false);
+  };
+
+  const handleQuote = () => {
+    toast.success('Quote created!');
+    setShareSheetOpen(false);
+  };
 
   // Prevent touch events from bubbling
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -242,14 +266,14 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
   if (!isOpen || !currentStory) return null;
 
   return (
-    <div 
+    <motion.div 
       ref={containerRef}
-      className="fixed inset-0 z-[70] bg-black flex flex-col touch-none"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[70] bg-black flex items-center justify-center"
       style={{ 
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        touchAction: 'none',
         height: '100dvh',
         width: '100vw',
       }}
@@ -257,117 +281,261 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Header - overlaid on video */}
-      <div className="absolute top-[env(safe-area-inset-top,0px)] left-0 right-0 z-20 flex items-center justify-between px-4 pt-3">
-        <button 
-          onClick={() => {
-            const profilePath = currentStory.username 
-              ? `/${currentStory.username}` 
-              : `/app/profile?id=${currentStory.wallet_address}`;
-            onClose();
-            navigate(profilePath);
-          }}
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-        >
-          <Avatar className="w-10 h-10 border-2 border-white">
-            <AvatarImage src={buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined} />
-            <AvatarFallback className="bg-zinc-700 text-white">
-              {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div className="text-left">
-            <p className="text-white font-medium text-sm">
-              {currentStory.username ? `@${currentStory.username}` : `${currentStory.wallet_address.slice(0, 6)}...`}
-            </p>
-            <p className="text-white/60 text-xs">
-              {formatDistanceToNow(new Date(currentStory.created_at), { addSuffix: true })}
-            </p>
-          </div>
-        </button>
-
-        <div className="flex items-center gap-2">
-          {isOwnStory && (
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="w-9 h-9 rounded-xl bg-red-500/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center disabled:opacity-50"
-            >
-              {isDeleting ? (
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
-              ) : (
-                <Trash2 className="w-4 h-4 text-white" />
-              )}
-            </button>
-          )}
-          <button
-            onClick={togglePause}
-            className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
+      {/* Main content area */}
+      <div className={`relative flex items-center justify-center h-full ${isMobile ? 'w-full' : 'gap-4 px-4'}`}>
+        
+        {/* Video Container - Vertical Carousel Stack */}
+        <div className={`relative ${isMobile ? 'w-full h-full bg-black' : 'w-[360px] h-[calc(100vh-80px)] max-h-[640px] bg-zinc-900'} rounded-none md:rounded-2xl overflow-hidden`}>
+          
+          {/* Draggable carousel container */}
+          <motion.div
+            className="absolute inset-0"
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.15}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
           >
-            {isPaused ? (
-              <Play className="w-4 h-4 text-white" />
-            ) : (
-              <Pause className="w-4 h-4 text-white" />
-            )}
-          </button>
+            {/* Render window of 3 stories (prev/current/next) */}
+            <AnimatePresence initial={false}>
+              {visibleIndices.map(index => {
+                const story = stories[index];
+                const offset = index - currentIndex;
+                const isActive = index === currentIndex;
+                
+                // Resolve avatar for this story
+                const storyAvatar = story.avatar?.startsWith('http') 
+                  ? story.avatar 
+                  : buildAvatarUrl(story.wallet_address, story.avatar) || undefined;
+                
+                return (
+                  <motion.div
+                    key={story.id}
+                    className="absolute inset-0"
+                    initial={false}
+                    animate={{
+                      y: `${offset * 100}%`,
+                      translateY: isActive ? dragOffset : dragOffset * 0.3,
+                    }}
+                    transition={dragOffset === 0 ? SPRING_TRANSITION : { duration: 0 }}
+                    style={{ zIndex: isActive ? 2 : 1 }}
+                  >
+                    <StorySlide
+                      story={story}
+                      isActive={isActive}
+                      isPaused={false}
+                      isMuted={isMuted}
+                      onEnded={goNext}
+                    />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Mobile-only overlays - TikTok-style layout (matching ShortsViewer exactly) */}
+          {isMobile && (
+            <>
+              {/* Bottom Left - Creator Info */}
+              <div className="absolute bottom-6 left-4 right-20 z-10 pointer-events-auto">
+                {/* Creator info row */}
+                <div className="flex items-center gap-2 mb-3">
+                  <button
+                    onClick={handleNavigateToProfile}
+                    className="flex-shrink-0"
+                  >
+                    <Avatar className="w-12 h-12 rounded-xl" key={resolvedAvatar || currentStory.id}>
+                      <AvatarImage src={resolvedAvatar} alt={currentStory.username || ''} className="rounded-xl" />
+                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">
+                        {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                  <div className="flex flex-col">
+                    <button
+                      onClick={handleNavigateToProfile}
+                      className="text-white font-semibold text-base drop-shadow-lg text-left"
+                    >
+                      {currentStory.username ? `@${currentStory.username}` : `${currentStory.wallet_address.slice(0, 6)}...`}
+                    </button>
+                    <span className="text-white/60 text-xs drop-shadow-lg">
+                      {formatDistanceToNow(new Date(currentStory.created_at), { addSuffix: true })}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side Action Buttons - Vertical stack (matching ShortsViewer) */}
+              <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5 pointer-events-auto">
+                {/* Comments placeholder */}
+                <button className="flex flex-col items-center gap-1">
+                  <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
+                </button>
+                
+                {/* Share */}
+                <button
+                  onClick={() => setShareSheetOpen(true)}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <Share2 className="w-8 h-8 text-white drop-shadow-lg" />
+                </button>
+
+                {/* Delete (own stories only) */}
+                {isOwnStory && (
+                  <button
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className="flex flex-col items-center gap-1"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="w-8 h-8 text-red-400 drop-shadow-lg animate-spin" />
+                    ) : (
+                      <Trash2 className="w-8 h-8 text-red-400 drop-shadow-lg" />
+                    )}
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Right Side Panel - Desktop Only */}
+        {!isMobile && (
+          <div className="w-[268px] lg:w-[320px] h-[calc(100vh-80px)] max-h-[640px] flex flex-col">
+            {/* Creator Info */}
+            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3">
+              <div className="flex items-center gap-2 lg:gap-3">
+                <button
+                  onClick={handleNavigateToProfile}
+                  className="flex items-center gap-2 lg:gap-3 min-w-0 flex-1 text-left"
+                >
+                  <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={resolvedAvatar || currentStory.id}>
+                    <AvatarImage src={resolvedAvatar} alt={currentStory.username || ''} className="rounded-xl" />
+                    <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">
+                      {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline">
+                      {currentStory.username ? `@${currentStory.username}` : `${currentStory.wallet_address.slice(0, 6)}...`}
+                    </p>
+                    <p className="text-white/60 text-xs lg:text-sm">
+                      {formatDistanceToNow(new Date(currentStory.created_at), { addSuffix: true })}
+                    </p>
+                  </div>
+                </button>
+                <button className="bg-white text-black text-xs lg:text-sm font-semibold px-3 lg:px-4 py-1 lg:py-1.5 rounded-xl hover:bg-white/90 transition-colors flex-shrink-0 max-w-[80px]">
+                  Follow
+                </button>
+              </div>
+            </div>
+
+            {/* Actions panel */}
+            <div className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col gap-3">
+              <button
+                onClick={() => setShareSheetOpen(true)}
+                className="flex items-center gap-3 p-3 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                <Share2 className="w-5 h-5 text-white" />
+                <span className="text-white text-sm">Share</span>
+              </button>
+              
+              {isOwnStory && (
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="flex items-center gap-3 p-3 hover:bg-red-500/20 rounded-xl transition-colors"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="w-5 h-5 text-red-400 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-5 h-5 text-red-400" />
+                  )}
+                  <span className="text-red-400 text-sm">Delete Story</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile top header controls - TikTok style (matching ShortsViewer exactly) */}
+      {isMobile && (
+        <>
+          {/* Back button - top left */}
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center"
+            className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
           >
-            <X className="w-4 h-4 text-white" />
+            <ChevronLeft className="w-6 h-6 text-white" />
           </button>
-        </div>
-      </div>
-
-      {/* Story content - Vertical Carousel Stack */}
-      <motion.div
-        className="absolute inset-0"
-        drag="y"
-        dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.15}
-        onDrag={handleDrag}
-        onDragEnd={handleDragEnd}
-      >
-        {/* Render window of 3 stories (prev/current/next) */}
-        <AnimatePresence initial={false}>
-          {visibleIndices.map(index => {
-            const story = stories[index];
-            const offset = index - currentIndex;
-            const isActive = index === currentIndex;
+          
+          {/* Right side controls */}
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+            {/* Mute button */}
+            <button
+              onClick={() => setIsMuted(prev => !prev)}
+              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white" />
+              )}
+            </button>
             
-            return (
-              <motion.div
-                key={story.id}
-                className="absolute inset-0"
-                initial={false}
-                animate={{
-                  y: `${offset * 100}%`,
-                  translateY: isActive ? dragOffset : dragOffset * 0.3,
-                }}
-                transition={dragOffset === 0 ? SPRING_TRANSITION : { duration: 0 }}
-                style={{ zIndex: isActive ? 2 : 1 }}
-              >
-                <StorySlide
-                  story={story}
-                  isActive={isActive}
-                  isPaused={isPaused}
-                  onEnded={goNext}
-                  onTimeUpdate={isActive ? handleTimeUpdate : undefined}
-                />
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
-      </motion.div>
+            {/* More options button */}
+            <button
+              onClick={() => setShareSheetOpen(true)}
+              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
+            >
+              <MoreHorizontal className="w-5 h-5 text-white" />
+            </button>
+          </div>
+        </>
+      )}
 
-      {/* Progress bar at bottom */}
-      <div className="absolute bottom-[env(safe-area-inset-bottom,0px)] left-0 right-0 z-20 px-4 pb-4">
-        <div className="h-1 bg-white/20 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-white transition-all duration-100"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
-    </div>
+      {/* Desktop close button */}
+      {!isMobile && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center z-20 transition-colors"
+        >
+          <X className="w-5 h-5 text-white" />
+        </button>
+      )}
+
+      {/* Share Drawer */}
+      <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
+        <DrawerContent glass className="px-4 pb-6">
+          <DrawerHeader className="relative">
+            <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col gap-1 mt-2 relative">
+            <button
+              onClick={handleRepost}
+              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+            >
+              <Repeat2 className="w-5 h-5" />
+              <span className="font-medium">Repost</span>
+            </button>
+            <button
+              onClick={handleQuote}
+              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+            >
+              <Quote className="w-5 h-5" />
+              <span className="font-medium">Quote</span>
+            </button>
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+            >
+              <Link className="w-5 h-5" />
+              <span className="font-medium">Copy Link</span>
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </motion.div>
   );
 }
