@@ -280,18 +280,14 @@ export function ImagesFeed({
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
-  // Filter states - default to "Latest" instead of "Random" to avoid 5-page prefetch
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]);
+  // Filter states - default to "Latest"
+  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
   const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
     ppv: false,
     w2e: false,
     locked: false,
   });
-  
-  // State for random mode pre-fetch
-  const [hasPreFetched, setHasPreFetched] = useState(false);
-  const [shuffleTrigger, setShuffleTrigger] = useState(0);
   
   const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
     setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -318,51 +314,16 @@ export function ImagesFeed({
   // Refetch when refreshKey changes
   useEffect(() => {
     if (refreshKey > 0) {
-      setShuffleTrigger(prev => prev + 1);
-      setHasPreFetched(false);
       refetch();
     }
   }, [refreshKey, refetch]);
-  
-  // Pre-fetch multiple pages for random mode to enable cross-page shuffling
-  useEffect(() => {
-    if (selectedSort.value !== 'random') {
-      setHasPreFetched(true); // Non-random modes don't need pre-fetch
-      return;
-    }
-    
-    const currentPageCount = apiData?.pages?.length || 0;
-    
-    // If we have less than RANDOM_PREFETCH_PAGES and more are available, fetch next
-    if (currentPageCount < RANDOM_PREFETCH_PAGES && hasNextPage && !isFetchingNextPage && !hasPreFetched) {
-      fetchNextPage();
-    } else if (currentPageCount >= RANDOM_PREFETCH_PAGES || !hasNextPage) {
-      setHasPreFetched(true);
-    }
-  }, [selectedSort.value, apiData?.pages?.length, hasNextPage, isFetchingNextPage, hasPreFetched, fetchNextPage]);
 
   // Map API data to ImagePost array
   const imagePosts = useMemo(() => {
-    // Don't compute until pre-fetch is complete for random mode
-    if (selectedSort.value === 'random' && !hasPreFetched) {
-      return [];
-    }
-    
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
-    let posts = allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
-    
-    // Apply shuffle for random mode - true Fisher-Yates shuffle
-    if (selectedSort.value === 'random') {
-      void shuffleTrigger; // Reference to trigger re-shuffle on refresh
-      for (let i = posts.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [posts[i], posts[j]] = [posts[j], posts[i]];
-      }
-    }
-    
-    return posts;
-  }, [apiData, selectedSort.value, hasPreFetched, shuffleTrigger]);
+    return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
+  }, [apiData]);
 
   // Handle image click in collage - switch to feed view
   const handleImageClick = (postId: string) => {
@@ -395,8 +356,8 @@ export function ImagesFeed({
   const shouldAnimate = hasAnimated.current;
   hasAnimated.current = true;
 
-  // Show loading during initial load OR during random mode pre-fetch
-  const isLoading = isApiLoading || isRefreshing || (selectedSort.value === 'random' && !hasPreFetched);
+  // Show loading during initial load
+  const isLoading = isApiLoading || isRefreshing;
   
   // Determine if we should show collage or feed
   // Show feed if: collage is off, OR user clicked an image from collage
