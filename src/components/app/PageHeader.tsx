@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 interface PageHeaderProps {
@@ -7,10 +7,34 @@ interface PageHeaderProps {
   subtitle?: string;
   showBack?: boolean;
   className?: string;
+  /** Fallback route when no history exists (e.g., direct URL access) */
+  fallbackRoute?: string;
 }
 
-export function PageHeader({ title, subtitle, showBack = true, className }: PageHeaderProps) {
+export function PageHeader({ 
+  title, 
+  subtitle, 
+  showBack = true, 
+  className,
+  fallbackRoute = '/app'
+}: PageHeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  /**
+   * Handle back navigation with fallback
+   * - If history exists (location.key !== 'default'), use navigate(-1)
+   * - Otherwise, navigate to fallback route (handles direct URL access)
+   */
+  const handleBack = () => {
+    // 'default' key means this is the first entry (no history to go back to)
+    if (location.key !== 'default') {
+      navigate(-1);
+    } else {
+      // Direct URL access - go to fallback route instead
+      navigate(fallbackRoute, { replace: true });
+    }
+  };
 
   return (
     <div className={cn(
@@ -20,7 +44,7 @@ export function PageHeader({ title, subtitle, showBack = true, className }: Page
       <div className="flex items-center gap-3">
         {showBack && (
           <button
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
             className="p-2 rounded-xl hover:bg-zinc-800 transition-colors"
             aria-label="Go back"
           >
