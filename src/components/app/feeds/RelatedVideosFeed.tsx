@@ -55,11 +55,11 @@ function toVideoItem(nft: any): VideoItem {
 }
 
 /**
- * Ad label overlay component - positioned at bottom left of video thumbnail
+ * Ad label overlay component - positioned at bottom left of video thumbnail (opposite to duration)
  */
 function AdLabel() {
   return (
-    <div className="absolute bottom-16 left-6 z-10 px-2 py-1 bg-yellow-500 text-black text-xs font-bold rounded">
+    <div className="absolute bottom-[52px] left-5 z-10 px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
       AD
     </div>
   );
