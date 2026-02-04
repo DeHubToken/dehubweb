@@ -221,9 +221,25 @@ function LoadingState() {
 }
 
 /**
- * Immersive back button for video posts - floats on top of the video
+ * Immersive header for video posts - back button + creator info on same line
  */
-function ImmersiveBackButton({ fallbackRoute = '/app' }: { fallbackRoute?: string }) {
+interface ImmersiveVideoHeaderProps {
+  fallbackRoute?: string;
+  channel?: string;
+  channelAvatar?: string;
+  creatorUsername?: string;
+  creatorId?: string;
+  verified?: boolean;
+}
+
+function ImmersiveVideoHeader({ 
+  fallbackRoute = '/app',
+  channel,
+  channelAvatar,
+  creatorUsername,
+  creatorId,
+  verified = false,
+}: ImmersiveVideoHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -235,14 +251,57 @@ function ImmersiveBackButton({ fallbackRoute = '/app' }: { fallbackRoute?: strin
     }
   };
 
+  const handleProfileClick = () => {
+    if (creatorUsername) {
+      const cleanUsername = creatorUsername.replace('@', '');
+      navigate(`/${cleanUsername}`);
+    } else if (creatorId) {
+      navigate(`/app/profile?id=${creatorId}`);
+    }
+  };
+
+  const isClickable = !!(creatorId || creatorUsername);
+
   return (
-    <button
-      onClick={handleBack}
-      className="absolute top-3 left-3 z-20 p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 hover:bg-black/80 transition-colors"
-      aria-label="Go back"
-    >
-      <ArrowLeft className="w-5 h-5 text-white" />
-    </button>
+    <div className="absolute top-0 left-0 right-0 z-20 flex items-center gap-2 p-3 bg-gradient-to-b from-black/80 to-transparent">
+      <button
+        onClick={handleBack}
+        className="p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 hover:bg-black/80 transition-colors shrink-0"
+        aria-label="Go back"
+      >
+        <ArrowLeft className="w-5 h-5 text-white" />
+      </button>
+      
+      {channel && (
+        <button
+          onClick={handleProfileClick}
+          disabled={!isClickable}
+          className={`flex items-center gap-2 min-w-0 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+        >
+          {channelAvatar && (
+            <img 
+              src={channelAvatar} 
+              alt={channel}
+              className="w-8 h-8 rounded-full object-cover shrink-0"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
+            />
+          )}
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="font-semibold text-white text-sm truncate">{channel}</span>
+            {verified && (
+              <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            )}
+            {creatorUsername && (
+              <span className="text-zinc-400 text-sm truncate">@{creatorUsername.replace('@', '')}</span>
+            )}
+          </div>
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -322,13 +381,21 @@ export default function SinglePostPage() {
   // Immersive layout for videos - uses fixed positioning to overlay the header area on mobile/tablet
   // Desktop gets standard layout with PageHeader
   // Both include the related videos feed below the main content
-  if (isVideoPost) {
+  if (isVideoPost && post) {
+    const videoData = toVideoItem(post);
+    
     return (
       <>
         {/* Mobile/Tablet: Full immersive scrollable overlay */}
         <div className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden overflow-y-auto">
           <div className="relative">
-            <ImmersiveBackButton />
+            <ImmersiveVideoHeader
+              channel={videoData.channel}
+              channelAvatar={videoData.channelAvatar}
+              creatorUsername={videoData.creatorUsername}
+              creatorId={videoData.creatorId}
+              verified={videoData.verified}
+            />
             {renderContent()}
           </div>
           {/* Related Videos Feed */}

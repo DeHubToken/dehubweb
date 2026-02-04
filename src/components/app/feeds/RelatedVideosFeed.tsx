@@ -55,11 +55,11 @@ function toVideoItem(nft: any): VideoItem {
 }
 
 /**
- * Ad label overlay component
+ * Ad label overlay component - positioned on the video thumbnail area
  */
 function AdLabel() {
   return (
-    <div className="absolute top-3 left-3 z-10 px-2 py-1 bg-yellow-500 text-black text-xs font-bold rounded">
+    <div className="absolute top-14 left-6 z-10 px-2 py-1 bg-yellow-500 text-black text-xs font-bold rounded">
       AD
     </div>
   );
@@ -170,13 +170,13 @@ export function RelatedVideosFeed({ currentVideoId }: RelatedVideosFeedProps) {
       {adVideo && (
         <div className="relative">
           <AdLabel />
-          <VideoCard video={toVideoItem(adVideo)} isImmersive />
+          <VideoCard video={toVideoItem(adVideo)} />
         </div>
       )}
 
       {/* Latest Videos */}
       {videos.map((video) => (
-        <VideoCard key={video.id} video={video} isImmersive />
+        <VideoCard key={video.id} video={video} />
       ))}
 
       {/* Load More Trigger */}
