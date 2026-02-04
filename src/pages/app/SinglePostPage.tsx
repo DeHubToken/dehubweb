@@ -46,15 +46,6 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   // API returns various timestamp fields - check all possibilities
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
-  // Debug: trace timestamp extraction
-  console.log('[toVideoItem] Timestamp extraction:', { 
-    tokenId: nft.tokenId,
-    rawCreatedAt: nft.createdAt, 
-    rawCreated_at: nft.created_at,
-    resolvedTimestamp: timestamp,
-    formatted: formatTimeAgo(timestamp)
-  });
-  
   return {
     id: String(nft.tokenId),
     type: 'video',
@@ -265,16 +256,6 @@ export default function SinglePostPage() {
     // Only show loading if we have no data at all (not even cached)
     if (isLoading && !hasCachedData) return <LoadingState />;
     if (error || !post) return <NotFoundState />;
-    
-    // Debug: log the timestamp fields
-    console.log('[SinglePostPage] Post timestamp fields:', {
-      tokenId: post.tokenId,
-      createdAt: post.createdAt,
-      created_at: post.created_at,
-      mintedAt: (post as any).mintedAt,
-      updatedAt: (post as any).updatedAt,
-      allKeys: Object.keys(post).filter(k => k.toLowerCase().includes('at') || k.toLowerCase().includes('date') || k.toLowerCase().includes('time'))
-    });
     
     // Handle processing posts
     if (post.status === 'signed' || post.status === 'pending') {
