@@ -446,29 +446,34 @@ export default function ExplorePage() {
     
     // Combine and dedupe users: accounts first, then video creators
     const userMap = new Map<string, SearchCreator>();
-    accountCreators.forEach(u => userMap.set(u.id, u));
+    accountCreators.forEach(u => {
+      if (u && u.id) userMap.set(u.id, u);
+    });
     videoCreators.forEach(u => {
-      if (!userMap.has(u.id)) userMap.set(u.id, u);
+      if (u && u.id && !userMap.has(u.id)) userMap.set(u.id, u);
     });
     
-    // Add exact user match to top if found
-    let peopleResults = Array.from(userMap.values());
-    if (exactUser && exactUser.id) {
-      const exists = peopleResults.some(c => c.id === exactUser.id);
-      if (!exists) {
-        peopleResults = [exactUser, ...peopleResults];
-      }
+    // Add exact user match if found and not already present
+    if (exactUser && exactUser.id && !userMap.has(exactUser.id)) {
+      userMap.set(exactUser.id, exactUser);
     }
     
     // Check if this is a brand-related search
     const queryLower = effectiveQuery.trim().toLowerCase();
     const isBrandQueryLocal = BRAND_QUERIES.includes(queryLower);
     
-    // For brand queries, ensure the real @d (from brandUser lookup) is at the top
+    // For brand queries, ensure the real @d (from brandUser lookup) is in the map
     if (isBrandQueryLocal && brandUser && brandUser.id) {
-      // Remove @d if already in results (to avoid duplicate)
+      // Override with brandUser data if present
+      userMap.set(brandUser.id, brandUser);
+    }
+    
+    // Convert to array and sort
+    let peopleResults = Array.from(userMap.values());
+    
+    // For brand queries, pin @d at the top
+    if (isBrandQueryLocal && brandUser && brandUser.id) {
       peopleResults = peopleResults.filter(u => u.id !== brandUser.id);
-      // Pin the real @d at the very top
       peopleResults = [brandUser, ...peopleResults];
     } else {
       // Normal sorting: exact username match first
