@@ -670,6 +670,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     "w-8 h-8 drop-shadow-lg",
                     isDisliked ? "fill-white text-white" : "text-white"
                   )} />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localDislikeCount)}</span>
                 </motion.button>
 
                 {/* Comments */}
@@ -680,6 +681,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
                   <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
                 </button>
+                
+                {/* Views */}
+                <div className="flex flex-col items-center gap-1">
+                  <Eye className="w-8 h-8 text-white drop-shadow-lg" />
+                  <span className="text-white text-xs font-medium drop-shadow-lg">{currentShort.views || '0'}</span>
+                </div>
                 
                 {/* Bookmark */}
                 <motion.button
