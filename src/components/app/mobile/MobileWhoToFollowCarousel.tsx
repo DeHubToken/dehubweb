@@ -180,7 +180,7 @@ export function MobileWhoToFollowCarousel() {
           <div
             key={user.address}
             onClick={() => handleUserClick(user)}
-            className="flex-shrink-0 w-[150px] bg-zinc-900 rounded-xl p-3 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start"
+            className="flex-shrink-0 w-[130px] bg-zinc-900 rounded-xl px-1 pt-1 pb-3 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start"
           >
           <div className="flex flex-col items-center text-center">
               <Avatar className="w-24 h-24 mb-2">
