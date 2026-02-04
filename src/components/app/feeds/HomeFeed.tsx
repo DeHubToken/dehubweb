@@ -894,7 +894,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </AnimatePresence>
 
           <div className="pt-2">
-            <StoriesBar users={storyUsers} />
+            <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
           
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !isPreFetchingRandom && !hasQueryData ? (

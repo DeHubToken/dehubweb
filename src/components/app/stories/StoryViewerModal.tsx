@@ -33,6 +33,8 @@ interface StoryViewerModalProps {
   onClose: () => void;
   stories: Story[];
   initialIndex?: number;
+  /** Called when user scrolls past the last story - use to transition to shorts */
+  onSwitchToShorts?: () => void;
 }
 
 // Spring animation config for smooth carousel transitions
@@ -49,7 +51,7 @@ function formatCount(count: number): string {
   return count.toString();
 }
 
-export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }: StoryViewerModalProps) {
+export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, onSwitchToShorts }: StoryViewerModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -130,13 +132,17 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0 }:
       setIsTransitioning(true);
       setCurrentIndex((prev) => prev + 1);
       setTimeout(() => setIsTransitioning(false), 350);
+    } else if (onSwitchToShorts) {
+      // Transition to shorts when reaching the end of stories
+      onSwitchToShorts();
     } else {
+      // Fallback: loop to random story if no shorts handler
       setIsTransitioning(true);
       const randomIndex = Math.floor(Math.random() * stories.length);
       setCurrentIndex(randomIndex);
       setTimeout(() => setIsTransitioning(false), 350);
     }
-  }, [currentIndex, stories.length, isTransitioning]);
+  }, [currentIndex, stories.length, isTransitioning, onSwitchToShorts]);
 
   const goPrev = useCallback(() => {
     if (isTransitioning) return;
