@@ -1,71 +1,163 @@
 
-# Fix MetaMask Browser Layout Gap After Login
 
-## Problem
-After logging in on MetaMask Mobile browser, Web3Auth injects iframes that create an ugly gap above the top navigation bar, pushing all content down.
+# Custom Content Ordering for Home Feed
 
-## Solution
-Add comprehensive CSS rules to collapse all Web3Auth-injected iframes and ensure any remaining gaps are filled with black background color.
+## Overview
+Implement a specific content ordering pattern for the home feed that displays videos, text posts, and images in a defined sequence while maintaining "most liked" sorting within each content type.
+
+## The Content Pattern
+The feed will follow this exact repeating sequence:
+
+| Position | Type | Count |
+|----------|------|-------|
+| 1-3 | Videos | 3 |
+| 4-5 | Text Posts | 2 |
+| 6 | Image | 1 |
+| 7-9 | Text Posts | 3 |
+| 10-12 | Videos | 3 |
+| 13 | Text Post | 1 |
+| 14 | Image | 1 |
+| 15-17 | Text Posts | 3 |
+| 18-19 | Videos | 2 |
+| 20-21 | Text Posts | 2 |
+| 22 | Image | 1 |
+| 23-24 | Text Posts | 2 |
+| 25 | Image | 1 |
+| 26-28 | Text Posts | 3 |
+| 29-31 | Videos | 3 |
+| 32 | Video | 1 |
+| 33 | Text | 1 |
+| 34 | Image | 1 |
+| 35 | Video | 1 |
+| 36 | Text | 1 |
+| 37 | Image | 1 |
+| 38-40 | Text | 3 |
+| 41-44 | Images | 4 |
+| 45-47 | Videos | 3 |
+| 48-50 | Text | 3 |
+
+**Total per cycle:** 50 items (16 videos, 24 text posts, 10 images)
 
 ---
 
-## Changes
+## Technical Approach
 
-### File: `src/index.css`
+### Strategy: Separate Fetch + Client-Side Interleaving
 
-Add the following CSS rules after the existing Web3Auth fixes (after line 476):
+Since the API returns mixed content sorted by "most liked", we need to:
 
-```css
-/* Fix Web3Auth injected iframes causing layout gaps on MetaMask Mobile */
-/* These iframes have position: fixed; top: 0 which pushes content down */
-iframe[id*="auth-iframe"],
-iframe[id*="walletIframe"],
-iframe[id*="web3auth"],
-iframe[src*="web3auth"],
-#w3a-container,
-[id^="w3a-"] {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-  border: none !important;
-  pointer-events: none !important;
-  background: transparent !important;
-}
+1. **Fetch each content type separately** (videos, images, text posts) with "most-liked" sorting
+2. **Maintain three separate queues** of sorted content
+3. **Interleave according to the pattern** from each queue
+4. **Handle edge cases** when a queue runs out of content
 
-/* Only show iframes when they contain visible content */
-iframe[id*="auth-iframe"][style*="display: block"],
-iframe[id*="walletIframe"][style*="display: block"],
-iframe[id*="web3auth"][style*="display: block"],
-iframe[src*="web3auth"][style*="display: block"] {
-  position: fixed !important;
-  width: 100% !important;
-  height: 100% !important;
-  pointer-events: auto !important;
-}
+### Implementation Details
 
-/* Fallback: ensure any injected elements at top of page match background */
-html, body {
-  background-color: #000 !important;
-}
+#### 1. Create Pattern Definition Constant
 
-/* Extra fallback: force black background on root and any gaps */
-#root {
-  background-color: #000;
-}
+Define the content sequence as an array of content type markers that repeats:
 
-/* Hide any fixed-position empty elements that might cause gaps */
-body > iframe:not([src]),
-body > iframe[style*="height: 0"],
-body > div[style*="position: fixed"][style*="height: 0"] {
-  display: none !important;
-}
+```typescript
+const CONTENT_PATTERN: Array<'video' | 'text' | 'image'> = [
+  // Cycle pattern as specified
+  'video', 'video', 'video',           // 3 videos
+  'text', 'text',                       // 2 text posts
+  'image',                              // 1 image
+  'text', 'text', 'text',               // 3 text posts
+  'video', 'video', 'video',            // 3 videos
+  'text',                               // 1 text post
+  'image',                              // 1 image
+  'text', 'text', 'text',               // 3 text posts
+  'video', 'video',                     // 2 videos
+  'text', 'text',                       // 2 text posts
+  'image',                              // 1 image
+  'text', 'text',                       // 2 text posts
+  'image',                              // 1 image
+  'text', 'text', 'text',               // 3 text posts
+  'video', 'video', 'video',            // 3 videos
+  'video',                              // 1 video
+  'text',                               // 1 text
+  'image',                              // 1 image
+  'video',                              // 1 video
+  'text',                               // 1 text
+  'image',                              // 1 image
+  'text', 'text', 'text',               // 3 text
+  'image', 'image', 'image', 'image',   // 4 images
+  'video', 'video', 'video',            // 3 videos
+  'text', 'text', 'text',               // 3 text
+];
 ```
 
-This approach:
-1. Collapses all Web3Auth-related iframes to zero dimensions by default
-2. Uses `position: absolute` instead of `fixed` to prevent layout interference
-3. Re-enables full-size display only when iframes are explicitly shown
-4. Sets black background on html/body/root as fallback so any gaps blend seamlessly
-5. Hides any empty fixed-position elements that might cause gaps
+#### 2. Fetch Content Types Separately
+
+Modify the `HomeFeed` to make **three parallel API calls** instead of one mixed feed call:
+
+- `useUnifiedFeed({ postType: 'video', sortBy: undefined /* most-liked default */ })`
+- `useUnifiedFeed({ postType: 'feed-images', sortBy: undefined })`
+- `useUnifiedFeed({ postType: 'feed-simple', sortBy: undefined })`
+
+#### 3. Create Interleaving Function
+
+A new utility function that takes three arrays and produces the ordered output:
+
+```typescript
+function interleaveByPattern(
+  videos: VideoItem[],
+  images: ImagePost[],
+  texts: TextPost[],
+  pattern: Array<'video' | 'text' | 'image'>
+): FeedItemType[]
+```
+
+This function:
+- Maintains index counters for each content type
+- Iterates through the pattern
+- Picks from the appropriate queue
+- Skips if a queue is exhausted (graceful degradation)
+- Cycles the pattern when reaching the end
+
+#### 4. Update Infinite Scroll Logic
+
+When the user scrolls to the bottom:
+- Determine which content type queues are running low
+- Fetch the next page for the depleted queues
+- Re-interleave the new items into the display
+
+---
+
+## File Changes
+
+### `src/components/app/feeds/HomeFeed.tsx`
+
+**Changes:**
+1. Add `CONTENT_PATTERN` constant at the top
+2. Replace single `useUnifiedFeed` call with three separate calls (videos, images, text posts)
+3. Add `interleaveByPattern` function to merge content in the specified order
+4. Update the `items` useMemo to use the new interleaving logic
+5. Update infinite scroll to track and fetch from multiple feeds
+6. Keep existing features: shorts carousel injection, radio carousel, filters, pinned posts
+
+### `src/lib/feed-utils.ts` (optional)
+
+Could add the `CONTENT_PATTERN` constant and `interleaveByPattern` utility here for reusability.
+
+---
+
+## Edge Cases Handled
+
+1. **Insufficient content of a type**: Skip that slot, continue with pattern
+2. **One feed exhausted**: Continue showing other content types
+3. **All feeds exhausted**: Show "end of feed" message
+4. **Filter changes**: Reset all three feeds and re-interleave
+5. **Sort changes**: If user changes from "Most Liked" to "Latest", the pattern still applies but content order within each type changes
+6. **Shorts/Radio carousel injection**: Insert at same intervals (every 5 items, after 15 items)
+
+---
+
+## Performance Considerations
+
+- Three parallel API calls instead of one (slightly more network overhead)
+- Server-side caching still applies to each individual feed type
+- Prefetching can be updated to warm all three feed type caches
+- TanStack Query handles deduplication and caching per feed type
+
