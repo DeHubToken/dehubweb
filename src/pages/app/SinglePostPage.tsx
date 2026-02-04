@@ -21,6 +21,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
+import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
 import { formatTimeAgo, formatDuration } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 
@@ -320,15 +321,18 @@ export default function SinglePostPage() {
 
   // Immersive layout for videos - uses fixed positioning to overlay the header area on mobile/tablet
   // Desktop gets standard layout with PageHeader
+  // Both include the related videos feed below the main content
   if (isVideoPost) {
     return (
       <>
-        {/* Mobile/Tablet: Full immersive fixed overlay */}
-        <div className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden">
+        {/* Mobile/Tablet: Full immersive scrollable overlay */}
+        <div className="flex flex-col fixed inset-0 z-50 bg-black lg:hidden overflow-y-auto">
           <div className="relative">
             <ImmersiveBackButton />
             {renderContent()}
           </div>
+          {/* Related Videos Feed */}
+          {id && <RelatedVideosFeed currentVideoId={id} />}
         </div>
         
         {/* Desktop: Standard layout with header */}
@@ -337,6 +341,8 @@ export default function SinglePostPage() {
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {renderContent()}
+              {/* Related Videos Feed */}
+              {id && <RelatedVideosFeed currentVideoId={id} />}
             </div>
           </div>
         </div>
