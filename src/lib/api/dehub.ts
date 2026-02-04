@@ -744,10 +744,16 @@ export interface VoteResponse {
  * @returns VoteResponse with result, action, and currentVote
  */
 export async function voteOnNFT(tokenId: string, vote: boolean): Promise<VoteResponse> {
+  // API expects streamTokenId as a number
+  const numericTokenId = parseInt(tokenId, 10);
+  if (isNaN(numericTokenId)) {
+    throw new Error(`Invalid token ID: ${tokenId}`);
+  }
+  
   return apiCall<VoteResponse>("/api/request_vote", {
     method: "POST",
     body: {
-      streamTokenId: tokenId,
+      streamTokenId: numericTokenId,
       vote: vote,
     },
     requiresAuth: true,
