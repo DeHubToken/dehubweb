@@ -13,8 +13,11 @@
 
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useLayoutEffect, useEffect } from 'react';
-import { Loader2, AlertCircle, Clock, ArrowLeft } from 'lucide-react';
+import { useLayoutEffect, useEffect, useState } from 'react';
+import { Loader2, AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { toast } from 'sonner';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -22,6 +25,14 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
+import { PostAIChat } from '@/components/app/cards/PostAIChat';
+import { ReportModal } from '@/components/app/modals/ReportModal';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import { formatTimeAgo, formatDuration } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 
@@ -276,7 +287,7 @@ function ImmersiveVideoHeader({
 }
 
 /**
- * Desktop creator info bar - shows avatar, display name, and handle above video
+ * Desktop creator info bar - shows avatar, display name, handle, and action buttons
  */
 interface DesktopCreatorInfoProps {
   channel?: string;
@@ -284,6 +295,8 @@ interface DesktopCreatorInfoProps {
   creatorUsername?: string;
   creatorId?: string;
   verified?: boolean;
+  onAIClick?: () => void;
+  onMenuClick?: () => void;
 }
 
 function DesktopCreatorInfo({
@@ -292,6 +305,8 @@ function DesktopCreatorInfo({
   creatorUsername,
   creatorId,
   verified = false,
+  onAIClick,
+  onMenuClick,
 }: DesktopCreatorInfoProps) {
   const navigate = useNavigate();
 
@@ -309,33 +324,54 @@ function DesktopCreatorInfo({
   if (!channel) return null;
 
   return (
-    <button
-      onClick={handleProfileClick}
-      disabled={!isClickable}
-      className={`flex items-center gap-3 mb-4 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
-    >
-      {channelAvatar && (
-        <img 
-          src={channelAvatar} 
-          alt={channel}
-          className="w-10 h-10 rounded-full object-cover shrink-0"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
-          }}
-        />
-      )}
-      <div className="flex items-center gap-2 min-w-0">
-        <span className="font-semibold text-white text-base">{channel}</span>
-        {verified && (
-          <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-          </svg>
+    <div className="flex items-center justify-between mb-4">
+      <button
+        onClick={handleProfileClick}
+        disabled={!isClickable}
+        className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
+      >
+        {channelAvatar && (
+          <img 
+            src={channelAvatar} 
+            alt={channel}
+            className="w-10 h-10 rounded-full object-cover shrink-0"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/placeholder.svg';
+            }}
+          />
         )}
-        {creatorUsername && (
-          <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
-        )}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-semibold text-white text-base">{channel}</span>
+          {verified && (
+            <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          )}
+          {creatorUsername && (
+            <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
+          )}
+        </div>
+      </button>
+      
+      {/* Action buttons */}
+      <div className="flex items-center gap-1">
+        <motion.button
+          onClick={onAIClick}
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Ask AI about this video"
+        >
+          <Sparkles className="w-5 h-5" />
+        </motion.button>
+        <button 
+          onClick={onMenuClick}
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+        >
+          <MoreVertical className="w-5 h-5" />
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -343,6 +379,11 @@ export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const id = postId || tokenId;
   const navigationType = useNavigationType();
+  
+  // State for desktop AI chat and options drawer
+  const [showDesktopAIChat, setShowDesktopAIChat] = useState(false);
+  const [showDesktopOptionsDrawer, setShowDesktopOptionsDrawer] = useState(false);
+  const [showDesktopReportModal, setShowDesktopReportModal] = useState(false);
 
   // Only scroll to top when PUSHING to the post page (not on back navigation)
   // useLayoutEffect runs before paint to prevent flash at wrong position
@@ -448,6 +489,8 @@ export default function SinglePostPage() {
                 creatorUsername={videoData.creatorUsername}
                 creatorId={videoData.creatorId}
                 verified={videoData.verified}
+                onAIClick={() => setShowDesktopAIChat(true)}
+                onMenuClick={() => setShowDesktopOptionsDrawer(true)}
               />
               {renderContent()}
               {/* Related Videos Feed */}
@@ -455,6 +498,69 @@ export default function SinglePostPage() {
             </div>
           </div>
         </div>
+
+        {/* Desktop AI Chat */}
+        <PostAIChat
+          isOpen={showDesktopAIChat}
+          onClose={() => setShowDesktopAIChat(false)}
+          postContext={{
+            type: 'video',
+            author: videoData.channel,
+            title: videoData.title,
+            imageUrl: videoData.thumbnail
+          }}
+        />
+
+        {/* Desktop Report Modal */}
+        <ReportModal
+          open={showDesktopReportModal}
+          onOpenChange={setShowDesktopReportModal}
+          tokenId={id || ''}
+          contentType="video"
+        />
+
+        {/* Desktop Options Drawer */}
+        <Drawer open={showDesktopOptionsDrawer} onOpenChange={setShowDesktopOptionsDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-2">
+              <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-1">
+              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <img src={dehubCoin} alt="DHB" className="w-5 h-5" /> Send Tip
+              </button>
+              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <ListPlus className="w-5 h-5" /> Queue
+              </button>
+              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <Clock className="w-5 h-5" /> Watch List
+              </button>
+              <button 
+                onClick={() => {
+                  setShowDesktopOptionsDrawer(false);
+                  setShowDesktopReportModal(true);
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Flag className="w-5 h-5" /> Report
+              </button>
+              <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <Download className="w-5 h-5" /> Download
+              </button>
+              <button 
+                onClick={() => {
+                  const url = `${window.location.origin}/app/post/${id}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Link copied to clipboard');
+                  setShowDesktopOptionsDrawer(false);
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Link2 className="w-5 h-5" /> Copy Link
+              </button>
+            </div>
+          </DrawerContent>
+        </Drawer>
       </>
     );
   }
