@@ -424,6 +424,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
+  const [showPPVDrawer, setShowPPVDrawer] = useState(false);
+  const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -888,12 +890,38 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
             {/* PPV Badge */}
             {video.isPPV && video.ppvPrice && (
-              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
-                <DollarSign className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
-                </span>
-              </div>
+              <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
+                <DrawerTrigger asChild>
+                  <button 
+                    className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <DollarSign className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-medium">
+                      {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+                    </span>
+                  </button>
+                </DrawerTrigger>
+                <DrawerContent glass className="px-4 pb-6">
+                  <DrawerHeader className="pb-3">
+                    <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                      <DollarSign className="w-5 h-5 text-white" />
+                      Pay-Per-View Content
+                    </DrawerTitle>
+                  </DrawerHeader>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                      <span className="text-white text-sm">Unlock Price</span>
+                      <span className="text-white text-lg font-bold">
+                        {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+                      </span>
+                    </div>
+                    <p className="text-center text-white/60 text-sm">
+                      Pay once to unlock this exclusive content forever! 💎
+                    </p>
+                  </div>
+                </DrawerContent>
+              </Drawer>
             )}
             
             {/* Bounty Badge */}
@@ -915,7 +943,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 <DrawerContent glass className="px-4 pb-6">
                   <DrawerHeader className="pb-3">
                     <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                      <Gift className="w-5 h-5 text-amber-400" />
+                      <Gift className="w-5 h-5 text-white" />
                       Bounty Rewards
                     </DrawerTitle>
                   </DrawerHeader>
@@ -924,8 +952,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                     <div className="space-y-3">
                       {video.bountyViews && video.bountyViews > 0 && (
                         <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                            <Eye className="w-4 h-4 text-emerald-400" />
+                          <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                            <Eye className="w-4 h-4 text-white" />
                           </div>
                           <div>
                             <p className="text-white text-sm font-medium">First {video.bountyViews} views</p>
@@ -935,8 +963,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                       )}
                       {video.bountyComments && video.bountyComments > 0 && (
                         <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                          <div className="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                            <MessageCircle className="w-4 h-4 text-blue-400" />
+                          <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                            <MessageCircle className="w-4 h-4 text-white" />
                           </div>
                           <div>
                             <p className="text-white text-sm font-medium">First {video.bountyComments} comments</p>
@@ -948,8 +976,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                     
                     {/* Reward per User */}
                     {video.bountyAmount && video.bountyAmount > 0 && (
-                      <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl border border-amber-500/20">
-                        <span className="text-zinc-300 text-sm">Reward per User</span>
+                      <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                        <span className="text-white text-sm">Reward per User</span>
                         <div className="flex items-center gap-2">
                           <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                           <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
@@ -958,7 +986,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                     )}
                     
                     {/* Call to Action */}
-                    <p className="text-center text-zinc-400 text-sm">
+                    <p className="text-center text-white/60 text-sm">
                       Watch and engage to earn rewards! 🎁
                     </p>
                   </div>
@@ -966,16 +994,45 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               </Drawer>
             )}
             
-            {/* Locked Badge */}
+            {/* Locked/Gated Badge */}
             {video.isLocked && (
-              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
-                <Lock className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {video.lockedPrice && video.lockedPrice > 0 
-                    ? `${formatCompact(video.lockedPrice)} ${video.lockedCurrency || 'DHB'}` 
-                    : ''}
-                </span>
-              </div>
+              <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
+                <DrawerTrigger asChild>
+                  <button 
+                    className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Lock className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-medium">
+                      {video.lockedPrice && video.lockedPrice > 0 
+                        ? `${formatCompact(video.lockedPrice)} ${video.lockedCurrency || 'DHB'}` 
+                        : ''}
+                    </span>
+                  </button>
+                </DrawerTrigger>
+                <DrawerContent glass className="px-4 pb-6">
+                  <DrawerHeader className="pb-3">
+                    <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                      <Lock className="w-5 h-5 text-white" />
+                      Gated Content
+                    </DrawerTitle>
+                  </DrawerHeader>
+                  <div className="flex flex-col gap-4">
+                    {video.lockedPrice && video.lockedPrice > 0 && (
+                      <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                        <span className="text-white text-sm">Must hold to view</span>
+                        <div className="flex items-center gap-2">
+                          <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                          <span className="text-white text-lg font-bold">{formatCompact(video.lockedPrice)} {video.lockedCurrency || 'DHB'}</span>
+                        </div>
+                      </div>
+                    )}
+                    <p className="text-center text-white/60 text-sm">
+                      Hold the required tokens to view this content! 🔓
+                    </p>
+                  </div>
+                </DrawerContent>
+              </Drawer>
             )}
           </div>
         )}
