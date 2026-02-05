@@ -51,6 +51,8 @@ export interface DeHubUser {
   followers?: number | string[];
   follower_count?: number;
   followings?: string[];
+  followingsList?: string[];
+  followersList?: string[];
   following_count?: number;
   likes?: number | number[];
   uploads?: number;
