@@ -64,6 +64,14 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     locked_currency: video.lockedCurrency,
     // Preserve the original timestamp - uploadedAgo is already formatted, so we need to pass createdAt
     createdAt: video.createdAt,
+    // Include bounty data in streamInfo for proper reconstruction
+    streamInfo: video.isW2E ? {
+      isAddBounty: true,
+      addBountyFirstXViewers: video.bountyViews,
+      addBountyFirstXComments: video.bountyComments,
+      addBountyAmount: video.bountyAmount,
+      addBountyTokenSymbol: video.bountyCurrency || 'DHB',
+    } : undefined,
   };
 }
 

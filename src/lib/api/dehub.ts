@@ -168,6 +168,21 @@ export interface DeHubNFT {
   locked_price?: number;
   locked_currency?: string;
 
+  // Bounty/W2E data (from streamInfo)
+  streamInfo?: {
+    isLockContent?: boolean;
+    lockContentAmount?: number;
+    lockContentTokenSymbol?: string;
+    isPayPerView?: boolean;
+    payPerViewAmount?: number;
+    isAddBounty?: boolean;
+    addBountyFirstXViewers?: number | string;
+    addBountyFirstXComments?: number | string;
+    addBountyAmount?: number;
+    addBountyTokenSymbol?: string;
+    addBountyChainId?: number;
+  };
+
   // User interaction state (returned when address param is provided)
   isLiked?: boolean;
   isDisliked?: boolean;
