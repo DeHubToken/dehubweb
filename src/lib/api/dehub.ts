@@ -476,9 +476,13 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
 /**
  * Universal search across accounts, videos, and livestreams
  * Uses the /api/search endpoint
+ * 
+ * Note: The API returns a flat array of NFT content in `result`, not structured
+ * accounts/videos/livestreams. We parse the array and categorize items.
  */
 export async function universalSearch(params: UniversalSearchParams): Promise<UniversalSearchResponse> {
-  const response = await apiCall<UniversalSearchResponse | { result: UniversalSearchResponse }>("/api/search", {
+  // The API returns { status: true, result: DeHubNFT[] } - a flat array
+  const response = await apiCall<{ result: DeHubNFT[] } | DeHubNFT[]>("/api/search", {
     params: {
       q: params.q,
       page: params.page,
@@ -489,12 +493,23 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
     },
   });
   
-  // Handle wrapped response from API
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
+  // Extract the flat array from response
+  let items: DeHubNFT[] = [];
+  if (Array.isArray(response)) {
+    items = response;
+  } else if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
+    items = response.result;
   }
   
-  return response as UniversalSearchResponse;
+  // Return all items as videos - the ExplorePage will categorize them further
+  // The API doesn't return accounts directly in search, those come from account_info lookups
+  return {
+    accounts: [],
+    videos: items,
+    livestreams: [],
+    has_more: items.length >= (params.unit || 15),
+    total: items.length,
+  };
 }
 
 /**
