@@ -150,7 +150,7 @@ export function PostCardSkeleton() {
 export function ShortsGridSkeleton() {
   return (
     <div className="grid grid-cols-3 gap-1">
-      {Array.from({ length: 9 }).map((_, i) => (
+      {Array.from({ length: 6 }).map((_, i) => (
         <Skeleton key={i} className="aspect-[9/16] rounded-lg" />
       ))}
     </div>
