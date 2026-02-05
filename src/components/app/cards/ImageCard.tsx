@@ -206,12 +206,6 @@ function ImageCarousel({
         </div>
       )}
       
-      {/* Image counter badge - only show if multiple images */}
-      {hasMultiple && (
-        <div className="absolute top-3 right-3 px-2 py-1 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-xs font-medium">
-          {currentIndex + 1}/{images.length}
-        </div>
-      )}
     </div>
   );
 }
