@@ -21,6 +21,7 @@ import {
 import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
+import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -44,6 +45,12 @@ function isBlockedCreator(nft: DeHubNFT): boolean {
   return BLOCKED_CREATORS.some(blocked => 
     displayName.includes(blocked) || username.includes(blocked)
   );
+}
+
+function isBlockedPost(nft: DeHubNFT): boolean {
+  const tokenId = nft.tokenId || nft.id || nft.token_id;
+  const numericId = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId;
+  return BLOCKED_POST_IDS.includes(numericId);
 }
 
 // Helper functions (formatDuration, formatViews, formatTimeAgo) are now imported from @/lib/feed-utils
@@ -313,8 +320,8 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
       // Handle both response formats: { result: [...] } or { data: [...] }
       const rawData = (response as any).result || response.data || [];
       
-      // Filter out blocked creators
-      const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft));
+      // Filter out blocked creators and blocked posts
+      const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft) && !isBlockedPost(nft));
       
       const unit = searchParams.unit || 15;
       
