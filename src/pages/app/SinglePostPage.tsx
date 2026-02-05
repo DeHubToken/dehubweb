@@ -61,6 +61,14 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   // Get raw duration in seconds - prioritize numeric field
   const durationSeconds = nft.videoDuration || nft.duration || 0;
   
+  // Extract bounty data from streamInfo if available
+  const streamInfo = nft.streamInfo;
+  const isW2E = nft.is_w2e || streamInfo?.isAddBounty || false;
+  const bountyViews = streamInfo?.addBountyFirstXViewers != null ? Number(streamInfo.addBountyFirstXViewers) : undefined;
+  const bountyComments = streamInfo?.addBountyFirstXComments != null ? Number(streamInfo.addBountyFirstXComments) : undefined;
+  const bountyAmount = streamInfo?.addBountyAmount;
+  const bountyCurrency = streamInfo?.addBountyTokenSymbol || 'DHB';
+  
   return {
     id: String(nft.tokenId),
     type: 'video',
@@ -86,13 +94,17 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     likeCount: nft.totalVotes?.for || 0,
     dislikeCount: nft.totalVotes?.against || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
-    isPPV: nft.is_ppv,
-    ppvPrice: nft.ppv_price,
-    ppvCurrency: nft.ppv_currency,
-    isW2E: nft.is_w2e,
-    isLocked: nft.is_locked,
-    lockedPrice: nft.locked_price,
-    lockedCurrency: nft.locked_currency,
+    isPPV: nft.is_ppv || streamInfo?.isPayPerView || false,
+    ppvPrice: nft.ppv_price || streamInfo?.payPerViewAmount,
+    ppvCurrency: nft.ppv_currency || 'DHB',
+    isW2E,
+    isLocked: nft.is_locked || streamInfo?.isLockContent || false,
+    lockedPrice: nft.locked_price || streamInfo?.lockContentAmount,
+    lockedCurrency: nft.locked_currency || streamInfo?.lockContentTokenSymbol || 'DHB',
+    bountyViews,
+    bountyComments,
+    bountyAmount,
+    bountyCurrency,
   };
 }
 
