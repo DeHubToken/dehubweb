@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
+import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 
 // Feed components
 import {
@@ -145,6 +146,9 @@ export default function HomePage() {
     
     // Clear prefetch state so feeds will be re-fetched
     clearPrefetchState();
+    
+    // Clear persisted filter states so filters reset to defaults
+    clearPersistedFeedFilters();
     
     // Scroll to top
     document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
