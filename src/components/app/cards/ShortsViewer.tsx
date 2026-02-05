@@ -473,43 +473,33 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth;
     
-    // If overlays are hidden, check for tap in restore zones
-    if (overlaysHidden) {
-      const inBottomZone = touch.clientY > screenHeight * 0.8;
-      const inTopZone = touch.clientY < screenHeight * 0.2;
-      const inRightZone = touch.clientX > screenWidth * 0.8;
-      
-      if (inBottomZone || inTopZone || inRightZone) {
-        // Only restore if it was a tap (minimal movement)
-        if (overlaySwipeStartY.current !== null && overlaySwipeStartX.current !== null) {
-          const deltaY = Math.abs(touch.clientY - overlaySwipeStartY.current);
-          const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
-          if (deltaY < 20 && deltaX < 20) {
-            setOverlaysHidden(false);
-          }
-        } else {
-          // Tap in top zone (no prior start tracked)
-          const startY = overlaySwipeStartY.current ?? touch.clientY;
-          const startX = overlaySwipeStartX.current ?? touch.clientX;
-          const deltaY = Math.abs(touch.clientY - startY);
-          const deltaX = Math.abs(touch.clientX - startX);
-          if (deltaY < 20 && deltaX < 20) {
-            setOverlaysHidden(false);
-          }
-        }
-      }
-      overlaySwipeStartY.current = null;
-      overlaySwipeStartX.current = null;
+    // Need start position to determine gesture
+    if (overlaySwipeStartY.current === null || overlaySwipeStartX.current === null) {
       return;
     }
     
-    // If overlays are visible, check for swipe down in bottom OR right zone
-    if (overlaySwipeStartY.current !== null && overlaySwipeStartX.current !== null) {
-      const deltaY = touch.clientY - overlaySwipeStartY.current;
-      const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
-      
-      // Swipe down gesture (at least 40px down, more vertical than horizontal)
-      if (deltaY > 40 && deltaY > deltaX) {
+    const deltaY = touch.clientY - overlaySwipeStartY.current;
+    const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
+    const isTap = Math.abs(deltaY) < 20 && deltaX < 20;
+    const isVerticalSwipe = Math.abs(deltaY) > 40 && Math.abs(deltaY) > deltaX;
+    
+    const inBottomZone = overlaySwipeStartY.current > screenHeight * 0.8;
+    const inRightZone = overlaySwipeStartX.current > screenWidth * 0.8;
+    const endInTopZone = touch.clientY < screenHeight * 0.2;
+    const endInBottomZone = touch.clientY > screenHeight * 0.8;
+    const endInRightZone = touch.clientX > screenWidth * 0.8;
+    
+    if (overlaysHidden) {
+      // Restore overlays: tap in edge zones OR swipe up in bottom/right zone
+      if (isTap && (endInBottomZone || endInTopZone || endInRightZone)) {
+        setOverlaysHidden(false);
+      } else if (isVerticalSwipe && deltaY < -40 && (inBottomZone || inRightZone)) {
+        // Swipe UP in bottom/right zone restores overlays
+        setOverlaysHidden(false);
+      }
+    } else {
+      // Hide overlays: swipe down in bottom/right zone
+      if (isVerticalSwipe && deltaY > 40 && (inBottomZone || inRightZone)) {
         setOverlaysHidden(true);
       }
     }
