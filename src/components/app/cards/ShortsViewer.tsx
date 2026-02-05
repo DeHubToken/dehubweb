@@ -962,9 +962,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         )}
       </div>
 
-      {/* Mobile top header controls - TikTok style */}
+      {/* Mobile top header controls - TikTok style - animated with overlaysHidden */}
       {isMobile && (
-        <>
+        <motion.div
+          className="pointer-events-auto"
+          animate={{ opacity: overlaysHidden ? 0 : 1 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          style={{ pointerEvents: overlaysHidden ? 'none' : 'auto' }}
+        >
           {/* Back button - top left */}
           <button
             onClick={onClose}
@@ -995,7 +1000,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               <MoreHorizontal className="w-5 h-5 text-white" />
             </button>
           </div>
-        </>
+        </motion.div>
       )}
 
       {/* Desktop close button */}
