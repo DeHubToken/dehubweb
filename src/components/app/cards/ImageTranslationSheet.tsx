@@ -72,7 +72,7 @@ export function ImageTranslationSheet({
           {/* Error State */}
           {error && !isLoading && (
             <div className="flex flex-col items-center justify-center py-8 gap-3">
-              <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
                 <AlertCircle className="w-6 h-6 text-red-400" />
               </div>
               <p className="text-red-400 text-sm text-center">{error}</p>
@@ -82,7 +82,7 @@ export function ImageTranslationSheet({
           {/* No Text Found */}
           {result && !result.hasText && !isLoading && !error && (
             <div className="flex flex-col items-center justify-center py-8 gap-3">
-              <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center">
                 <FileText className="w-6 h-6 text-zinc-500" />
               </div>
               <p className="text-zinc-400 text-sm text-center">No text found in this image</p>

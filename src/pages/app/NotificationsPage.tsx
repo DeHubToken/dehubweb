@@ -343,7 +343,7 @@ export default function NotificationsPage() {
               <img src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
               <h1 className="font-bold text-white text-lg">Notifications</h1>
               {totalUnread > 0 && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-full">
+                <span className="px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg">
                   {totalUnread > 99 ? '99+' : totalUnread}
                 </span>
               )}
@@ -550,7 +550,7 @@ export default function NotificationsPage() {
                   <tab.icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{tab.label}</span>
                   {count > 0 && activeTab !== tab.value && (
-                    <span className="ml-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+                    <span className="ml-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-lg">
                       {count > 99 ? '99+' : count}
                     </span>
                   )}

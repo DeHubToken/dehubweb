@@ -550,7 +550,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       </p>
       <button 
         onClick={() => refetch()}
-        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
+        className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
       >
         <RefreshCw className="w-4 h-4" />
         Refresh

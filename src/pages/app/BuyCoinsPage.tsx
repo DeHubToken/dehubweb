@@ -124,7 +124,7 @@ export default function BuyCoinsPage() {
           >
             <div className="flex items-center gap-3">
               {selectedToken?.logoUrl ? (
-                <img src={selectedToken.logoUrl} alt={selectedToken.symbol} className="w-8 h-8 rounded-full" />
+                <img src={selectedToken.logoUrl} alt={selectedToken.symbol} className="w-8 h-8 rounded-xl" />
               ) : (
                 <img src={dehubCoin} alt="DHB" className="w-8 h-8" />
               )}
@@ -220,7 +220,7 @@ export default function BuyCoinsPage() {
           <label className="text-sm text-zinc-400 block">Payment Method</label>
           
           <button className="w-full flex items-center gap-3 p-3 bg-white/10 border border-white/20 rounded-xl">
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 text-left">
@@ -278,9 +278,9 @@ export default function BuyCoinsPage() {
                 >
                   <div className="flex items-center gap-3">
                     {token.logoUrl ? (
-                      <img src={token.logoUrl} alt={token.symbol} className="w-10 h-10 rounded-full" />
+                      <img src={token.logoUrl} alt={token.symbol} className="w-10 h-10 rounded-xl" />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center text-white font-medium">
+                      <div className="w-10 h-10 rounded-xl bg-zinc-700 flex items-center justify-center text-white font-medium">
                         {token.symbol[0]}
                       </div>
                     )}

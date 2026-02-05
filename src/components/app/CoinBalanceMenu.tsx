@@ -195,7 +195,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={() => setMenuView('buy')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Plus className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Buy Coins</span>
@@ -206,7 +206,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Cash Out</span>
@@ -215,7 +215,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={handleCopyAddress}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
         </div>
         <div className="flex flex-col">
@@ -227,7 +227,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={() => setMenuView('send')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Send className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Send Coins</span>
@@ -236,7 +236,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={() => setMenuView('history')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <History className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Transactions</span>
@@ -245,7 +245,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={() => setMenuView('stake')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Lock className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Stake Coins</span>
@@ -267,7 +267,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={handleBuyWithCard}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <CreditCard className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Buy with Card</span>
@@ -276,7 +276,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         onClick={handleBuyWithCrypto}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Bitcoin className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Buy with Crypto</span>
@@ -312,7 +312,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
                 onClick={() => setSelectedUser(user)}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
               >
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white text-sm font-medium">
                   {user.username[0].toUpperCase()}
                 </div>
                 <span className="text-white">@{user.username}</span>
@@ -383,7 +383,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
             className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
           >
             <div className="flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
                 tx.type === 'received' || tx.type === 'earned' 
                   ? 'bg-white/10' 
                   : tx.type === 'staked' 
@@ -584,7 +584,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           onClick={handleBuyWithCard}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
         >
-          <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
             <CreditCard className="w-4 h-4 text-white" />
           </div>
           <span className="text-white font-medium">Buy with Card</span>
@@ -593,7 +593,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           onClick={handleBuyWithCrypto}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
         >
-          <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
             <Bitcoin className="w-4 h-4 text-white" />
           </div>
           <span className="text-white font-medium">Buy with Crypto</span>
@@ -631,7 +631,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
                   onClick={() => setSelectedUser(user)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left"
                 >
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-sm font-medium">
+                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white text-sm font-medium">
                     {user.username[0].toUpperCase()}
                   </div>
                   <span className="text-white">@{user.username}</span>
@@ -704,7 +704,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
               className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-white/10">
                   {tx.type === 'received' || tx.type === 'earned' ? (
                     <Plus className="w-4 h-4 text-white" />
                   ) : tx.type === 'staked' ? (
@@ -806,7 +806,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         onClick={() => setMenuView('buy')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Plus className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Buy Coins</span>
@@ -817,7 +817,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Cash Out</span>
@@ -826,7 +826,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         onClick={handleCopyAddress}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
         </div>
         <div className="flex flex-col">
@@ -838,7 +838,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         onClick={() => setMenuView('send')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Send className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Send Coins</span>
@@ -847,7 +847,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         onClick={() => setMenuView('history')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <History className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Transactions</span>
@@ -856,7 +856,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         onClick={() => setMenuView('stake')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
-        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Lock className="w-4 h-4 text-white" />
         </div>
         <span className="text-white font-medium">Stake Coins</span>

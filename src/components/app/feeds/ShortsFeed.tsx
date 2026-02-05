@@ -341,7 +341,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
       </p>
       <button 
         onClick={() => refetch()}
-        className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
+        className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20 transition-colors flex items-center gap-2"
       >
         <RefreshCw className="w-4 h-4" />
         Refresh
@@ -351,7 +351,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const FilteredEmptyState = () => (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+      <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
         <Filter className="w-6 h-6 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold mb-1">No matches</h3>

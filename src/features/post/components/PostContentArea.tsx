@@ -69,7 +69,7 @@ function createLinkChip(url: string): HTMLSpanElement {
   chip.setAttribute('data-link-chip', 'true');
   chip.setAttribute('data-url', url);
   chip.contentEditable = 'false';
-  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors';
+  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-primary/20 text-primary rounded-lg text-sm cursor-pointer hover:bg-primary/30 transition-colors';
   chip.innerHTML = `🔗`;
   chip.title = url;
   chip.onclick = (e) => {
@@ -461,7 +461,7 @@ export function PostContentArea({
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-medium"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-medium"
             >
               <Clock className="w-3 h-3" />
               {format(scheduledDate, 'MMM d, h:mm a')}
@@ -575,7 +575,7 @@ export function PostContentArea({
                 onClick={onStopRecording}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors ml-auto"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors ml-auto"
               >
                 <Square className="w-3 h-3 fill-current" />
                 Stop
@@ -691,7 +691,7 @@ export function PostContentArea({
                     <span
                       key={dest}
                       className={cn(
-                        "text-xs px-1.5 py-0.5 rounded-full",
+                        "text-xs px-1.5 py-0.5 rounded-lg",
                         dest === 'Shorts' ? 'bg-emerald-500/20 text-emerald-400' :
                         dest === 'Live' ? 'bg-red-500/20 text-red-400' :
                         dest === 'Music' ? 'bg-purple-500/20 text-purple-400' :

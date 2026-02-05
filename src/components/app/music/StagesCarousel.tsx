@@ -32,7 +32,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
     >
       {/* Live badge and listeners */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-1.5 px-2 py-1 bg-red-500/20 rounded-full">
+        <div className="flex items-center gap-1.5 px-2 py-1 bg-red-500/20 rounded-lg">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
           <span className="text-red-400 text-xs font-medium">LIVE</span>
         </div>

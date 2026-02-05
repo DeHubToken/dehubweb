@@ -289,10 +289,10 @@ export default function PostInfoPage() {
         <div className="flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto mt-16">
           {/* Animated processing indicator */}
           <div className="relative mb-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
               <Loader2 className="w-10 h-10 text-primary animate-spin" />
             </div>
-            <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" />
+            <div className="absolute inset-0 rounded-xl bg-primary/10 animate-ping" />
           </div>
           
           <h2 className="text-xl font-semibold text-white mb-3">
@@ -309,7 +309,7 @@ export default function PostInfoPage() {
           
           <button
             onClick={() => navigate(-1)}
-            className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-full text-sm font-medium transition-colors"
+            className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors"
           >
             Go Back
           </button>
@@ -384,7 +384,7 @@ export default function PostInfoPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold text-white">Post Info</h1>
-          <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-white/10 rounded-full text-white/80">
+          <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-white/10 rounded-lg text-white/80">
             {chainInfo.name}
           </span>
         </div>
@@ -400,7 +400,7 @@ export default function PostInfoPage() {
                 <p className="text-xl font-bold text-white">#{nftInfo.tokenId}</p>
               </div>
               {nftInfo.status && (
-                <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
+                <span className={`px-2.5 py-1 text-xs font-medium rounded-lg ${
                   nftInfo.status === 'minted' 
                     ? 'bg-green-500/20 text-green-400' 
                     : 'bg-yellow-500/20 text-yellow-400'
@@ -457,10 +457,10 @@ export default function PostInfoPage() {
                 <img 
                   src={creatorAvatar} 
                   alt={creatorName}
-                  className="w-12 h-12 rounded-full object-cover bg-white/10"
+                  className="w-12 h-12 rounded-xl object-cover bg-white/10"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
                   <User className="w-6 h-6 text-white/60" />
                 </div>
               )}
@@ -611,7 +611,7 @@ export default function PostInfoPage() {
               ) : (
                 // Fallback: Show creator as 100% owner
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                     <Users className="w-5 h-5 text-white/60" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -703,7 +703,7 @@ export default function PostInfoPage() {
               {nftInfo.category && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(Array.isArray(nftInfo.category) ? nftInfo.category : [nftInfo.category]).map((cat, i) => (
-                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-full text-white/70">
+                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-lg text-white/70">
                       {cat}
                     </span>
                   ))}

@@ -24,7 +24,7 @@ export function BalanceCard() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-zinc-400 text-sm">Total balance</span>
-            <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               Increased by 27%
             </span>
@@ -46,12 +46,12 @@ export function BalanceCard() {
       </div>
 
       {/* Time Filters */}
-      <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-full p-1 w-fit">
+      <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit">
         {timeFilters.map((filter) => (
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
+            className={`px-3 py-1 text-xs rounded-lg transition-colors ${
               activeFilter === filter
                 ? 'bg-emerald-600 text-white'
                 : 'text-zinc-400 hover:text-white'

@@ -57,7 +57,7 @@ export function TransactionsTab() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-zinc-400 text-sm">Total transactions</span>
-                <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
                   Increased by 27%
                 </span>
