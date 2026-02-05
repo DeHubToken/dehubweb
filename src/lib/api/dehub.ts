@@ -132,7 +132,8 @@ export interface DeHubNFT {
 
   // Creator info (API uses different field names)
   minter: string;
-  mintername?: string;
+  mintername?: string;      // Older API format
+  minterUsername?: string;  // Newer API format (preferred)
   minterDisplayName?: string;
   minterAvatarUrl?: string;
   creator?: DeHubUser;

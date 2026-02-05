@@ -130,11 +130,14 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
     
     const minterId = nft.minter;
     if (creatorMap.has(minterId)) return;
+    
+    // API uses minterUsername (preferred) or mintername as fallback
+    const username = nft.minterUsername || nft.mintername;
 
     creatorMap.set(minterId, {
       id: minterId,
-      name: nft.minterDisplayName || nft.mintername || 'User',
-      handle: `@${nft.mintername || minterId.slice(0, 8)}`,
+      name: nft.minterDisplayName || username || 'User',
+      handle: `@${username || minterId.slice(0, 8)}`,
       avatar: buildAvatarUrl(minterId, extractAvatarPath(nft)),
       verified: false, // API doesn't return verification on NFT objects
       bio: undefined,
