@@ -356,7 +356,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
     const filteredData = data.filter((nft: any) => {
       const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
       const username = (nft.creator?.username || '').toLowerCase();
-      const blocked = ['monkey d luffy', 'monkey d. luffy', 'monkeydluffy', 'monkey_d_luffy', 'viral'];
+      const blocked = ['monkey d luffy', 'monkey d. luffy', 'monkeydluffy', 'monkey_d_luffy'];
       return !blocked.some(b => displayName.includes(b) || username.includes(b));
     });
     queryClient.setQueryData(

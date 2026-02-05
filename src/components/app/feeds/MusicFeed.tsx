@@ -52,7 +52,6 @@ const BLOCKED_CREATORS = [
   'monkey d. luffy',
   'monkeydluffy',
   'monkey_d_luffy',
-  'viral',
 ];
 
 function isBlockedCreator(nft: DeHubNFT): boolean {
