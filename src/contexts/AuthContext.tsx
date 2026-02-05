@@ -20,6 +20,7 @@ import {
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
+import { Wallet } from 'ethers';
 import { 
   initWeb3Auth, 
   disconnectWeb3Auth,
@@ -265,40 +266,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const completeDeHubAuthAfterRedirect = async (provider: IProvider) => {
     const web3authInstance = await getOrInitWeb3Auth();
     
-    // Get the primary EOA provider
-    const eoaProvider = web3authInstance.provider;
-    if (!eoaProvider) {
-      throw new Error('EOA provider not available');
-    }
-
-    // Get EOA address
-    const eoaAccounts = await eoaProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!eoaAccounts || eoaAccounts.length === 0) {
-      throw new Error('No EOA accounts available');
-    }
-    const eoaAddress = eoaAccounts[0].toLowerCase();
-    
-    // Use EOA address for identity
-    const authAddress = eoaAddress;
-    
-    console.log('[Auth] Redirect auth - EOA Address:', authAddress);
-
-    // Create sign message for DeHub auth
+    let authAddress: string;
+    let signature: string;
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // Sign with EOA provider to get standard signature
-    console.log('[Auth] Signing with EOA provider (redirect)...');
-    const signature = await eoaProvider.request({
-      method: 'personal_sign',
-      params: [message, authAddress],
-    }) as string;
+    // Social login (Auth adapter) - use private key for EOA signature
+    if (web3authInstance.connectedAdapterName === 'auth') {
+      console.log('[Auth] Redirect - Using EOA private key path');
+      const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+      const wallet = new Wallet(privateKey);
+      authAddress = wallet.address.toLowerCase();
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      signature = await wallet.signMessage(message);
+    } else {
+      // Regular wallet
+      const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+      authAddress = accounts[0].toLowerCase();
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [message, authAddress],
+      }) as string;
+    }
     
-    console.log('[Auth] Signature obtained, length:', signature?.length);
+    console.log('[Auth] Redirect auth - Address:', authAddress);
+    console.log('[Auth] Signature length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
-
     const authResponse = await authenticateWallet(
       authAddress,
       signature,
@@ -318,7 +313,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setRequiresUsername(true);
     }
     
-    // Invalidate all feed caches
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
@@ -334,66 +328,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const completeDeHubAuth = async (provider: IProvider) => {
     const web3authInstance = await getOrInitWeb3Auth();
     
-    // Get the primary EOA provider from Web3Auth
-    const eoaProvider = web3authInstance.provider;
-    if (!eoaProvider) {
-      throw new Error('EOA provider not available');
-    }
-
-    // Get EOA address
-    const eoaAccounts = await eoaProvider.request({ method: 'eth_accounts' }) as string[];
-    if (!eoaAccounts || eoaAccounts.length === 0) {
-      throw new Error('No EOA accounts available');
-    }
-    const eoaAddress = eoaAccounts[0].toLowerCase();
-
-    // Get the address from the passed provider (could be EOA or Smart Account)
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-    const currentAddress = accounts?.[0]?.toLowerCase() || eoaAddress;
-
-    // Use EOA address for identity to ensure backend compatibility
-    // The backend api.dehub.io expects standard ECDSA signatures
-    const authAddress = eoaAddress;
-    
-    console.log('[Auth] EOA Address:', eoaAddress);
-    console.log('[Auth] Current Provider Address:', currentAddress);
-    
-    // Detect if this is social login (embedded wallet)
-    let isEmbeddedWallet = false;
-    try {
-      const userInfo = await web3authInstance.getUserInfo();
-      const info = userInfo as Record<string, unknown>;
-      isEmbeddedWallet = !!(info && (
-        info.email || 
-        info.name || 
-        info.verifier || 
-        info.typeOfLogin ||
-        info.idToken
-      ));
-    } catch (e) {
-      isEmbeddedWallet = false;
-    }
-    
-    console.log('[Auth] Is embedded wallet (social login):', isEmbeddedWallet);
-    console.log('[Auth] Using address for auth:', authAddress);
-
-    // Create sign message for DeHub auth
+    let authAddress: string;
+    let signature: string;
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // ALWAYS use the EOA provider for authentication signatures
-    // This ensures we get a standard 65-byte ECDSA signature
-    console.log('[Auth] Signing with EOA provider...');
-    const signature = await eoaProvider.request({
-      method: 'personal_sign',
-      params: [message, authAddress],
-    }) as string;
+    // Detect if this is social login (Auth adapter)
+    if (web3authInstance.connectedAdapterName === 'auth') {
+      console.log('[Auth] Using EOA private key path for standard signature');
+      const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+      const wallet = new Wallet(privateKey);
+      authAddress = wallet.address.toLowerCase();
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      signature = await wallet.signMessage(message);
+    } else {
+      // External wallet - use provider signing
+      const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+      authAddress = accounts[0].toLowerCase();
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+      
+      try {
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [message, authAddress],
+        }) as string;
+      } catch {
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [authAddress, message],
+        }) as string;
+      }
+    }
     
-    console.log('[Auth] Signature obtained, length:', signature?.length);
+    console.log('[Auth] Using address for auth:', authAddress);
+    console.log('[Auth] Signature length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
-
     const authResponse = await authenticateWallet(
       authAddress,
       signature,
@@ -413,7 +383,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setRequiresUsername(true);
     }
     
-    // Invalidate all feed caches to fetch fresh data with user's vote state
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
