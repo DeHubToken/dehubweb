@@ -395,6 +395,14 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return FALLBACK_CATEGORIES;
   }, [apiCategories]);
 
+  // For "Most Liked", ignore date filter to get true all-time ranking (matches Home feed behavior)
+  const effectiveRange = useMemo(() => {
+    if (selectedSort.value === 'most-liked') {
+      return undefined; // All-time for global ranking
+    }
+    return getUnifiedRange(selectedUploadDate.value);
+  }, [selectedSort.value, selectedUploadDate.value]);
+
   // Use unified feed with server-side PPV/Bounty/Locked filtering
   const {
     data: apiData,
@@ -409,7 +417,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     postType: 'video',
     sortBy: getUnifiedSortBy(selectedSort.value),
     sortOrder: 'desc',
-    range: getUnifiedRange(selectedUploadDate.value),
+    range: effectiveRange,
     address: walletAddress || undefined,
     isPPV: contentFilters.ppv || undefined,
     hasBounty: contentFilters.w2e || undefined,
