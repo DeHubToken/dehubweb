@@ -283,7 +283,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {isPlaying && (
           <button
             onClick={handleMuteToggle}
-            className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/80 transition-colors"
+            className="absolute bottom-3 right-3 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
           >
             {isMuted ? (
               <VolumeX className="w-5 h-5 text-white" />

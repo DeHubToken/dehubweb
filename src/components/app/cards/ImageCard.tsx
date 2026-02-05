@@ -170,7 +170,7 @@ function ImageCarousel({
           {currentIndex > 0 && (
             <button
               onClick={scrollPrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -179,7 +179,7 @@ function ImageCarousel({
           {currentIndex < images.length - 1 && (
             <button
               onClick={scrollNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5" />
@@ -208,7 +208,7 @@ function ImageCarousel({
       
       {/* Image counter badge - only show if multiple images */}
       {hasMultiple && (
-        <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-black/60 text-white text-xs font-medium">
+        <div className="absolute top-3 right-3 px-2 py-1 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-xs font-medium">
           {currentIndex + 1}/{images.length}
         </div>
       )}
