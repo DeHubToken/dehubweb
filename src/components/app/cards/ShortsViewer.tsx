@@ -445,7 +445,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     e.stopPropagation();
   };
 
-  // Overlay hide/show gesture handlers
+  // Overlay hide/show gesture handlers - integrated with drag system
   const handleOverlayGestureTouchStart = useCallback((e: React.TouchEvent) => {
     if (!isMobile) return;
     
@@ -453,8 +453,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth;
     
-    // Track if touch started in bottom 1/5 for swipe detection
-    if (touch.clientY > screenHeight * 0.8) {
+    // Track if touch started in bottom 1/5 OR right 1/5 for swipe-down detection
+    const inBottomZone = touch.clientY > screenHeight * 0.8;
+    const inRightZone = touch.clientX > screenWidth * 0.8;
+    
+    if (inBottomZone || inRightZone) {
       overlaySwipeStartY.current = touch.clientY;
       overlaySwipeStartX.current = touch.clientX;
     } else {
@@ -462,10 +465,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       overlaySwipeStartX.current = null;
     }
   }, [isMobile]);
-
-  const handleOverlayGestureTouchMove = useCallback((e: React.TouchEvent) => {
-    // We only track, actual action happens on touch end
-  }, []);
 
   const handleOverlayGestureTouchEnd = useCallback((e: React.TouchEvent) => {
     if (!isMobile) return;
@@ -481,16 +480,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       const inRightZone = touch.clientX > screenWidth * 0.8;
       
       if (inBottomZone || inTopZone || inRightZone) {
-        // Only restore if it was a tap (not a drag/swipe)
-        if (overlaySwipeStartY.current !== null) {
+        // Only restore if it was a tap (minimal movement)
+        if (overlaySwipeStartY.current !== null && overlaySwipeStartX.current !== null) {
           const deltaY = Math.abs(touch.clientY - overlaySwipeStartY.current);
-          const deltaX = Math.abs(touch.clientX - (overlaySwipeStartX.current || 0));
+          const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
           if (deltaY < 20 && deltaX < 20) {
             setOverlaysHidden(false);
           }
         } else {
-          // Tap in top or right zone
-          setOverlaysHidden(false);
+          // Tap in top zone (no prior start tracked)
+          const startY = overlaySwipeStartY.current ?? touch.clientY;
+          const startX = overlaySwipeStartX.current ?? touch.clientX;
+          const deltaY = Math.abs(touch.clientY - startY);
+          const deltaX = Math.abs(touch.clientX - startX);
+          if (deltaY < 20 && deltaX < 20) {
+            setOverlaysHidden(false);
+          }
         }
       }
       overlaySwipeStartY.current = null;
@@ -498,10 +503,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       return;
     }
     
-    // If overlays are visible, check for swipe down in bottom zone
-    if (overlaySwipeStartY.current !== null) {
+    // If overlays are visible, check for swipe down in bottom OR right zone
+    if (overlaySwipeStartY.current !== null && overlaySwipeStartX.current !== null) {
       const deltaY = touch.clientY - overlaySwipeStartY.current;
-      const deltaX = Math.abs(touch.clientX - (overlaySwipeStartX.current || 0));
+      const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
       
       // Swipe down gesture (at least 40px down, more vertical than horizontal)
       if (deltaY > 40 && deltaY > deltaX) {
@@ -710,14 +715,31 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Gesture detection layer - covers whole screen for hide/show */}
-              <div 
-                className="absolute inset-0 z-[15] pointer-events-auto"
-                onTouchStart={handleOverlayGestureTouchStart}
-                onTouchMove={handleOverlayGestureTouchMove}
-                onTouchEnd={handleOverlayGestureTouchEnd}
-                style={{ pointerEvents: overlaysHidden ? 'auto' : 'none' }}
-              />
+              {/* Tap-to-restore zones - only active when overlays are hidden */}
+              {overlaysHidden && (
+                <div 
+                  className="absolute inset-0 z-[25] pointer-events-none"
+                >
+                  {/* Top zone */}
+                  <div 
+                    className="absolute inset-x-0 top-0 h-[20%] pointer-events-auto"
+                    onTouchStart={handleOverlayGestureTouchStart}
+                    onTouchEnd={handleOverlayGestureTouchEnd}
+                  />
+                  {/* Bottom zone */}
+                  <div 
+                    className="absolute inset-x-0 bottom-0 h-[20%] pointer-events-auto"
+                    onTouchStart={handleOverlayGestureTouchStart}
+                    onTouchEnd={handleOverlayGestureTouchEnd}
+                  />
+                  {/* Right zone */}
+                  <div 
+                    className="absolute top-[20%] bottom-[20%] right-0 w-[20%] pointer-events-auto"
+                    onTouchStart={handleOverlayGestureTouchStart}
+                    onTouchEnd={handleOverlayGestureTouchEnd}
+                  />
+                </div>
+              )}
               
               {/* Animated overlay container */}
               <motion.div
@@ -732,7 +754,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <div 
                   className="absolute bottom-6 left-4 right-20 pointer-events-auto"
                   onTouchStart={handleOverlayGestureTouchStart}
-                  onTouchMove={handleOverlayGestureTouchMove}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                 >
                   {/* Creator info row */}
@@ -787,7 +808,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <div 
                   className="absolute right-3 bottom-8 flex flex-col items-center gap-5 pointer-events-auto"
                   onTouchStart={handleOverlayGestureTouchStart}
-                  onTouchMove={handleOverlayGestureTouchMove}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                 >
                   {/* Like */}
