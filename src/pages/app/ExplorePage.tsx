@@ -247,13 +247,12 @@ const UserResultCard = ({
           <AvatarFallback className="bg-zinc-700 rounded-xl">{user.name[0]}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          {/* Mobile: stack vertically, Desktop: inline */}
-          <div className="flex items-center gap-1.5 md:flex-row flex-col md:items-center items-start">
-            <p className="text-white font-medium flex items-center gap-1.5 truncate max-w-full">
+          <div className="flex items-center gap-1.5">
+            <p className="text-white font-medium flex items-center gap-1.5 truncate">
               <span className="truncate">{user.name}</span>
               {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
             </p>
-            <span className="text-zinc-500 font-normal text-sm truncate max-w-full md:text-base">{user.handle}</span>
+            <span className="text-zinc-500 font-normal text-sm truncate">{user.handle}</span>
           </div>
           {user.bio && (
             <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5 hidden md:block">{user.bio}</p>

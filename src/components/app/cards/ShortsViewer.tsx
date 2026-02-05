@@ -759,12 +759,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     </button>
                     <button
                       onClick={() => handleNavigateToProfile()}
-                      className="text-left min-w-0"
+                      className="flex items-center gap-1.5 min-w-0"
                     >
                       {currentShort.displayName && (
-                        <p className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</p>
+                        <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
                       )}
-                      <p className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</p>
+                      <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                     </button>
                   </div>
                   
@@ -885,11 +885,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
                   <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 flex-1 min-w-0">
                   {currentShort.displayName && (
-                    <p className="text-white font-semibold text-sm lg:text-base truncate hover:underline">{currentShort.displayName}</p>
+                    <span className="text-white font-semibold text-sm lg:text-base truncate hover:underline">{currentShort.displayName}</span>
                   )}
-                  <p className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</p>
+                  <span className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                 </div>
               </button>
               {currentShort.description && (

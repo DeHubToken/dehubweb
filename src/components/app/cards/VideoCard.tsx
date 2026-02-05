@@ -128,18 +128,16 @@ function MobileCreatorInfo({
             }}
           />
         )}
-        <div className="flex flex-col min-w-0">
-          <span className="font-semibold text-white text-sm leading-tight">{channel}</span>
-          <div className="flex items-center gap-1">
-            {creatorUsername && (
-              <span className="text-zinc-400 text-xs">@{creatorUsername.replace('@', '')}</span>
-            )}
-            {verified && (
-              <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-              </svg>
-            )}
-          </div>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="font-semibold text-white text-sm leading-tight truncate">{channel}</span>
+          {creatorUsername && (
+            <span className="text-zinc-400 text-sm truncate">@{creatorUsername.replace('@', '')}</span>
+          )}
+          {verified && (
+            <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          )}
         </div>
       </button>
       
