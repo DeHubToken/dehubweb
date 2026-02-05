@@ -234,17 +234,17 @@ function MobileCreatorInfo({
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
             <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <Gift className="w-5 h-5 text-amber-400" />
+              <Gift className="w-5 h-5 text-white" />
               Bounty Rewards
             </DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-4">
             {/* Reward Criteria */}
             <div className="space-y-3">
-              {bountyViews && bountyViews > 0 && (
+            {bountyViews && bountyViews > 0 && (
                 <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                    <Eye className="w-4 h-4 text-emerald-400" />
+                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                    <Eye className="w-4 h-4 text-white" />
                   </div>
                   <div>
                     <p className="text-white text-sm font-medium">First {bountyViews} views</p>
@@ -254,8 +254,8 @@ function MobileCreatorInfo({
               )}
               {bountyComments && bountyComments > 0 && (
                 <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                    <MessageCircle className="w-4 h-4 text-blue-400" />
+                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                    <MessageCircle className="w-4 h-4 text-white" />
                   </div>
                   <div>
                     <p className="text-white text-sm font-medium">First {bountyComments} comments</p>
@@ -267,8 +267,8 @@ function MobileCreatorInfo({
             
             {/* Reward per User */}
             {bountyAmount && bountyAmount > 0 && (
-              <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl border border-amber-500/20">
-                <span className="text-zinc-300 text-sm">Reward per User</span>
+              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-white text-sm">Reward per User</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                   <span className="text-white text-lg font-bold">{formatCompact(bountyAmount)} {bountyCurrency || 'DHB'}</span>
@@ -279,16 +279,16 @@ function MobileCreatorInfo({
             {/* Total Bounty Pool */}
             {totalBountyPool > 0 && (
               <div className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-zinc-400 text-sm">Total Bounty Pool</span>
+                <span className="text-white text-sm">Total Bounty Pool</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoinSmall} alt="DHB" className="w-4 h-4" />
-                  <span className="text-zinc-300 text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
+                  <span className="text-white text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
                 </div>
               </div>
             )}
             
             {/* Call to Action */}
-            <p className="text-center text-zinc-400 text-sm">
+            <p className="text-center text-white/60 text-sm">
               Watch and engage to earn rewards! 🎁
             </p>
           </div>
@@ -300,18 +300,18 @@ function MobileCreatorInfo({
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
             <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-emerald-400" />
+              <DollarSign className="w-5 h-5 text-white" />
               Pay-Per-View Content
             </DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-xl border border-emerald-500/20">
-              <span className="text-zinc-300 text-sm">Unlock Price</span>
+            <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+              <span className="text-white text-sm">Unlock Price</span>
               <span className="text-white text-lg font-bold">
                 {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
               </span>
             </div>
-            <p className="text-center text-zinc-400 text-sm">
+            <p className="text-center text-white/60 text-sm">
               Pay once to unlock this exclusive content forever! 💎
             </p>
           </div>
@@ -323,21 +323,21 @@ function MobileCreatorInfo({
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
             <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <Lock className="w-5 h-5 text-purple-400" />
+              <Lock className="w-5 h-5 text-white" />
               Gated Content
             </DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-4">
             {lockedPrice && lockedPrice > 0 && (
-              <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
-                <span className="text-zinc-300 text-sm">Must hold to view</span>
+              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-white text-sm">Must hold to view</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                   <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
                 </div>
               </div>
             )}
-            <p className="text-center text-zinc-400 text-sm">
+            <p className="text-center text-white/60 text-sm">
               Hold the required tokens to view this content! 🔓
             </p>
           </div>
