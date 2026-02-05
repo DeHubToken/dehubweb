@@ -108,25 +108,27 @@ export function CardHeader({
         {isLive ? (
           <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
             <div className="p-0.5 bg-zinc-900 rounded-xl">
-              <Avatar className="w-8 h-8">
-                {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} />}
-                <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
+              <Avatar className="w-8 h-8 rounded-xl">
+                {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-xl" />}
+                <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{username[0]?.toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
           </div>
         ) : (
-          <Avatar className="w-8 h-8">
-            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium">{username[0]?.toUpperCase()}</AvatarFallback>
+          <Avatar className="w-8 h-8 rounded-xl">
+            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-xl" />}
+            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="font-semibold text-white text-sm truncate max-w-[100px] sm:max-w-none">{username}</span>
-          {verified && <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />}
+        <div className="flex flex-col min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-white text-sm truncate max-w-[100px] sm:max-w-none leading-tight">{username}</span>
+            {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
+            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
+          </div>
           {formattedHandle && (
-            <span className="text-zinc-500 text-sm truncate max-w-[100px] sm:max-w-none">{formattedHandle}</span>
+            <span className="text-zinc-500 text-xs truncate max-w-[100px] sm:max-w-none">{formattedHandle}</span>
           )}
-          {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
         </div>
       </button>
     </div>

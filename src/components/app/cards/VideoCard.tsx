@@ -122,22 +122,24 @@ function MobileCreatorInfo({
           <img 
             src={channelAvatar} 
             alt={channel}
-            className="w-9 h-9 rounded-full object-cover shrink-0"
+            className="w-9 h-9 rounded-xl object-cover shrink-0"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/placeholder.svg';
             }}
           />
         )}
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="font-semibold text-white text-sm">{channel}</span>
-          {verified && (
-            <svg className="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-            </svg>
-          )}
-          {creatorUsername && (
-            <span className="text-zinc-400 text-sm">@{creatorUsername.replace('@', '')}</span>
-          )}
+        <div className="flex flex-col min-w-0">
+          <span className="font-semibold text-white text-sm leading-tight">{channel}</span>
+          <div className="flex items-center gap-1">
+            {creatorUsername && (
+              <span className="text-zinc-400 text-xs">@{creatorUsername.replace('@', '')}</span>
+            )}
+            {verified && (
+              <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            )}
+          </div>
         </div>
       </button>
       
