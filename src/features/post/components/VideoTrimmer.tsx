@@ -472,7 +472,7 @@ export function VideoTrimmer({
                   key={speed}
                   onClick={() => setPlaybackSpeed(speed)}
                   className={cn(
-                    "px-2 py-1 rounded-full text-xs font-medium transition-all",
+                    "px-2 py-1 rounded-lg text-xs font-medium transition-all",
                     playbackSpeed === speed
                       ? 'bg-white text-black'
                       : 'bg-white/10 text-white hover:bg-white/20'

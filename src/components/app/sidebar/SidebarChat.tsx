@@ -56,7 +56,7 @@ export function SidebarChat() {
         <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center mb-2">
+              <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2">
                 <Users className="w-5 h-5 text-zinc-500" />
               </div>
               <p className="text-zinc-500 text-xs">No messages yet</p>

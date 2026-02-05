@@ -337,7 +337,7 @@ export function StoryRecorderModal({ isOpen, onClose, onStoryRecorded, onPhotoCa
                 }}
                 className="absolute inset-0 bottom-32 flex items-center justify-center z-5 pointer-events-auto"
               >
-                <div className="w-20 h-20 rounded-full bg-black/40 backdrop-blur-[24px] border border-white/30 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center">
                   <Play className="w-10 h-10 text-white fill-white ml-1" />
                 </div>
               </button>

@@ -1069,7 +1069,7 @@ export function PostMediaPreview({
             </motion.div>
 
             {/* Image counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-sm">
               {fullscreenPreview.index + 1} / {media.length}
             </div>
           </motion.div>

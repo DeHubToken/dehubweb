@@ -950,7 +950,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               exit={{ opacity: 0, scale: 0.8 }}
               className={`absolute top-1/2 -translate-y-1/2 ${seekIndicator === 'right' ? 'right-8' : 'left-8'}`}
             >
-              <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
                 {seekIndicator === 'right' ? (
                   <FastForward className="h-6 w-6 text-white" />
                 ) : (

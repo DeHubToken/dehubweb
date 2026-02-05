@@ -1292,8 +1292,8 @@ function MessagesSettings() {
             <span className="text-white font-medium">Storage Used</span>
             <span className="text-zinc-400">2.1 GB of 5 GB</span>
           </div>
-          <div className="w-full bg-zinc-700 rounded-full h-2 mb-3">
-            <div className="bg-white h-2 rounded-full" style={{ width: '42%' }} />
+          <div className="w-full bg-zinc-700 rounded-lg h-2 mb-3">
+            <div className="bg-white h-2 rounded-lg" style={{ width: '42%' }} />
           </div>
           <div className="flex justify-between text-xs text-zinc-500">
             <span>Messages: 1.2 GB</span>

@@ -35,12 +35,12 @@ export function IncomeChart() {
       </div>
 
       {/* Time Filters */}
-      <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-full p-1 w-fit ml-auto">
+      <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit ml-auto">
         {timeFilters.map((filter) => (
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
+            className={`px-3 py-1 text-xs rounded-lg transition-colors ${
               activeFilter === filter
                 ? 'bg-emerald-600 text-white'
                 : 'text-zinc-400 hover:text-white'

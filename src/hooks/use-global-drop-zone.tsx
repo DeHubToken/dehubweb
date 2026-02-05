@@ -105,7 +105,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       {isDragging && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center pointer-events-none">
           <div className="border-2 border-dashed border-primary rounded-3xl p-12 flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center">
               <svg 
                 className="w-8 h-8 text-primary" 
                 fill="none" 
