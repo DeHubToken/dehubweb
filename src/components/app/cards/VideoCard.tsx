@@ -318,19 +318,19 @@ function MobileCreatorInfo({
         </DrawerContent>
       </Drawer>
 
-      {/* Locked Drawer */}
+      {/* Gated Content Drawer */}
       <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
             <DrawerTitle className="text-white text-lg flex items-center gap-2">
               <Lock className="w-5 h-5 text-purple-400" />
-              Locked Content
+              Gated Content
             </DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-4">
             {lockedPrice && lockedPrice > 0 && (
               <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
-                <span className="text-zinc-300 text-sm">Unlock Price</span>
+                <span className="text-zinc-300 text-sm">Must hold to view</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
                   <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
@@ -338,7 +338,7 @@ function MobileCreatorInfo({
               </div>
             )}
             <p className="text-center text-zinc-400 text-sm">
-              Unlock this content to view! 🔓
+              Hold the required tokens to view this content! 🔓
             </p>
           </div>
         </DrawerContent>
