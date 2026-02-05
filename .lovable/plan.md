@@ -1,93 +1,89 @@
 
-# Fix Search Not Finding Users
+# Fix Search to Find All Users on "All" Tab
+
+## Problem Summary
+
+When searching for "malik" on the "All" tab, only 1 user appears because:
+
+1. The search API (`/api/search`) requires a `type` parameter to search users
+2. Without `type=accounts`, the API only searches content/posts
+3. The only user shown comes from an exact username lookup (`/api/account_info/malik`), not from the actual search
 
 ## Root Cause
 
-The `universalSearch()` function in `src/lib/api/dehub.ts` is broken. It treats **all** API responses as NFT content and puts them in the `videos` array, even when:
-1. `type=accounts` is passed
-2. The API returns user objects (with `_id`, `address`, `username`, etc.)
+The API behaves differently based on the `type` parameter:
+- `type=accounts` → Returns matching users
+- `type=videos` or no type → Returns matching content/posts only
 
-The API actually returns different data structures based on the `type` parameter:
-- **`type=accounts`**: Returns user objects like `{_id, address, username, displayName, avatarImageUrl}`
-- **No type / `type=videos`**: Returns NFT objects like `{tokenId, name, imageUrl, minter}`
-
-Currently, when you search "ja", the API correctly returns users named "jamie", "james", etc. but the `universalSearch()` function mistakenly puts them in the `videos` array where they get filtered out or lost.
+Currently on the "All" tab:
+- `getTypeForTab('all')` returns `undefined`
+- Only one search call is made without `type`, returning only content
+- Users are not searched via the main search API
 
 ## Solution
 
-Update `universalSearch()` to properly detect and categorize the response data:
+For the "All" tab, run **parallel searches** for both accounts and content, then merge results.
 
-1. **Check if searching for accounts**: When `type=accounts`, parse the result as `SearchAccount[]`
-2. **Check response data structure**: Use heuristics to detect if items are users (have `username`/`displayName`) or NFTs (have `tokenId`/`imageUrl`)
-3. **Map user objects correctly**: Convert raw user objects to `SearchAccount` format
+### Changes Required
 
-## Code Changes
+**1. Update `src/pages/app/ExplorePage.tsx`**
 
-### File: `src/lib/api/dehub.ts`
+Add a second search query specifically for accounts when on the "All" tab:
 
-```typescript
-export async function universalSearch(params: UniversalSearchParams): Promise<UniversalSearchResponse> {
-  const response = await apiCall<{ 
-    result: Array<DeHubNFT | DeHubUser>; 
-    pagination?: { hasMore: boolean; totalCount: number } 
-  }>("/api/search", {
-    params: {
-      q: params.q,
-      page: params.page,
-      unit: params.unit,
-      type: params.type,
-      postType: params.postType,
-      address: params.address,
-    },
-  });
-  
-  // Extract the array from response
-  let items: Array<any> = [];
-  if (response && typeof response === 'object' && 'result' in response) {
-    items = Array.isArray(response.result) ? response.result : [];
-  }
-  
-  // Determine if results are accounts or NFTs based on type param and data shape
-  const isAccountSearch = params.type === 'accounts';
-  
-  if (isAccountSearch) {
-    // Map raw user objects to SearchAccount format
-    const accounts: SearchAccount[] = items.map(item => ({
-      id: item._id || item.id || item.address,
-      address: item.address,
-      username: item.username,
-      displayName: item.displayName,
-      bio: item.aboutMe || item.bio,
-      avatarUrl: item.avatarImageUrl || item.avatarUrl,
-      avatarImageUrl: item.avatarImageUrl,
-      verified: item.isVerified || false,
-      followerCount: typeof item.followers === 'number' ? item.followers : undefined,
-    })).filter(a => a.id && a.address);
-    
-    return {
-      accounts,
-      videos: [],
-      livestreams: [],
-      has_more: response.pagination?.hasMore ?? items.length >= (params.unit || 15),
-      total: response.pagination?.totalCount ?? items.length,
-    };
-  }
-  
-  // For video/NFT searches, keep existing behavior
-  return {
-    accounts: [],
-    videos: items as DeHubNFT[],
-    livestreams: [],
-    has_more: response.pagination?.hasMore ?? items.length >= (params.unit || 15),
-    total: response.pagination?.totalCount ?? items.length,
-  };
-}
+```text
+// Existing search for content (when tab is 'all', this searches content only)
+const {
+  data: searchData,
+  // ... 
+} = useDeHubSearch({
+  query: effectiveQuery,
+  type: effectiveSearchType,  // undefined for 'all' tab
+  // ...
+});
+
+// NEW: Additional search for accounts when on 'All' tab
+const {
+  data: accountSearchData,
+} = useDeHubSearch({
+  query: effectiveQuery,
+  type: 'accounts',  // Always search accounts
+  enabled: isSearching && (activeTab === 'all'),  // Only when 'All' tab is active
+  minQueryLength: isShortSearch ? 1 : 3,
+});
 ```
 
-## Expected Result
+**2. Merge account results into `searchResults`**
+
+Update the `useMemo` that builds `searchResults` to also include accounts from the new `accountSearchData`:
+
+```text
+const searchResults = useMemo(() => {
+  // Get accounts from universal search (people tab)
+  const accounts = flattenSearchAccounts(searchData) || [];
+  
+  // NEW: Also get accounts from dedicated account search (for All tab)
+  const allTabAccounts = flattenSearchAccounts(accountSearchData) || [];
+  
+  // Merge account sources
+  const combinedAccounts = [...accounts, ...allTabAccounts];
+  
+  // ... rest of the existing logic to dedupe and sort
+}, [searchData, accountSearchData, exactUser, brandUser, isShortSearch, effectiveQuery]);
+```
+
+## Technical Details
+
+### Files to Modify
+- `src/pages/app/ExplorePage.tsx` - Add second search hook and merge logic
+
+### Why This Works
+- Running two parallel searches (one for content, one for accounts) mirrors what the API expects
+- Results are merged and deduplicated using the existing Map-based deduplication
+- No changes needed to the API layer or search hook
+
+## Expected Outcome
 
 After this fix:
-- Searching "ja" will correctly show users like "jamie", "james", "jasmin" in the People tab
-- Searching "jamie" will still work as before
-- The "All" tab will show both people and content matching the query
-- Short 1-2 character searches will work for finding people
+- Searching "malik" on "All" tab will show all users with "malik" in their username (malik, dehub-malik, malik_dehub, malikjan, etc.)
+- Searching "mal" will show even more users matching "mal*"
+- Content and user results will be properly combined on the "All" tab
