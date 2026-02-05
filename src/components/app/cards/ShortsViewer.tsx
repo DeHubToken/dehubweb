@@ -637,6 +637,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
+              {/* Bottom gradient overlay - fades from transparent to black */}
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-[5]" />
+              
               {/* Bottom Left - Creator Info & Description */}
               <div className="absolute bottom-6 left-4 right-20 z-10 pointer-events-auto">
                 {/* Creator info row */}
@@ -665,10 +668,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {currentShort.description && (
                   <button
                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                    className={cn(
-                      "text-left w-full transition-all duration-200 rounded-xl",
-                      isDescriptionExpanded && "bg-gradient-to-t from-black/80 via-black/60 to-black/40 p-3 -m-3"
-                    )}
+                    className="text-left w-full"
                   >
                     <div 
                       className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
