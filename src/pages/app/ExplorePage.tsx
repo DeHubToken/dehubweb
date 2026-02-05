@@ -462,21 +462,26 @@ export default function ExplorePage() {
     // Also extract creators from video results for backwards compatibility (not for short search)
     const videoCreators = isShortSearch ? [] : extractUniqueCreators(videos) || [];
     
-    // Combine and dedupe users: accounts first, then all-tab accounts, then video creators
+    // Combine and dedupe users by ID AND handle (same user may have different IDs from different sources)
     const userMap = new Map<string, SearchCreator>();
-    accountCreators.forEach(u => {
-      if (u && u.id) userMap.set(u.id, u);
-    });
-    allTabAccountCreators.forEach(u => {
-      if (u && u.id && !userMap.has(u.id)) userMap.set(u.id, u);
-    });
-    videoCreators.forEach(u => {
-      if (u && u.id && !userMap.has(u.id)) userMap.set(u.id, u);
-    });
+    const seenHandles = new Set<string>();
     
-    // Add exact user match if found and not already present
-    if (exactUser && exactUser.id && !userMap.has(exactUser.id)) {
-      userMap.set(exactUser.id, exactUser);
+    const addUser = (u: SearchCreator) => {
+      if (!u || !u.id) return;
+      const handleLower = u.handle.toLowerCase();
+      // Skip if we already have this user by ID or handle
+      if (userMap.has(u.id) || seenHandles.has(handleLower)) return;
+      userMap.set(u.id, u);
+      seenHandles.add(handleLower);
+    };
+    
+    accountCreators.forEach(addUser);
+    allTabAccountCreators.forEach(addUser);
+    videoCreators.forEach(addUser);
+    
+    // Add exact user match if found
+    if (exactUser) {
+      addUser(exactUser);
     }
     
     // Check if this is a brand-related search
@@ -485,8 +490,10 @@ export default function ExplorePage() {
     
     // For brand queries, ensure the real @d (from brandUser lookup) is in the map
     if (isBrandQueryLocal && brandUser && brandUser.id) {
-      // Override with brandUser data if present
+      // Override with brandUser data if present (force add even if duplicate)
+      const handleLower = brandUser.handle.toLowerCase();
       userMap.set(brandUser.id, brandUser);
+      seenHandles.add(handleLower);
     }
     
     // Convert to array and sort
