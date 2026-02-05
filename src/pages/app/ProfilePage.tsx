@@ -977,10 +977,6 @@ export default function ProfilePage() {
                   {(showFollowersFollowing || isViewingOwnProfile) ? (
                     <button 
                       onClick={() => {
-                        if (!apiProfile?.followingsList?.length) {
-                          toast.info('Following list not available');
-                          return;
-                        }
                         setFollowListType('following');
                         setFollowListDrawerOpen(true);
                       }}
@@ -999,10 +995,6 @@ export default function ProfilePage() {
                   {(showFollowersFollowing || isViewingOwnProfile) ? (
                     <button 
                       onClick={() => {
-                        if (!apiProfile?.followersList?.length) {
-                          toast.info('Followers list not available');
-                          return;
-                        }
                         setFollowListType('followers');
                         setFollowListDrawerOpen(true);
                       }}
@@ -1105,11 +1097,8 @@ export default function ProfilePage() {
       <FollowersListDrawer
         open={followListDrawerOpen}
         onOpenChange={setFollowListDrawerOpen}
-        addresses={followListType === 'followers' 
-          ? (apiProfile?.followersList || []) 
-          : (apiProfile?.followingsList || [])}
+        profileAddress={apiProfile?.walletAddress || ''}
         title={followListType === 'followers' ? 'Followers' : 'Following'}
-        profileAddress={apiProfile?.walletAddress}
       />
     </div>
   );
