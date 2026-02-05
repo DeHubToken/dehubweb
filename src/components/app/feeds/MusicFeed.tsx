@@ -266,11 +266,11 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
             isPlaying ? "opacity-0 hover:opacity-100" : "opacity-0 group-hover:opacity-100"
           )}
         >
-          <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
             {isPlaying ? (
-              <Pause className="w-6 h-6 text-white" />
+              <Pause className="w-6 h-6 text-white fill-white" />
             ) : (
-              <Play className="w-6 h-6 text-white fill-white" />
+              <Play className="w-6 h-6 text-white fill-white ml-0.5" />
             )}
           </div>
         </button>

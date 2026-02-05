@@ -269,7 +269,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {/* Play/Pause Button Overlay */}
         {!isLoading && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-            <div className="w-16 h-16 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
               {isPlaying ? (
                 <Pause className="w-8 h-8 text-white fill-white" />
               ) : (

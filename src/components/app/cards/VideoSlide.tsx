@@ -154,12 +154,12 @@ export const VideoSlide = memo(function VideoSlide({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center"
+            className="w-16 h-16 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl flex items-center justify-center border border-white/10"
           >
             {showPlayIndicator === 'play' ? (
-              <Play className="w-8 h-8 text-white fill-white" />
+              <Play className="w-8 h-8 text-white fill-white ml-1" />
             ) : (
-              <Pause className="w-8 h-8 text-white" />
+              <Pause className="w-8 h-8 text-white fill-white" />
             )}
           </motion.div>
         </div>
