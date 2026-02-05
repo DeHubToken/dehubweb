@@ -64,6 +64,16 @@ interface MobileCreatorInfoProps {
   verified?: boolean;
   onAIClick?: () => void;
   onMenuClick?: () => void;
+  isPPV?: boolean;
+  ppvPrice?: number | string;
+  ppvCurrency?: string;
+  isW2E?: boolean;
+  bountyAmount?: number;
+  bountyCurrency?: string;
+  isLocked?: boolean;
+  lockedPrice?: number;
+  lockedCurrency?: string;
+  onBountyClick?: () => void;
 }
 
 function MobileCreatorInfo({
@@ -74,6 +84,16 @@ function MobileCreatorInfo({
   verified = false,
   onAIClick,
   onMenuClick,
+  isPPV,
+  ppvPrice,
+  ppvCurrency,
+  isW2E,
+  bountyAmount,
+  bountyCurrency,
+  isLocked,
+  lockedPrice,
+  lockedCurrency,
+  onBountyClick,
 }: MobileCreatorInfoProps) {
   const navigate = useNavigate();
 
@@ -87,6 +107,7 @@ function MobileCreatorInfo({
   };
 
   const isClickable = !!(creatorId || creatorUsername);
+  const hasBadges = isPPV || isW2E || isLocked;
 
   if (!channel) return null;
 
@@ -120,8 +141,53 @@ function MobileCreatorInfo({
         </div>
       </button>
       
-      {/* Action buttons */}
-      <div className="flex items-center gap-1">
+      {/* Action buttons and badges */}
+      <div className="flex items-center gap-1.5">
+        {/* Content Type Badges - PPV/Bounty/Locked */}
+        {hasBadges && (
+          <div className="flex items-center gap-1">
+            {/* PPV Badge */}
+            {isPPV && ppvPrice && (
+              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+                <DollarSign className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {typeof ppvPrice === 'number' ? ppvPrice.toLocaleString() : ppvPrice} {ppvCurrency || 'USDC'}
+                </span>
+              </div>
+            )}
+            
+            {/* Bounty Badge */}
+            {isW2E && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBountyClick?.();
+                }}
+              >
+                <Gift className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {bountyAmount && bountyAmount > 0 
+                    ? `${bountyAmount.toLocaleString()} ${bountyCurrency || 'DHB'}` 
+                    : 'Bounty'}
+                </span>
+              </button>
+            )}
+            
+            {/* Locked Badge */}
+            {isLocked && (
+              <div className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10">
+                <Lock className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {lockedPrice && lockedPrice > 0 
+                    ? `${lockedPrice.toLocaleString()} ${lockedCurrency || 'DHB'}` 
+                    : ''}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        
         <motion.button
           onClick={onAIClick}
           className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
@@ -678,8 +744,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           />
         )}
         
-        {/* Content Type Badges - PPV/Bounty/Locked - show all that apply */}
-        {(video.isPPV || video.isW2E || video.isLocked) && (
+        {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}
+        {!isImmersive && (video.isPPV || video.isW2E || video.isLocked) && (
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
             {/* PPV Badge */}
             {video.isPPV && video.ppvPrice && (
@@ -922,6 +988,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             verified={video.verified}
             onAIClick={() => setShowAIChat(true)}
             onMenuClick={() => setShowOptionsDrawer(true)}
+            isPPV={video.isPPV}
+            ppvPrice={video.ppvPrice}
+            ppvCurrency={video.ppvCurrency}
+            isW2E={video.isW2E}
+            bountyAmount={video.bountyAmount}
+            bountyCurrency={video.bountyCurrency}
+            isLocked={video.isLocked}
+            lockedPrice={video.lockedPrice}
+            lockedCurrency={video.lockedCurrency}
+            onBountyClick={() => setShowBountyDrawer(true)}
           />
         )}
         <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" />
