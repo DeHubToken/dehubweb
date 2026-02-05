@@ -887,20 +887,20 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         {isPlaying && (showControls || isTouchDevice) && (
           <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
             <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-full flex items-center justify-center border border-white/10"
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={toggleMute}
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
             <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-full flex items-center justify-center border border-white/10"
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handlePictureInPicture}
               title="Picture in Picture (P)"
             >
               <PictureInPicture2 className="h-4 w-4" />
             </button>
             <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-full flex items-center justify-center border border-white/10"
+              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
             >
               <Maximize className="h-4 w-4" />

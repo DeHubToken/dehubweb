@@ -276,13 +276,13 @@ function ImmersiveVideoHeader({
   const isClickable = !!(creatorId || creatorUsername);
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-20 flex items-center gap-2 p-3">
+    <div className="absolute top-2 left-2 z-20">
       <button
         onClick={handleBack}
-        className="p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/10 hover:bg-black/80 transition-colors shrink-0"
+        className="h-8 w-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
         aria-label="Go back"
       >
-        <ArrowLeft className="w-5 h-5 text-white" />
+        <ArrowLeft className="w-4 h-4 text-white" />
       </button>
     </div>
   );
