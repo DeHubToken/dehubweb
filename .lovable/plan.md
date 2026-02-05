@@ -1,38 +1,83 @@
 
-# ✅ IMPLEMENTED: Email Login on Mobile - Redirect Mode
+# Fix: Ad Video "Format Not Supported" on Dedicated Post Page
 
-## Problem
-Email login was getting stuck on "Sending link..." on mobile devices because Web3Auth's popup mode doesn't work reliably on mobile browsers.
+## Problem Analysis
 
-## Solution Implemented
-Added **redirect mode** for email/SMS login on mobile devices:
+The ad video (ID 2008) plays correctly in feeds and profiles but shows "Video format not supported" when displayed in the Related Videos section under dedicated post pages.
 
-1. **Mobile Detection** (`src/lib/web3auth.ts`)
-   - Added `isMobileDevice()` utility function
-   - Added `authConnector` with device-aware `uxMode`
-   - Mobile: `UX_MODE.REDIRECT` with `redirectUrl: /app`
-   - Desktop: `UX_MODE.POPUP` (unchanged behavior)
+### Root Cause
 
-2. **Redirect Handling** (`src/contexts/AuthContext.tsx`)
-   - Added `isProcessingRedirect` state
-   - Added `redirectProcessedRef` to prevent double processing
-   - Added `useEffect` to detect and process redirect results
-   - Added `completeDeHubAuthAfterRedirect()` for post-redirect authentication
-   - Clears URL params after processing to prevent loops
+The codebase has **inconsistent video URL construction** across different components:
 
-3. **UI Updates** (`src/components/app/LoginModal.tsx`)
-   - Mobile shows "Redirecting..." instead of "Sending link..."
-   - Mobile shows "You'll be redirected to enter a verification code"
+| Component | URL Construction | Result |
+|-----------|-----------------|--------|
+| `use-dehub-feed.ts` (feeds/profiles) | Canonical CDN pattern: `{CDN}/videos/{tokenId}.mp4` | Works |
+| `RelatedVideosFeed.tsx` (ad video) | Raw API value: `getMediaUrl(nft.videoUrl)` | Fails |
+| `SinglePostPage.tsx` (post page) | Raw API value: `getMediaUrl(nft.videoUrl)` | Fails |
 
-## Expected Behavior
+The API may return video URLs pointing to files with unsupported codecs (H.265/HEVC) or different file formats. The canonical CDN pattern (`/videos/{tokenId}.mp4`) always points to browser-compatible transcoded files.
 
-**Desktop:**
-- Email → OTP popup → Enter code → Popup closes → Logged in
+---
 
-**Mobile:**
-- Email → Redirect to Web3Auth OTP page → Enter code → Redirect back → Logged in
+## Solution
 
-## Files Modified
-- `src/lib/web3auth.ts` - Added authConnector with redirect mode
-- `src/contexts/AuthContext.tsx` - Handle redirect result processing
-- `src/components/app/LoginModal.tsx` - Mobile-aware messaging
+Update the `toVideoItem()` functions in both `RelatedVideosFeed.tsx` and `SinglePostPage.tsx` to use the same canonical CDN URL pattern that works reliably in the main feeds.
+
+---
+
+## Implementation Details
+
+### 1. RelatedVideosFeed.tsx
+
+**Current code (line 40):**
+```typescript
+videoUrl: getMediaUrl(nft.videoUrl),
+```
+
+**Fix:**
+```typescript
+videoUrl: nft.tokenId 
+  ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
+  : undefined,
+```
+
+### 2. SinglePostPage.tsx
+
+**Current code (line 68):**
+```typescript
+videoUrl: getMediaUrl(nft.videoUrl),
+```
+
+**Fix:**
+```typescript
+videoUrl: nft.tokenId 
+  ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
+  : undefined,
+```
+
+---
+
+## Files to Modify
+
+| File | Change |
+|------|--------|
+| `src/components/app/feeds/RelatedVideosFeed.tsx` | Update `toVideoItem()` to use canonical CDN URL |
+| `src/pages/app/SinglePostPage.tsx` | Update `toVideoItem()` to use canonical CDN URL |
+
+---
+
+## Technical Notes
+
+- The `DEHUB_CDN_BASE` constant is already available and can be imported
+- This matches the proven pattern used in `use-dehub-feed.ts` line 92
+- All videos on the CDN are transcoded to browser-compatible H.264 MP4 format
+- This ensures cross-browser compatibility on desktop and mobile
+
+---
+
+## Testing Checklist
+
+- Verify the ad video under post pages now plays correctly
+- Verify videos still play correctly in the main feed
+- Verify videos still play correctly on profile pages
+- Test on both desktop and mobile browsers
