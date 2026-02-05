@@ -19,7 +19,6 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
-import { buildFeedImageUrls, buildAvatarUrl } from '@/lib/media-url';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -102,16 +101,8 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
  */
 function toImagePost(nft: DeHubNFT): ImagePost {
   const views = nft.views != null ? String(nft.views) : '0';
-  
-  // Use shared utility for feed-images paths - handles "feed-images/xxx.jpg" format
-  const imageUrls = buildFeedImageUrls(nft.imageUrls) || [];
-  
-  // Primary image: prefer imageUrls array, fallback to single imageUrl
-  const primaryImage = imageUrls[0] || 
-                       getMediaUrl(nft.imageUrl) || 
-                       getMediaUrl((nft as any).media_url) || 
-                       getMediaUrl((nft as any).thumbnail_url) || 
-                       '/placeholder.svg';
+  const imageUrls = nft.imageUrls?.map(url => getMediaUrl(url) || '') || [];
+  const primaryImage = getMediaUrl(nft.imageUrl) || '/placeholder.svg';
   
   const title = nft.title || nft.name;
   // Only use description if it's different from title (avoid duplicates)
@@ -119,16 +110,12 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   // API returns various timestamp fields - check all possibilities
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
-  // Build canonical avatar URL using minter address
-  const minterAddress = nft.minter || '';
-  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || '/placeholder.svg';
-  
   return {
     id: String(nft.tokenId),
     type: 'image',
     username: nft.minterDisplayName || nft.mintername || 'Unknown',
     verified: false,
-    avatar,
+    avatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
     image: primaryImage,
     imageUrls: imageUrls.length > 0 ? imageUrls : [primaryImage],
     title,

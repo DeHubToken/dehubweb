@@ -87,43 +87,19 @@ export function buildVideoUrl(tokenId: number | string): string {
 }
 
 /**
- * Build multi-image URLs from API paths
- * API returns arrays like:
- * - ["feed-images/abc.jpg"] → cdn/feed-images/abc.jpg
- * - ["nfts/images/2729-1.jpg"] → cdn/images/2729-1.jpg (strips nfts/ prefix)
+ * Build multi-image URLs: cdn/feed-images/{filename}
+ * API returns array like ["feed-images/abc.jpg", "feed-images/def.png"]
+ * We extract filename and build: https://dehubcdn.../feed-images/{filename}
  */
 export function buildFeedImageUrls(apiImageUrls: string[] | undefined | null): string[] | undefined {
   if (!apiImageUrls || apiImageUrls.length === 0) return undefined;
   
   return apiImageUrls.map((imgUrl) => {
-    // Already a full URL - return as-is
     if (imgUrl.startsWith('http')) return imgUrl;
-    
-    // Handle "nfts/images/xxx.jpg" → "images/xxx.jpg"
-    if (imgUrl.startsWith('nfts/')) {
-      const pathWithoutNfts = imgUrl.slice(5); // Remove "nfts/" prefix
-      return `${DEHUB_CDN_BASE}${pathWithoutNfts}`;
-    }
-    
-    // Handle "feed-images/xxx.jpg" → extract filename and build URL
-    if (imgUrl.startsWith('feed-images/')) {
-      const filename = imgUrl.split('/').pop() || '';
-      if (filename) {
-        return `${DEHUB_CDN_BASE}feed-images/${filename}`;
-      }
-    }
-    
-    // Handle "images/xxx.jpg" directly
-    if (imgUrl.startsWith('images/')) {
-      return `${DEHUB_CDN_BASE}${imgUrl}`;
-    }
-    
-    // Fallback: extract filename and put in feed-images (legacy behavior)
     const filename = imgUrl.split('/').pop() || '';
     if (filename) {
       return `${DEHUB_CDN_BASE}feed-images/${filename}`;
     }
-    
     return imgUrl;
   });
 }
