@@ -197,7 +197,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               style={{ backgroundImage: `url(${stream.thumbnail})` }}
             />
             <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
-              <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center">
                 <Radio className="w-8 h-8 text-zinc-500" />
               </div>
               <div>
@@ -226,9 +226,9 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
               <button
                 onClick={togglePlay}
-                className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+                className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
               >
-                <Play className="w-8 h-8 text-white" fill="white" />
+                <Play className="w-8 h-8 text-white fill-white ml-1" />
               </button>
             </div>
             

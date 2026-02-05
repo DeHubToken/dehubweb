@@ -539,7 +539,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
         <Video className="w-8 h-8 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold text-lg mb-2">No Videos Yet</h3>
@@ -561,7 +561,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   // Filtered empty state (when filters return no results but API has data)
   const FilteredEmptyState = () => (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-3">
+      <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
         <Filter className="w-6 h-6 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold mb-1">No matches</h3>
@@ -665,8 +665,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                 
                 {/* Play button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Play className="w-6 h-6 text-white fill-white" />
+                  <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                    <Play className="w-6 h-6 text-white fill-white ml-0.5" />
                   </div>
                 </div>
                 
@@ -720,8 +720,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   
                   {/* Play button overlay */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <Play className="w-5 h-5 text-white fill-white" />
+                    <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                      <Play className="w-5 h-5 text-white fill-white ml-0.5" />
                     </div>
                   </div>
                   

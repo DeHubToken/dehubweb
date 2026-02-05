@@ -873,7 +873,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               }
             }}
           >
-            <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+            <div className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
               {isPlaying ? (
                 <Pause className="h-6 w-6 text-white fill-current" />
               ) : (

@@ -323,13 +323,13 @@ export function VideoTrimmer({
               className="absolute inset-0 flex items-center justify-center group"
             >
               <div className={cn(
-                "w-14 h-14 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all",
+                "w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 transition-all",
                 isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
               )}>
                 {isPlaying ? (
-                  <Pause className="w-7 h-7 text-white" />
+                  <Pause className="w-7 h-7 text-white fill-white" />
                 ) : (
-                  <Play className="w-7 h-7 text-white fill-white" />
+                  <Play className="w-7 h-7 text-white fill-white ml-0.5" />
                 )}
               </div>
             </button>

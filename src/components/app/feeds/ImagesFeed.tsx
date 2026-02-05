@@ -370,7 +370,7 @@ export function ImagesFeed({
   // Empty state component
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
         <ImageIcon className="w-8 h-8 text-zinc-500" />
       </div>
       <h3 className="text-white font-semibold text-lg mb-2">No Images Yet</h3>

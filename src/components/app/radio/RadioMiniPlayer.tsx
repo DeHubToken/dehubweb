@@ -54,7 +54,7 @@ export function RadioMiniPlayer() {
         >
           <button
             onClick={togglePlayPause}
-            className="relative w-14 h-14 rounded-full overflow-hidden bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl group"
+            className="relative w-14 h-14 rounded-xl overflow-hidden bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl group"
           >
             {/* Station Logo */}
             {currentStation.favicon ? (
