@@ -1,83 +1,192 @@
 
-# Fix: Ad Video "Format Not Supported" on Dedicated Post Page
+# Fix: Story View Counters Showing Wrong Numbers
 
 ## Problem Analysis
 
-The ad video (ID 2008) plays correctly in feeds and profiles but shows "Video format not supported" when displayed in the Related Videos section under dedicated post pages.
+After investigating the story view tracking system, I found several issues causing incorrect view counts to be displayed:
 
-### Root Cause
+### Issue 1: Optimistic Update Incorrect Logic
+**Location**: `src/hooks/use-story-views.ts` (lines 87-94)
 
-The codebase has **inconsistent video URL construction** across different components:
+When a view is recorded, the hook optimistically adds `+7` to the local cache:
+```typescript
+onSuccess: () => {
+  const currentCount = viewCountCache.get(storyId) ?? 0;
+  const newCount = currentCount + 7; // Apply 7x multiplier locally
+  viewCountCache.set(storyId, newCount);
+  queryClient.setQueryData(['story-views', storyId], newCount);
+}
+```
 
-| Component | URL Construction | Result |
-|-----------|-----------------|--------|
-| `use-dehub-feed.ts` (feeds/profiles) | Canonical CDN pattern: `{CDN}/videos/{tokenId}.mp4` | Works |
-| `RelatedVideosFeed.tsx` (ad video) | Raw API value: `getMediaUrl(nft.videoUrl)` | Fails |
-| `SinglePostPage.tsx` (post page) | Raw API value: `getMediaUrl(nft.videoUrl)` | Fails |
+**Problem**: This adds 7 regardless of whether the database actually created a new record. If the user already viewed the story (upsert finds existing record), no new row is created, but the UI still shows +7.
 
-The API may return video URLs pointing to files with unsupported codecs (H.265/HEVC) or different file formats. The canonical CDN pattern (`/videos/{tokenId}.mp4`) always points to browser-compatible transcoded files.
+### Issue 2: Anonymous User ID Generation
+**Location**: `supabase/functions/stories-api/index.ts` (line 84)
+
+```typescript
+const viewerWallet = walletAddress || `anon-${crypto.randomUUID()}`;
+```
+
+Each anonymous request generates a NEW UUID, so the upsert will always insert a new row. Combined with potential client-side timing issues, this could lead to duplicate anonymous views.
+
+### Issue 3: Missing useCallback on recordView
+**Location**: `src/hooks/use-story-views.ts` (lines 103-108)
+
+The `recordView` function is not wrapped in `useCallback`, causing a new function reference on every render. This can lead to unnecessary effect executions in `StoryViewerModal`.
+
+### Issue 4: Stale Cache After Page Navigation
+The in-memory `viewCountCache` may show stale values when navigating between stories or returning to a previously viewed story.
 
 ---
 
 ## Solution
 
-Update the `toVideoItem()` functions in both `RelatedVideosFeed.tsx` and `SinglePostPage.tsx` to use the same canonical CDN URL pattern that works reliably in the main feeds.
+### 1. Fix Optimistic Update Logic
 
----
+Instead of blindly adding +7, invalidate the query to refetch the actual count from the database:
 
-## Implementation Details
-
-### 1. RelatedVideosFeed.tsx
-
-**Current code (line 40):**
 ```typescript
-videoUrl: getMediaUrl(nft.videoUrl),
+onSuccess: () => {
+  // Invalidate to refetch actual count instead of guessing
+  queryClient.invalidateQueries({ queryKey: ['story-views', storyId] });
+}
 ```
 
-**Fix:**
+### 2. Add useCallback to recordView
+
+Wrap the function in useCallback to prevent unnecessary re-renders:
+
 ```typescript
-videoUrl: nft.tokenId 
-  ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
-  : undefined,
+const recordView = useCallback(() => {
+  if (storyId && !recordedViews.current.has(storyId)) {
+    recordedViews.current.add(storyId);
+    recordViewMutation.mutate();
+  }
+}, [storyId, recordViewMutation]);
 ```
 
-### 2. SinglePostPage.tsx
+### 3. Improve Anonymous ID Consistency (Optional)
 
-**Current code (line 68):**
-```typescript
-videoUrl: getMediaUrl(nft.videoUrl),
-```
-
-**Fix:**
-```typescript
-videoUrl: nft.tokenId 
-  ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
-  : undefined,
-```
+Consider using a session-based anonymous ID stored in localStorage/sessionStorage rather than generating a new UUID for each request. This would prevent duplicate views from the same anonymous browser session.
 
 ---
 
 ## Files to Modify
 
-| File | Change |
-|------|--------|
-| `src/components/app/feeds/RelatedVideosFeed.tsx` | Update `toVideoItem()` to use canonical CDN URL |
-| `src/pages/app/SinglePostPage.tsx` | Update `toVideoItem()` to use canonical CDN URL |
+| File | Changes |
+|------|---------|
+| `src/hooks/use-story-views.ts` | Fix optimistic update, add useCallback wrapper |
 
 ---
 
-## Technical Notes
+## Technical Details
 
-- The `DEHUB_CDN_BASE` constant is already available and can be imported
-- This matches the proven pattern used in `use-dehub-feed.ts` line 92
-- All videos on the CDN are transcoded to browser-compatible H.264 MP4 format
-- This ensures cross-browser compatibility on desktop and mobile
+### Fixed Hook Code
+
+```typescript
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRef, useEffect, useCallback } from 'react';
+
+const STORIES_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories-api`;
+
+const viewCountCache = new Map<string, number>();
+
+export function useStoryViews(storyId: string | undefined) {
+  const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
+  const recordedViews = useRef<Set<string>>(new Set());
+
+  const { data: fetchedCount, isLoading } = useQuery({
+    queryKey: ['story-views', storyId],
+    queryFn: async (): Promise<number> => {
+      if (!storyId) return 0;
+
+      const response = await fetch(`${STORIES_API_URL}/views?story_id=${storyId}`);
+      if (!response.ok) {
+        console.error('[story-views] Error fetching view count');
+        return viewCountCache.get(storyId) ?? 0;
+      }
+
+      const data = await response.json();
+      const count = data.result?.count ?? 0;
+      
+      viewCountCache.set(storyId, count);
+      return count;
+    },
+    enabled: !!storyId,
+    staleTime: 30000, // Reduce stale time to 30 seconds for fresher data
+    gcTime: 300000,
+  });
+
+  const viewCount = storyId 
+    ? (fetchedCount ?? viewCountCache.get(storyId) ?? null)
+    : 0;
+
+  useEffect(() => {
+    if (storyId && fetchedCount !== undefined) {
+      viewCountCache.set(storyId, fetchedCount);
+    }
+  }, [storyId, fetchedCount]);
+
+  const recordViewMutation = useMutation({
+    mutationFn: async () => {
+      if (!storyId) throw new Error('Missing story ID');
+
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (walletAddress) {
+        headers['x-wallet-address'] = walletAddress.toLowerCase();
+      }
+
+      const response = await fetch(`${STORIES_API_URL}/views`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ story_id: storyId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to record view');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      // Refetch actual count from server instead of optimistic guess
+      if (storyId) {
+        queryClient.invalidateQueries({ queryKey: ['story-views', storyId] });
+      }
+    },
+    onError: (err) => {
+      console.error('[story-views] Error recording view:', err);
+    },
+  });
+
+  // Wrap in useCallback to prevent unnecessary effect re-runs
+  const recordView = useCallback(() => {
+    if (storyId && !recordedViews.current.has(storyId)) {
+      recordedViews.current.add(storyId);
+      recordViewMutation.mutate();
+    }
+  }, [storyId, recordViewMutation]);
+
+  return {
+    viewCount: viewCount ?? 0,
+    isLoading: isLoading && viewCount === null,
+    recordView,
+  };
+}
+```
 
 ---
 
 ## Testing Checklist
 
-- Verify the ad video under post pages now plays correctly
-- Verify videos still play correctly in the main feed
-- Verify videos still play correctly on profile pages
-- Test on both desktop and mobile browsers
+- View a story and verify the view count increments correctly
+- Navigate to another story and back - verify counts remain accurate
+- Test as both logged-in and anonymous user
+- Verify the count matches the database value (actual views × 7)
+
