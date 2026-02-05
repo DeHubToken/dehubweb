@@ -103,6 +103,18 @@ function MobileCreatorInfo({
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
 
+  // Format numbers with abbreviations (1K, 1M, etc.) - matches thumbnail format
+  const formatCompact = (num: number): string => {
+    if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
+    if (num >= 1000) return `${Math.floor(num / 1000)}K`;
+    return String(num);
+  };
+
+  // Calculate total bounty pool
+  const totalBountyPool = bountyAmount && (bountyViews || bountyComments)
+    ? bountyAmount * ((bountyViews || 0) + (bountyComments || 0))
+    : 0;
+
   const handleProfileClick = () => {
     if (creatorUsername) {
       const cleanUsername = creatorUsername.replace('@', '');
@@ -164,7 +176,7 @@ function MobileCreatorInfo({
                 >
                   <DollarSign className="w-3 h-3 text-white" />
                   <span className="text-white text-xs font-medium">
-                    {typeof ppvPrice === 'number' ? ppvPrice.toLocaleString() : ppvPrice} {ppvCurrency || 'USDC'}
+                    {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
                   </span>
                 </button>
               )}
@@ -181,7 +193,7 @@ function MobileCreatorInfo({
                   <Gift className="w-3 h-3 text-white" />
                   <span className="text-white text-xs font-medium">
                     {bountyAmount && bountyAmount > 0 
-                      ? `${bountyAmount.toLocaleString()} ${bountyCurrency || 'DHB'}` 
+                      ? `${formatCompact(bountyAmount)} ${bountyCurrency || 'DHB'}` 
                       : 'Bounty'}
                   </span>
                 </button>
@@ -199,7 +211,7 @@ function MobileCreatorInfo({
                   <Lock className="w-3 h-3 text-white" />
                   <span className="text-white text-xs font-medium">
                     {lockedPrice && lockedPrice > 0 
-                      ? `${lockedPrice.toLocaleString()} ${lockedCurrency || 'DHB'}` 
+                      ? `${formatCompact(lockedPrice)} ${lockedCurrency || 'DHB'}` 
                       : ''}
                   </span>
                 </button>
@@ -267,7 +279,18 @@ function MobileCreatorInfo({
                 <span className="text-zinc-300 text-sm">Reward per User</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                  <span className="text-white text-lg font-bold">{bountyAmount} {bountyCurrency || 'DHB'}</span>
+                  <span className="text-white text-lg font-bold">{formatCompact(bountyAmount)} {bountyCurrency || 'DHB'}</span>
+                </div>
+              </div>
+            )}
+            
+            {/* Total Bounty Pool */}
+            {totalBountyPool > 0 && (
+              <div className="flex items-center justify-between px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-zinc-400 text-sm">Total Bounty Pool</span>
+                <div className="flex items-center gap-2">
+                  <img src={dehubCoinSmall} alt="DHB" className="w-4 h-4" />
+                  <span className="text-zinc-300 text-sm font-medium">{formatCompact(totalBountyPool)} {bountyCurrency || 'DHB'}</span>
                 </div>
               </div>
             )}
@@ -293,7 +316,7 @@ function MobileCreatorInfo({
             <div className="flex items-center justify-between px-4 py-4 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-xl border border-emerald-500/20">
               <span className="text-zinc-300 text-sm">Unlock Price</span>
               <span className="text-white text-lg font-bold">
-                {typeof ppvPrice === 'number' ? ppvPrice.toLocaleString() : ppvPrice} {ppvCurrency || 'USDC'}
+                {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
               </span>
             </div>
             <p className="text-center text-zinc-400 text-sm">
@@ -318,7 +341,7 @@ function MobileCreatorInfo({
                 <span className="text-zinc-300 text-sm">Unlock Price</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                  <span className="text-white text-lg font-bold">{lockedPrice.toLocaleString()} {lockedCurrency || 'DHB'}</span>
+                  <span className="text-white text-lg font-bold">{formatCompact(lockedPrice)} {lockedCurrency || 'DHB'}</span>
                 </div>
               </div>
             )}
