@@ -56,7 +56,7 @@ export function LinkPreviewCard({ preview, onRemove }: LinkPreviewCardProps) {
           e.stopPropagation();
           onRemove();
         }}
-        className="absolute top-2 right-2 p-1 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+        className="absolute top-2 right-2 p-1.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60"
       >
         <X className="w-3.5 h-3.5 text-white" />
       </button>
