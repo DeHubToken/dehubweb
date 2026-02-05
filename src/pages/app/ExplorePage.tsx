@@ -408,6 +408,19 @@ export default function ExplorePage() {
     minQueryLength: isShortSearch ? 1 : 3,
   });
 
+  // Additional account search specifically for "All" tab
+  // The main search above only returns content when type is undefined (All tab)
+  // This parallel search fetches accounts to merge into results
+  const {
+    data: allTabAccountData,
+  } = useDeHubSearch({
+    query: effectiveQuery,
+    type: 'accounts',
+    address: walletAddress || undefined,
+    enabled: isSearching && activeTab === 'all' && !isShortSearch,
+    minQueryLength: 3,
+  });
+
   // Exact username lookup - always try exact match to prioritize @username
   const {
     data: exactUser,
@@ -433,21 +446,29 @@ export default function ExplorePage() {
 
   // Process search results from the new universal search API
   const searchResults = useMemo(() => {
-    // Get accounts directly from universal search
+    // Get accounts directly from universal search (People tab or when type=accounts)
     const accounts = flattenSearchAccounts(searchData) || [];
+    
+    // Get accounts from the dedicated All-tab account search
+    const allTabAccounts = flattenSearchAccounts(allTabAccountData) || [];
+    
     // For short search, don't include video results
     const videos = isShortSearch ? [] : (flattenSearchVideos(searchData) || []);
     
-    // Map accounts to our SearchCreator format
+    // Map both account sources to SearchCreator format
     const accountCreators = accounts.map(mapAccountToCreator);
+    const allTabAccountCreators = allTabAccounts.map(mapAccountToCreator);
     
     // Also extract creators from video results for backwards compatibility (not for short search)
     const videoCreators = isShortSearch ? [] : extractUniqueCreators(videos) || [];
     
-    // Combine and dedupe users: accounts first, then video creators
+    // Combine and dedupe users: accounts first, then all-tab accounts, then video creators
     const userMap = new Map<string, SearchCreator>();
     accountCreators.forEach(u => {
       if (u && u.id) userMap.set(u.id, u);
+    });
+    allTabAccountCreators.forEach(u => {
+      if (u && u.id && !userMap.has(u.id)) userMap.set(u.id, u);
     });
     videoCreators.forEach(u => {
       if (u && u.id && !userMap.has(u.id)) userMap.set(u.id, u);
@@ -495,7 +516,7 @@ export default function ExplorePage() {
       posts: videos.filter(p => p && (p.id || p.tokenId)),
       total: searchData?.pages?.[0]?.total || 0,
     };
-  }, [searchData, exactUser, brandUser, isShortSearch, effectiveQuery]);
+  }, [searchData, allTabAccountData, exactUser, brandUser, isShortSearch, effectiveQuery]);
 
   const activeFilterCount = [
     filters.w2e,
