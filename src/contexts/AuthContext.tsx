@@ -263,27 +263,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * This is a simplified version that doesn't depend on outer scope callbacks
    */
   const completeDeHubAuthAfterRedirect = async (provider: IProvider) => {
-    // Get address using eth_accounts
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available');
+    const web3authInstance = await getOrInitWeb3Auth();
+    
+    // Get the primary EOA provider
+    const eoaProvider = web3authInstance.provider;
+    if (!eoaProvider) {
+      throw new Error('EOA provider not available');
     }
+
+    // Get EOA address
+    const eoaAccounts = await eoaProvider.request({ method: 'eth_accounts' }) as string[];
+    if (!eoaAccounts || eoaAccounts.length === 0) {
+      throw new Error('No EOA accounts available');
+    }
+    const eoaAddress = eoaAccounts[0].toLowerCase();
     
-    const address = accounts[0];
-    const normalizedAddress = address.toLowerCase();
+    // Use EOA address for identity
+    const authAddress = eoaAddress;
     
-    console.log('[Auth] Redirect auth - Wallet address:', normalizedAddress);
+    console.log('[Auth] Redirect auth - EOA Address:', authAddress);
 
     // Create sign message for DeHub auth
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    // For redirect flow, this is always an embedded wallet (email/SMS)
-    console.log('[Auth] Using smart account signing path (redirect flow)');
-    const signature = await provider.request({
+    // Sign with EOA provider to get standard signature
+    console.log('[Auth] Signing with EOA provider (redirect)...');
+    const signature = await eoaProvider.request({
       method: 'personal_sign',
-      params: [message, normalizedAddress],
+      params: [message, authAddress],
     }) as string;
     
     console.log('[Auth] Signature obtained, length:', signature?.length);
@@ -291,26 +300,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const BASE_CHAIN_ID = 8453;
 
     const authResponse = await authenticateWallet(
-      normalizedAddress,
+      authAddress,
       signature,
       timestamp,
       BASE_CHAIN_ID
     );
 
-    const normalizedUser = normalizeUser(authResponse.user, normalizedAddress);
+    const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
-    localStorage.setItem('dehub_wallet', normalizedAddress);
+    localStorage.setItem('dehub_wallet', authAddress);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
-    setWalletAddress(normalizedAddress);
+    setWalletAddress(authAddress);
     setUser(normalizedUser);
 
     if (!normalizedUser.username) {
       setRequiresUsername(true);
     }
     
-    // Invalidate all feed caches to fetch fresh data with user's vote state
-    console.log('[Auth] Invalidating feed caches for fresh personalized data');
+    // Invalidate all feed caches
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
@@ -324,23 +332,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Detects EOA vs smart account and uses appropriate signing method
    */
   const completeDeHubAuth = async (provider: IProvider) => {
-    // Get address using eth_accounts
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available');
-    }
-    
-    const address = accounts[0];
-    const normalizedAddress = address.toLowerCase();
-    
-    // Detect if this is social login (embedded wallet) or external wallet (EOA)
-    let isEmbeddedWallet = false;
     const web3authInstance = await getOrInitWeb3Auth();
     
+    // Get the primary EOA provider from Web3Auth
+    const eoaProvider = web3authInstance.provider;
+    if (!eoaProvider) {
+      throw new Error('EOA provider not available');
+    }
+
+    // Get EOA address
+    const eoaAccounts = await eoaProvider.request({ method: 'eth_accounts' }) as string[];
+    if (!eoaAccounts || eoaAccounts.length === 0) {
+      throw new Error('No EOA accounts available');
+    }
+    const eoaAddress = eoaAccounts[0].toLowerCase();
+
+    // Get the address from the passed provider (could be EOA or Smart Account)
+    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    const currentAddress = accounts?.[0]?.toLowerCase() || eoaAddress;
+
+    // Use EOA address for identity to ensure backend compatibility
+    // The backend api.dehub.io expects standard ECDSA signatures
+    const authAddress = eoaAddress;
+    
+    console.log('[Auth] EOA Address:', eoaAddress);
+    console.log('[Auth] Current Provider Address:', currentAddress);
+    
+    // Detect if this is social login (embedded wallet)
+    let isEmbeddedWallet = false;
     try {
       const userInfo = await web3authInstance.getUserInfo();
-      console.log('[Auth] Full userInfo:', JSON.stringify(userInfo, null, 2));
-      
       const info = userInfo as Record<string, unknown>;
       isEmbeddedWallet = !!(info && (
         info.email || 
@@ -350,61 +371,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         info.idToken
       ));
     } catch (e) {
-      console.log('[Auth] getUserInfo threw (likely external wallet):', e);
       isEmbeddedWallet = false;
     }
     
-    console.log('[Auth] Wallet address:', normalizedAddress);
     console.log('[Auth] Is embedded wallet (social login):', isEmbeddedWallet);
+    console.log('[Auth] Using address for auth:', authAddress);
 
     // Create sign message for DeHub auth
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    let signature: string;
-    
-    if (!isEmbeddedWallet) {
-      // EOA path: use personal_sign with injected provider
-      console.log('[Auth] Using EOA signing path');
-      try {
-        signature = await provider.request({
-          method: 'personal_sign',
-          params: [message, address],
-        }) as string;
-      } catch {
-        // Fallback: some providers expect [address, message]
-        signature = await provider.request({
-          method: 'personal_sign',
-          params: [address, message],
-        }) as string;
-      }
-    } else {
-      // Smart account path (social login): use Web3Auth provider directly
-      console.log('[Auth] Using smart account signing path');
-      signature = await provider.request({
-        method: 'personal_sign',
-        params: [message, normalizedAddress],
-      }) as string;
-    }
+    // ALWAYS use the EOA provider for authentication signatures
+    // This ensures we get a standard 65-byte ECDSA signature
+    console.log('[Auth] Signing with EOA provider...');
+    const signature = await eoaProvider.request({
+      method: 'personal_sign',
+      params: [message, authAddress],
+    }) as string;
     
     console.log('[Auth] Signature obtained, length:', signature?.length);
 
     const BASE_CHAIN_ID = 8453;
 
     const authResponse = await authenticateWallet(
-      normalizedAddress,
+      authAddress,
       signature,
       timestamp,
       BASE_CHAIN_ID
     );
 
-    const normalizedUser = normalizeUser(authResponse.user, normalizedAddress);
+    const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
-    localStorage.setItem('dehub_wallet', normalizedAddress);
+    localStorage.setItem('dehub_wallet', authAddress);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
-    setWalletAddress(normalizedAddress);
+    setWalletAddress(authAddress);
     setUser(normalizedUser);
 
     if (!normalizedUser.username) {
@@ -412,7 +414,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     // Invalidate all feed caches to fetch fresh data with user's vote state
-    console.log('[Auth] Invalidating feed caches for fresh personalized data');
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
@@ -461,6 +462,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
     } else if (errorMessage.includes('bundler') || errorMessage.includes('paymaster')) {
       userFriendlyMessage = 'Account setup failed. Please try again.';
+    } else if (errorMessage.includes('Invalid auth connection') || errorMessage.includes('invalid auth connection')) {
+      userFriendlyMessage = 'This login method is not configured. Please try a different option.';
+    } else if (errorMessage.includes('smart account') || errorMessage.includes('Smart Account') || errorMessage.includes('aa_')) {
+      userFriendlyMessage = 'Smart account setup failed. Please try again or use an external wallet.';
     }
     
     toast.error(userFriendlyMessage);
@@ -510,6 +515,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       handleConnectionError(error);
+      throw error;
     } finally {
       setIsConnecting(false);
     }
@@ -552,6 +558,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       handleConnectionError(error);
+      throw error;
     } finally {
       setIsConnecting(false);
     }
@@ -594,6 +601,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       handleConnectionError(error);
+      throw error;
     } finally {
       setIsConnecting(false);
     }
@@ -634,6 +642,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       handleConnectionError(error);
+      throw error;
     } finally {
       setIsConnecting(false);
     }

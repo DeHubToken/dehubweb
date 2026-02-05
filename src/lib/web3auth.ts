@@ -8,9 +8,9 @@
  * without showing the default Web3Auth modal.
  */
 
-import { 
-  Web3Auth, 
-  CHAIN_NAMESPACES, 
+import {
+  Web3Auth,
+  CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
   WALLET_CONNECTORS,
   AUTH_CONNECTION,
@@ -60,7 +60,7 @@ let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = n
 export function resetWeb3AuthState(): void {
   console.log("[Web3Auth] Resetting module state...");
   if (web3authInstance?.connected) {
-    web3authInstance.logout().catch(() => {});
+    web3authInstance.logout().catch(() => { });
   }
   web3authInstance = null;
   isInitializing = false;
@@ -149,7 +149,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] Creating Web3Auth instance with custom UI config...");
       console.log("[Web3Auth] Is mobile device:", isMobileDevice());
       console.log("[Web3Auth] UX Mode:", isMobileDevice() ? "REDIRECT" : "POPUP");
-      
+
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
@@ -177,7 +177,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           authConnector({
             connectorSettings: {
               uxMode: isMobileDevice() ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-              redirectUrl: `${window.location.origin}/app`,
+              redirectUrl: window.location.origin,
             }
           })
         ],
@@ -185,29 +185,31 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         walletServicesConfig: {
           confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
           modalZIndex: 99999,
+          loginMode: 'modal',
           whiteLabel: {
             showWidgetButton: false,
           },
-        } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
+        } as any,
         // Custom UI configuration - we use our own modal
         uiConfig: {
           appName: "DeHub",
           mode: "dark",
           defaultLanguage: "en",
         },
-      });
+        enableLogging: true,
+      } as any);
       console.log("[Web3Auth] ✓ Instance created with Account Abstraction");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
-      
+
       const initWithTimeout = Promise.race([
         web3authInstance.init(),
-        new Promise<never>((_, reject) => 
+        new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error("Web3Auth init timeout")), 15000)
         )
       ]);
-      
+
       await initWithTimeout;
       console.log("[Web3Auth] ✓ init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
@@ -234,21 +236,37 @@ export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
   loginHint?: string
 ): Promise<ReturnType<Web3Auth['connectTo']>> {
-  const web3auth = await getOrInitWeb3Auth();
-  
-  console.log(`[Web3Auth] Connecting to ${authConnection}...`);
-  
+  console.log(`[Web3Auth] connectToSocialProvider: phase=INIT authConnection=${authConnection} loginHint=${loginHint ? 'set' : 'none'}`);
+
+  let web3auth: Web3Auth;
+  try {
+    web3auth = await getOrInitWeb3Auth();
+    console.log(`[Web3Auth] connectToSocialProvider: phase=READY status=${web3auth.status}`);
+  } catch (err) {
+    console.error(`[Web3Auth] connectToSocialProvider: phase=INIT_FAILED`, err);
+    throw err;
+  }
+
   const params: Record<string, unknown> = {
     authConnection,
   };
-  
+
   // Add login hint for email/sms passwordless
   if (loginHint) {
     params.loginHint = loginHint;
   }
-  
-  const provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
-  
+
+  let provider: ReturnType<Web3Auth['connectTo']> extends Promise<infer R> ? R : never;
+  try {
+    console.log(`[Web3Auth] connectToSocialProvider: phase=OAUTH calling connectTo(AUTH, ${JSON.stringify(params)})`);
+    provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+    console.log(`[Web3Auth] connectToSocialProvider: phase=OAUTH_OK provider=${provider ? 'received' : 'null'}`);
+  } catch (err) {
+    console.error(`[Web3Auth] connectToSocialProvider: phase=OAUTH_FAILED`, err);
+    throw err;
+  }
+
+  console.log(`[Web3Auth] connectToSocialProvider: phase=AA_SETUP status=${web3auth.status} connected=${web3auth.connected}`);
   console.log(`[Web3Auth] ✓ Connected to ${authConnection}`);
   return provider;
 }
@@ -260,11 +278,11 @@ export async function connectToExternalWallet(
   walletConnector: typeof WALLET_CONNECTORS[keyof typeof WALLET_CONNECTORS]
 ): Promise<ReturnType<Web3Auth['connectTo']>> {
   const web3auth = await getOrInitWeb3Auth();
-  
+
   console.log(`[Web3Auth] Connecting to external wallet: ${walletConnector}...`);
-  
+
   const provider = await web3auth.connectTo(walletConnector);
-  
+
   console.log(`[Web3Auth] ✓ Connected to ${walletConnector}`);
   return provider;
 }
@@ -274,10 +292,10 @@ export async function connectToExternalWallet(
  */
 export async function connectWithModal(): Promise<ReturnType<Web3Auth['connect']>> {
   const web3auth = await getOrInitWeb3Auth();
-  
+
   console.log("[Web3Auth] Opening default modal...");
   const provider = await web3auth.connect();
-  
+
   console.log("[Web3Auth] ✓ Connected via modal");
   return provider;
 }
@@ -328,7 +346,7 @@ export async function disconnectWeb3Auth(): Promise<void> {
  */
 export async function forceCleanupWeb3Auth(): Promise<void> {
   console.log("[Web3Auth] Force cleanup after error...");
-  
+
   // Try to logout regardless of connection state - clears internal SDK state
   if (web3authInstance) {
     try {
@@ -339,25 +357,25 @@ export async function forceCleanupWeb3Auth(): Promise<void> {
       console.log("[Web3Auth] Logout during cleanup failed (expected):", e);
     }
   }
-  
+
   // Clean up any leftover Web3Auth iframes/modals from the DOM
   const iframes = document.querySelectorAll('iframe[title*="web3auth"], iframe[id*="web3auth"], iframe[src*="web3auth"]');
   iframes.forEach(el => {
     console.log("[Web3Auth] Removing leftover iframe:", el);
     el.remove();
   });
-  
+
   const modals = document.querySelectorAll('[class*="w3a-modal"], [class*="web3auth"], [id*="w3a-"]');
   modals.forEach(el => {
     console.log("[Web3Auth] Removing leftover modal element:", el);
     el.remove();
   });
-  
+
   // Reset all module variables to allow fresh initialization
   web3authInstance = null;
   isInitializing = false;
   initPromise = null;
-  
+
   // Pre-initialize a new instance so it's ready for the next connection attempt
   console.log("[Web3Auth] Pre-initializing new instance after cleanup...");
   try {
@@ -366,7 +384,7 @@ export async function forceCleanupWeb3Auth(): Promise<void> {
   } catch (e) {
     console.warn("[Web3Auth] Pre-init after cleanup failed (will retry on connect):", e);
   }
-  
+
   console.log("[Web3Auth] ✓ Force cleanup complete - ready for new connection");
 }
 

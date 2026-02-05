@@ -27,6 +27,13 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    dedupe: [
+      "@web3auth/no-modal",
+      "@toruslabs/base-controllers",
+      "@toruslabs/ethereum-controllers",
+      "permissionless",
+      "viem",
+    ],
   },
   define: {
     global: 'globalThis',
