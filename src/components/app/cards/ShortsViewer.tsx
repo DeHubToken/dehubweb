@@ -665,7 +665,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {currentShort.description && (
                   <button
                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                    className="text-left w-full"
+                    className={cn(
+                      "text-left w-full transition-all duration-200 rounded-xl",
+                      isDescriptionExpanded && "bg-gradient-to-t from-black/80 via-black/60 to-black/40 p-3 -m-3"
+                    )}
                   >
                     <div 
                       className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
