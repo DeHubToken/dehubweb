@@ -165,23 +165,20 @@ function MobileCreatorInfo({
           {/* Content Type Badges - PPV/Bounty/Locked */}
           {hasBadges && (
             <div className="flex items-center gap-1">
-              {/* PPV Badge */}
+              {/* PPV Badge - icon only on mobile */}
               {isPPV && ppvPrice && (
                 <button 
-                  className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                  className="flex items-center justify-center bg-black/40 backdrop-blur-[24px] saturate-[180%] w-7 h-7 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowPPVDrawer(true);
                   }}
                 >
-                  <DollarSign className="w-3 h-3 text-white" />
-                  <span className="text-white text-xs font-medium">
-                    {formatCompact(Number(ppvPrice))} {ppvCurrency || 'USDC'}
-                  </span>
+                  <DollarSign className="w-4 h-4 text-white" />
                 </button>
               )}
               
-              {/* Bounty Badge */}
+              {/* Bounty Badge - keep text for bounty */}
               {isW2E && (
                 <button 
                   className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
@@ -199,21 +196,16 @@ function MobileCreatorInfo({
                 </button>
               )}
               
-              {/* Locked Badge */}
+              {/* Locked Badge - icon only on mobile */}
               {isLocked && (
                 <button 
-                  className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                  className="flex items-center justify-center bg-black/40 backdrop-blur-[24px] saturate-[180%] w-7 h-7 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowLockedDrawer(true);
                   }}
                 >
-                  <Lock className="w-3 h-3 text-white" />
-                  <span className="text-white text-xs font-medium">
-                    {lockedPrice && lockedPrice > 0 
-                      ? `${formatCompact(lockedPrice)} ${lockedCurrency || 'DHB'}` 
-                      : ''}
-                  </span>
+                  <Lock className="w-4 h-4 text-white" />
                 </button>
               )}
             </div>
