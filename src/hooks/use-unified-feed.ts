@@ -12,6 +12,7 @@ import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { supabase } from '@/integrations/supabase/client';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -121,6 +122,10 @@ function isBlockedCreator(item: UnifiedFeedItem): boolean {
   return BLOCKED_CREATORS.some(blocked => 
     displayName.includes(blocked) || username.includes(blocked)
   );
+}
+
+function isBlockedPost(item: UnifiedFeedItem): boolean {
+  return BLOCKED_POST_IDS.includes(item.tokenId);
 }
 
 // Helper functions (formatDuration, formatViews, formatTimeAgo) are now imported from @/lib/feed-utils
@@ -426,7 +431,7 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       });
       
       // Filter out blocked creators
-      const filteredItems = (response.result || []).filter(item => !isBlockedCreator(item));
+      const filteredItems = (response.result || []).filter(item => !isBlockedCreator(item) && !isBlockedPost(item));
       
       return {
         items: filteredItems,
