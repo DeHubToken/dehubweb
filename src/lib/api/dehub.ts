@@ -482,8 +482,13 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
  * accounts/videos/livestreams. We parse the array and categorize items.
  */
 export async function universalSearch(params: UniversalSearchParams): Promise<UniversalSearchResponse> {
-  // The API returns { status: true, result: DeHubNFT[] } - a flat array
-  const response = await apiCall<{ result: DeHubNFT[] } | DeHubNFT[]>("/api/search", {
+  // The API returns different data based on type param:
+  // - type=accounts: returns user objects with _id, address, username, displayName, avatarImageUrl
+  // - type=videos or no type: returns NFT objects with tokenId, name, imageUrl, minter
+  const response = await apiCall<{ 
+    result: Array<DeHubNFT | DeHubUser>; 
+    pagination?: { hasMore: boolean; totalCount: number } 
+  }>("/api/search", {
     params: {
       q: params.q,
       page: params.page,
@@ -494,22 +499,49 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
     },
   });
   
-  // Extract the flat array from response
-  let items: DeHubNFT[] = [];
-  if (Array.isArray(response)) {
+  // Extract the array from response
+  let items: Array<any> = [];
+  if (response && typeof response === 'object' && 'result' in response) {
+    items = Array.isArray(response.result) ? response.result : [];
+  } else if (Array.isArray(response)) {
     items = response;
-  } else if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
-    items = response.result;
   }
   
-  // Return all items as videos - the ExplorePage will categorize them further
-  // The API doesn't return accounts directly in search, those come from account_info lookups
+  // Determine if results are accounts based on type param
+  const isAccountSearch = params.type === 'accounts';
+  
+  if (isAccountSearch) {
+    // Map raw user objects to SearchAccount format
+    const accounts: SearchAccount[] = items
+      .map(item => ({
+        id: item._id || item.id || item.address || '',
+        address: item.address || '',
+        username: item.username || '',
+        displayName: item.displayName,
+        bio: item.aboutMe || item.bio,
+        avatarUrl: item.avatarImageUrl || item.avatarUrl,
+        avatarImageUrl: item.avatarImageUrl,
+        verified: item.isVerified || false,
+        followerCount: typeof item.followers === 'number' ? item.followers : undefined,
+      }))
+      .filter(a => a.id && a.address);
+    
+    return {
+      accounts,
+      videos: [],
+      livestreams: [],
+      has_more: (response as any).pagination?.hasMore ?? items.length >= (params.unit || 15),
+      total: (response as any).pagination?.totalCount ?? items.length,
+    };
+  }
+  
+  // For video/NFT searches, keep existing behavior
   return {
     accounts: [],
-    videos: items,
+    videos: items as DeHubNFT[],
     livestreams: [],
-    has_more: items.length >= (params.unit || 15),
-    total: items.length,
+    has_more: (response as any).pagination?.hasMore ?? items.length >= (params.unit || 15),
+    total: (response as any).pagination?.totalCount ?? items.length,
   };
 }
 
