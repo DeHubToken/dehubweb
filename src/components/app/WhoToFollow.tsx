@@ -82,11 +82,14 @@ export function WhoToFollow() {
 
   // Get following list as a Set for O(1) lookups
   const followingSet = useMemo(() => {
-    const followings = currentUserData?.followings;
-    if (!followings || !Array.isArray(followings)) return new Set<string>();
+    // API returns followingsList as the array, followings is just a count
+    const followings = currentUserData?.followingsList;
+    if (!followings || !Array.isArray(followings)) {
+      return new Set<string>();
+    }
     console.log('[WhoToFollow] Following set size:', followings.length);
     return new Set(followings.map(addr => addr.toLowerCase()));
-  }, [currentUserData?.followings]);
+  }, [currentUserData?.followingsList]);
 
   // Infinite query for user suggestions
   const {
