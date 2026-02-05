@@ -7,7 +7,7 @@
  * @module components/app/feeds/VideosFeed
  */
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useMemo, useEffect, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye, Loader2 } from 'lucide-react';
@@ -23,6 +23,7 @@ import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@
 import { buildAvatarUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
+import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 // Category images
@@ -366,24 +367,15 @@ function ContentTypeFilterSection({
 export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
   const navigate = useNavigate();
   
-  // Sort is now client-side - default to "Latest" for instant loading
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
-  // Duration and upload date are client-side filters
-  const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // null = All
-  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
-    ppv: false,
-    w2e: false,
-    locked: false,
-  });
+  // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', SORT_OPTIONS[0]);
+  // Duration and upload date are client-side filters - persisted
+  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
+  const [contentFilters, toggleContentFilter] = usePersistedContentFilters('videos');
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
-  
-
-  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
-    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
-  };
   
   const { walletAddress } = useAuth();
 
@@ -530,11 +522,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  // Reset client-side filters
+  // Reset client-side filters to defaults
   const clearFilters = () => {
     setSelectedDuration(DURATION_FILTERS[0]);
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-    setContentFilters({ ppv: false, w2e: false, locked: false });
   };
 
   const EmptyState = () => (

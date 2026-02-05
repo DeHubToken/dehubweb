@@ -8,7 +8,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useState, useCallback } from 'react';
+import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -54,6 +54,7 @@ import {
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers, useDeHubVideos } from '@/hooks/use-dehub-feed';
+import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getAccountInfo } from '@/lib/api/dehub';
 import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
@@ -264,19 +265,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
   
-  // Default to Trending (first option)
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]); // Trending
-  const [selectedDate, setSelectedDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
-  const [selectedPostType, setSelectedPostType] = useState<PostTypeFilterValue>('all');
-  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
-    ppv: false,
-    w2e: false,
-    locked: false,
-  });
-
-  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
-    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
-  };
+  // Default to Trending (first option) - persisted to sessionStorage
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
+  const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [contentFilters, toggleContentFilter] = usePersistedContentFilters('home');
 
   const { walletAddress, isAuthenticated } = useAuth();
   const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();

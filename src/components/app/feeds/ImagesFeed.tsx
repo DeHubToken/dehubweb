@@ -7,7 +7,7 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
+import { useRef, useMemo, useEffect, useCallback } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2 } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ImageCard } from '@/components/app/cards';
 import { useAuth } from '@/contexts/AuthContext';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
+import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import type { ImagePost } from '@/types/feed.types';
@@ -283,18 +284,11 @@ export function ImagesFeed({
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
-  // Filter states - default to "Latest"
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
-  const [contentFilters, setContentFilters] = useState<ContentTypeFilters>({
-    ppv: false,
-    w2e: false,
-    locked: false,
-  });
+  // Filter states - default to "Latest" - persisted to sessionStorage
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', SORT_OPTIONS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
+  const [contentFilters, toggleContentFilter] = usePersistedContentFilters('images');
   
-  const toggleContentFilter = (filter: keyof ContentTypeFilters) => {
-    setContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
-  };
   
   // Get wallet address for authenticated requests
   const { walletAddress } = useAuth();

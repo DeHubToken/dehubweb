@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -219,12 +220,12 @@ interface ShortsFeedProps {
 }
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
-  // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch
-  const [selectedSort, setSelectedSort] = useState<SortOption>(SORT_OPTIONS[1]);
-  // Duration and upload date are client-side filters
-  const [selectedDuration, setSelectedDuration] = useState(DURATION_FILTERS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = useState<DateFilterOption>(DATE_FILTER_OPTIONS[0]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch - persisted
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('shorts', 'sort', SORT_OPTIONS[1]);
+  // Duration and upload date are client-side filters - persisted
+  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('shorts', 'duration', DURATION_FILTERS[0]);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('shorts', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('shorts', 'category', null);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
