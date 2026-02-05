@@ -93,6 +93,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isPostingComment, setIsPostingComment] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [overlaysHidden, setOverlaysHidden] = useState(false);
+  
+  // Gesture tracking for overlay hide/show
+  const overlaySwipeStartY = useRef<number | null>(null);
+  const overlaySwipeStartX = useRef<number | null>(null);
   
   // Drag state for visual feedback
   const [dragOffset, setDragOffset] = useState(0);
@@ -440,6 +445,74 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     e.stopPropagation();
   };
 
+  // Overlay hide/show gesture handlers
+  const handleOverlayGestureTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
+    
+    const touch = e.touches[0];
+    const screenHeight = window.innerHeight;
+    const screenWidth = window.innerWidth;
+    
+    // Track if touch started in bottom 1/5 for swipe detection
+    if (touch.clientY > screenHeight * 0.8) {
+      overlaySwipeStartY.current = touch.clientY;
+      overlaySwipeStartX.current = touch.clientX;
+    } else {
+      overlaySwipeStartY.current = null;
+      overlaySwipeStartX.current = null;
+    }
+  }, [isMobile]);
+
+  const handleOverlayGestureTouchMove = useCallback((e: React.TouchEvent) => {
+    // We only track, actual action happens on touch end
+  }, []);
+
+  const handleOverlayGestureTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
+    
+    const touch = e.changedTouches[0];
+    const screenHeight = window.innerHeight;
+    const screenWidth = window.innerWidth;
+    
+    // If overlays are hidden, check for tap in restore zones
+    if (overlaysHidden) {
+      const inBottomZone = touch.clientY > screenHeight * 0.8;
+      const inTopZone = touch.clientY < screenHeight * 0.2;
+      const inRightZone = touch.clientX > screenWidth * 0.8;
+      
+      if (inBottomZone || inTopZone || inRightZone) {
+        // Only restore if it was a tap (not a drag/swipe)
+        if (overlaySwipeStartY.current !== null) {
+          const deltaY = Math.abs(touch.clientY - overlaySwipeStartY.current);
+          const deltaX = Math.abs(touch.clientX - (overlaySwipeStartX.current || 0));
+          if (deltaY < 20 && deltaX < 20) {
+            setOverlaysHidden(false);
+          }
+        } else {
+          // Tap in top or right zone
+          setOverlaysHidden(false);
+        }
+      }
+      overlaySwipeStartY.current = null;
+      overlaySwipeStartX.current = null;
+      return;
+    }
+    
+    // If overlays are visible, check for swipe down in bottom zone
+    if (overlaySwipeStartY.current !== null) {
+      const deltaY = touch.clientY - overlaySwipeStartY.current;
+      const deltaX = Math.abs(touch.clientX - (overlaySwipeStartX.current || 0));
+      
+      // Swipe down gesture (at least 40px down, more vertical than horizontal)
+      if (deltaY > 40 && deltaY > deltaX) {
+        setOverlaysHidden(true);
+      }
+    }
+    
+    overlaySwipeStartY.current = null;
+    overlaySwipeStartX.current = null;
+  }, [isMobile, overlaysHidden]);
+
   const handleCopyLink = () => {
     const url = `${window.location.origin}/app/post/${currentShort.id}`;
     navigator.clipboard.writeText(url);
@@ -637,128 +710,154 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Bottom gradient overlay - fades from transparent to black */}
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-[5]" />
+              {/* Gesture detection layer - covers whole screen for hide/show */}
+              <div 
+                className="absolute inset-0 z-[15] pointer-events-auto"
+                onTouchStart={handleOverlayGestureTouchStart}
+                onTouchMove={handleOverlayGestureTouchMove}
+                onTouchEnd={handleOverlayGestureTouchEnd}
+                style={{ pointerEvents: overlaysHidden ? 'auto' : 'none' }}
+              />
               
-              {/* Bottom Left - Creator Info & Description */}
-              <div className="absolute bottom-6 left-4 right-20 z-10 pointer-events-auto">
-                {/* Creator info row */}
-                <div className="flex items-center gap-2 mb-3">
-                  <button
-                    onClick={() => handleNavigateToProfile()}
-                    className="flex-shrink-0"
-                  >
-                    <Avatar className="w-12 h-12 rounded-xl" key={currentShort.avatar || currentShort.id}>
-                      <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                      <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                  </button>
-                  <button
-                    onClick={() => handleNavigateToProfile()}
-                    className="text-left min-w-0"
-                  >
-                    {currentShort.displayName && (
-                      <p className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</p>
-                    )}
-                    <p className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</p>
-                  </button>
-                </div>
+              {/* Animated overlay container */}
+              <motion.div
+                className="absolute inset-0 z-10 pointer-events-none"
+                animate={{ opacity: overlaysHidden ? 0 : 1 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              >
+                {/* Bottom gradient overlay - fades from transparent to black */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
                 
-                {/* Description - tap to expand/collapse */}
-                {currentShort.description && (
-                  <button
-                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                    className="text-left w-full"
-                  >
-                    <div 
-                      className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
-                        isDescriptionExpanded ? 'max-h-[calc(2.5rem+200px)]' : 'max-h-[2.5rem]'
-                      }`}
+                {/* Bottom Left - Creator Info & Description */}
+                <div 
+                  className="absolute bottom-6 left-4 right-20 pointer-events-auto"
+                  onTouchStart={handleOverlayGestureTouchStart}
+                  onTouchMove={handleOverlayGestureTouchMove}
+                  onTouchEnd={handleOverlayGestureTouchEnd}
+                >
+                  {/* Creator info row */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <button
+                      onClick={() => handleNavigateToProfile()}
+                      className="flex-shrink-0"
                     >
-                      <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
-                        isDescriptionExpanded ? 'whitespace-pre-wrap' : 'line-clamp-2'
-                      }`}>
-                        {currentShort.description}
-                      </p>
-                    </div>
-                    {currentShort.description.length > 80 && (
-                      <span className="text-white/60 text-xs mt-1">
-                        {isDescriptionExpanded ? 'less' : 'more'}
-                      </span>
-                    )}
-                  </button>
-                )}
-              </div>
-
-              {/* Right Side Action Buttons - Vertical stack */}
-              <div className="absolute right-3 bottom-8 z-10 flex flex-col items-center gap-5 pointer-events-auto">
-                {/* Like */}
-                <motion.button
-                  onClick={() => handleVote(true)}
-                  disabled={isVoting}
-                  className="flex flex-col items-center gap-1"
-                  animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                >
-                  <ThumbsUp className={cn(
-                    "w-8 h-8 drop-shadow-lg",
-                    isLiked ? "fill-white text-white" : "text-white"
-                  )} />
-                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localLikeCount)}</span>
-                </motion.button>
-                
-                {/* Dislike */}
-                <motion.button
-                  onClick={() => handleVote(false)}
-                  disabled={isVoting}
-                  className="flex flex-col items-center gap-1"
-                  animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                >
-                  <ThumbsDown className={cn(
-                    "w-8 h-8 drop-shadow-lg",
-                    isDisliked ? "fill-white text-white" : "text-white"
-                  )} />
-                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localDislikeCount)}</span>
-                </motion.button>
-
-                {/* Comments */}
-                <button
-                  onClick={() => setShowComments(true)}
-                  className="flex flex-col items-center gap-1"
-                >
-                  <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
-                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
-                </button>
-                
-                {/* Views */}
-                <div className="flex flex-col items-center gap-1">
-                  <Eye className="w-8 h-8 text-white drop-shadow-lg" />
-                  <span className="text-white text-xs font-medium drop-shadow-lg">{currentShort.views || '0'}</span>
+                      <Avatar className="w-12 h-12 rounded-xl" key={currentShort.avatar || currentShort.id}>
+                        <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
+                        <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                    </button>
+                    <button
+                      onClick={() => handleNavigateToProfile()}
+                      className="text-left min-w-0"
+                    >
+                      {currentShort.displayName && (
+                        <p className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</p>
+                      )}
+                      <p className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</p>
+                    </button>
+                  </div>
+                  
+                  {/* Description - tap to expand/collapse */}
+                  {currentShort.description && (
+                    <button
+                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                      className="text-left w-full"
+                    >
+                      <div 
+                        className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
+                          isDescriptionExpanded ? 'max-h-[calc(2.5rem+200px)]' : 'max-h-[2.5rem]'
+                        }`}
+                      >
+                        <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
+                          isDescriptionExpanded ? 'whitespace-pre-wrap' : 'line-clamp-2'
+                        }`}>
+                          {currentShort.description}
+                        </p>
+                      </div>
+                      {currentShort.description.length > 80 && (
+                        <span className="text-white/60 text-xs mt-1">
+                          {isDescriptionExpanded ? 'less' : 'more'}
+                        </span>
+                      )}
+                    </button>
+                  )}
                 </div>
-                
-                {/* Bookmark */}
-                <motion.button
-                  onClick={toggleBookmark}
-                  disabled={isBookmarkLoading}
-                  className="flex flex-col items-center gap-1"
-                  animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+
+                {/* Right Side Action Buttons - Vertical stack */}
+                <div 
+                  className="absolute right-3 bottom-8 flex flex-col items-center gap-5 pointer-events-auto"
+                  onTouchStart={handleOverlayGestureTouchStart}
+                  onTouchMove={handleOverlayGestureTouchMove}
+                  onTouchEnd={handleOverlayGestureTouchEnd}
                 >
-                  <Bookmark className={cn(
-                    "w-8 h-8 drop-shadow-lg",
-                    isBookmarked ? "fill-white text-white" : "text-white"
-                  )} />
-                </motion.button>
-                
-                {/* Share */}
-                <button
-                  onClick={() => setShareSheetOpen(true)}
-                  className="flex flex-col items-center gap-1"
-                >
-                  <Share2 className="w-8 h-8 drop-shadow-lg" />
-                </button>
-              </div>
+                  {/* Like */}
+                  <motion.button
+                    onClick={() => handleVote(true)}
+                    disabled={isVoting}
+                    className="flex flex-col items-center gap-1"
+                    animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <ThumbsUp className={cn(
+                      "w-8 h-8 drop-shadow-lg",
+                      isLiked ? "fill-white text-white" : "text-white"
+                    )} />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localLikeCount)}</span>
+                  </motion.button>
+                  
+                  {/* Dislike */}
+                  <motion.button
+                    onClick={() => handleVote(false)}
+                    disabled={isVoting}
+                    className="flex flex-col items-center gap-1"
+                    animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <ThumbsDown className={cn(
+                      "w-8 h-8 drop-shadow-lg",
+                      isDisliked ? "fill-white text-white" : "text-white"
+                    )} />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(localDislikeCount)}</span>
+                  </motion.button>
+
+                  {/* Comments */}
+                  <button
+                    onClick={() => setShowComments(true)}
+                    className="flex flex-col items-center gap-1"
+                  >
+                    <MessageSquare className="w-8 h-8 text-white drop-shadow-lg" />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                  </button>
+                  
+                  {/* Views */}
+                  <div className="flex flex-col items-center gap-1">
+                    <Eye className="w-8 h-8 text-white drop-shadow-lg" />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{currentShort.views || '0'}</span>
+                  </div>
+                  
+                  {/* Bookmark */}
+                  <motion.button
+                    onClick={toggleBookmark}
+                    disabled={isBookmarkLoading}
+                    className="flex flex-col items-center gap-1"
+                    animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    <Bookmark className={cn(
+                      "w-8 h-8 drop-shadow-lg",
+                      isBookmarked ? "fill-white text-white" : "text-white"
+                    )} />
+                  </motion.button>
+                  
+                  {/* Share */}
+                  <button
+                    onClick={() => setShareSheetOpen(true)}
+                    className="flex flex-col items-center gap-1"
+                  >
+                    <Share2 className="w-8 h-8 drop-shadow-lg" />
+                  </button>
+                </div>
+              </motion.div>
             </>
           )}
         </div>
