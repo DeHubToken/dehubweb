@@ -1,62 +1,68 @@
 
-# Plan: Fix Profile Bio Not Displaying
 
-## Root Cause
+# Plan: Fix Gap Between Mobile Header and Tab Navigation
 
-The DeHub API returns the user's bio in the `aboutMe` field, but the `mapUserToProfile` function in `use-dehub-profile.ts` only checks the `bio` field:
+## Problem Identified
 
-```typescript
-// Current code (line 78)
-bio: user.bio || '',
-```
+There's a visual gap between the mobile header (DEHUB logo bar) and the tab navigation bar below it. This is caused by a height mismatch:
 
-This means if the API returns `{ aboutMe: "My bio text" }` but no `bio` field, the profile bio will be empty.
+| Element | Current Value | Actual/Expected Height |
+|---------|---------------|------------------------|
+| MobileHeader padding | `py-1.5` (12px) | - |
+| MobileHeader content | ~27px (avatar/icons) | - |
+| **Total header height** | **~39px** | - |
+| Main content `pt-` | `pt-11` (44px) | Should match header |
+| Tab nav `top-` | `top-11` (44px) | Should match header |
 
-## Evidence
+The 5px gap (44px - 39px = 5px) creates the ugly visual separation.
 
-1. **Update profile uses `aboutMe`** (dehub.ts line 690):
-   ```typescript
-   formData.append("aboutMe", data.aboutMe);
-   ```
-
-2. **Interface defines both fields** (dehub.ts lines 35-36):
-   ```typescript
-   bio?: string;
-   aboutMe?: string | null;
-   ```
-
-3. **Mapping only checks `bio`** (use-dehub-profile.ts line 78):
-   ```typescript
-   bio: user.bio || '',
-   ```
+---
 
 ## Solution
 
-Update the `mapUserToProfile` function to check both `user.bio` and `user.aboutMe`:
+Increase the MobileHeader height to match the 44px (top-11) offset by adjusting padding.
 
-### File: `src/hooks/use-dehub-profile.ts`
+### File: `src/components/app/navigation/MobileHeader.tsx`
 
-**Change line 78 from:**
-```typescript
-bio: user.bio || '',
+**Line 43** - Change:
+```tsx
+// FROM
+<header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-1.5 flex items-center justify-between">
+
+// TO
+<header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 py-2.5 flex items-center justify-between">
 ```
 
-**To:**
-```typescript
-bio: user.bio || user.aboutMe || '',
+**Change**: `py-1.5` (12px total) becomes `py-2.5` (20px total)
+
+This increases the header height from ~39px to ~47px, which slightly overshoots but ensures no gap. Alternatively, we can use a fixed height.
+
+---
+
+## Alternative: Use Fixed Height (More Precise)
+
+If padding adjustment doesn't align perfectly, use an explicit height:
+
+```tsx
+<header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between">
 ```
 
-This will:
-1. First try `user.bio` (for backwards compatibility)
-2. Fall back to `user.aboutMe` (the field the API actually uses)
-3. Default to empty string if neither exists
+This guarantees the header is exactly 44px (`h-11`) to match `pt-11` and `top-11`.
+
+---
 
 ## Technical Details
 
 | File | Line | Change |
 |------|------|--------|
-| `src/hooks/use-dehub-profile.ts` | 78 | Add `user.aboutMe` fallback |
+| `src/components/app/navigation/MobileHeader.tsx` | 43 | Change `py-1.5` to `h-11` for exact 44px height |
+
+---
 
 ## Expected Result
 
-After this fix, the profile bio will display correctly on the profile page, showing the user's "About Me" text that was saved via the settings page.
+After this fix:
+- The mobile header will be exactly 44px tall
+- The tab navigation bar will sit flush against the header with no gap
+- Consistent alignment across all pages using `top-11` sticky positioning
+
