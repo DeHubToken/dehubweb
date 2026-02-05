@@ -796,6 +796,46 @@ export async function unfollowUser(walletAddress: string): Promise<{ result: boo
   });
 }
 
+/**
+ * Follow list item from API
+ */
+export interface FollowListItem {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarImageUrl?: string;
+  avatarUrl?: string;
+  isVerified?: boolean;
+  isFollowing?: boolean;
+  followsYou?: boolean;
+}
+
+/**
+ * Get followers or following list for a user
+ * Uses GET /api/follow_list/{address}?type=followers|following
+ */
+export async function getFollowList(
+  address: string, 
+  type: 'followers' | 'following',
+  viewerAddress?: string
+): Promise<FollowListItem[]> {
+  const params: Record<string, string> = { type };
+  if (viewerAddress) {
+    params.address = viewerAddress;
+  }
+  
+  const response = await apiCall<{ result: FollowListItem[] } | FollowListItem[]>(
+    `/api/follow_list/${encodeURIComponent(address)}`, 
+    { params }
+  );
+  
+  // Handle wrapped response from API
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as FollowListItem[];
+}
+
 export interface PostCommentResponse {
   result?: boolean;
 }
