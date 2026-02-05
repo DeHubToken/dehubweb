@@ -8,7 +8,7 @@
  */
 
 import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
-import { Heart, MessageCircle, RefreshCw, ImageIcon, Grid3x3, Loader2 } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2 } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -158,14 +158,17 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
                 alt=""
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 sm:gap-6">
-                <div className="flex items-center gap-1 sm:gap-2 text-white">
-                  <Heart className="w-4 h-4 sm:w-6 sm:h-6 fill-white" />
-                  <span className="font-semibold text-xs sm:text-base">{post.likes.toLocaleString()}</span>
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2 text-white">
-                  <MessageCircle className="w-4 h-4 sm:w-6 sm:h-6 fill-white" />
-                  <span className="font-semibold text-xs sm:text-base">{post.comments}</span>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <ThumbsDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="flex items-center gap-1 sm:gap-1.5 text-white">
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-semibold text-xs sm:text-sm">{post.comments}</span>
                 </div>
               </div>
             </div>
