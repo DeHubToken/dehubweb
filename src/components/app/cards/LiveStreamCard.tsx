@@ -138,7 +138,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   }, []);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden isolate">
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
         <CardHeader
