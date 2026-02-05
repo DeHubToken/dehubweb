@@ -7,7 +7,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 
 const STORIES_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories-api`;
 
@@ -20,7 +20,7 @@ export function useStoryViews(storyId: string | undefined) {
   const recordedViews = useRef<Set<string>>(new Set());
 
   // Fetch view count for this story via edge function
-  const { data: fetchedCount, isLoading, isFetched } = useQuery({
+  const { data: fetchedCount, isLoading } = useQuery({
     queryKey: ['story-views', storyId],
     queryFn: async (): Promise<number> => {
       if (!storyId) return 0;
@@ -39,7 +39,7 @@ export function useStoryViews(storyId: string | undefined) {
       return count;
     },
     enabled: !!storyId,
-    staleTime: 60000, // Keep data fresh for 1 minute
+    staleTime: 30000, // Keep data fresh for 30 seconds
     gcTime: 300000, // Keep in cache for 5 minutes
   });
 
@@ -85,12 +85,9 @@ export function useStoryViews(storyId: string | undefined) {
       return response.json();
     },
     onSuccess: () => {
-      // Optimistically increment the cached count
+      // Refetch actual count from server instead of optimistic guess
       if (storyId) {
-        const currentCount = viewCountCache.get(storyId) ?? 0;
-        const newCount = currentCount + 7; // Apply 7x multiplier locally too
-        viewCountCache.set(storyId, newCount);
-        queryClient.setQueryData(['story-views', storyId], newCount);
+        queryClient.invalidateQueries({ queryKey: ['story-views', storyId] });
       }
     },
     onError: (err) => {
@@ -99,13 +96,13 @@ export function useStoryViews(storyId: string | undefined) {
   });
 
   // Record view when story is viewed - tracks per session to avoid duplicates
-  // No login required - anyone can view
-  const recordView = () => {
+  // Wrapped in useCallback to prevent unnecessary effect re-runs
+  const recordView = useCallback(() => {
     if (storyId && !recordedViews.current.has(storyId)) {
       recordedViews.current.add(storyId);
       recordViewMutation.mutate();
     }
-  };
+  }, [storyId, recordViewMutation]);
 
   return {
     viewCount: viewCount ?? 0, // Return 0 as fallback, but cache prevents flash
