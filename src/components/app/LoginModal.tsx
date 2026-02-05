@@ -5,13 +5,14 @@
  * Uses connectTo() for direct provider connections.
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { isMobileDevice } from '@/lib/web3auth';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import phantomLogo from '@/assets/icons/phantom-logo.png';
 import rabbyLogo from '@/assets/icons/rabby-logo.png';
@@ -99,6 +100,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  
+  // Memoize mobile detection to avoid recalculating on every render
+  const isMobile = useMemo(() => isMobileDevice(), []);
 
   const handleClose = () => {
     // Always allow closing - user should never be trapped
@@ -271,7 +275,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {activeProvider === 'email' ? (
             <span className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Sending link...
+              {isMobile ? 'Redirecting...' : 'Sending link...'}
             </span>
           ) : (
             'Continue'
@@ -279,7 +283,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
 
         <p className="text-white/40 text-xs text-center">
-          We'll send you a magic link to sign in
+          {isMobile 
+            ? "You'll be redirected to enter a verification code" 
+            : "We'll send you a magic link to sign in"}
         </p>
       </form>
     </div>
@@ -312,7 +318,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {activeProvider === 'sms' ? (
             <span className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Sending code...
+              {isMobile ? 'Redirecting...' : 'Sending code...'}
             </span>
           ) : (
             'Continue'
@@ -320,7 +326,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
 
         <p className="text-white/40 text-xs text-center">
-          We'll send you a verification code via SMS
+          {isMobile 
+            ? "You'll be redirected to enter a verification code" 
+            : "We'll send you a verification code via SMS"}
         </p>
       </form>
     </div>

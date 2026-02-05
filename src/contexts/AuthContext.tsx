@@ -28,6 +28,8 @@ import {
   connectToSocialProvider,
   connectToExternalWallet,
   connectWithModal,
+  hasRedirectResult,
+  isMobileDevice,
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
@@ -45,6 +47,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isConnecting: boolean;
+  isProcessingRedirect: boolean;
   requiresUsername: boolean;
   needsSignature: boolean;
   web3auth: Web3Auth | null;
@@ -122,6 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
   const [requiresUsername, setRequiresUsername] = useState(false);
   const [needsSignature, setNeedsSignature] = useState(false);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
@@ -129,6 +133,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   // Ref to track if connection should be aborted when modal is closed
   const connectionAbortedRef = useRef(false);
+  // Ref to track if redirect has been processed to prevent double processing
+  const redirectProcessedRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
@@ -154,6 +160,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const init = async () => {
+      // Check if this is a redirect return from Web3Auth (mobile email/SMS login)
+      const isRedirectReturn = hasRedirectResult();
+      if (isRedirectReturn) {
+        console.log('[Auth] Detected Web3Auth redirect result, will process after init');
+        // Don't restore session from cache if we're processing a redirect
+        // The redirect flow will create a fresh session
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
@@ -196,6 +212,112 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     init();
   }, []);
+
+  // Handle Web3Auth redirect result (mobile email/SMS login)
+  useEffect(() => {
+    const processRedirect = async () => {
+      // Only process once and only if redirect params present
+      if (redirectProcessedRef.current || !hasRedirectResult()) {
+        return;
+      }
+      
+      redirectProcessedRef.current = true;
+      console.log('[Auth] Processing Web3Auth redirect result...');
+      setIsProcessingRedirect(true);
+
+      try {
+        // Initialize Web3Auth - this will automatically process the redirect params
+        const web3authInstance = await initWeb3Auth();
+        setWeb3auth(web3authInstance);
+        
+        console.log('[Auth] Web3Auth initialized after redirect, status:', web3authInstance.status);
+        console.log('[Auth] Web3Auth connected:', web3authInstance.connected);
+
+        // If Web3Auth is connected after processing redirect, complete DeHub auth
+        if (web3authInstance.connected && web3authInstance.provider) {
+          console.log('[Auth] Completing DeHub auth after redirect...');
+          await completeDeHubAuthAfterRedirect(web3authInstance.provider);
+        } else {
+          console.warn('[Auth] Web3Auth not connected after redirect processing');
+          toast.error('Login failed. Please try again.');
+        }
+
+        // Clear URL parameters to prevent reprocessing on refresh
+        window.history.replaceState({}, '', window.location.pathname);
+      } catch (error) {
+        console.error('[Auth] Redirect result processing failed:', error);
+        toast.error('Login failed. Please try again.');
+        // Clear params even on error to prevent infinite loop
+        window.history.replaceState({}, '', window.location.pathname);
+      } finally {
+        setIsProcessingRedirect(false);
+        setIsLoading(false);
+      }
+    };
+
+    processRedirect();
+  }, []);
+
+  /**
+   * Complete DeHub auth specifically after redirect flow
+   * This is a simplified version that doesn't depend on outer scope callbacks
+   */
+  const completeDeHubAuthAfterRedirect = async (provider: IProvider) => {
+    // Get address using eth_accounts
+    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available');
+    }
+    
+    const address = accounts[0];
+    const normalizedAddress = address.toLowerCase();
+    
+    console.log('[Auth] Redirect auth - Wallet address:', normalizedAddress);
+
+    // Create sign message for DeHub auth
+    const timestamp = Math.floor(Date.now() / 1000);
+    const displayedDate = new Date(timestamp * 1000);
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${normalizedAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+    // For redirect flow, this is always an embedded wallet (email/SMS)
+    console.log('[Auth] Using smart account signing path (redirect flow)');
+    const signature = await provider.request({
+      method: 'personal_sign',
+      params: [message, normalizedAddress],
+    }) as string;
+    
+    console.log('[Auth] Signature obtained, length:', signature?.length);
+
+    const BASE_CHAIN_ID = 8453;
+
+    const authResponse = await authenticateWallet(
+      normalizedAddress,
+      signature,
+      timestamp,
+      BASE_CHAIN_ID
+    );
+
+    const normalizedUser = normalizeUser(authResponse.user, normalizedAddress);
+
+    localStorage.setItem('dehub_wallet', normalizedAddress);
+    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+
+    setWalletAddress(normalizedAddress);
+    setUser(normalizedUser);
+
+    if (!normalizedUser.username) {
+      setRequiresUsername(true);
+    }
+    
+    // Invalidate all feed caches to fetch fresh data with user's vote state
+    console.log('[Auth] Invalidating feed caches for fresh personalized data');
+    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+    
+    toast.success('Successfully logged in!');
+    console.log('[Auth] ✓ DeHub authentication complete (redirect flow)');
+  };
 
   /**
    * Complete DeHub authentication after Web3Auth connects
@@ -599,6 +721,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated,
         isLoading,
         isConnecting,
+        isProcessingRedirect,
         requiresUsername,
         needsSignature,
         web3auth,

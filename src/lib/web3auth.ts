@@ -15,8 +15,20 @@ import {
   WALLET_CONNECTORS,
   AUTH_CONNECTION,
   CONFIRMATION_STRATEGY,
+  authConnector,
+  UX_MODE,
 } from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
+
+/**
+ * Detect if running on a mobile device based on user agent
+ */
+export function isMobileDevice(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+}
 
 // Re-export for use in other files
 export { WALLET_CONNECTORS, AUTH_CONNECTION };
@@ -135,6 +147,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       // Create Web3Auth instance with custom UI configuration
       // Modal is hidden - we use connectTo() for direct provider access
       console.log("[Web3Auth] Creating Web3Auth instance with custom UI config...");
+      console.log("[Web3Auth] Is mobile device:", isMobileDevice());
+      console.log("[Web3Auth] UX Mode:", isMobileDevice() ? "REDIRECT" : "POPUP");
+      
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
@@ -157,6 +172,15 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
         // Use AA only for embedded wallets (social/email login)
         // External wallets like MetaMask will use their own accounts
         useAAWithExternalWallet: false,
+        // Configure connectors for mobile-aware email/SMS login
+        connectors: [
+          authConnector({
+            connectorSettings: {
+              uxMode: isMobileDevice() ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+              redirectUrl: `${window.location.origin}/app`,
+            }
+          })
+        ],
         // Auto-approve signatures for auth messages (bypasses blocking modal)
         walletServicesConfig: {
           confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
