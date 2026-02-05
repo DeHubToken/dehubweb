@@ -65,7 +65,9 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     id: String(nft.tokenId),
     type: 'video',
     thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
-    videoUrl: getMediaUrl(nft.videoUrl),
+    videoUrl: nft.tokenId 
+      ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
+      : undefined,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,
