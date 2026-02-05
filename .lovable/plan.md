@@ -1,183 +1,87 @@
 
-# Fix: Story View Counters Showing Wrong Numbers
+# Fix: Image URLs Not Loading on Direct URL Access
 
-## Problem Analysis
+## Problem Identified
 
-After investigating the story view tracking system, I found several issues causing incorrect view counts to be displayed:
+When accessing `/app/post/2729` directly via browser URL, the image doesn't load. However, it loads fine when navigating from within the app.
 
-### Issue 1: Optimistic Update Incorrect Logic
-**Location**: `src/hooks/use-story-views.ts` (lines 87-94)
+### Root Cause
 
-When a view is recorded, the hook optimistically adds `+7` to the local cache:
-```typescript
-onSuccess: () => {
-  const currentCount = viewCountCache.get(storyId) ?? 0;
-  const newCount = currentCount + 7; // Apply 7x multiplier locally
-  viewCountCache.set(storyId, newCount);
-  queryClient.setQueryData(['story-views', storyId], newCount);
-}
-```
+The API returns different path formats in `imageUrls`:
+- **New posts**: `["feed-images/abc.jpg", "feed-images/def.png"]` 
+- **Older/NFT posts**: `["nfts/images/2729-1.jpg", "nfts/images/2729-2.jpg"]`
 
-**Problem**: This adds 7 regardless of whether the database actually created a new record. If the user already viewed the story (upsert finds existing record), no new row is created, but the UI still shows +7.
+The `buildFeedImageUrls()` function in `src/lib/media-url.ts` currently:
+1. Extracts just the filename (e.g., `2729-1.jpg`)
+2. Always places it under `feed-images/` folder
 
-### Issue 2: Anonymous User ID Generation
-**Location**: `supabase/functions/stories-api/index.ts` (line 84)
+This produces the wrong URL for paths starting with `nfts/images/`:
+- Current output: `https://dehubcdn.../feed-images/2729-1.jpg` (broken)
+- Correct output: `https://dehubcdn.../images/2729-1.jpg` (works)
 
-```typescript
-const viewerWallet = walletAddress || `anon-${crypto.randomUUID()}`;
-```
+### Why It Works In-App
 
-Each anonymous request generates a NEW UUID, so the upsert will always insert a new row. Combined with potential client-side timing issues, this could lead to duplicate anonymous views.
-
-### Issue 3: Missing useCallback on recordView
-**Location**: `src/hooks/use-story-views.ts` (lines 103-108)
-
-The `recordView` function is not wrapped in `useCallback`, causing a new function reference on every render. This can lead to unnecessary effect executions in `StoryViewerModal`.
-
-### Issue 4: Stale Cache After Page Navigation
-The in-memory `viewCountCache` may show stale values when navigating between stories or returning to a previously viewed story.
+When navigating from the feed, the data is cached and may come from the unified feed which handles it differently or the paths may already be fully resolved.
 
 ---
 
 ## Solution
 
-### 1. Fix Optimistic Update Logic
+Update `buildFeedImageUrls()` to detect the path prefix and route accordingly:
 
-Instead of blindly adding +7, invalidate the query to refetch the actual count from the database:
-
-```typescript
-onSuccess: () => {
-  // Invalidate to refetch actual count instead of guessing
-  queryClient.invalidateQueries({ queryKey: ['story-views', storyId] });
-}
-```
-
-### 2. Add useCallback to recordView
-
-Wrap the function in useCallback to prevent unnecessary re-renders:
-
-```typescript
-const recordView = useCallback(() => {
-  if (storyId && !recordedViews.current.has(storyId)) {
-    recordedViews.current.add(storyId);
-    recordViewMutation.mutate();
-  }
-}, [storyId, recordViewMutation]);
-```
-
-### 3. Improve Anonymous ID Consistency (Optional)
-
-Consider using a session-based anonymous ID stored in localStorage/sessionStorage rather than generating a new UUID for each request. This would prevent duplicate views from the same anonymous browser session.
-
----
-
-## Files to Modify
-
-| File | Changes |
-|------|---------|
-| `src/hooks/use-story-views.ts` | Fix optimistic update, add useCallback wrapper |
+| Path Prefix | Output Folder |
+|-------------|---------------|
+| `nfts/images/` | `images/` |
+| `feed-images/` | `feed-images/` |
+| Other | Preserve relative path |
 
 ---
 
 ## Technical Details
 
-### Fixed Hook Code
+### File to Modify: `src/lib/media-url.ts`
 
 ```typescript
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRef, useEffect, useCallback } from 'react';
-
-const STORIES_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories-api`;
-
-const viewCountCache = new Map<string, number>();
-
-export function useStoryViews(storyId: string | undefined) {
-  const { walletAddress } = useAuth();
-  const queryClient = useQueryClient();
-  const recordedViews = useRef<Set<string>>(new Set());
-
-  const { data: fetchedCount, isLoading } = useQuery({
-    queryKey: ['story-views', storyId],
-    queryFn: async (): Promise<number> => {
-      if (!storyId) return 0;
-
-      const response = await fetch(`${STORIES_API_URL}/views?story_id=${storyId}`);
-      if (!response.ok) {
-        console.error('[story-views] Error fetching view count');
-        return viewCountCache.get(storyId) ?? 0;
-      }
-
-      const data = await response.json();
-      const count = data.result?.count ?? 0;
-      
-      viewCountCache.set(storyId, count);
-      return count;
-    },
-    enabled: !!storyId,
-    staleTime: 30000, // Reduce stale time to 30 seconds for fresher data
-    gcTime: 300000,
-  });
-
-  const viewCount = storyId 
-    ? (fetchedCount ?? viewCountCache.get(storyId) ?? null)
-    : 0;
-
-  useEffect(() => {
-    if (storyId && fetchedCount !== undefined) {
-      viewCountCache.set(storyId, fetchedCount);
+/**
+ * Build multi-image URLs from API paths
+ * API returns arrays like:
+ * - ["feed-images/abc.jpg"] → cdn/feed-images/abc.jpg
+ * - ["nfts/images/2729-1.jpg"] → cdn/images/2729-1.jpg (strips nfts/ prefix)
+ */
+export function buildFeedImageUrls(apiImageUrls: string[] | undefined | null): string[] | undefined {
+  if (!apiImageUrls || apiImageUrls.length === 0) return undefined;
+  
+  return apiImageUrls.map((imgUrl) => {
+    // Already a full URL - return as-is
+    if (imgUrl.startsWith('http')) return imgUrl;
+    
+    // Handle "nfts/images/xxx.jpg" → "images/xxx.jpg"
+    if (imgUrl.startsWith('nfts/')) {
+      const pathWithoutNfts = imgUrl.slice(5); // Remove "nfts/" prefix
+      return `${DEHUB_CDN_BASE}${pathWithoutNfts}`;
     }
-  }, [storyId, fetchedCount]);
-
-  const recordViewMutation = useMutation({
-    mutationFn: async () => {
-      if (!storyId) throw new Error('Missing story ID');
-
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      
-      if (walletAddress) {
-        headers['x-wallet-address'] = walletAddress.toLowerCase();
+    
+    // Handle "feed-images/xxx.jpg" → extract filename and build URL
+    if (imgUrl.startsWith('feed-images/')) {
+      const filename = imgUrl.split('/').pop() || '';
+      if (filename) {
+        return `${DEHUB_CDN_BASE}feed-images/${filename}`;
       }
-
-      const response = await fetch(`${STORIES_API_URL}/views`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ story_id: storyId }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to record view');
-      }
-
-      return response.json();
-    },
-    onSuccess: () => {
-      // Refetch actual count from server instead of optimistic guess
-      if (storyId) {
-        queryClient.invalidateQueries({ queryKey: ['story-views', storyId] });
-      }
-    },
-    onError: (err) => {
-      console.error('[story-views] Error recording view:', err);
-    },
-  });
-
-  // Wrap in useCallback to prevent unnecessary effect re-runs
-  const recordView = useCallback(() => {
-    if (storyId && !recordedViews.current.has(storyId)) {
-      recordedViews.current.add(storyId);
-      recordViewMutation.mutate();
     }
-  }, [storyId, recordViewMutation]);
-
-  return {
-    viewCount: viewCount ?? 0,
-    isLoading: isLoading && viewCount === null,
-    recordView,
-  };
+    
+    // Handle "images/xxx.jpg" directly
+    if (imgUrl.startsWith('images/')) {
+      return `${DEHUB_CDN_BASE}${imgUrl}`;
+    }
+    
+    // Fallback: extract filename and put in feed-images (legacy behavior)
+    const filename = imgUrl.split('/').pop() || '';
+    if (filename) {
+      return `${DEHUB_CDN_BASE}feed-images/${filename}`;
+    }
+    
+    return imgUrl;
+  });
 }
 ```
 
@@ -185,8 +89,7 @@ export function useStoryViews(storyId: string | undefined) {
 
 ## Testing Checklist
 
-- View a story and verify the view count increments correctly
-- Navigate to another story and back - verify counts remain accurate
-- Test as both logged-in and anonymous user
-- Verify the count matches the database value (actual views × 7)
-
+- Load `/app/post/2729` directly in browser - image should display
+- Navigate to same post from feed - image should still work
+- Test other image posts with different path formats
+- Verify multi-image posts show all images correctly
