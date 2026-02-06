@@ -53,6 +53,8 @@ let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let cachedClientId: string | null = null;
 let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
+// Track which connector was last used (for detecting social login vs external wallet)
+let lastConnectedConnector: string | null = null;
 
 /**
  * Reset all Web3Auth module state - used for HMR and error recovery
@@ -65,6 +67,7 @@ export function resetWeb3AuthState(): void {
   web3authInstance = null;
   isInitializing = false;
   initPromise = null;
+  lastConnectedConnector = null;
   console.log("[Web3Auth] ✓ Module state reset");
 }
 
@@ -260,6 +263,7 @@ export async function connectToSocialProvider(
   try {
     console.log(`[Web3Auth] connectToSocialProvider: phase=OAUTH calling connectTo(AUTH, ${JSON.stringify(params)})`);
     provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+    lastConnectedConnector = WALLET_CONNECTORS.AUTH; // Track that this was a social login
     console.log(`[Web3Auth] connectToSocialProvider: phase=OAUTH_OK provider=${provider ? 'received' : 'null'}`);
   } catch (err) {
     console.error(`[Web3Auth] connectToSocialProvider: phase=OAUTH_FAILED`, err);
@@ -282,6 +286,7 @@ export async function connectToExternalWallet(
   console.log(`[Web3Auth] Connecting to external wallet: ${walletConnector}...`);
 
   const provider = await web3auth.connectTo(walletConnector);
+  lastConnectedConnector = walletConnector; // Track that this was an external wallet
 
   console.log(`[Web3Auth] ✓ Connected to ${walletConnector}`);
   return provider;
@@ -398,4 +403,26 @@ export async function safeResetAfterError(): Promise<void> {
 
 export function isWeb3AuthConnected(): boolean {
   return web3authInstance?.connected ?? false;
+}
+
+/**
+ * Check if the current connection is via social login (Auth connector)
+ * Used to determine signing method (private key vs provider)
+ */
+export function isSocialLoginConnected(): boolean {
+  return lastConnectedConnector === WALLET_CONNECTORS.AUTH;
+}
+
+/**
+ * Get the last connected connector name
+ */
+export function getLastConnectedConnector(): string | null {
+  return lastConnectedConnector;
+}
+
+/**
+ * Set the last connected connector (used when restoring session from redirect)
+ */
+export function setLastConnectedConnector(connector: string | null): void {
+  lastConnectedConnector = connector;
 }
