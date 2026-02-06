@@ -37,10 +37,11 @@ export { WALLET_CONNECTORS, AUTH_CONNECTION };
 export type AuthConnectionType = typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION];
 
 // Chain configuration for Base Mainnet
+// Note: Using publicnode.com RPC - mainnet.base.org returns 403 errors
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0x2105", // 8453 in hex
-  rpcTarget: "https://mainnet.base.org",
+  rpcTarget: "https://base-rpc.publicnode.com",
   displayName: "Base Mainnet",
   blockExplorerUrl: "https://basescan.org",
   ticker: "ETH",
