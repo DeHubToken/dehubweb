@@ -118,7 +118,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
   const currentShort = shorts[currentIndex];
   
@@ -188,10 +188,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   
   // Fetch inline comments
   const { data: inlineComments = [] } = useQuery({
-    queryKey: ['shorts-inline-comments', currentShort?.id],
+    queryKey: ['shorts-inline-comments', currentShort?.id, walletAddress],
     queryFn: async () => {
       if (!currentShort?.id) return [];
-      const response = await getNFTComments(currentShort.id, 0, 50);
+      const response = await getNFTComments(currentShort.id, 0, 50, walletAddress?.toLowerCase());
       return response.map(mapApiCommentToInline);
     },
     enabled: !!currentShort?.id,

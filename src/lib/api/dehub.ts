@@ -660,6 +660,8 @@ export interface ApiCommentResponse {
   parentId: number | null;
   createdAt: string;
   updatedAt: string;
+  likeCount?: number;
+  isLiked?: boolean;
   writor: {
     username: string;
     avatarUrl?: string;
@@ -681,9 +683,10 @@ export async function getNFTComments(
   tokenId: string,
   page: number = 0,
   limit: number = 20,
+  address?: string,
 ): Promise<ApiCommentResponse[]> {
   const response = await apiCall<CommentsApiResponse>(`/api/nft/${tokenId}/comments`, {
-    params: { page, limit },
+    params: { page, limit, address },
   });
   return response.result?.items || [];
 }
