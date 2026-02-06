@@ -163,10 +163,13 @@ export default function JobsPage() {
               {/* About the role */}
               <Section title="About the Role">
                 <p>
-                  As a Business Development Manager at DeHub, you will be the driving force behind our partnership 
+                  As one of our Business Development Managers at DeHub, you will be part of the driving force behind our partnership 
                   strategy. Your mission is to identify, engage, and close deals with companies across both Web2 
                   and Web3 — from gaming studios and content platforms to blockchain projects and DeFi protocols. 
-                  This is an OTE (On-Target Earnings) commission-based position: the harder you hustle, the more you earn.
+                  This is an OTE (On-Target Earnings) commission-based position: the harder you hustle, the more you earn. 
+                  The role is simple, bring on companies, projects, communities or any large profile accounts on to DeHub, and get paid. 
+                  The idea is, more awareness drives more growth to our ecosystem, which pays you more bonuses for successful campaigns. 
+                  It's a infinite loop of growth with uncapped earning potential. Even those without experience are invited to apply, if the attitude is right for the role.
                 </p>
               </Section>
 
