@@ -139,14 +139,10 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
   initPromise = (async () => {
     try {
-      // Fetch configurations in parallel
-      console.log("[Web3Auth] Fetching configurations...");
-      const [clientId, pimlicoConfig] = await Promise.all([
-        getWeb3AuthClientId(),
-        getPimlicoConfig(),
-      ]);
+      // Fetch Web3Auth client ID
+      console.log("[Web3Auth] Fetching configuration...");
+      const clientId = await getWeb3AuthClientId();
       console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
-      console.log("[Web3Auth] ✓ Pimlico config fetched");
 
       // Create Web3Auth instance with custom UI configuration
       // Modal is hidden - we use connectTo() for direct provider access
@@ -154,28 +150,13 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       console.log("[Web3Auth] Is mobile device:", isMobileDevice());
       console.log("[Web3Auth] UX Mode:", isMobileDevice() ? "REDIRECT" : "POPUP");
 
+      // NOTE: Account Abstraction DISABLED - DeHub backend requires standard EOA signatures
+      // AA produces EIP-1271 smart contract signatures which the backend can't verify
+      // Re-enable AA once backend supports EIP-1271 signature verification
       web3authInstance = new Web3Auth({
         clientId,
         chains: [chainConfig],
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        // v10 Account Abstraction configuration
-        accountAbstractionConfig: {
-          smartAccountType: "safe",
-          chains: [
-            {
-              chainId: "0x2105", // Base Mainnet
-              bundlerConfig: {
-                url: pimlicoConfig.bundlerUrl,
-              },
-              paymasterConfig: {
-                url: pimlicoConfig.paymasterUrl,
-              },
-            },
-          ],
-        },
-        // Use AA only for embedded wallets (social/email login)
-        // External wallets like MetaMask will use their own accounts
-        useAAWithExternalWallet: false,
         // Configure connectors for mobile-aware email/SMS login
         connectors: [
           authConnector({
@@ -185,24 +166,14 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
             }
           })
         ],
-        // Auto-approve signatures for auth messages (bypasses blocking modal)
-        walletServicesConfig: {
-          confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-          modalZIndex: 99999,
-          loginMode: 'modal',
-          whiteLabel: {
-            showWidgetButton: false,
-          },
-        } as any,
         // Custom UI configuration - we use our own modal
         uiConfig: {
           appName: "DeHub",
           mode: "dark",
           defaultLanguage: "en",
         },
-        enableLogging: true,
-      } as any);
-      console.log("[Web3Auth] ✓ Instance created with Account Abstraction");
+      });
+      console.log("[Web3Auth] ✓ Instance created (EOA mode, no AA)");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
