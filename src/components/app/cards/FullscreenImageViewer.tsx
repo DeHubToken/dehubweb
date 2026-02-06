@@ -7,6 +7,7 @@
  */
 
 import { useCallback, useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -167,7 +168,7 @@ export function FullscreenImageViewer({
   // Calculate opacity based on drag offset
   const bgOpacity = Math.max(0.3, 1 - dragOffset / 300);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -307,6 +308,7 @@ export function FullscreenImageViewer({
           />
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
