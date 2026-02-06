@@ -246,7 +246,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                   onClick={() => {
                     const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
                     navigator.clipboard.writeText(url);
-                    toast.success('Comment link copied');
+                    toast.success(`Copied: ${url}`);
                   }}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
