@@ -31,6 +31,8 @@ import {
   connectWithModal,
   hasRedirectResult,
   isMobileDevice,
+  isSocialLoginConnected,
+  setLastConnectedConnector,
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
@@ -272,9 +274,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const displayedDate = new Date(timestamp * 1000);
 
     // Social login (Auth adapter) - use private key for EOA signature
-    if (web3authInstance.connectedAdapterName === 'auth') {
+    // After redirect, lastConnectedConnector is lost, so we try to get private key as a fallback
+    let isSocialLogin = isSocialLoginConnected();
+    let privateKey: string | null = null;
+    
+    if (!isSocialLogin) {
+      // Try to get private key - if successful, this is a social login
+      try {
+        privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+        if (privateKey) {
+          isSocialLogin = true;
+          setLastConnectedConnector('auth'); // Restore the connector tracking
+        }
+      } catch {
+        // Not a social login - private key not available
+        isSocialLogin = false;
+      }
+    }
+    
+    if (isSocialLogin) {
       console.log('[Auth] Redirect - Using EOA private key path');
-      const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+      if (!privateKey) {
+        privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+      }
       const wallet = new Wallet(privateKey);
       authAddress = wallet.address.toLowerCase();
       const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
@@ -334,7 +356,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const displayedDate = new Date(timestamp * 1000);
 
     // Detect if this is social login (Auth adapter)
-    if (web3authInstance.connectedAdapterName === 'auth') {
+    if (isSocialLoginConnected()) {
       console.log('[Auth] Using EOA private key path for standard signature');
       const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
       const wallet = new Wallet(privateKey);
