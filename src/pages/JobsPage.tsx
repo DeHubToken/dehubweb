@@ -129,7 +129,6 @@ export default function JobsPage() {
         {/* Intro section */}
         <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/5 rounded-2xl p-6 mb-8">
           <p className="text-zinc-300 text-sm leading-relaxed">
-            DeHub is a decentralised social media platform merging Web3 with mainstream content creation. 
             We're looking for passionate individuals who want to be part of the next wave of social media — 
             one that puts creators and communities first. All roles are <span className="text-white font-medium">fully remote</span> with 
             <span className="text-white font-medium"> flexible hours</span>, giving you the freedom to work from anywhere in the world.
