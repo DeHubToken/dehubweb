@@ -609,26 +609,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="overflow-hidden"
           >
-            <div className="bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
+            <div className="relative bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
               <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
               <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
               <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
               <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
-                  <button
-                    onClick={() => {
-                      setSelectedSort(SORT_OPTIONS[0]);
-                      setSelectedDuration(DURATION_FILTERS[0]);
-                      setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-                      resetContentFilters();
-                    }}
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-                    aria-label="Reset filters"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
                 <div className="relative">
                   <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
                     {CONTENT_TYPE_FILTERS.map((filter) => (
@@ -649,6 +635,19 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
                 </div>
               </div>
+              {/* Reset filters - bottom right */}
+              <button
+                onClick={() => {
+                  setSelectedSort(SORT_OPTIONS[0]);
+                  setSelectedDuration(DURATION_FILTERS[0]);
+                  setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                  resetContentFilters();
+                }}
+                className="absolute bottom-4 right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                aria-label="Reset filters"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
             </div>
           </motion.div>
         )}

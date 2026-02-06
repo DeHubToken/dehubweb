@@ -171,7 +171,7 @@ function SortFilterSection({
   onReset,
 }: FilterSectionProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
@@ -246,16 +246,7 @@ function SortFilterSection({
 
       {/* Content Type Filters */}
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
-          <button
-            onClick={onReset}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-            aria-label="Reset filters"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
             {CONTENT_TYPE_FILTERS.map((filter) => (
@@ -276,6 +267,15 @@ function SortFilterSection({
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
+
+      {/* Reset filters - bottom right */}
+      <button
+        onClick={onReset}
+        className="absolute bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+        aria-label="Reset filters"
+      >
+        <RefreshCw className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 }
