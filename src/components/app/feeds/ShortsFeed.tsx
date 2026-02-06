@@ -402,6 +402,18 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
                 <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
                 <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
+                <div className="flex justify-end pt-1">
+                  <button
+                    onClick={() => {
+                      setSelectedSort(SORT_OPTIONS[1]);
+                      setSelectedDuration(DURATION_FILTERS[0]);
+                      setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                    }}
+                    className="text-xs text-zinc-500 hover:text-white transition-colors"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}

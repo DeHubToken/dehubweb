@@ -385,7 +385,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
-  const [contentFilters, toggleContentFilter] = usePersistedContentFilters('videos');
+  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
@@ -614,6 +614,19 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
               <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
               <ContentTypeFilterSection filters={contentFilters} onToggle={toggleContentFilter} />
+              <div className="flex justify-end pt-1">
+                <button
+                  onClick={() => {
+                    setSelectedSort(SORT_OPTIONS[0]);
+                    setSelectedDuration(DURATION_FILTERS[0]);
+                    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                    resetContentFilters();
+                  }}
+                  className="text-xs text-zinc-500 hover:text-white transition-colors"
+                >
+                  Reset Filters
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

@@ -156,6 +156,7 @@ interface FilterSectionProps {
   onPostTypeSelect: (v: PostTypeFilterValue) => void;
   contentFilters: ContentTypeFilters;
   onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
+  onReset: () => void;
 }
 
 function SortFilterSection({ 
@@ -167,6 +168,7 @@ function SortFilterSection({
   onPostTypeSelect,
   contentFilters,
   onContentFilterToggle,
+  onReset,
 }: FilterSectionProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -265,6 +267,15 @@ function SortFilterSection({
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
+      {/* Reset Filters */}
+      <div className="flex justify-end pt-1">
+        <button
+          onClick={onReset}
+          className="text-xs text-zinc-500 hover:text-white transition-colors"
+        >
+          Reset Filters
+        </button>
+      </div>
     </div>
   );
 }
@@ -281,7 +292,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
-  const [contentFilters, toggleContentFilter] = usePersistedContentFilters('home');
+  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
 
   const { walletAddress, isAuthenticated } = useAuth();
   const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
@@ -949,6 +960,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                     onPostTypeSelect={setSelectedPostType}
                     contentFilters={contentFilters}
                     onContentFilterToggle={toggleContentFilter}
+                    onReset={() => {
+                      setSelectedSort(SORT_OPTIONS[0]);
+                      setSelectedDate(DATE_FILTER_OPTIONS[0]);
+                      setSelectedPostType('all');
+                      resetContentFilters();
+                    }}
                   />
                 </div>
               </motion.div>

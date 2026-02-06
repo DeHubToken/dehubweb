@@ -296,7 +296,7 @@ export function ImagesFeed({
   // Filter states - default to "Latest" - persisted to sessionStorage
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
-  const [contentFilters, toggleContentFilter] = usePersistedContentFilters('images');
+  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('images');
   
   
   // Get wallet address for authenticated requests
@@ -432,6 +432,18 @@ export function ImagesFeed({
                 filters={contentFilters} 
                 onToggle={toggleContentFilter} 
               />
+              <div className="flex justify-end pt-1">
+                <button
+                  onClick={() => {
+                    setSelectedSort(SORT_OPTIONS[0]);
+                    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                    resetContentFilters();
+                  }}
+                  className="text-xs text-zinc-500 hover:text-white transition-colors"
+                >
+                  Reset Filters
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
