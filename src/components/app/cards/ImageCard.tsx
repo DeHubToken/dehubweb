@@ -170,7 +170,7 @@ function ImageCarousel({
           {currentIndex > 0 && (
             <button
               onClick={scrollPrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
+              className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -179,7 +179,7 @@ function ImageCarousel({
           {currentIndex < images.length - 1 && (
             <button
               onClick={scrollNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center text-white hover:bg-black/60 transition-colors"
+              className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5" />
