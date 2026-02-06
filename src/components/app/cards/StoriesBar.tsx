@@ -175,7 +175,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   );
 
   const triggerButton = (
-    <div className="flex flex-col items-center gap-0.5 lg:gap-1 flex-shrink-0 cursor-pointer -ml-[7.5px]">
+    <div className="flex flex-col items-center gap-0.5 lg:gap-1 flex-shrink-0 cursor-pointer">
       <div className="rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500 p-[2px]">
         <div className="w-[58px] h-[58px] lg:w-[68px] lg:h-[68px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
           <Plus className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
