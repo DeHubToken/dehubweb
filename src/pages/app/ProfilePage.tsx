@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, MessageCircle, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, ChevronLeft
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, ChevronLeft, Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -193,8 +193,10 @@ export default function ProfilePage() {
   // Re-auth handler for API error handling
   const { handleApiError } = useReauthHandler();
   
-  // Use API's isFollowing status
+  // Use API's isFollowing and isPending status
   const isFollowing = apiProfile?.isFollowing ?? false;
+  const isPending = apiProfile?.isPending ?? false;
+  const isTargetPrivate = apiProfile?.isPrivate ?? false;
   
   // Pull-to-refresh handler
   const PULL_THRESHOLD = 80;
@@ -300,12 +302,23 @@ export default function ProfilePage() {
     }
     
     setIsFollowLoading(true);
-    // Optimistic update
-    setFollowStatus(true);
+    
+    // For private accounts, the follow becomes a request
+    if (isTargetPrivate) {
+      // Optimistic update - show pending state
+      setFollowStatus(true); // will show as pending via isPending
+    } else {
+      // Optimistic update - immediate follow
+      setFollowStatus(true);
+    }
     
     try {
       await followUser(profile.walletAddress);
-      toast.success(`Following ${profile.name}`);
+      if (isTargetPrivate) {
+        toast.success(`Follow request sent to ${profile.name}`);
+      } else {
+        toast.success(`Following ${profile.name}`);
+      }
     } catch (error) {
       // Revert on error
       setFollowStatus(false);
@@ -417,6 +430,23 @@ export default function ProfilePage() {
   );
 
   const renderTabContent = () => {
+    // Private account gate: show lock message if not following & not own profile
+    if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
+      return (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mb-4">
+            <Lock className="w-8 h-8 text-zinc-500" />
+          </div>
+          <p className="text-white text-lg font-semibold">This account is private</p>
+          <p className="text-zinc-500 text-sm mt-1 max-w-xs">
+            {isPending 
+              ? 'Your follow request is pending approval.'
+              : 'Follow this account to see their posts and content.'}
+          </p>
+        </div>
+      );
+    }
+    
     // Only show loading on initial fetch (no cached data) - not during refetches
     // isLoading = isFetching && !data, so it's only true when there's no cached data
     const hasData = userContentData && userContentData.pages && userContentData.pages.length > 0;
@@ -862,7 +892,20 @@ export default function ProfilePage() {
                   </Button>
                 ) : (
                   <>
-                    {!isFollowing && (
+                    {/* Show Requested button for pending follow requests */}
+                    {isPending && !isFollowing && (
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        className="rounded-xl border-zinc-600 text-zinc-300 gap-2 cursor-default"
+                        disabled
+                      >
+                        <Clock className="w-4 h-4" />
+                        Requested
+                      </Button>
+                    )}
+                    {/* Show Follow button if not following and not pending */}
+                    {!isFollowing && !isPending && (
                       <Button 
                         size="sm" 
                         className="rounded-xl bg-white text-black hover:bg-zinc-200 gap-2"
@@ -874,7 +917,7 @@ export default function ProfilePage() {
                         ) : (
                           <UserPlus className="w-4 h-4" />
                         )}
-                        Follow
+                        {isTargetPrivate ? 'Request' : 'Follow'}
                       </Button>
                     )}
                     {isFollowing && !isSubscribed && hasPlans && (
@@ -924,6 +967,9 @@ export default function ProfilePage() {
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                {isTargetPrivate && !isViewingOwnProfile && (
+                  <Lock className="w-4 h-4 text-zinc-500" />
+                )}
                 <button
                   onClick={() => {
                     const username = profile.handle.replace('@', '');

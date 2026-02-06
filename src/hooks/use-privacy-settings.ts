@@ -44,6 +44,7 @@ export function usePrivacySettings() {
 
   const customs = profile?.customs;
   const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
+  const isPrivate = customs?.isPrivate === 'true' || customs?.isPrivate === true;
 
   const updateMutation = useMutation({
     mutationFn: async (newCustoms: Record<string, string>) => {
@@ -74,6 +75,7 @@ export function usePrivacySettings() {
     show_followers_following?: boolean;
     hide_follower_counts?: boolean;
     default_post_visibility?: 'public' | 'private';
+    is_private?: boolean;
   }) => {
     const newCustoms: Record<string, string> = {};
 
@@ -94,6 +96,10 @@ export function usePrivacySettings() {
       newCustoms.defaultPostVisibility = updates.default_post_visibility;
     }
 
+    if (updates.is_private !== undefined) {
+      newCustoms.isPrivate = String(updates.is_private);
+    }
+
     updateMutation.mutate(newCustoms);
   };
 
@@ -102,6 +108,7 @@ export function usePrivacySettings() {
     isLoading: false,
     showFollowersFollowing,
     hideFollowerCounts,
+    isPrivate,
     defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
     updateSettings,
     isUpdating: updateMutation.isPending,

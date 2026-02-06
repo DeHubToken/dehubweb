@@ -59,6 +59,7 @@ import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
+import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
 import dehubCoin from '@/assets/dehub-coin.png';
 import settingsIcon from '@/assets/icons/settings-icon.png';
 
@@ -620,10 +621,11 @@ function NotificationSettings() {
 }
 
 function PrivacySettings() {
-  const { showFollowersFollowing, hideFollowerCounts, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const [whoCanMessage, setWhoCanMessage] = useState('everyone');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
+  const [followRequestsOpen, setFollowRequestsOpen] = useState(false);
   
   const handlePostVisibilityChange = async (newVisibility: 'public' | 'private') => {
     if (!user?.address) {
@@ -681,6 +683,26 @@ function PrivacySettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">Profile Visibility</h3>
         <div className="space-y-4">
+          <SettingToggle
+            icon={Lock}
+            title="Private Account"
+            description="Only approved followers can see your content"
+            defaultChecked={isPrivate}
+            onCheckedChange={(checked) => updateSettings({ is_private: checked })}
+            disabled={isUpdating || isLoading}
+          />
+          {isPrivate && (
+            <div className="ml-8">
+              <button
+                onClick={() => setFollowRequestsOpen(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white text-sm font-medium"
+              >
+                <UserPlus className="w-4 h-4" />
+                View Follow Requests
+              </button>
+              <FollowRequestsDrawer open={followRequestsOpen} onOpenChange={setFollowRequestsOpen} />
+            </div>
+          )}
           <SettingToggle
             icon={Globe}
             title="Public Profile"
@@ -1055,12 +1077,16 @@ function SettingToggle({
   icon: Icon, 
   title, 
   description, 
-  defaultChecked = false 
+  defaultChecked = false,
+  onCheckedChange,
+  disabled = false,
 }: { 
   icon: any; 
   title: string; 
   description: string; 
   defaultChecked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="flex items-center justify-between">
@@ -1071,7 +1097,12 @@ function SettingToggle({
           <p className="text-zinc-500 text-sm">{description}</p>
         </div>
       </div>
-      <Switch defaultChecked={defaultChecked} />
+      <Switch 
+        defaultChecked={defaultChecked} 
+        checked={onCheckedChange ? defaultChecked : undefined}
+        onCheckedChange={onCheckedChange}
+        disabled={disabled}
+      />
     </div>
   );
 }
