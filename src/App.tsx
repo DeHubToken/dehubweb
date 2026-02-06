@@ -11,6 +11,7 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import Index from "./pages/Index";
 import DeleteAccount from "./pages/DeleteAccount";
 import CreatorsPage from "./pages/app/CreatorsPage";
+import JobsPage from "./pages/JobsPage";
 import SkillPage from "./pages/SkillPage";
 import NotFound from "./pages/NotFound";
 
@@ -61,6 +62,7 @@ function AppContent() {
             <Route path="/" element={<Index />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/creators" element={<CreatorsPage />} />
+            <Route path="/jobs" element={<JobsPage />} />
             <Route path="/skill.md" element={<SkillPage />} />
             
             {/* App routes with shared layout */}
