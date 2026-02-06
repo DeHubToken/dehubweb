@@ -3273,13 +3273,15 @@ export interface LiveChatUserProfile {
  * GET /api/livechat/rooms
  */
 export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
-  const response = await apiCall<{ result: LiveChatRoom[] } | LiveChatRoom[]>("/api/livechat/rooms", {
+  const response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
     requiresAuth: false,
   });
-  if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
-    return response.result;
+  // API returns { rooms: [...], total: N }
+  if (response && typeof response === 'object') {
+    if ('rooms' in response && Array.isArray(response.rooms)) return response.rooms as LiveChatRoom[];
+    if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatRoom[];
   }
-  if (Array.isArray(response)) return response;
+  if (Array.isArray(response)) return response as unknown as LiveChatRoom[];
   return [];
 }
 
@@ -3305,7 +3307,7 @@ export async function getLiveChatMessages(
   roomId: string,
   params?: { page?: number; limit?: number; before?: string }
 ): Promise<LiveChatMessage[]> {
-  const response = await apiCall<{ result: LiveChatMessage[] } | LiveChatMessage[]>(
+  const response = await apiCall<Record<string, unknown>>(
     `/api/livechat/rooms/${roomId}/messages`,
     {
       params: {
@@ -3316,10 +3318,12 @@ export async function getLiveChatMessages(
       requiresAuth: false,
     }
   );
-  if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
-    return response.result;
+  // API may return { messages: [...] } or { result: [...] }
+  if (response && typeof response === 'object') {
+    if ('messages' in response && Array.isArray(response.messages)) return response.messages as LiveChatMessage[];
+    if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatMessage[];
   }
-  if (Array.isArray(response)) return response;
+  if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
   return [];
 }
 
