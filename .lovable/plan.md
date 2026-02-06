@@ -1,47 +1,43 @@
 
 
-# Make Sort/Filter Menus Horizontally Scrollable
+## Fix: Comment Copy Link Not Including Comment ID
 
-## Problem
-The sort and filter pill menus (Sort, Upload Date, Duration, Post Type, Content Access, Content Type) currently use `flex-wrap`, which causes them to break into two rows on smaller screens. This looks crowded and inconsistent with the rest of the app's horizontal scroll patterns.
+### Investigation Summary
 
-## Solution
-Replace `flex-wrap` with horizontal scrolling (`overflow-x-auto`) on all filter pill rows across every feed. This matches the existing pattern used by Radio genre filters and TV category filters. A right-side fade gradient will hint that more options exist off-screen.
+I thoroughly tested the "Copy Link" feature in the browser. Here's what I found:
 
-## Files to Update
+1. **The code is correct** -- at line 247 in `CommentsSection.tsx`, the URL is built as:
+   ```
+   ${window.location.origin}/app/post/${tokenId}?comment=${comment.id}
+   ```
+   And the API returns valid comment IDs (e.g., `"938"`, `"934"`, `"935"`).
 
-Four feed files contain filter sections that need this change:
+2. **There are TWO different "Copy Link" buttons** that look the same:
+   - **Post-level Copy Link** (in `ActionBar.tsx`, line 225): copies just `/app/post/2719` with NO comment ID -- this is the share button below the post content
+   - **Comment-level Copy Link** (in `CommentsSection.tsx`, line 247): copies `/app/post/2719?comment=938` WITH the comment ID -- this is inside the share dropdown on each individual comment
 
-1. **HomeFeed.tsx** -- 4 filter rows: Sort, Upload Date, Post Type, Content Access
-2. **VideosFeed.tsx** -- 4 filter rows: Sort, Duration, Upload Date, Content Type
-3. **ImagesFeed.tsx** -- 3 filter rows: Sort, Upload Date, Content Type
-4. **ShortsFeed.tsx** -- 3 filter rows: Sort, Duration, Upload Date
+3. **There's also a Share icon in the comments panel header** (line 712-718 in `CommentsSection.tsx`) that does nothing when clicked -- no handler attached at all.
 
-## Technical Details
+You might be clicking the post-level share button (ActionBar) which only copies the post link, not the comment-specific one.
 
-For each filter row, the change is the same pattern:
+### To verify, here's what I'll do:
 
-**Before:**
+1. **Add a visible toast message** that includes the actual URL being copied, so you can confirm which button is being triggered and what URL it produces.
+
+2. **After verification**, I'll remove the debug toast and keep only the clean "Comment link copied" message.
+
+### Technical Change
+
+**File: `src/components/app/cards/CommentsSection.tsx`** (line 247)
+
+Temporarily update the toast to show the copied URL:
+```typescript
+onClick={() => {
+  const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
+  navigator.clipboard.writeText(url);
+  toast.success(`Copied: ${url}`);
+}}
 ```
-<div class="flex gap-1.5 flex-wrap">
-  {buttons}
-</div>
-```
 
-**After:**
-```
-<div class="relative">
-  <div class="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
-    {buttons with flex-shrink-0}
-  </div>
-  <div class="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
-</div>
-```
-
-- Each button gets `flex-shrink-0` so it doesn't compress
-- `scrollbar-hide` keeps it clean (already used elsewhere in the app)
-- A subtle fade on the right edge signals scrollability
-- The gradient fades from `zinc-900` to match the filter panel background
-
-This is a purely visual/layout change with no logic or data changes.
+This will show the full URL in the toast so you can confirm the comment ID is present. Then we can identify if the issue is with which button you're pressing.
 
