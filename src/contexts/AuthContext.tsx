@@ -20,6 +20,7 @@ import {
   isTokenExpired,
   type DeHubUser 
 } from '@/lib/api/dehub';
+import { Wallet } from 'ethers';
 import {
   initWeb3Auth,
   disconnectWeb3Auth,
@@ -265,22 +266,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    // Get address from provider (works for both AA and EOA)
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available from provider');
-    }
-    const authAddress = accounts[0].toLowerCase();
+    // Redirect flow is always from social login (email/SMS)
+    // Get private key and sign with ethers for standard ECDSA signature
+    console.log('[Auth] Redirect - Getting private key for direct signing...');
+    const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+    const wallet = new Wallet(privateKey);
+    const authAddress = wallet.address.toLowerCase();
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Redirect - Signing with address:', authAddress);
-
-    // Use personal_sign - Web3Auth AA provider handles signing internally
-    const signature = await provider.request({
-      method: 'personal_sign',
-      params: [message, authAddress],
-    }) as string;
+    console.log('[Auth] Redirect - Signing with ethers.Wallet for address:', authAddress);
+    const signature = await wallet.signMessage(message);
 
     console.log('[Auth] Redirect auth - Address:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
@@ -321,31 +317,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    // Get address from provider (works for both AA and EOA)
-    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-    if (!accounts || accounts.length === 0) {
-      throw new Error('No accounts available from provider');
-    }
-    const authAddress = accounts[0].toLowerCase();
-
-    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-    console.log('[Auth] Signing with address:', authAddress);
-    console.log('[Auth] Is social login:', isSocialLoginConnected());
-
-    // Use personal_sign - Web3Auth AA provider handles signing internally
+    let authAddress: string;
     let signature: string;
-    try {
-      signature = await provider.request({
-        method: 'personal_sign',
-        params: [message, authAddress],
-      }) as string;
-    } catch {
-      // Fallback: some providers expect [address, message] order
-      signature = await provider.request({
-        method: 'personal_sign',
-        params: [authAddress, message],
-      }) as string;
+
+    // Check if this is a social login (embedded wallet)
+    const isSocial = isSocialLoginConnected();
+    console.log('[Auth] Is social login:', isSocial);
+
+    if (isSocial) {
+      // Social login: get private key and sign with ethers for standard ECDSA signature
+      // This bypasses Web3Auth wallet services which would transform the signature
+      console.log('[Auth] Getting private key for direct signing...');
+      const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
+      const wallet = new Wallet(privateKey);
+      authAddress = wallet.address.toLowerCase();
+
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+      console.log('[Auth] Signing with ethers.Wallet for address:', authAddress);
+      signature = await wallet.signMessage(message);
+    } else {
+      // External wallet: use provider signing
+      const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts available from provider');
+      }
+      authAddress = accounts[0].toLowerCase();
+
+      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+
+      console.log('[Auth] Signing with external wallet for address:', authAddress);
+      try {
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [message, authAddress],
+        }) as string;
+      } catch {
+        // Fallback: some providers expect [address, message] order
+        signature = await provider.request({
+          method: 'personal_sign',
+          params: [authAddress, message],
+        }) as string;
+      }
     }
 
     console.log('[Auth] Using address for auth:', authAddress);
