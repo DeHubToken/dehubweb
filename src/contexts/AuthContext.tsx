@@ -97,9 +97,8 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
     case 'twitter': return AUTH_CONNECTION.TWITTER;
     case 'apple': return AUTH_CONNECTION.APPLE;
     case 'discord': return AUTH_CONNECTION.DISCORD;
-    // telegram and github not configured in no-modal SDK - fallback to google
-    case 'telegram': return AUTH_CONNECTION.GOOGLE;
-    case 'github': return AUTH_CONNECTION.GOOGLE;
+    case 'telegram': return AUTH_CONNECTION.TELEGRAM;
+    case 'github': return AUTH_CONNECTION.GITHUB;
     default: return AUTH_CONNECTION.GOOGLE;
   }
 }

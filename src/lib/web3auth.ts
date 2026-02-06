@@ -1,16 +1,16 @@
 /**
- * Web3Auth Configuration with No-Modal SDK
- * =========================================
- * Web3Auth No-Modal SDK for Base Mainnet with direct private key access.
- * Uses EthereumPrivateKeyProvider to enable eth_private_key method for
- * standard ECDSA signatures required by DeHub backend.
+ * Web3Auth Configuration with No-Modal SDK v8
+ * ============================================
+ * Web3Auth No-Modal SDK v8 for Base Mainnet with direct private key access.
+ * Uses EthereumPrivateKeyProvider + OpenloginAdapter for eth_private_key support
+ * to generate standard ECDSA signatures required by DeHub backend.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
  * without showing any Web3Auth modal.
  */
 
 import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { AuthAdapter } from "@web3auth/auth-adapter";
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import {
   CHAIN_NAMESPACES,
@@ -34,12 +34,14 @@ export function isMobileDevice(): boolean {
 // Re-export for use in other files
 export { WALLET_ADAPTERS };
 
-// Auth connection types for social login
+// Auth connection types for social login (maps to Web3Auth login providers)
 export const AUTH_CONNECTION = {
   GOOGLE: "google",
   APPLE: "apple",
   TWITTER: "twitter",
   DISCORD: "discord",
+  TELEGRAM: "telegram",
+  GITHUB: "github",
   EMAIL_PASSWORDLESS: "email_passwordless",
   SMS_PASSWORDLESS: "sms_passwordless",
 } as const;
@@ -111,8 +113,8 @@ async function getWeb3AuthClientId(): Promise<string> {
 }
 
 /**
- * Initialize Web3Auth No-Modal with direct private key access
- * Uses EthereumPrivateKeyProvider for eth_private_key support
+ * Initialize Web3Auth No-Modal v8 with direct private key access
+ * Uses EthereumPrivateKeyProvider + OpenloginAdapter for eth_private_key support
  */
 export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
   console.log("[Web3Auth] initWeb3Auth() called");
@@ -157,26 +159,20 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
         clientId,
         chainConfig,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        privateKeyProvider,
-        uiConfig: {
-          appName: "DeHub",
-          mode: "dark",
-          defaultLanguage: "en",
-        },
       });
       console.log("[Web3Auth] Web3AuthNoModal instance created");
 
-      // Configure Auth adapter for social/email/sms logins
-      console.log("[Web3Auth] Configuring Auth adapter...");
-      const authAdapter = new AuthAdapter({
+      // Configure Openlogin adapter for social/email/sms logins
+      console.log("[Web3Auth] Configuring Openlogin adapter...");
+      const openloginAdapter = new OpenloginAdapter({
+        privateKeyProvider,
         adapterSettings: {
           uxMode: isMobileDevice() ? UX_MODE.REDIRECT : UX_MODE.POPUP,
           redirectUrl: window.location.origin,
         },
-        privateKeyProvider,
       });
-      web3authInstance.configureAdapter(authAdapter);
-      console.log("[Web3Auth] Auth adapter configured");
+      web3authInstance.configureAdapter(openloginAdapter);
+      console.log("[Web3Auth] Openlogin adapter configured");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -192,7 +188,7 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      console.log("[Web3Auth] INITIALIZATION COMPLETE (No-Modal + PrivateKeyProvider), status:", web3authInstance.status);
+      console.log("[Web3Auth] INITIALIZATION COMPLETE (No-Modal v8 + PrivateKeyProvider), status:", web3authInstance.status);
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] INITIALIZATION FAILED:", error);
@@ -234,12 +230,12 @@ export async function connectToSocialProvider(
 
   let provider: IProvider | null;
   try {
-    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_ADAPTERS.AUTH}, { loginProvider: ${authConnection} })`);
-    provider = await web3auth.connectTo(WALLET_ADAPTERS.AUTH, {
+    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_ADAPTERS.OPENLOGIN}, { loginProvider: ${authConnection} })`);
+    provider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
       loginProvider: authConnection,
       extraLoginOptions,
     });
-    lastConnectedAdapter = WALLET_ADAPTERS.AUTH; // Track that this was a social login
+    lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN; // Track that this was a social login
     console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT_OK provider=${provider ? 'received' : 'null'}`);
   } catch (err) {
     console.error(`[Web3Auth] connectToSocialProvider: phase=CONNECT_FAILED`, err);
@@ -370,11 +366,11 @@ export function isWeb3AuthConnected(): boolean {
 }
 
 /**
- * Check if the current connection is via social login (Auth adapter)
+ * Check if the current connection is via social login (Openlogin adapter)
  * Used to determine signing method (private key vs provider)
  */
 export function isSocialLoginConnected(): boolean {
-  return lastConnectedAdapter === WALLET_ADAPTERS.AUTH;
+  return lastConnectedAdapter === WALLET_ADAPTERS.OPENLOGIN;
 }
 
 /**
