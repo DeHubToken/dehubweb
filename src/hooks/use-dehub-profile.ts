@@ -37,6 +37,8 @@ export interface ProfileData {
   followingsList?: string[];
   /** Staked DHB amount for tier badge */
   staked?: number;
+  /** Raw customs data from API */
+  customs?: Record<string, unknown>;
 }
 
 /**
@@ -90,6 +92,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     staked: typeof user.staked === 'number' 
       ? user.staked 
       : user.balanceData?.[0]?.staked,
+    customs: user.customs as Record<string, unknown> | undefined,
   };
 }
 
