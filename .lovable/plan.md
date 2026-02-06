@@ -1,71 +1,47 @@
 
 
-# Plan: Make VideosFeed "Most Liked" Show All-Time Rankings
+# Make Sort/Filter Menus Horizontally Scrollable
 
 ## Problem
-
-The Videos feed "Most Liked" sort doesn't match the Home feed's behavior:
-- **Home feed**: "Most Liked" ignores the date filter and shows all-time most liked content
-- **Videos feed**: "Most Liked" still applies whatever date filter is selected (e.g., "This Week"), limiting results to that time range
-
-## Root Cause
-
-In `VideosFeed.tsx`, the `range` parameter is always derived from `selectedUploadDate`, regardless of the sort type:
-
-```typescript
-// Current behavior - always applies date filter
-range: getUnifiedRange(selectedUploadDate.value),
-```
-
-In `HomeFeed.tsx`, the range is conditionally removed for global sorts:
-
-```typescript
-// HomeFeed correctly ignores date for global sorts
-const range = useMemo(() => {
-  if (selectedSort.value === 'trending' || selectedSort.value === 'following') {
-    return undefined; // No range limit
-  }
-  return getDateRange(selectedDate.value);
-}, [selectedSort.value, selectedDate.value]);
-```
+The sort and filter pill menus (Sort, Upload Date, Duration, Post Type, Content Access, Content Type) currently use `flex-wrap`, which causes them to break into two rows on smaller screens. This looks crowded and inconsistent with the rest of the app's horizontal scroll patterns.
 
 ## Solution
+Replace `flex-wrap` with horizontal scrolling (`overflow-x-auto`) on all filter pill rows across every feed. This matches the existing pattern used by Radio genre filters and TV category filters. A right-side fade gradient will hint that more options exist off-screen.
 
-Update `VideosFeed.tsx` to ignore the date range when "Most Liked" is selected, matching the Home feed behavior.
+## Files to Update
 
-## Technical Changes
+Four feed files contain filter sections that need this change:
 
-### File: `src/components/app/feeds/VideosFeed.tsx`
+1. **HomeFeed.tsx** -- 4 filter rows: Sort, Upload Date, Post Type, Content Access
+2. **VideosFeed.tsx** -- 4 filter rows: Sort, Duration, Upload Date, Content Type
+3. **ImagesFeed.tsx** -- 3 filter rows: Sort, Upload Date, Content Type
+4. **ShortsFeed.tsx** -- 3 filter rows: Sort, Duration, Upload Date
 
-1. **Add conditional range logic** before the `useUnifiedFeed` call:
+## Technical Details
 
-```typescript
-// For "Most Liked", ignore date filter to get true all-time ranking
-const effectiveRange = useMemo(() => {
-  if (selectedSort.value === 'most-liked') {
-    return undefined; // All-time for global ranking
-  }
-  return getUnifiedRange(selectedUploadDate.value);
-}, [selectedSort.value, selectedUploadDate.value]);
+For each filter row, the change is the same pattern:
+
+**Before:**
+```
+<div class="flex gap-1.5 flex-wrap">
+  {buttons}
+</div>
 ```
 
-2. **Update the useUnifiedFeed hook call** to use the new conditional range:
-
-```typescript
-useUnifiedFeed({
-  // ...other params
-  range: effectiveRange, // Changed from getUnifiedRange(selectedUploadDate.value)
-  // ...
-});
+**After:**
+```
+<div class="relative">
+  <div class="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+    {buttons with flex-shrink-0}
+  </div>
+  <div class="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+</div>
 ```
 
-## Files to Modify
+- Each button gets `flex-shrink-0` so it doesn't compress
+- `scrollbar-hide` keeps it clean (already used elsewhere in the app)
+- A subtle fade on the right edge signals scrollability
+- The gradient fades from `zinc-900` to match the filter panel background
 
-1. `src/components/app/feeds/VideosFeed.tsx` - Add conditional range logic for "Most Liked" sort
-
-## Expected Behavior After Fix
-
-- **"Most Liked" on Videos tab**: Shows all-time most liked videos, regardless of date filter selection
-- **Other sorts** (Latest, Most Viewed, Most Comments): Continue to respect the date filter as before
-- **Matches Home feed behavior**: Consistent user experience across tabs
+This is a purely visual/layout change with no logic or data changes.
 
