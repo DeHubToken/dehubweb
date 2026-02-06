@@ -419,7 +419,7 @@ export function ImagesFeed({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="p-3 sm:p-4 space-y-4 bg-zinc-900 mx-2 sm:mx-3 rounded-2xl mb-2">
+            <div className="relative p-3 sm:p-4 space-y-4 bg-zinc-900 mx-2 sm:mx-3 rounded-2xl mb-2">
               <SortFilterSection 
                 selected={selectedSort} 
                 onSelect={setSelectedSort} 
@@ -429,20 +429,7 @@ export function ImagesFeed({
                 onSelect={setSelectedUploadDate} 
               />
               <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
-                  <button
-                    onClick={() => {
-                      setSelectedSort(SORT_OPTIONS[0]);
-                      setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-                      resetContentFilters();
-                    }}
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-                    aria-label="Reset filters"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
                 <div className="relative">
                   <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
                     {CONTENT_TYPE_FILTERS.map((filter) => (
@@ -463,6 +450,18 @@ export function ImagesFeed({
                   <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
                 </div>
               </div>
+              {/* Reset filters - bottom right */}
+              <button
+                onClick={() => {
+                  setSelectedSort(SORT_OPTIONS[0]);
+                  setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                  resetContentFilters();
+                }}
+                className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                aria-label="Reset filters"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
             </div>
           </motion.div>
         )}
