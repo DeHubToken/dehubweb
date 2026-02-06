@@ -428,22 +428,40 @@ export function ImagesFeed({
                 selected={selectedUploadDate} 
                 onSelect={setSelectedUploadDate} 
               />
-              <ContentTypeFilterSection 
-                filters={contentFilters} 
-                onToggle={toggleContentFilter} 
-              />
-              <div className="flex justify-end pt-1">
-                <button
-                  onClick={() => {
-                    setSelectedSort(SORT_OPTIONS[0]);
-                    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-                    resetContentFilters();
-                  }}
-                  className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-                  aria-label="Reset filters"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                </button>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+                  <button
+                    onClick={() => {
+                      setSelectedSort(SORT_OPTIONS[0]);
+                      setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+                      resetContentFilters();
+                    }}
+                    className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                    aria-label="Reset filters"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="relative">
+                  <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+                    {CONTENT_TYPE_FILTERS.map((filter) => (
+                      <button
+                        key={filter.value}
+                        onClick={() => toggleContentFilter(filter.value)}
+                        className={cn(
+                          'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                          contentFilters[filter.value]
+                            ? 'bg-white text-black'
+                            : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                        )}
+                      >
+                        {filter.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+                </div>
               </div>
             </div>
           </motion.div>
