@@ -83,10 +83,11 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     username: apiComment.writor?.username || 'Anonymous',
     avatar: resolvedAvatar,
     text: apiComment.content,
-    likes: 0, // API doesn't provide like counts for comments currently
+    likes: apiComment.likeCount ?? 0,
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),
     createdAt,
+    isLiked: apiComment.isLiked ?? false,
     replyToId: apiComment.parentId ? String(apiComment.parentId) : undefined,
     address,
   };
@@ -203,12 +204,13 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
             <button
               onClick={() => onLike(comment.id)}
               className={cn(
-                "transition-colors",
-                comment.isLiked ? "text-zinc-400" : "text-white hover:text-zinc-400"
+                "flex items-center gap-1 transition-colors",
+                comment.isLiked ? "text-blue-400" : "text-white hover:text-zinc-400"
               )}
               aria-label="Like"
             >
-              <ThumbsUp className="w-4 h-4" />
+              <ThumbsUp className={cn("w-4 h-4", comment.isLiked && "fill-current")} />
+              {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
             </button>
             <button
               onClick={() => onDislike(comment.id)}
@@ -281,7 +283,7 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
 export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'search'>('replies');
@@ -310,8 +312,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
   // Fetch comments from API
   const { data: apiComments, isLoading, error } = useQuery({
-    queryKey: ['comments', tokenId],
-    queryFn: () => getNFTComments(tokenId),
+    queryKey: ['comments', tokenId, walletAddress],
+    queryFn: () => getNFTComments(tokenId, 0, 20, walletAddress?.toLowerCase()),
     staleTime: 30000,
   });
 
@@ -492,7 +494,19 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     });
     
     try {
-      await toggleCommentLike({ commentId });
+      const result = await toggleCommentLike({ commentId });
+      // Update override with server-confirmed state
+      if (result.likeCount !== undefined) {
+        setLikeOverrides(prev => {
+          const next = new Map(prev);
+          next.set(commentId, {
+            isLiked: result.isLiked,
+            isDisliked: false,
+            likes: result.likeCount ?? newLikes,
+          });
+          return next;
+        });
+      }
     } catch (error) {
       // Revert on error
       setLikeOverrides(prev => {
