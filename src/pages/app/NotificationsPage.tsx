@@ -73,19 +73,14 @@ function getNotificationIcon(type: DeHubNotification['type']) {
 }
 
 function getNotificationContent(notification: DeHubNotification): React.ReactNode {
-  // Use the content from API which already includes aggregation text
-  if (notification.content) {
-    return notification.content;
-  }
-  
-  // Fallback text generation
+  // Always generate clean, simple notification text — never use raw API content
   const actorName = notification.actorUsername || 'Someone';
   
   switch (notification.type) {
     case 'like':
-      return `${actorName} liked your ${notification.postType === 'video' ? 'video' : 'post'}`;
+      return `${actorName} liked your post`;
     case 'comment':
-      return `${actorName} commented on your ${notification.postType === 'video' ? 'video' : 'post'}`;
+      return `${actorName} commented on your post`;
     case 'comment_reply':
       return `${actorName} replied to your comment`;
     case 'tip':
@@ -94,15 +89,15 @@ function getNotificationContent(notification: DeHubNotification): React.ReactNod
     case 'subscription':
       return `${actorName} subscribed to your plan`;
     case 'ppv_purchase':
-      return `${actorName} purchased access to your video`;
+      return `${actorName} purchased your content`;
     case 'following':
       return `${actorName} started following you`;
     case 'video_milestone':
-      return `🎉 Your video reached a new milestone!`;
+      return `🎉 Your post reached a new milestone!`;
     case 'livestream_start':
       return `${actorName} started streaming`;
     case 'video_removal':
-      return `Your video was removed`;
+      return `Your post was removed`;
     default:
       return 'New notification';
   }
