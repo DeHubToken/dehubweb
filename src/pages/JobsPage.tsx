@@ -117,7 +117,7 @@ export default function JobsPage() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div>
+          <div className="text-center sm:text-left flex-1">
             <h1 className="text-2xl font-bold">Careers at DeHub</h1>
             <p className="text-zinc-500 text-sm">Join the team building the future of decentralised social media</p>
           </div>
