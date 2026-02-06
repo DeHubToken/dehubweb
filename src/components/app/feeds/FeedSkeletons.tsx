@@ -34,18 +34,18 @@ function Skeleton({ className }: SkeletonProps) {
 
 export function StoriesBarSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-3 lg:p-4 -mt-[7px]">
-      <div className="flex gap-3 lg:gap-4 overflow-hidden">
+    <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
+      <div className="flex gap-4 overflow-hidden">
         {/* Create button skeleton */}
-        <div className="flex flex-col items-center gap-0.5 lg:gap-1 flex-shrink-0">
-          <Skeleton className="w-[62px] h-[62px] lg:w-[72px] lg:h-[72px] rounded-xl" />
-          <Skeleton className="w-10 lg:w-12 h-3 rounded" />
+        <div className="flex flex-col items-center gap-1 flex-shrink-0">
+          <Skeleton className="w-[72px] h-[72px] rounded-xl" />
+          <Skeleton className="w-12 h-3 rounded" />
         </div>
         {/* Story items skeleton */}
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex flex-col items-center gap-0.5 lg:gap-1 flex-shrink-0">
-            <Skeleton className="w-[58px] h-[58px] lg:w-[68px] lg:h-[68px] rounded-xl" />
-            <Skeleton className="w-12 lg:w-14 h-3 rounded" />
+          <div key={i} className="flex flex-col items-center gap-1 flex-shrink-0">
+            <Skeleton className="w-[68px] h-[68px] rounded-xl" />
+            <Skeleton className="w-14 h-3 rounded" />
           </div>
         ))}
       </div>
