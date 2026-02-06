@@ -45,7 +45,7 @@ export function PostMetadata({ timestamp, viewCount, translateControl }: PostMet
       return (
         <button
           onClick={translateControl.onShowOriginal}
-          className="flex items-center gap-1 text-zinc-500 hover:text-zinc-400 transition-colors"
+          className="flex items-center gap-1 text-white hover:text-zinc-300 transition-colors"
         >
           <RotateCcw className="w-3 h-3" />
           <span>Show original</span>
@@ -71,7 +71,7 @@ export function PostMetadata({ timestamp, viewCount, translateControl }: PostMet
             "flex items-center gap-1 transition-colors",
             translateControl.error 
               ? "text-red-400" 
-              : "text-zinc-500 hover:text-zinc-400"
+              : "text-white hover:text-zinc-300"
           )}
         >
           {translateControl.isLoading ? (

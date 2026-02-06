@@ -282,7 +282,7 @@ export function TranslatableText({
       return (
         <button
           onClick={handleShowOriginal}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-400 transition-colors mt-1"
+          className="flex items-center gap-1.5 text-xs text-white hover:text-zinc-300 transition-colors mt-1"
         >
           <RotateCcw className="w-3 h-3" />
           <span>
@@ -311,7 +311,7 @@ export function TranslatableText({
             "flex items-center gap-1.5 text-xs transition-colors mt-1",
             error 
               ? "text-red-400" 
-              : "text-zinc-500 hover:text-zinc-400"
+              : "text-white hover:text-zinc-300"
           )}
         >
           {isLoading ? (
@@ -395,7 +395,7 @@ export function TranslatableGroup({ text, children }: TranslatableGroupProps) {
             "flex items-center gap-1.5 text-xs transition-colors mt-1",
             error 
               ? "text-red-400" 
-              : "text-zinc-500 hover:text-zinc-400"
+              : "text-white hover:text-zinc-300"
           )}
         >
           {isLoading ? (
