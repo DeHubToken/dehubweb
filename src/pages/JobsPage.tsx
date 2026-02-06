@@ -145,7 +145,7 @@ export default function JobsPage() {
               {/* Title row */}
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div>
-                  <h2 className="text-xl font-bold text-white">Business Development Manager</h2>
+                  <h2 className="text-xl font-bold text-white">Business Development Managers</h2>
                   <p className="text-zinc-400 text-sm mt-1">Partnerships &amp; Growth</p>
                 </div>
                 <div className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-xs font-medium text-white shrink-0">
@@ -163,7 +163,7 @@ export default function JobsPage() {
               {/* About the role */}
               <Section title="About the Role">
                 <p>
-                  As a Business Development Manager at DeHub you will be the driving force behind our partnership 
+                  As a Business Development Manager at DeHub, you will be the driving force behind our partnership 
                   strategy. Your mission is to identify, engage, and close deals with companies across both Web2 
                   and Web3 — from gaming studios and content platforms to blockchain projects and DeFi protocols. 
                   This is an OTE (On-Target Earnings) commission-based position: the harder you hustle, the more you earn.
