@@ -409,9 +409,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                       setSelectedDuration(DURATION_FILTERS[0]);
                       setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
                     }}
-                    className="text-xs text-zinc-500 hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                    aria-label="Reset filters"
                   >
-                    Reset Filters
+                    <RefreshCw className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
