@@ -138,7 +138,8 @@ export function usePersistedContentFilters(
   feedType: FeedType
 ): [
   { ppv: boolean; w2e: boolean; locked: boolean },
-  (filter: 'ppv' | 'w2e' | 'locked') => void
+  (filter: 'ppv' | 'w2e' | 'locked') => void,
+  () => void
 ] {
   const defaultFilters = { ppv: false, w2e: false, locked: false };
   
@@ -151,6 +152,10 @@ export function usePersistedContentFilters(
   const toggleFilter = useCallback((filter: 'ppv' | 'w2e' | 'locked') => {
     setFilters((prev) => ({ ...prev, [filter]: !prev[filter] }));
   }, [setFilters]);
+
+  const resetFilters = useCallback(() => {
+    setFilters(defaultFilters);
+  }, [setFilters]);
   
-  return [filters, toggleFilter];
+  return [filters, toggleFilter, resetFilters];
 }
