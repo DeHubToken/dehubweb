@@ -94,7 +94,7 @@ export function ImageTranslationSheet({
             <>
               {/* Source Language Badge */}
               <div className="flex items-center gap-2">
-                <span className="px-2 py-1 rounded-lg bg-zinc-800 text-zinc-400 text-xs">
+                <span className="px-2 py-1 rounded-lg bg-zinc-800 text-white text-xs">
                   Translated from {sourceLangName}
                 </span>
               </div>
