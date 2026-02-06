@@ -972,7 +972,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
           </AnimatePresence>
 
-          <div className="pt-2">
+          <div className="pt-3">
             <StoriesBar users={storyUsers} shorts={shorts} />
           </div>
           

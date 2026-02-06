@@ -175,13 +175,13 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   );
 
   const triggerButton = (
-    <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer -ml-[7.5px]">
+    <div className="flex flex-col items-center gap-0.5 lg:gap-1 flex-shrink-0 cursor-pointer -ml-[7.5px]">
       <div className="rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500 p-[2px]">
-        <div className="w-[68px] h-[68px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
-          <Plus className="w-6 h-6 text-white" />
+        <div className="w-[58px] h-[58px] lg:w-[68px] lg:h-[68px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
+          <Plus className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
         </div>
       </div>
-      <span className="text-xs text-zinc-400 truncate w-16 text-center">Create</span>
+      <span className="text-[10px] lg:text-xs text-zinc-400 truncate w-14 lg:w-16 text-center">Create</span>
     </div>
   );
 
@@ -253,12 +253,12 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         isOpen={isPostModalOpen}
         onClose={() => setIsPostModalOpen(false)}
       />
-      <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
+      <div className="bg-zinc-900 rounded-2xl p-3 lg:p-4 -mt-[7px]">
         <div className="relative">
           {/* Right fade only */}
           <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
           
-          <SwipeableCarousel className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
+          <SwipeableCarousel className="flex gap-3 lg:gap-4 overflow-x-auto scrollbar-hide px-1 lg:px-2">
             {/* Create Story/Live Button */}
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
               <div onClick={() => setIsOpen(true)}>
@@ -286,14 +286,14 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
             {allStoryItems.map((item, index) => (
               <div
                 key={item.type === 'story' ? item.story?.id : `placeholder-${index}`}
-                className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer"
+                className="flex flex-col items-center gap-0.5 lg:gap-1 flex-shrink-0 cursor-pointer"
                 onClick={() => item.story && handleViewStory(item.story)}
               >
                 {item.type === 'story' ? (
                   <div className="rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500 p-[2px]">
                     {/* Show thumbnail if available, otherwise avatar */}
                     {item.thumbnail ? (
-                      <div className="w-[68px] h-[68px] rounded-[10px] overflow-hidden">
+                      <div className="w-[58px] h-[58px] lg:w-[68px] lg:h-[68px] rounded-[10px] overflow-hidden">
                         <img 
                           src={item.thumbnail} 
                           alt={item.name}
@@ -301,7 +301,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                         />
                       </div>
                     ) : (
-                      <Avatar className="w-[68px] h-[68px] rounded-[10px]">
+                      <Avatar className="w-[58px] h-[58px] lg:w-[68px] lg:h-[68px] rounded-[10px]">
                         <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
                         <AvatarFallback className="bg-zinc-700 rounded-[10px]">
                           {item.name[0]?.toUpperCase()}
@@ -310,14 +310,14 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                     )}
                   </div>
                 ) : (
-                  <Avatar className="w-[68px] h-[68px] rounded-[10px]">
+                  <Avatar className="w-[58px] h-[58px] lg:w-[68px] lg:h-[68px] rounded-[10px]">
                     <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
                     <AvatarFallback className="bg-zinc-700 rounded-[10px]">
                       {item.name[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <span className="text-xs text-zinc-400 truncate w-16 text-center">
+                <span className="text-[10px] lg:text-xs text-zinc-400 truncate w-14 lg:w-16 text-center">
                   {item.name}
                 </span>
               </div>
