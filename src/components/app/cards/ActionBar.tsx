@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { voteOnNFT } from '@/lib/api/dehub';
+import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import {
@@ -174,7 +174,7 @@ export function ActionBar({
     setTimeout(() => setJustVoted(null), 400);
 
     try {
-      await voteOnNFT(postId, vote);
+      await voteOnPost({ tokenId: parseInt(postId, 10), voteType: vote ? 'for' : 'against' });
       // No toast on success - animation is enough feedback
     } catch (error: unknown) {
       // Revert optimistic update on error

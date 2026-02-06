@@ -15,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnNFT, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnPost, getNFTComments, postComment, followUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -289,7 +289,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setTimeout(() => setJustVoted(null), 400);
 
     try {
-      await voteOnNFT(tokenId, vote);
+      await voteOnPost({ tokenId: parseInt(tokenId, 10), voteType: vote ? 'for' : 'against' });
     } catch (error) {
       // Revert on error
       if (isRemovingVote) {
