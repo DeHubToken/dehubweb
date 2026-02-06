@@ -101,9 +101,6 @@ export function ImageTranslationSheet({
 
               {/* Translated Text */}
               <div className="space-y-2">
-                <h4 className="text-xs font-medium text-white uppercase tracking-wide">
-                  Translation
-                </h4>
                 <div className="bg-zinc-800/50 rounded-xl p-4 border border-white/5">
                   <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">
                     {result.translatedText}
