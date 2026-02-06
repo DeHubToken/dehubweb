@@ -1,38 +1,74 @@
 import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
+import { useLiveChatRooms, useLiveChatMessages } from '@/hooks/use-livechat';
+import { getMediaUrl, type LiveChatMessage as ApiMessage } from '@/lib/api/dehub';
+import { useAuth } from '@/contexts/AuthContext';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 
 interface PublicChatProps {
   onBack: () => void;
 }
 
+/** Map API livechat message to local ChatMessage format */
+function toLocalMessage(msg: ApiMessage): Message {
+  return {
+    id: msg.id,
+    userId: msg.sender?.address || 'unknown',
+    userName: msg.sender?.displayName || msg.sender?.username || msg.sender?.address?.slice(0, 8) || 'Anon',
+    userAvatar: getMediaUrl(msg.sender?.avatarImageUrl) || undefined,
+    content: msg.content || '',
+    timestamp: new Date(msg.createdAt),
+    type: (msg.type as Message['type']) || 'text',
+    imageUrl: msg.imageUrl ? getMediaUrl(msg.imageUrl) : undefined,
+  };
+}
+
 export function PublicChat({ onBack }: PublicChatProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated } = useAuth();
 
-  // Scroll to bottom when new messages arrive
+  // Fetch rooms, use the first available room
+  const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+
+  // Auto-select the first room once loaded
+  useEffect(() => {
+    if (rooms.length > 0 && !selectedRoomId) {
+      setSelectedRoomId(rooms[0].id);
+    }
+  }, [rooms, selectedRoomId]);
+
+  const { messages: apiMessages, isLoading: messagesLoading, isSending, send } = useLiveChatMessages(selectedRoomId);
+
+  // Convert API messages to local format
+  const messages: Message[] = apiMessages.map(toLocalMessage);
+
+  // Auto-scroll when messages change
   useEffect(() => {
     if (messages.length > 0) {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [messages.length]);
 
-  const handleSendMessage = (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      userId: 'currentUser',
-      userName: 'You',
-      content,
-      timestamp: new Date(),
-      type,
-      imageUrl,
-    };
-    
-    setMessages(prev => [...prev, newMessage]);
+  const handleSendMessage = async (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => {
+    if (!isAuthenticated) {
+      toast.error('Sign in to send messages');
+      return;
+    }
+    try {
+      await send(content, type, imageUrl);
+    } catch {
+      toast.error('Failed to send message');
+    }
   };
+
+  const isLoading = roomsLoading || messagesLoading;
+  const roomName = rooms.find((r) => r.id === selectedRoomId)?.name || rooms.find((r) => r.id === selectedRoomId)?.topic || 'Public Chat';
 
   return (
     <div className="flex flex-col h-full bg-zinc-900 rounded-2xl overflow-hidden">
@@ -49,11 +85,31 @@ export function PublicChat({ onBack }: PublicChatProps) {
           </Button>
           
           <div>
-            <h2 className="font-bold text-white">Public Chat</h2>
+            <h2 className="font-bold text-white">{roomName}</h2>
+            {rooms.length > 0 && (
+              <span className="text-zinc-500 text-xs flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                {rooms.find((r) => r.id === selectedRoomId)?.participantCount ?? 0} online
+              </span>
+            )}
           </div>
         </div>
         
         <div className="flex items-center gap-2">
+          {/* Room selector for multiple rooms */}
+          {rooms.length > 1 && (
+            <select
+              value={selectedRoomId || ''}
+              onChange={(e) => setSelectedRoomId(e.target.value)}
+              className="bg-zinc-800 text-white text-xs rounded-lg px-2 py-1 border border-zinc-700"
+            >
+              {rooms.map((room) => (
+                <option key={room.id} value={room.id}>
+                  {room.name || room.topic || room.id}
+                </option>
+              ))}
+            </select>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -77,7 +133,19 @@ export function PublicChat({ onBack }: PublicChatProps) {
           ref={scrollContainerRef}
           className="absolute inset-0 overflow-y-auto py-2"
         >
-          {messages.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-3 p-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex gap-3">
+                  <Skeleton className="w-8 h-8 rounded-full bg-zinc-800" />
+                  <div className="space-y-1.5 flex-1">
+                    <Skeleton className="h-3 w-24 bg-zinc-800" />
+                    <Skeleton className="h-4 w-48 bg-zinc-800" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
               <MessageCircle className="w-12 h-12 text-zinc-700" />
               <p className="text-sm">No messages yet</p>
@@ -93,7 +161,15 @@ export function PublicChat({ onBack }: PublicChatProps) {
       </div>
       
       {/* Input Area */}
-      <ChatInput onSendMessage={handleSendMessage} />
+      <div className="relative">
+        {isSending && (
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs text-zinc-400 bg-zinc-800/90 rounded-full px-3 py-1">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Sending...
+          </div>
+        )}
+        <ChatInput onSendMessage={handleSendMessage} />
+      </div>
     </div>
   );
 }

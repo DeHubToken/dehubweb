@@ -3217,3 +3217,256 @@ export async function editComment(params: {
   }
   return response as EditCommentResponse;
 }
+
+// ==========================================
+// LiveChat (Public Chat Rooms) API
+// ==========================================
+
+/**
+ * LiveChat room from API
+ */
+export interface LiveChatRoom {
+  id: string;
+  name?: string;
+  topic?: string;
+  description?: string;
+  participantCount?: number;
+  messageCount?: number;
+  createdAt?: string;
+  settings?: Record<string, unknown>;
+  moderators?: string[];
+}
+
+/**
+ * LiveChat message from API
+ */
+export interface LiveChatMessage {
+  id: string;
+  roomId: string;
+  content: string;
+  type?: 'text' | 'image' | 'gif';
+  imageUrl?: string;
+  sender: {
+    address: string;
+    username?: string;
+    displayName?: string;
+    avatarImageUrl?: string;
+  };
+  isPinned?: boolean;
+  createdAt: string;
+}
+
+/**
+ * LiveChat user profile
+ */
+export interface LiveChatUserProfile {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarImageUrl?: string;
+  isBanned?: boolean;
+  isModerator?: boolean;
+}
+
+/**
+ * List available chat rooms
+ * GET /api/livechat/rooms
+ */
+export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
+  const response = await apiCall<{ result: LiveChatRoom[] } | LiveChatRoom[]>("/api/livechat/rooms", {
+    requiresAuth: false,
+  });
+  if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
+    return response.result;
+  }
+  if (Array.isArray(response)) return response;
+  return [];
+}
+
+/**
+ * Get room details
+ * GET /api/livechat/rooms/{roomId}
+ */
+export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
+  const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>(`/api/livechat/rooms/${roomId}`, {
+    requiresAuth: false,
+  });
+  if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response.result)) {
+    return response.result;
+  }
+  return response as LiveChatRoom;
+}
+
+/**
+ * Get messages from a room
+ * GET /api/livechat/rooms/{roomId}/messages
+ */
+export async function getLiveChatMessages(
+  roomId: string,
+  params?: { page?: number; limit?: number; before?: string }
+): Promise<LiveChatMessage[]> {
+  const response = await apiCall<{ result: LiveChatMessage[] } | LiveChatMessage[]>(
+    `/api/livechat/rooms/${roomId}/messages`,
+    {
+      params: {
+        page: params?.page,
+        limit: params?.limit,
+        before: params?.before,
+      },
+      requiresAuth: false,
+    }
+  );
+  if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
+    return response.result;
+  }
+  if (Array.isArray(response)) return response;
+  return [];
+}
+
+/**
+ * Get user chat profile
+ * GET /api/livechat/user/{address}
+ */
+export async function getLiveChatUserProfile(address: string): Promise<LiveChatUserProfile> {
+  const response = await apiCall<{ result: LiveChatUserProfile } | LiveChatUserProfile>(
+    `/api/livechat/user/${address}`,
+    { requiresAuth: false }
+  );
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as LiveChatUserProfile;
+}
+
+/**
+ * Create a topic-based chat room
+ * POST /api/livechat/rooms/topic
+ */
+export async function createTopicRoom(params: {
+  topic: string;
+  description?: string;
+}): Promise<LiveChatRoom> {
+  const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>("/api/livechat/rooms/topic", {
+    method: "POST",
+    body: params as Record<string, unknown>,
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as LiveChatRoom;
+}
+
+/**
+ * Send a message to a livechat room
+ * Uses the DM upload endpoint pattern for sending messages
+ * POST /api/livechat/rooms/{roomId}/messages (if separate endpoint exists)
+ * Falls back to a simulated send via the DM upload pattern
+ */
+export async function sendLiveChatMessage(
+  roomId: string,
+  content: string,
+  type: 'text' | 'image' | 'gif' = 'text',
+  imageUrl?: string
+): Promise<LiveChatMessage> {
+  const senderAddress = localStorage.getItem('dehub_wallet') || '';
+  const body: Record<string, unknown> = {
+    roomId,
+    content,
+    type,
+    senderAddress: senderAddress.toLowerCase(),
+  };
+  if (imageUrl) body.imageUrl = imageUrl;
+
+  const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
+    `/api/livechat/rooms/${roomId}/messages`,
+    {
+      method: "POST",
+      body,
+      requiresAuth: true,
+    }
+  );
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as LiveChatMessage;
+}
+
+/**
+ * Pin a message
+ * POST /api/livechat/rooms/{roomId}/messages/{messageId}/pin
+ */
+export async function pinLiveChatMessage(roomId: string, messageId: string): Promise<void> {
+  await apiCall(`/api/livechat/rooms/${roomId}/messages/${messageId}/pin`, {
+    method: "POST",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Unpin a message
+ * DELETE /api/livechat/rooms/{roomId}/messages/{messageId}/pin
+ */
+export async function unpinLiveChatMessage(roomId: string, messageId: string): Promise<void> {
+  await apiCall(`/api/livechat/rooms/${roomId}/messages/${messageId}/pin`, {
+    method: "DELETE",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Ban a user from a room
+ * POST /api/livechat/rooms/{roomId}/ban
+ */
+export async function banLiveChatUser(roomId: string, userAddress: string): Promise<void> {
+  await apiCall(`/api/livechat/rooms/${roomId}/ban`, {
+    method: "POST",
+    body: { address: userAddress.toLowerCase() },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Unban a user from a room
+ * DELETE /api/livechat/rooms/{roomId}/ban/{userAddress}
+ */
+export async function unbanLiveChatUser(roomId: string, userAddress: string): Promise<void> {
+  await apiCall(`/api/livechat/rooms/${roomId}/ban/${userAddress.toLowerCase()}`, {
+    method: "DELETE",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Add a moderator to a room
+ * POST /api/livechat/rooms/{roomId}/moderators
+ */
+export async function addLiveChatModerator(roomId: string, userAddress: string): Promise<void> {
+  await apiCall(`/api/livechat/rooms/${roomId}/moderators`, {
+    method: "POST",
+    body: { address: userAddress.toLowerCase() },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Update room settings
+ * PATCH /api/livechat/rooms/{roomId}/settings
+ */
+export async function updateLiveChatRoomSettings(
+  roomId: string,
+  settings: Record<string, unknown>
+): Promise<LiveChatRoom> {
+  const response = await apiCall<{ result: LiveChatRoom } | LiveChatRoom>(
+    `/api/livechat/rooms/${roomId}/settings`,
+    {
+      method: "PATCH",
+      body: settings,
+      requiresAuth: true,
+    }
+  );
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as LiveChatRoom;
+}

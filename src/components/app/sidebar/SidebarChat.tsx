@@ -1,37 +1,47 @@
-import { useState, useRef } from 'react';
-import { Send, Smile, Users } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, Smile, Users, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TranslatableText } from '../TranslatableText';
-
-interface ChatMessage {
-  id: string;
-  userName: string;
-  content: string;
-  timestamp: Date;
-}
+import { useLiveChatRooms, useLiveChatMessages } from '@/hooks/use-livechat';
+import { getMediaUrl, type LiveChatMessage } from '@/lib/api/dehub';
+import { useAuth } from '@/contexts/AuthContext';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 
 export function SidebarChat() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated } = useAuth();
 
-  const handleSend = () => {
+  // Use the first available room
+  const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
+  const roomId = rooms[0]?.id || null;
+  const { messages, isLoading: messagesLoading, isSending, send } = useLiveChatMessages(roomId);
+
+  // Auto-scroll on new messages
+  useEffect(() => {
+    if (messages.length > 0) {
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+  }, [messages.length]);
+
+  const handleSend = async () => {
     if (!newMessage.trim()) return;
-    
-    const newMsg: ChatMessage = {
-      id: Date.now().toString(),
-      userName: 'You',
-      content: newMessage.trim(),
-      timestamp: new Date(),
-    };
-    setMessages(prev => [...prev, newMsg]);
+    if (!isAuthenticated) {
+      toast.error('Sign in to chat');
+      return;
+    }
+    const text = newMessage.trim();
     setNewMessage('');
-    
-    requestAnimationFrame(() => {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
+    try {
+      await send(text, 'text');
+    } catch {
+      toast.error('Failed to send');
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -41,20 +51,34 @@ export function SidebarChat() {
     }
   };
 
+  const isLoading = roomsLoading || messagesLoading;
+
   return (
     <div className="flex flex-col h-full px-4">
       {/* Header */}
       <div className="flex items-center gap-2 pb-3 border-b border-zinc-800">
         <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
         <span className="text-zinc-400 text-xs flex items-center gap-1">
-          <Users className="w-3 h-3" /> 0 online
+          <Users className="w-3 h-3" /> {rooms[0]?.participantCount ?? 0} online
         </span>
       </div>
 
       {/* Messages */}
       <div className="relative flex-1">
         <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
-          {messages.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-2 py-2">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <Skeleton className="w-6 h-6 rounded-full bg-zinc-800" />
+                  <div className="space-y-1 flex-1">
+                    <Skeleton className="h-3 w-16 bg-zinc-800" />
+                    <Skeleton className="h-3 w-32 bg-zinc-800" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2">
                 <Users className="w-5 h-5 text-zinc-500" />
@@ -63,19 +87,30 @@ export function SidebarChat() {
               <p className="text-zinc-600 text-xs">Be the first to say hello!</p>
             </div>
           ) : (
-            messages.map((msg) => (
-              <div key={msg.id} className="flex items-start gap-2">
-                <Avatar className="w-6 h-6 flex-shrink-0">
-                  <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
-                    {msg.userName.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <span className="text-xs font-semibold text-white">{msg.userName}</span>
-                  <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
+            messages.map((msg) => {
+              const avatarUrl = getMediaUrl(msg.sender?.avatarImageUrl);
+              const name = msg.sender?.displayName || msg.sender?.username || msg.sender?.address?.slice(0, 8) || 'Anon';
+              return (
+                <div key={msg.id} className="flex items-start gap-2">
+                  <Avatar className="w-6 h-6 flex-shrink-0">
+                    {avatarUrl && <AvatarImage src={avatarUrl} />}
+                    <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
+                      {name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <span className="text-xs font-semibold text-white">{name}</span>
+                    {msg.type === 'image' && msg.imageUrl ? (
+                      <img src={getMediaUrl(msg.imageUrl)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
+                    ) : msg.type === 'gif' && msg.imageUrl ? (
+                      <img src={msg.imageUrl} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                    ) : (
+                      <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
           <div ref={bottomRef} />
         </div>
@@ -96,10 +131,14 @@ export function SidebarChat() {
           />
           <button
             onClick={handleSend}
-            disabled={!newMessage.trim()}
+            disabled={!newMessage.trim() || isSending}
             className="h-8 w-8 flex items-center justify-center disabled:opacity-40"
           >
-            <Send className="w-4 h-4 text-white" />
+            {isSending ? (
+              <Loader2 className="w-4 h-4 text-white animate-spin" />
+            ) : (
+              <Send className="w-4 h-4 text-white" />
+            )}
           </button>
         </div>
       </div>
