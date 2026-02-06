@@ -173,84 +173,96 @@ function SortFilterSection({
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {SORT_OPTIONS.map((option) => (
-            <button
-              key={option.label}
-              onClick={() => onSortSelect(option)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selectedSort.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+            {SORT_OPTIONS.map((option) => (
+              <button
+                key={option.label}
+                onClick={() => onSortSelect(option)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  selectedSort.label === option.label
+                    ? 'bg-white text-black'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
       
       {/* Date Filter Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {DATE_FILTER_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => onDateSelect(option)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selectedDate.value === option.value
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+            {DATE_FILTER_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => onDateSelect(option)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  selectedDate.value === option.value
+                    ? 'bg-white text-black'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
 
       {/* Post Type Filter */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Post Type</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {POST_TYPE_FILTERS.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => onPostTypeSelect(option.value)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                selectedPostType === option.value
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+            {POST_TYPE_FILTERS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => onPostTypeSelect(option.value)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  selectedPostType === option.value
+                    ? 'bg-white text-black'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
 
       {/* Content Type Filters */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
-        <div className="flex gap-1.5 flex-wrap">
-          {CONTENT_TYPE_FILTERS.map((filter) => (
-            <button
-              key={filter.value}
-              onClick={() => onContentFilterToggle(filter.value)}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                contentFilters[filter.value]
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              )}
-            >
-              {filter.label}
-            </button>
-          ))}
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+            {CONTENT_TYPE_FILTERS.map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => onContentFilterToggle(filter.value)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  contentFilters[filter.value]
+                    ? 'bg-white text-black'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
       </div>
     </div>

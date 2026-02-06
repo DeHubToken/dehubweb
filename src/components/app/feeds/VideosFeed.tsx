@@ -259,21 +259,24 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {SORT_OPTIONS.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelect(option)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selected.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -284,21 +287,24 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Duration</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {DURATION_FILTERS.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelect(option)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {DURATION_FILTERS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selected.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -309,21 +315,24 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {DATE_FILTER_OPTIONS.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelect(option)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              selected.label === option.label
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {DATE_FILTER_OPTIONS.map((option) => (
+            <button
+              key={option.label}
+              onClick={() => onSelect(option)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selected.label === option.label
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -340,21 +349,24 @@ function ContentTypeFilterSection({
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
-      <div className="flex gap-1.5 flex-wrap">
-        {CONTENT_TYPE_FILTERS.map((filter) => (
-          <button
-            key={filter.value}
-            onClick={() => onToggle(filter.value)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-              filters[filter.value]
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-            )}
-          >
-            {filter.label}
-          </button>
-        ))}
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          {CONTENT_TYPE_FILTERS.map((filter) => (
+            <button
+              key={filter.value}
+              onClick={() => onToggle(filter.value)}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                filters[filter.value]
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
     </div>
   );
