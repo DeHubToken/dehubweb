@@ -874,6 +874,7 @@ export async function unfollowUser(walletAddress: string): Promise<{ result: boo
  * Follow request item from API
  */
 export interface FollowRequestItem {
+  id: string;
   address: string;
   username?: string;
   displayName?: string;
@@ -885,11 +886,11 @@ export interface FollowRequestItem {
 
 /**
  * Get pending follow requests for the current user
- * GET /api/follow_requests
+ * GET /api/follow-requests
  */
 export async function getFollowRequests(): Promise<FollowRequestItem[]> {
   const response = await apiCall<{ result: FollowRequestItem[] } | FollowRequestItem[]>(
-    "/api/follow_requests",
+    "/api/follow-requests",
     { requiresAuth: true }
   );
   
@@ -900,25 +901,45 @@ export async function getFollowRequests(): Promise<FollowRequestItem[]> {
 }
 
 /**
- * Approve a follow request
- * POST /api/approve_follow with body { address }
+ * Accept a follow request
+ * POST /api/follow-requests/{id}/accept
  */
-export async function approveFollowRequest(address: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/approve_follow", {
+export async function approveFollowRequest(requestId: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/follow-requests/${requestId}/accept`, {
     method: "POST",
-    body: { address: address.toLowerCase() },
     requiresAuth: true,
   });
 }
 
 /**
  * Reject a follow request
- * POST /api/reject_follow with body { address }
+ * POST /api/follow-requests/{id}/reject
  */
-export async function rejectFollowRequest(address: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/reject_follow", {
+export async function rejectFollowRequest(requestId: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/follow-requests/${requestId}/reject`, {
     method: "POST",
-    body: { address: address.toLowerCase() },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Accept all pending follow requests
+ * POST /api/follow-requests/accept-all
+ */
+export async function acceptAllFollowRequests(): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/follow-requests/accept-all", {
+    method: "POST",
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Reject all pending follow requests
+ * POST /api/follow-requests/reject-all
+ */
+export async function rejectAllFollowRequests(): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/follow-requests/reject-all", {
+    method: "POST",
     requiresAuth: true,
   });
 }
