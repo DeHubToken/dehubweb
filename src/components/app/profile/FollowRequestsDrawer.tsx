@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { Check, X, Loader2, UserPlus, Clock } from 'lucide-react';
+import { Check, X, Loader2, UserPlus, Clock, CheckCheck, XCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getFollowRequests, approveFollowRequest, rejectFollowRequest, type FollowRequestItem } from '@/lib/api/dehub';
+import {
+  getFollowRequests,
+  approveFollowRequest,
+  rejectFollowRequest,
+  acceptAllFollowRequests,
+  rejectAllFollowRequests,
+  type FollowRequestItem,
+} from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +26,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
+  const [bulkProcessing, setBulkProcessing] = useState<'accept' | 'reject' | null>(null);
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['follow-requests'],
@@ -27,52 +35,84 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
     staleTime: 1000 * 30,
   });
 
+  const invalidateRequests = () => {
+    queryClient.invalidateQueries({ queryKey: ['follow-requests'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+  };
+
   const approveMutation = useMutation({
-    mutationFn: (address: string) => approveFollowRequest(address),
-    onMutate: (address) => {
-      setProcessingIds(prev => new Set(prev).add(address));
+    mutationFn: (requestId: string) => approveFollowRequest(requestId),
+    onMutate: (requestId) => {
+      setProcessingIds(prev => new Set(prev).add(requestId));
     },
-    onSuccess: (_, address) => {
-      queryClient.invalidateQueries({ queryKey: ['follow-requests'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+    onSuccess: (_, requestId) => {
+      invalidateRequests();
       toast.success('Follow request approved');
       setProcessingIds(prev => {
         const next = new Set(prev);
-        next.delete(address);
+        next.delete(requestId);
         return next;
       });
     },
-    onError: (_, address) => {
+    onError: (_, requestId) => {
       toast.error('Failed to approve request');
       setProcessingIds(prev => {
         const next = new Set(prev);
-        next.delete(address);
+        next.delete(requestId);
         return next;
       });
     },
   });
 
   const rejectMutation = useMutation({
-    mutationFn: (address: string) => rejectFollowRequest(address),
-    onMutate: (address) => {
-      setProcessingIds(prev => new Set(prev).add(address));
+    mutationFn: (requestId: string) => rejectFollowRequest(requestId),
+    onMutate: (requestId) => {
+      setProcessingIds(prev => new Set(prev).add(requestId));
     },
-    onSuccess: (_, address) => {
-      queryClient.invalidateQueries({ queryKey: ['follow-requests'] });
+    onSuccess: (_, requestId) => {
+      invalidateRequests();
       toast.success('Follow request rejected');
       setProcessingIds(prev => {
         const next = new Set(prev);
-        next.delete(address);
+        next.delete(requestId);
         return next;
       });
     },
-    onError: (_, address) => {
+    onError: (_, requestId) => {
       toast.error('Failed to reject request');
       setProcessingIds(prev => {
         const next = new Set(prev);
-        next.delete(address);
+        next.delete(requestId);
         return next;
       });
+    },
+  });
+
+  const acceptAllMutation = useMutation({
+    mutationFn: acceptAllFollowRequests,
+    onMutate: () => setBulkProcessing('accept'),
+    onSuccess: () => {
+      invalidateRequests();
+      toast.success('All follow requests accepted');
+      setBulkProcessing(null);
+    },
+    onError: () => {
+      toast.error('Failed to accept all requests');
+      setBulkProcessing(null);
+    },
+  });
+
+  const rejectAllMutation = useMutation({
+    mutationFn: rejectAllFollowRequests,
+    onMutate: () => setBulkProcessing('reject'),
+    onSuccess: () => {
+      invalidateRequests();
+      toast.success('All follow requests rejected');
+      setBulkProcessing(null);
+    },
+    onError: () => {
+      toast.error('Failed to reject all requests');
+      setBulkProcessing(null);
     },
   });
 
@@ -83,6 +123,8 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
       navigate(`/${target}`);
     }
   };
+
+  const isBulkProcessing = bulkProcessing !== null;
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -99,6 +141,39 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
           </DrawerTitle>
         </DrawerHeader>
 
+        {/* Bulk actions */}
+        {requests.length > 1 && (
+          <div className="flex items-center gap-2 mb-3">
+            <Button
+              size="sm"
+              onClick={() => acceptAllMutation.mutate()}
+              disabled={isBulkProcessing}
+              className="rounded-xl bg-white text-black hover:bg-zinc-200 h-8 px-3 gap-1.5 flex-1"
+            >
+              {bulkProcessing === 'accept' ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <CheckCheck className="w-3.5 h-3.5" />
+              )}
+              <span className="text-xs">Accept All</span>
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => rejectAllMutation.mutate()}
+              disabled={isBulkProcessing}
+              className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-8 px-3 gap-1.5 flex-1"
+            >
+              {bulkProcessing === 'reject' ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <XCircle className="w-3.5 h-3.5" />
+              )}
+              <span className="text-xs">Reject All</span>
+            </Button>
+          </div>
+        )}
+
         <div className="overflow-y-auto max-h-[60vh] space-y-2">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
@@ -112,16 +187,16 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
             </div>
           ) : (
             requests.map((request) => {
-              const isProcessing = processingIds.has(request.address);
+              const requestId = request.id || request.address;
+              const isProcessing = processingIds.has(requestId) || isBulkProcessing;
               const avatarUrl = buildAvatarUrl(request.address, request.avatarImageUrl || request.avatarUrl);
               const displayName = request.displayName || request.username || request.address.slice(0, 8);
 
               return (
                 <div
-                  key={request.address}
+                  key={requestId}
                   className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10"
                 >
-                  {/* Avatar - clickable */}
                   <button
                     onClick={() => handleNavigateToProfile(request)}
                     className="flex-shrink-0"
@@ -134,7 +209,6 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                     </Avatar>
                   </button>
 
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
                     <button
                       onClick={() => handleNavigateToProfile(request)}
@@ -152,15 +226,14 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                     )}
                   </div>
 
-                  {/* Actions */}
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <Button
                       size="sm"
-                      onClick={() => approveMutation.mutate(request.address)}
+                      onClick={() => approveMutation.mutate(requestId)}
                       disabled={isProcessing}
                       className="rounded-xl bg-white text-black hover:bg-zinc-200 h-8 px-3 gap-1"
                     >
-                      {isProcessing ? (
+                      {processingIds.has(requestId) ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       ) : (
                         <Check className="w-3.5 h-3.5" />
@@ -170,7 +243,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => rejectMutation.mutate(request.address)}
+                      onClick={() => rejectMutation.mutate(requestId)}
                       disabled={isProcessing}
                       className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-8 px-3 gap-1"
                     >
