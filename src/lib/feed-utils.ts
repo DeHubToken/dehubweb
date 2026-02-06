@@ -177,11 +177,11 @@ export function getApiSortMode(sortValue: SortValue): ApiSortMode {
 // ============================================================================
 
 export const DATE_FILTER_OPTIONS = [
-  { label: 'All time', value: 'all' as const },
-  { label: 'Today', value: 'today' as const },
-  { label: 'This week', value: 'week' as const },
-  { label: 'This month', value: 'month' as const },
-  { label: 'This year', value: 'year' as const },
+  { label: 'All', value: 'all' as const },
+  { label: '1d', value: 'today' as const },
+  { label: '1w', value: 'week' as const },
+  { label: '1m', value: 'month' as const },
+  { label: '1y', value: 'year' as const },
 ] as const;
 
 export type DateFilterOption = typeof DATE_FILTER_OPTIONS[number];
