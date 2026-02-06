@@ -950,7 +950,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="overflow-hidden"
               >
-                <div className="bg-zinc-900 rounded-2xl p-4 mb-3">
+                <div className="bg-zinc-900 rounded-2xl p-4">
                   <SortFilterSection 
                     selectedSort={selectedSort} 
                     onSortSelect={handleSortSelect}
@@ -972,9 +972,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
           </AnimatePresence>
 
-          <div className="pt-2">
-            <StoriesBar users={storyUsers} shorts={shorts} />
-          </div>
+          <StoriesBar users={storyUsers} shorts={shorts} />
           
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
