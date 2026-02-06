@@ -1,87 +1,63 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { updateProfile } from '@/lib/api/dehub';
+import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 
-export interface PrivacySettings {
-  id: string;
-  wallet_address: string;
-  show_followers_following: boolean;
-  hide_follower_counts: boolean;
-  default_post_visibility: 'public' | 'private';
-  created_at: string;
-  updated_at: string;
+/**
+ * Follow visibility modes stored in DeHub API customs.followVisibility:
+ * - 'public'      → numbers visible AND clickable (lists accessible)
+ * - 'counts-only' → numbers visible but NOT clickable
+ * - 'hidden'      → numbers completely hidden from visitors
+ */
+export type FollowVisibility = 'public' | 'counts-only' | 'hidden';
+
+/**
+ * Derive boolean flags from a single followVisibility string.
+ */
+function parseVisibility(raw?: unknown): { showFollowersFollowing: boolean; hideFollowerCounts: boolean } {
+  const value = (typeof raw === 'string' ? raw : 'public') as FollowVisibility;
+
+  switch (value) {
+    case 'hidden':
+      return { showFollowersFollowing: false, hideFollowerCounts: true };
+    case 'counts-only':
+      return { showFollowersFollowing: false, hideFollowerCounts: false };
+    case 'public':
+    default:
+      return { showFollowersFollowing: true, hideFollowerCounts: false };
+  }
 }
 
 /**
- * Hook to manage the current user's privacy settings
+ * Hook to manage the current user's privacy settings via the DeHub API customs field.
  */
 export function usePrivacySettings() {
-  const { walletAddress, isAuthenticated } = useAuth();
+  const { user, walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-  const lowerAddress = walletAddress?.toLowerCase();
 
-  const { data: settings, isLoading } = useQuery({
-    queryKey: ['privacy-settings', lowerAddress],
-    queryFn: async (): Promise<PrivacySettings | null> => {
-      if (!lowerAddress) return null;
-
-      const query = supabase
-        .from('user_privacy_settings')
-        .select('*')
-        .eq('wallet_address', lowerAddress)
-        .maybeSingle();
-
-      const { data, error } = await withWalletHeader(query, lowerAddress);
-
-      if (error) {
-        console.error('Failed to fetch privacy settings:', error);
-        return null;
-      }
-
-      return data as PrivacySettings | null;
-    },
-    enabled: !!lowerAddress && isAuthenticated,
+  // Read current profile (customs) from the existing profile query
+  const { data: profile } = useDeHubProfile({
+    userId: walletAddress || undefined,
+    enabled: !!walletAddress && isAuthenticated,
   });
 
+  const customs = profile?.customs;
+  const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
+
   const updateMutation = useMutation({
-    mutationFn: async (updates: Partial<Pick<PrivacySettings, 'show_followers_following' | 'hide_follower_counts' | 'default_post_visibility'>>) => {
-      if (!lowerAddress) throw new Error('Not authenticated');
+    mutationFn: async (newCustoms: Record<string, string>) => {
+      if (!walletAddress) throw new Error('Not authenticated');
 
-      // Check if settings exist
-      const checkQuery = supabase
-        .from('user_privacy_settings')
-        .select('id')
-        .eq('wallet_address', lowerAddress)
-        .maybeSingle();
+      // Merge with existing customs
+      const existingCustoms = (customs ?? {}) as Record<string, string>;
+      const merged = { ...existingCustoms, ...newCustoms };
 
-      const { data: existing } = await withWalletHeader(checkQuery, lowerAddress);
-
-      if (existing) {
-        // Update existing
-        const updateQuery = supabase
-          .from('user_privacy_settings')
-          .update({ ...updates, updated_at: new Date().toISOString() })
-          .eq('wallet_address', lowerAddress);
-
-        const { error } = await withWalletHeader(updateQuery, lowerAddress);
-        if (error) throw error;
-      } else {
-        // Insert new
-        const insertQuery = supabase
-          .from('user_privacy_settings')
-          .insert({
-            wallet_address: lowerAddress,
-            ...updates,
-          });
-
-        const { error } = await withWalletHeader(insertQuery, lowerAddress);
-        if (error) throw error;
-      }
+      await updateProfile({ customs: merged });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['privacy-settings', lowerAddress] });
+      // Invalidate profile queries so the new customs value is picked up
+      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       toast.success('Privacy settings updated');
     },
     onError: (error) => {
@@ -90,50 +66,66 @@ export function usePrivacySettings() {
     },
   });
 
+  /**
+   * Accept the same partial shape the Settings page sends, but translate to
+   * customs fields before persisting.
+   */
+  const updateSettings = (updates: {
+    show_followers_following?: boolean;
+    hide_follower_counts?: boolean;
+    default_post_visibility?: 'public' | 'private';
+  }) => {
+    const newCustoms: Record<string, string> = {};
+
+    // Determine follow visibility if relevant fields are present
+    if (updates.show_followers_following !== undefined || updates.hide_follower_counts !== undefined) {
+      let visibility: FollowVisibility;
+      if (updates.hide_follower_counts) {
+        visibility = 'hidden';
+      } else if (updates.show_followers_following === false) {
+        visibility = 'counts-only';
+      } else {
+        visibility = 'public';
+      }
+      newCustoms.followVisibility = visibility;
+    }
+
+    if (updates.default_post_visibility !== undefined) {
+      newCustoms.defaultPostVisibility = updates.default_post_visibility;
+    }
+
+    updateMutation.mutate(newCustoms);
+  };
+
   return {
-    settings,
-    isLoading,
-    showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true (list is visible)
-    hideFollowerCounts: settings?.hide_follower_counts ?? false, // Default to false (counts are shown)
-    defaultPostVisibility: settings?.default_post_visibility ?? 'public', // Default to public
-    updateSettings: updateMutation.mutate,
+    settings: null, // kept for interface compat
+    isLoading: false,
+    showFollowersFollowing,
+    hideFollowerCounts,
+    defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
+    updateSettings,
     isUpdating: updateMutation.isPending,
   };
 }
 
 /**
- * Hook to check another user's privacy settings (for profile pages)
+ * Hook to check another user's privacy settings (for profile pages).
+ * Reads from the customs field already present on the profile query.
  */
 export function useUserPrivacySettings(walletAddress?: string) {
-  const lowerAddress = walletAddress?.toLowerCase();
-
-  const { data: settings, isLoading } = useQuery({
-    queryKey: ['privacy-settings', lowerAddress],
-    queryFn: async (): Promise<PrivacySettings | null> => {
-      if (!lowerAddress) return null;
-
-      const { data, error } = await supabase
-        .from('user_privacy_settings')
-        .select('*')
-        .eq('wallet_address', lowerAddress)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Failed to fetch user privacy settings:', error);
-        return null;
-      }
-
-      return data as PrivacySettings | null;
-    },
-    enabled: !!lowerAddress,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  const { data: profile } = useDeHubProfile({
+    userId: walletAddress,
+    enabled: !!walletAddress,
   });
 
+  const customs = profile?.customs;
+  const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
+
   return {
-    settings,
-    isLoading,
-    showFollowersFollowing: settings?.show_followers_following ?? true, // Default to true (list is visible)
-    hideFollowerCounts: settings?.hide_follower_counts ?? false, // Default to false (counts are shown)
-    defaultPostVisibility: settings?.default_post_visibility ?? 'public', // Default to public
+    settings: null,
+    isLoading: false,
+    showFollowersFollowing,
+    hideFollowerCounts,
+    defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
   };
 }
