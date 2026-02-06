@@ -64,6 +64,10 @@ export interface DeHubUser {
   // Follow relationship (returned when address param is provided)
   isFollowing?: boolean;   // Viewer follows this user
   followsYou?: boolean;    // This user follows viewer
+  isPending?: boolean;     // Follow request is pending (for private accounts)
+
+  // Private account
+  isPrivate?: boolean;     // Whether account is private (requires follow approval)
 
   // Balance data
   balanceData?: Array<{
@@ -858,6 +862,63 @@ export async function unfollowUser(walletAddress: string): Promise<{ result: boo
   return apiCall<{ result: boolean }>("/api/request_follow", {
     method: "GET",
     params: { following: walletAddress, unFollowing: "true" },
+    requiresAuth: true,
+  });
+}
+
+// =============================================
+// Follow Request System (Private Accounts)
+// =============================================
+
+/**
+ * Follow request item from API
+ */
+export interface FollowRequestItem {
+  address: string;
+  username?: string;
+  displayName?: string;
+  avatarImageUrl?: string;
+  avatarUrl?: string;
+  isVerified?: boolean;
+  createdAt?: string;
+}
+
+/**
+ * Get pending follow requests for the current user
+ * GET /api/follow_requests
+ */
+export async function getFollowRequests(): Promise<FollowRequestItem[]> {
+  const response = await apiCall<{ result: FollowRequestItem[] } | FollowRequestItem[]>(
+    "/api/follow_requests",
+    { requiresAuth: true }
+  );
+  
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as FollowRequestItem[];
+}
+
+/**
+ * Approve a follow request
+ * POST /api/approve_follow with body { address }
+ */
+export async function approveFollowRequest(address: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/approve_follow", {
+    method: "POST",
+    body: { address: address.toLowerCase() },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Reject a follow request
+ * POST /api/reject_follow with body { address }
+ */
+export async function rejectFollowRequest(address: string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/reject_follow", {
+    method: "POST",
+    body: { address: address.toLowerCase() },
     requiresAuth: true,
   });
 }

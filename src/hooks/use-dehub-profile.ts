@@ -31,6 +31,10 @@ export interface ProfileData {
   isFollowing?: boolean;
   /** Whether this user follows the current viewer */
   followsYou?: boolean;
+  /** Whether a follow request is pending (for private accounts) */
+  isPending?: boolean;
+  /** Whether this account is private (requires follow approval) */
+  isPrivate?: boolean;
   /** Raw array of follower wallet addresses (for list display) */
   followersList?: string[];
   /** Raw array of following wallet addresses (for list display) */
@@ -71,6 +75,9 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   // Preserve raw arrays for list display (if available)
   const followersList = Array.isArray(user.followers) ? user.followers : undefined;
   const followingsList = Array.isArray(user.followings) ? user.followings : undefined;
+  
+  // Get customs data for isPrivate fallback
+  const customs = user.customs as Record<string, unknown> | undefined;
 
   return {
     id: user._id || user.id || '',
@@ -87,6 +94,8 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     walletAddress: user.address || user.wallet_address,
     isFollowing: user.isFollowing,
     followsYou: user.followsYou,
+    isPending: user.isPending,
+    isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
     followersList,
     followingsList,
     staked: typeof user.staked === 'number' 
