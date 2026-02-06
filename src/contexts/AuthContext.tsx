@@ -2,23 +2,23 @@
  * Auth Context
  * ============
  * Provides Web3Auth authentication integrated with DeHub API.
- * Smart accounts are handled automatically by Web3Auth's AccountAbstractionProvider
- * with Pimlico paymaster for gasless transactions.
- * 
+ * Uses Web3Auth No-Modal SDK for direct private key access and
+ * standard ECDSA signatures required by the DeHub backend.
+ *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
- * without showing the default Web3Auth modal.
+ * without showing any Web3Auth modal.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { 
-  authenticateWallet, 
+import {
+  authenticateWallet,
   getAccountInfo,
-  getAuthToken, 
+  getAuthToken,
   clearAuthSession,
   isTokenExpired,
-  type DeHubUser 
+  type DeHubUser
 } from '@/lib/api/dehub';
 import { Wallet } from 'ethers';
 import {
@@ -31,11 +31,11 @@ import {
   hasRedirectResult,
   isSocialLoginConnected,
   AUTH_CONNECTION,
-  WALLET_CONNECTORS,
+  WALLET_ADAPTERS,
   getOrInitWeb3Auth,
 } from '@/lib/web3auth';
-import type { Web3Auth } from '@web3auth/modal';
-import type { IProvider } from '@web3auth/modal';
+import type { Web3AuthNoModal } from '@web3auth/no-modal';
+import type { IProvider } from '@web3auth/base';
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
@@ -50,7 +50,7 @@ interface AuthContextType {
   isProcessingRedirect: boolean;
   requiresUsername: boolean;
   needsSignature: boolean;
-  web3auth: Web3Auth | null;
+  web3auth: Web3AuthNoModal | null;
   // Legacy connect method (opens default modal)
   connect: () => Promise<void>;
   // New custom UI methods
@@ -95,27 +95,28 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
   switch (provider) {
     case 'google': return AUTH_CONNECTION.GOOGLE;
     case 'twitter': return AUTH_CONNECTION.TWITTER;
-    case 'telegram': return AUTH_CONNECTION.TELEGRAM;
     case 'apple': return AUTH_CONNECTION.APPLE;
     case 'discord': return AUTH_CONNECTION.DISCORD;
-    case 'github': return AUTH_CONNECTION.GITHUB;
+    // telegram and github not configured in no-modal SDK - fallback to google
+    case 'telegram': return AUTH_CONNECTION.GOOGLE;
+    case 'github': return AUTH_CONNECTION.GOOGLE;
     default: return AUTH_CONNECTION.GOOGLE;
   }
 }
 
-// Map wallet providers to Web3Auth connectors
-// Note: Phantom, Rabby, Trust all use the same injected provider (window.ethereum)
-// The browser's active wallet extension will respond to connection requests
-function mapWalletProvider(wallet: WalletProvider): typeof WALLET_CONNECTORS[keyof typeof WALLET_CONNECTORS] {
+// Map wallet providers to Web3Auth adapters
+// Note: External wallet adapters are not currently configured
+// TODO: Add MetaMask, WalletConnect, Coinbase adapters when needed
+function mapWalletProvider(wallet: WalletProvider): string {
   switch (wallet) {
-    case 'metamask': 
+    case 'metamask':
     case 'phantom':
     case 'rabby':
     case 'trust':
-      return WALLET_CONNECTORS.METAMASK; // All injected wallets use the same connector
-    case 'walletconnect': return WALLET_CONNECTORS.WALLET_CONNECT_V2;
-    case 'coinbase': return WALLET_CONNECTORS.COINBASE;
-    default: return WALLET_CONNECTORS.METAMASK;
+      return 'metamask';
+    case 'walletconnect': return 'wallet-connect-v2';
+    case 'coinbase': return 'coinbase';
+    default: return 'metamask';
   }
 }
 
@@ -128,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
   const [requiresUsername, setRequiresUsername] = useState(false);
   const [needsSignature, setNeedsSignature] = useState(false);
-  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
+  const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   // Ref to track if connection should be aborted when modal is closed

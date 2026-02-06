@@ -1,23 +1,24 @@
 /**
- * Web3Auth Configuration with Account Abstraction
- * =================================================
- * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico-powered
- * Account Abstraction for gasless transactions.
- * 
+ * Web3Auth Configuration with No-Modal SDK
+ * =========================================
+ * Web3Auth No-Modal SDK for Base Mainnet with direct private key access.
+ * Uses EthereumPrivateKeyProvider to enable eth_private_key method for
+ * standard ECDSA signatures required by DeHub backend.
+ *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
- * without showing the default Web3Auth modal.
+ * without showing any Web3Auth modal.
  */
 
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { AuthAdapter } from "@web3auth/auth-adapter";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import {
-  Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
-  WALLET_CONNECTORS,
-  AUTH_CONNECTION,
-  CONFIRMATION_STRATEGY,
-  authConnector,
+  WALLET_ADAPTERS,
   UX_MODE,
-} from "@web3auth/modal";
+  IProvider,
+} from "@web3auth/base";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -31,9 +32,18 @@ export function isMobileDevice(): boolean {
 }
 
 // Re-export for use in other files
-export { WALLET_CONNECTORS, AUTH_CONNECTION };
+export { WALLET_ADAPTERS };
 
-// Auth connection type for TypeScript
+// Auth connection types for social login
+export const AUTH_CONNECTION = {
+  GOOGLE: "google",
+  APPLE: "apple",
+  TWITTER: "twitter",
+  DISCORD: "discord",
+  EMAIL_PASSWORDLESS: "email_passwordless",
+  SMS_PASSWORDLESS: "sms_passwordless",
+} as const;
+
 export type AuthConnectionType = typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION];
 
 // Chain configuration for Base Mainnet
@@ -49,13 +59,12 @@ const chainConfig = {
   logo: "https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0",
 };
 
-let web3authInstance: Web3Auth | null = null;
+let web3authInstance: Web3AuthNoModal | null = null;
 let isInitializing = false;
-let initPromise: Promise<Web3Auth> | null = null;
+let initPromise: Promise<Web3AuthNoModal> | null = null;
 let cachedClientId: string | null = null;
-let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
-// Track which connector was last used (for detecting social login vs external wallet)
-let lastConnectedConnector: string | null = null;
+// Track which adapter was last used (for detecting social login vs external wallet)
+let lastConnectedAdapter: string | null = null;
 
 /**
  * Reset all Web3Auth module state - used for HMR and error recovery
@@ -68,8 +77,8 @@ export function resetWeb3AuthState(): void {
   web3authInstance = null;
   isInitializing = false;
   initPromise = null;
-  lastConnectedConnector = null;
-  console.log("[Web3Auth] ✓ Module state reset");
+  lastConnectedAdapter = null;
+  console.log("[Web3Auth] Module state reset");
 }
 
 // HMR cleanup - reset state when module is replaced during development
@@ -101,23 +110,11 @@ async function getWeb3AuthClientId(): Promise<string> {
   throw new Error("Web3Auth client ID not configured");
 }
 
-async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
-  if (cachedPimlicoConfig) return cachedPimlicoConfig;
-  console.log("[Web3Auth] Fetching Pimlico config from edge function...");
-  const { data, error } = await supabase.functions.invoke("get-pimlico-config");
-  console.log("[Web3Auth] get-pimlico-config response:", { data, error });
-  if (!error && data?.bundlerUrl && data?.paymasterUrl) {
-    cachedPimlicoConfig = data;
-    return cachedPimlicoConfig;
-  }
-  throw new Error("Pimlico API key not configured");
-}
-
 /**
- * Initialize Web3Auth with Account Abstraction via Pimlico
- * Configured for CUSTOM UI - no default modal shown
+ * Initialize Web3Auth No-Modal with direct private key access
+ * Uses EthereumPrivateKeyProvider for eth_private_key support
  */
-export async function initWeb3Auth(): Promise<Web3Auth> {
+export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
   console.log("[Web3Auth] initWeb3Auth() called");
   console.log("[Web3Auth] Current instance:", web3authInstance ? "exists" : "null");
   console.log("[Web3Auth] Current status:", web3authInstance?.status || "N/A");
@@ -142,38 +139,44 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       // Fetch Web3Auth client ID
       console.log("[Web3Auth] Fetching configuration...");
       const clientId = await getWeb3AuthClientId();
-      console.log("[Web3Auth] ✓ Client ID fetched:", clientId?.substring(0, 15) + "...");
+      console.log("[Web3Auth] Client ID fetched:", clientId?.substring(0, 15) + "...");
 
-      // Create Web3Auth instance with custom UI configuration
-      // Modal is hidden - we use connectTo() for direct provider access
-      console.log("[Web3Auth] Creating Web3Auth instance with custom UI config...");
+      // Create private key provider for direct key access
+      console.log("[Web3Auth] Creating EthereumPrivateKeyProvider...");
+      const privateKeyProvider = new EthereumPrivateKeyProvider({
+        config: { chainConfig },
+      });
+      console.log("[Web3Auth] PrivateKeyProvider created");
+
+      // Create Web3Auth No-Modal instance
+      console.log("[Web3Auth] Creating Web3AuthNoModal instance...");
       console.log("[Web3Auth] Is mobile device:", isMobileDevice());
       console.log("[Web3Auth] UX Mode:", isMobileDevice() ? "REDIRECT" : "POPUP");
 
-      // NOTE: Account Abstraction DISABLED - DeHub backend requires standard EOA signatures
-      // AA produces EIP-1271 smart contract signatures which the backend can't verify
-      // Re-enable AA once backend supports EIP-1271 signature verification
-      web3authInstance = new Web3Auth({
+      web3authInstance = new Web3AuthNoModal({
         clientId,
-        chains: [chainConfig],
+        chainConfig,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        // Configure connectors for mobile-aware email/SMS login
-        connectors: [
-          authConnector({
-            connectorSettings: {
-              uxMode: isMobileDevice() ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-              redirectUrl: window.location.origin,
-            }
-          })
-        ],
-        // Custom UI configuration - we use our own modal
+        privateKeyProvider,
         uiConfig: {
           appName: "DeHub",
           mode: "dark",
           defaultLanguage: "en",
         },
       });
-      console.log("[Web3Auth] ✓ Instance created (EOA mode, no AA)");
+      console.log("[Web3Auth] Web3AuthNoModal instance created");
+
+      // Configure Auth adapter for social/email/sms logins
+      console.log("[Web3Auth] Configuring Auth adapter...");
+      const authAdapter = new AuthAdapter({
+        adapterSettings: {
+          uxMode: isMobileDevice() ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+          redirectUrl: window.location.origin,
+        },
+        privateKeyProvider,
+      });
+      web3authInstance.configureAdapter(authAdapter);
+      console.log("[Web3Auth] Auth adapter configured");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -186,13 +189,13 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
       ]);
 
       await initWithTimeout;
-      console.log("[Web3Auth] ✓ init() completed, status:", web3authInstance.status);
+      console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      console.log("[Web3Auth] ✓ INITIALIZATION COMPLETE with Pimlico AA, status:", web3authInstance.status);
+      console.log("[Web3Auth] INITIALIZATION COMPLETE (No-Modal + PrivateKeyProvider), status:", web3authInstance.status);
       return web3authInstance;
     } catch (error) {
-      console.error("[Web3Auth] ✗ INITIALIZATION FAILED:", error);
+      console.error("[Web3Auth] INITIALIZATION FAILED:", error);
       web3authInstance = null;
       throw error;
     } finally {
@@ -205,15 +208,15 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
 
 /**
  * Connect to a specific social login provider using connectTo()
- * This bypasses the Web3Auth modal completely
+ * This bypasses any modal completely - direct provider connection
  */
 export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
   loginHint?: string
-): Promise<ReturnType<Web3Auth['connectTo']>> {
+): Promise<IProvider | null> {
   console.log(`[Web3Auth] connectToSocialProvider: phase=INIT authConnection=${authConnection} loginHint=${loginHint ? 'set' : 'none'}`);
 
-  let web3auth: Web3Auth;
+  let web3auth: Web3AuthNoModal;
   try {
     web3auth = await getOrInitWeb3Auth();
     console.log(`[Web3Auth] connectToSocialProvider: phase=READY status=${web3auth.status}`);
@@ -222,65 +225,54 @@ export async function connectToSocialProvider(
     throw err;
   }
 
-  const params: Record<string, unknown> = {
-    authConnection,
-  };
+  const extraLoginOptions: Record<string, unknown> = {};
 
   // Add login hint for email/sms passwordless
   if (loginHint) {
-    params.loginHint = loginHint;
+    extraLoginOptions.login_hint = loginHint;
   }
 
-  let provider: ReturnType<Web3Auth['connectTo']> extends Promise<infer R> ? R : never;
+  let provider: IProvider | null;
   try {
-    console.log(`[Web3Auth] connectToSocialProvider: phase=OAUTH calling connectTo(AUTH, ${JSON.stringify(params)})`);
-    provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
-    lastConnectedConnector = WALLET_CONNECTORS.AUTH; // Track that this was a social login
-    console.log(`[Web3Auth] connectToSocialProvider: phase=OAUTH_OK provider=${provider ? 'received' : 'null'}`);
+    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_ADAPTERS.AUTH}, { loginProvider: ${authConnection} })`);
+    provider = await web3auth.connectTo(WALLET_ADAPTERS.AUTH, {
+      loginProvider: authConnection,
+      extraLoginOptions,
+    });
+    lastConnectedAdapter = WALLET_ADAPTERS.AUTH; // Track that this was a social login
+    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT_OK provider=${provider ? 'received' : 'null'}`);
   } catch (err) {
-    console.error(`[Web3Auth] connectToSocialProvider: phase=OAUTH_FAILED`, err);
+    console.error(`[Web3Auth] connectToSocialProvider: phase=CONNECT_FAILED`, err);
     throw err;
   }
 
-  console.log(`[Web3Auth] connectToSocialProvider: phase=AA_SETUP status=${web3auth.status} connected=${web3auth.connected}`);
-  console.log(`[Web3Auth] ✓ Connected to ${authConnection}`);
+  console.log(`[Web3Auth] connectToSocialProvider: phase=DONE status=${web3auth.status} connected=${web3auth.connected}`);
+  console.log(`[Web3Auth] Connected to ${authConnection}`);
   return provider;
 }
 
 /**
  * Connect to an external wallet (MetaMask, WalletConnect, etc.)
+ * Note: External wallet adapters need to be configured separately
  */
 export async function connectToExternalWallet(
-  walletConnector: typeof WALLET_CONNECTORS[keyof typeof WALLET_CONNECTORS]
-): Promise<ReturnType<Web3Auth['connectTo']>> {
+  walletAdapter: string
+): Promise<IProvider | null> {
   const web3auth = await getOrInitWeb3Auth();
 
-  console.log(`[Web3Auth] Connecting to external wallet: ${walletConnector}...`);
+  console.log(`[Web3Auth] Connecting to external wallet: ${walletAdapter}...`);
 
-  const provider = await web3auth.connectTo(walletConnector);
-  lastConnectedConnector = walletConnector; // Track that this was an external wallet
+  const provider = await web3auth.connectTo(walletAdapter);
+  lastConnectedAdapter = walletAdapter; // Track that this was an external wallet
 
-  console.log(`[Web3Auth] ✓ Connected to ${walletConnector}`);
-  return provider;
-}
-
-/**
- * Connect using the default Web3Auth modal (fallback)
- */
-export async function connectWithModal(): Promise<ReturnType<Web3Auth['connect']>> {
-  const web3auth = await getOrInitWeb3Auth();
-
-  console.log("[Web3Auth] Opening default modal...");
-  const provider = await web3auth.connect();
-
-  console.log("[Web3Auth] ✓ Connected via modal");
+  console.log(`[Web3Auth] Connected to ${walletAdapter}`);
   return provider;
 }
 
 /**
  * Get the initialized Web3Auth instance
  */
-export function getWeb3Auth(): Web3Auth {
+export function getWeb3Auth(): Web3AuthNoModal {
   if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
     throw new Error("Web3Auth not initialized. Call initWeb3Auth() first.");
   }
@@ -290,18 +282,18 @@ export function getWeb3Auth(): Web3Auth {
 /**
  * Get or initialize Web3Auth
  */
-export async function getOrInitWeb3Auth(): Promise<Web3Auth> {
+export async function getOrInitWeb3Auth(): Promise<Web3AuthNoModal> {
   if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
     return web3authInstance;
   }
   return initWeb3Auth();
 }
 
-export function getWeb3AuthInstance(): Web3Auth | null {
+export function getWeb3AuthInstance(): Web3AuthNoModal | null {
   return web3authInstance;
 }
 
-export function getWeb3AuthProvider() {
+export function getWeb3AuthProvider(): IProvider | null {
   return web3authInstance?.provider || null;
 }
 
@@ -310,7 +302,7 @@ export async function disconnectWeb3Auth(): Promise<void> {
   try {
     if (web3authInstance?.connected) {
       await web3authInstance.logout();
-      console.log("[Web3Auth] ✓ Logged out");
+      console.log("[Web3Auth] Logged out");
     }
   } catch (e) {
     console.warn("[Web3Auth] Logout error (continuing cleanup):", e);
@@ -328,7 +320,7 @@ export async function forceCleanupWeb3Auth(): Promise<void> {
   if (web3authInstance) {
     try {
       await web3authInstance.logout();
-      console.log("[Web3Auth] ✓ Logged out during cleanup");
+      console.log("[Web3Auth] Logged out during cleanup");
     } catch (e) {
       // Expected to fail if not connected, that's fine
       console.log("[Web3Auth] Logout during cleanup failed (expected):", e);
@@ -357,12 +349,12 @@ export async function forceCleanupWeb3Auth(): Promise<void> {
   console.log("[Web3Auth] Pre-initializing new instance after cleanup...");
   try {
     await initWeb3Auth();
-    console.log("[Web3Auth] ✓ New instance ready after cleanup");
+    console.log("[Web3Auth] New instance ready after cleanup");
   } catch (e) {
     console.warn("[Web3Auth] Pre-init after cleanup failed (will retry on connect):", e);
   }
 
-  console.log("[Web3Auth] ✓ Force cleanup complete - ready for new connection");
+  console.log("[Web3Auth] Force cleanup complete - ready for new connection");
 }
 
 /**
@@ -378,23 +370,23 @@ export function isWeb3AuthConnected(): boolean {
 }
 
 /**
- * Check if the current connection is via social login (Auth connector)
+ * Check if the current connection is via social login (Auth adapter)
  * Used to determine signing method (private key vs provider)
  */
 export function isSocialLoginConnected(): boolean {
-  return lastConnectedConnector === WALLET_CONNECTORS.AUTH;
+  return lastConnectedAdapter === WALLET_ADAPTERS.AUTH;
 }
 
 /**
- * Get the last connected connector name
+ * Get the last connected adapter name
  */
 export function getLastConnectedConnector(): string | null {
-  return lastConnectedConnector;
+  return lastConnectedAdapter;
 }
 
 /**
- * Set the last connected connector (used when restoring session from redirect)
+ * Set the last connected adapter (used when restoring session from redirect)
  */
 export function setLastConnectedConnector(connector: string | null): void {
-  lastConnectedConnector = connector;
+  lastConnectedAdapter = connector;
 }
