@@ -429,8 +429,8 @@ export default function JobsPage() {
         <div className="mt-10 text-center space-y-2">
           <p className="text-zinc-500 text-xs">
             Don't see a role that fits? Reach out to us on{' '}
-            <a href="https://t.me/DeHubChat" target="_blank" rel="noopener noreferrer" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">
-              Telegram
+            <a href="mailto:dev@dehub.io" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">
+              dev@dehub.io
             </a>{' '}
             — we're always looking for talented people.
           </p>
