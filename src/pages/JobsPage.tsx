@@ -106,7 +106,7 @@ export default function JobsPage() {
         ))}
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
+      <div className="max-w-[59rem] mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button
