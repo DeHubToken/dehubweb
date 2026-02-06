@@ -434,9 +434,6 @@ export default function JobsPage() {
             </a>{' '}
             — we're always looking for talented people.
           </p>
-          <p className="text-zinc-600 text-xs">
-            DeHub is an equal opportunity employer. We value diversity and are committed to creating an inclusive environment.
-          </p>
         </div>
       </div>
     </div>
