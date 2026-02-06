@@ -172,7 +172,7 @@ export function MobileWhoToFollowCarousel() {
       <div className="flex items-center justify-between px-4 mb-3">
         <div className="flex items-center gap-2">
           <UserPlus className="w-4 h-4 text-zinc-400" />
-          <span className="text-sm font-semibold text-white">Who to Follow</span>
+          <span className="text-sm font-semibold text-white">Follow Suggestions</span>
         </div>
         <button 
           onClick={() => navigate('/app/explore')}
