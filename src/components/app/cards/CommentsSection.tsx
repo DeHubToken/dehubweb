@@ -105,6 +105,7 @@ const SORT_OPTIONS = [
 
 interface CommentItemProps {
   comment: Comment;
+  tokenId: string;
   onLike: (id: string) => void;
   onDislike: (id: string) => void;
   onReply: (id: string) => void;
@@ -158,7 +159,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   
   // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
@@ -242,6 +243,17 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="min-w-[160px]">
                 <DropdownMenuItem
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success('Comment link copied');
+                  }}
+                  className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                >
+                  <Link className="w-4 h-4" />
+                  Copy Link
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={() => onShare(comment.id)}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
@@ -251,10 +263,11 @@ function CommentItem({ comment, onLike, onDislike, onReply, onShare, onBookmark,
                 <DropdownMenuItem
                   onClick={() => {
                     navigator.clipboard.writeText(comment.text);
+                    toast.success('Comment text copied');
                   }}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
                 >
-                  <Link className="w-4 h-4" />
+                  <Quote className="w-4 h-4" />
                   Copy Text
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -735,7 +748,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   filteredGroupedComments.map(({ comment, replies }) => (
                     <div key={comment.id}>
                       <CommentItem 
-                        comment={comment} 
+                        comment={comment}
+                        tokenId={tokenId}
                         onLike={handleLike} 
                         onDislike={handleDislike} 
                         onReply={handleReply} 
@@ -746,7 +760,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                       {replies.map(reply => (
                         <CommentItem 
                           key={reply.id}
-                          comment={reply} 
+                          comment={reply}
+                          tokenId={tokenId}
                           onLike={handleLike} 
                           onDislike={handleDislike} 
                           onReply={handleReply} 
@@ -798,7 +813,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                   filteredGroupedComments.map(({ comment, replies }) => (
                     <div key={comment.id}>
                       <CommentItem 
-                        comment={comment} 
+                        comment={comment}
+                        tokenId={tokenId}
                         onLike={handleLike} 
                         onDislike={handleDislike} 
                         onReply={handleReply} 
@@ -809,7 +825,8 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                       {replies.map(reply => (
                         <CommentItem 
                           key={reply.id}
-                          comment={reply} 
+                          comment={reply}
+                          tokenId={tokenId}
                           onLike={handleLike} 
                           onDislike={handleDislike} 
                           onReply={handleReply} 
