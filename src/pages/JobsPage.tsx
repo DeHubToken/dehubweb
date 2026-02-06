@@ -197,8 +197,7 @@ export default function JobsPage() {
                 <p>
                   This role offers a <span className="text-white font-medium">negotiable base salary</span> plus 
                   an <span className="text-white font-medium">uncapped OTE commission structure</span> tied directly 
-                  to the partnerships you bring in. Top performers have unlimited earning potential. You'll also 
-                  receive early access to DeHub token allocations and other perks as the platform scales.
+                  to the partnerships you bring in. Top performers have unlimited earning potential.
                 </p>
               </Section>
 
