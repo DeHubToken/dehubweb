@@ -972,7 +972,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
           </AnimatePresence>
 
-          <StoriesBar users={storyUsers} shorts={shorts} />
+          <div className={showFilters ? '' : 'pt-1'}>
+            <StoriesBar users={storyUsers} shorts={shorts} />
+          </div>
           
           {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
             <EmptyState />
