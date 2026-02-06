@@ -215,7 +215,7 @@ export default function JobsPage() {
                 ) : (
                   <>
                     <Briefcase className="w-4 h-4 mr-2" />
-                    Apply Now
+                    Apply as BDM
                   </>
                 )}
               </Button>
