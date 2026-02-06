@@ -258,6 +258,51 @@ export type Database = {
         }
         Relationships: []
       }
+      job_applications: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          instagram: string | null
+          linkedin: string | null
+          name: string
+          other_socials: string | null
+          past_experience: string | null
+          role: string
+          telegram: string | null
+          twitter: string | null
+          why_hire_you: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          instagram?: string | null
+          linkedin?: string | null
+          name: string
+          other_socials?: string | null
+          past_experience?: string | null
+          role: string
+          telegram?: string | null
+          twitter?: string | null
+          why_hire_you?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          instagram?: string | null
+          linkedin?: string | null
+          name?: string
+          other_socials?: string | null
+          past_experience?: string | null
+          role?: string
+          telegram?: string | null
+          twitter?: string | null
+          why_hire_you?: string | null
+        }
+        Relationships: []
+      }
       leaderboard_cache: {
         Row: {
           data: Json
