@@ -234,6 +234,83 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_request_votes: {
+        Row: {
+          created_at: string
+          feature_request_id: string
+          id: string
+          vote_type: number
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          feature_request_id: string
+          id?: string
+          vote_type: number
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          feature_request_id?: string
+          id?: string
+          vote_type?: number
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_request_votes_feature_request_id_fkey"
+            columns: ["feature_request_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_requests: {
+        Row: {
+          author_avatar: string | null
+          author_username: string | null
+          author_wallet_address: string
+          category: string
+          comment_count: number
+          created_at: string
+          description: string
+          id: string
+          status: string
+          title: string
+          updated_at: string
+          vote_count: number
+        }
+        Insert: {
+          author_avatar?: string | null
+          author_username?: string | null
+          author_wallet_address: string
+          category?: string
+          comment_count?: number
+          created_at?: string
+          description: string
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+          vote_count?: number
+        }
+        Update: {
+          author_avatar?: string | null
+          author_username?: string | null
+          author_wallet_address?: string
+          category?: string
+          comment_count?: number
+          created_at?: string
+          description?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vote_count?: number
+        }
+        Relationships: []
+      }
       feed_cache: {
         Row: {
           cache_key: string
