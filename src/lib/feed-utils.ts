@@ -141,6 +141,7 @@ export const SORT_OPTIONS = [
   { label: 'Most Viewed', value: 'most-viewed' as const },
   { label: 'Most Liked', value: 'most-liked' as const },
   { label: 'Most Comments', value: 'most-comments' as const },
+  { label: 'Random', value: 'random' as const },
 ] as const;
 
 export type SortOption = typeof SORT_OPTIONS[number];
