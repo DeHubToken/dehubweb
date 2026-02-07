@@ -14,8 +14,6 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { isMobileDevice } from '@/lib/web3auth';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import phantomLogo from '@/assets/icons/phantom-logo.png';
-import rabbyLogo from '@/assets/icons/rabby-logo.png';
 
 // Social provider icons as SVG components
 const GoogleIcon = () => (
@@ -58,11 +56,33 @@ const WalletConnectIcon = () => (
 );
 
 const PhantomIcon = () => (
-  <img src={phantomLogo} alt="Phantom" className="w-5 h-5 rounded-md" />
+  <svg viewBox="0 0 128 128" className="w-5 h-5">
+    <defs>
+      <linearGradient id="phantomGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#534BB1" />
+        <stop offset="100%" stopColor="#551BF9" />
+      </linearGradient>
+    </defs>
+    <rect width="128" height="128" rx="26" fill="url(#phantomGrad)" />
+    <path d="M110.584 64.914H99.143C99.143 41.096 79.884 21.837 56.066 21.837C32.709 21.837 13.737 40.341 13.012 63.515C12.266 87.39 33.386 108.163 57.267 108.163H60.452C81.846 108.163 110.584 87.876 110.584 64.914Z" fill="url(#phantomGrad)" />
+    <path d="M110.584 64.914H99.143C99.143 41.096 79.884 21.837 56.066 21.837C32.709 21.837 13.737 40.341 13.012 63.515C12.266 87.39 33.386 108.163 57.267 108.163H60.452C81.846 108.163 110.584 87.876 110.584 64.914Z" fill="white" fillOpacity="0.1" />
+    <circle cx="42.032" cy="60.131" r="6.813" fill="white" />
+    <circle cx="69.462" cy="60.131" r="6.813" fill="white" />
+  </svg>
 );
 
 const RabbyIcon = () => (
-  <img src={rabbyLogo} alt="Rabby" className="w-5 h-5 rounded-full" />
+  <svg viewBox="0 0 32 32" className="w-5 h-5">
+    <defs>
+      <linearGradient id="rabbyGrad" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#8697FF" />
+        <stop offset="1" stopColor="#6B7AFF" />
+      </linearGradient>
+    </defs>
+    <rect width="32" height="32" rx="8" fill="url(#rabbyGrad)" />
+    <path d="M22.5 11.5C22.5 9.5 20.5 8 18 8C14 8 10 11 9.5 15C9 19 11 22 15 23.5C15 23.5 14.5 25 12.5 25.5C12.5 25.5 16 26 19 24C22 22 24 18 23.5 14.5C23.3 13.3 23 12.3 22.5 11.5Z" fill="white" />
+    <circle cx="18.5" cy="13" r="1.5" fill="#6B7AFF" />
+  </svg>
 );
 
 const TrustWalletIcon = () => (
@@ -104,25 +124,12 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // Memoize mobile detection to avoid recalculating on every render
   const isMobile = useMemo(() => isMobileDevice(), []);
 
-  // Preload wallet icon images so they appear simultaneously with SVG icons
-  const [walletIconsReady, setWalletIconsReady] = useState(false);
+  // Reset state when modal closes
   useEffect(() => {
     if (!open) {
-      setWalletIconsReady(false);
-      return;
+      setStep('main');
+      setActiveProvider(null);
     }
-    const sources = [phantomLogo, rabbyLogo];
-    let loaded = 0;
-    const onLoad = () => {
-      loaded++;
-      if (loaded >= sources.length) setWalletIconsReady(true);
-    };
-    sources.forEach(src => {
-      const img = new Image();
-      img.onload = onLoad;
-      img.onerror = onLoad; // don't block on failure
-      img.src = src;
-    });
   }, [open]);
 
   const handleClose = () => {
@@ -356,7 +363,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   );
 
   const renderWalletsStep = () => (
-    <div className={`space-y-3 transition-opacity duration-200 ${walletIconsReady ? 'opacity-100' : 'opacity-0'}`}>
+    <div className="space-y-3">
       <Button
         onClick={() => handleWalletConnect('metamask')}
         disabled={isConnecting}
