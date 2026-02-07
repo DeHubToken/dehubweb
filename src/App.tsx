@@ -33,6 +33,7 @@ import SinglePostPage from "./pages/app/SinglePostPage";
 import AssistantPage from "./pages/app/AssistantPage";
 import BuyCoinsPage from "./pages/app/BuyCoinsPage";
 import AgentsPage from "./pages/app/AgentsPage";
+import FeaturesPage from "./pages/app/FeaturesPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,6 +65,9 @@ function AppContent() {
             <Route path="/creators" element={<CreatorsPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/skill.md" element={<SkillPage />} />
+            <Route path="/features" element={<AppLayout />}>
+              <Route index element={<FeaturesPage />} />
+            </Route>
             
             {/* App routes with shared layout */}
             <Route path="/app" element={<AppLayout />}>
@@ -80,6 +84,7 @@ function AppContent() {
               <Route path="music" element={<MusicPage />} />
               <Route path="buy" element={<BuyCoinsPage />} />
               <Route path="agents" element={<AgentsPage />} />
+              <Route path="features" element={<FeaturesPage />} />
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />
               <Route path="post/:postId/info" element={<PostInfoPage />} />
