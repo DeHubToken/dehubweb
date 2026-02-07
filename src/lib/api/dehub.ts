@@ -972,16 +972,26 @@ export async function getFollowList(
     params.address = viewerAddress;
   }
   
-  const response = await apiCall<{ result: FollowListItem[] } | FollowListItem[]>(
+  const response = await apiCall<{ result: FollowListItem[] | string[] } | FollowListItem[] | string[]>(
     `/api/follow_list/${encodeURIComponent(address)}`, 
     { params }
   );
   
-  // Handle wrapped response from API
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
+  // Unwrap { result: [...] } wrapper if present
+  const items: FollowListItem[] | string[] = (response && typeof response === 'object' && 'result' in response)
+    ? (response as { result: FollowListItem[] | string[] }).result
+    : response as FollowListItem[] | string[];
+  
+  if (!Array.isArray(items) || items.length === 0) {
+    return [];
   }
-  return response as FollowListItem[];
+
+  // API may return raw address strings instead of objects — normalise them
+  if (typeof items[0] === 'string') {
+    return (items as string[]).map(addr => ({ address: addr.toLowerCase() }));
+  }
+
+  return items as FollowListItem[];
 }
 
 export interface PostCommentResponse {
