@@ -5,7 +5,7 @@
  * Uses connectTo() for direct provider connections.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -103,6 +103,27 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   
   // Memoize mobile detection to avoid recalculating on every render
   const isMobile = useMemo(() => isMobileDevice(), []);
+
+  // Preload wallet icon images so they appear simultaneously with SVG icons
+  const [walletIconsReady, setWalletIconsReady] = useState(false);
+  useEffect(() => {
+    if (!open) {
+      setWalletIconsReady(false);
+      return;
+    }
+    const sources = [phantomLogo, rabbyLogo];
+    let loaded = 0;
+    const onLoad = () => {
+      loaded++;
+      if (loaded >= sources.length) setWalletIconsReady(true);
+    };
+    sources.forEach(src => {
+      const img = new Image();
+      img.onload = onLoad;
+      img.onerror = onLoad; // don't block on failure
+      img.src = src;
+    });
+  }, [open]);
 
   const handleClose = () => {
     // Always allow closing - user should never be trapped
@@ -335,7 +356,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   );
 
   const renderWalletsStep = () => (
-    <div className="space-y-3">
+    <div className={`space-y-3 transition-opacity duration-200 ${walletIconsReady ? 'opacity-100' : 'opacity-0'}`}>
       <Button
         onClick={() => handleWalletConnect('metamask')}
         disabled={isConnecting}
