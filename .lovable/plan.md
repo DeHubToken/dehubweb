@@ -1,43 +1,71 @@
 
 
-## Fix: Comment Copy Link Not Including Comment ID
+## Fix: Followers/Following List Not Loading
 
-### Investigation Summary
+### Root Cause
 
-I thoroughly tested the "Copy Link" feature in the browser. Here's what I found:
+The `/api/follow_list/{address}` endpoint returns **raw wallet address arrays** (e.g., `["0x26eeb...", "0x6f78..."]`), but the code expects fully structured user objects with `username`, `displayName`, `avatarImageUrl`, etc.
 
-1. **The code is correct** -- at line 247 in `CommentsSection.tsx`, the URL is built as:
-   ```
-   ${window.location.origin}/app/post/${tokenId}?comment=${comment.id}
-   ```
-   And the API returns valid comment IDs (e.g., `"938"`, `"934"`, `"935"`).
+When `mapFollowListItem` receives a plain string instead of an object, every field resolves to `undefined`, causing the list to render broken/empty items.
 
-2. **There are TWO different "Copy Link" buttons** that look the same:
-   - **Post-level Copy Link** (in `ActionBar.tsx`, line 225): copies just `/app/post/2719` with NO comment ID -- this is the share button below the post content
-   - **Comment-level Copy Link** (in `CommentsSection.tsx`, line 247): copies `/app/post/2719?comment=938` WITH the comment ID -- this is inside the share dropdown on each individual comment
-
-3. **There's also a Share icon in the comments panel header** (line 712-718 in `CommentsSection.tsx`) that does nothing when clicked -- no handler attached at all.
-
-You might be clicking the post-level share button (ActionBar) which only copies the post link, not the comment-specific one.
-
-### To verify, here's what I'll do:
-
-1. **Add a visible toast message** that includes the actual URL being copied, so you can confirm which button is being triggered and what URL it produces.
-
-2. **After verification**, I'll remove the debug toast and keep only the clean "Comment link copied" message.
-
-### Technical Change
-
-**File: `src/components/app/cards/CommentsSection.tsx`** (line 247)
-
-Temporarily update the toast to show the copied URL:
-```typescript
-onClick={() => {
-  const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
-  navigator.clipboard.writeText(url);
-  toast.success(`Copied: ${url}`);
-}}
+Evidence from the network logs -- the `account_info` response for the same user shows the same data shape:
+```text
+"followersList": ["0x26eeb761c7c88d9d1f0a688ced47f3a77c53b70c", "0x6f7800748dc7b61fda62e2ca4e21ad37a7ff6177"]
 ```
 
-This will show the full URL in the toast so you can confirm the comment ID is present. Then we can identify if the issue is with which button you're pressing.
+### Solution
+
+**Two-step resolution:** handle the raw address response, then enrich each address into a full user profile using the existing `batch-avatars` edge function (which already fetches `account_info` for multiple addresses in parallel).
+
+### Changes
+
+#### 1. Update `getFollowList` in `src/lib/api/dehub.ts`
+
+- Detect whether the API returned an array of strings (addresses) vs. an array of objects
+- If strings, return them in a minimal shape `{ address: "0x..." }` so the caller knows enrichment is needed
+
+#### 2. Update `FollowersListDrawer.tsx`
+
+- After receiving the raw address list from `getFollowList`, call the `batch-avatars` edge function to resolve each address into `username`, `displayName`, `avatarUrl`
+- Merge the enriched data back into the user list items
+- Show skeleton loading while enrichment is in progress
+- Handle the case where some addresses fail to resolve (show truncated address as fallback)
+
+### Flow
+
+```text
+User clicks "Followers" or "Following"
+        |
+        v
+getFollowList("/api/follow_list/{address}")
+        |
+        v
+API returns: { result: ["0xabc...", "0xdef..."] }
+        |
+        v
+Detect: items are strings, not objects
+        |
+        v
+Call batch-avatars edge function with address array
+        |
+        v
+Receive enriched data: { avatars: { "0xabc": { username, displayName, avatarUrl }, ... } }
+        |
+        v
+Merge into UserListItem[] and render
+```
+
+### Technical Details
+
+**`src/lib/api/dehub.ts` -- `getFollowList` function:**
+- After unwrapping the `result`, check if items are strings via `typeof items[0] === 'string'`
+- If so, map each string to `{ address: string }` as a `FollowListItem`
+- This keeps the return type consistent
+
+**`src/components/app/profile/FollowersListDrawer.tsx`:**
+- After `getFollowList` returns, check if items lack usernames (i.e., they were raw addresses)
+- If enrichment is needed, POST to the `batch-avatars` edge function with the address list
+- Merge the returned `avatarMap` data (username, displayName, avatarUrl) into each item
+- Add the viewer's address to get `isFollowing` status via `is_following` API calls (or skip for simplicity and just show follow buttons that check on click)
+- Fallback display: show truncated wallet address (e.g., `0x26ee...b70c`) when username is unavailable
 
