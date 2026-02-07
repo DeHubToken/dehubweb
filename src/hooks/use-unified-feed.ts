@@ -27,7 +27,7 @@ const CACHE_STALE_MS = 10 * 60 * 1000;
 export interface UnifiedFeedParams {
   page?: number;
   limit?: number;
-  sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments';
+  sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random';
   sortOrder?: 'asc' | 'desc';
   postType?: 'all' | 'video' | 'feed-images' | 'feed-simple';
   status?: 'minted' | 'pending' | 'failed';
@@ -40,6 +40,8 @@ export interface UnifiedFeedParams {
   range?: 'day' | 'week' | 'month' | 'year';
   from?: string;
   to?: string;
+  shuffleSeed?: string;
+  maxPerCreator?: number;
 }
 
 export interface UnifiedFeedItem {
@@ -102,6 +104,7 @@ export interface UnifiedFeedResponse {
     totalPages: number;
     hasMore: boolean;
   };
+  shuffleSeed?: string;
 }
 
 // ============================================================================
@@ -369,6 +372,8 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
   if (params.range) url.searchParams.set('range', params.range);
   if (params.from) url.searchParams.set('from', params.from);
   if (params.to) url.searchParams.set('to', params.to);
+  if (params.shuffleSeed) url.searchParams.set('shuffleSeed', params.shuffleSeed);
+  if (params.maxPerCreator !== undefined) url.searchParams.set('maxPerCreator', String(params.maxPerCreator));
   
   const token = getAuthToken();
   const headers: HeadersInit = {
@@ -420,15 +425,29 @@ interface UseUnifiedFeedOptions extends Omit<UnifiedFeedParams, 'page'> {
 export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
   const { enabled = true, limit = 20, ...params } = options;
   
+  // Track shuffleSeed across pages for random sort stable pagination
+  const shuffleSeedRef = { current: '' };
+  
   return useInfiniteQuery({
     // Include address in query key to force cache invalidation on login/logout
     queryKey: ['unified-feed', params, limit, params.address],
     queryFn: async ({ pageParam = 1 }) => {
+      // For random sort: reuse the seed from the first page response for stable pagination
+      const queryParams = { ...params };
+      if (params.sortBy === 'random' && pageParam > 1 && shuffleSeedRef.current) {
+        queryParams.shuffleSeed = shuffleSeedRef.current;
+      }
+      
       const response = await fetchUnifiedFeed({
-        ...params,
+        ...queryParams,
         page: pageParam,
         limit,
       });
+      
+      // Store the shuffleSeed from the first page for subsequent pages
+      if (params.sortBy === 'random' && response.shuffleSeed && pageParam === 1) {
+        shuffleSeedRef.current = response.shuffleSeed;
+      }
       
       // Filter out blocked creators
       const filteredItems = (response.result || []).filter(item => !isBlockedCreator(item) && !isBlockedPost(item));
@@ -437,6 +456,7 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
         items: filteredItems,
         pagination: response.pagination,
         page: pageParam,
+        shuffleSeed: response.shuffleSeed,
       };
     },
     getNextPageParam: (lastPage) => {

@@ -346,6 +346,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         return 'views' as const;
       case 'most-comments':
         return 'comments' as const;
+      case 'random':
+        return 'random' as const;
       case 'latest':
       default:
         return 'createdAt' as const;
@@ -357,8 +359,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // For trending and following, don't limit range - let pagination go back in time naturally
   // The trending algorithm's time decay will still prioritize recent content at the top
   const range = useMemo(() => {
-    if (selectedSort.value === 'trending' || selectedSort.value === 'following') {
-      return undefined; // No range limit - infinite scroll goes back in time
+    if (selectedSort.value === 'trending' || selectedSort.value === 'following' || selectedSort.value === 'random') {
+      return undefined; // No range limit
     }
     return getDateRange(selectedDate.value);
   }, [selectedSort.value, selectedDate.value]);
@@ -381,7 +383,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // For "Most Liked", "Trending", or "Following" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
-  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'trending' || selectedSort.value === 'following';
+  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'trending' || selectedSort.value === 'following' || selectedSort.value === 'random';
   const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
 
   // Fetch videos

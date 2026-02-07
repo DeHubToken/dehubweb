@@ -120,6 +120,8 @@ function getUnifiedSortBy(sortValue: SortValue): UnifiedFeedParams['sortBy'] {
       return 'likes';
     case 'most-comments':
       return 'comments';
+    case 'random':
+      return 'random';
     case 'latest':
     default:
       return 'createdAt';
@@ -409,8 +411,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // For "Most Liked", ignore date filter to get true all-time ranking (matches Home feed behavior)
   const effectiveRange = useMemo(() => {
-    if (selectedSort.value === 'most-liked') {
-      return undefined; // All-time for global ranking
+    if (selectedSort.value === 'most-liked' || selectedSort.value === 'random') {
+      return undefined; // No range limit for global ranking / random
     }
     return getUnifiedRange(selectedUploadDate.value);
   }, [selectedSort.value, selectedUploadDate.value]);
