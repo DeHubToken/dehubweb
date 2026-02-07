@@ -6,7 +6,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles } from 'lucide-react';
+import { Lightbulb, Search, ChevronUp, ChevronDown, Plus, X, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -16,6 +16,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import {
   useFeatureRequests,
+  useShippedFeatures,
   useUserVotes,
   useSubmitFeatureRequest,
   useVoteFeatureRequest,
@@ -44,10 +45,11 @@ const CATEGORIES: { id: FeatureCategory | 'all'; label: string }[] = [
   { id: 'other', label: 'Other' },
 ];
 
+type PageTab = 'requests' | 'shipped';
+
 const SORTS: { id: FeatureSort; label: string }[] = [
   { id: 'most_voted', label: 'Most Voted' },
   { id: 'newest', label: 'Newest' },
-  { id: 'trending', label: 'Trending' },
 ];
 
 const STATUS_COLORS: Record<FeatureStatus, string> = {
@@ -354,10 +356,54 @@ function FeatureSkeletons() {
 }
 
 // ──────────────────────────────────────────────────
+// Shipped Feature Card (simpler, no voting)
+// ──────────────────────────────────────────────────
+function ShippedCard({ feature }: { feature: FeatureRequest }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div
+      className="bg-zinc-900 rounded-2xl p-4 flex gap-3 cursor-pointer hover:bg-zinc-800/70 transition-colors"
+      onClick={() => setExpanded(!expanded)}
+    >
+      <div className="flex flex-col items-center justify-center min-w-[40px]">
+        <div className="w-8 h-8 rounded-lg bg-emerald-900/40 flex items-center justify-center">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        </div>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start gap-2 mb-1.5">
+          <h3 className="text-white font-semibold text-sm leading-tight flex-1 min-w-0">
+            {feature.title}
+          </h3>
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-emerald-900/40 text-emerald-400">
+            Shipped
+          </span>
+        </div>
+
+        <p className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`}>
+          {feature.description}
+        </p>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+            {CATEGORY_LABELS[feature.category]}
+          </span>
+          <span className="text-zinc-700 text-[11px]">·</span>
+          <span className="text-zinc-500 text-[11px]">{formatTimeAgo(feature.updated_at)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
 // Main Page
 // ──────────────────────────────────────────────────
 export default function FeaturesPage() {
   const { isAuthenticated, openLoginModal } = useAuth();
+  const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
   const [searchInput, setSearchInput] = useState('');
@@ -365,6 +411,7 @@ export default function FeaturesPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { data: features, isLoading } = useFeatureRequests(sort, category, search);
+  const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: userVotes } = useUserVotes();
   const voteMutation = useVoteFeatureRequest();
 
@@ -388,6 +435,7 @@ export default function FeaturesPage() {
   };
 
   const totalCount = features?.length ?? 0;
+  const shippedCount = shippedFeatures?.length ?? 0;
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
@@ -413,87 +461,151 @@ export default function FeaturesPage() {
           </Button>
         </div>
 
-        {/* Category Pills */}
-        <div className="relative mb-3">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-          <div className="flex gap-2 overflow-x-auto scrollbar-invisible pb-1">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setCategory(cat.id)}
-                className={`px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
-                  category === cat.id
-                    ? 'bg-white text-black'
-                    : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+        {/* Page Tabs: Requests / Shipped */}
+        <div className="flex gap-1 bg-zinc-800 rounded-xl p-1 mb-3">
+          <button
+            type="button"
+            onClick={() => setActiveTab('requests')}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeTab === 'requests'
+                ? 'bg-zinc-700 text-white'
+                : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            Requests
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('shipped')}
+            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
+              activeTab === 'shipped'
+                ? 'bg-zinc-700 text-white'
+                : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            Shipped
+            {shippedCount > 0 && (
+              <span className="text-[10px] bg-emerald-900/40 text-emerald-400 px-1.5 py-0.5 rounded-md font-semibold">
+                {shippedCount}
+              </span>
+            )}
+          </button>
         </div>
 
-        {/* Sort Tabs */}
-        <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
-          {SORTS.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setSort(s.id)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                sort === s.id
-                  ? 'bg-zinc-700 text-white'
-                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
+        {/* Filters (only shown on requests tab) */}
+        {activeTab === 'requests' && (
+          <>
+            {/* Category Pills */}
+            <div className="relative mb-3">
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+              <div className="flex gap-2 overflow-x-auto scrollbar-invisible pb-1">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setCategory(cat.id)}
+                    className={`px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
+                      category === cat.id
+                        ? 'bg-white text-black'
+                        : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder="Search feature requests..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-          />
-        </div>
+            {/* Sort Tabs */}
+            <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
+              {SORTS.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setSort(s.id)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    sort === s.id
+                      ? 'bg-zinc-700 text-white'
+                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Input
+                placeholder="Search feature requests..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+              />
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Feature List */}
-      {isLoading ? (
-        <FeatureSkeletons />
-      ) : features && features.length > 0 ? (
-        <div className="space-y-3">
-          {features.map((feature) => (
-            <FeatureCard
-              key={feature.id}
-              feature={feature}
-              currentVote={userVotes?.[feature.id]}
-              onVote={handleVote}
-              voteDisabled={voteMutation.isPending}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="bg-zinc-900 rounded-2xl p-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
-            <Lightbulb className="w-8 h-8 text-zinc-600" />
-          </div>
-          <h3 className="text-white font-semibold mb-1">No feature requests yet</h3>
-          <p className="text-zinc-500 text-sm mb-4">Be the first to suggest an idea!</p>
-          <Button
-            onClick={handleSubmitClick}
-            className="bg-white text-black hover:bg-zinc-200 rounded-xl font-semibold"
-          >
-            <Plus className="w-4 h-4" />
-            Submit Feature Request
-          </Button>
-        </div>
+      {/* Feature List (Requests Tab) */}
+      {activeTab === 'requests' && (
+        <>
+          {isLoading ? (
+            <FeatureSkeletons />
+          ) : features && features.length > 0 ? (
+            <div className="space-y-3">
+              {features.map((feature) => (
+                <FeatureCard
+                  key={feature.id}
+                  feature={feature}
+                  currentVote={userVotes?.[feature.id]}
+                  onVote={handleVote}
+                  voteDisabled={voteMutation.isPending}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <Lightbulb className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">No feature requests yet</h3>
+              <p className="text-zinc-500 text-sm mb-4">Be the first to suggest an idea!</p>
+              <Button
+                onClick={handleSubmitClick}
+                className="bg-white text-black hover:bg-zinc-200 rounded-xl font-semibold"
+              >
+                <Plus className="w-4 h-4" />
+                Submit Feature Request
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Shipped Features Tab */}
+      {activeTab === 'shipped' && (
+        <>
+          {isLoadingShipped ? (
+            <FeatureSkeletons />
+          ) : shippedFeatures && shippedFeatures.length > 0 ? (
+            <div className="space-y-3">
+              {shippedFeatures.map((feature) => (
+                <ShippedCard key={feature.id} feature={feature} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">No shipped features yet</h3>
+              <p className="text-zinc-500 text-sm">Completed features will appear here.</p>
+            </div>
+          )}
+        </>
       )}
 
       {/* Submit Drawer */}

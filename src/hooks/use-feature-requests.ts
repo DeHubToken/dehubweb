@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 export type FeatureCategory = 'ui_ux' | 'performance' | 'new_feature' | 'bug_fix' | 'integration' | 'other';
 export type FeatureStatus = 'open' | 'under_review' | 'planned' | 'in_progress' | 'completed' | 'declined';
-export type FeatureSort = 'most_voted' | 'newest' | 'trending';
+export type FeatureSort = 'most_voted' | 'newest';
 
 export interface FeatureRequest {
   id: string;
@@ -79,16 +79,29 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
         case 'newest':
           query = query.order('created_at', { ascending: false });
           break;
-        case 'trending':
-          // Fetch all and sort client-side by recent vote activity
-          // For simplicity, sort by vote_count but only show recent items
-          query = query
-            .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-            .order('vote_count', { ascending: false });
-          break;
       }
 
+      // Exclude shipped (completed) features from the main list
+      query = query.neq('status', 'completed');
+
       const { data, error } = await query;
+      if (error) throw error;
+      return (data || []) as FeatureRequest[];
+    },
+    staleTime: 30_000,
+  });
+}
+
+export function useShippedFeatures() {
+  return useQuery({
+    queryKey: ['feature-requests-shipped'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .select('*')
+        .eq('status', 'completed')
+        .order('updated_at', { ascending: false });
+
       if (error) throw error;
       return (data || []) as FeatureRequest[];
     },
