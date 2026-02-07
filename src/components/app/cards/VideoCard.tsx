@@ -445,6 +445,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const containerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isHoveringRef = useRef(false);
   const isTouchDevice = useIsTouchDevice();
   
   // View tracking - fires view after watching threshold
@@ -483,6 +485,22 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     };
   }, [instanceId, pauseVideo, isPlaying]);
 
+  // Show controls briefly after any user interaction, then auto-hide
+  const showControlsBriefly = useCallback(() => {
+    setShowControls(true);
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    controlsTimerRef.current = setTimeout(() => {
+      if (!isHoveringRef.current) setShowControls(false);
+    }, 3000);
+  }, []);
+
+  // Cleanup controls timer on unmount
+  useEffect(() => {
+    return () => {
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    };
+  }, []);
+
   const handlePlayClick = useCallback(() => {
     if (!video.videoUrl) return;
     
@@ -490,6 +508,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoRef.current?.pause();
       setIsPlaying(false);
       videoPlaybackManager.stop(instanceId);
+      showControlsBriefly();
     } else {
       // Sync mute state from global manager before playing
       const currentGlobalMuted = videoPlaybackManager.globalMuted;
@@ -504,13 +523,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       videoRef.current?.play().then(() => {
         setIsPlaying(true);
         setIsLoading(false);
+        showControlsBriefly();
       }).catch(() => {
         setIsLoading(false);
         setHasError(true);
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, instanceId]);
+  }, [isPlaying, video.videoUrl, instanceId, showControlsBriefly]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -854,8 +874,16 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
         onClick={isTouchDevice ? undefined : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
-        onMouseEnter={() => setShowControls(true)}
-        onMouseLeave={() => setShowControls(false)}
+        onMouseEnter={() => {
+          isHoveringRef.current = true;
+          setShowControls(true);
+          if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+        }}
+        onMouseLeave={() => {
+          isHoveringRef.current = false;
+          if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), 3000);
+        }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
