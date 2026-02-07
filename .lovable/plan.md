@@ -1,71 +1,133 @@
 
 
-## Fix: Followers/Following List Not Loading
+## Feature Request Page (`/features`)
 
-### Root Cause
+A community-driven feature request board where logged-in users can submit ideas and all users can vote them up or down. Think of it as a lightweight "Canny" or "UserVoice" built directly into DeHub.
 
-The `/api/follow_list/{address}` endpoint returns **raw wallet address arrays** (e.g., `["0x26eeb...", "0x6f78..."]`), but the code expects fully structured user objects with `username`, `displayName`, `avatarImageUrl`, etc.
+---
 
-When `mapFollowListItem` receives a plain string instead of an object, every field resolves to `undefined`, causing the list to render broken/empty items.
+### What users will see
 
-Evidence from the network logs -- the `account_info` response for the same user shows the same data shape:
-```text
-"followersList": ["0x26eeb761c7c88d9d1f0a688ced47f3a77c53b70c", "0x6f7800748dc7b61fda62e2ca4e21ad37a7ff6177"]
-```
+**Header Section**
+- Page title "Feature Requests" with a lightbulb icon
+- Subtitle showing total request count
+- "Submit Feature" button (opens a form modal/drawer for logged-in users, triggers login for others)
 
-### Solution
+**Filter/Sort Bar**
+- Category filter pills: All, UI/UX, Performance, New Feature, Bug Fix, Integration
+- Sort options: Most Voted, Newest, Trending (most votes in last 7 days)
+- Search bar to filter by title/description
 
-**Two-step resolution:** handle the raw address response, then enrich each address into a full user profile using the existing `batch-avatars` edge function (which already fetches `account_info` for multiple addresses in parallel).
+**Feature Request Cards**
+- Each card shows: title, description (truncated), category badge, author info (avatar + username), vote count, comment count, and creation date
+- Left side: vote buttons (up arrow / down arrow) with net vote count between them
+- Status badge: Open, Under Review, Planned, In Progress, Completed, Declined
+- Clicking a card expands it inline to show the full description
 
-### Changes
+**Submit Feature Form (Drawer)**
+- Title input (required, max 100 chars)
+- Description textarea (required, max 1000 chars) 
+- Category selector dropdown
+- Submit button with loading state
 
-#### 1. Update `getFollowList` in `src/lib/api/dehub.ts`
+**Empty State**
+- Friendly message encouraging the first feature request
 
-- Detect whether the API returned an array of strings (addresses) vs. an array of objects
-- If strings, return them in a minimal shape `{ address: "0x..." }` so the caller knows enrichment is needed
+---
 
-#### 2. Update `FollowersListDrawer.tsx`
+### Database Design
 
-- After receiving the raw address list from `getFollowList`, call the `batch-avatars` edge function to resolve each address into `username`, `displayName`, `avatarUrl`
-- Merge the enriched data back into the user list items
-- Show skeleton loading while enrichment is in progress
-- Handle the case where some addresses fail to resolve (show truncated address as fallback)
+Two new tables:
 
-### Flow
+**`feature_requests`**
+| Column | Type | Notes |
+|--------|------|-------|
+| id | uuid (PK) | Auto-generated |
+| title | text | Required, max 100 chars |
+| description | text | Required, max 1000 chars |
+| category | text | One of: ui_ux, performance, new_feature, bug_fix, integration, other |
+| status | text | Default: 'open'. One of: open, under_review, planned, in_progress, completed, declined |
+| author_wallet_address | text | Wallet address of submitter |
+| author_username | text | Cached at time of submission |
+| author_avatar | text | Cached at time of submission |
+| vote_count | integer | Denormalized net votes (upvotes - downvotes), default 0 |
+| comment_count | integer | Reserved for future use, default 0 |
+| created_at | timestamptz | Default now() |
+| updated_at | timestamptz | Default now() |
 
-```text
-User clicks "Followers" or "Following"
-        |
-        v
-getFollowList("/api/follow_list/{address}")
-        |
-        v
-API returns: { result: ["0xabc...", "0xdef..."] }
-        |
-        v
-Detect: items are strings, not objects
-        |
-        v
-Call batch-avatars edge function with address array
-        |
-        v
-Receive enriched data: { avatars: { "0xabc": { username, displayName, avatarUrl }, ... } }
-        |
-        v
-Merge into UserListItem[] and render
-```
+**`feature_request_votes`**
+| Column | Type | Notes |
+|--------|------|-------|
+| id | uuid (PK) | Auto-generated |
+| feature_request_id | uuid (FK) | References feature_requests.id |
+| wallet_address | text | Voter's wallet |
+| vote_type | integer | +1 for upvote, -1 for downvote |
+| created_at | timestamptz | Default now() |
+| **UNIQUE** | | (feature_request_id, wallet_address) -- one vote per user per request |
 
-### Technical Details
+**RLS Policies:**
+- `feature_requests`: SELECT open to everyone (anon + authenticated). INSERT for authenticated users only. UPDATE/DELETE restricted to the author (matching wallet address).
+- `feature_request_votes`: SELECT open to everyone. INSERT/UPDATE/DELETE for authenticated users only, scoped to their own wallet address.
 
-**`src/lib/api/dehub.ts` -- `getFollowList` function:**
-- After unwrapping the `result`, check if items are strings via `typeof items[0] === 'string'`
-- If so, map each string to `{ address: string }` as a `FollowListItem`
-- This keeps the return type consistent
+**Database trigger**: On INSERT/UPDATE/DELETE on `feature_request_votes`, automatically recalculate `vote_count` on the parent `feature_requests` row.
 
-**`src/components/app/profile/FollowersListDrawer.tsx`:**
-- After `getFollowList` returns, check if items lack usernames (i.e., they were raw addresses)
-- If enrichment is needed, POST to the `batch-avatars` edge function with the address list
-- Merge the returned `avatarMap` data (username, displayName, avatarUrl) into each item
-- Add the viewer's address to get `isFollowing` status via `is_following` API calls (or skip for simplicity and just show follow buttons that check on click)
-- Fallback display: show truncated wallet address (e.g., `0x26ee...b70c`) when username is unavailable
+---
 
+### Technical Implementation
+
+**1. Database Migration**
+- Create both tables with proper indexes
+- Add RLS policies
+- Create a trigger function to sync `vote_count`
+- Enable realtime on `feature_requests` for live vote count updates
+
+**2. New Page: `src/pages/app/FeaturesPage.tsx`**
+- Follows the existing page pattern (see LeaderboardPage, BookmarksPage)
+- Uses `useQuery` for fetching feature requests with sort/filter params
+- Optimistic voting UI (instant visual feedback, rollback on error)
+- Submit form uses a Drawer component (matching app's glass morphism style)
+- Zod validation for the submission form
+- Category pills with horizontal scroll on mobile
+
+**3. New Hook: `src/hooks/use-feature-requests.ts`**
+- `useFeatureRequests(sort, category, search)` -- paginated query
+- `useSubmitFeatureRequest()` -- mutation with optimistic update
+- `useVoteFeatureRequest()` -- mutation with optimistic vote count update
+- Uses Supabase client directly (not the DeHub API)
+
+**4. Routing**
+- Add route `/app/features` inside the AppLayout routes in `App.tsx`
+- Also add `/features` as a top-level redirect to `/app/features` so `dehub.io/features` works
+- Place the route ABOVE the `/:username` catch-all to prevent it from being treated as a username
+
+**5. Navigation**
+- No sidebar nav item added (keep sidebar clean) -- accessible via direct URL or a link from settings/about
+
+**6. Design Consistency**
+- Black/white palette only (zinc scale)
+- Rounded-2xl cards on zinc-900 backgrounds
+- Glass morphism drawer for submission form
+- Vote buttons use `bg-zinc-800 hover:bg-zinc-700` with white text
+- Active upvote: white fill. Active downvote: white fill. Matching the existing action bar pattern.
+- Category badges use `bg-zinc-800 text-zinc-300` style
+
+---
+
+### Files to Create/Modify
+
+| File | Action |
+|------|--------|
+| `src/pages/app/FeaturesPage.tsx` | **Create** -- Main page component |
+| `src/hooks/use-feature-requests.ts` | **Create** -- Data fetching and mutations |
+| `src/App.tsx` | **Modify** -- Add route for `/features` and `/app/features` |
+| Database migration | **Create** -- Tables, RLS, trigger |
+
+---
+
+### Security Considerations
+
+- RLS ensures users can only create/edit/delete their own requests and votes
+- Input validation with Zod on the client side (title max 100 chars, description max 1000 chars)
+- Wallet address is read from auth context, never from user input
+- The `vote_count` trigger runs as a database function (SECURITY DEFINER) to prevent manipulation
+- One vote per user per feature request enforced at the database level via UNIQUE constraint
