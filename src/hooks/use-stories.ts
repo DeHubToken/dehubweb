@@ -89,7 +89,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-1',
     wallet_address: '0xTEMPLATE000000000000000000000000000001',
-    username: 'alex_streams',
+    username: 'vrgl',
     avatar: null,
     video_url: 'https://assets.mixkit.co/videos/39875/39875-720.mp4',
     thumbnail_url: null,
@@ -99,7 +99,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-2',
     wallet_address: '0xTEMPLATE000000000000000000000000000002',
-    username: 'maya_creates',
+    username: 'notmaya',
     avatar: null,
     video_url: 'https://assets.mixkit.co/videos/39874/39874-720.mp4',
     thumbnail_url: null,
@@ -109,7 +109,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-3',
     wallet_address: '0xTEMPLATE000000000000000000000000000003',
-    username: 'kai_fitness',
+    username: '0xkai',
     avatar: null,
     video_url: 'https://assets.mixkit.co/videos/39878/39878-720.mp4',
     thumbnail_url: null,
@@ -119,7 +119,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-4',
     wallet_address: '0xTEMPLATE000000000000000000000000000004',
-    username: 'luna_music',
+    username: 'ξluna',
     avatar: null,
     video_url: 'https://assets.mixkit.co/ngl4vwp6mhwm97fv0212vrgi6iw0',
     thumbnail_url: null,
@@ -129,7 +129,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-5',
     wallet_address: '0xTEMPLATE000000000000000000000000000005',
-    username: 'dev_marco',
+    username: 'marcø',
     avatar: null,
     video_url: 'https://assets.mixkit.co/wwnepv77a959cjk6wicpxqosy1mu',
     thumbnail_url: null,
@@ -139,7 +139,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-6',
     wallet_address: '0xTEMPLATE000000000000000000000000000006',
-    username: 'nina_travels',
+    username: 'ninarealll',
     avatar: null,
     video_url: 'https://assets.mixkit.co/m9oyxjg4wit94y3k2e998i90n96r',
     thumbnail_url: null,
@@ -149,7 +149,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-7',
     wallet_address: '0xTEMPLATE000000000000000000000000000007',
-    username: 'jake_cooks',
+    username: 'j',
     avatar: null,
     video_url: 'https://assets.mixkit.co/v949y07olycrk26kgawi7zef1f0h',
     thumbnail_url: null,
@@ -159,7 +159,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-8',
     wallet_address: '0xTEMPLATE000000000000000000000000000008',
-    username: 'zara_fashion',
+    username: 'z4r4.eth',
     avatar: null,
     video_url: 'https://assets.mixkit.co/7zctwtusix6zyq97h24z0b863ofv',
     thumbnail_url: null,
@@ -169,7 +169,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-9',
     wallet_address: '0xTEMPLATE000000000000000000000000000009',
-    username: 'rio_skates',
+    username: 'riooo',
     avatar: null,
     video_url: 'https://assets.mixkit.co/yqgsdhqnrvzbtbxv0o76xcebwtpi',
     thumbnail_url: null,
@@ -179,7 +179,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-10',
     wallet_address: '0xTEMPLATE000000000000000000000000000010',
-    username: 'ella_pets',
+    username: 'ella',
     avatar: null,
     video_url: 'https://assets.mixkit.co/1n3mnf16ls4nz4b26j03mmmou9hs',
     thumbnail_url: null,
@@ -189,7 +189,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-11',
     wallet_address: '0xTEMPLATE000000000000000000000000000011',
-    username: 'sam_astro',
+    username: 'sv.mp4',
     avatar: null,
     video_url: 'https://assets.mixkit.co/xljy8btgxl02zhespwj0cz6jdn7k',
     thumbnail_url: null,
@@ -199,7 +199,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-12',
     wallet_address: '0xTEMPLATE000000000000000000000000000012',
-    username: 'mia_dances',
+    username: 'mi444',
     avatar: null,
     video_url: 'https://assets.mixkit.co/xnhfrp4eu75lfd518c7fgvrb60y5',
     thumbnail_url: null,
@@ -209,7 +209,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-13',
     wallet_address: '0xTEMPLATE000000000000000000000000000013',
-    username: 'leo_photos',
+    username: 'leothedev',
     avatar: null,
     video_url: 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
     thumbnail_url: null,
@@ -219,7 +219,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-14',
     wallet_address: '0xTEMPLATE000000000000000000000000000014',
-    username: 'ivy_nature',
+    username: 'ivyivyivy',
     avatar: null,
     video_url: 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
     thumbnail_url: null,
@@ -229,7 +229,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-15',
     wallet_address: '0xTEMPLATE000000000000000000000000000015',
-    username: 'omar_builds',
+    username: 'ømr',
     avatar: null,
     video_url: 'https://assets.mixkit.co/06jelsa32165b7uucf6owicufji2',
     thumbnail_url: null,
