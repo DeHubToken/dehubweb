@@ -198,12 +198,9 @@ export function MobileWhoToFollowCarousel() {
                   {getDisplayName(user).charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex items-center gap-1 justify-center w-full mb-2">
+              <div className="flex items-center justify-center w-full mb-2">
                 <span className="font-semibold text-white text-xs truncate">
                   {getDisplayName(user)}
-                </span>
-                <span className="text-zinc-500 text-xs truncate">
-                  {getHandle(user)}
                 </span>
               </div>
               <Button
