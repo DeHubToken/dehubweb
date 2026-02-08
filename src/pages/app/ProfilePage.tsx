@@ -30,8 +30,7 @@ import { useDeHubProfile, useDeHubUserContent, separateUserContent, type Profile
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
-import { followUser, unfollowUser, getMediaUrl } from '@/lib/api/dehub';
-import { useUserNFTs } from '@/hooks/use-user-nfts';
+import { followUser, unfollowUser } from '@/lib/api/dehub';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
@@ -180,7 +179,7 @@ export default function ProfilePage() {
     { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
     { icon: Play, label: 'Songs', value: 'songs', count: 0 },
     { icon: Radio, label: 'Live', value: 'live', count: 0 },
-    { icon: PieChart, label: 'NFTs', value: 'fractions', count: 0 },
+    { icon: PieChart, label: 'Fractions', value: 'fractions', count: 0 },
   ];
   
   // Fetch subscription plans for this profile
@@ -195,11 +194,7 @@ export default function ProfilePage() {
   // Fetch privacy settings for the profile being viewed
   const { showFollowersFollowing, hideFollowerCounts } = useUserPrivacySettings(apiProfile?.walletAddress);
 
-  // Fetch NFTs for the "Fractions" (NFTs) tab
-  const { nfts: userNFTs, total: nftTotal, isLoading: isLoadingNFTs, hasMore: hasMoreNFTs, loadMore: loadMoreNFTs } = useUserNFTs({
-    userId: apiProfile?.walletAddress,
-    enabled: !!apiProfile?.walletAddress && activeTab === 'fractions',
-  });
+  
   
   // Re-auth handler for API error handling
   const { handleApiError } = useReauthHandler();
@@ -731,62 +726,11 @@ export default function ProfilePage() {
           </div>
         );
       case 'fractions':
-        if (isLoadingNFTs && userNFTs.length === 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
-              <p className="text-zinc-500 text-sm">Loading NFTs...</p>
-            </div>
-          );
-        }
-        if (userNFTs.length === 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <PieChart className="w-12 h-12 text-zinc-600 mb-3" />
-              <p className="text-zinc-400 text-lg font-medium">No NFTs yet</p>
-              <p className="text-zinc-500 text-sm mt-1">Collectibles will appear here</p>
-            </div>
-          );
-        }
         return (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {userNFTs.map((nft) => {
-                const imageUrl = getMediaUrl(nft.imageUrl);
-                return (
-                  <button
-                    key={nft.id || nft.tokenId}
-                    className="relative aspect-square rounded-xl overflow-hidden bg-zinc-800 group"
-                    onClick={() => imageUrl && setFullscreenImage(imageUrl)}
-                  >
-                    {imageUrl ? (
-                      <img src={imageUrl} alt={nft.title || 'NFT'} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-zinc-600">
-                        <PieChart className="w-8 h-8" />
-                      </div>
-                    )}
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                      <p className="text-white text-xs font-medium truncate">{nft.title || `#${nft.tokenId}`}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-            {hasMoreNFTs && (
-              <div className="flex justify-center pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={loadMoreNFTs}
-                  disabled={isLoadingNFTs}
-                  className="rounded-xl border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-                >
-                  {isLoadingNFTs ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                  Load More
-                </Button>
-              </div>
-            )}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <PieChart className="w-12 h-12 text-zinc-600 mb-3" />
+            <p className="text-zinc-400 text-lg font-medium">No fractions yet</p>
+            <p className="text-zinc-500 text-sm mt-1">Fraction holdings will appear here</p>
           </div>
         );
       default:
