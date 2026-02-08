@@ -81,10 +81,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] p-2 xl:p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
-        {/* Logo & Coin Balance (when stickToBanner is enabled) */}
-        <div className="mb-6 flex items-center justify-between">
-          <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] px-2 xl:px-[18px] pt-[2px] pb-2 flex-col overflow-y-auto scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
+        {/* Logo & Coin Balance */}
+        <div className="mb-6 flex items-center justify-between w-full">
+          <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px] mx-auto xl:mx-0">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto hidden xl:block" />
             <img src={dehubLogoCompact} alt="dehub" className="h-[28px] w-auto xl:hidden" />
           </button>
@@ -99,18 +99,16 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           )}
         </div>
 
-        {/* Navigation Bento - reduced padding */}
-        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1.5 xl:p-2.5 space-y-[2px]">
+        {/* Navigation Bento */}
+        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-[2px] flex flex-col items-center xl:items-stretch">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
-            
-            // Insert AI link after Messages
             const isAfterMessages = item.label === 'Messages';
 
             return (
-              <div key={item.label}>
+              <div key={item.label} className="w-full flex flex-col items-center xl:items-stretch">
                 <SidebarNavItem
                   item={item}
                   isActive={isActive}
@@ -119,7 +117,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   variant="desktop"
                   collapsed={true}
                   onClick={isProfileItem ? handleProfileClick : undefined}
-                  // Show user avatar for Profile item when authenticated
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
                   notificationCount={isNotificationsItem ? unreadCount?.total : undefined}
@@ -128,8 +125,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   <NavLink
                     to="/app/assistant"
                     className={cn(
-                      'flex items-center w-full rounded-xl text-left transition-colors text-[15px]',
-                      'gap-0 xl:gap-3 justify-center xl:justify-start px-0 xl:px-2.5 py-2.5',
+                      'flex items-center rounded-xl text-left transition-colors text-[15px]',
+                      'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start xl:px-2.5 xl:py-2.5 xl:gap-3',
                       isAIActive
                         ? 'bg-zinc-800 font-semibold text-white'
                         : 'text-white hover:bg-zinc-800/50'
@@ -137,7 +134,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   >
                     <div className={cn(
                       "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
-                      isAIActive ? "bg-zinc-700" : "bg-zinc-800"
+                      "xl:w-9 xl:h-9",
+                      isAIActive ? "bg-zinc-700" : "xl:bg-zinc-800 bg-transparent"
                     )}>
                       <Sparkles className="w-5 h-5" />
                     </div>
@@ -149,31 +147,34 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           })}
         </div>
 
-        {/* Post Button Bento - reduced padding and button size */}
-        <div className="mt-3 bg-zinc-900 rounded-2xl p-1.5 xl:p-2.5">
+        {/* Post / Login Button Bento */}
+        <div className="mt-3 bg-zinc-900 rounded-2xl p-1 xl:p-2.5 flex items-center justify-center xl:block">
           <Button 
             onClick={handlePostClick}
             disabled={isConnecting}
-            className="w-[90%] xl:w-full mx-auto rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2 disabled:opacity-70"
+            className={cn(
+              "rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold gap-2 disabled:opacity-70",
+              "w-9 h-9 p-0 xl:w-full xl:h-auto xl:py-5 xl:px-4 text-[13.5px]"
+            )}
           >
             {isAuthenticated ? (
               <>
-                <PenSquare className="w-[18px] h-[18px]" />
+                <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
                 <span className="hidden xl:inline">Create</span>
               </>
             ) : isConnecting ? (
               <>
-                <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
                 <span className="hidden xl:inline">Connecting...</span>
               </>
             ) : needsSignature ? (
               <>
-                <LogIn className="w-[18px] h-[18px]" />
+                <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
                 <span className="hidden xl:inline">Sign message</span>
               </>
             ) : (
               <>
-                <LogIn className="w-[18px] h-[18px]" />
+                <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
                 <span className="hidden xl:inline">Log in</span>
               </>
             )}
