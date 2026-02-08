@@ -188,7 +188,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     </div>
   );
 
-  // Combine real stories with placeholder users
+  // Combine real stories with placeholder users, watched stories go to end
   const allStoryItems = [
     ...storyUsers.map((story) => ({
       type: 'story' as const,
@@ -196,6 +196,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       name: story.username ? `@${story.username}` : `${story.wallet_address.slice(0, 6)}...`,
       avatar: buildAvatarUrl(story.wallet_address, story.avatar) || '',
       thumbnail: story.thumbnail_url || '',
+      watched: isWatched(story.id),
     })),
     ...users.map((user) => ({
       type: 'placeholder' as const,
@@ -203,8 +204,13 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       name: user.name.startsWith('@') ? user.name : `@${user.name}`,
       avatar: user.avatar,
       thumbnail: '',
+      watched: false,
     })),
-  ];
+  ].sort((a, b) => {
+    // Unwatched first, watched last
+    if (a.watched !== b.watched) return a.watched ? 1 : -1;
+    return 0;
+  });
 
   // Show skeleton while loading
   if (showSkeleton) {
