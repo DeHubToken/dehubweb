@@ -532,12 +532,16 @@ body.immersive-video-mode main {
 
 /* Story shimmer border — rotating conic-gradient light sweep */
 @keyframes story-shimmer-rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes story-shimmer-pulse {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.8; }
+  35%  { opacity: 0.8; }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
 }
 
 .story-shimmer-border {
@@ -561,15 +565,16 @@ body.immersive-video-mode main {
     transparent 318deg,
     transparent 360deg
   );
-  animation: story-shimmer-rotate 3s linear infinite;
-  will-change: transform;
+  animation:
+    story-shimmer-rotate 3s linear infinite,
+    story-shimmer-pulse 5s ease-in-out infinite;
+  will-change: transform, opacity;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .story-shimmer-border:hover::before {
   opacity: 1;
+  animation-name: story-shimmer-rotate;
 }
 
 .story-shimmer-border > *:first-child {
