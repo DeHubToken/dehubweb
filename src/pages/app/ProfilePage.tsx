@@ -31,6 +31,9 @@ import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
 import { useUserPrivacySettings } from '@/hooks/use-privacy-settings';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
+import { useStories, useWatchedStories } from '@/hooks/use-stories';
+import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
+import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
 
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -94,6 +97,7 @@ export default function ProfilePage() {
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
   
   // Refs for pull-to-refresh
   const profileContainerRef = useRef<HTMLDivElement>(null);
@@ -192,6 +196,30 @@ export default function ProfilePage() {
   
   // Re-auth handler for API error handling
   const { handleApiError } = useReauthHandler();
+  
+  // Stories - check if this user has active stories
+  const { stories: allStories } = useStories();
+  const { isWatched, markWatched } = useWatchedStories();
+  
+  // Filter stories for this profile's wallet address
+  const profileStories = useMemo(() => {
+    if (!profile?.walletAddress || !allStories.length) return [];
+    return allStories.filter(
+      s => s.wallet_address.toLowerCase() === profile.walletAddress.toLowerCase()
+    );
+  }, [allStories, profile?.walletAddress]);
+  
+  const hasStories = profileStories.length > 0;
+  const hasUnwatchedStories = hasStories && profileStories.some(s => !isWatched(s.id));
+  
+  // Find index of this user's first story in the full stories array for the viewer
+  const profileStoryStartIndex = useMemo(() => {
+    if (!hasStories) return 0;
+    const idx = allStories.findIndex(
+      s => s.wallet_address.toLowerCase() === profile?.walletAddress?.toLowerCase()
+    );
+    return idx >= 0 ? idx : 0;
+  }, [allStories, profile?.walletAddress, hasStories]);
   
   // Use API's isFollowing and isPending status
   const isFollowing = apiProfile?.isFollowing ?? false;
@@ -855,29 +883,56 @@ export default function ProfilePage() {
           
           {/* Profile Content */}
           <div className="px-4 sm:px-6 pb-4">
-            {/* Avatar - positioned to overlap banner, clickable for fullscreen */}
+            {/* Avatar - positioned to overlap banner, clickable for story or fullscreen */}
             <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
               <div className="relative">
-                <button 
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
-                  onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
-                  disabled={!profile.avatarUrl}
-                >
-                  {profile.avatarUrl ? (
-                    <img 
-                      src={profile.avatarUrl} 
-                      alt={profile.name} 
-                      className="w-full h-full rounded-lg object-cover"
-                    />
-                  ) : (
-                    <UserAvatar 
-                      name={profile.name} 
-                      handle={profile.handle} 
-                      size="lg" 
-                      className="w-full h-full rounded-lg"
-                    />
-                  )}
-                </button>
+                {hasStories ? (
+                  <ShimmerBorder active={hasUnwatchedStories} className="w-24 h-24 sm:w-28 sm:h-28">
+                    <button 
+                      className="w-full h-full rounded-[10px] bg-zinc-900 cursor-pointer hover:opacity-95 transition-opacity overflow-hidden"
+                      onClick={() => {
+                        profileStories.forEach(s => markWatched(s.id));
+                        setIsStoryViewerOpen(true);
+                      }}
+                    >
+                      {profile.avatarUrl ? (
+                        <img 
+                          src={profile.avatarUrl} 
+                          alt={profile.name} 
+                          className="w-full h-full rounded-[10px] object-cover"
+                        />
+                      ) : (
+                        <UserAvatar 
+                          name={profile.name} 
+                          handle={profile.handle} 
+                          size="lg" 
+                          className="w-full h-full rounded-[10px]"
+                        />
+                      )}
+                    </button>
+                  </ShimmerBorder>
+                ) : (
+                  <button 
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
+                    onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
+                    disabled={!profile.avatarUrl}
+                  >
+                    {profile.avatarUrl ? (
+                      <img 
+                        src={profile.avatarUrl} 
+                        alt={profile.name} 
+                        className="w-full h-full rounded-lg object-cover"
+                      />
+                    ) : (
+                      <UserAvatar 
+                        name={profile.name} 
+                        handle={profile.handle} 
+                        size="lg" 
+                        className="w-full h-full rounded-lg"
+                      />
+                    )}
+                  </button>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 {isViewingOwnProfile ? (
@@ -1143,6 +1198,15 @@ export default function ProfilePage() {
         onOpenChange={setFollowListDrawerOpen}
         profileAddress={apiProfile?.walletAddress || ''}
         title={followListType === 'followers' ? 'Followers' : 'Following'}
+      />
+      
+      {/* Story Viewer Modal - opens when clicking avatar with stories */}
+      <StoryViewerModal
+        isOpen={isStoryViewerOpen}
+        onClose={() => setIsStoryViewerOpen(false)}
+        stories={allStories}
+        initialIndex={profileStoryStartIndex}
+        onStoryWatched={markWatched}
       />
     </div>
   );
