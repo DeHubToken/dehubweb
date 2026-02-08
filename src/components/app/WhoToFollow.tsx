@@ -258,9 +258,8 @@ export function WhoToFollow() {
                 {getDisplayName(user).charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="flex items-center gap-1.5 flex-1 min-w-0">
-              <span className="font-semibold text-white text-sm truncate">{getDisplayName(user)}</span>
-              <span className="text-zinc-500 text-sm truncate">{getHandle(user)}</span>
+            <div className="flex-1 min-w-0">
+              <span className="font-semibold text-white text-sm truncate block">{getDisplayName(user)}</span>
             </div>
             <Button
               size="sm"
