@@ -238,6 +238,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         onClose={() => setIsStoryViewerOpen(false)}
         stories={stories}
         initialIndex={viewerStartIndex}
+        onStoryWatched={markWatched}
         onSwitchToShorts={() => {
           // Close stories and open shorts viewer
           setIsStoryViewerOpen(false);

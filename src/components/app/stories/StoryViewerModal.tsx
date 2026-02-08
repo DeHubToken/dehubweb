@@ -33,6 +33,8 @@ interface StoryViewerModalProps {
   onClose: () => void;
   stories: Story[];
   initialIndex?: number;
+  /** Called when a story becomes the active/viewed story */
+  onStoryWatched?: (storyId: string) => void;
   /** Called when user scrolls past the last story - use to transition to shorts */
   onSwitchToShorts?: () => void;
 }
@@ -51,7 +53,7 @@ function formatCount(count: number): string {
   return count.toString();
 }
 
-export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, onSwitchToShorts }: StoryViewerModalProps) {
+export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, onStoryWatched, onSwitchToShorts }: StoryViewerModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -80,12 +82,13 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
   // Story comments hook
   const { comments: inlineComments, commentCount, postComment: addStoryComment, isPosting: isPostingComment } = useStoryComments(currentStory?.id);
 
-  // Record view when story is active
+  // Record view and mark as watched when story becomes active
   useEffect(() => {
     if (isOpen && currentStory?.id) {
       recordView();
+      onStoryWatched?.(currentStory.id);
     }
-  }, [isOpen, currentStory?.id, recordView]);
+  }, [isOpen, currentStory?.id, recordView, onStoryWatched]);
 
   // Resolve avatar URL
   const resolvedAvatar = useMemo(() => {
