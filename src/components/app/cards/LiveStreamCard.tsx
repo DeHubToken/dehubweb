@@ -46,6 +46,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [error, setError] = useState<string | null>(null);
   
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const videoId = `live-${stream.id}`;
 
@@ -127,13 +128,16 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   }, [isMuted]);
 
   const toggleFullscreen = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
     if (document.fullscreenElement) {
       document.exitFullscreen();
     } else {
-      video.requestFullscreen();
+      const el = containerRef.current as any;
+      if (!el) return;
+      if (el.requestFullscreen) {
+        el.requestFullscreen();
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
     }
   }, []);
 
@@ -187,7 +191,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       </div>
 
       {/* Video Player or Stream Ended State */}
-      <div className="aspect-video bg-black relative">
+      <div ref={containerRef} className="aspect-video bg-black relative">
         {streamEnded || error ? (
           // Stream Ended State
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900">

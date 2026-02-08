@@ -12,7 +12,7 @@
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
@@ -542,10 +542,39 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     }
   }, [isMuted]);
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Track fullscreen state changes
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      const el = containerRef.current as any;
+      if (!el) return;
+      if (el.requestFullscreen) {
+        el.requestFullscreen();
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
+    }
+  }, []);
+
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    videoRef.current?.requestFullscreen();
-  }, []);
+    toggleFullscreen();
+  }, [toggleFullscreen]);
 
   const handlePictureInPicture = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -624,7 +653,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     
     // Center zone (37.5% - 62.5%) - fullscreen only, no seek
     if (relativeX >= 0.375 && relativeX <= 0.625) {
-      videoRef.current?.requestFullscreen();
+      toggleFullscreen();
       return;
     }
     
@@ -641,7 +670,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       }
       setTimeout(() => setSeekIndicator(null), 500);
     }
-  }, [isPlaying]);
+  }, [isPlaying, toggleFullscreen]);
 
   const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
     const now = Date.now();
@@ -871,7 +900,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         ref={containerRef}
         tabIndex={0}
         data-no-navigate
-        className="relative aspect-video bg-zinc-800 cursor-pointer group/thumb outline-none"
+        className={`relative bg-zinc-800 cursor-pointer group/thumb outline-none ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'aspect-video'}`}
         onClick={isTouchDevice ? undefined : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
         onMouseEnter={() => {
@@ -902,7 +931,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onLoadedData={() => console.log('Video loaded:', video.videoUrl)}
-            className="w-full h-full object-cover"
+            className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
           />
         ) : (
           <img 
@@ -1084,11 +1113,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               
               // Only toggle fullscreen in center 25% zone
               if (relativeX >= 0.375 && relativeX <= 0.625) {
-                if (document.fullscreenElement) {
-                  document.exitFullscreen();
-                } else {
-                  videoRef.current?.requestFullscreen();
-                }
+                toggleFullscreen();
               } else {
                 // Left/right zones trigger seek via the main handler
                 handleDoubleTapSeek(e);
@@ -1125,7 +1150,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
             >
-              <Maximize className="h-4 w-4" />
+              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>
           </div>
         )}
