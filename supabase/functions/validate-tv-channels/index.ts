@@ -23,31 +23,81 @@ interface ParsedChannel {
 // CONSTANTS
 // ============================================================================
 
-const FREE_TV_PLAYLIST_URL =
-  "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8";
+const PLAYLIST_SOURCES = [
+  { name: "Free-TV", url: "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8" },
+  { name: "iptv-org", url: "https://iptv-org.github.io/iptv/index.m3u" },
+];
 
 const BATCH_SIZE = 20;
 const STREAM_TIMEOUT = 5000;
 
 const COUNTRY_TO_CATEGORY: Record<string, string> = {
-  "united states": "us",
-  usa: "us",
-  "united kingdom": "uk",
-  uk: "uk",
-  germany: "de",
-  deutschland: "de",
-  france: "fr",
-  spain: "es",
-  "españa": "es",
-  italy: "it",
-  italia: "it",
-  india: "in",
-  brazil: "br",
-  brasil: "br",
-  mexico: "mx",
-  "méxico": "mx",
-  canada: "ca",
-  australia: "au",
+  // North America
+  "united states": "us", "united states of america": "us", "usa": "us", "us": "us",
+  "canada": "ca", "ca": "ca",
+  "mexico": "mx", "méxico": "mx", "mx": "mx",
+  // Europe
+  "united kingdom": "uk", "uk": "uk", "gb": "uk",
+  "germany": "de", "deutschland": "de", "de": "de",
+  "france": "fr", "fr": "fr",
+  "spain": "es", "españa": "es", "es": "es",
+  "italy": "it", "italia": "it", "it": "it",
+  "netherlands": "nl", "nl": "nl",
+  "portugal": "pt", "pt": "pt",
+  "poland": "pl", "pl": "pl",
+  "sweden": "se", "se": "se",
+  "norway": "no", "no": "no",
+  "denmark": "dk", "dk": "dk",
+  "finland": "fi", "fi": "fi",
+  "belgium": "be", "be": "be",
+  "austria": "at", "at": "at",
+  "switzerland": "ch", "ch": "ch",
+  "ireland": "ie", "ie": "ie",
+  "greece": "gr", "gr": "gr",
+  "romania": "ro", "ro": "ro",
+  "czech republic": "cz", "czechia": "cz", "cz": "cz",
+  "hungary": "hu", "hu": "hu",
+  "ukraine": "ua", "ua": "ua",
+  "russia": "ru", "ru": "ru",
+  "turkey": "tr", "türkiye": "tr", "tr": "tr",
+  // Asia
+  "india": "in", "in": "in",
+  "japan": "jp", "jp": "jp",
+  "south korea": "kr", "korea": "kr", "kr": "kr",
+  "china": "cn", "cn": "cn",
+  "taiwan": "tw", "tw": "tw",
+  "hong kong": "hk", "hk": "hk",
+  "thailand": "th", "th": "th",
+  "vietnam": "vn", "vn": "vn",
+  "philippines": "ph", "ph": "ph",
+  "indonesia": "id", "id": "id",
+  "malaysia": "my", "my": "my",
+  "singapore": "sg", "sg": "sg",
+  "pakistan": "pk", "pk": "pk",
+  "bangladesh": "bd", "bd": "bd",
+  // Middle East
+  "saudi arabia": "sa", "sa": "sa",
+  "united arab emirates": "ae", "uae": "ae", "ae": "ae",
+  "qatar": "qa", "qa": "qa",
+  "israel": "il", "il": "il",
+  "iran": "ir", "ir": "ir",
+  "iraq": "iq", "iq": "iq",
+  // Africa
+  "south africa": "za", "za": "za",
+  "nigeria": "ng", "ng": "ng",
+  "egypt": "eg", "eg": "eg",
+  "morocco": "ma", "ma": "ma",
+  "kenya": "ke", "ke": "ke",
+  // South America
+  "brazil": "br", "brasil": "br", "br": "br",
+  "argentina": "ar", "ar": "ar",
+  "colombia": "co", "co": "co",
+  "chile": "cl", "cl": "cl",
+  "peru": "pe", "pe": "pe",
+  "venezuela": "ve", "ve": "ve",
+  // Oceania
+  "australia": "au", "au": "au",
+  "new zealand": "nz", "nz": "nz",
 };
 
 // ============================================================================
@@ -91,6 +141,7 @@ function parseM3U8Playlist(content: string): ParsedChannel[] {
       const nameMatch = line.match(/tvg-name="([^"]+)"/);
       const logoMatch = line.match(/tvg-logo="([^"]+)"/);
       const groupMatch = line.match(/group-title="([^"]+)"/);
+      const countryMatch = line.match(/tvg-country="([^"]+)"/);
       const titleMatch = line.match(/,(.+)$/);
 
       let streamUrl = "";
@@ -107,15 +158,22 @@ function parseM3U8Playlist(content: string): ParsedChannel[] {
       if (!isValidStreamUrl(streamUrl, name)) continue;
 
       seenUrls.add(streamUrl);
+
+      // Use tvg-country (iptv-org format) first, fall back to group-title (Free-TV format)
+      const countryCode = countryMatch?.[1]?.toLowerCase().trim() || "";
       const groupTitle = groupMatch?.[1] || "Other";
+      const category = COUNTRY_TO_CATEGORY[countryCode] || mapCountryToCategory(groupTitle);
+      const countryLabel = countryCode
+        ? (groupTitle !== "Other" ? groupTitle : countryCode.toUpperCase())
+        : groupTitle;
 
       channels.push({
         id: generateIdFromUrl(streamUrl),
         name: name.trim(),
         logo: logoMatch?.[1] || null,
-        category: mapCountryToCategory(groupTitle),
+        category,
         streamUrl,
-        country: groupTitle,
+        country: countryLabel,
       });
     }
   }
@@ -182,12 +240,36 @@ Deno.serve(async (req) => {
 
     console.log("[validate-tv] Starting channel validation...");
 
-    // Fetch and parse playlist
-    const playlistRes = await fetch(`${FREE_TV_PLAYLIST_URL}?_=${Date.now()}`);
-    if (!playlistRes.ok) throw new Error(`Playlist fetch failed: ${playlistRes.status}`);
-    const playlistContent = await playlistRes.text();
-    const parsedChannels = parseM3U8Playlist(playlistContent);
-    console.log(`[validate-tv] Parsed ${parsedChannels.length} channels`);
+    // Fetch and parse all playlist sources
+    const allParsed: ParsedChannel[] = [];
+    const seenStreamUrls = new Set<string>();
+
+    for (const source of PLAYLIST_SOURCES) {
+      try {
+        console.log(`[validate-tv] Fetching ${source.name}...`);
+        const playlistRes = await fetch(`${source.url}?_=${Date.now()}`);
+        if (!playlistRes.ok) {
+          console.warn(`[validate-tv] ${source.name} fetch failed: ${playlistRes.status}`);
+          continue;
+        }
+        const playlistContent = await playlistRes.text();
+        const parsed = parseM3U8Playlist(playlistContent);
+        console.log(`[validate-tv] ${source.name}: parsed ${parsed.length} channels`);
+
+        // Deduplicate across sources by stream URL
+        for (const ch of parsed) {
+          if (!seenStreamUrls.has(ch.streamUrl)) {
+            seenStreamUrls.add(ch.streamUrl);
+            allParsed.push(ch);
+          }
+        }
+      } catch (err) {
+        console.warn(`[validate-tv] ${source.name} error:`, err);
+      }
+    }
+
+    const parsedChannels = allParsed;
+    console.log(`[validate-tv] Total unique channels: ${parsedChannels.length}`);
 
     // Track all valid IDs for cleanup
     const validIds: string[] = [];
