@@ -529,3 +529,43 @@ body.immersive-video-mode header.lg\\:hidden {
 body.immersive-video-mode main {
   padding-top: 0 !important;
 }
+
+/* Story shimmer border — rotating conic-gradient light sweep */
+@keyframes story-shimmer-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.story-shimmer-border {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.story-shimmer-border::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 150deg,
+    rgba(255, 255, 255, 0.5) 170deg,
+    rgba(255, 255, 255, 0.7) 180deg,
+    rgba(255, 255, 255, 0.5) 190deg,
+    transparent 210deg,
+    transparent 360deg
+  );
+  animation: story-shimmer-rotate 4s linear infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.story-shimmer-border > *:first-child {
+  position: relative;
+  z-index: 1;
+}

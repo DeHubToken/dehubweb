@@ -134,6 +134,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "close-button-glitch": "close-button-glitch 0.4s ease-in-out",
+        "story-shimmer": "story-shimmer-rotate 4s linear infinite",
       },
     },
   },
