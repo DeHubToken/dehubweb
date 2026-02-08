@@ -4,11 +4,14 @@
  * Displays individual TV channel with HLS video player.
  * Glass-morphism style matching app aesthetic.
  * 
+ * Pause = keep HLS alive, just pause video element.
+ * Stop  = destroy HLS instance entirely (used by VideoPlaybackManager).
+ * 
  * @module components/app/tv/TVChannelCard
  */
 
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
@@ -23,32 +26,25 @@ const MAX_RETRIES = 2;
 
 export function TVChannelCard({ channel }: TVChannelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const isStoppingRef = useRef(false);
   const cardId = `tv-${channel.id}`;
   
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
-  
-  // Register with VideoPlaybackManager
-  useEffect(() => {
-    videoPlaybackManager.register(cardId, () => {
-      stopPlayback();
-    });
-    
-    return () => {
-      videoPlaybackManager.unregister(cardId);
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-      }
-    };
-  }, [cardId]);
-  
-  const stopPlayback = useCallback(() => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  /**
+   * Full stop — destroys HLS instance, clears video source.
+   * Used when another video takes over or on unmount.
+   */
+  const fullStop = useCallback(() => {
     isStoppingRef.current = true;
     if (hlsRef.current) {
       hlsRef.current.destroy();
@@ -56,14 +52,54 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     }
     if (videoRef.current) {
       videoRef.current.pause();
-      videoRef.current.src = '';
+      videoRef.current.removeAttribute('src');
+      videoRef.current.load();
     }
     setIsPlaying(false);
+    setIsPaused(false);
     setShowVideo(false);
     setIsLoading(false);
-    // Reset after a tick so the error event (fired synchronously) is caught
-    setTimeout(() => { isStoppingRef.current = false; }, 0);
+    setTimeout(() => { isStoppingRef.current = false; }, 100);
   }, []);
+
+  /**
+   * Pause — keeps HLS instance alive, just pauses the video element.
+   */
+  const pausePlayback = useCallback(() => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+    setIsPlaying(false);
+    setIsPaused(true);
+    videoPlaybackManager.stop(cardId);
+  }, [cardId]);
+
+  /**
+   * Resume — resumes from paused state without reloading.
+   */
+  const resumePlayback = useCallback(() => {
+    if (videoRef.current) {
+      videoPlaybackManager.play(cardId);
+      videoRef.current.play().catch(() => {});
+      setIsPaused(false);
+    }
+  }, [cardId]);
+  
+  // Register with VideoPlaybackManager — full stop when another video plays
+  useEffect(() => {
+    videoPlaybackManager.register(cardId, () => {
+      fullStop();
+    });
+    
+    return () => {
+      videoPlaybackManager.unregister(cardId);
+      isStoppingRef.current = true;
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+    };
+  }, [cardId, fullStop]);
   
   const startPlayback = useCallback(() => {
     const video = videoRef.current;
@@ -75,6 +111,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     setIsLoading(true);
     setHasError(false);
     setShowVideo(true);
+    setIsPaused(false);
     
     if (Hls.isSupported()) {
       const hls = new Hls({
@@ -90,17 +127,15 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       hls.attachMedia(video);
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {
-          // Autoplay blocked
-        });
+        video.play().catch(() => {});
       });
       
       hls.on(Hls.Events.ERROR, (_, data) => {
+        if (isStoppingRef.current) return;
         if (data.fatal) {
           setHasError(true);
           setIsLoading(false);
           setIsPlaying(false);
-          // Auto-report if retries exhausted
           if (retryCount >= MAX_RETRIES - 1) {
             reportBrokenChannel(channel.id);
           }
@@ -109,11 +144,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       
       hlsRef.current = hls;
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native HLS support (Safari/iOS)
       video.src = channel.streamUrl;
-      video.play().catch(() => {
-        // Autoplay blocked
-      });
+      video.play().catch(() => {});
     } else {
       setHasError(true);
       setIsLoading(false);
@@ -126,7 +158,9 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       return;
     }
     if (isPlaying) {
-      stopPlayback();
+      pausePlayback();
+    } else if (isPaused) {
+      resumePlayback();
     } else {
       startPlayback();
     }
@@ -137,8 +171,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     if (retryCount < MAX_RETRIES) {
       setRetryCount(prev => prev + 1);
       setHasError(false);
-      stopPlayback();
-      // Small delay before retry
+      fullStop();
       setTimeout(() => {
         startPlayback();
       }, 500);
@@ -152,6 +185,36 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       setIsMuted(!isMuted);
     }
   };
+
+  const handleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      const el = container as HTMLElement & { webkitRequestFullscreen?: () => void };
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => {});
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
+    }
+  };
+
+  // Track fullscreen state
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', onFullscreenChange);
+    };
+  }, []);
   
   // Video event handlers
   useEffect(() => {
@@ -160,8 +223,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     
     const handlePlaying = () => {
       setIsPlaying(true);
+      setIsPaused(false);
       setIsLoading(false);
-      // Reset retry count on successful playback
       setRetryCount(0);
     };
     
@@ -170,7 +233,9 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     };
     
     const handleWaiting = () => {
-      setIsLoading(true);
+      if (!isStoppingRef.current) {
+        setIsLoading(true);
+      }
     };
     
     const handleCanPlay = () => {
@@ -178,12 +243,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     };
     
     const handleError = () => {
-      // Skip errors caused by intentional stopPlayback() clearing the src
       if (isStoppingRef.current) return;
       setHasError(true);
       setIsLoading(false);
       setIsPlaying(false);
-      // Auto-report on native playback error
       if (retryCount >= MAX_RETRIES) {
         reportBrokenChannel(channel.id);
       }
@@ -202,10 +265,11 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
     };
-  }, []);
+  }, [channel.id, retryCount]);
   
   const countryFlag = getCountryFlag(channel.country);
   const canRetry = retryCount < MAX_RETRIES;
+  const isActive = isPlaying || isPaused;
   
   return (
     <div
@@ -213,13 +277,17 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         'w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10',
         'rounded-2xl overflow-hidden',
         'hover:bg-white/5 transition-all duration-200 cursor-pointer',
-        isPlaying && 'ring-1 ring-white/20 bg-white/5'
+        isActive && 'ring-1 ring-white/20 bg-white/5'
       )}
     >
       {/* Video/Thumbnail Area */}
       <div 
+        ref={containerRef}
         onClick={handleClick}
-        className="relative aspect-video bg-zinc-900"
+        className={cn(
+          'relative aspect-video bg-zinc-900',
+          isFullscreen && '!aspect-auto w-full h-full'
+        )}
       >
         {/* Video Element */}
         <video
@@ -227,12 +295,13 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           muted={isMuted}
           playsInline
           className={cn(
-            'absolute inset-0 w-full h-full object-cover',
+            'absolute inset-0 w-full h-full',
+            isFullscreen ? 'object-contain' : 'object-cover',
             showVideo ? 'opacity-100' : 'opacity-0'
           )}
         />
         
-        {/* Channel Logo Overlay (when not playing) */}
+        {/* Channel Logo Overlay (when not active) */}
         {!showVideo && (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
             {channel.logo ? (
@@ -280,7 +349,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           </div>
         )}
         
-        {/* Play/Pause Button Overlay */}
+        {/* Play/Pause/Resume Center Icon */}
         {!isLoading && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
             <div className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
@@ -293,18 +362,33 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           </div>
         )}
         
-        {/* Mute Button (when playing) */}
-        {isPlaying && (
-          <button
-            onClick={handleMuteToggle}
-            className="absolute bottom-3 right-3 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
-          >
-            {isMuted ? (
-              <VolumeX className="w-5 h-5 text-white" />
-            ) : (
-              <Volume2 className="w-5 h-5 text-white" />
-            )}
-          </button>
+        {/* Bottom Controls Bar (when active) */}
+        {isActive && (
+          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+            {/* Mute Button */}
+            <button
+              onClick={handleMuteToggle}
+              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white" />
+              )}
+            </button>
+
+            {/* Fullscreen Button */}
+            <button
+              onClick={handleFullscreen}
+              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+            >
+              {isFullscreen ? (
+                <Minimize className="w-5 h-5 text-white" />
+              ) : (
+                <Maximize className="w-5 h-5 text-white" />
+              )}
+            </button>
+          </div>
         )}
       </div>
       
