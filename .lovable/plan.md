@@ -1,70 +1,63 @@
 
 
-# Add `dehub_update_profile` Tool to MCP Server
+# Fix Story Views: Every Click = 1 View
 
-## Problem
+## Root Cause
 
-The MCP server has no way for agents to update their profile after registration. The internal `setDeHubProfile` helper only sends JSON (username + bio) and cannot upload files. The 3 agents (leothedev, omr_, ivyivyivy) that failed during initial registration have no path to set their avatars/banners.
+Two issues are preventing views from being recorded:
+
+1. **Database type mismatch**: The `story_views.story_id` column is type `uuid` with a foreign key to `stories(id)`. Template stories use IDs like `template-1`, `template-13` -- these aren't valid UUIDs, so every INSERT and SELECT query fails with `invalid input syntax for type uuid: "template-1"`.
+
+2. **Deduplication prevents repeat views**: There's a `UNIQUE(story_id, viewer_wallet_address)` constraint plus upsert logic plus a frontend `recordedViews` ref that all prevent the same user from being counted more than once per session.
 
 ## Solution
 
-Add a `dehub_update_profile` tool to the MCP server that uses `FormData` to update profile fields including avatar and banner image uploads. This tool will:
+Make views dead simple: **every click = 1 new row, no auth, no deduplication**.
 
-1. Accept optional parameters: `bio`, `avatar_url`, `banner_url`
-2. Download images from provided URLs (e.g., from the storage bucket public URLs)
-3. Build a `FormData` request with the image files and text fields
-4. Send to the DeHub `/api/update_profile` endpoint with the agent's auth token
-5. Verify persistence by checking `account_info` afterward
-6. Return detailed results including whether the avatar/banner actually saved
+### 1. Database Migration
 
-## Tool Schema
+- Change `story_id` from `uuid` to `text` (drop the FK constraint to `stories` and the unique constraint first)
+- Remove the `UNIQUE(story_id, viewer_wallet_address)` constraint so repeat views are allowed
+- Keep `viewer_wallet_address` as optional context but don't use it for dedup
 
-```
-dehub_update_profile:
-  - bio (optional): New bio/about text
-  - avatar_url (optional): URL to download avatar image from
-  - banner_url (optional): URL to download banner image from
+```text
+Before: story_views(id uuid PK, story_id uuid FK -> stories, viewer_wallet_address text, viewed_at timestamptz)
+         + UNIQUE(story_id, viewer_wallet_address)
+
+After:  story_views(id uuid PK, story_id text, viewer_wallet_address text, viewed_at timestamptz)
+         (no FK, no unique constraint)
 ```
 
-## Implementation Details
+### 2. Edge Function (`supabase/functions/stories-api/index.ts`)
 
-### Changes to `supabase/functions/dehub-mcp/index.ts`
+**GET /views** (lines 58-78):
+- Keep as-is (count query works fine once the type is text)
+- Keep the 7x multiplier
 
-Add a new `dehub_update_profile` tool (around line 540, after the comment tool):
+**POST /views** (lines 80-110):
+- Change from `upsert` with `onConflict` to a plain `INSERT` -- every call = 1 new row
+- Keep the anonymous viewer ID generation (good for analytics context)
+- No duplicate checking at all
 
-- Authenticate the agent via API key (same pattern as other write tools)
-- Re-authenticate with DeHub to get a fresh auth token
-- If `avatar_url` is provided, fetch the image and include as `avatarImg` in FormData
-- If `banner_url` is provided, fetch the image and include as `coverImg` in FormData
-- If `bio` is provided, include as `aboutMe` in FormData
-- Send combined FormData to `/api/update_profile`
-- Log and return the full response body
-- Verify by calling `account_info/{username}` to confirm persistence
-- Report actual verification status (not just HTTP 200)
+### 3. Frontend Hook (`src/hooks/use-story-views.ts`)
 
-### Rate Limiting
-
-Add a new rate limit category `profile_update` with a limit of 5 per hour to prevent abuse.
-
-## After Deployment
-
-Once deployed, we can immediately call the MCP tool (or use curl) to update the 3 failing agents by passing their storage bucket avatar/banner URLs:
-
-```
-Avatar URL pattern: https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/agent-avatars/{name}.png
-Banner URL pattern: https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/agent-avatars/banners/agent-{name}.png
-```
+- Remove the `recordedViews` ref and per-session dedup -- every time `recordView()` is called, it fires the POST
+- Remove `useAuth` import since no auth is needed
+- Keep the wallet address header as optional (nice-to-have analytics)
+- Keep the memory cache and React Query cache for display purposes
 
 ## Files Changed
 
 | File | Change |
 |------|--------|
-| `supabase/functions/dehub-mcp/index.ts` | Add `dehub_update_profile` tool with FormData image upload, verification, and `profile_update` rate limit |
-| `public/skill.md` | Document the new tool in the MCP skill page |
+| Database migration | Drop FK, drop UNIQUE, alter `story_id` from `uuid` to `text` |
+| `supabase/functions/stories-api/index.ts` | Change `upsert` to plain `INSERT` on POST /views |
+| `src/hooks/use-story-views.ts` | Remove `recordedViews` session dedup so every call fires |
 
 ## Expected Result
 
-- External AI agents can update their profile (bio, avatar, banner) after registration
-- We can use the new tool to attempt fixing the 3 agents with missing avatars/banners
-- Full response body logging will reveal exactly what the DeHub API returns, helping diagnose the silent failure
+- Clicking on any story (including template stories) immediately records a view
+- View count increments on every click/open (x7 multiplier still applies)
+- No auth required, no login needed
+- No more 500 errors from UUID type mismatch
 
