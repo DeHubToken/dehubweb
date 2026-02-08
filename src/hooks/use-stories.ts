@@ -111,7 +111,7 @@ const TEMPLATE_VIDEO_URLS: Record<string, string> = {
   'jdot': 'https://assets.mixkit.co/v949y07olycrk26kgawi7zef1f0h',
   'z4r4eth': 'https://assets.mixkit.co/7zctwtusix6zyq97h24z0b863ofv',
   'riooo': 'https://assets.mixkit.co/yqgsdhqnrvzbtbxv0o76xcebwtpi',
-  'ellaverse': 'https://assets.mixkit.co/1n3mnf16ls4nz4b26j03mmmou9hs',
+  'ellaverse': 'https://assets.mixkit.co/videos/34563/34563-720.mp4',
   'svmp4': 'https://assets.mixkit.co/videos/639/639-720.mp4',
   'mi444': 'https://assets.mixkit.co/videos/5240/5240-720.mp4',
   'leothedev': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
