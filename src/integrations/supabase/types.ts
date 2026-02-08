@@ -613,29 +613,21 @@ export type Database = {
           id: string
           story_id: string
           viewed_at: string
-          viewer_wallet_address: string
+          viewer_wallet_address: string | null
         }
         Insert: {
           id?: string
           story_id: string
           viewed_at?: string
-          viewer_wallet_address: string
+          viewer_wallet_address?: string | null
         }
         Update: {
           id?: string
           story_id?: string
           viewed_at?: string
-          viewer_wallet_address?: string
+          viewer_wallet_address?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "story_views_story_id_fkey"
-            columns: ["story_id"]
-            isOneToOne: false
-            referencedRelation: "stories"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       tv_channels_verified: {
         Row: {

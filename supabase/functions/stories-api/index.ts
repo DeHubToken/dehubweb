@@ -72,9 +72,7 @@ Deno.serve(async (req) => {
         return errorResponse('Failed to fetch view count', 500);
       }
 
-      // Apply 7x view multiplier
-      const multipliedCount = (count || 0) * 7;
-      return successResponse({ count: multipliedCount });
+      return successResponse({ count: count || 0 });
     }
 
     // POST /views - Record a view (no auth required - anyone can view)
@@ -90,16 +88,13 @@ Deno.serve(async (req) => {
 
       console.log(`[stories-api] POST record view for story: ${story_id} by ${viewerWallet}`);
 
-      // Upsert to avoid duplicate views per user (or per anonymous session)
+      // Simple insert — every call = 1 new view row
       const { error } = await supabase
         .from('story_views')
-        .upsert(
-          {
-            story_id,
-            viewer_wallet_address: viewerWallet,
-          },
-          { onConflict: 'story_id,viewer_wallet_address' }
-        );
+        .insert({
+          story_id,
+          viewer_wallet_address: viewerWallet,
+        });
 
       if (error) {
         console.error('[stories-api] Error recording view:', error);
