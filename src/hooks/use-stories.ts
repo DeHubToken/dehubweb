@@ -19,16 +19,16 @@ import avatarNotmaya from '@/assets/avatars/notmaya.png';
 import avatar0xkai from '@/assets/avatars/0xkai.png';
 import avatarXluna from '@/assets/avatars/xluna.png';
 import avatarMarcoV from '@/assets/avatars/marco_v.png';
-import avatarNinarealll from '@/assets/avatars/ninarealll.png';
+import avatarNini from '@/assets/avatars/ninarealll.png';
 import avatarJdot from '@/assets/avatars/jdot.png';
 import avatarZ4r4eth from '@/assets/avatars/z4r4eth.png';
 import avatarRiooo from '@/assets/avatars/riooo.png';
 import avatarEllaverse from '@/assets/avatars/ellaverse.png';
 import avatarSvmp4 from '@/assets/avatars/svmp4.png';
 import avatarMi444 from '@/assets/avatars/mi444.png';
-import avatarLeothedev from '@/assets/avatars/leothedev.png';
-import avatarIvyivyivy from '@/assets/avatars/ivyivyivy.png';
-import avatarOmr from '@/assets/avatars/omr_.png';
+import avatarLynrdskynrd from '@/assets/avatars/leothedev.png';
+import avatarIvy from '@/assets/avatars/ivyivyivy.png';
+import avatarMimi from '@/assets/avatars/omr_.png';
 
 export interface Story {
   id: string;
@@ -110,16 +110,16 @@ const TEMPLATE_VIDEO_URLS: Record<string, string> = {
   '0xkai': 'https://assets.mixkit.co/videos/39878/39878-720.mp4',
   'xluna': 'https://assets.mixkit.co/ngl4vwp6mhwm97fv0212vrgi6iw0',
   'marco_v': 'https://assets.mixkit.co/wwnepv77a959cjk6wicpxqosy1mu',
-  'ninarealll': 'https://assets.mixkit.co/m9oyxjg4wit94y3k2e998i90n96r',
+  'nini': 'https://assets.mixkit.co/videos/52270/52270-720.mp4',
   'jdot': 'https://assets.mixkit.co/v949y07olycrk26kgawi7zef1f0h',
   'z4r4eth': 'https://assets.mixkit.co/7zctwtusix6zyq97h24z0b863ofv',
   'riooo': 'https://assets.mixkit.co/yqgsdhqnrvzbtbxv0o76xcebwtpi',
   'ellaverse': 'https://assets.mixkit.co/videos/34563/34563-720.mp4',
   'svmp4': 'https://assets.mixkit.co/videos/639/639-720.mp4',
   'mi444': 'https://assets.mixkit.co/videos/5240/5240-720.mp4',
-  'leothedev_': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
-  'ivyivyivy_': 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
-  'omr__': 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
+  'lynrdskynrd': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
+  'ivy': 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
+  'mimi': 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
 };
 
 /**
@@ -131,16 +131,16 @@ const TEMPLATE_AVATARS: Record<string, string> = {
   '0xkai': avatar0xkai,
   'xluna': avatarXluna,
   'marco_v': avatarMarcoV,
-  'ninarealll': avatarNinarealll,
+  'nini': avatarNini,
   'jdot': avatarJdot,
   'z4r4eth': avatarZ4r4eth,
   'riooo': avatarRiooo,
   'ellaverse': avatarEllaverse,
   'svmp4': avatarSvmp4,
   'mi444': avatarMi444,
-  'leothedev_': avatarLeothedev,
-  'ivyivyivy_': avatarIvyivyivy,
-  'omr__': avatarOmr,
+  'lynrdskynrd': avatarLynrdskynrd,
+  'ivy': avatarIvy,
+  'mimi': avatarMimi,
 };
 
 /**
