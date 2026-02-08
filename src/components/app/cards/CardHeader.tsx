@@ -121,7 +121,7 @@ export function CardHeader({
           </Avatar>
         )}
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="font-semibold text-white text-sm truncate max-w-[100px] sm:max-w-none leading-tight">{username}</span>
+          <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
           {formattedHandle && (
             <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
           )}
