@@ -9,7 +9,7 @@
  * 2. TranslatableGroup - wraps multiple elements, shows single control at end
  */
 
-import { useState, useMemo, useEffect, createContext, useContext, ReactNode } from 'react';
+import { useState, useMemo, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { Globe, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
@@ -119,7 +119,41 @@ function isLatinText(text: string): boolean {
   return totalChars > 0 && latinChars / totalChars > 0.7;
 }
 
-// Minimum length to even consider translation (skip very short text)
+// ============================================================================
+// Shared Translation Context
+// Allows multiple TranslatableText components to sync: when one triggers
+// translation, all siblings within the same provider auto-translate too.
+// ============================================================================
+
+interface SharedTranslationContextValue {
+  /** Increments each time translation is requested */
+  translateSignal: number;
+  /** Increments each time "show original" is requested */
+  originalSignal: number;
+  requestTranslate: () => void;
+  requestOriginal: () => void;
+}
+
+const SharedTranslationContext = createContext<SharedTranslationContextValue | null>(null);
+
+/**
+ * Wrap multiple TranslatableText components to share a single translate trigger.
+ * When any child with a visible button triggers translation, all siblings translate too.
+ */
+export function SharedTranslationProvider({ children }: { children: ReactNode }) {
+  const [translateSignal, setTranslateSignal] = useState(0);
+  const [originalSignal, setOriginalSignal] = useState(0);
+
+  const requestTranslate = useCallback(() => setTranslateSignal(s => s + 1), []);
+  const requestOriginal = useCallback(() => setOriginalSignal(s => s + 1), []);
+
+  return (
+    <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate, requestOriginal }}>
+      {children}
+    </SharedTranslationContext.Provider>
+  );
+}
+
 const MIN_TEXT_LENGTH_FOR_TRANSLATION = 10;
 
 // Custom hook for translation logic (shared between components)
@@ -262,6 +296,7 @@ export function TranslatableText({
   as: Component = 'span',
   hideControls = false,
 }: TranslatableTextProps) {
+  const sharedCtx = useContext(SharedTranslationContext);
   const {
     userLang,
     isTranslated,
@@ -275,6 +310,37 @@ export function TranslatableText({
     handleShowOriginal,
   } = useTranslation(text);
 
+  // Listen to shared context signals — auto-translate/show-original when a sibling triggers
+  const [lastTranslateSignal, setLastTranslateSignal] = useState(0);
+  const [lastOriginalSignal, setLastOriginalSignal] = useState(0);
+
+  useEffect(() => {
+    if (!sharedCtx) return;
+    if (sharedCtx.translateSignal > lastTranslateSignal && !isTranslated && shouldOfferTranslation) {
+      setLastTranslateSignal(sharedCtx.translateSignal);
+      handleTranslate();
+    }
+  }, [sharedCtx?.translateSignal]);
+
+  useEffect(() => {
+    if (!sharedCtx) return;
+    if (sharedCtx.originalSignal > lastOriginalSignal && isTranslated) {
+      setLastOriginalSignal(sharedCtx.originalSignal);
+      handleShowOriginal();
+    }
+  }, [sharedCtx?.originalSignal]);
+
+  // Wrapped handlers that also notify siblings via shared context
+  const onTranslate = () => {
+    handleTranslate();
+    sharedCtx?.requestTranslate();
+  };
+
+  const onShowOriginal = () => {
+    handleShowOriginal();
+    sharedCtx?.requestOriginal();
+  };
+
   // If no translation needed and not detecting, just render the text
   if (!shouldOfferTranslation && !isDetecting) {
     return <Component className={cn("whitespace-pre-wrap", className)}>{renderTextWithLinks(text)}</Component>;
@@ -284,7 +350,7 @@ export function TranslatableText({
     if (isTranslated) {
       return (
         <button
-          onClick={handleShowOriginal}
+          onClick={onShowOriginal}
           className="flex items-center gap-1.5 text-xs text-white hover:text-zinc-300 transition-colors mt-1"
         >
           <RotateCcw className="w-3 h-3" />
@@ -308,7 +374,7 @@ export function TranslatableText({
     if (shouldOfferTranslation) {
       return (
         <button
-          onClick={handleTranslate}
+          onClick={onTranslate}
           disabled={isLoading}
           className={cn(
             "flex items-center gap-1.5 text-xs transition-colors mt-1",

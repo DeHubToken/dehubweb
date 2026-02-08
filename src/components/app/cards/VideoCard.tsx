@@ -20,7 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { PostMetadata } from './PostMetadata';
-import { TranslatableText } from '../TranslatableText';
+import { TranslatableText, SharedTranslationProvider } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { CommentsSection } from './CommentsSection';
@@ -1250,13 +1250,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             lockedCurrency={video.lockedCurrency}
           />
         )}
-        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" hideControls />
-        {video.description && video.description !== video.title && (
-          <ExpandableDescription 
-            description={video.description} 
-            isImmersive={isImmersive} 
-          />
-        )}
+        <SharedTranslationProvider>
+          <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" hideControls />
+          {video.description && video.description !== video.title && (
+            <ExpandableDescription 
+              description={video.description} 
+              isImmersive={isImmersive} 
+            />
+          )}
+        </SharedTranslationProvider>
         <div className="mb-3">
           <PostMetadata 
             timestamp={video.uploadedAgo} 
