@@ -521,6 +521,34 @@ body > div[style*="position: fixed"][style*="height: 0"] {
   display: none !important;
 }
 
+/* Story border shimmer - plays once on mount, pure CSS */
+@keyframes story-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.story-border-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.05) 0%,
+    rgba(255,255,255,0.4) 25%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0.4) 75%,
+    rgba(255,255,255,0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: story-shimmer 1.8s ease-out forwards;
+  transition: opacity 0.2s ease;
+}
+
+.story-border-shimmer:hover {
+  opacity: 0.85;
+}
+
 /* Immersive video mode - hide mobile header and remove top padding */
 body.immersive-video-mode header.lg\\:hidden {
   display: none !important;
