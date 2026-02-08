@@ -62,8 +62,8 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           )}
         </button>
         
-        {/* Coin Balance (when stickToBanner is enabled) */}
-        {stickToBanner && (
+        {/* Coin Balance (when stickToBanner is enabled and user is logged in) */}
+        {isAuthenticated && stickToBanner && (
           <CoinBalanceMenu balance={coinBalance} variant="mobile" />
         )}
         
