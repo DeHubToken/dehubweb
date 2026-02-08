@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } fr
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import searchIcon from '@/assets/icons/search-icon.png';
 import search3dIcon from '@/assets/icons/search-3d-icon.png';
+import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Check, Clock, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -965,7 +966,10 @@ export default function ExplorePage() {
               {/* Trending Bento */}
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
+                  <div className="flex items-center gap-2">
+                    <img src={trendingFireIcon} alt="" className="w-7 h-7 object-contain" />
+                    <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
+                  </div>
                   <FilterDropdown
                     label="Country"
                     value={selectedCountry}
