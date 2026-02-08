@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -52,6 +52,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isShortsViewerOpen, setIsShortsViewerOpen] = useState(false);
   const [thumbnailsReady, setThumbnailsReady] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(9);
+  const scrollSentinelRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
@@ -225,13 +228,34 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   });
 
   // Set the total stories count for coordinated thumbnail loading
-  const storyCount = allStoryItems.filter(i => i.type === 'story').length;
+  // Only count visible stories for the initial reveal
+  const visibleStoryItems = allStoryItems.slice(0, visibleCount);
+  const hasMore = visibleCount < allStoryItems.length;
+  const storyCount = visibleStoryItems.filter(i => i.type === 'story').length;
   if (storyCount !== totalStoriesRef.current) {
     totalStoriesRef.current = storyCount;
     loadedCountRef.current = 0;
     // If no stories to load, mark ready immediately
     if (storyCount === 0) setThumbnailsReady(true);
   }
+
+  // Lazy-load more stories when user scrolls near the end
+  useEffect(() => {
+    const sentinel = scrollSentinelRef.current;
+    if (!sentinel || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount(prev => Math.min(prev + 6, allStoryItems.length));
+        }
+      },
+      { root: scrollContainerRef.current, rootMargin: '0px 200px 0px 0px', threshold: 0 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, allStoryItems.length]);
 
   // Show skeleton while loading
   if (showSkeleton) {
@@ -296,7 +320,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
             </div>
           )}
           
-          <SwipeableCarousel className={`flex gap-1.5 overflow-x-auto scrollbar-hide px-2 ${!thumbnailsReady && storyCount > 0 ? 'invisible' : ''}`}>
+          <SwipeableCarousel ref={scrollContainerRef} className={`flex gap-1.5 overflow-x-auto scrollbar-hide px-2 ${!thumbnailsReady && storyCount > 0 ? 'invisible' : ''}`}>
             {/* Create Story/Live Button */}
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
               <div onClick={() => setIsOpen(true)}>
@@ -320,8 +344,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               </DrawerContent>
             </Drawer>
 
-            {/* Stories - Real and Placeholder */}
-            {allStoryItems.map((item, index) => (
+            {/* Stories - Real and Placeholder (paginated) */}
+            {visibleStoryItems.map((item, index) => (
               <div
                 key={item.type === 'story' ? item.story?.id : `placeholder-${index}`}
                 className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer"
@@ -369,6 +393,11 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                 </span>
               </div>
             ))}
+            
+            {/* Scroll sentinel for lazy-loading more stories */}
+            {hasMore && (
+              <div ref={scrollSentinelRef} className="flex-shrink-0 w-1 h-1" />
+            )}
           </SwipeableCarousel>
         </div>
       </div>
