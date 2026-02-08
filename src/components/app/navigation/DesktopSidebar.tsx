@@ -81,12 +81,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] p-2 xl:p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] p-1 xl:p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
         {/* Logo & Coin Balance (when stickToBanner is enabled) */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-3 xl:mb-6 flex items-center justify-center xl:justify-between">
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto hidden xl:block" />
-            <img src={dehubLogoCompact} alt="dehub" className="h-[28px] w-auto xl:hidden" />
+            <img src={dehubLogoCompact} alt="dehub" className="h-[24px] w-auto xl:hidden" />
           </button>
           {stickToBanner && (
             <div className="mt-[10px] hidden xl:block">
@@ -100,7 +100,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - reduced padding */}
-        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1.5 xl:p-2.5 space-y-[2px]">
+        <div className="-mt-[8.5px] xl:-mt-[8.5px] mt-0 bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-[2px]">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
@@ -149,12 +149,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           })}
         </div>
 
-        {/* Post Button Bento - reduced padding and button size */}
-        <div className="mt-3 bg-zinc-900 rounded-2xl p-1.5 xl:p-2.5">
+        {/* Post Button Bento */}
+        <div className="mt-2 xl:mt-3 bg-zinc-900 rounded-2xl p-1 xl:p-2.5">
           <Button 
             onClick={handlePostClick}
             disabled={isConnecting}
-            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2 disabled:opacity-70"
+            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-3 xl:py-5 text-[13.5px] gap-2 disabled:opacity-70 px-0 xl:px-4"
           >
             {isAuthenticated ? (
               <>
