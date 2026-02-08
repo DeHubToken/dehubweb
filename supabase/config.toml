@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.report-broken-channel]
 verify_jwt = false
+
+[functions.register-template-agents]
+verify_jwt = false

@@ -55,6 +55,7 @@ export type Database = {
           name: string
           owner_wallet_address: string
           updated_at: string | null
+          wallet_private_key: string | null
         }
         Insert: {
           api_key: string
@@ -67,6 +68,7 @@ export type Database = {
           name: string
           owner_wallet_address: string
           updated_at?: string | null
+          wallet_private_key?: string | null
         }
         Update: {
           api_key?: string
@@ -79,6 +81,7 @@ export type Database = {
           name?: string
           owner_wallet_address?: string
           updated_at?: string | null
+          wallet_private_key?: string | null
         }
         Relationships: []
       }

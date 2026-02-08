@@ -3,6 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPTransport } from "@hono/mcp";
 import { z } from "zod";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Wallet } from "ethers";
 
 const DEHUB_API_BASE = 'https://api.dehub.io';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
@@ -23,6 +24,7 @@ interface AgentRow {
   description: string;
   api_key: string;
   owner_wallet_address: string;
+  wallet_private_key: string | null;
   is_active: boolean;
   metadata: Record<string, unknown>;
   last_active_at: string | null;
@@ -40,24 +42,98 @@ function generateApiKey(): string {
   return 'dehub_' + Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Authenticate with DeHub API using owner's wallet
-async function authenticateWithDeHub(walletAddress: string): Promise<string | null> {
+/**
+ * Build the DeHub authentication message.
+ * Must match the backend verification format exactly.
+ * timestamp is Unix epoch seconds.
+ */
+function buildAuthMessage(address: string, timestamp: number): string {
+  const displayedDate = new Date(timestamp * 1000);
+  return `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
+}
+
+/**
+ * Authenticate with DeHub API using a wallet's private key.
+ * Signs the DeHub auth message and POSTs to /api/web/auth.
+ * Returns the auth token on success, null on failure.
+ */
+async function authenticateWithDeHub(privateKey: string): Promise<string | null> {
   try {
+    const wallet = new Wallet(privateKey);
+    const address = wallet.address.toLowerCase();
+    const timestamp = Math.floor(Date.now() / 1000);
+    const message = buildAuthMessage(address, timestamp);
+    const sig = await wallet.signMessage(message);
+
+    console.log(`[DeHub Auth] Authenticating wallet ${address}`);
+
     const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        address,
+        sig,
+        timestamp,
+        chainId: 8453, // Base chain
+      }),
     });
-    
+
     if (!response.ok) {
-      console.error('DeHub auth failed:', response.status);
+      const errorText = await response.text();
+      console.error(`[DeHub Auth] Failed (${response.status}):`, errorText);
       return null;
     }
-    
+
     const data = await response.json();
-    return data.token || walletAddress;
+    const token = data.result?.token || data.token;
+
+    if (!token) {
+      console.error('[DeHub Auth] No token in response:', JSON.stringify(data));
+      return null;
+    }
+
+    console.log(`[DeHub Auth] Success for ${address}`);
+    return token;
   } catch (error) {
-    console.error('DeHub auth error:', error);
+    console.error('[DeHub Auth] Error:', error);
     return null;
+  }
+}
+
+/**
+ * Set username and bio on a DeHub account via /api/update_profile.
+ */
+async function setDeHubProfile(
+  authToken: string,
+  username: string,
+  bio?: string
+): Promise<boolean> {
+  try {
+    console.log(`[DeHub Profile] Setting username="${username}"`);
+
+    const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        username,
+        aboutMe: bio || `AI agent: ${username}`,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[DeHub Profile] Failed (${response.status}):`, errorText);
+      return false;
+    }
+
+    console.log(`[DeHub Profile] Success for "${username}"`);
+    return true;
+  } catch (error) {
+    console.error('[DeHub Profile] Error:', error);
+    return false;
   }
 }
 
@@ -142,23 +218,24 @@ const mcpServer = new McpServer({
 
 // ============= MCP Tool Definitions =============
 
-// Register a new AI agent (no auth required)
+// Register a new AI agent with a REAL DeHub account
 mcpServer.tool(
   "dehub_register",
-  "Register a new AI agent to interact with DeHub. Returns an API key that must be included in x-dehub-api-key header for all future requests.",
+  "Register a new AI agent with a real DeHub account. Generates an Ethereum wallet, authenticates with the DeHub API, and sets the agent's profile. Returns an API key for all future requests.",
   {
-    name: z.string().describe("Unique name for your AI agent"),
-    description: z.string().optional().describe("Description of what your agent does"),
-    owner_wallet_address: z.string().describe("Your wallet address (0x...) that will own this agent"),
+    name: z.string().describe("Unique name/username for your AI agent"),
+    description: z.string().optional().describe("Description/bio of what your agent does"),
+    owner_wallet_address: z.string().optional().describe("Your wallet address (for attribution). The agent will get its own generated wallet."),
   },
   async ({ name, description, owner_wallet_address }) => {
     // deno-lint-ignore no-explicit-any
     const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     
-    if (!name || !owner_wallet_address) {
-      return { content: [{ type: "text", text: JSON.stringify({ error: "Missing required fields: name and owner_wallet_address" }) }] };
+    if (!name) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Missing required field: name" }) }] };
     }
     
+    // Check if name is already taken
     const { data: existing } = await supabase
       .from('ai_agents')
       .select('id')
@@ -168,20 +245,50 @@ mcpServer.tool(
     if (existing) {
       return { content: [{ type: "text", text: JSON.stringify({ error: `Agent name "${name}" is already taken` }) }] };
     }
+
+    console.log(`[Register] Creating real DeHub account for agent "${name}"`);
     
+    // Step 1: Generate a real Ethereum wallet
+    const wallet = Wallet.createRandom();
+    const walletAddress = wallet.address.toLowerCase();
+    const privateKey = wallet.privateKey;
+
+    console.log(`[Register] Generated wallet: ${walletAddress}`);
+    
+    // Step 2: Authenticate with DeHub API (creates the account)
+    const authToken = await authenticateWithDeHub(privateKey);
+    if (!authToken) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to create DeHub account. The API may be unavailable." }) }] };
+    }
+    
+    // Step 3: Set the agent's username and bio on DeHub
+    const bio = description || `AI agent: ${name}`;
+    const profileSet = await setDeHubProfile(authToken, name, bio);
+    if (!profileSet) {
+      console.warn(`[Register] Profile update failed for "${name}", account still created`);
+    }
+    
+    // Step 4: Store everything in the database
     const apiKey = generateApiKey();
     
     const { data, error } = await supabase.from('ai_agents').insert({
       name,
-      description: description || `AI agent: ${name}`,
+      description: bio,
       api_key: apiKey,
-      owner_wallet_address: owner_wallet_address.toLowerCase(),
+      owner_wallet_address: walletAddress, // Agent's own wallet
+      wallet_private_key: privateKey, // For future authenticated API calls
       is_active: true,
+      metadata: {
+        human_owner: owner_wallet_address?.toLowerCase() || null,
+        dehub_auth_token: authToken,
+        registered_at: new Date().toISOString(),
+        chain_id: 8453,
+      },
     }).select().single();
     
     if (error) {
-      console.error('Registration error:', error);
-      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to register agent" }) }] };
+      console.error('[Register] DB insert error:', error);
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to save agent registration" }) }] };
     }
     
     const result = {
@@ -189,12 +296,14 @@ mcpServer.tool(
       agent: {
         id: data.id,
         name: data.name,
+        wallet_address: walletAddress,
         api_key: apiKey,
-        owner_wallet_address: data.owner_wallet_address,
+        profile_set: profileSet,
       },
-      important: "⚠️ SAVE YOUR API KEY SECURELY! Include it in the x-dehub-api-key header for all future requests.",
+      important: "⚠️ SAVE YOUR API KEY SECURELY! Include it in the x-dehub-api-key header for all future requests. Your agent now has a real DeHub account and can post, vote, and comment.",
     };
     
+    console.log(`[Register] Agent "${name}" registered successfully with wallet ${walletAddress}`);
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -293,13 +402,17 @@ mcpServer.tool(
     if (!agent) {
       return { content: [{ type: "text", text: JSON.stringify({ error: "Authentication required. Include x-dehub-api-key header." }) }] };
     }
+
+    if (!agent.wallet_private_key) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Agent does not have a wallet. Re-register with dehub_register to get a real account." }) }] };
+    }
     
     const rateCheck = await checkRateLimit(supabase, agent.id, 'post_create');
     if (!rateCheck.allowed) {
       return { content: [{ type: "text", text: JSON.stringify({ error: `Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}` }) }] };
     }
     
-    const authToken = await authenticateWithDeHub(agent.owner_wallet_address);
+    const authToken = await authenticateWithDeHub(agent.wallet_private_key);
     if (!authToken) {
       return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to authenticate with DeHub" }) }] };
     }
@@ -503,9 +616,9 @@ mcpServer.tool(
 // Get profile
 mcpServer.tool(
   "dehub_profile",
-  "Get a user's profile from DeHub. If no wallet address is provided, returns the agent's owner profile.",
+  "Get a user's profile from DeHub. If no wallet address is provided, returns the agent's own profile.",
   {
-    wallet_address: z.string().optional().describe("Wallet address to lookup (defaults to your owner wallet)"),
+    wallet_address: z.string().optional().describe("Wallet address to lookup (defaults to agent's own wallet)"),
   },
   async ({ wallet_address }) => {
     // deno-lint-ignore no-explicit-any

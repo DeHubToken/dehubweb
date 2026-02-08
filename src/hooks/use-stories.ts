@@ -81,162 +81,76 @@ async function fetchFreshAvatar(walletAddress: string): Promise<string | null> {
 }
 
 /**
- * Template stories shown when no real stories exist.
- * Uses publicly available stock videos from Pexels CDN.
- * Remove this array once there's a steady flow of real stories.
+ * Template story video URLs mapped by agent username.
+ * These videos are shown as stories for template agents.
  */
-const TEMPLATE_STORIES: Story[] = [
-  {
-    id: 'template-1',
-    wallet_address: '0xTEMPLATE000000000000000000000000000001',
-    username: 'vrgl',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/videos/2213/2213-720.mp4',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-2',
-    wallet_address: '0xTEMPLATE000000000000000000000000000002',
-    username: 'notmaya',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/videos/4793/4793-720.mp4',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-3',
-    wallet_address: '0xTEMPLATE000000000000000000000000000003',
-    username: '0xkai',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/videos/39878/39878-720.mp4',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-4',
-    wallet_address: '0xTEMPLATE000000000000000000000000000004',
-    username: 'xluna',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/ngl4vwp6mhwm97fv0212vrgi6iw0',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-5',
-    wallet_address: '0xTEMPLATE000000000000000000000000000005',
-    username: 'marco_v',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/wwnepv77a959cjk6wicpxqosy1mu',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-6',
-    wallet_address: '0xTEMPLATE000000000000000000000000000006',
-    username: 'ninarealll',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/m9oyxjg4wit94y3k2e998i90n96r',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-7',
-    wallet_address: '0xTEMPLATE000000000000000000000000000007',
-    username: 'jdot',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/v949y07olycrk26kgawi7zef1f0h',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-8',
-    wallet_address: '0xTEMPLATE000000000000000000000000000008',
-    username: 'z4r4eth',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/7zctwtusix6zyq97h24z0b863ofv',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-9',
-    wallet_address: '0xTEMPLATE000000000000000000000000000009',
-    username: 'riooo',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/yqgsdhqnrvzbtbxv0o76xcebwtpi',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-10',
-    wallet_address: '0xTEMPLATE000000000000000000000000000010',
-    username: 'ellaverse',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/1n3mnf16ls4nz4b26j03mmmou9hs',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-11',
-    wallet_address: '0xTEMPLATE000000000000000000000000000011',
-    username: 'svmp4',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/videos/639/639-720.mp4',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-12',
-    wallet_address: '0xTEMPLATE000000000000000000000000000012',
-    username: 'mi444',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/videos/5240/5240-720.mp4',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-13',
-    wallet_address: '0xTEMPLATE000000000000000000000000000013',
-    username: 'leothedev',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-14',
-    wallet_address: '0xTEMPLATE000000000000000000000000000014',
-    username: 'ivyivyivy',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-  {
-    id: 'template-15',
-    wallet_address: '0xTEMPLATE000000000000000000000000000015',
-    username: 'omr_',
-    avatar: null,
-    video_url: 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
-    thumbnail_url: null,
-    created_at: new Date().toISOString(),
-    expires_at: new Date(Date.now() + 86400000).toISOString(),
-  },
-];
+const TEMPLATE_VIDEO_URLS: Record<string, string> = {
+  'vrgl': 'https://assets.mixkit.co/videos/2213/2213-720.mp4',
+  'notmaya': 'https://assets.mixkit.co/videos/4793/4793-720.mp4',
+  '0xkai': 'https://assets.mixkit.co/videos/39878/39878-720.mp4',
+  'xluna': 'https://assets.mixkit.co/ngl4vwp6mhwm97fv0212vrgi6iw0',
+  'marco_v': 'https://assets.mixkit.co/wwnepv77a959cjk6wicpxqosy1mu',
+  'ninarealll': 'https://assets.mixkit.co/m9oyxjg4wit94y3k2e998i90n96r',
+  'jdot': 'https://assets.mixkit.co/v949y07olycrk26kgawi7zef1f0h',
+  'z4r4eth': 'https://assets.mixkit.co/7zctwtusix6zyq97h24z0b863ofv',
+  'riooo': 'https://assets.mixkit.co/yqgsdhqnrvzbtbxv0o76xcebwtpi',
+  'ellaverse': 'https://assets.mixkit.co/1n3mnf16ls4nz4b26j03mmmou9hs',
+  'svmp4': 'https://assets.mixkit.co/videos/639/639-720.mp4',
+  'mi444': 'https://assets.mixkit.co/videos/5240/5240-720.mp4',
+  'leothedev': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
+  'ivyivyivy': 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
+  'omr_': 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
+};
+
+/**
+ * Build template stories dynamically from the ai_agents table.
+ * Falls back to placeholder addresses only if the DB query fails.
+ */
+async function fetchTemplateStories(): Promise<Story[]> {
+  try {
+    const { data: agents, error } = await supabase
+      .from('ai_agents')
+      .select('name, owner_wallet_address')
+      .in('name', Object.keys(TEMPLATE_VIDEO_URLS));
+
+    // Build a map of username -> real wallet address from the database
+    const walletMap = new Map<string, string>();
+    if (!error && agents) {
+      for (const agent of agents) {
+        walletMap.set(agent.name, agent.owner_wallet_address);
+      }
+    }
+
+    const now = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + 86400000).toISOString();
+
+    return Object.entries(TEMPLATE_VIDEO_URLS).map(([username, videoUrl], index) => ({
+      id: `template-${index + 1}`,
+      wallet_address: walletMap.get(username) || `0xTEMPLATE${String(index + 1).padStart(36, '0')}`,
+      username,
+      avatar: null,
+      video_url: videoUrl,
+      thumbnail_url: null,
+      created_at: now,
+      expires_at: expiresAt,
+    }));
+  } catch {
+    // Fallback: return with placeholder addresses if fetch fails
+    const now = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + 86400000).toISOString();
+
+    return Object.entries(TEMPLATE_VIDEO_URLS).map(([username, videoUrl], index) => ({
+      id: `template-${index + 1}`,
+      wallet_address: `0xTEMPLATE${String(index + 1).padStart(36, '0')}`,
+      username,
+      avatar: null,
+      video_url: videoUrl,
+      thumbnail_url: null,
+      created_at: now,
+      expires_at: expiresAt,
+    }));
+  }
+}
 
 const WATCHED_STORIES_KEY = 'dehub_watched_stories';
 const STORIES_CACHE_KEY = 'dehub_stories_cache';
@@ -300,6 +214,13 @@ export function useWatchedStories() {
 export function useStories() {
   const queryClient = useQueryClient();
 
+  // Fetch template stories from ai_agents table (with real wallet addresses)
+  const { data: templateStories = [] } = useQuery({
+    queryKey: ['template-stories'],
+    queryFn: fetchTemplateStories,
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  });
+
   // Fetch active (non-expired) stories - uses localStorage cache for instant load
   const { data: stories = [], isLoading, refetch } = useQuery({
     queryKey: ['stories'],
@@ -321,35 +242,35 @@ export function useStories() {
   });
 
   // Use template stories as fallback when no real stories exist
-  const activeStories = stories.length > 0 ? stories : TEMPLATE_STORIES;
+  const activeStories = stories.length > 0 ? stories : templateStories;
 
   // Lazy-load fresh avatars in the background (non-blocking)
-  // Skip avatar fetching for template stories (they don't exist in DeHub API)
+  // Now that agents have real wallets, we can fetch their avatars from DeHub
   const { data: enrichedStories = activeStories } = useQuery({
     queryKey: ['stories-with-avatars', activeStories.map(s => s.id).join(',')],
     queryFn: async () => {
       if (activeStories.length === 0) return [];
       
-      // Get unique wallet addresses, excluding template addresses
+      // Get unique wallet addresses, excluding any remaining placeholder addresses
       const uniqueAddresses = [...new Set(
         activeStories
           .filter(s => !isTemplateAddress(s.wallet_address))
           .map(s => s.wallet_address)
       )];
       
-      // If all stories are templates, skip avatar fetching entirely
+      // If all stories still use placeholder addresses, skip avatar fetching
       if (uniqueAddresses.length === 0) return activeStories;
       
       // Fetch fresh avatars for all unique real users in parallel
       const avatarMap = new Map<string, string | null>();
       await Promise.all(
-        uniqueAddresses.map(async (address) => {
+        uniqueAddresses.map(async (address: string) => {
           const freshAvatar = await fetchFreshAvatar(address);
           avatarMap.set(address.toLowerCase(), freshAvatar);
         })
       );
       
-      // Enrich stories with fresh avatars (templates keep null avatar)
+      // Enrich stories with fresh avatars (placeholders keep null avatar)
       return activeStories.map(story => ({
         ...story,
         avatar: isTemplateAddress(story.wallet_address)
