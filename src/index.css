@@ -553,11 +553,13 @@ body.immersive-video-mode main {
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    transparent 150deg,
-    rgba(255, 255, 255, 0.5) 170deg,
+    transparent 120deg,
+    rgba(255, 255, 255, 0.4) 140deg,
+    rgba(255, 255, 255, 0.6) 160deg,
     rgba(255, 255, 255, 0.7) 180deg,
-    rgba(255, 255, 255, 0.5) 190deg,
-    transparent 210deg,
+    rgba(255, 255, 255, 0.6) 200deg,
+    rgba(255, 255, 255, 0.4) 220deg,
+    transparent 240deg,
     transparent 360deg
   );
   animation: story-shimmer-rotate 4s linear infinite;
