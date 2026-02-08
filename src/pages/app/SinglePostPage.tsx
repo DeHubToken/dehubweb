@@ -273,6 +273,7 @@ interface ImmersiveVideoHeaderProps {
   creatorUsername?: string;
   creatorId?: string;
   verified?: boolean;
+  showBack?: boolean;
 }
 
 function ImmersiveVideoHeader({ 
@@ -282,16 +283,12 @@ function ImmersiveVideoHeader({
   creatorUsername,
   creatorId,
   verified = false,
+  showBack = true,
 }: ImmersiveVideoHeaderProps) {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleBack = () => {
-    if (location.key && location.key !== 'default') {
-      navigate(-1);
-    } else {
-      navigate(fallbackRoute, { replace: true });
-    }
+    navigate(-1);
   };
 
   const handleProfileClick = () => {
@@ -304,6 +301,8 @@ function ImmersiveVideoHeader({
   };
 
   const isClickable = !!(creatorId || creatorUsername);
+
+  if (!showBack) return null;
 
   return (
     <div className="absolute top-2 left-2 z-20">
@@ -411,6 +410,10 @@ export default function SinglePostPage() {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const id = postId || tokenId;
   const navigationType = useNavigationType();
+  const location = useLocation();
+  
+  // Hide back button when there's no navigation history (direct URL access)
+  const hasHistory = !!(location.key && location.key !== 'default');
   
   // State for desktop AI chat and options drawer
   const [showDesktopAIChat, setShowDesktopAIChat] = useState(false);
@@ -508,6 +511,7 @@ export default function SinglePostPage() {
               creatorUsername={videoData.creatorUsername}
               creatorId={videoData.creatorId}
               verified={videoData.verified}
+              showBack={hasHistory}
             />
             {renderContent()}
           </div>
@@ -517,7 +521,7 @@ export default function SinglePostPage() {
         
         {/* Desktop: Standard layout with header */}
         <div className="hidden lg:flex lg:flex-col">
-          <PageHeader showBack />
+          <PageHeader showBack={hasHistory} />
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {/* Creator info for desktop */}
@@ -606,7 +610,7 @@ export default function SinglePostPage() {
   // Standard layout for other content types
   return (
     <div className="flex flex-col">
-      <PageHeader showBack />
+      <PageHeader showBack={hasHistory} />
       
       <div className="px-3 sm:px-4 pb-8">
         <div className="max-w-2xl mx-auto">
