@@ -39,7 +39,11 @@ import {
   Copy,
   Loader2,
   LogOut,
-  Coins
+  Coins,
+  Gift,
+  Palmtree,
+  Terminal,
+  Skull
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -883,10 +887,10 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               { value: 'dark', icon: Moon, label: 'Dark' },
               { value: 'system', icon: Monitor, label: 'System' },
               { value: 'cosmic', icon: Sparkles, label: 'Cosmic' },
-              { value: 'christmas', icon: Sparkles, label: 'Christmas' },
-              { value: 'island', icon: Sparkles, label: 'Island' },
-              { value: 'hacker', icon: Sparkles, label: 'Hacker' },
-              { value: 'horror', icon: Sparkles, label: 'Horror' },
+              { value: 'christmas', icon: Gift, label: 'Christmas' },
+              { value: 'island', icon: Palmtree, label: 'Island' },
+              { value: 'hacker', icon: Terminal, label: 'Hacker' },
+              { value: 'horror', icon: Skull, label: 'Horror' },
             ].map((option) => {
               const Icon = option.icon;
               return (
