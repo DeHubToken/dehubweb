@@ -1250,7 +1250,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             lockedCurrency={video.lockedCurrency}
           />
         )}
-        <h3 className="text-white text-sm font-medium mb-1">{video.title}</h3>
+        <TranslatableText text={video.title} className="text-white text-sm font-medium mb-1" as="h3" hideControls />
         {video.description && video.description !== video.title && (
           <ExpandableDescription 
             description={video.description} 
