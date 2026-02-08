@@ -32,6 +32,8 @@ interface TranslatableTextProps {
   text: string;
   className?: string;
   as?: 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3';
+  /** When true, hides the translate/show-original controls (text still gets translated if auto-translated via parent) */
+  hideControls?: boolean;
 }
 
 /**
@@ -258,6 +260,7 @@ export function TranslatableText({
   text, 
   className,
   as: Component = 'span',
+  hideControls = false,
 }: TranslatableTextProps) {
   const {
     userLang,
@@ -349,7 +352,7 @@ export function TranslatableText({
           </Component>
         </motion.div>
       </AnimatePresence>
-      {renderTranslateControl()}
+      {!hideControls && renderTranslateControl()}
     </>
   );
 }
