@@ -154,7 +154,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <Button 
             onClick={handlePostClick}
             disabled={isConnecting}
-            className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2 disabled:opacity-70"
+            className="w-[90%] xl:w-full mx-auto rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-5 text-[13.5px] gap-2 disabled:opacity-70"
           >
             {isAuthenticated ? (
               <>
