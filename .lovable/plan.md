@@ -1,102 +1,80 @@
 
 
-## Fix: Video Controls Not Appearing After Clicking Play
+## Fix: Image Posts Should Preserve Their Natural Aspect Ratio
 
-### Root Cause
+### Problem
 
-The video controls (volume, PiP, fullscreen, progress bar) are gated behind a `showControls` state that is driven purely by `onMouseEnter` / `onMouseLeave` on the container div. When the user clicks the play button:
-
-1. `isPlaying` becomes `true`
-2. The play button overlay div (which the cursor was hovering on) is removed from the DOM
-3. The browser fires a `mouseleave` event on the container because the element under the cursor vanished
-4. `showControls` flips to `false`
-5. The top controls and progress bar never render because they require `showControls === true`
-6. The user has to move the mouse out and back in to re-trigger `onMouseEnter`
+Every image in the feed carousel is forced into a square container (`aspect-square`) with `object-cover`, which crops portrait and landscape images. A portrait image (e.g. the Galatasaray post) loses its top and bottom, appearing as a square.
 
 ### Solution
 
-Introduce a timed "controls visible" mechanism that keeps controls showing for a few seconds after any user interaction (play, pause, click), independent of hover state. This guarantees controls are always visible after clicking play.
+Remove the fixed `aspect-square` constraint and let images render at their natural dimensions, while keeping sensible bounds to avoid extremely tall or wide images breaking the layout.
 
-### Changes to `src/components/app/cards/VideoCard.tsx`
+### Approach: Dynamic Aspect Ratio with Bounds
 
-**1. Add a `controlsTimerRef` and replace simple hover-based logic**
+Instead of a fixed square, let the first image in a post "set" the container height naturally, with a max-height to prevent excessively tall images from dominating the feed.
 
-- Add a `useRef` for the auto-hide timer
-- Create a `showControlsBriefly()` helper that:
-  - Sets `showControls` to `true`
-  - Clears any existing timer
-  - Sets a new 3-second timer to hide controls (only if mouse is not hovering)
-- Track mouse hover state separately via a `isHovering` ref (not state, to avoid re-renders)
+### Changes to `src/components/app/cards/ImageCard.tsx`
 
-**2. Call `showControlsBriefly()` on play/pause actions**
+**1. Update the image container in `ImageCarousel`**
 
-- In `handlePlayClick`: after starting playback, call `showControlsBriefly()` so controls appear immediately
-- In `handleVideoAreaClick` / `handleTouchEnd`: also call it so any tap/click reveals controls
+Replace the fixed `aspect-square` div with a container that adapts to the image's natural aspect ratio:
 
-**3. Update `onMouseEnter` / `onMouseLeave`**
+- Remove `aspect-square` from the wrapper div
+- Change the img from `object-cover` to `object-contain` inside a bounded container
+- Set `max-h-[600px]` (or similar) to prevent very tall portrait images from being too dominant
+- Use `bg-zinc-800` as the letterbox background for images that don't fill the full width
+- Keep `w-full` so landscape/square images still stretch to full width
 
-- `onMouseEnter`: set `isHovering` ref to `true`, set `showControls(true)`, clear any auto-hide timer
-- `onMouseLeave`: set `isHovering` ref to `false`, start the 3-second auto-hide timer
+**2. Specific code change in the `ImageCarousel` component (around lines 143-161)**
 
-**4. Cleanup timer on unmount**
-
-- Clear the timer in the component's cleanup to avoid memory leaks
-
-### Behavior After Fix
-
-```text
-User clicks play
-    |
-    v
-Video starts, showControls = true (forced)
-    |
-    v
-Controls visible for 3 seconds
-    |
-    +--> Mouse still hovering? --> Controls stay visible
-    |
-    +--> Mouse left? --> Controls auto-hide after 3s
+Current code:
+```tsx
+<div className="flex-[0_0_100%] min-w-0">
+  <div className="aspect-square bg-zinc-800 cursor-pointer">
+    <img src={img} className="w-full h-full object-cover" />
+  </div>
+</div>
 ```
 
-On touch devices, nothing changes -- they already use `isTouchDevice` to keep controls always visible during playback.
+New code:
+```tsx
+<div className="flex-[0_0_100%] min-w-0">
+  <div
+    className="bg-zinc-800 cursor-pointer flex items-center justify-center max-h-[600px] overflow-hidden"
+    onClick={...}
+  >
+    <img
+      src={img}
+      className="w-full max-h-[600px] object-contain"
+      loading="lazy"
+    />
+  </div>
+</div>
+```
+
+This ensures:
+- Portrait images render tall (up to 600px) with horizontal letterboxing
+- Landscape images render wide, filling the card width with minimal vertical letterboxing
+- Square images look the same as before
+- No image exceeds 600px in height, keeping the feed scrollable
+
+**3. Collage grid (ImagesFeed.tsx) stays unchanged**
+
+The collage view in `ImagesFeed.tsx` intentionally uses `aspect-square` with `object-cover` for its grid layout. This is the correct behavior for a thumbnail grid -- cropping to squares is expected there. No changes needed.
+
+### What stays the same
+
+- Fullscreen image viewer (already shows natural dimensions)
+- Collage/grid thumbnails (square crop is intentional there)
+- Single post page rendering (uses `ImageCard`, so it inherits the fix)
+- Carousel navigation (dot indicators, arrow buttons, swipe gestures)
+- All other card types (Video, Post, Live)
 
 ### Technical Details
 
-```text
-// New refs
-controlsTimerRef = useRef<NodeJS.Timeout>()
-isHoveringRef = useRef(false)
-
-// New helper
-showControlsBriefly():
-  setShowControls(true)
-  clearTimeout(controlsTimerRef.current)
-  controlsTimerRef.current = setTimeout(() => {
-    if (!isHoveringRef.current) setShowControls(false)
-  }, 3000)
-
-// Updated handlers
-onMouseEnter:
-  isHoveringRef.current = true
-  setShowControls(true)
-  clearTimeout(controlsTimerRef.current)
-
-onMouseLeave:
-  isHoveringRef.current = false
-  controlsTimerRef.current = setTimeout(() => setShowControls(false), 3000)
-
-handlePlayClick (play branch):
-  ...existing play logic...
-  showControlsBriefly()
-
-handleVideoAreaClick (single click branch):
-  ...existing logic calls handlePlayClick which now calls showControlsBriefly...
-```
-
-### File Changed
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `src/components/app/cards/VideoCard.tsx` | Modify -- add timed controls visibility logic |
+| `src/components/app/cards/ImageCard.tsx` | Remove `aspect-square` and `object-cover` from carousel slides; use `object-contain` with `max-h-[600px]` bounded container |
 
-Only one file needs to change. No new files, no database changes, no dependencies.
+Single file change. No new dependencies, no database changes.
