@@ -1,73 +1,52 @@
 
+# Fix Missing Avatars in Story Playback
 
-# Periodic Shimmer Glisten on Story Borders
+## Problem
 
-## What Changes
+After xluna, all remaining agents (marco_v, ninarealll, jdot, etc.) show a generic letter fallback instead of their actual profile picture in the story viewer. This is caused by two bugs working together.
 
-Instead of the shimmer only appearing on hover (or being always visible), the light sweep will **pulse in and out every few seconds** -- a brief glisten that catches the eye, then fades away, then returns. Like light catching a glass surface momentarily.
+## Root Causes
 
-## Visual Behavior
+### 1. Wrong wallet address for avatar lookups
 
-- **Unwatched stories**: Every ~4 seconds, a soft white light sweeps around the border over ~1.5s, then fades out. The cycle repeats indefinitely.
-- **Watched stories**: Static dim gradient border, no shimmer -- unchanged.
-- **Hover**: Still brightens the shimmer (existing behavior preserved).
+The `fetchTemplateStories` function queries `owner_wallet_address` from the `ai_agents` table. This is the **human creator's wallet**, not the agent's own registered DeHub wallet (which is derived from `wallet_private_key`). So the avatar enrichment step looks up the wrong account on DeHub and gets back either someone else's avatar or nothing.
 
-## Technical Details
+### 2. Local asset paths get corrupted
 
-### File: `src/index.css`
+When enrichment fails, the fallback avatar is a Vite-bundled local file path (e.g., `/assets/avatars/vrgl-abc123.png`). The story viewer's `resolvedAvatar` logic only handles URLs starting with `http` -- local paths fall through to `buildAvatarUrl()` which constructs a broken CDN URL that doesn't exist. The same issue affects `StoriesBar.tsx` line 212 where it calls `buildAvatarUrl()` on the story avatars.
 
-**1. Replace the `story-shimmer-rotate` keyframes** with a combined rotation + opacity pulse animation:
+## Solution
 
-```css
-@keyframes story-shimmer-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+### Step 1: Fix avatar URL resolution in story viewer (`StoryViewerModal.tsx`)
 
-@keyframes story-shimmer-pulse {
-  0%   { opacity: 0; }
-  10%  { opacity: 0.8; }
-  35%  { opacity: 0.8; }
-  50%  { opacity: 0; }
-  100% { opacity: 0; }
-}
+Update the `resolvedAvatar` logic to recognize local asset paths (those starting with `/`) and return them as-is, before falling through to CDN URL construction.
+
+```
+Before:  http check -> buildAvatarUrl (breaks local paths)
+After:   http check -> local path check -> buildAvatarUrl
 ```
 
-The pulse keyframes control visibility: the shimmer fades in quickly, stays visible for a sweep, then fades out and stays hidden for the remainder of the cycle.
+### Step 2: Fix avatar enrichment to use agent usernames (`use-stories.ts`)
 
-**2. Update `.story-shimmer-border::before`**:
+Replace `fetchFreshAvatar(walletAddress)` with a username-based lookup using `getAccountByUsername(username)` for template stories. This correctly resolves the agent's own DeHub profile avatar instead of the owner's. The DeHub API already supports lookup by username (via `getAccountByUsername`).
 
-- Remove the static `opacity: 0` and `transition: opacity`
-- Apply two animations simultaneously: the rotation (continuous spin) and the pulse (periodic fade in/out)
-- The rotation runs at ~3s per full turn; the pulse cycle runs at ~5s total (visible for roughly 1.5-2s, hidden for ~3s)
+Changes:
+- Update the enrichment query to pass usernames alongside wallet addresses
+- For template stories with known usernames, use `getAccountByUsername(username)` instead of `getAccountInfo(walletAddress)`
+- Keep local `TEMPLATE_AVATARS` as the final fallback if the API call fails
 
-```css
-.story-shimmer-border::before {
-  /* ...existing positioning and gradient... */
-  animation: 
-    story-shimmer-rotate 3s linear infinite,
-    story-shimmer-pulse 5s ease-in-out infinite;
-  will-change: transform, opacity;
-  pointer-events: none;
-}
-```
+### Step 3: Fix StoriesBar avatar handling (`StoriesBar.tsx`)
 
-**3. Keep the hover rule** so hovering still forces full brightness:
+Line 212 calls `buildAvatarUrl(story.wallet_address, story.avatar)` which also mangles local asset paths. Add the same local-path guard: if `story.avatar` starts with `/`, use it directly.
 
-```css
-.story-shimmer-border:hover::before {
-  opacity: 1;
-  animation-name: story-shimmer-rotate; /* stop the pulse, stay bright */
-}
-```
-
-### No component changes needed
-
-`ShimmerBorder`, `StoriesBar.tsx`, and `ProfilePage.tsx` already apply the `story-shimmer-border` class correctly. This is a CSS-only change.
-
-### Summary
+## Files Changed
 
 | File | Change |
 |------|--------|
-| `src/index.css` | Add `story-shimmer-pulse` keyframes; update `.story-shimmer-border::before` to use dual animation (rotate + pulse); adjust hover to override pulse |
+| `src/components/app/stories/StoryViewerModal.tsx` | Guard `resolvedAvatar` against local asset paths |
+| `src/hooks/use-stories.ts` | Use `getAccountByUsername` for template story avatar enrichment |
+| `src/components/app/cards/StoriesBar.tsx` | Guard avatar resolution against local asset paths |
 
+## Expected Result
+
+All 15 agent stories will display their correct profile pictures in both the stories bar thumbnails and the story playback viewer, using either the live DeHub avatar (if available) or the bundled local asset as a reliable fallback.
