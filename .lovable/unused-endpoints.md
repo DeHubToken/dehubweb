@@ -52,16 +52,16 @@
 ## 5. LiveChat Moderation (6 endpoints)
 - ⬜ `GET /api/livechat/rooms/{id}` → `getLiveChatRoom` — Single room details
 - ⬜ `GET /api/livechat/user/{addr}` → `getLiveChatUserProfile` — Chat user profile
-- ⬜ `POST /api/livechat/rooms/topic` → `createTopicRoom` — Create topic room
+- ✅ `POST /api/livechat/rooms/topic` → `createTopicRoom` — Create topic room
 - ✅ `POST .../messages/{id}/pin` → `pinLiveChatMessage` — Pin a message
 - ✅ `DELETE .../messages/{id}/pin` → `unpinLiveChatMessage` — Unpin a message
 - ✅ `POST .../rooms/{id}/ban` → `banLiveChatUser` — Ban from room
 - ✅ `DELETE .../ban/{addr}` → `unbanLiveChatUser` — Unban from room
-- ⬜ `POST .../rooms/{id}/moderators` → `addLiveChatModerator` — Add moderator
-- ⬜ `PATCH .../rooms/{id}/settings` → `updateLiveChatRoomSettings` — Room settings
+- ✅ `POST .../rooms/{id}/moderators` → `addLiveChatModerator` — Add moderator
+- ✅ `PATCH .../rooms/{id}/settings` → `updateLiveChatRoomSettings` — Room settings
 
 ## 6. Content Management (4 endpoints)
-- ⬜ `GET /api/user/{id}/nfts` → `getUserNFTs` — Get a user's NFTs (paginated)
+- ✅ `GET /api/user/{id}/nfts` → `getUserNFTs` — Get a user's NFTs (paginated)
 - ✅ `POST /api/token_visibility` → `updateTokenVisibility` — Toggle post public/private/unlisted
 - ✅ `POST /api/comment_image` → `addCommentWithImage` — Image comment
 - ✅ `POST /api/edit_comment` → `editComment` — Edit existing comment

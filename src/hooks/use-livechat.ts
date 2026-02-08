@@ -15,16 +15,19 @@ export function useLiveChatRooms() {
   const [rooms, setRooms] = useState<LiveChatRoom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
+  const fetchRooms = useCallback(() => {
+    setIsLoading(true);
     getLiveChatRooms()
-      .then((data) => { if (!cancelled) setRooms(data); })
+      .then((data) => setRooms(data))
       .catch((err) => console.error('[LiveChat] Failed to fetch rooms:', err))
-      .finally(() => { if (!cancelled) setIsLoading(false); });
-    return () => { cancelled = true; };
+      .finally(() => setIsLoading(false));
   }, []);
 
-  return { rooms, isLoading };
+  useEffect(() => {
+    fetchRooms();
+  }, [fetchRooms]);
+
+  return { rooms, isLoading, refetch: fetchRooms };
 }
 
 export function useLiveChatMessages(roomId: string | null) {
