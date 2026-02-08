@@ -24,6 +24,7 @@ const MAX_RETRIES = 2;
 export function TVChannelCard({ channel }: TVChannelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
+  const isStoppingRef = useRef(false);
   const cardId = `tv-${channel.id}`;
   
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,6 +49,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   }, [cardId]);
   
   const stopPlayback = useCallback(() => {
+    isStoppingRef.current = true;
     if (hlsRef.current) {
       hlsRef.current.destroy();
       hlsRef.current = null;
@@ -59,6 +61,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     setIsPlaying(false);
     setShowVideo(false);
     setIsLoading(false);
+    // Reset after a tick so the error event (fired synchronously) is caught
+    setTimeout(() => { isStoppingRef.current = false; }, 0);
   }, []);
   
   const startPlayback = useCallback(() => {
@@ -174,6 +178,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     };
     
     const handleError = () => {
+      // Skip errors caused by intentional stopPlayback() clearing the src
+      if (isStoppingRef.current) return;
       setHasError(true);
       setIsLoading(false);
       setIsPlaying(false);
