@@ -159,7 +159,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-8',
     wallet_address: '0xTEMPLATE000000000000000000000000000008',
-    username: 'z4r4.eth',
+    username: 'z4r4eth',
     avatar: null,
     video_url: 'https://assets.mixkit.co/7zctwtusix6zyq97h24z0b863ofv',
     thumbnail_url: null,
@@ -189,7 +189,7 @@ const TEMPLATE_STORIES: Story[] = [
   {
     id: 'template-11',
     wallet_address: '0xTEMPLATE000000000000000000000000000011',
-    username: 'sv.mp4',
+    username: 'svmp4',
     avatar: null,
     video_url: 'https://assets.mixkit.co/xljy8btgxl02zhespwj0cz6jdn7k',
     thumbnail_url: null,
