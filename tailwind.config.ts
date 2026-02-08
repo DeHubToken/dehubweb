@@ -130,19 +130,16 @@ export default {
           },
         },
         "story-shimmer": {
-          "0%": {
-            backgroundPosition: "200% 0",
-          },
-          "100%": {
-            backgroundPosition: "-200% 0",
-          },
+          "0%": { backgroundPosition: "200% 0" },
+          "30%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "close-button-glitch": "close-button-glitch 0.4s ease-in-out",
-        "story-shimmer": "story-shimmer 1.5s ease-in-out",
+        "story-shimmer": "story-shimmer 5s ease-in-out infinite",
       },
     },
   },
