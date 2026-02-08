@@ -75,13 +75,13 @@
 - ⬜ `GET /api/reports/{tokenId}` → `getReportsForNFT` — Reports for specific post
 
 ## 9. DPay Payments (7 endpoints)
-- ⬜ `GET /api/dpay/price/{chainId}` → `getDPayPriceByChain` — Chain-specific price
-- ⬜ `GET /api/dpay/available/tokens` → `getAvailableTokens` — Available tokens list
-- ⬜ `GET /api/dpay/available/gas` → `getAvailableGasTokens` — Gas token list
-- ⬜ `GET /api/dpay/tnxs` → `getDPayTransactions` — Transaction history
-- ⬜ `GET /api/dpay/total` → `getDPayTotal` — Volume stats
-- ⬜ `POST /api/dpay/create-onramp-session` → `createOnrampSession` — Fiat onramp
-- ⬜ `POST /api/dpay/checkout` → `createCheckoutSession` — Checkout flow
+- ✅ `GET /api/dpay/price/{chainId}` → `getDPayPriceByChain` — Chain-specific price
+- ✅ `GET /api/dpay/available/tokens` → `getAvailableTokens` — Available tokens list
+- ✅ `GET /api/dpay/available/gas` → `getAvailableGasTokens` — Gas token list
+- ✅ `GET /api/dpay/tnxs` → `getDPayTransactions` — Transaction history
+- ✅ `GET /api/dpay/total` → `getDPayTotal` — Volume stats
+- ✅ `POST /api/dpay/create-onramp-session` → `createOnrampSession` — Fiat onramp
+- ✅ `POST /api/dpay/checkout` → `createCheckoutSession` — Checkout flow
 
 ## 10. Legacy/Duplicate
 - ⬜ `POST /api/user_mint` → `mintNFT` — Legacy mint (replaced by `mintPost`)

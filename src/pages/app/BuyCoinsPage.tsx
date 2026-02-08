@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle } from 'lucide-react';
+import { ArrowLeft, CreditCard, Wallet, Loader2, Check, ChevronDown, AlertCircle, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,9 +8,12 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { 
-  getDPayPrice, 
+  getDPayPrice,
+  getDPayPriceByChain,
   getAvailableTokens, 
+  getAvailableGasTokens,
   createCheckoutSession,
+  createOnrampSession,
   type DPayToken,
 } from '@/lib/api/dpay';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -23,6 +26,13 @@ import {
 
 const PRESET_AMOUNTS = [10, 25, 50, 100, 250, 500];
 
+const CHAINS = [
+  { id: 8453, name: 'Base', color: '#0052FF' },
+  { id: 56, name: 'BNB', color: '#F0B90B' },
+];
+
+type PaymentMethod = 'card' | 'onramp';
+
 export default function BuyCoinsPage() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -30,6 +40,8 @@ export default function BuyCoinsPage() {
   const [customAmount, setCustomAmount] = useState('');
   const [isTokenDrawerOpen, setIsTokenDrawerOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<DPayToken | null>(null);
+  const [selectedChainId, setSelectedChainId] = useState(8453);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
 
   // Fetch available tokens
   const { data: tokens, isLoading: tokensLoading } = useQuery({
@@ -39,30 +51,44 @@ export default function BuyCoinsPage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch DHB price
-  const { data: priceData, isLoading: priceLoading } = useQuery({
+  // Fetch gas tokens
+  const { data: gasTokens } = useQuery({
+    queryKey: ['dpay', 'gasTokens'],
+    queryFn: getAvailableGasTokens,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Fetch chain-specific price
+  const { data: chainPriceData, isLoading: priceLoading } = useQuery({
+    queryKey: ['dpay', 'price', selectedChainId],
+    queryFn: () => getDPayPriceByChain(selectedChainId),
+    enabled: isAuthenticated,
+    staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
+  });
+
+  // Fallback to general price if chain price fails
+  const { data: generalPriceData } = useQuery({
     queryKey: ['dpay', 'price'],
     queryFn: getDPayPrice,
-    enabled: isAuthenticated,
-    staleTime: 30 * 1000, // Refresh price every 30s
-    refetchInterval: 30 * 1000,
+    enabled: isAuthenticated && !chainPriceData,
+    staleTime: 30 * 1000,
   });
 
   // Set default token when tokens load
   useEffect(() => {
     if (tokens && tokens.length > 0 && !selectedToken) {
-      // Default to DHB or first token
       const dhbToken = tokens.find(t => t.symbol === 'DHB');
       setSelectedToken(dhbToken || tokens[0]);
     }
   }, [tokens, selectedToken]);
 
   // Create checkout session mutation
-  const createSessionMutation = useMutation({
+  const checkoutMutation = useMutation({
     mutationFn: createCheckoutSession,
     onSuccess: (data) => {
       if (data.checkoutUrl) {
-        // Redirect to payment provider
         window.open(data.checkoutUrl, '_blank');
         toast.success('Redirecting to payment...');
       } else if (data.sessionId) {
@@ -74,9 +100,27 @@ export default function BuyCoinsPage() {
     },
   });
 
+  // Create onramp session mutation
+  const onrampMutation = useMutation({
+    mutationFn: createOnrampSession,
+    onSuccess: (data) => {
+      if (data.url) {
+        window.open(data.url, '_blank');
+        toast.success('Redirecting to onramp...');
+      } else {
+        toast.success('Onramp session created', { description: `Session: ${data.sessionId}` });
+      }
+    },
+    onError: (error: Error) => {
+      toast.error('Failed to start onramp', { description: error.message });
+    },
+  });
+
+  const priceData = chainPriceData || generalPriceData;
   const effectiveAmount = customAmount ? Number(customAmount) : selectedAmount;
   const tokenPrice = priceData?.price || 0;
   const estimatedTokens = tokenPrice > 0 ? effectiveAmount / tokenPrice : 0;
+  const isPending = checkoutMutation.isPending || onrampMutation.isPending;
 
   const handlePurchase = () => {
     if (!walletAddress) {
@@ -88,11 +132,21 @@ export default function BuyCoinsPage() {
       return;
     }
 
-    createSessionMutation.mutate({
-      amount: effectiveAmount,
-      tokenSymbol: selectedToken?.symbol || 'DHB',
-      walletAddress,
-    });
+    if (paymentMethod === 'onramp') {
+      onrampMutation.mutate({
+        amount: effectiveAmount,
+        currency: 'usd',
+        tokenSymbol: selectedToken?.symbol || 'DHB',
+        walletAddress,
+      });
+    } else {
+      checkoutMutation.mutate({
+        amount: effectiveAmount,
+        tokenSymbol: selectedToken?.symbol || 'DHB',
+        walletAddress,
+        chainId: String(selectedChainId),
+      });
+    }
   };
 
   if (!isAuthenticated) {
@@ -113,6 +167,26 @@ export default function BuyCoinsPage() {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <h1 className="text-xl font-bold text-white">Buy Coins</h1>
+        </div>
+
+        {/* Chain Selection */}
+        <div className="bg-zinc-900 rounded-2xl p-4">
+          <label className="text-sm text-zinc-400 mb-2 block">Network</label>
+          <div className="flex gap-2">
+            {CHAINS.map((chain) => (
+              <button
+                key={chain.id}
+                onClick={() => setSelectedChainId(chain.id)}
+                className={`flex-1 py-3 rounded-xl font-medium transition-all text-sm ${
+                  selectedChainId === chain.id
+                    ? 'bg-white text-black'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                }`}
+              >
+                {chain.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Token Selection */}
@@ -141,7 +215,6 @@ export default function BuyCoinsPage() {
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-4">
           <label className="text-sm text-zinc-400 block">Amount (USD)</label>
           
-          {/* Preset amounts */}
           <div className="grid grid-cols-3 gap-2">
             {PRESET_AMOUNTS.map((amount) => (
               <button
@@ -161,7 +234,6 @@ export default function BuyCoinsPage() {
             ))}
           </div>
 
-          {/* Custom amount */}
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 font-medium">$</span>
             <Input
@@ -210,16 +282,38 @@ export default function BuyCoinsPage() {
             {tokenPrice > 0 && (
               <p className="text-xs text-zinc-500 mt-1 text-right">
                 1 {selectedToken?.symbol || 'DHB'} ≈ ${tokenPrice.toFixed(4)}
+                {priceData?.change24h != null && (
+                  <span className={priceData.change24h >= 0 ? 'text-emerald-400 ml-2' : 'text-red-400 ml-2'}>
+                    {priceData.change24h >= 0 ? '+' : ''}{priceData.change24h.toFixed(2)}%
+                  </span>
+                )}
               </p>
             )}
           </div>
+
+          {/* Gas token info */}
+          {gasTokens && gasTokens.length > 0 && (
+            <div className="border-t border-zinc-800 pt-3">
+              <p className="text-xs text-zinc-500 flex items-center gap-1">
+                <Zap className="w-3 h-3" />
+                Gas: {gasTokens.map(g => g.symbol).join(', ')} available on {CHAINS.find(c => c.id === selectedChainId)?.name}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Payment Methods */}
         <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <label className="text-sm text-zinc-400 block">Payment Method</label>
           
-          <button className="w-full flex items-center gap-3 p-3 bg-white/10 border border-white/20 rounded-xl">
+          <button
+            onClick={() => setPaymentMethod('card')}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+              paymentMethod === 'card'
+                ? 'bg-white/10 border border-white/20'
+                : 'bg-zinc-800 hover:bg-zinc-700 border border-transparent'
+            }`}
+          >
             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-white" />
             </div>
@@ -227,22 +321,40 @@ export default function BuyCoinsPage() {
               <p className="text-white font-medium">Card / Bank</p>
               <p className="text-xs text-zinc-400">Visa, Mastercard, Apple Pay</p>
             </div>
-            <Check className="w-5 h-5 text-primary" />
+            {paymentMethod === 'card' && <Check className="w-5 h-5 text-primary" />}
+          </button>
+
+          <button
+            onClick={() => setPaymentMethod('onramp')}
+            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+              paymentMethod === 'onramp'
+                ? 'bg-white/10 border border-white/20'
+                : 'bg-zinc-800 hover:bg-zinc-700 border border-transparent'
+            }`}
+          >
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-yellow-400" />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-white font-medium">Fiat Onramp</p>
+              <p className="text-xs text-zinc-400">Buy crypto directly with fiat</p>
+            </div>
+            {paymentMethod === 'onramp' && <Check className="w-5 h-5 text-primary" />}
           </button>
         </div>
 
         {/* Buy Button */}
         <Button
           onClick={handlePurchase}
-          disabled={effectiveAmount < 5 || createSessionMutation.isPending}
+          disabled={effectiveAmount < 5 || isPending}
           className="w-full py-6 text-lg font-semibold bg-white text-black hover:bg-zinc-200 rounded-xl disabled:opacity-50"
         >
-          {createSessionMutation.isPending ? (
+          {isPending ? (
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
           ) : (
             <Wallet className="w-5 h-5 mr-2" />
           )}
-          {createSessionMutation.isPending ? 'Processing...' : `Buy ${selectedToken?.symbol || 'DHB'}`}
+          {isPending ? 'Processing...' : `Buy ${selectedToken?.symbol || 'DHB'}`}
         </Button>
 
         {/* Disclaimer */}
