@@ -22,14 +22,14 @@
 - ⬜ `POST /api/live/{id}/end` → `endLiveStream` — End a live stream
 
 ## 2. Subscriptions & Plans (7 endpoints)
-- ⬜ `GET /api/plans/{id}` → `getPlan` — Get subscription plan
-- ⬜ `GET /api/plans` → `getPlans` / `getMyPlans` — List subscription plans
-- ⬜ `GET /api/subscription/me` → `getMySubscriptions` — User's active subscriptions
-- ⬜ `GET /api/subscription/{id}` → `getSubscription` — Single subscription detail
-- ⬜ `POST /api/plans` → `createPlan` — Create subscription plan
-- ⬜ `POST /api/plans/{id}` → `updatePlan` — Update subscription plan
-- ⬜ `POST /api/plan/buy` → `buyPlan` — Purchase a subscription
-- ⬜ `isSubscribedToCreator` — Helper: Check subscription status
+- ✅ `GET /api/plans/{id}` → `getPlan` — Get subscription plan
+- ✅ `GET /api/plans` → `getPlans` / `getMyPlans` — List subscription plans
+- ✅ `GET /api/subscription/me` → `getMySubscriptions` — User's active subscriptions
+- ✅ `GET /api/subscription/{id}` → `getSubscription` — Single subscription detail
+- ✅ `POST /api/plans` → `createPlan` — Create subscription plan
+- ✅ `POST /api/plans/{id}` → `updatePlan` — Update subscription plan
+- ✅ `POST /api/plan/buy` → `buyPlan` — Purchase a subscription
+- ✅ `isSubscribedToCreator` — Helper: Check subscription status
 
 ## 3. DM Admin & Group Features (10 endpoints)
 - ✅ `GET /api/dm/search` — DM conversation search

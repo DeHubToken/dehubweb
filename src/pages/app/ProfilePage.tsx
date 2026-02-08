@@ -14,7 +14,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { AppLayout } from '@/components/app/AppLayout';
 import { LoginModal } from '@/components/app/LoginModal';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
-import { CreatePlanModal, PlanCard } from '@/components/app/subscriptions';
+import { CreatePlanModal, EditPlanModal, PlanCard } from '@/components/app/subscriptions';
 import { FollowersListDrawer } from '@/components/app/profile';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -98,6 +98,7 @@ export default function ProfilePage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<import('@/lib/api/dehub').SubscriptionPlan | null>(null);
   
   // Refs for pull-to-refresh
   const profileContainerRef = useRef<HTMLDivElement>(null);
@@ -675,7 +676,7 @@ export default function ProfilePage() {
                     key={plan._id || plan.id} 
                     plan={plan} 
                     isOwner={true}
-                    onEdit={() => toast.info('Edit plan coming soon')}
+                    onEdit={() => setEditingPlan(plan)}
                   />
                 ))}
               </div>
@@ -1211,7 +1212,15 @@ export default function ProfilePage() {
         onOpenChange={setCreatePlanModalOpen}
       />
 
-      {/* Followers/Following List Drawer */}
+      {/* Edit Plan Modal */}
+      {editingPlan && (
+        <EditPlanModal
+          open={!!editingPlan}
+          onOpenChange={(open) => { if (!open) setEditingPlan(null); }}
+          plan={editingPlan}
+        />
+      )}
+
       <FollowersListDrawer
         open={followListDrawerOpen}
         onOpenChange={setFollowListDrawerOpen}
