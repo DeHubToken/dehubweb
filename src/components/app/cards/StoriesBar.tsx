@@ -209,7 +209,10 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       type: 'story' as const,
       story,
       name: story.username || `${story.wallet_address.slice(0, 6)}...`,
-      avatar: buildAvatarUrl(story.wallet_address, story.avatar) || '',
+      // Local asset paths (starting with /) must pass through as-is, not through buildAvatarUrl
+      avatar: (story.avatar?.startsWith('/') || story.avatar?.startsWith('http'))
+        ? story.avatar
+        : buildAvatarUrl(story.wallet_address, story.avatar) || '',
       thumbnail: story.thumbnail_url || '',
       watched: isWatched(story.id),
     })),
