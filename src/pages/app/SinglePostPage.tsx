@@ -42,10 +42,15 @@ import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.ty
  * Detect content type from API response
  */
 function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
-  // Check if this is a live stream post
-  if ((post as any).postType === 'live' || (post as any).isLive !== undefined) return 'live';
-  if (post.postType === 'video' || post.videoUrl) return 'video';
-  if (post.postType === 'image' || (post.imageUrl && !post.videoUrl)) return 'image';
+  const postType = (post as any).postType as string | undefined;
+  if (postType === 'live' || (post as any).isLive !== undefined) return 'live';
+  if (postType === 'video' || post.videoUrl) return 'video';
+  if (
+    postType === 'image' ||
+    postType === 'feed-images' ||
+    (post.imageUrls && post.imageUrls.length > 0 && !post.videoUrl) ||
+    (post.imageUrl && !post.videoUrl)
+  ) return 'image';
   return 'post';
 }
 
