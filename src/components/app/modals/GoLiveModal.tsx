@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { createLiveStream, startLiveStream, type StartLiveStreamResponse } from '@/lib/api/dehub';
+import { createLiveStream, startLiveStream, getStreamKey, getStreamIngestUrl, type StartLiveStreamResponse } from '@/lib/api/dehub';
 
 
 interface GoLiveModalProps {
@@ -64,17 +64,30 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       }
 
       // Step 2: Start the stream to get RTMP credentials
-      const startResponse = await startLiveStream({
-        streamId,
-      });
+      const startResponse = await startLiveStream({ streamId });
 
-      setStreamData(startResponse.result);
+      let resultData = startResponse.result;
+
+      // Step 3: If startLiveStream didn't return credentials, fetch them explicitly
+      if (!resultData?.streamKey || !resultData?.ingestUrl) {
+        const [keyRes, ingestRes] = await Promise.all([
+          getStreamKey(streamId).catch(() => null),
+          getStreamIngestUrl(streamId).catch(() => null),
+        ]);
+        resultData = {
+          streamId,
+          streamKey: resultData?.streamKey || keyRes?.result?.streamKey || '',
+          ingestUrl: resultData?.ingestUrl || keyRes?.result?.ingestUrl || ingestRes?.result?.ingestUrl || '',
+          playbackUrl: resultData?.playbackUrl || '',
+        };
+      }
+
+      setStreamData(resultData);
       setStep('ready');
       toast.success('Stream created! Copy your stream key to start broadcasting.');
     } catch (error) {
       console.error('Failed to start stream:', error);
       const message = error instanceof Error ? error.message : 'Failed to create stream';
-      // Handle specific error cases
       if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
         toast.error('Session expired. Please log in again.');
       } else if (message.includes('400')) {

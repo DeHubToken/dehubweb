@@ -449,6 +449,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     isLive: stream.status === 'live',
     creatorId: stream.address,
     creatorUsername: stream.streamer?.username,
+    likeCount: stream.likeCount || 0,
   };
 }
 
