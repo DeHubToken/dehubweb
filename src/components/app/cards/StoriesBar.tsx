@@ -290,8 +290,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                 className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer"
                 onClick={() => item.story && handleViewStory(item.story)}
               >
-                {item.type === 'story' ? (
-                  <div className="rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px]">
+              {item.type === 'story' ? (
+                  <div className="rounded-xl story-border-shimmer p-[2px]">
                     <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] overflow-hidden bg-zinc-800">
                       {item.thumbnail ? (
                         <img 
