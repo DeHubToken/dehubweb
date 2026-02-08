@@ -543,7 +543,6 @@ body.immersive-video-mode main {
 .story-shimmer-border {
   position: relative;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
 }
 
 .story-shimmer-border::before {
@@ -562,9 +561,15 @@ body.immersive-video-mode main {
     transparent 318deg,
     transparent 360deg
   );
-  animation: story-shimmer-rotate 4s linear infinite;
+  animation: story-shimmer-rotate 3s linear infinite;
   will-change: transform;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.story-shimmer-border:hover::before {
+  opacity: 1;
 }
 
 .story-shimmer-border > *:first-child {
