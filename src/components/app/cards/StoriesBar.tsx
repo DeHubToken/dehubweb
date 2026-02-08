@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -51,6 +51,15 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const [viewerStartIndex, setViewerStartIndex] = useState(0);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isShortsViewerOpen, setIsShortsViewerOpen] = useState(false);
+  const [viewedStories, setViewedStories] = useState<Set<string>>(() => {
+    try {
+      const stored = localStorage.getItem('dehub-viewed-stories');
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+  const [shimmerTick, setShimmerTick] = useState(0);
   
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
@@ -59,6 +68,26 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
+
+  // Trigger shimmer every 5 seconds for unwatched stories
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShimmerTick(t => t + 1);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Mark a story as viewed and persist to localStorage
+  const markAsViewed = useCallback((storyId: string) => {
+    setViewedStories(prev => {
+      const next = new Set(prev);
+      next.add(storyId);
+      try {
+        localStorage.setItem('dehub-viewed-stories', JSON.stringify([...next]));
+      } catch { /* quota exceeded */ }
+      return next;
+    });
+  }, []);
 
   const handleGoLiveVideo = () => {
     setShowLiveOptions(false);
@@ -109,6 +138,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     const index = stories.findIndex((s) => s.id === story.id);
     setViewerStartIndex(index >= 0 ? index : 0);
     setIsStoryViewerOpen(true);
+    markAsViewed(story.id);
   };
 
   const menuContent = (
@@ -284,14 +314,30 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
             </Drawer>
 
             {/* Stories - Real and Placeholder */}
-            {allStoryItems.map((item, index) => (
+            {allStoryItems.map((item, index) => {
+              const storyId = item.story?.id || '';
+              const isViewed = viewedStories.has(storyId);
+              const isUnwatched = item.type === 'story' && !isViewed;
+
+              return (
               <div
-                key={item.type === 'story' ? item.story?.id : `placeholder-${index}`}
-                className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer"
+                key={item.type === 'story' ? storyId : `placeholder-${index}`}
+                className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer group"
                 onClick={() => item.story && handleViewStory(item.story)}
               >
                 {item.type === 'story' ? (
-                  <div className="rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px]">
+                  <div
+                    key={isUnwatched ? `shimmer-${shimmerTick}` : 'static'}
+                    className={`rounded-xl p-[2px] transition-all duration-300 ${
+                      isUnwatched
+                        ? 'animate-story-shimmer group-hover:animate-story-shimmer'
+                        : 'bg-gradient-to-br from-white/15 via-white/8 to-white/3'
+                    }`}
+                    style={isUnwatched ? {
+                      background: 'linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.5) 25%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.5) 75%, rgba(255,255,255,0.1) 100%)',
+                      backgroundSize: '200% 100%',
+                    } : undefined}
+                  >
                     <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] overflow-hidden bg-zinc-800">
                       {item.thumbnail ? (
                         <img 
@@ -328,7 +374,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                   {item.name}
                 </span>
               </div>
-            ))}
+              );
+            })}
           </SwipeableCarousel>
         </div>
       </div>
