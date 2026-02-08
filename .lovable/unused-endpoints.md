@@ -50,8 +50,8 @@
 - ⬜ `GET /api/dm/dm-videos` → `getDMVideos` — Videos shared in DMs
 
 ## 5. LiveChat Moderation (6 endpoints)
-- ⬜ `GET /api/livechat/rooms/{id}` → `getLiveChatRoom` — Single room details
-- ⬜ `GET /api/livechat/user/{addr}` → `getLiveChatUserProfile` — Chat user profile
+- ✅ `GET /api/livechat/rooms/{id}` → `getLiveChatRoom` — Single room details
+- ✅ `GET /api/livechat/user/{addr}` → `getLiveChatUserProfile` — Chat user profile
 - ✅ `POST /api/livechat/rooms/topic` → `createTopicRoom` — Create topic room
 - ✅ `POST .../messages/{id}/pin` → `pinLiveChatMessage` — Pin a message
 - ✅ `DELETE .../messages/{id}/pin` → `unpinLiveChatMessage` — Unpin a message
