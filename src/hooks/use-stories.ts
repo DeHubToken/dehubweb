@@ -239,8 +239,32 @@ const TEMPLATE_STORIES: Story[] = [
 ];
 
 const WATCHED_STORIES_KEY = 'dehub_watched_stories';
+const STORIES_CACHE_KEY = 'dehub_stories_cache';
 
 const isTemplateAddress = (address: string) => address.startsWith('0xTEMPLATE');
+
+/** Read stories from localStorage cache */
+function getCachedStories(): Story[] | undefined {
+  try {
+    const raw = localStorage.getItem(STORIES_CACHE_KEY);
+    if (!raw) return undefined;
+    const { data, timestamp } = JSON.parse(raw);
+    // Expire cache after 2 hours (safety net)
+    if (Date.now() - timestamp > 2 * 60 * 60 * 1000) return undefined;
+    // Filter out already-expired stories
+    const now = new Date().toISOString();
+    return (data as Story[]).filter(s => s.expires_at > now);
+  } catch {
+    return undefined;
+  }
+}
+
+/** Write stories to localStorage cache */
+function setCachedStories(stories: Story[]) {
+  try {
+    localStorage.setItem(STORIES_CACHE_KEY, JSON.stringify({ data: stories, timestamp: Date.now() }));
+  } catch { /* quota exceeded */ }
+}
 
 /**
  * Hook to track which stories a user has already viewed.
@@ -276,7 +300,7 @@ export function useWatchedStories() {
 export function useStories() {
   const queryClient = useQueryClient();
 
-  // Fetch active (non-expired) stories - FAST: just DB query, no avatar fetching
+  // Fetch active (non-expired) stories - uses localStorage cache for instant load
   const { data: stories = [], isLoading, refetch } = useQuery({
     queryKey: ['stories'],
     queryFn: async () => {
@@ -288,9 +312,12 @@ export function useStories() {
 
       if (error) throw error;
       
-      return data as Story[];
+      const result = data as Story[];
+      setCachedStories(result);
+      return result;
     },
-    staleTime: 1000 * 60, // 1 minute
+    staleTime: 1000 * 60 * 60, // 1 hour
+    placeholderData: getCachedStories,
   });
 
   // Use template stories as fallback when no real stories exist
