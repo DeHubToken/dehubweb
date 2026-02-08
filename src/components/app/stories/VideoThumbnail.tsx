@@ -3,9 +3,13 @@
  * =========================
  * Extracts and displays the first frame of a video as a thumbnail image.
  * Uses a hidden video element + canvas to capture the frame.
+ * Caches extracted thumbnails in a module-level Map so they persist across remounts.
  */
 
 import { useState, useEffect, memo } from 'react';
+
+// ─── Persistent thumbnail cache (survives component remounts / tab switches) ───
+const thumbnailCache = new Map<string, string>();
 
 interface VideoThumbnailProps {
   videoUrl: string;
@@ -23,13 +27,25 @@ export const VideoThumbnail = memo(function VideoThumbnail({
   fallback,
   onReady,
 }: VideoThumbnailProps) {
-  const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(null);
+  // Check cache synchronously on mount — instant display if available
+  const cached = videoUrl ? thumbnailCache.get(videoUrl) : null;
+  const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(cached);
   const [failed, setFailed] = useState(false);
 
+  // If we got a cache hit, signal ready immediately
   useEffect(() => {
-    if (!videoUrl) {
-      setFailed(true);
+    if (cached) {
       onReady?.();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    // Skip extraction if already cached
+    if (!videoUrl || thumbnailCache.has(videoUrl)) {
+      if (!videoUrl) {
+        setFailed(true);
+        onReady?.();
+      }
       return;
     }
 
@@ -68,6 +84,8 @@ export const VideoThumbnail = memo(function VideoThumbnail({
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          // Store in persistent cache
+          thumbnailCache.set(videoUrl, dataUrl);
           setThumbnailSrc(dataUrl);
           onReady?.();
         } else {
@@ -94,7 +112,7 @@ export const VideoThumbnail = memo(function VideoThumbnail({
     return () => {
       cleanup();
     };
-  }, [videoUrl]);
+  }, [videoUrl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (failed || !thumbnailSrc) {
     return <>{fallback}</> || null;
