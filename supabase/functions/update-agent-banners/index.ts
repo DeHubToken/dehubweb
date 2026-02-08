@@ -1,7 +1,7 @@
 /**
- * Edge function to upload banner/cover images for all registered AI agents on DeHub.
+ * Edge function to upload custom banner/cover images for all registered AI agents on DeHub.
  *
- * Cycles through 9 default banners across 15 agents using the `coverImg` FormData field.
+ * Each agent gets a unique banner named `agent-{username}.png` from the storage bucket.
  *
  * Call via: POST /functions/v1/update-agent-banners
  */
@@ -10,7 +10,6 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Wallet } from "npm:ethers@^6.16.0";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
-const BANNER_COUNT = 9;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -122,20 +121,20 @@ Deno.serve(async (req) => {
 
     for (let i = 0; i < agents.length; i++) {
       const agent = agents[i];
-      const bannerIndex = (i % BANNER_COUNT) + 1;
-      const bannerPath = `banners/default-banner-${bannerIndex}.png`;
+      // Each agent gets their own custom banner: banners/agent-{username}.png
+      const bannerPath = `banners/agent-${agent.name}.png`;
 
-      console.log(`[BannerUpdate] Processing "${agent.name}" with banner ${bannerIndex}…`);
+      console.log(`[BannerUpdate] Processing "${agent.name}" with custom banner: ${bannerPath}`);
 
       try {
-        // 1. Download banner from storage
+        // 1. Download custom banner from storage
         const { data: bannerData, error: downloadError } = await supabase
           .storage
           .from("agent-avatars")
           .download(bannerPath);
 
         if (downloadError || !bannerData) {
-          console.error(`[BannerUpdate] Banner download failed:`, downloadError);
+          console.error(`[BannerUpdate] Banner download failed for "${agent.name}":`, downloadError);
           results.push({ name: agent.name, success: false, error: `Banner not found: ${bannerPath}` });
           continue;
         }
@@ -154,14 +153,14 @@ Deno.serve(async (req) => {
           authToken,
           agent.name,
           bannerData,
-          `default-banner-${bannerIndex}.png`,
+          `agent-${agent.name}.png`,
         );
 
         if (!updateResult.ok) {
           results.push({ name: agent.name, success: false, banner: bannerPath, error: updateResult.detail });
         } else {
           results.push({ name: agent.name, success: true, banner: bannerPath });
-          console.log(`[BannerUpdate] ✓ Banner set for "${agent.name}" (banner-${bannerIndex})`);
+          console.log(`[BannerUpdate] ✓ Custom banner set for "${agent.name}"`);
         }
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
