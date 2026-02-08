@@ -143,7 +143,7 @@ function ImageCarousel({
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
               <div 
-                className="aspect-square bg-zinc-800 cursor-pointer"
+                className="bg-zinc-800 cursor-pointer flex items-center justify-center max-h-[600px] overflow-hidden"
                 onClick={(e) => {
                   e.stopPropagation();
                   onImageClick(idx);
@@ -152,7 +152,7 @@ function ImageCarousel({
                 <img 
                   src={img} 
                   alt="" 
-                  className="w-full h-full object-cover"
+                  className="w-full max-h-[600px] object-contain"
                   loading="lazy"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/placeholder.svg';
