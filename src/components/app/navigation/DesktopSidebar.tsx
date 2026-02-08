@@ -88,7 +88,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <img src={dehubLogo} alt="dehub" className="h-[50.8px] w-auto hidden xl:block" />
             <img src={dehubLogoCompact} alt="dehub" className="h-[28px] w-auto xl:hidden" />
           </button>
-          {stickToBanner && (
+          {isAuthenticated && stickToBanner && (
             <div className="mt-[10px] hidden xl:block">
               <CoinBalanceMenu 
                 balance={coinBalance} 
