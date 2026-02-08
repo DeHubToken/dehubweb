@@ -80,14 +80,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   return (
     <>
-      <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible">
+      <aside className="hidden lg:flex sticky top-0 h-screen w-[60px] xl:w-[231px] p-2 xl:p-[18px] pt-[2px] flex-col overflow-y-auto scrollbar-invisible items-center xl:items-stretch transition-all duration-200">
         {/* Logo & Coin Balance (when stickToBanner is enabled) */}
         <div className="mb-6 flex items-center justify-between">
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
-            <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto" />
+            <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto hidden xl:block" />
+            <img src={dehubLogo} alt="dehub" className="h-[28px] w-auto xl:hidden" />
           </button>
           {stickToBanner && (
-            <div className="mt-[10px]">
+            <div className="mt-[10px] hidden xl:block">
               <CoinBalanceMenu 
                 balance={coinBalance} 
                 variant="desktop" 
@@ -98,7 +99,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - reduced padding */}
-        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-2.5 space-y-[2px]">
+        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1.5 xl:p-2.5 space-y-[2px]">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
@@ -115,6 +116,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   isHome={false}
                   currentPath={location.pathname}
                   variant="desktop"
+                  collapsed={true}
                   onClick={isProfileItem ? handleProfileClick : undefined}
                   // Show user avatar for Profile item when authenticated
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
@@ -125,7 +127,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   <NavLink
                     to="/app/assistant"
                     className={cn(
-                      'flex items-center gap-3 w-full px-2.5 py-2.5 rounded-xl text-left transition-colors text-[15px]',
+                      'flex items-center w-full rounded-xl text-left transition-colors text-[15px]',
+                      'gap-0 xl:gap-3 justify-center xl:justify-start px-0 xl:px-2.5 py-2.5',
                       isAIActive
                         ? 'bg-zinc-800 font-semibold text-white'
                         : 'text-white hover:bg-zinc-800/50'
@@ -137,7 +140,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     )}>
                       <Sparkles className="w-5 h-5" />
                     </div>
-                    <span className="truncate">Assistant</span>
+                    <span className="truncate hidden xl:inline">Assistant</span>
                   </NavLink>
                 )}
               </div>
@@ -146,7 +149,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Post Button Bento - reduced padding and button size */}
-        <div className="mt-3 bg-zinc-900 rounded-2xl p-2.5">
+        <div className="mt-3 bg-zinc-900 rounded-2xl p-1.5 xl:p-2.5">
           <Button 
             onClick={handlePostClick}
             disabled={isConnecting}
@@ -155,22 +158,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             {isAuthenticated ? (
               <>
                 <PenSquare className="w-[18px] h-[18px]" />
-                Create
+                <span className="hidden xl:inline">Create</span>
               </>
             ) : isConnecting ? (
               <>
                 <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Connecting...
+                <span className="hidden xl:inline">Connecting...</span>
               </>
             ) : needsSignature ? (
               <>
                 <LogIn className="w-[18px] h-[18px]" />
-                Sign message
+                <span className="hidden xl:inline">Sign message</span>
               </>
             ) : (
               <>
                 <LogIn className="w-[18px] h-[18px]" />
-                Log in
+                <span className="hidden xl:inline">Log in</span>
               </>
             )}
           </Button>

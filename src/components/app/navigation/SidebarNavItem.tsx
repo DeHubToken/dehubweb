@@ -11,6 +11,7 @@ interface SidebarNavItemProps {
   onNavigate?: () => void;
   onClick?: (e: React.MouseEvent) => void;
   variant?: 'mobile' | 'desktop';
+  collapsed?: boolean;
   avatarUrl?: string | null;
   avatarFallback?: string;
   notificationCount?: number;
@@ -24,6 +25,7 @@ export function SidebarNavItem({
   onNavigate,
   onClick,
   variant = 'desktop',
+  collapsed = false,
   avatarUrl,
   avatarFallback,
   notificationCount,
@@ -50,6 +52,7 @@ export function SidebarNavItem({
 
   // Check if we should render avatar instead of icon
   const showAvatar = avatarUrl !== undefined;
+  const collapsedClasses = collapsed ? 'justify-center xl:justify-start' : '';
 
   if (item.external) {
     return (
@@ -61,8 +64,9 @@ export function SidebarNavItem({
         className={cn(
           'flex items-center w-full rounded-xl transition-colors text-white',
           isDesktop 
-            ? 'gap-3 px-2.5 py-2.5 text-[15px]' 
+            ? 'gap-0 xl:gap-3 px-0 xl:px-2.5 py-2.5 text-[15px]' 
             : 'gap-3.5 px-3 py-3 text-[15px]',
+          collapsedClasses,
           variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
             : 'hover:bg-zinc-800/50'
@@ -74,7 +78,7 @@ export function SidebarNavItem({
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
-        <span className="truncate">{item.label}</span>
+        <span className={cn("truncate", collapsed && "hidden xl:inline")}>{item.label}</span>
       </a>
     );
   }
@@ -86,8 +90,9 @@ export function SidebarNavItem({
       className={cn(
         'flex items-center w-full rounded-xl transition-colors text-white',
         isDesktop 
-          ? 'gap-3 px-2.5 py-2.5 text-[15px]' 
+          ? 'gap-0 xl:gap-3 px-0 xl:px-2.5 py-2.5 text-[15px]' 
           : 'gap-3.5 px-3 py-3 text-[15px]',
+        collapsedClasses,
         isActive
           ? variant === 'mobile'
             ? 'bg-zinc-700/50 font-semibold'
@@ -123,7 +128,7 @@ export function SidebarNavItem({
           )}
         </div>
       )}
-      <span className="truncate">{item.label}</span>
+      <span className={cn("truncate", collapsed && "hidden xl:inline")}>{item.label}</span>
     </NavLink>
   );
 }
