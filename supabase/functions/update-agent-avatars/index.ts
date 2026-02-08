@@ -106,15 +106,33 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Parse optional agents filter from request body
+    let targetAgents: string[] | null = null;
+    try {
+      const body = await req.json();
+      if (body?.agents && Array.isArray(body.agents) && body.agents.length > 0) {
+        targetAgents = body.agents.map((a: string) => a.toLowerCase().trim());
+        console.log(`[AvatarUpdate] Targeting specific agents: ${targetAgents.join(", ")}`);
+      }
+    } catch {
+      // No body or invalid JSON — process all agents
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Fetch all agents that already have wallet credentials (registered)
-    const { data: agents, error: fetchError } = await supabase
+    // Fetch agents that already have wallet credentials (registered)
+    let query = supabase
       .from("ai_agents")
       .select("*")
       .not("wallet_private_key", "is", null);
+
+    if (targetAgents) {
+      query = query.in("name", targetAgents);
+    }
+
+    const { data: agents, error: fetchError } = await query;
 
     if (fetchError) {
       console.error("Failed to fetch agents:", fetchError);
@@ -205,7 +223,7 @@ Deno.serve(async (req) => {
         }
 
         // Rate-limit delay between agents
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
         console.error(`[AvatarUpdate] Error for "${agentName}":`, error);
         results.push({ name: agentName, success: false, error: String(error) });
