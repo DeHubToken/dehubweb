@@ -52,18 +52,18 @@ const FREE_TV_PLAYLIST_URL = 'https://raw.githubusercontent.com/Free-TV/IPTV/mas
 
 export const TV_CATEGORIES: TVCategory[] = [
   { id: 'all', label: 'All' },
-  { id: 'us', label: '🇺🇸 USA' },
-  { id: 'uk', label: '🇬🇧 UK' },
-  { id: 'de', label: '🇩🇪 Germany' },
-  { id: 'fr', label: '🇫🇷 France' },
-  { id: 'es', label: '🇪🇸 Spain' },
-  { id: 'it', label: '🇮🇹 Italy' },
-  { id: 'in', label: '🇮🇳 India' },
-  { id: 'br', label: '🇧🇷 Brazil' },
-  { id: 'mx', label: '🇲🇽 Mexico' },
-  { id: 'ca', label: '🇨🇦 Canada' },
-  { id: 'au', label: '🇦🇺 Australia' },
-  { id: 'other', label: '🌍 Other' },
+  { id: 'us', label: 'USA' },
+  { id: 'uk', label: 'UK' },
+  { id: 'de', label: 'Germany' },
+  { id: 'fr', label: 'France' },
+  { id: 'es', label: 'Spain' },
+  { id: 'it', label: 'Italy' },
+  { id: 'in', label: 'India' },
+  { id: 'br', label: 'Brazil' },
+  { id: 'mx', label: 'Mexico' },
+  { id: 'ca', label: 'Canada' },
+  { id: 'au', label: 'Australia' },
+  { id: 'other', label: 'Other' },
 ];
 
 const COUNTRY_TO_CATEGORY: Record<string, TVCategoryId> = {
