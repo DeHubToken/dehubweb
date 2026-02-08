@@ -90,7 +90,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
               </button>
             ) : (
               <button
-                className="p-2 rounded-full transition-colors"
+                className="p-2 rounded-full transition-colors mr-[-20px]"
                 aria-label="Toggle menu"
               >
                 <Menu className="w-[33px] h-[33px] text-zinc-400" />
