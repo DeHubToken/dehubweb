@@ -13,6 +13,23 @@ import { toast } from 'sonner';
 import { getAccountInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 
+// Template bot avatar imports
+import avatarVrgl from '@/assets/avatars/vrgl.png';
+import avatarNotmaya from '@/assets/avatars/notmaya.png';
+import avatar0xkai from '@/assets/avatars/0xkai.png';
+import avatarXluna from '@/assets/avatars/xluna.png';
+import avatarMarcoV from '@/assets/avatars/marco_v.png';
+import avatarNinarealll from '@/assets/avatars/ninarealll.png';
+import avatarJdot from '@/assets/avatars/jdot.png';
+import avatarZ4r4eth from '@/assets/avatars/z4r4eth.png';
+import avatarRiooo from '@/assets/avatars/riooo.png';
+import avatarEllaverse from '@/assets/avatars/ellaverse.png';
+import avatarSvmp4 from '@/assets/avatars/svmp4.png';
+import avatarMi444 from '@/assets/avatars/mi444.png';
+import avatarLeothedev from '@/assets/avatars/leothedev.png';
+import avatarIvyivyivy from '@/assets/avatars/ivyivyivy.png';
+import avatarOmr from '@/assets/avatars/omr_.png';
+
 export interface Story {
   id: string;
   wallet_address: string;
@@ -103,6 +120,27 @@ const TEMPLATE_VIDEO_URLS: Record<string, string> = {
 };
 
 /**
+ * Default avatar images for template bot accounts.
+ */
+const TEMPLATE_AVATARS: Record<string, string> = {
+  'vrgl': avatarVrgl,
+  'notmaya': avatarNotmaya,
+  '0xkai': avatar0xkai,
+  'xluna': avatarXluna,
+  'marco_v': avatarMarcoV,
+  'ninarealll': avatarNinarealll,
+  'jdot': avatarJdot,
+  'z4r4eth': avatarZ4r4eth,
+  'riooo': avatarRiooo,
+  'ellaverse': avatarEllaverse,
+  'svmp4': avatarSvmp4,
+  'mi444': avatarMi444,
+  'leothedev': avatarLeothedev,
+  'ivyivyivy': avatarIvyivyivy,
+  'omr_': avatarOmr,
+};
+
+/**
  * Build template stories dynamically from the ai_agents table.
  * Falls back to placeholder addresses only if the DB query fails.
  */
@@ -121,34 +159,58 @@ async function fetchTemplateStories(): Promise<Story[]> {
       }
     }
 
-    const now = new Date().toISOString();
-    const expiresAt = new Date(Date.now() + 86400000).toISOString();
+    const usernames = Object.keys(TEMPLATE_VIDEO_URLS);
+    const totalStories = usernames.length;
+    
+    // Spread stories across 22-24 hours ago (within a 2-hour window)
+    // Each story gets a fixed offset so they appear staggered
+    const now = Date.now();
+    const windowStartMs = 24 * 60 * 60 * 1000; // 24 hours ago
+    const windowEndMs = 22 * 60 * 60 * 1000;   // 22 hours ago
+    const windowSpanMs = windowStartMs - windowEndMs; // 2 hours span
 
-    return Object.entries(TEMPLATE_VIDEO_URLS).map(([username, videoUrl], index) => ({
-      id: `template-${index + 1}`,
-      wallet_address: walletMap.get(username) || `0xTEMPLATE${String(index + 1).padStart(36, '0')}`,
-      username,
-      avatar: null,
-      video_url: videoUrl,
-      thumbnail_url: null,
-      created_at: now,
-      expires_at: expiresAt,
-    }));
+    return usernames.map((username, index) => {
+      // Evenly distribute across the 2-hour window (24h ago -> 22h ago)
+      const offsetMs = windowStartMs - (windowSpanMs * index) / (totalStories - 1);
+      const createdAt = new Date(now - offsetMs);
+      const expiresAt = new Date(createdAt.getTime() + 86400000); // +24h from created
+
+      return {
+        id: `template-${index + 1}`,
+        wallet_address: walletMap.get(username) || `0xTEMPLATE${String(index + 1).padStart(36, '0')}`,
+        username,
+        avatar: TEMPLATE_AVATARS[username] || null,
+        video_url: TEMPLATE_VIDEO_URLS[username],
+        thumbnail_url: null,
+        created_at: createdAt.toISOString(),
+        expires_at: expiresAt.toISOString(),
+      };
+    });
   } catch {
     // Fallback: return with placeholder addresses if fetch fails
-    const now = new Date().toISOString();
-    const expiresAt = new Date(Date.now() + 86400000).toISOString();
+    const now = Date.now();
+    const windowStartMs = 24 * 60 * 60 * 1000;
+    const windowEndMs = 22 * 60 * 60 * 1000;
+    const windowSpanMs = windowStartMs - windowEndMs;
+    const usernames = Object.keys(TEMPLATE_VIDEO_URLS);
+    const totalStories = usernames.length;
 
-    return Object.entries(TEMPLATE_VIDEO_URLS).map(([username, videoUrl], index) => ({
-      id: `template-${index + 1}`,
-      wallet_address: `0xTEMPLATE${String(index + 1).padStart(36, '0')}`,
-      username,
-      avatar: null,
-      video_url: videoUrl,
-      thumbnail_url: null,
-      created_at: now,
-      expires_at: expiresAt,
-    }));
+    return usernames.map((username, index) => {
+      const offsetMs = windowStartMs - (windowSpanMs * index) / (totalStories - 1);
+      const createdAt = new Date(now - offsetMs);
+      const expiresAt = new Date(createdAt.getTime() + 86400000);
+
+      return {
+        id: `template-${index + 1}`,
+        wallet_address: `0xTEMPLATE${String(index + 1).padStart(36, '0')}`,
+        username,
+        avatar: TEMPLATE_AVATARS[username] || null,
+        video_url: TEMPLATE_VIDEO_URLS[username],
+        thumbnail_url: null,
+        created_at: createdAt.toISOString(),
+        expires_at: expiresAt.toISOString(),
+      };
+    });
   }
 }
 

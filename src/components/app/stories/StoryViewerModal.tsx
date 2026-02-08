@@ -599,7 +599,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                   onClick={handleNavigateToProfile}
                   className="flex items-center gap-2 lg:gap-3 min-w-0 flex-1 text-left"
                 >
-                  <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={resolvedAvatar || currentStory.id}>
+                  <Avatar className="w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0 rounded-xl" key={resolvedAvatar || currentStory.id}>
                     <AvatarImage src={resolvedAvatar} alt={currentStory.username || ''} className="rounded-xl" />
                     <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">
                       {(currentStory.username || currentStory.wallet_address)?.[0]?.toUpperCase()}
