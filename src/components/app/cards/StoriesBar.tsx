@@ -255,7 +255,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       />
       <div className="-mt-[7px]">
         <div className="relative">
-          {/* Right fade removed since no background container */}
+          {/* Right fade gradient to signal more stories */}
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
           
           <SwipeableCarousel className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
             {/* Create Story/Live Button */}
