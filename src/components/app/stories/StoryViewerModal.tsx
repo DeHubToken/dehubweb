@@ -90,10 +90,10 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
     }
   }, [isOpen, currentStory?.id, recordView, onStoryWatched]);
 
-  // Resolve avatar URL
+  // Resolve avatar URL — local asset paths (starting with /) must pass through as-is
   const resolvedAvatar = useMemo(() => {
-    if (!currentStory) return undefined;
-    if (currentStory.avatar?.startsWith('http')) {
+    if (!currentStory?.avatar) return undefined;
+    if (currentStory.avatar.startsWith('http') || currentStory.avatar.startsWith('/')) {
       return currentStory.avatar;
     }
     return buildAvatarUrl(currentStory.wallet_address, currentStory.avatar) || undefined;

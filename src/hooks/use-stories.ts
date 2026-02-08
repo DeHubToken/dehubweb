@@ -10,7 +10,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountByUsername } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 
 // Template bot avatar imports
@@ -85,13 +85,16 @@ async function extractFirstFrame(videoBlob: Blob): Promise<Blob | null> {
 }
 
 /**
- * Fetch fresh avatar for a user from DeHub API
+ * Fetch fresh avatar for a user from DeHub API by username.
+ * Uses username lookup so template agents resolve their own profile,
+ * not the owner's wallet.
  */
-async function fetchFreshAvatar(walletAddress: string): Promise<string | null> {
+async function fetchFreshAvatarByUsername(username: string): Promise<string | null> {
   try {
-    const user = await getAccountInfo(walletAddress);
+    const user = await getAccountByUsername(username);
     const rawAvatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
-    return buildAvatarUrl(walletAddress, rawAvatar);
+    const address = user.address || user.wallet_address || '';
+    return buildAvatarUrl(address, rawAvatar);
   } catch {
     return null;
   }
@@ -307,40 +310,37 @@ export function useStories() {
   const activeStories = stories.length > 0 ? stories : templateStories;
 
   // Lazy-load fresh avatars in the background (non-blocking)
-  // Now that agents have real wallets, we can fetch their avatars from DeHub
+  // Uses username-based lookup so template agents resolve their own profile avatar
   const { data: enrichedStories = activeStories } = useQuery({
     queryKey: ['stories-with-avatars', activeStories.map(s => s.id).join(',')],
     queryFn: async () => {
       if (activeStories.length === 0) return [];
       
-      // Get unique wallet addresses, excluding any remaining placeholder addresses
-      const uniqueAddresses = [...new Set(
-        activeStories
-          .filter(s => !isTemplateAddress(s.wallet_address))
-          .map(s => s.wallet_address)
-      )];
+      // Get unique usernames from stories that have one
+      const storiesWithUsernames = activeStories.filter(s => s.username);
       
-      // If all stories still use placeholder addresses, skip avatar fetching
-      if (uniqueAddresses.length === 0) return activeStories;
+      if (storiesWithUsernames.length === 0) return activeStories;
       
-      // Fetch fresh avatars for all unique real users in parallel
+      // Fetch fresh avatars by username in parallel
       const avatarMap = new Map<string, string | null>();
       await Promise.all(
-        uniqueAddresses.map(async (address: string) => {
-          const freshAvatar = await fetchFreshAvatar(address);
-          avatarMap.set(address.toLowerCase(), freshAvatar);
+        [...new Set(storiesWithUsernames.map(s => s.username!))].map(async (username) => {
+          const freshAvatar = await fetchFreshAvatarByUsername(username);
+          avatarMap.set(username.toLowerCase(), freshAvatar);
         })
       );
       
-      // Enrich stories with fresh avatars (placeholders keep null avatar)
-      return activeStories.map(story => ({
-        ...story,
-        avatar: isTemplateAddress(story.wallet_address)
-          ? story.avatar
-          : avatarMap.get(story.wallet_address.toLowerCase()) || story.avatar,
-      }));
+      // Enrich stories with fresh avatars; keep local TEMPLATE_AVATARS as fallback
+      return activeStories.map(story => {
+        if (!story.username) return story;
+        const fresh = avatarMap.get(story.username.toLowerCase());
+        return {
+          ...story,
+          avatar: fresh || story.avatar,
+        };
+      });
     },
-    enabled: activeStories.length > 0 && activeStories.some(s => !isTemplateAddress(s.wallet_address)),
+    enabled: activeStories.length > 0 && activeStories.some(s => !!s.username),
     staleTime: 1000 * 60 * 5, // 5 minutes - avatars don't change often
   });
 
