@@ -32,9 +32,9 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
 
   return (
     <>
-      <div className="bg-zinc-900 rounded-2xl p-4">
+      <div>
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="font-bold text-white flex items-center gap-2">
             <Play className="w-4 h-4 text-white" />
             Scroll

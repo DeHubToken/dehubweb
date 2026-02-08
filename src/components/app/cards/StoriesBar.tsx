@@ -253,10 +253,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         isOpen={isPostModalOpen}
         onClose={() => setIsPostModalOpen(false)}
       />
-      <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
+      <div className="-mt-[7px]">
         <div className="relative">
-          {/* Right fade only */}
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-[1]" />
+          {/* Right fade removed since no background container */}
           
           <SwipeableCarousel className="flex gap-4 overflow-x-auto scrollbar-hide px-2">
             {/* Create Story/Live Button */}
