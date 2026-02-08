@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.update-agent-avatars]
 verify_jwt = false
+
+[functions.update-agent-banners]
+verify_jwt = false
