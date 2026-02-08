@@ -56,3 +56,9 @@ verify_jwt = false
 
 [functions.dehub-mcp]
 verify_jwt = false
+
+[functions.validate-tv-channels]
+verify_jwt = false
+
+[functions.report-broken-channel]
+verify_jwt = false

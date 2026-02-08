@@ -12,7 +12,7 @@ import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw } from 'lucide-re
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
-import { getCountryFlag } from '@/lib/api/live-tv';
+import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 
 interface TVChannelCardProps {
@@ -96,6 +96,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           setHasError(true);
           setIsLoading(false);
           setIsPlaying(false);
+          // Auto-report if retries exhausted
+          if (retryCount >= MAX_RETRIES - 1) {
+            reportBrokenChannel(channel.id);
+          }
         }
       });
       
@@ -110,7 +114,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       setHasError(true);
       setIsLoading(false);
     }
-  }, [cardId, channel.streamUrl]);
+  }, [cardId, channel.streamUrl, channel.id, retryCount]);
   
   const handleClick = () => {
     if (hasError) {
@@ -173,6 +177,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       setHasError(true);
       setIsLoading(false);
       setIsPlaying(false);
+      // Auto-report on native playback error
+      if (retryCount >= MAX_RETRIES) {
+        reportBrokenChannel(channel.id);
+      }
     };
     
     video.addEventListener('playing', handlePlaying);

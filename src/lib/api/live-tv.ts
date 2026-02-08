@@ -1,11 +1,14 @@
 /**
  * Live TV API Client
  * ==================
- * Fetches and parses IPTV channels from Free-TV curated playlist.
- * All channels are legally free to stream and actively maintained.
+ * Fetches verified TV channels from the database.
+ * Falls back to raw playlist parsing if database is empty.
+ * Includes auto-reporting of broken channels.
  * 
  * @module lib/api/live-tv
  */
+
+import { supabase } from '@/integrations/supabase/client';
 
 // ============================================================================
 // TYPES
@@ -63,7 +66,6 @@ export const TV_CATEGORIES: TVCategory[] = [
   { id: 'other', label: '🌍 Other' },
 ];
 
-// Country name to category ID mapping
 const COUNTRY_TO_CATEGORY: Record<string, TVCategoryId> = {
   'united states': 'us',
   'usa': 'us',
@@ -91,15 +93,50 @@ const COUNTRY_TO_CATEGORY: Record<string, TVCategoryId> = {
 
 let channelsCache: TVChannel[] | null = null;
 let cacheTimestamp: number = 0;
-const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// Track reported channels to avoid duplicate reports per session
+const reportedChannels = new Set<string>();
 
 // ============================================================================
-// HELPERS
+// DATABASE-BACKED CHANNEL FETCHING
 // ============================================================================
 
 /**
- * Generate a simple hash ID from a URL
+ * Fetch verified channels from the database
  */
+async function fetchVerifiedChannels(): Promise<TVChannel[]> {
+  const { data, error } = await supabase
+    .from('tv_channels_verified')
+    .select('*')
+    .eq('is_active', true)
+    .order('name');
+
+  if (error) {
+    console.warn('[live-tv] Database fetch error, will use fallback:', error.message);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    console.log('[live-tv] No verified channels in database, using fallback');
+    return [];
+  }
+
+  return data.map((row) => ({
+    id: row.id,
+    name: row.name,
+    logo: row.logo,
+    category: row.category,
+    streamUrl: row.stream_url,
+    country: row.country,
+    languages: [],
+  }));
+}
+
+// ============================================================================
+// FALLBACK: RAW PLAYLIST PARSING
+// ============================================================================
+
 function generateIdFromUrl(url: string): string {
   let hash = 0;
   for (let i = 0; i < url.length; i++) {
@@ -110,42 +147,22 @@ function generateIdFromUrl(url: string): string {
   return `ch-${Math.abs(hash).toString(36)}`;
 }
 
-/**
- * Map group-title (country name) to category ID
- */
 function mapCountryToCategory(groupTitle: string): TVCategoryId {
   const normalized = groupTitle.toLowerCase().trim();
   return COUNTRY_TO_CATEGORY[normalized] || 'other';
 }
 
-/**
- * Check if URL is a valid, playable stream
- * Filters out problematic stream types
- */
 function isValidStream(url: string, name: string): boolean {
   const lowerUrl = url.toLowerCase();
-  
-  // Skip non-HLS formats (DASH not supported by HLS.js)
   if (lowerUrl.includes('.mpd')) return false;
-  
-  // Skip YouTube/Twitch/Dailymotion (require special handling)
   if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) return false;
   if (lowerUrl.includes('twitch.tv')) return false;
   if (lowerUrl.includes('dailymotion.com')) return false;
-  
-  // Skip HTTP streams (mixed content issues in HTTPS pages)
   if (url.startsWith('http://')) return false;
-  
-  // Skip geo-restricted channels (marked with Ⓖ in Free-TV)
   if (name.includes('Ⓖ')) return false;
-  
-  // Only allow HLS streams for reliable playback
   return lowerUrl.includes('.m3u8');
 }
 
-/**
- * Parse M3U8 playlist content into TVChannel array
- */
 function parseM3U8Playlist(content: string): TVChannel[] {
   const lines = content.split('\n');
   const channels: TVChannel[] = [];
@@ -155,13 +172,11 @@ function parseM3U8Playlist(content: string): TVChannel[] {
     const line = lines[i].trim();
     
     if (line.startsWith('#EXTINF:')) {
-      // Extract metadata from EXTINF line
       const nameMatch = line.match(/tvg-name="([^"]+)"/);
       const logoMatch = line.match(/tvg-logo="([^"]+)"/);
       const groupMatch = line.match(/group-title="([^"]+)"/);
       const titleMatch = line.match(/,(.+)$/);
       
-      // Next non-comment line is the stream URL
       let streamUrl = '';
       for (let j = i + 1; j < lines.length && j < i + 3; j++) {
         const nextLine = lines[j]?.trim();
@@ -173,13 +188,10 @@ function parseM3U8Playlist(content: string): TVChannel[] {
       
       const name = nameMatch?.[1] || titleMatch?.[1] || 'Unknown Channel';
       
-      // Validate stream URL
       if (!streamUrl || seenUrls.has(streamUrl)) continue;
       if (!isValidStream(streamUrl, name)) continue;
       
       seenUrls.add(streamUrl);
-      
-      // name already extracted above
       const groupTitle = groupMatch?.[1] || 'Other';
       
       channels.push({
@@ -187,7 +199,7 @@ function parseM3U8Playlist(content: string): TVChannel[] {
         name: name.trim(),
         logo: logoMatch?.[1] || null,
         category: mapCountryToCategory(groupTitle),
-        streamUrl: streamUrl,
+        streamUrl,
         country: groupTitle,
         languages: [],
       });
@@ -197,28 +209,38 @@ function parseM3U8Playlist(content: string): TVChannel[] {
   return channels;
 }
 
+async function fetchFallbackChannels(): Promise<TVChannel[]> {
+  const response = await fetch(`${FREE_TV_PLAYLIST_URL}?_=${Date.now()}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch TV channels');
+  }
+  const content = await response.text();
+  return parseM3U8Playlist(content);
+}
+
 // ============================================================================
 // API FUNCTIONS
 // ============================================================================
 
 /**
- * Fetch all channels from Free-TV playlist
+ * Fetch all channels — tries database first, falls back to raw playlist
  */
 async function fetchAllChannels(): Promise<TVChannel[]> {
   const now = Date.now();
-  // Check cache (but force refresh if cache is from old session)
   if (channelsCache && channelsCache.length > 0 && now - cacheTimestamp < CACHE_TTL) {
     return channelsCache;
   }
   
-  // Add cache-bust to force fresh playlist data
-  const response = await fetch(`${FREE_TV_PLAYLIST_URL}?_=${now}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch TV channels');
+  // Try database first
+  let channels = await fetchVerifiedChannels();
+  
+  // Fallback to raw playlist if database is empty
+  if (channels.length === 0) {
+    console.log('[live-tv] Falling back to raw playlist parsing');
+    channels = await fetchFallbackChannels();
   }
   
-  const content = await response.text();
-  channelsCache = parseM3U8Playlist(content);
+  channelsCache = channels;
   cacheTimestamp = now;
   
   return channelsCache;
@@ -272,7 +294,6 @@ export async function searchTVChannels(
     );
   });
   
-  // Sort by relevance
   results.sort((a, b) => {
     const aExact = a.name.toLowerCase() === queryLower;
     const bExact = b.name.toLowerCase() === queryLower;
@@ -299,6 +320,24 @@ export async function searchTVChannels(
 export async function getTVChannelCount(): Promise<number> {
   const allChannels = await fetchAllChannels();
   return allChannels.length;
+}
+
+/**
+ * Report a broken channel (called automatically on playback failure)
+ */
+export async function reportBrokenChannel(channelId: string): Promise<void> {
+  // Avoid duplicate reports in the same session
+  if (reportedChannels.has(channelId)) return;
+  reportedChannels.add(channelId);
+  
+  try {
+    await supabase.functions.invoke('report-broken-channel', {
+      body: { channel_id: channelId },
+    });
+    console.log(`[live-tv] Reported broken channel: ${channelId}`);
+  } catch (error) {
+    console.warn('[live-tv] Failed to report broken channel:', error);
+  }
 }
 
 /**
