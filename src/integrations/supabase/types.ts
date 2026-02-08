@@ -634,6 +634,42 @@ export type Database = {
           },
         ]
       }
+      tv_channels_verified: {
+        Row: {
+          broken_reports: number
+          category: string
+          country: string
+          id: string
+          is_active: boolean
+          last_verified_at: string
+          logo: string | null
+          name: string
+          stream_url: string
+        }
+        Insert: {
+          broken_reports?: number
+          category?: string
+          country?: string
+          id: string
+          is_active?: boolean
+          last_verified_at?: string
+          logo?: string | null
+          name: string
+          stream_url: string
+        }
+        Update: {
+          broken_reports?: number
+          category?: string
+          country?: string
+          id?: string
+          is_active?: boolean
+          last_verified_at?: string
+          logo?: string | null
+          name?: string
+          stream_url?: string
+        }
+        Relationships: []
+      }
       user_privacy_settings: {
         Row: {
           created_at: string
