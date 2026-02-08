@@ -521,61 +521,6 @@ body > div[style*="position: fixed"][style*="height: 0"] {
   display: none !important;
 }
 
-/* Story border shimmer - plays once on mount, pure CSS */
-@keyframes story-border-sweep {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes story-shimmer-fade {
-  0% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.story-border-shimmer {
-  position: relative;
-  background: rgba(255,255,255,0.08);
-}
-
-.story-border-shimmer::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2px;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    rgba(255,255,255,0.6) 60deg,
-    rgba(255,255,255,0.9) 90deg,
-    rgba(255,255,255,0.6) 120deg,
-    transparent 180deg,
-    transparent 360deg
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: story-border-sweep 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards,
-             story-shimmer-fade 2s ease-out forwards;
-  pointer-events: none;
-}
-
-.story-border-shimmer:hover {
-  background: rgba(255,255,255,0.15);
-  transition: background 0.2s ease;
-}
-
-.story-border-shimmer:hover::before {
-  opacity: 0;
-}
-
 /* Immersive video mode - hide mobile header and remove top padding */
 body.immersive-video-mode header.lg\\:hidden {
   display: none !important;
