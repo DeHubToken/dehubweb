@@ -26,6 +26,7 @@ import { PostModal } from '@/features/post';
 import { useStories, useUploadStory, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { VideoThumbnail } from '@/components/app/stories/VideoThumbnail';
 
 interface StoryUser {
   name: string;
@@ -291,23 +292,29 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               >
                 {item.type === 'story' ? (
                   <div className="rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px]">
-                    {/* Show thumbnail if available, otherwise avatar */}
-                    {item.thumbnail ? (
-                      <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] overflow-hidden">
+                    <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] overflow-hidden bg-zinc-800">
+                      {item.thumbnail ? (
                         <img 
                           src={item.thumbnail} 
                           alt={item.name}
                           className="w-full h-full object-cover"
                         />
-                      </div>
-                    ) : (
-                      <Avatar className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px]">
-                        <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
-                        <AvatarFallback className="bg-zinc-700 rounded-[10px]">
-                          {item.name[0]?.toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
+                      ) : (
+                        <VideoThumbnail
+                          videoUrl={item.story?.video_url || ''}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          fallback={
+                            <Avatar className="w-full h-full rounded-[10px]">
+                              <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
+                              <AvatarFallback className="bg-zinc-700 rounded-[10px]">
+                                {item.name[0]?.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <Avatar className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px]">
