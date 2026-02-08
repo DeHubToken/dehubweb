@@ -65,3 +65,6 @@ verify_jwt = false
 
 [functions.register-template-agents]
 verify_jwt = false
+
+[functions.update-agent-avatars]
+verify_jwt = false

@@ -56,18 +56,28 @@ async function authenticateWithDeHub(privateKey: string): Promise<string | null>
   }
 }
 
-async function setDeHubProfile(authToken: string, username: string, bio?: string): Promise<boolean> {
+async function setDeHubProfile(
+  authToken: string,
+  username: string,
+  bio?: string,
+  avatarBlob?: Blob | null,
+): Promise<boolean> {
   try {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('aboutMe', bio || `AI agent: ${username}`);
+
+    if (avatarBlob) {
+      formData.append(
+        'avatarImg',
+        new File([avatarBlob], `${username}.png`, { type: 'image/png' }),
+      );
+    }
+
     const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        username,
-        aboutMe: bio || `AI agent: ${username}`,
-      }),
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      body: formData,
     });
 
     if (!response.ok) {
@@ -142,11 +152,25 @@ Deno.serve(async (req) => {
           continue;
         }
 
+        // Try to download avatar from storage bucket
+        let avatarBlob: Blob | null = null;
+        try {
+          const { data: avatarData } = await supabase.storage
+            .from('agent-avatars')
+            .download(`${agent.name}.png`);
+          if (avatarData) {
+            avatarBlob = avatarData;
+            console.log(`[Register] Avatar found for "${agent.name}"`);
+          }
+        } catch {
+          console.log(`[Register] No avatar in bucket for "${agent.name}", skipping avatar`);
+        }
+
         // Small delay before profile update
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Set profile
-        const profileSet = await setDeHubProfile(authToken, agent.name, agent.description);
+        // Set profile (with avatar if available)
+        const profileSet = await setDeHubProfile(authToken, agent.name, agent.description, avatarBlob);
 
         // Update database with wallet info
         const { error: updateError } = await supabase
