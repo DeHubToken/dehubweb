@@ -12,7 +12,7 @@
 import { useState, memo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -23,6 +23,8 @@ import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
+import { useAuth } from '@/contexts/AuthContext';
+import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
@@ -56,9 +58,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+  
+  const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -133,6 +139,25 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <Ban className="w-5 h-5" /> Block Creator
               </button>
+              {isOwnPost && (
+                <>
+                  <div className="border-t border-white/10 my-1" />
+                  <button
+                    onClick={async () => {
+                      const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
+                      try {
+                        await updateTokenVisibility(post.id, next);
+                        setVisibility(next);
+                        toast.success(`Post set to ${next}`);
+                      } catch { toast.error('Failed to update visibility'); }
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
+                    {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                  </button>
+                </>
+              )}
             </div>
           </DrawerContent>
         </Drawer>

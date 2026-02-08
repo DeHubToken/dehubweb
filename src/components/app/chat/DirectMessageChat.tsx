@@ -5,14 +5,14 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2 } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMediaUrl, type DeHubConversation, type DeHubDMMessage } from '@/lib/api/dehub';
+import { getMediaUrl, blockConversation, unblockConversation, uploadChatImage, type DeHubConversation, type DeHubDMMessage } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
@@ -130,6 +130,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(conversation.isBlocked ?? false);
+  const [isBlockProcessing, setIsBlockProcessing] = useState(false);
   const isInitialMount = useRef(true);
 
   // Get the other participant
@@ -190,12 +192,28 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSendMessage = (content: string, type: 'text' | 'image' | 'gif', imageUrl?: string) => {
+  const handleSendMessage = async (content: string, type: 'text' | 'image' | 'gif' | 'audio', imageUrl?: string) => {
+    let finalMediaUrl = imageUrl;
+
+    // If sending an image with a base64 data URL, upload to CDN first
+    if (type === 'image' && imageUrl && imageUrl.startsWith('data:')) {
+      try {
+        // Convert base64 to File
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const file = new File([blob], 'chat-image.jpg', { type: blob.type || 'image/jpeg' });
+        const { url } = await uploadChatImage(file);
+        finalMediaUrl = url;
+      } catch (err) {
+        console.error('[DM] Image upload failed, sending base64 fallback:', err);
+        // Fall through with base64 URL as fallback
+      }
+    }
+
     sendMessageMutation.mutate(
-      { content, type, mediaUrl: imageUrl },
+      { content, type, mediaUrl: finalMediaUrl },
       {
         onSuccess: () => {
-          // Scroll to bottom after sending
           setTimeout(scrollToBottom, 100);
         },
         onError: () => {
@@ -216,6 +234,26 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       },
     });
     setShowDeleteDialog(false);
+  };
+
+  const handleToggleBlock = async () => {
+    setIsBlockProcessing(true);
+    try {
+      if (isBlocked) {
+        await unblockConversation(conversation.id);
+        setIsBlocked(false);
+        toast.success('User unblocked');
+      } else {
+        await blockConversation(conversation.id);
+        setIsBlocked(true);
+        toast.success('User blocked');
+      }
+    } catch (err) {
+      console.error('Block/unblock error:', err);
+      toast.error(isBlocked ? 'Failed to unblock' : 'Failed to block');
+    } finally {
+      setIsBlockProcessing(false);
+    }
   };
 
   return (
@@ -253,15 +291,32 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
               <MoreVertical className="w-5 h-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-            <DropdownMenuItem 
-              className="text-red-400 focus:text-red-400 focus:bg-zinc-700 cursor-pointer"
-              onClick={() => setShowDeleteDialog(true)}
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete Conversation
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+           <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+             <DropdownMenuItem 
+               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+               onClick={handleToggleBlock}
+               disabled={isBlockProcessing}
+             >
+               {isBlocked ? (
+                 <>
+                   <ShieldCheck className="w-4 h-4 mr-2" />
+                   Unblock User
+                 </>
+               ) : (
+                 <>
+                   <ShieldBan className="w-4 h-4 mr-2" />
+                   Block User
+                 </>
+               )}
+             </DropdownMenuItem>
+             <DropdownMenuItem 
+               className="text-red-400 focus:text-red-400 focus:bg-zinc-700 cursor-pointer"
+               onClick={() => setShowDeleteDialog(true)}
+             >
+               <Trash2 className="w-4 h-4 mr-2" />
+               Delete Conversation
+             </DropdownMenuItem>
+           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
