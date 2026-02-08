@@ -329,7 +329,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {hasError && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
             <Tv className="w-8 h-8 text-zinc-500 mb-2" />
-            <p className="text-zinc-400 text-sm mb-3">Stream unavailable</p>
+            <p className="text-zinc-400 text-sm">Stream geo-blocked or unavailable</p>
+            <p className="text-zinc-500 text-xs mb-3">Sorry for the inconvenience</p>
             {canRetry && (
               <button
                 onClick={handleRetry}

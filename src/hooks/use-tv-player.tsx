@@ -135,7 +135,7 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
             default:
               setState(prev => ({ 
                 ...prev, 
-                error: 'Stream unavailable',
+                error: 'Stream geo-blocked or unavailable',
                 isLoading: false,
                 isPlaying: false,
               }));
@@ -269,7 +269,7 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
         ...prev, 
         isPlaying: false, 
         isLoading: false,
-        error: 'Stream unavailable'
+        error: 'Stream geo-blocked or unavailable'
       }));
     };
     
