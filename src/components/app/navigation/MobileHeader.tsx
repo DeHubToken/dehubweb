@@ -48,19 +48,21 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       </div>
       
       <div className="flex items-center gap-4">
-        {/* Notifications Button */}
-        <button
-          onClick={() => navigate('/app/notifications')}
-          className={`relative flex items-center justify-center transition-colors mr-[-18px] ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
-          aria-label="Notifications"
-        >
-          <Bell className="w-[26px] h-[26px]" />
-          {unreadCount?.total !== undefined && unreadCount.total > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full">
-              {unreadCount.total > 99 ? '99+' : unreadCount.total}
-            </span>
-          )}
-        </button>
+        {/* Notifications Button - only visible when logged in */}
+        {isAuthenticated && (
+          <button
+            onClick={() => navigate('/app/notifications')}
+            className={`relative flex items-center justify-center transition-colors mr-[-18px] ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
+            aria-label="Notifications"
+          >
+            <Bell className="w-[26px] h-[26px]" />
+            {unreadCount?.total !== undefined && unreadCount.total > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full">
+                {unreadCount.total > 99 ? '99+' : unreadCount.total}
+              </span>
+            )}
+          </button>
+        )}
         
         {/* Coin Balance (when stickToBanner is enabled and user is logged in) */}
         {isAuthenticated && stickToBanner && (
