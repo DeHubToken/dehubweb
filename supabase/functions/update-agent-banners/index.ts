@@ -2,8 +2,10 @@
  * Edge function to upload custom banner/cover images for all registered AI agents on DeHub.
  *
  * Each agent gets a unique banner named `agent-{username}.png` from the storage bucket.
+ * After upload, verifies the banner persisted via account_info and retries once if not.
  *
  * Call via: POST /functions/v1/update-agent-banners
+ * Optional body: { "agents": ["leothedev", "omr_"] }
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -57,13 +59,14 @@ async function updateProfileBanner(
   username: string,
   bannerBlob: Blob,
   bannerFilename: string,
-): Promise<{ ok: boolean; detail?: string }> {
+): Promise<{ ok: boolean; detail?: string; responseBody?: string }> {
   try {
     const formData = new FormData();
     formData.append(
       "coverImg",
       new File([bannerBlob], bannerFilename, { type: "image/png" }),
     );
+    // Include username — the API may need it to associate the banner
     formData.append("username", username);
 
     const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
@@ -72,18 +75,43 @@ async function updateProfileBanner(
       body: formData,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Banner update failed for "${username}" (${response.status}):`, errorText);
-      return { ok: false, detail: `${response.status}: ${errorText}` };
+    const responseText = await response.text();
+    console.log(`[BannerUpdate] update_profile response for "${username}" (${response.status}): ${responseText}`);
+
+    const isUsernameConflict = responseText.includes("username is already in use");
+    if (!response.ok && !isUsernameConflict) {
+      return { ok: false, detail: `${response.status}: ${responseText}`, responseBody: responseText };
     }
 
-    return { ok: true };
+    return { ok: true, responseBody: responseText };
   } catch (error) {
     console.error(`Banner update error for "${username}":`, error);
     return { ok: false, detail: String(error) };
   }
 }
+
+/* ── Verification helper ────────────────────────────────────────────── */
+
+async function verifyBannerPersisted(username: string): Promise<{ hasBanner: boolean; bannerUrl?: string }> {
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`);
+    if (!response.ok) {
+      const text = await response.text();
+      console.error(`[BannerUpdate] account_info failed for "${username}" (${response.status}): ${text}`);
+      return { hasBanner: false };
+    }
+    const data = await response.json();
+    const profile = data.result || data;
+    const bannerUrl = profile.coverImageUrl || profile.cover_image_url || null;
+    console.log(`[BannerUpdate] Verification for "${username}": coverImageUrl = ${bannerUrl || "(empty)"}`);
+    return { hasBanner: !!bannerUrl, bannerUrl };
+  } catch (error) {
+    console.error(`[BannerUpdate] Verification error for "${username}":`, error);
+    return { hasBanner: false };
+  }
+}
+
+/* ── Main handler ───────────────────────────────────────────────────── */
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -135,11 +163,19 @@ Deno.serve(async (req) => {
 
     console.log(`[BannerUpdate] Found ${agents.length} agents to update`);
 
-    const results: Array<{ name: string; success: boolean; banner?: string; error?: string }> = [];
+    const results: Array<{
+      name: string;
+      success: boolean;
+      verified: boolean;
+      retried?: boolean;
+      banner?: string;
+      bannerUrl?: string;
+      error?: string;
+      responseBody?: string;
+    }> = [];
 
     for (let i = 0; i < agents.length; i++) {
       const agent = agents[i];
-      // Each agent gets their own custom banner: banners/agent-{username}.png
       const bannerPath = `banners/agent-${agent.name}.png`;
 
       console.log(`[BannerUpdate] Processing "${agent.name}" with custom banner: ${bannerPath}`);
@@ -153,14 +189,14 @@ Deno.serve(async (req) => {
 
         if (downloadError || !bannerData) {
           console.error(`[BannerUpdate] Banner download failed for "${agent.name}":`, downloadError);
-          results.push({ name: agent.name, success: false, error: `Banner not found: ${bannerPath}` });
+          results.push({ name: agent.name, success: false, verified: false, error: `Banner not found: ${bannerPath}` });
           continue;
         }
 
         // 2. Authenticate with DeHub
         const authToken = await authenticateWithDeHub(agent.wallet_private_key);
         if (!authToken) {
-          results.push({ name: agent.name, success: false, error: "DeHub auth failed" });
+          results.push({ name: agent.name, success: false, verified: false, error: "DeHub auth failed" });
           continue;
         }
 
@@ -175,26 +211,119 @@ Deno.serve(async (req) => {
         );
 
         if (!updateResult.ok) {
-          results.push({ name: agent.name, success: false, banner: bannerPath, error: updateResult.detail });
+          results.push({
+            name: agent.name,
+            success: false,
+            verified: false,
+            banner: bannerPath,
+            error: updateResult.detail,
+            responseBody: updateResult.responseBody,
+          });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          continue;
+        }
+
+        // 4. Verify the banner actually persisted
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const verification = await verifyBannerPersisted(agent.name);
+
+        if (verification.hasBanner) {
+          results.push({ name: agent.name, success: true, verified: true, banner: bannerPath, bannerUrl: verification.bannerUrl });
+          console.log(`[BannerUpdate] ✓ Banner verified for "${agent.name}": ${verification.bannerUrl}`);
         } else {
-          results.push({ name: agent.name, success: true, banner: bannerPath });
-          console.log(`[BannerUpdate] ✓ Custom banner set for "${agent.name}"`);
+          // 5. Retry once
+          console.log(`[BannerUpdate] ⚠ Banner NOT persisted for "${agent.name}", retrying…`);
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          const retryToken = await authenticateWithDeHub(agent.wallet_private_key);
+          if (!retryToken) {
+            results.push({
+              name: agent.name,
+              success: false,
+              verified: false,
+              retried: true,
+              banner: bannerPath,
+              error: "DeHub re-auth failed on retry",
+              responseBody: updateResult.responseBody,
+            });
+            continue;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          // Re-download banner (blob may have been consumed)
+          const { data: retryBannerData } = await supabase
+            .storage
+            .from("agent-avatars")
+            .download(bannerPath);
+
+          if (!retryBannerData) {
+            results.push({
+              name: agent.name,
+              success: false,
+              verified: false,
+              retried: true,
+              banner: bannerPath,
+              error: "Banner re-download failed on retry",
+            });
+            continue;
+          }
+
+          const retryResult = await updateProfileBanner(
+            retryToken,
+            agent.name,
+            retryBannerData,
+            `agent-${agent.name}.png`,
+          );
+
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+          const retryVerification = await verifyBannerPersisted(agent.name);
+
+          if (retryVerification.hasBanner) {
+            results.push({
+              name: agent.name,
+              success: true,
+              verified: true,
+              retried: true,
+              banner: bannerPath,
+              bannerUrl: retryVerification.bannerUrl,
+            });
+            console.log(`[BannerUpdate] ✓ Banner verified on retry for "${agent.name}": ${retryVerification.bannerUrl}`);
+          } else {
+            results.push({
+              name: agent.name,
+              success: false,
+              verified: false,
+              retried: true,
+              banner: bannerPath,
+              error: "Banner still not persisted after retry",
+              responseBody: retryResult.responseBody,
+            });
+            console.error(`[BannerUpdate] ✗ Banner STILL not persisted for "${agent.name}" after retry`);
+          }
         }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (error) {
         console.error(`[BannerUpdate] Error for "${agent.name}":`, error);
-        results.push({ name: agent.name, success: false, error: String(error) });
+        results.push({ name: agent.name, success: false, verified: false, error: String(error) });
       }
     }
 
     const successCount = results.filter((r) => r.success).length;
     const failCount = results.filter((r) => !r.success).length;
+    const verifiedCount = results.filter((r) => r.verified).length;
 
-    console.log(`[BannerUpdate] Complete: ${successCount} succeeded, ${failCount} failed`);
+    console.log(`[BannerUpdate] Complete: ${successCount} succeeded, ${verifiedCount} verified, ${failCount} failed`);
 
     return new Response(
-      JSON.stringify({ message: `Updated banners for ${successCount}/${agents.length} agents`, success_count: successCount, fail_count: failCount, results }, null, 2),
+      JSON.stringify({
+        message: `Updated banners for ${successCount}/${agents.length} agents (${verifiedCount} verified)`,
+        success_count: successCount,
+        verified_count: verifiedCount,
+        fail_count: failCount,
+        results,
+      }, null, 2),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
