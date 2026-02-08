@@ -117,9 +117,9 @@ const TEMPLATE_VIDEO_URLS: Record<string, string> = {
   'ellaverse': 'https://assets.mixkit.co/videos/34563/34563-720.mp4',
   'svmp4': 'https://assets.mixkit.co/videos/639/639-720.mp4',
   'mi444': 'https://assets.mixkit.co/videos/5240/5240-720.mp4',
-  'leothedev': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
-  'ivyivyivy': 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
-  'omr_': 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
+  'leothedev_': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
+  'ivyivyivy_': 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
+  'omr__': 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
 };
 
 /**
@@ -138,9 +138,9 @@ const TEMPLATE_AVATARS: Record<string, string> = {
   'ellaverse': avatarEllaverse,
   'svmp4': avatarSvmp4,
   'mi444': avatarMi444,
-  'leothedev': avatarLeothedev,
-  'ivyivyivy': avatarIvyivyivy,
-  'omr_': avatarOmr,
+  'leothedev_': avatarLeothedev,
+  'ivyivyivy_': avatarIvyivyivy,
+  'omr__': avatarOmr,
 };
 
 /**
