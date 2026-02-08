@@ -247,7 +247,7 @@ export function FullscreenImageViewer({
             </div>
           </motion.div>
 
-          {/* Navigation arrows */}
+          {/* Navigation arrows – hidden on mobile/tablet, swipe to navigate instead */}
           {hasMultiple && (
             <>
               {currentIndex > 0 && (
@@ -256,7 +256,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollPrev();
                   }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                  className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -268,7 +268,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollNext();
                   }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                  className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Next image"
                 >
                   <ChevronRight className="w-6 h-6" />
