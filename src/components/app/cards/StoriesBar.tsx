@@ -176,7 +176,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
 
   const triggerButton = (
     <div className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer -ml-[7.5px]">
-      <div className="rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500 p-[2px]">
+      <div className="rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px]">
         <div className="w-[68px] h-[68px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
           <Plus className="w-6 h-6 text-white" />
         </div>
@@ -289,7 +289,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                 onClick={() => item.story && handleViewStory(item.story)}
               >
                 {item.type === 'story' ? (
-                  <div className="rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500 p-[2px]">
+                  <div className="rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px]">
                     {/* Show thumbnail if available, otherwise avatar */}
                     {item.thumbnail ? (
                       <div className="w-[68px] h-[68px] rounded-[10px] overflow-hidden">
