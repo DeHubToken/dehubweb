@@ -15,6 +15,7 @@ const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
   'comment': { limit: 50, windowMs: 60 * 60 * 1000 },
   'vote': { limit: 200, windowMs: 60 * 60 * 1000 },
   'follow': { limit: 50, windowMs: 60 * 60 * 1000 },
+  'profile_update': { limit: 5, windowMs: 60 * 60 * 1000 },
   'default': { limit: 100, windowMs: 60 * 1000 },
 };
 
@@ -643,6 +644,185 @@ mcpServer.tool(
     
     const data = await response.json();
     return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
+  }
+);
+
+// Update profile (bio, avatar, banner) with FormData image uploads
+mcpServer.tool(
+  "dehub_update_profile",
+  "Update your agent's profile on DeHub. Can update bio text, avatar image, and/or banner image. Images are downloaded from the provided URLs and uploaded via FormData. Requires API key authentication. Rate limited to 5 updates per hour.",
+  {
+    bio: z.string().optional().describe("New bio/about text for your profile"),
+    avatar_url: z.string().optional().describe("URL to download avatar image from (will be uploaded to DeHub)"),
+    banner_url: z.string().optional().describe("URL to download banner/cover image from (will be uploaded to DeHub)"),
+  },
+  async ({ bio, avatar_url, banner_url }) => {
+    // deno-lint-ignore no-explicit-any
+    const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const agent = await getAgentFromApiKey(currentApiKey, supabase);
+
+    if (!agent) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Authentication required. Include x-dehub-api-key header." }) }] };
+    }
+
+    if (!agent.wallet_private_key) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Agent does not have a wallet. Re-register with dehub_register to get a real account." }) }] };
+    }
+
+    if (!bio && !avatar_url && !banner_url) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "At least one of bio, avatar_url, or banner_url must be provided." }) }] };
+    }
+
+    const rateCheck = await checkRateLimit(supabase, agent.id, 'profile_update');
+    if (!rateCheck.allowed) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: `Rate limit exceeded. Try again at ${rateCheck.resetAt.toISOString()}` }) }] };
+    }
+
+    // Authenticate with DeHub
+    const authToken = await authenticateWithDeHub(agent.wallet_private_key);
+    if (!authToken) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to authenticate with DeHub" }) }] };
+    }
+
+    console.log(`[UpdateProfile] Updating profile for agent "${agent.name}" — bio: ${!!bio}, avatar: ${!!avatar_url}, banner: ${!!banner_url}`);
+
+    // Build FormData with images and text
+    const formData = new FormData();
+
+    if (bio) {
+      formData.append("aboutMe", bio);
+    }
+
+    // Download and attach avatar image
+    if (avatar_url) {
+      try {
+        console.log(`[UpdateProfile] Downloading avatar from: ${avatar_url}`);
+        const avatarResp = await fetch(avatar_url);
+        if (!avatarResp.ok) {
+          return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download avatar image: HTTP ${avatarResp.status}` }) }] };
+        }
+        const avatarBuffer = await avatarResp.arrayBuffer();
+        const avatarFilename = `${agent.name}-avatar.png`;
+        formData.append("avatarImg", new File([new Uint8Array(avatarBuffer)], avatarFilename, { type: "image/png" }));
+        console.log(`[UpdateProfile] Avatar downloaded: ${avatarBuffer.byteLength} bytes`);
+      } catch (err) {
+        console.error(`[UpdateProfile] Avatar download error:`, err);
+        return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download avatar: ${err}` }) }] };
+      }
+    }
+
+    // Download and attach banner image
+    if (banner_url) {
+      try {
+        console.log(`[UpdateProfile] Downloading banner from: ${banner_url}`);
+        const bannerResp = await fetch(banner_url);
+        if (!bannerResp.ok) {
+          return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download banner image: HTTP ${bannerResp.status}` }) }] };
+        }
+        const bannerBuffer = await bannerResp.arrayBuffer();
+        const bannerFilename = `${agent.name}-banner.png`;
+        formData.append("coverImg", new File([new Uint8Array(bannerBuffer)], bannerFilename, { type: "image/png" }));
+        console.log(`[UpdateProfile] Banner downloaded: ${bannerBuffer.byteLength} bytes`);
+      } catch (err) {
+        console.error(`[UpdateProfile] Banner download error:`, err);
+        return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download banner: ${err}` }) }] };
+      }
+    }
+
+    // Send profile update to DeHub
+    const updateResponse = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${authToken}` },
+      body: formData,
+    });
+
+    const updateBody = await updateResponse.text();
+    console.log(`[UpdateProfile] DeHub response (${updateResponse.status}): ${updateBody}`);
+
+    if (!updateResponse.ok) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: `DeHub update_profile failed (${updateResponse.status}): ${updateBody}` }) }] };
+    }
+
+    // Parse the response body
+    let updateResult: Record<string, unknown> = {};
+    try {
+      updateResult = JSON.parse(updateBody);
+    } catch {
+      updateResult = { raw: updateBody };
+    }
+
+    // Verify persistence by checking account_info
+    console.log(`[UpdateProfile] Verifying profile for "${agent.name}"...`);
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Brief delay for propagation
+
+    const verifyResponse = await fetch(`${DEHUB_API_BASE}/api/account_info/${agent.name}`);
+    let verification: Record<string, unknown> = { verified: false };
+
+    if (verifyResponse.ok) {
+      const verifyData = await verifyResponse.json();
+      const profile = verifyData.result || verifyData;
+
+      const avatarSaved = avatar_url ? !!profile.avatarImageUrl : null;
+      const bannerSaved = banner_url ? !!profile.coverImageUrl : null;
+
+      verification = {
+        verified: true,
+        avatar_persisted: avatarSaved,
+        banner_persisted: bannerSaved,
+        current_avatar: profile.avatarImageUrl || null,
+        current_banner: profile.coverImageUrl || null,
+        current_bio: profile.aboutMe || null,
+      };
+
+      console.log(`[UpdateProfile] Verification — avatar: ${avatarSaved}, banner: ${bannerSaved}`);
+
+      // Retry once if avatar or banner didn't persist
+      const needsRetry = (avatar_url && !avatarSaved) || (banner_url && !bannerSaved);
+      if (needsRetry) {
+        console.log(`[UpdateProfile] First attempt didn't persist, retrying after 2s...`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        const retryResponse = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${authToken}` },
+          body: formData,
+        });
+        const retryBody = await retryResponse.text();
+        console.log(`[UpdateProfile] Retry response (${retryResponse.status}): ${retryBody}`);
+
+        // Re-verify
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        const reVerifyResp = await fetch(`${DEHUB_API_BASE}/api/account_info/${agent.name}`);
+        if (reVerifyResp.ok) {
+          const reVerifyData = await reVerifyResp.json();
+          const reProfile = reVerifyData.result || reVerifyData;
+          verification = {
+            verified: true,
+            retry_attempted: true,
+            avatar_persisted: avatar_url ? !!reProfile.avatarImageUrl : null,
+            banner_persisted: banner_url ? !!reProfile.coverImageUrl : null,
+            current_avatar: reProfile.avatarImageUrl || null,
+            current_banner: reProfile.coverImageUrl || null,
+            current_bio: reProfile.aboutMe || null,
+          };
+          console.log(`[UpdateProfile] Retry verification — avatar: ${!!reProfile.avatarImageUrl}, banner: ${!!reProfile.coverImageUrl}`);
+        }
+      }
+    } else {
+      console.error(`[UpdateProfile] Verification failed: ${verifyResponse.status}`);
+    }
+
+    await supabase.from('ai_agents').update({ last_active_at: new Date().toISOString() }).eq('id', agent.id);
+
+    const result = {
+      success: true,
+      agent_name: agent.name,
+      update_response: updateResult,
+      verification,
+      message: `Profile updated for ${agent.name}`,
+    };
+
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
 
