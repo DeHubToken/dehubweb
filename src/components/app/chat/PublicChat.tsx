@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
+import { CreateTopicRoomModal } from './CreateTopicRoomModal';
+import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages } from '@/hooks/use-livechat';
-import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatMessage as ApiMessage } from '@/lib/api/dehub';
+import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatMessage as ApiMessage, type LiveChatRoom } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -40,8 +42,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const { isAuthenticated } = useAuth();
 
   // Fetch rooms, use the first available room
-  const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
+  const { rooms, isLoading: roomsLoading, refetch: refetchRooms } = useLiveChatRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [createRoomOpen, setCreateRoomOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Auto-select the first room once loaded
   useEffect(() => {
@@ -119,8 +123,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [selectedRoomId, isAuthenticated, refetch]);
 
+  const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
   const isLoading = roomsLoading || messagesLoading;
-  const roomName = rooms.find((r) => r.id === selectedRoomId)?.name || rooms.find((r) => r.id === selectedRoomId)?.topic || 'Public Chat';
+  const roomName = selectedRoom?.name || selectedRoom?.topic || 'Public Chat';
+
+  const handleRoomCreated = useCallback((room: LiveChatRoom) => {
+    refetchRooms();
+    setSelectedRoomId(room.id);
+  }, [refetchRooms]);
 
   return (
     <div className="flex flex-col h-full bg-zinc-900 rounded-2xl overflow-hidden">
@@ -141,7 +151,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             {rooms.length > 0 && (
               <span className="text-zinc-500 text-xs flex items-center gap-1">
                 <Users className="w-3 h-3" />
-                {rooms.find((r) => r.id === selectedRoomId)?.participantCount ?? 0} online
+                {selectedRoom?.participantCount ?? 0} online
               </span>
             )}
           </div>
@@ -162,19 +172,25 @@ export function PublicChat({ onBack }: PublicChatProps) {
               ))}
             </select>
           )}
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-zinc-400 hover:text-white"
+              onClick={() => setCreateRoomOpen(true)}
+              title="Create new room"
+            >
+              <MessageSquarePlus className="w-4 h-4" />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-zinc-400 hover:text-white"
+            onClick={() => setSettingsOpen(true)}
+            title="Room settings"
           >
             <Settings className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-zinc-400 hover:text-white"
-          >
-            <MoreVertical className="w-4 h-4" />
           </Button>
         </div>
       </div>
@@ -247,6 +263,19 @@ export function PublicChat({ onBack }: PublicChatProps) {
         )}
         <ChatInput onSendMessage={handleSendMessage} />
       </div>
+
+      {/* Modals */}
+      <CreateTopicRoomModal
+        open={createRoomOpen}
+        onOpenChange={setCreateRoomOpen}
+        onCreated={handleRoomCreated}
+      />
+      <RoomSettingsModal
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        room={selectedRoom}
+        onUpdated={refetchRooms}
+      />
     </div>
   );
 }
