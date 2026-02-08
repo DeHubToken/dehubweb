@@ -33,21 +33,21 @@
 
 ## 3. DM Admin & Group Features (10 endpoints)
 - ✅ `GET /api/dm/search` — DM conversation search
-- ⬜ `GET /api/dm/{id}` → `getConversation` — Get single conversation
+- ✅ `GET /api/dm/{id}` → `getConversation` — Get single conversation
 - ✅ `POST /api/dm/block` → `blockConversation` — Block a DM user
 - ✅ `GET /api/dm/un-block/{id}` → `unblockConversation` — Unblock a DM user
-- ⬜ `POST /api/dm/group/info` → `getGroupInfo` — Get group details
-- ⬜ `POST /api/dm/group/join` → `joinGroup` — Join a group chat
-- ⬜ `PUT /api/dm/group` → `updateGroup` — Update group settings
-- ⬜ `POST /api/dm/group-user-exit` → `leaveGroup` — Leave group chat
-- ⬜ `POST /api/dm/group-user-block` → `blockUserInGroup` — Block user in group
+- ✅ `POST /api/dm/group/info` → `getGroupInfo` — Get group details
+- ✅ `POST /api/dm/group/join` → `joinGroup` — Join a group chat
+- ✅ `PUT /api/dm/group` → `updateGroup` — Update group settings
+- ✅ `POST /api/dm/group-user-exit` → `leaveGroup` — Leave group chat
+- ✅ `POST /api/dm/group-user-block` → `blockUserInGroup` — Block user in group
 - ✅ `POST /api/chat-image` → `uploadChatImage` — Upload image for chat
 
 ## 4. DM Status & Gating (4 endpoints)
 - ✅ `GET /api/dm/user-status/{addr}` → `getDMUserStatus` / `getUserOnlineStatus` — User online status
 - ✅ `POST /api/dm/user-status/{addr}` → `updateUserOnlineStatus` — Heartbeat/presence
-- ⬜ `GET /api/dm/plan/{id}` → `getDMPlanSettings` — DM subscription gates
-- ⬜ `GET /api/dm/dm-videos` → `getDMVideos` — Videos shared in DMs
+- ✅ `GET /api/dm/plan/{id}` → `getDMPlanSettings` — DM subscription gates
+- ✅ `GET /api/dm/dm-videos` → `getDMVideos` — Videos shared in DMs
 
 ## 5. LiveChat Moderation (6 endpoints)
 - ✅ `GET /api/livechat/rooms/{id}` → `getLiveChatRoom` — Single room details

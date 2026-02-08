@@ -5,14 +5,15 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMediaUrl, blockConversation, unblockConversation, uploadChatImage, type DeHubConversation, type DeHubDMMessage } from '@/lib/api/dehub';
+import { getMediaUrl, getConversation, blockConversation, unblockConversation, uploadChatImage, getDMPlanSettings, getDMVideos, type DeHubConversation, type DeHubDMMessage } from '@/lib/api/dehub';
+import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
@@ -132,7 +133,37 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isBlocked, setIsBlocked] = useState(conversation.isBlocked ?? false);
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
+  const [showGroupSettings, setShowGroupSettings] = useState(false);
+  const [conversationData, setConversationData] = useState<DeHubConversation>(conversation);
+  const [dmGateChecked, setDmGateChecked] = useState(false);
+  const [dmGated, setDmGated] = useState(false);
   const isInitialMount = useRef(true);
+
+  const isGroupChat = conversation.isGroup || !!conversation.groupInfo;
+
+  // Fetch full conversation details via getConversation
+  useEffect(() => {
+    getConversation(conversation.id)
+      .then((data) => setConversationData(data))
+      .catch((err) => console.error('[DM] getConversation fallback:', err));
+  }, [conversation.id]);
+
+  // Check DM plan gating if the other user has a subscription plan
+  useEffect(() => {
+    // Use type-safe access for optional dmPlanId field
+    const otherUserData = conversationData?.otherUser as any;
+    const planId = otherUserData?.dmPlanId;
+    if (!planId) {
+      setDmGateChecked(true);
+      return;
+    }
+    getDMPlanSettings(planId)
+      .then((settings) => {
+        setDmGated(!settings.enabled);
+        setDmGateChecked(true);
+      })
+      .catch(() => setDmGateChecked(true));
+  }, [conversationData]);
 
   // Get the other participant
   const otherUser = conversation.otherUser || 
@@ -292,6 +323,16 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             </Button>
           </DropdownMenuTrigger>
            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+             {/* Group settings - only for group chats */}
+             {isGroupChat && (
+               <DropdownMenuItem 
+                 className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+                 onClick={() => setShowGroupSettings(true)}
+               >
+                 <Settings className="w-4 h-4 mr-2" />
+                 Group Settings
+               </DropdownMenuItem>
+             )}
              <DropdownMenuItem 
                className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
                onClick={handleToggleBlock}
@@ -308,6 +349,20 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                    Block User
                  </>
                )}
+             </DropdownMenuItem>
+             <DropdownMenuItem 
+               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+               onClick={async () => {
+                 try {
+                   const { items } = await getDMVideos(0, 20);
+                   toast.info(`${items.length} shared video${items.length !== 1 ? 's' : ''} found`);
+                 } catch {
+                   toast.error('Failed to fetch shared videos');
+                 }
+               }}
+             >
+               <Video className="w-4 h-4 mr-2" />
+               Shared Videos
              </DropdownMenuItem>
              <DropdownMenuItem 
                className="text-red-400 focus:text-red-400 focus:bg-zinc-700 cursor-pointer"
@@ -394,6 +449,34 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Group Settings Drawer */}
+      {isGroupChat && (
+        <GroupSettingsDrawer
+          open={showGroupSettings}
+          onOpenChange={setShowGroupSettings}
+          groupId={conversation.id}
+          onLeft={onBack}
+          onUpdated={() => {
+            getConversation(conversation.id)
+              .then(setConversationData)
+              .catch(() => {});
+          }}
+        />
+      )}
+
+      {/* DM Gated Banner */}
+      {dmGateChecked && dmGated && (
+        <div className="absolute inset-0 bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center z-20 rounded-2xl">
+          <div className="text-center px-6">
+            <ShieldBan className="w-12 h-12 text-zinc-500 mx-auto mb-3" />
+            <h3 className="text-white font-semibold text-lg mb-1">DMs Restricted</h3>
+            <p className="text-zinc-400 text-sm">
+              This user requires a subscription to receive messages.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
