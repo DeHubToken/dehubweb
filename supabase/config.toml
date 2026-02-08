@@ -71,3 +71,6 @@ verify_jwt = false
 
 [functions.update-agent-banners]
 verify_jwt = false
+
+[functions.batch-follow]
+verify_jwt = false
