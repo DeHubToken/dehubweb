@@ -52,7 +52,11 @@ export function SidebarNavItem({
 
   // Check if we should render avatar instead of icon
   const showAvatar = avatarUrl !== undefined;
-  const collapsedClasses = collapsed ? 'justify-center xl:justify-start' : '';
+  
+  // Collapsed: icon-only square button; Expanded: full-width row
+  const collapsedItemClass = collapsed
+    ? 'w-9 h-9 xl:w-full xl:h-auto justify-center xl:justify-start px-0 xl:px-2.5 xl:py-2.5 xl:gap-3'
+    : 'gap-3 px-2.5 py-2.5';
 
   if (item.external) {
     return (
@@ -62,19 +66,17 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'flex items-center w-full rounded-xl transition-colors text-white',
-          isDesktop 
-            ? 'gap-0 xl:gap-3 px-0 xl:px-2.5 py-2.5 text-[15px]' 
-            : 'gap-3.5 px-3 py-3 text-[15px]',
-          collapsedClasses,
+          'flex items-center rounded-xl transition-colors text-white text-[15px]',
+          isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
           variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
             : 'hover:bg-zinc-800/50'
         )}
       >
         <div className={cn(
-          "rounded-xl bg-zinc-800 flex items-center justify-center flex-shrink-0",
-          isDesktop ? "w-9 h-9" : "w-10 h-10"
+          "rounded-xl flex items-center justify-center flex-shrink-0",
+          isDesktop ? "w-9 h-9" : "w-10 h-10",
+          collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
@@ -88,15 +90,14 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'flex items-center w-full rounded-xl transition-colors text-white',
-        isDesktop 
-          ? 'gap-0 xl:gap-3 px-0 xl:px-2.5 py-2.5 text-[15px]' 
-          : 'gap-3.5 px-3 py-3 text-[15px]',
-        collapsedClasses,
+        'flex items-center rounded-xl transition-colors text-white text-[15px]',
+        isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive
           ? variant === 'mobile'
             ? 'bg-zinc-700/50 font-semibold'
-            : 'bg-zinc-800 font-semibold'
+            : collapsed
+              ? 'xl:bg-zinc-800 bg-zinc-700 font-semibold'
+              : 'bg-zinc-800 font-semibold'
           : variant === 'mobile'
             ? 'hover:bg-zinc-700/50'
             : 'hover:bg-zinc-800/50'
@@ -118,7 +119,9 @@ export function SidebarNavItem({
         <div className={cn(
           "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
-          isActive ? "bg-zinc-700" : "bg-zinc-800"
+          isActive 
+            ? "bg-zinc-700" 
+            : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
           {notificationCount !== undefined && notificationCount > 0 && (
