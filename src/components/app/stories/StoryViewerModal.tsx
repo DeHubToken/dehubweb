@@ -88,7 +88,9 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
       recordView();
       onStoryWatched?.(currentStory.id);
     }
-  }, [isOpen, currentStory?.id, recordView, onStoryWatched]);
+    // recordView is stable (ref-based) — only re-run on story change or modal open
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, currentStory?.id]);
 
   // Resolve avatar URL — local asset paths (starting with /) must pass through as-is
   const resolvedAvatar = useMemo(() => {
