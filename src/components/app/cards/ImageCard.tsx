@@ -143,16 +143,25 @@ function ImageCarousel({
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
               <div 
-                className="bg-black cursor-pointer flex items-center justify-center max-h-[600px] overflow-hidden"
+                className="relative cursor-pointer max-h-[600px] overflow-hidden"
                 onClick={(e) => {
                   e.stopPropagation();
                   onImageClick(idx);
                 }}
               >
+                {/* Blurred background fill - liquid glass effect from image colors */}
                 <img 
                   src={img} 
                   alt="" 
-                  className="w-full max-h-[600px] object-contain"
+                  className="absolute inset-0 w-full h-full object-cover scale-110 blur-[24px] saturate-[180%] opacity-60"
+                  aria-hidden="true"
+                />
+                <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+                {/* Actual image - natural aspect ratio */}
+                <img 
+                  src={img} 
+                  alt="" 
+                  className="relative w-full max-h-[600px] object-contain"
                   loading="lazy"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/placeholder.svg';
