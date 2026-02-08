@@ -340,16 +340,61 @@ export async function reportBrokenChannel(channelId: string): Promise<void> {
   }
 }
 
+/** Map country names / codes to 2-letter ISO codes for flag rendering */
+const COUNTRY_NAME_TO_ISO: Record<string, string> = {
+  usa: 'US', uk: 'GB', us: 'US', gb: 'GB',
+  'united states': 'US', 'united kingdom': 'GB',
+  germany: 'DE', deutschland: 'DE', france: 'FR',
+  spain: 'ES', 'españa': 'ES', italy: 'IT', italia: 'IT',
+  india: 'IN', brazil: 'BR', brasil: 'BR',
+  mexico: 'MX', 'méxico': 'MX', canada: 'CA', australia: 'AU',
+  japan: 'JP', china: 'CN', russia: 'RU', 'south korea': 'KR',
+  argentina: 'AR', chile: 'CL', colombia: 'CO', peru: 'PE',
+  portugal: 'PT', netherlands: 'NL', belgium: 'BE', switzerland: 'CH',
+  austria: 'AT', sweden: 'SE', norway: 'NO', denmark: 'DK',
+  finland: 'FI', poland: 'PL', 'czech republic': 'CZ', romania: 'RO',
+  greece: 'GR', turkey: 'TR', ukraine: 'UA', ireland: 'IE',
+  albania: 'AL', croatia: 'HR', serbia: 'RS', bulgaria: 'BG',
+  hungary: 'HU', slovakia: 'SK', slovenia: 'SI',
+  'bosnia and herzegovina': 'BA', belarus: 'BY', azerbaijan: 'AZ',
+  philippines: 'PH', indonesia: 'ID', thailand: 'TH', vietnam: 'VN',
+  malaysia: 'MY', pakistan: 'PK', bangladesh: 'BD', iran: 'IR',
+  iraq: 'IQ', 'saudi arabia': 'SA', 'united arab emirates': 'AE',
+  egypt: 'EG', 'south africa': 'ZA', nigeria: 'NG', kenya: 'KE',
+  morocco: 'MA', tunisia: 'TN', algeria: 'DZ', chad: 'TD',
+};
+
 /**
- * Get country flag emoji from country code
+ * Get country flag emoji from country name or code
  */
-export function getCountryFlag(countryCode: string): string {
-  if (!countryCode || countryCode.length !== 2) return '🌍';
+export function getCountryFlag(country: string): string {
+  if (!country) return '🌍';
+
+  // If already a 2-letter code
+  const normalized = country.toLowerCase().trim();
+  const iso = normalized.length === 2
+    ? normalized.toUpperCase()
+    : COUNTRY_NAME_TO_ISO[normalized];
+
+  if (!iso || iso.length !== 2) return '🌍';
   
-  const codePoints = countryCode
-    .toUpperCase()
+  const codePoints = iso
     .split('')
     .map((char) => 127397 + char.charCodeAt(0));
   
   return String.fromCodePoint(...codePoints);
+}
+
+/** Map category IDs to display labels */
+const CATEGORY_DISPLAY: Record<string, string> = {
+  us: 'USA', uk: 'UK', de: 'Germany', fr: 'France',
+  es: 'Spain', it: 'Italy', in: 'India', br: 'Brazil',
+  mx: 'Mexico', ca: 'Canada', au: 'Australia', other: 'Other',
+};
+
+/**
+ * Get a readable display name for a category ID
+ */
+export function getCategoryDisplayName(categoryId: string): string {
+  return CATEGORY_DISPLAY[categoryId] || categoryId;
 }

@@ -15,7 +15,7 @@ import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimi
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
-import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
+import { getCountryFlag, reportBrokenChannel, getCategoryDisplayName } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 
 interface TVChannelCardProps {
@@ -422,8 +422,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           </h3>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="text-base">{countryFlag}</span>
-            <span className="text-zinc-400 text-xs capitalize">
-              {channel.category}
+            <span className="text-zinc-400 text-xs">
+              {getCategoryDisplayName(channel.category)}
             </span>
           </div>
         </div>
