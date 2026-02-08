@@ -967,7 +967,7 @@ export default function ExplorePage() {
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mt-[6px]">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <img src={trendingFireIcon} alt="" className="w-[33px] h-[33px] object-contain" />
+                    <img src={trendingFireIcon} alt="" className="w-[35px] h-[35px] object-contain" />
                     <h2 className="text-lg sm:text-xl font-bold text-white">Trending</h2>
                   </div>
                   <FilterDropdown
