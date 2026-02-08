@@ -522,31 +522,58 @@ body > div[style*="position: fixed"][style*="height: 0"] {
 }
 
 /* Story border shimmer - plays once on mount, pure CSS */
-@keyframes story-shimmer {
+@keyframes story-border-sweep {
   0% {
-    background-position: -200% 0;
+    transform: rotate(0deg);
   }
   100% {
-    background-position: 200% 0;
+    transform: rotate(360deg);
   }
+}
+
+@keyframes story-shimmer-fade {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .story-border-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.05) 0%,
-    rgba(255,255,255,0.4) 25%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0.4) 75%,
-    rgba(255,255,255,0.05) 100%
+  position: relative;
+  background: rgba(255,255,255,0.08);
+}
+
+.story-border-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(255,255,255,0.6) 60deg,
+    rgba(255,255,255,0.9) 90deg,
+    rgba(255,255,255,0.6) 120deg,
+    transparent 180deg,
+    transparent 360deg
   );
-  background-size: 200% 100%;
-  animation: story-shimmer 1.8s ease-out forwards;
-  transition: opacity 0.2s ease;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: story-border-sweep 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+             story-shimmer-fade 2s ease-out forwards;
+  pointer-events: none;
 }
 
 .story-border-shimmer:hover {
-  opacity: 0.85;
+  background: rgba(255,255,255,0.15);
+  transition: background 0.2s ease;
+}
+
+.story-border-shimmer:hover::before {
+  opacity: 0;
 }
 
 /* Immersive video mode - hide mobile header and remove top padding */
