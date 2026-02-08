@@ -1,15 +1,11 @@
 /**
  * Edge function to register (or re-register) template agents as real DeHub accounts.
  * 
- * Generates a real Ethereum wallet for each, authenticates with the DeHub API,
- * sets their profile (username + bio + avatar + banner) via FormData in one call,
- * and stores the credentials.
- * 
  * Modes:
  * - POST with no body: registers all agents where wallet_private_key IS NULL
  * - POST with {"agents": ["name1", "name2"]}: re-registers specific agents with fresh wallets
- * 
- * Call via: POST /functions/v1/register-template-agents
+ * - POST with {"set_profile": [{"db_name": "leothedev", "username": "leothedev_"}]}:
+ *   Uses existing wallet to set username + avatar + banner on the DeHub account
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -38,12 +34,7 @@ async function authenticateWithDeHub(privateKey: string): Promise<string | null>
     const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        address,
-        sig,
-        timestamp,
-        chainId: 8453,
-      }),
+      body: JSON.stringify({ address, sig, timestamp, chainId: 8453 }),
     });
 
     if (!response.ok) {
@@ -60,10 +51,6 @@ async function authenticateWithDeHub(privateKey: string): Promise<string | null>
   }
 }
 
-/**
- * Set username, bio, avatar, AND banner on a DeHub account in one FormData call.
- * This is the only reliable way to get images to persist — during initial username set.
- */
 async function setDeHubProfileWithImages(
   authToken: string,
   username: string,
@@ -77,18 +64,12 @@ async function setDeHubProfileWithImages(
     formData.append('aboutMe', bio || `AI agent: ${username}`);
 
     if (avatarBlob) {
-      formData.append(
-        'avatarImg',
-        new File([avatarBlob], `${username}.png`, { type: 'image/png' }),
-      );
+      formData.append('avatarImg', new File([avatarBlob], `${username}.png`, { type: 'image/png' }));
       console.log(`[Register] Including avatar (${avatarBlob.size} bytes) for "${username}"`);
     }
 
     if (bannerBlob) {
-      formData.append(
-        'coverImg',
-        new File([bannerBlob], `${username}-banner.png`, { type: 'image/png' }),
-      );
+      formData.append('coverImg', new File([bannerBlob], `${username}-banner.png`, { type: 'image/png' }));
       console.log(`[Register] Including banner (${bannerBlob.size} bytes) for "${username}"`);
     }
 
@@ -100,7 +81,6 @@ async function setDeHubProfileWithImages(
 
     const responseBody = await response.text();
     console.log(`[Register] Profile response for "${username}" (${response.status}): ${responseBody}`);
-
     return { success: response.ok, responseBody };
   } catch (error) {
     console.error(`Profile update error for "${username}":`, error);
@@ -108,9 +88,6 @@ async function setDeHubProfileWithImages(
   }
 }
 
-/**
- * Verify that avatar/banner actually persisted by checking account_info.
- */
 async function verifyProfile(username: string): Promise<{
   hasAvatar: boolean;
   hasBanner: boolean;
@@ -135,6 +112,22 @@ async function verifyProfile(username: string): Promise<{
   }
 }
 
+// deno-lint-ignore no-explicit-any
+type SupabaseClient = ReturnType<typeof createClient<any>>;
+
+async function downloadFromBucket(supabase: SupabaseClient, path: string): Promise<Blob | null> {
+  try {
+    const { data } = await supabase.storage.from('agent-avatars').download(path);
+    if (data) {
+      console.log(`[Register] Downloaded "${path}" (${data.size} bytes)`);
+      return data;
+    }
+  } catch {
+    console.log(`[Register] Not found in bucket: "${path}"`);
+  }
+  return null;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -145,49 +138,121 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if specific agents are requested for re-registration
-    let targetAgentNames: string[] | null = null;
+    let body: Record<string, unknown> = {};
     try {
-      const body = await req.json();
-      if (body?.agents && Array.isArray(body.agents)) {
-        targetAgentNames = body.agents;
-        console.log(`[Register] Re-registration requested for: ${targetAgentNames.join(', ')}`);
-      }
+      body = await req.json();
     } catch {
-      // No body or invalid JSON — register all unregistered agents
+      // No body
+    }
+
+    // ===== MODE: set_profile — use existing wallet to set username + images =====
+    if (body?.set_profile && Array.isArray(body.set_profile)) {
+      const profileRequests = body.set_profile as Array<{ db_name: string; username: string }>;
+      console.log(`[SetProfile] Processing ${profileRequests.length} agents`);
+
+      // deno-lint-ignore no-explicit-any
+      const results: any[] = [];
+
+      for (const { db_name, username } of profileRequests) {
+        console.log(`[SetProfile] Agent "${db_name}" → username "${username}"`);
+
+        // Fetch agent from DB
+        const { data: agent, error } = await supabase
+          .from('ai_agents')
+          .select('*')
+          .eq('name', db_name)
+          .eq('is_active', true)
+          .single();
+
+        if (error || !agent || !agent.wallet_private_key) {
+          results.push({ db_name, username, success: false, error: 'Agent not found or no wallet' });
+          continue;
+        }
+
+        // Authenticate with existing wallet
+        const authToken = await authenticateWithDeHub(agent.wallet_private_key);
+        if (!authToken) {
+          results.push({ db_name, username, success: false, error: 'Auth failed' });
+          continue;
+        }
+
+        // Download avatar and banner from storage
+        const avatarBlob = await downloadFromBucket(supabase, `${db_name}.png`);
+        const bannerBlob = await downloadFromBucket(supabase, `banners/agent-${db_name}.png`);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Set profile with username + avatar + banner
+        const bio = agent.description || `AI agent: ${username}`;
+        const profileResult = await setDeHubProfileWithImages(authToken, username, bio, avatarBlob, bannerBlob);
+
+        // Wait and verify
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        const verification = await verifyProfile(username);
+        console.log(`[SetProfile] Verification for "${username}": avatar=${verification.hasAvatar}, banner=${verification.hasBanner}`);
+
+        // Update DB: store the new DeHub username in metadata
+        await supabase
+          .from('ai_agents')
+          .update({
+            metadata: {
+              ...(typeof agent.metadata === 'object' && agent.metadata !== null ? agent.metadata : {}),
+              dehub_username: username,
+              dehub_auth_token: authToken,
+              profile_set_at: new Date().toISOString(),
+              avatar_verified: verification.hasAvatar,
+              banner_verified: verification.hasBanner,
+            },
+          })
+          .eq('id', agent.id);
+
+        results.push({
+          db_name,
+          username,
+          success: profileResult.success,
+          profile_response: profileResult.responseBody,
+          verification,
+        });
+
+        // Delay between agents
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+
+      return new Response(JSON.stringify({ mode: 'set_profile', results }, null, 2), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // ===== MODE: re-register specific agents with new wallets =====
+    let targetAgentNames: string[] | null = null;
+    if (body?.agents && Array.isArray(body.agents)) {
+      targetAgentNames = body.agents as string[];
+      console.log(`[Register] Re-registration requested for: ${targetAgentNames.join(', ')}`);
     }
 
     // deno-lint-ignore no-explicit-any
     let agents: any[] = [];
 
     if (targetAgentNames && targetAgentNames.length > 0) {
-      // Re-registration mode: fetch specific agents regardless of wallet status
       const { data, error } = await supabase
         .from('ai_agents')
         .select('*')
         .in('name', targetAgentNames)
         .eq('is_active', true);
-
       if (error) {
-        console.error('Failed to fetch agents:', error);
         return new Response(JSON.stringify({ error: 'Failed to fetch agents' }), {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
       agents = data || [];
     } else {
-      // Normal mode: register agents without wallet keys
       const { data, error } = await supabase
         .from('ai_agents')
         .select('*')
         .is('wallet_private_key', null);
-
       if (error) {
-        console.error('Failed to fetch agents:', error);
         return new Response(JSON.stringify({ error: 'Failed to fetch agents' }), {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
       agents = data || [];
@@ -201,76 +266,36 @@ Deno.serve(async (req) => {
 
     console.log(`[Register] Found ${agents.length} agents to process`);
 
-    const results: Array<{
-      name: string;
-      success: boolean;
-      wallet_address?: string;
-      verification?: { hasAvatar: boolean; hasBanner: boolean };
-      profile_response?: string;
-      error?: string;
-    }> = [];
+    // deno-lint-ignore no-explicit-any
+    const results: any[] = [];
 
-    // Process each agent sequentially to avoid rate limiting
     for (const agent of agents) {
       console.log(`[Register] Processing agent "${agent.name}"...`);
 
       try {
-        // Generate wallet
         const wallet = Wallet.createRandom();
         const walletAddress = wallet.address.toLowerCase();
         const privateKey = wallet.privateKey;
 
-        // Small delay between registrations to avoid rate limits
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Authenticate (creates DeHub account)
         const authToken = await authenticateWithDeHub(privateKey);
         if (!authToken) {
           results.push({ name: agent.name, success: false, error: 'Auth failed' });
           continue;
         }
 
-        // Download avatar from storage bucket
-        let avatarBlob: Blob | null = null;
-        try {
-          const { data: avatarData } = await supabase.storage
-            .from('agent-avatars')
-            .download(`${agent.name}.png`);
-          if (avatarData) {
-            avatarBlob = avatarData;
-            console.log(`[Register] Avatar found for "${agent.name}" (${avatarData.size} bytes)`);
-          }
-        } catch {
-          console.log(`[Register] No avatar in bucket for "${agent.name}"`);
-        }
+        const avatarBlob = await downloadFromBucket(supabase, `${agent.name}.png`);
+        const bannerBlob = await downloadFromBucket(supabase, `banners/agent-${agent.name}.png`);
 
-        // Download banner from storage bucket
-        let bannerBlob: Blob | null = null;
-        try {
-          const { data: bannerData } = await supabase.storage
-            .from('agent-avatars')
-            .download(`banners/agent-${agent.name}.png`);
-          if (bannerData) {
-            bannerBlob = bannerData;
-            console.log(`[Register] Banner found for "${agent.name}" (${bannerData.size} bytes)`);
-          }
-        } catch {
-          console.log(`[Register] No banner in bucket for "${agent.name}"`);
-        }
-
-        // Small delay before profile update
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Set profile with username + bio + avatar + banner all in one FormData call
         const bio = agent.description || `AI agent: ${agent.name}`;
         const profileResult = await setDeHubProfileWithImages(authToken, agent.name, bio, avatarBlob, bannerBlob);
 
-        // Wait and verify
         await new Promise(resolve => setTimeout(resolve, 2000));
         const verification = await verifyProfile(agent.name);
-        console.log(`[Register] Verification for "${agent.name}": avatar=${verification.hasAvatar}, banner=${verification.hasBanner}`);
 
-        // Update database with new wallet info
         const { error: updateError } = await supabase
           .from('ai_agents')
           .update({
@@ -291,7 +316,6 @@ Deno.serve(async (req) => {
           .eq('id', agent.id);
 
         if (updateError) {
-          console.error(`Failed to update agent "${agent.name}":`, updateError);
           results.push({ name: agent.name, success: false, error: 'DB update failed' });
           continue;
         }
@@ -304,17 +328,15 @@ Deno.serve(async (req) => {
           profile_response: profileResult.responseBody,
         });
 
-        console.log(`[Register] ✓ Agent "${agent.name}" registered at ${walletAddress} — avatar: ${verification.hasAvatar}, banner: ${verification.hasBanner}`);
+        console.log(`[Register] ✓ "${agent.name}" at ${walletAddress} — avatar: ${verification.hasAvatar}, banner: ${verification.hasBanner}`);
       } catch (error) {
         console.error(`[Register] Error for "${agent.name}":`, error);
         results.push({ name: agent.name, success: false, error: String(error) });
       }
     }
 
-    const successCount = results.filter(r => r.success).length;
-    const failCount = results.filter(r => !r.success).length;
-
-    console.log(`[Register] Complete: ${successCount} succeeded, ${failCount} failed`);
+    const successCount = results.filter((r: { success: boolean }) => r.success).length;
+    const failCount = results.filter((r: { success: boolean }) => !r.success).length;
 
     return new Response(JSON.stringify({
       message: `Registered ${successCount}/${agents.length} agents`,
