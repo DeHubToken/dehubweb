@@ -1,23 +1,23 @@
 /**
  * Live TV Section Component
  * =========================
- * Main TV content section with category filter and channel list.
+ * Main TV content section with dynamic country filter and channel list.
  * 
  * @module components/app/tv/LiveTVSection
  */
 
 import { useState } from 'react';
-import { Search, Tv, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Search, Tv } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TVChannelCard } from './TVChannelCard';
 import { TVCategoryFilter } from './TVCategoryFilter';
 import { 
-  getTVChannelsByCategory, 
+  getTVChannelsByCountry, 
+  getAvailableCountries,
   searchTVChannels,
-  type TVCategoryId,
+  type TVCountryFilter,
 } from '@/lib/api/live-tv';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
@@ -26,21 +26,28 @@ interface LiveTVSectionProps {
 }
 
 export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
-  const [activeCategory, setActiveCategory] = useState<TVCategoryId>('all');
+  const [activeCountry, setActiveCountry] = useState<TVCountryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
   
   const isSearching = debouncedSearch.length > 0;
+
+  // Fetch available countries for the filter
+  const { data: countries = [] } = useQuery({
+    queryKey: ['tv-countries'],
+    queryFn: getAvailableCountries,
+    staleTime: 5 * 60 * 1000,
+  });
   
-  // Fetch channels by category
+  // Fetch channels by country
   const { 
-    data: categoryChannels, 
-    isLoading: isLoadingCategory,
-    error: categoryError 
+    data: countryChannels, 
+    isLoading: isLoadingCountry,
+    error: countryError 
   } = useQuery({
-    queryKey: ['tv-channels', activeCategory],
-    queryFn: () => getTVChannelsByCategory(activeCategory, 50),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['tv-channels', activeCountry],
+    queryFn: () => getTVChannelsByCountry(activeCountry, 50),
+    staleTime: 5 * 60 * 1000,
     enabled: !isSearching,
   });
   
@@ -52,38 +59,39 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
   } = useQuery({
     queryKey: ['tv-search', debouncedSearch],
     queryFn: () => searchTVChannels(debouncedSearch, 50),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000,
     enabled: isSearching,
   });
   
   const channels = isSearching 
     ? (searchResults || []) 
-    : (categoryChannels || []);
+    : (countryChannels || []);
   
-  const isLoading = isSearching ? isLoadingSearch : isLoadingCategory;
-  const error = isSearching ? searchError : categoryError;
+  const isLoading = isSearching ? isLoadingSearch : isLoadingCountry;
+  const error = isSearching ? searchError : countryError;
   
   return (
     <div className="space-y-3">
-      {/* Search & Category Filter - not sticky to avoid overlapping icons */}
+      {/* Search & Country Filter */}
       <div className="space-y-2.5">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             type="text"
-            placeholder="Search 700+ live TV channels..."
+            placeholder={`Search ${channels.length || ''}+ live TV channels...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
           />
         </div>
         
-        {/* Category Filter (hidden when searching) */}
-        {!isSearching && (
+        {/* Country Filter (hidden when searching) */}
+        {!isSearching && countries.length > 0 && (
           <TVCategoryFilter 
-            activeCategory={activeCategory} 
-            onCategoryChange={setActiveCategory} 
+            activeCountry={activeCountry} 
+            onCountryChange={setActiveCountry}
+            countries={countries}
           />
         )}
         
@@ -135,7 +143,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
           <p className="text-zinc-500 text-sm max-w-[280px]">
             {isSearching 
               ? 'Try a different search term.'
-              : 'Try selecting a different category.'}
+              : 'Try selecting a different country.'}
           </p>
         </div>
       )}

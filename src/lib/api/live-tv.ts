@@ -24,24 +24,13 @@ export interface TVChannel {
   languages: string[];
 }
 
-export type TVCategoryId = 
-  | 'all'
-  | 'us'
-  | 'uk'
-  | 'de'
-  | 'fr'
-  | 'es'
-  | 'it'
-  | 'in'
-  | 'br'
-  | 'mx'
-  | 'ca'
-  | 'au'
-  | 'other';
+/** Country filter uses the raw country string from the database */
+export type TVCountryFilter = string; // 'all' or the exact country name e.g. 'Italy', 'USA'
 
 export interface TVCategory {
-  id: TVCategoryId;
+  id: string;
   label: string;
+  count: number;
 }
 
 // ============================================================================
@@ -50,41 +39,14 @@ export interface TVCategory {
 
 const FREE_TV_PLAYLIST_URL = 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8';
 
-export const TV_CATEGORIES: TVCategory[] = [
-  { id: 'all', label: 'All' },
-  { id: 'us', label: 'USA' },
-  { id: 'uk', label: 'UK' },
-  { id: 'de', label: 'Germany' },
-  { id: 'fr', label: 'France' },
-  { id: 'es', label: 'Spain' },
-  { id: 'it', label: 'Italy' },
-  { id: 'in', label: 'India' },
-  { id: 'br', label: 'Brazil' },
-  { id: 'mx', label: 'Mexico' },
-  { id: 'ca', label: 'Canada' },
-  { id: 'au', label: 'Australia' },
-  { id: 'other', label: 'Other' },
-];
-
-const COUNTRY_TO_CATEGORY: Record<string, TVCategoryId> = {
-  'united states': 'us',
-  'usa': 'us',
-  'united kingdom': 'uk',
-  'uk': 'uk',
-  'germany': 'de',
-  'deutschland': 'de',
-  'france': 'fr',
-  'spain': 'es',
-  'españa': 'es',
-  'italy': 'it',
-  'italia': 'it',
-  'india': 'in',
-  'brazil': 'br',
-  'brasil': 'br',
-  'mexico': 'mx',
-  'méxico': 'mx',
-  'canada': 'ca',
-  'australia': 'au',
+/** Friendly display names for countries that need cleanup */
+const COUNTRY_DISPLAY_OVERRIDES: Record<string, string> = {
+  'VOD Italy': 'VOD Italy',
+  '日本 / Japan': 'Japan',
+  'News (AR)': 'News (Arabic)',
+  'News (ES)': 'News (Spanish)',
+  'Documentaries (EN)': 'Documentaries',
+  'North Macedonia': 'N. Macedonia',
 };
 
 // ============================================================================
@@ -147,9 +109,9 @@ function generateIdFromUrl(url: string): string {
   return `ch-${Math.abs(hash).toString(36)}`;
 }
 
-function mapCountryToCategory(groupTitle: string): TVCategoryId {
-  const normalized = groupTitle.toLowerCase().trim();
-  return COUNTRY_TO_CATEGORY[normalized] || 'other';
+function mapCountryToCategory(groupTitle: string): string {
+  // For fallback parsing, just use the group title as-is
+  return groupTitle;
 }
 
 function isValidStream(url: string, name: string): boolean {
@@ -247,20 +209,20 @@ async function fetchAllChannels(): Promise<TVChannel[]> {
 }
 
 /**
- * Get TV channels by country category
+ * Get TV channels by country filter
  */
-export async function getTVChannelsByCategory(
-  category: TVCategoryId,
+export async function getTVChannelsByCountry(
+  country: TVCountryFilter,
   limit: number = 50
 ): Promise<TVChannel[]> {
   const allChannels = await fetchAllChannels();
   
   let filtered: TVChannel[];
   
-  if (category === 'all') {
+  if (country === 'all') {
     filtered = allChannels;
   } else {
-    filtered = allChannels.filter((ch) => ch.category === category);
+    filtered = allChannels.filter((ch) => ch.country === country);
   }
   
   // Sort: channels with logos first, then by name
@@ -281,7 +243,7 @@ export async function searchTVChannels(
   limit: number = 50
 ): Promise<TVChannel[]> {
   if (!query.trim()) {
-    return getTVChannelsByCategory('all', limit);
+    return getTVChannelsByCountry('all', limit);
   }
   
   const allChannels = await fetchAllChannels();
@@ -312,6 +274,33 @@ export async function searchTVChannels(
   });
   
   return results.slice(0, limit);
+}
+
+/**
+ * Get available countries with channel counts, sorted by count descending.
+ * Returns TVCategory[] with 'All' as the first entry.
+ */
+export async function getAvailableCountries(): Promise<TVCategory[]> {
+  const allChannels = await fetchAllChannels();
+  const countMap = new Map<string, number>();
+
+  for (const ch of allChannels) {
+    countMap.set(ch.country, (countMap.get(ch.country) || 0) + 1);
+  }
+
+  const countries: TVCategory[] = [
+    { id: 'all', label: 'All', count: allChannels.length },
+  ];
+
+  // Sort by channel count descending
+  const sorted = [...countMap.entries()].sort((a, b) => b[1] - a[1]);
+
+  for (const [country, count] of sorted) {
+    const displayName = COUNTRY_DISPLAY_OVERRIDES[country] || country;
+    countries.push({ id: country, label: displayName, count });
+  }
+
+  return countries;
 }
 
 /**
@@ -385,16 +374,3 @@ export function getCountryFlag(country: string): string {
   return String.fromCodePoint(...codePoints);
 }
 
-/** Map category IDs to display labels */
-const CATEGORY_DISPLAY: Record<string, string> = {
-  us: 'USA', uk: 'UK', de: 'Germany', fr: 'France',
-  es: 'Spain', it: 'Italy', in: 'India', br: 'Brazil',
-  mx: 'Mexico', ca: 'Canada', au: 'Australia', other: 'Other',
-};
-
-/**
- * Get a readable display name for a category ID
- */
-export function getCategoryDisplayName(categoryId: string): string {
-  return CATEGORY_DISPLAY[categoryId] || categoryId;
-}
