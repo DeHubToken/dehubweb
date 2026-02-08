@@ -1,38 +1,81 @@
 import { useState } from 'react';
-import { TrendingUp, Info, Settings2 } from 'lucide-react';
+import { TrendingUp, Info, Settings2, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, ComposedChart } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
+import { useQuery } from '@tanstack/react-query';
+import { getDPayTransactions, getDPayTotal, type DPayTransaction } from '@/lib/api/dpay';
+import { useAuth } from '@/contexts/AuthContext';
 import dehubCoin from '@/assets/dehub-coin.png';
-
-const chartData = [
-  { month: 'Jan', income: 45000, expenditure: 30000 },
-  { month: 'Feb', income: 77567, expenditure: 23831 },
-  { month: 'Mar', income: 65000, expenditure: 35000 },
-  { month: 'Apr', income: 58000, expenditure: 28000 },
-  { month: 'May', income: 72000, expenditure: 32000 },
-  { month: 'Jun', income: 85000, expenditure: 40000 },
-];
-
-const breakdownData = [
-  { name: 'Subscriptions', value: 46.2, color: '#22c55e' },
-  { name: 'Withdrawals', value: 23.7, color: '#3b82f6' },
-  { name: 'Tips', value: 15.9, color: '#ef4444' },
-  { name: 'Deposits', value: 12.2, color: '#eab308' },
-];
-
-const transactionList = [
-  { date: '06-Mar-24', type: 'Tips', amount: '- 400 DeHub', method: 'Wallet', status: 'Complete' },
-  { date: '29-Feb-24', type: 'Subscription', amount: '5600 DeHub', method: 'Wallet', status: 'Complete' },
-  { date: '15-Feb-24', type: 'Deposit', amount: '+ 10000 DeHub', method: 'Fiat Gateway', status: 'Complete' },
-  { date: '06-Mar-24', type: 'Tips', amount: '- 400 DeHub', method: 'Wallet', status: 'Complete' },
-  { date: '15-Feb-24', type: 'Deposit', amount: '+ 10000 DeHub', method: 'Fiat Gateway', status: 'Complete' },
-];
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
+// Generate chart data from transactions
+function buildChartData(transactions: DPayTransaction[]) {
+  if (transactions.length === 0) return [];
+  
+  // Group by month
+  const months: Record<string, { income: number; expenditure: number }> = {};
+  
+  transactions.forEach((tx) => {
+    const date = new Date(tx.createdAt);
+    const key = date.toLocaleDateString('en-US', { month: 'short' });
+    if (!months[key]) months[key] = { income: 0, expenditure: 0 };
+    
+    if (tx.type === 'buy' || tx.type === 'transfer') {
+      months[key].income += tx.amount;
+    } else {
+      months[key].expenditure += tx.amount;
+    }
+  });
+  
+  return Object.entries(months).map(([month, data]) => ({
+    month,
+    income: Math.round(data.income),
+    expenditure: Math.round(data.expenditure),
+  }));
+}
+
+// Generate breakdown from transactions
+function buildBreakdown(transactions: DPayTransaction[]) {
+  const types: Record<string, number> = {};
+  let total = 0;
+  
+  transactions.forEach((tx) => {
+    const label = tx.type === 'buy' ? 'Purchases' : tx.type === 'sell' ? 'Sales' : 'Transfers';
+    types[label] = (types[label] || 0) + tx.amount;
+    total += tx.amount;
+  });
+  
+  const colors = ['#22c55e', '#3b82f6', '#ef4444', '#eab308'];
+  return Object.entries(types).map(([name, value], i) => ({
+    name,
+    value: total > 0 ? Math.round((value / total) * 1000) / 10 : 0,
+    color: colors[i % colors.length],
+  }));
+}
+
 export function TransactionsTab() {
   const [activeFilter, setActiveFilter] = useState('1m');
+  const { isAuthenticated } = useAuth();
+
+  const { data: transactions = [], isLoading: txLoading, isError: txError } = useQuery({
+    queryKey: ['dpay', 'transactions'],
+    queryFn: getDPayTransactions,
+    enabled: isAuthenticated,
+    staleTime: 60_000,
+  });
+
+  const { data: totals } = useQuery({
+    queryKey: ['dpay', 'totals'],
+    queryFn: getDPayTotal,
+    staleTime: 5 * 60_000,
+  });
+
+  const chartData = buildChartData(transactions);
+  const breakdownData = buildBreakdown(transactions);
+  const totalVolume = totals?.totalVolume ?? 0;
+  const totalCount = totals?.totalTransactions ?? 0;
 
   return (
     <div className="space-y-4">
@@ -56,17 +99,20 @@ export function TransactionsTab() {
           <div className="flex items-start justify-between mb-2">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-zinc-400 text-sm">Total transactions</span>
-                <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
-                  Increased by 27%
-                </span>
+                <span className="text-zinc-400 text-sm">Total volume</span>
+                {totalCount > 0 && (
+                  <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    {totalCount} txns
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-3xl sm:text-4xl font-bold text-white">490,890</span>
+                <span className="text-3xl sm:text-4xl font-bold text-white">
+                  {totalVolume.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                </span>
                 <img src={dehubCoin} alt="DeHub" className="w-5 h-5" />
               </div>
-              <p className="text-zinc-500 text-sm mt-1"><span className="text-white">50,698 DeHub</span> more than last month.</p>
             </div>
             <div className="flex items-center gap-2">
               <button className="text-zinc-500 hover:text-zinc-300">
@@ -99,63 +145,55 @@ export function TransactionsTab() {
 
           {/* Chart */}
           <div className="h-40">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis 
-                  dataKey="month" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#71717a', fontSize: 11 }}
-                />
-                <YAxis hide />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#18181b', 
-                    border: '1px solid #27272a',
-                    borderRadius: '8px',
-                    color: '#fff'
-                  }}
-                  formatter={(value: number, name: string) => [
-                    `${value.toLocaleString()} DeHub`, 
-                    name === 'income' ? 'Income' : 'Expenditure'
-                  ]}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="income"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  fill="url(#incomeGradient)"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="expenditure"
-                  stroke="#ef4444"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Legend */}
-          <div className="flex items-center gap-4 mt-2 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-0.5 bg-blue-500" />
-              <span className="text-zinc-400">Income/Expenditure</span>
-            </div>
-            <div className="flex items-center gap-1 bg-zinc-800 px-2 py-1 rounded text-blue-400">
-              <span>↑ 77,567 DeHub</span>
-            </div>
-            <div className="flex items-center gap-1 bg-zinc-800 px-2 py-1 rounded text-red-400">
-              <span>↓ 23,831 DeHub</span>
-            </div>
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis 
+                    dataKey="month" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#71717a', fontSize: 11 }}
+                  />
+                  <YAxis hide />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#18181b', 
+                      border: '1px solid #27272a',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }}
+                    formatter={(value: number, name: string) => [
+                      `${value.toLocaleString()} DeHub`, 
+                      name === 'income' ? 'Income' : 'Expenditure'
+                    ]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="income"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    fill="url(#incomeGradient)"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="expenditure"
+                    stroke="#ef4444"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-zinc-500 text-sm">
+                {txLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'No chart data yet'}
+              </div>
+            )}
           </div>
         </div>
 
@@ -164,78 +202,52 @@ export function TransactionsTab() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <span className="text-zinc-400 text-sm">Transaction breakdown</span>
-              <p className="text-zinc-500 text-xs mt-1">
-                Most amount of transaction <span className="text-white">236509 DeHub</span> through
-              </p>
-              <p className="text-emerald-400 text-sm font-medium">Subscriptions</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="text-zinc-500 hover:text-zinc-300">
-                <Info className="w-4 h-4" />
-              </button>
-              <button className="text-zinc-500 hover:text-zinc-300">
-                <Settings2 className="w-4 h-4" />
-              </button>
+              {breakdownData.length > 0 && (
+                <>
+                  <p className="text-zinc-500 text-xs mt-1">
+                    Largest category: <span className="text-emerald-400 font-medium">{breakdownData[0]?.name}</span>
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
-          {/* Time Filters */}
-          <div className="flex items-center gap-1 mb-4 bg-zinc-800/50 rounded-xl p-1 w-fit ml-auto">
-            {timeFilters.map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                  activeFilter === filter
-                    ? 'bg-emerald-600 text-white'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
+          {breakdownData.length > 0 ? (
+            <div className="flex items-center justify-center gap-8">
+              <div className="space-y-2">
+                {breakdownData.map((item, index) => (
+                  <div key={index} className="flex items-center gap-2 text-xs">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className="text-zinc-400">{item.value}% {item.name}</span>
+                  </div>
+                ))}
+              </div>
 
-          {/* Donut Chart with Legend */}
-          <div className="flex items-center justify-center gap-8">
-            <div className="space-y-2">
-              {breakdownData.slice(0, 2).map((item, index) => (
-                <div key={index} className="flex items-center gap-2 text-xs">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-zinc-400">{item.value}% {item.name}</span>
-                </div>
-              ))}
+              <div className="w-40 h-40">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={breakdownData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={45}
+                      outerRadius={70}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {breakdownData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-
-            <div className="w-40 h-40">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={breakdownData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={45}
-                    outerRadius={70}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {breakdownData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-40 text-zinc-500 text-sm">
+              {txLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'No transactions yet'}
             </div>
-
-            <div className="space-y-2">
-              {breakdownData.slice(2).map((item, index) => (
-                <div key={index} className="flex items-center gap-2 text-xs">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-zinc-400">{item.value}% {item.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -243,48 +255,76 @@ export function TransactionsTab() {
       <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
         <div className="flex items-center justify-between mb-4">
           <span className="text-white font-semibold">Transaction list</span>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-xl bg-transparent">
-              Filter ▼
-            </Button>
-            <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-8 rounded-xl bg-transparent">
-              Export CSV
-            </Button>
-          </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-zinc-500 text-xs border-b border-zinc-800">
-                <th className="text-left font-normal pb-3">Date</th>
-                <th className="text-left font-normal pb-3">Type</th>
-                <th className="text-left font-normal pb-3">Amount</th>
-                <th className="text-left font-normal pb-3">Payment method</th>
-                <th className="text-left font-normal pb-3">Status</th>
-                <th className="text-left font-normal pb-3">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-800">
-              {transactionList.map((tx, index) => (
-                <tr key={index} className="text-zinc-400">
-                  <td className="py-4">{tx.date}</td>
-                  <td className="py-4">{tx.type}</td>
-                  <td className={`py-4 ${tx.amount.startsWith('+') ? 'text-emerald-400' : tx.amount.startsWith('-') ? 'text-red-400' : 'text-white'}`}>
-                    {tx.amount}
-                  </td>
-                  <td className="py-4">{tx.method}</td>
-                  <td className="py-4 text-emerald-400">{tx.status}</td>
-                  <td className="py-4">
-                    <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-400 text-xs h-7 rounded-xl bg-transparent">
-                      View transaction
-                    </Button>
-                  </td>
+        {txLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
+          </div>
+        ) : txError ? (
+          <div className="flex flex-col items-center justify-center py-8 text-zinc-400 gap-2">
+            <AlertCircle className="w-6 h-6" />
+            <p className="text-sm">Failed to load transactions</p>
+          </div>
+        ) : transactions.length === 0 ? (
+          <div className="text-center py-8 text-zinc-500 text-sm">
+            No transactions found. Make your first purchase!
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-zinc-500 text-xs border-b border-zinc-800">
+                  <th className="text-left font-normal pb-3">Date</th>
+                  <th className="text-left font-normal pb-3">Type</th>
+                  <th className="text-left font-normal pb-3">Amount</th>
+                  <th className="text-left font-normal pb-3">Token</th>
+                  <th className="text-left font-normal pb-3">Status</th>
+                  <th className="text-left font-normal pb-3">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-zinc-800">
+                {transactions.map((tx) => {
+                  const date = new Date(tx.createdAt);
+                  const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: '2-digit' });
+                  const isCredit = tx.type === 'buy';
+                  
+                  return (
+                    <tr key={tx.id} className="text-zinc-400">
+                      <td className="py-4">{dateStr}</td>
+                      <td className="py-4 capitalize">{tx.type}</td>
+                      <td className={`py-4 font-medium ${isCredit ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {isCredit ? '+' : '-'} {tx.amount.toLocaleString()} DHB
+                      </td>
+                      <td className="py-4">{tx.tokenSymbol}</td>
+                      <td className="py-4">
+                        <span className={`text-xs px-2 py-0.5 rounded-lg ${
+                          tx.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                          tx.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                          'bg-red-500/20 text-red-400'
+                        }`}>
+                          {tx.status}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        {tx.txHash && (
+                          <a
+                            href={`https://basescan.org/tx/${tx.txHash}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:text-blue-300 text-xs"
+                          >
+                            View tx
+                          </a>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
