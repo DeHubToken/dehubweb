@@ -175,11 +175,12 @@ async function fetchTemplateStories(): Promise<Story[]> {
     const usernames = Object.keys(TEMPLATE_VIDEO_URLS);
     const totalStories = usernames.length;
     
-    // Spread stories across 22-24 hours ago (within a 2-hour window)
+    // Spread stories across 1-2 hours ago so they appear fresh
+    // They'll naturally expire 24 hours after their created_at timestamp
     const now = Date.now();
-    const windowStartMs = 24 * 60 * 60 * 1000; // 24 hours ago
-    const windowEndMs = 22 * 60 * 60 * 1000;   // 22 hours ago
-    const windowSpanMs = windowStartMs - windowEndMs; // 2 hours span
+    const windowStartMs = 2 * 60 * 60 * 1000; // 2 hours ago
+    const windowEndMs = 1 * 60 * 60 * 1000;   // 1 hour ago
+    const windowSpanMs = windowStartMs - windowEndMs; // 1 hour span
 
     return usernames.map((username, index) => {
       const offsetMs = windowStartMs - (windowSpanMs * index) / (totalStories - 1);
@@ -199,8 +200,8 @@ async function fetchTemplateStories(): Promise<Story[]> {
     });
   } catch {
     const now = Date.now();
-    const windowStartMs = 24 * 60 * 60 * 1000;
-    const windowEndMs = 22 * 60 * 60 * 1000;
+    const windowStartMs = 2 * 60 * 60 * 1000;
+    const windowEndMs = 1 * 60 * 60 * 1000;
     const windowSpanMs = windowStartMs - windowEndMs;
     const usernames = Object.keys(TEMPLATE_VIDEO_URLS);
     const totalStories = usernames.length;
