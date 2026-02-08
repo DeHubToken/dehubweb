@@ -3,11 +3,11 @@
  * ============
  * Manages story uploads, fetching, and real-time updates.
  * Stories expire after 24 hours.
- * Avatars are fetched fresh from user profiles to stay current.
+ * Avatars are cached aggressively to prevent re-rendering between tabs / story flicks.
  */
 
-import { useState, useCallback, useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useCallback, useMemo, useRef } from 'react';
+import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { getAccountByUsername } from '@/lib/api/dehub';
@@ -84,17 +84,27 @@ async function extractFirstFrame(videoBlob: Blob): Promise<Blob | null> {
   });
 }
 
+// ─── Persistent avatar cache (survives component remounts) ───
+const avatarCache = new Map<string, string>();
+
 /**
  * Fetch fresh avatar for a user from DeHub API by username.
- * Uses username lookup so template agents resolve their own profile,
- * not the owner's wallet.
+ * Results are cached in a module-level Map so they persist across remounts.
  */
 async function fetchFreshAvatarByUsername(username: string): Promise<string | null> {
+  const key = username.toLowerCase();
+
+  // Return cached value immediately
+  const cached = avatarCache.get(key);
+  if (cached) return cached;
+
   try {
     const user = await getAccountByUsername(username);
     const rawAvatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
     const address = user.address || user.wallet_address || '';
-    return buildAvatarUrl(address, rawAvatar);
+    const url = buildAvatarUrl(address, rawAvatar);
+    if (url) avatarCache.set(key, url);
+    return url;
   } catch {
     return null;
   }
@@ -166,17 +176,15 @@ async function fetchTemplateStories(): Promise<Story[]> {
     const totalStories = usernames.length;
     
     // Spread stories across 22-24 hours ago (within a 2-hour window)
-    // Each story gets a fixed offset so they appear staggered
     const now = Date.now();
     const windowStartMs = 24 * 60 * 60 * 1000; // 24 hours ago
     const windowEndMs = 22 * 60 * 60 * 1000;   // 22 hours ago
     const windowSpanMs = windowStartMs - windowEndMs; // 2 hours span
 
     return usernames.map((username, index) => {
-      // Evenly distribute across the 2-hour window (24h ago -> 22h ago)
       const offsetMs = windowStartMs - (windowSpanMs * index) / (totalStories - 1);
       const createdAt = new Date(now - offsetMs);
-      const expiresAt = new Date(createdAt.getTime() + 86400000); // +24h from created
+      const expiresAt = new Date(createdAt.getTime() + 86400000);
 
       return {
         id: `template-${index + 1}`,
@@ -190,7 +198,6 @@ async function fetchTemplateStories(): Promise<Story[]> {
       };
     });
   } catch {
-    // Fallback: return with placeholder addresses if fetch fails
     const now = Date.now();
     const windowStartMs = 24 * 60 * 60 * 1000;
     const windowEndMs = 22 * 60 * 60 * 1000;
@@ -228,9 +235,7 @@ function getCachedStories(): Story[] | undefined {
     const raw = localStorage.getItem(STORIES_CACHE_KEY);
     if (!raw) return undefined;
     const { data, timestamp } = JSON.parse(raw);
-    // Expire cache after 2 hours (safety net)
     if (Date.now() - timestamp > 2 * 60 * 60 * 1000) return undefined;
-    // Filter out already-expired stories
     const now = new Date().toISOString();
     return (data as Story[]).filter(s => s.expires_at > now);
   } catch {
@@ -284,6 +289,7 @@ export function useStories() {
     queryKey: ['template-stories'],
     queryFn: fetchTemplateStories,
     staleTime: 1000 * 60 * 30, // 30 minutes
+    gcTime: 1000 * 60 * 60, // keep in cache for 1 hour
   });
 
   // Fetch active (non-expired) stories - uses localStorage cache for instant load
@@ -303,25 +309,33 @@ export function useStories() {
       return result;
     },
     staleTime: 1000 * 60 * 60, // 1 hour
+    gcTime: 1000 * 60 * 60 * 2, // 2 hours
     placeholderData: getCachedStories,
   });
 
-  // Use template stories as fallback when no real stories exist
-  const activeStories = stories.length > 0 ? stories : templateStories;
+  // Stable reference for activeStories — only changes when IDs actually change
+  const activeStories = useMemo(
+    () => (stories.length > 0 ? stories : templateStories),
+    [stories, templateStories]
+  );
+
+  // Stable key for the avatar enrichment query — only changes when story IDs change
+  const storyIdsKey = useMemo(
+    () => activeStories.map(s => s.id).join(','),
+    [activeStories]
+  );
 
   // Lazy-load fresh avatars in the background (non-blocking)
-  // Uses username-based lookup so template agents resolve their own profile avatar
+  // Uses keepPreviousData to prevent flash on refetch
   const { data: enrichedStories = activeStories } = useQuery({
-    queryKey: ['stories-with-avatars', activeStories.map(s => s.id).join(',')],
+    queryKey: ['stories-with-avatars', storyIdsKey],
     queryFn: async () => {
       if (activeStories.length === 0) return [];
       
-      // Get unique usernames from stories that have one
       const storiesWithUsernames = activeStories.filter(s => s.username);
-      
       if (storiesWithUsernames.length === 0) return activeStories;
       
-      // Fetch fresh avatars by username in parallel
+      // Fetch fresh avatars by username in parallel (module-level cache handles dedup)
       const avatarMap = new Map<string, string | null>();
       await Promise.all(
         [...new Set(storiesWithUsernames.map(s => s.username!))].map(async (username) => {
@@ -330,27 +344,31 @@ export function useStories() {
         })
       );
       
-      // Enrich stories with fresh avatars; keep local TEMPLATE_AVATARS as fallback
       return activeStories.map(story => {
         if (!story.username) return story;
         const fresh = avatarMap.get(story.username.toLowerCase());
-        return {
-          ...story,
-          avatar: fresh || story.avatar,
-        };
+        // Only create a new object if the avatar actually changed
+        if (fresh && fresh !== story.avatar) {
+          return { ...story, avatar: fresh };
+        }
+        return story;
       });
     },
     enabled: activeStories.length > 0 && activeStories.some(s => !!s.username),
-    staleTime: 1000 * 60 * 5, // 5 minutes - avatars don't change often
+    staleTime: 1000 * 60 * 30, // 30 minutes — avatars rarely change
+    gcTime: 1000 * 60 * 60, // keep in cache for 1 hour
+    placeholderData: keepPreviousData,
   });
 
-  // Group stories by user (most recent story per user shown in bar)
-  const storyUsers = enrichedStories.reduce((acc, story) => {
-    if (!acc.find((s) => s.wallet_address === story.wallet_address)) {
-      acc.push(story);
-    }
-    return acc;
-  }, [] as Story[]);
+  // Memoize storyUsers — only recompute when enrichedStories reference changes
+  const storyUsers = useMemo(() => {
+    return enrichedStories.reduce((acc, story) => {
+      if (!acc.find((s) => s.wallet_address === story.wallet_address)) {
+        acc.push(story);
+      }
+      return acc;
+    }, [] as Story[]);
+  }, [enrichedStories]);
 
   return {
     stories: enrichedStories,

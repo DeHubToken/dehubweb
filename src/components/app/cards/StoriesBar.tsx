@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -204,31 +204,35 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   );
 
   // Combine real stories with placeholder users, watched stories go to end
-  const allStoryItems = [
-    ...storyUsers.map((story) => ({
-      type: 'story' as const,
-      story,
-      name: story.username || `${story.wallet_address.slice(0, 6)}...`,
-      // Local asset paths (starting with /) must pass through as-is, not through buildAvatarUrl
-      avatar: (story.avatar?.startsWith('/') || story.avatar?.startsWith('http'))
-        ? story.avatar
-        : buildAvatarUrl(story.wallet_address, story.avatar) || '',
-      thumbnail: story.thumbnail_url || '',
-      watched: isWatched(story.id),
-    })),
-    ...users.map((user) => ({
-      type: 'placeholder' as const,
-      story: null as Story | null,
-      name: user.name.replace(/^@/, ''),
-      avatar: user.avatar,
-      thumbnail: '',
-      watched: false,
-    })),
-  ].sort((a, b) => {
-    // Unwatched first, watched last
-    if (a.watched !== b.watched) return a.watched ? 1 : -1;
-    return 0;
-  });
+  // Memoize to prevent recalculation on every render
+  const allStoryItems = useMemo(() => {
+    const items = [
+      ...storyUsers.map((story) => ({
+        type: 'story' as const,
+        story,
+        name: story.username || `${story.wallet_address.slice(0, 6)}...`,
+        // Local asset paths (starting with /) must pass through as-is, not through buildAvatarUrl
+        avatar: (story.avatar?.startsWith('/') || story.avatar?.startsWith('http'))
+          ? story.avatar
+          : buildAvatarUrl(story.wallet_address, story.avatar) || '',
+        thumbnail: story.thumbnail_url || '',
+        watched: isWatched(story.id),
+      })),
+      ...users.map((u) => ({
+        type: 'placeholder' as const,
+        story: null as Story | null,
+        name: u.name.replace(/^@/, ''),
+        avatar: u.avatar,
+        thumbnail: '',
+        watched: false,
+      })),
+    ];
+    items.sort((a, b) => {
+      if (a.watched !== b.watched) return a.watched ? 1 : -1;
+      return 0;
+    });
+    return items;
+  }, [storyUsers, users, isWatched]);
 
   // Set the total stories count for coordinated thumbnail loading
   // Only count visible stories for the initial reveal
