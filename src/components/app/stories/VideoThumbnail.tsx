@@ -12,6 +12,8 @@ interface VideoThumbnailProps {
   alt: string;
   className?: string;
   fallback?: React.ReactNode;
+  /** Called when the thumbnail has loaded or failed */
+  onReady?: () => void;
 }
 
 export const VideoThumbnail = memo(function VideoThumbnail({
@@ -19,6 +21,7 @@ export const VideoThumbnail = memo(function VideoThumbnail({
   alt,
   className = '',
   fallback,
+  onReady,
 }: VideoThumbnailProps) {
   const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
@@ -26,6 +29,7 @@ export const VideoThumbnail = memo(function VideoThumbnail({
   useEffect(() => {
     if (!videoUrl) {
       setFailed(true);
+      onReady?.();
       return;
     }
 
@@ -39,6 +43,7 @@ export const VideoThumbnail = memo(function VideoThumbnail({
     const timeout = setTimeout(() => {
       cleanup();
       setFailed(true);
+      onReady?.();
     }, 8000);
 
     function cleanup() {
@@ -64,12 +69,15 @@ export const VideoThumbnail = memo(function VideoThumbnail({
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
           setThumbnailSrc(dataUrl);
+          onReady?.();
         } else {
           setFailed(true);
+          onReady?.();
         }
       } catch {
         // CORS or other canvas error
         setFailed(true);
+        onReady?.();
       }
       cleanup();
     };
@@ -77,6 +85,7 @@ export const VideoThumbnail = memo(function VideoThumbnail({
     video.onerror = () => {
       cleanup();
       setFailed(true);
+      onReady?.();
     };
 
     video.src = videoUrl;

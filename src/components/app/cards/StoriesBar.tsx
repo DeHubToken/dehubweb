@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -51,12 +51,24 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const [viewerStartIndex, setViewerStartIndex] = useState(0);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isShortsViewerOpen, setIsShortsViewerOpen] = useState(false);
+  const [thumbnailsReady, setThumbnailsReady] = useState(false);
   
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
   const { storyUsers, stories, isLoading: storiesLoading } = useStories();
   const { uploadStory, isUploading } = useUploadStory();
   const { markWatched, isWatched } = useWatchedStories();
+
+  // Track how many thumbnails have loaded so we can reveal all at once
+  const loadedCountRef = useRef(0);
+  const totalStoriesRef = useRef(0);
+
+  const handleThumbnailReady = useCallback(() => {
+    loadedCountRef.current += 1;
+    if (loadedCountRef.current >= totalStoriesRef.current) {
+      setThumbnailsReady(true);
+    }
+  }, []);
   
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
@@ -193,7 +205,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     ...storyUsers.map((story) => ({
       type: 'story' as const,
       story,
-      name: story.username ? `@${story.username}` : `${story.wallet_address.slice(0, 6)}...`,
+      name: story.username || `${story.wallet_address.slice(0, 6)}...`,
       avatar: buildAvatarUrl(story.wallet_address, story.avatar) || '',
       thumbnail: story.thumbnail_url || '',
       watched: isWatched(story.id),
@@ -201,7 +213,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     ...users.map((user) => ({
       type: 'placeholder' as const,
       story: null as Story | null,
-      name: user.name.startsWith('@') ? user.name : `@${user.name}`,
+      name: user.name.replace(/^@/, ''),
       avatar: user.avatar,
       thumbnail: '',
       watched: false,
@@ -211,6 +223,15 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     if (a.watched !== b.watched) return a.watched ? 1 : -1;
     return 0;
   });
+
+  // Set the total stories count for coordinated thumbnail loading
+  const storyCount = allStoryItems.filter(i => i.type === 'story').length;
+  if (storyCount !== totalStoriesRef.current) {
+    totalStoriesRef.current = storyCount;
+    loadedCountRef.current = 0;
+    // If no stories to load, mark ready immediately
+    if (storyCount === 0) setThumbnailsReady(true);
+  }
 
   // Show skeleton while loading
   if (showSkeleton) {
@@ -268,7 +289,14 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           {/* Right fade gradient to signal more stories */}
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
           
-          <SwipeableCarousel className="flex gap-1.5 overflow-x-auto scrollbar-hide px-2">
+          {/* Show skeleton overlay until all thumbnails are ready */}
+          {!thumbnailsReady && storyCount > 0 && (
+            <div className="absolute inset-0 z-20">
+              <StoriesBarSkeleton />
+            </div>
+          )}
+          
+          <SwipeableCarousel className={`flex gap-1.5 overflow-x-auto scrollbar-hide px-2 ${!thumbnailsReady && storyCount > 0 ? 'invisible' : ''}`}>
             {/* Create Story/Live Button */}
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
               <div onClick={() => setIsOpen(true)}>
@@ -307,12 +335,15 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                           src={item.thumbnail} 
                           alt={item.name}
                           className="w-full h-full object-cover"
+                          onLoad={handleThumbnailReady}
+                          onError={handleThumbnailReady}
                         />
                       ) : (
                         <VideoThumbnail
                           videoUrl={item.story?.video_url || ''}
                           alt={item.name}
                           className="w-full h-full object-cover"
+                          onReady={handleThumbnailReady}
                           fallback={
                             <Avatar className="w-full h-full rounded-[10px]">
                               <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
