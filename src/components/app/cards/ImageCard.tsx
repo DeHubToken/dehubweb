@@ -12,7 +12,7 @@
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -29,6 +29,8 @@ import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
+import { useAuth } from '@/contexts/AuthContext';
+import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheImageForNavigation } from '@/lib/post-cache';
 import {
   Drawer,
@@ -353,9 +355,12 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
+  const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+  const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -466,6 +471,25 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                 <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                   <EyeOff className="w-5 h-5" /> See Less Like This
                 </button>
+                {isOwnPost && (
+                  <>
+                    <div className="border-t border-white/10 my-1" />
+                    <button
+                      onClick={async () => {
+                        const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
+                        try {
+                          await updateTokenVisibility(post.id, next);
+                          setVisibility(next);
+                          toast.success(`Post set to ${next}`);
+                        } catch { toast.error('Failed to update visibility'); }
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
+                      {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                    </button>
+                  </>
+                )}
               </div>
             </DrawerContent>
           </Drawer>

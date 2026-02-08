@@ -34,14 +34,14 @@
 ## 3. DM Admin & Group Features (10 endpoints)
 - ⬜ `GET /api/dm/search` — DM conversation search
 - ⬜ `GET /api/dm/{id}` → `getConversation` — Get single conversation
-- ⬜ `POST /api/dm/block` → `blockConversation` — Block a DM user
-- ⬜ `GET /api/dm/un-block/{id}` → `unblockConversation` — Unblock a DM user
+- ✅ `POST /api/dm/block` → `blockConversation` — Block a DM user
+- ✅ `GET /api/dm/un-block/{id}` → `unblockConversation` — Unblock a DM user
 - ⬜ `POST /api/dm/group/info` → `getGroupInfo` — Get group details
 - ⬜ `POST /api/dm/group/join` → `joinGroup` — Join a group chat
 - ⬜ `PUT /api/dm/group` → `updateGroup` — Update group settings
 - ⬜ `POST /api/dm/group-user-exit` → `leaveGroup` — Leave group chat
 - ⬜ `POST /api/dm/group-user-block` → `blockUserInGroup` — Block user in group
-- ⬜ `POST /api/chat-image` → `uploadChatImage` — Upload image for chat
+- ✅ `POST /api/chat-image` → `uploadChatImage` — Upload image for chat
 
 ## 4. DM Status & Gating (4 endpoints)
 - ⬜ `GET /api/dm/user-status/{addr}` → `getDMUserStatus` / `getUserOnlineStatus` — User online status
@@ -62,13 +62,13 @@
 
 ## 6. Content Management (4 endpoints)
 - ⬜ `GET /api/user/{id}/nfts` → `getUserNFTs` — Get a user's NFTs (paginated)
-- ⬜ `POST /api/token_visibility` → `updateTokenVisibility` — Toggle post public/private/unlisted
+- ✅ `POST /api/token_visibility` → `updateTokenVisibility` — Toggle post public/private/unlisted
 - ⬜ `POST /api/comment_image` → `addCommentWithImage` — Image comment
-- ⬜ `POST /api/edit_comment` → `editComment` — Edit existing comment
+- ✅ `POST /api/edit_comment` → `editComment` — Edit existing comment
 
 ## 7. Follow Request Bulk (2 endpoints)
-- ⬜ `POST /api/follow-requests/accept-all` → `acceptAllFollowRequests` — Bulk accept
-- ⬜ `POST /api/follow-requests/reject-all` → `rejectAllFollowRequests` — Bulk reject
+- ✅ `POST /api/follow-requests/accept-all` → `acceptAllFollowRequests` — Bulk accept (was already wired)
+- ✅ `POST /api/follow-requests/reject-all` → `rejectAllFollowRequests` — Bulk reject (was already wired)
 
 ## 8. Reports (2 endpoints)
 - ⬜ `GET /api/nft/reports` → `getAllReports` — Admin: get all reports

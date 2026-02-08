@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -30,7 +30,7 @@ import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, editComment, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -111,8 +111,10 @@ interface CommentItemProps {
   onReply: (id: string) => void;
   onShare: (id: string) => void;
   onBookmark: (id: string) => void;
+  onEdit: (id: string, newContent: string) => void;
   onUserPress: (username: string) => void;
   isReply?: boolean;
+  isOwnComment?: boolean;
 }
 
 interface VoiceNotePlayerProps {
@@ -159,9 +161,10 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onUserPress, isReply }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onBookmark, onEdit, onUserPress, isReply, isOwnComment }: CommentItemProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
-  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.text);
   // Avatar URL is already resolved via buildAvatarUrl in mapApiComment
   const avatarUrl = comment.avatar;
 
@@ -192,13 +195,47 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
           </button>
           <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
-        {comment.text && (
-          <TranslatableText text={comment.text} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
-        )}
-        {comment.voiceNote && (
-          <div className="mt-1">
-            <VoiceNotePlayer voiceNote={comment.voiceNote} />
+        {isEditing ? (
+          <div className="flex items-center gap-2 mt-1">
+            <input
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-1.5 border border-zinc-700 focus:outline-none focus:border-zinc-500"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onEdit(comment.id, editText);
+                  setIsEditing(false);
+                } else if (e.key === 'Escape') {
+                  setEditText(comment.text);
+                  setIsEditing(false);
+                }
+              }}
+            />
+            <button
+              onClick={() => { onEdit(comment.id, editText); setIsEditing(false); }}
+              className="text-green-400 hover:text-green-300 transition-colors"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => { setEditText(comment.text); setIsEditing(false); }}
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
+        ) : (
+          <>
+            {comment.text && (
+              <TranslatableText text={comment.text} className="text-zinc-300 text-sm leading-relaxed break-words" as="p" />
+            )}
+            {comment.voiceNote && (
+              <div className="mt-1">
+                <VoiceNotePlayer voiceNote={comment.voiceNote} />
+              </div>
+            )}
+          </>
         )}
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-4">
@@ -230,6 +267,15 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                 aria-label="Reply"
               >
                 <MessageSquare className="w-4 h-4" />
+              </button>
+            )}
+            {isOwnComment && !isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-white hover:text-zinc-400 transition-colors"
+                aria-label="Edit"
+              >
+                <Pencil className="w-4 h-4" />
               </button>
             )}
             <DropdownMenu>
@@ -573,6 +619,18 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     setNewComment('');
   };
 
+  const handleEditComment = async (commentId: string, newContent: string) => {
+    if (!newContent.trim()) return;
+    try {
+      await editComment({ commentId, content: newContent });
+      queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+      toast.success('Comment updated');
+    } catch (err) {
+      console.error('Edit comment error:', err);
+      toast.error('Failed to edit comment');
+    }
+  };
+
   const handlePostComment = useCallback(async () => {
     if ((!newComment.trim() && !voiceNote) || isSubmitting) return;
     
@@ -755,7 +813,9 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
+                        onEdit={handleEditComment}
                         onUserPress={handleUserPress}
+                        isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
                       {replies.map(reply => (
                         <CommentItem 
@@ -767,8 +827,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onReply={handleReply} 
                           onShare={() => {}} 
                           onBookmark={() => {}}
+                          onEdit={handleEditComment}
                           onUserPress={handleUserPress}
                           isReply
+                          isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
                     </div>
@@ -820,7 +882,9 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                         onReply={handleReply} 
                         onShare={() => {}} 
                         onBookmark={() => {}}
+                        onEdit={handleEditComment}
                         onUserPress={handleUserPress}
+                        isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
                       {replies.map(reply => (
                         <CommentItem 
@@ -832,8 +896,10 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                           onReply={handleReply} 
                           onShare={() => {}} 
                           onBookmark={() => {}}
+                          onEdit={handleEditComment}
                           onUserPress={handleUserPress}
                           isReply
+                          isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
                     </div>
