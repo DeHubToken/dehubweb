@@ -10,3 +10,4 @@ export { DirectMessageChat } from './DirectMessageChat';
 export { NewConversationModal } from './NewConversationModal';
 export { NewMessageSelector } from './NewMessageSelector';
 export { CreateGroupModal } from './CreateGroupModal';
+export { GroupSettingsDrawer } from './GroupSettingsDrawer';
