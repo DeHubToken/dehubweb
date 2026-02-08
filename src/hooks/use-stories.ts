@@ -6,7 +6,7 @@
  * Avatars are fetched fresh from user profiles to stay current.
  */
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -238,7 +238,40 @@ const TEMPLATE_STORIES: Story[] = [
   },
 ];
 
+const WATCHED_STORIES_KEY = 'dehub_watched_stories';
+
 const isTemplateAddress = (address: string) => address.startsWith('0xTEMPLATE');
+
+/**
+ * Hook to track which stories a user has already viewed.
+ * Persists to localStorage so it survives page reloads.
+ */
+export function useWatchedStories() {
+  const [watchedIds, setWatchedIds] = useState<Set<string>>(() => {
+    try {
+      const stored = localStorage.getItem(WATCHED_STORIES_KEY);
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const markWatched = useCallback((storyId: string) => {
+    setWatchedIds(prev => {
+      if (prev.has(storyId)) return prev;
+      const next = new Set(prev);
+      next.add(storyId);
+      try {
+        localStorage.setItem(WATCHED_STORIES_KEY, JSON.stringify([...next]));
+      } catch { /* quota exceeded — ignore */ }
+      return next;
+    });
+  }, []);
+
+  const isWatched = useCallback((storyId: string) => watchedIds.has(storyId), [watchedIds]);
+
+  return { watchedIds, markWatched, isWatched };
+}
 
 export function useStories() {
   const queryClient = useQueryClient();

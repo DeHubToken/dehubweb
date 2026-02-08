@@ -20,10 +20,10 @@ import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { GoLiveModal } from '@/components/app/modals';
 import { AudioSpacesModal } from '@/components/app/spaces';
-import { StoryRecorderModal, StoryViewerModal } from '@/components/app/stories';
+import { StoryRecorderModal, StoryViewerModal, ShimmerBorder } from '@/components/app/stories';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { PostModal } from '@/features/post';
-import { useStories, useUploadStory, type Story } from '@/hooks/use-stories';
+import { useStories, useUploadStory, useWatchedStories, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { VideoThumbnail } from '@/components/app/stories/VideoThumbnail';
@@ -56,6 +56,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const { walletAddress, user } = useAuth();
   const { storyUsers, stories, isLoading: storiesLoading } = useStories();
   const { uploadStory, isUploading } = useUploadStory();
+  const { markWatched, isWatched } = useWatchedStories();
   
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
@@ -108,6 +109,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const handleViewStory = (story: Story) => {
     const index = stories.findIndex((s) => s.id === story.id);
     setViewerStartIndex(index >= 0 ? index : 0);
+    markWatched(story.id);
     setIsStoryViewerOpen(true);
   };
 
@@ -291,7 +293,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                 onClick={() => item.story && handleViewStory(item.story)}
               >
                 {item.type === 'story' ? (
-                  <div className="rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px]">
+                  <ShimmerBorder active={!isWatched(item.story?.id || '')}>
                     <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] overflow-hidden bg-zinc-800">
                       {item.thumbnail ? (
                         <img 
@@ -315,7 +317,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                         />
                       )}
                     </div>
-                  </div>
+                  </ShimmerBorder>
                 ) : (
                   <Avatar className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px]">
                     <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
