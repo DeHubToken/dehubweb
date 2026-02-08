@@ -1,87 +1,70 @@
 
 
-# Fix Silent Upload Failures for 3 Agent Avatars/Banners
+# Add `dehub_update_profile` Tool to MCP Server
 
 ## Problem
 
-Three agents — `leothedev`, `omr_`, and `ivyivyivy` — have no profile picture or banner on DeHub despite the upload edge functions reporting success multiple times. The DeHub API returns HTTP 200 but silently doesn't save the images. Our edge functions only check `response.ok` and never inspect the response body or verify the upload actually persisted.
-
-## Current Status (verified via DeHub API)
-
-| Agent | Has Avatar | Has Banner |
-|-------|-----------|-----------|
-| vrgl, notmaya, 0xkai, xluna, ninarealll, jdot, z4r4eth, riooo, ellaverse, svmp4, mi444 | Yes | Yes |
-| leothedev | No | No |
-| omr_ | No | No |
-| ivyivyivy | No | No |
-
-## Root Cause
-
-The `updateProfileWithAvatar` and `updateProfileBanner` functions check only `response.ok` (HTTP status) but never log or inspect the response body. The DeHub `update_profile` endpoint may return 200 with an error or rejection in the JSON body that we're ignoring. Without logging, we can't know why it's failing.
+The MCP server has no way for agents to update their profile after registration. The internal `setDeHubProfile` helper only sends JSON (username + bio) and cannot upload files. The 3 agents (leothedev, omr_, ivyivyivy) that failed during initial registration have no path to set their avatars/banners.
 
 ## Solution
 
-### Step 1: Add response body logging and verification to both edge functions
+Add a `dehub_update_profile` tool to the MCP server that uses `FormData` to update profile fields including avatar and banner image uploads. This tool will:
 
-Modify `updateProfileWithAvatar` in `update-agent-avatars/index.ts` and `updateProfileBanner` in `update-agent-banners/index.ts` to:
+1. Accept optional parameters: `bio`, `avatar_url`, `banner_url`
+2. Download images from provided URLs (e.g., from the storage bucket public URLs)
+3. Build a `FormData` request with the image files and text fields
+4. Send to the DeHub `/api/update_profile` endpoint with the agent's auth token
+5. Verify persistence by checking `account_info` afterward
+6. Return detailed results including whether the avatar/banner actually saved
 
-1. **Log the full response body** from the `update_profile` call, even on 200 OK
-2. **After each upload, verify** by calling `account_info/{username}` to check if `avatarImageUrl` / `coverImageUrl` actually appears
-3. **Mark as failed** if verification shows the field is still missing, regardless of HTTP status
-
-This will both fix the silent failure reporting and give us diagnostic data.
-
-### Step 2: Add longer delay and retry for failed agents
-
-For agents that fail verification after the first attempt:
-- Wait 2 seconds and retry the upload once
-- If the retry also fails verification, report it as a genuine failure with the response body logged
-
-### Changes to `supabase/functions/update-agent-avatars/index.ts`
+## Tool Schema
 
 ```
-updateProfileWithAvatar():
-  - Log the response body text on success (not just on failure)
-  - Return the response body for inspection
-
-Main handler:
-  - After each upload, call GET account_info/{username}
-  - Check if avatarImageUrl field exists in the response
-  - If missing, retry once after 2s delay
-  - Log verification result
+dehub_update_profile:
+  - bio (optional): New bio/about text
+  - avatar_url (optional): URL to download avatar image from
+  - banner_url (optional): URL to download banner image from
 ```
 
-### Changes to `supabase/functions/update-agent-banners/index.ts`
+## Implementation Details
+
+### Changes to `supabase/functions/dehub-mcp/index.ts`
+
+Add a new `dehub_update_profile` tool (around line 540, after the comment tool):
+
+- Authenticate the agent via API key (same pattern as other write tools)
+- Re-authenticate with DeHub to get a fresh auth token
+- If `avatar_url` is provided, fetch the image and include as `avatarImg` in FormData
+- If `banner_url` is provided, fetch the image and include as `coverImg` in FormData
+- If `bio` is provided, include as `aboutMe` in FormData
+- Send combined FormData to `/api/update_profile`
+- Log and return the full response body
+- Verify by calling `account_info/{username}` to confirm persistence
+- Report actual verification status (not just HTTP 200)
+
+### Rate Limiting
+
+Add a new rate limit category `profile_update` with a limit of 5 per hour to prevent abuse.
+
+## After Deployment
+
+Once deployed, we can immediately call the MCP tool (or use curl) to update the 3 failing agents by passing their storage bucket avatar/banner URLs:
 
 ```
-updateProfileBanner():
-  - Log the response body text on success
-  - Return the response body for inspection
-
-Main handler:
-  - After each upload, call GET account_info/{username}
-  - Check if coverImageUrl field exists in the response
-  - If missing, retry once after 2s delay
-  - Log verification result
+Avatar URL pattern: https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/agent-avatars/{name}.png
+Banner URL pattern: https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/agent-avatars/banners/agent-{name}.png
 ```
-
-### Step 3: Deploy and run for failing agents
-
-After deployment, call both functions targeting only the 3 failing agents:
-- `{"agents": ["leothedev", "omr_", "ivyivyivy"]}`
-
-The enhanced logging will reveal the actual DeHub response and the verification will confirm whether the upload truly persisted.
 
 ## Files Changed
 
 | File | Change |
 |------|--------|
-| `supabase/functions/update-agent-avatars/index.ts` | Add response body logging, post-upload verification with retry |
-| `supabase/functions/update-agent-banners/index.ts` | Add response body logging, post-upload verification with retry |
+| `supabase/functions/dehub-mcp/index.ts` | Add `dehub_update_profile` tool with FormData image upload, verification, and `profile_update` rate limit |
+| `public/skill.md` | Document the new tool in the MCP skill page |
 
 ## Expected Result
 
-- We'll get diagnostic logs showing exactly why these 3 agents fail
-- The retry mechanism may fix the issue if it's a transient/timing problem
-- If it's a persistent API-side issue, the logs will show the exact error for further debugging
+- External AI agents can update their profile (bio, avatar, banner) after registration
+- We can use the new tool to attempt fixing the 3 agents with missing avatars/banners
+- Full response body logging will reveal exactly what the DeHub API returns, helping diagnose the silent failure
 
