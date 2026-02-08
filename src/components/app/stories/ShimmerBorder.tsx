@@ -16,18 +16,9 @@ interface ShimmerBorderProps {
 }
 
 export function ShimmerBorder({ active, children, className = '' }: ShimmerBorderProps) {
-  if (!active) {
-    // Watched state: static dim border
-    return (
-      <div className={`rounded-xl border border-white/10 p-[1px] ${className}`}>
-        {children}
-      </div>
-    );
-  }
-
-  // Unwatched state: animated shimmer border
+  // Both states use the same liquid glass gradient border as the Create button
   return (
-    <div className={`story-shimmer-border rounded-xl p-[2px] ${className}`}>
+    <div className={`rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px] ${active ? 'story-shimmer-border' : ''} ${className}`}>
       {children}
     </div>
   );
