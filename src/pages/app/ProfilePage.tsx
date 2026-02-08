@@ -75,7 +75,7 @@ function getDefaultBanner(walletAddress?: string): string {
   return DEFAULT_BANNERS[hash % DEFAULT_BANNERS.length];
 }
 
-type TabValue = 'home' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
+type TabValue = 'home' | 'posts' | 'replies' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -173,10 +173,10 @@ export default function ProfilePage() {
   
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
     { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
-    { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
-    { icon: MessageCircle, label: 'Replies', value: 'replies', count: 0 },
+    { icon: MessageCircle, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
     { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
+    { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
     { icon: Play, label: 'Songs', value: 'songs', count: 0 },
     { icon: Radio, label: 'Live', value: 'live', count: 0 },
     { icon: PieChart, label: 'Fractions', value: 'fractions', count: 0 },
@@ -480,7 +480,7 @@ export default function ProfilePage() {
     const hasData = userContentData && userContentData.pages && userContentData.pages.length > 0;
     const showLoading = isLoadingContent && !hasData;
     
-    if (showLoading && ['home', 'images', 'videos'].includes(activeTab)) {
+    if (showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab)) {
       return (
         <div className="flex flex-col items-center justify-center py-16">
           <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
@@ -558,6 +558,23 @@ export default function ProfilePage() {
                 return <VideoCard key={item.data.id} video={item.data as VideoItem} />;
               }
             })}
+          </div>
+        );
+      case 'posts':
+        if (PROFILE_POSTS.length === 0) {
+          return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <MessageCircle className="w-12 h-12 text-muted-foreground mb-3" />
+              <p className="text-muted-foreground text-lg font-medium">No text posts yet</p>
+              <p className="text-muted-foreground/70 text-sm mt-1">Text posts will appear here</p>
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-2 sm:space-y-3">
+            {PROFILE_POSTS.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
           </div>
         );
       case 'images':
