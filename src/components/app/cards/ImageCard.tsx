@@ -143,7 +143,7 @@ function ImageCarousel({
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
               <div 
-                className="bg-zinc-800 cursor-pointer flex items-center justify-center max-h-[600px] overflow-hidden"
+                className="bg-black cursor-pointer flex items-center justify-center max-h-[600px] overflow-hidden"
                 onClick={(e) => {
                   e.stopPropagation();
                   onImageClick(idx);
