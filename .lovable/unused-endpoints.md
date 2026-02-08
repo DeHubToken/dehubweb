@@ -8,18 +8,18 @@
 
 ---
 
-## 1. Livestream Management (10 endpoints)
-- ⬜ `POST /api/live` → `createLiveStream` — Create/schedule a live stream
-- ⬜ `GET /api/live/user/{addr}` → `getUserLiveStreams` — Get user's live streams
-- ⬜ `GET /api/live/user/{addr}/scheduled` → `getUserScheduledStreams` — Get scheduled streams
-- ⬜ `GET /api/live/{id}` → `getLiveStream` — Get single stream details
-- ⬜ `GET /api/live/{id}/key` → `getStreamKey` — Get stream key for broadcast
-- ⬜ `GET /api/live/{id}/activities` → `getStreamActivities` — Stream activity log
-- ⬜ `GET /api/live/{id}/ingesturl` → `getStreamIngestUrl` — Get ingest URL
-- ⬜ `POST /api/live/start` → `startLiveStream` — Start broadcasting
-- ⬜ `POST /api/live/{id}/like` → `likeLiveStream` — Like a live stream
-- ⬜ `POST /api/live/{id}/gift` → `sendLiveStreamGift` — Send gift during live
-- ⬜ `POST /api/live/{id}/end` → `endLiveStream` — End a live stream
+## 1. Livestream Management (11 endpoints)
+- ✅ `POST /api/live` → `createLiveStream` — Create/schedule a live stream
+- ✅ `GET /api/live/user/{addr}` → `getUserLiveStreams` — Get user's live streams
+- ✅ `GET /api/live/user/{addr}/scheduled` → `getUserScheduledStreams` — Get scheduled streams
+- ✅ `GET /api/live/{id}` → `getLiveStream` — Get single stream details
+- ✅ `GET /api/live/{id}/key` → `getStreamKey` — Get stream key for broadcast
+- ✅ `GET /api/live/{id}/activities` → `getStreamActivities` — Stream activity log
+- ✅ `GET /api/live/{id}/ingesturl` → `getStreamIngestUrl` — Get ingest URL
+- ✅ `POST /api/live/start` → `startLiveStream` — Start broadcasting
+- ✅ `POST /api/live/{id}/like` → `likeLiveStream` — Like a live stream
+- ✅ `POST /api/live/{id}/gift` → `sendLiveStreamGift` — Send gift during live
+- ✅ `POST /api/live/{id}/end` → `endLiveStream` — End a live stream
 
 ## 2. Subscriptions & Plans (7 endpoints)
 - ✅ `GET /api/plans/{id}` → `getPlan` — Get subscription plan
