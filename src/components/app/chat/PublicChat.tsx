@@ -1,13 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { useLiveChatRooms, useLiveChatMessages } from '@/hooks/use-livechat';
-import { getMediaUrl, type LiveChatMessage as ApiMessage } from '@/lib/api/dehub';
+import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatMessage as ApiMessage } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface PublicChatProps {
   onBack: () => void;
@@ -24,6 +30,7 @@ function toLocalMessage(msg: ApiMessage): Message {
     timestamp: new Date(msg.createdAt),
     type: (msg.type as Message['type']) || 'text',
     imageUrl: msg.imageUrl ? getMediaUrl(msg.imageUrl) : undefined,
+    isPinned: msg.isPinned || false,
   };
 }
 
@@ -43,10 +50,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [rooms, selectedRoomId]);
 
-  const { messages: apiMessages, isLoading: messagesLoading, isSending, send } = useLiveChatMessages(selectedRoomId);
+  const { messages: apiMessages, isLoading: messagesLoading, isSending, send, refetch } = useLiveChatMessages(selectedRoomId);
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
+
+  // Find pinned message
+  const pinnedMessage = messages.find(m => m.isPinned);
 
   // Auto-scroll when messages change
   useEffect(() => {
@@ -66,6 +76,48 @@ export function PublicChat({ onBack }: PublicChatProps) {
       toast.error('Failed to send message');
     }
   };
+
+  const handlePinMessage = useCallback(async (messageId: string) => {
+    if (!selectedRoomId || !isAuthenticated) {
+      toast.error('Sign in to moderate');
+      return;
+    }
+    try {
+      await pinLiveChatMessage(selectedRoomId, messageId);
+      toast.success('Message pinned');
+      refetch();
+    } catch (err) {
+      console.error('[PublicChat] Pin failed:', err);
+      toast.error('Failed to pin message');
+    }
+  }, [selectedRoomId, isAuthenticated, refetch]);
+
+  const handleUnpinMessage = useCallback(async (messageId: string) => {
+    if (!selectedRoomId || !isAuthenticated) return;
+    try {
+      await unpinLiveChatMessage(selectedRoomId, messageId);
+      toast.success('Message unpinned');
+      refetch();
+    } catch (err) {
+      console.error('[PublicChat] Unpin failed:', err);
+      toast.error('Failed to unpin message');
+    }
+  }, [selectedRoomId, isAuthenticated, refetch]);
+
+  const handleBanUser = useCallback(async (userId: string, userName: string) => {
+    if (!selectedRoomId || !isAuthenticated) {
+      toast.error('Sign in to moderate');
+      return;
+    }
+    try {
+      await banLiveChatUser(selectedRoomId, userId);
+      toast.success(`${userName} has been banned`);
+      refetch();
+    } catch (err) {
+      console.error('[PublicChat] Ban failed:', err);
+      toast.error('Failed to ban user');
+    }
+  }, [selectedRoomId, isAuthenticated, refetch]);
 
   const isLoading = roomsLoading || messagesLoading;
   const roomName = rooms.find((r) => r.id === selectedRoomId)?.name || rooms.find((r) => r.id === selectedRoomId)?.topic || 'Public Chat';
@@ -126,6 +178,24 @@ export function PublicChat({ onBack }: PublicChatProps) {
           </Button>
         </div>
       </div>
+
+      {/* Pinned message banner */}
+      {pinnedMessage && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border-b border-yellow-500/20 text-sm">
+          <Pin className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+          <span className="text-yellow-200/80 font-medium text-xs truncate">
+            {pinnedMessage.userName}: {pinnedMessage.content}
+          </span>
+          {isAuthenticated && (
+            <button
+              onClick={() => handleUnpinMessage(pinnedMessage.id)}
+              className="ml-auto text-yellow-500/50 hover:text-yellow-300 text-xs flex-shrink-0"
+            >
+              Unpin
+            </button>
+          )}
+        </div>
+      )}
       
       {/* Messages Area */}
       <div className="relative flex-1">
@@ -153,7 +223,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
             </div>
           ) : (
             messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+              <ChatMessage 
+                key={message.id} 
+                message={message}
+                showActions={isAuthenticated}
+                onPin={handlePinMessage}
+                onUnpin={handleUnpinMessage}
+                onBan={handleBanUser}
+              />
             ))
           )}
           <div ref={bottomRef} />

@@ -32,7 +32,7 @@
 - ⬜ `isSubscribedToCreator` — Helper: Check subscription status
 
 ## 3. DM Admin & Group Features (10 endpoints)
-- ⬜ `GET /api/dm/search` — DM conversation search
+- ✅ `GET /api/dm/search` — DM conversation search
 - ⬜ `GET /api/dm/{id}` → `getConversation` — Get single conversation
 - ✅ `POST /api/dm/block` → `blockConversation` — Block a DM user
 - ✅ `GET /api/dm/un-block/{id}` → `unblockConversation` — Unblock a DM user
@@ -44,8 +44,8 @@
 - ✅ `POST /api/chat-image` → `uploadChatImage` — Upload image for chat
 
 ## 4. DM Status & Gating (4 endpoints)
-- ⬜ `GET /api/dm/user-status/{addr}` → `getDMUserStatus` / `getUserOnlineStatus` — User online status
-- ⬜ `POST /api/dm/user-status/{addr}` → `updateUserOnlineStatus` — Heartbeat/presence
+- ✅ `GET /api/dm/user-status/{addr}` → `getDMUserStatus` / `getUserOnlineStatus` — User online status
+- ✅ `POST /api/dm/user-status/{addr}` → `updateUserOnlineStatus` — Heartbeat/presence
 - ⬜ `GET /api/dm/plan/{id}` → `getDMPlanSettings` — DM subscription gates
 - ⬜ `GET /api/dm/dm-videos` → `getDMVideos` — Videos shared in DMs
 
@@ -53,17 +53,17 @@
 - ⬜ `GET /api/livechat/rooms/{id}` → `getLiveChatRoom` — Single room details
 - ⬜ `GET /api/livechat/user/{addr}` → `getLiveChatUserProfile` — Chat user profile
 - ⬜ `POST /api/livechat/rooms/topic` → `createTopicRoom` — Create topic room
-- ⬜ `POST .../messages/{id}/pin` → `pinLiveChatMessage` — Pin a message
-- ⬜ `DELETE .../messages/{id}/pin` → `unpinLiveChatMessage` — Unpin a message
-- ⬜ `POST .../rooms/{id}/ban` → `banLiveChatUser` — Ban from room
-- ⬜ `DELETE .../ban/{addr}` → `unbanLiveChatUser` — Unban from room
+- ✅ `POST .../messages/{id}/pin` → `pinLiveChatMessage` — Pin a message
+- ✅ `DELETE .../messages/{id}/pin` → `unpinLiveChatMessage` — Unpin a message
+- ✅ `POST .../rooms/{id}/ban` → `banLiveChatUser` — Ban from room
+- ✅ `DELETE .../ban/{addr}` → `unbanLiveChatUser` — Unban from room
 - ⬜ `POST .../rooms/{id}/moderators` → `addLiveChatModerator` — Add moderator
 - ⬜ `PATCH .../rooms/{id}/settings` → `updateLiveChatRoomSettings` — Room settings
 
 ## 6. Content Management (4 endpoints)
 - ⬜ `GET /api/user/{id}/nfts` → `getUserNFTs` — Get a user's NFTs (paginated)
 - ✅ `POST /api/token_visibility` → `updateTokenVisibility` — Toggle post public/private/unlisted
-- ⬜ `POST /api/comment_image` → `addCommentWithImage` — Image comment
+- ✅ `POST /api/comment_image` → `addCommentWithImage` — Image comment
 - ✅ `POST /api/edit_comment` → `editComment` — Edit existing comment
 
 ## 7. Follow Request Bulk (2 endpoints)
