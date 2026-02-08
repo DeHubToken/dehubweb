@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   getLiveChatRooms,
+  getLiveChatRoom,
   getLiveChatMessages,
+  getLiveChatUserProfile,
   sendLiveChatMessage,
   type LiveChatRoom,
   type LiveChatMessage,
+  type LiveChatUserProfile,
   getMediaUrl,
 } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
@@ -89,4 +92,66 @@ export function useLiveChatMessages(roomId: string | null) {
   }, [roomId, isAuthenticated]);
 
   return { messages, isLoading, isSending, send, refetch: () => fetchMessages(false) };
+}
+
+/**
+ * Fetch full details for a single livechat room.
+ * Provides richer metadata (description, messageCount, moderators) than the list endpoint.
+ */
+export function useLiveChatRoomDetails(roomId: string | null) {
+  const [room, setRoom] = useState<LiveChatRoom | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetch = useCallback(async () => {
+    if (!roomId) {
+      setRoom(null);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const data = await getLiveChatRoom(roomId);
+      setRoom(data);
+    } catch (err) {
+      console.error('[LiveChat] Failed to fetch room details:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  return { room, isLoading, refetch: fetch };
+}
+
+/**
+ * Fetch a livechat user's profile by wallet address.
+ * Returns display name, avatar, banned/moderator status.
+ */
+export function useLiveChatUser(address: string | null) {
+  const [profile, setProfile] = useState<LiveChatUserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetch = useCallback(async () => {
+    if (!address) {
+      setProfile(null);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const data = await getLiveChatUserProfile(address);
+      setProfile(data);
+    } catch (err) {
+      console.error('[LiveChat] Failed to fetch user profile:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  return { profile, isLoading, refetch: fetch };
 }

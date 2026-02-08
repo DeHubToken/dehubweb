@@ -5,7 +5,7 @@ import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
-import { useLiveChatRooms, useLiveChatMessages } from '@/hooks/use-livechat';
+import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails } from '@/hooks/use-livechat';
 import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatMessage as ApiMessage, type LiveChatRoom } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -55,6 +55,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [rooms, selectedRoomId]);
 
   const { messages: apiMessages, isLoading: messagesLoading, isSending, send, refetch } = useLiveChatMessages(selectedRoomId);
+
+  // Fetch full room details (description, moderators, messageCount) for the selected room
+  const { room: roomDetails } = useLiveChatRoomDetails(selectedRoomId);
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
@@ -123,9 +126,12 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [selectedRoomId, isAuthenticated, refetch]);
 
+  // Merge list-level room data with the richer single-room details
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
+  const enrichedRoom = roomDetails || selectedRoom;
   const isLoading = roomsLoading || messagesLoading;
-  const roomName = selectedRoom?.name || selectedRoom?.topic || 'Public Chat';
+  const roomName = enrichedRoom?.name || enrichedRoom?.topic || 'Public Chat';
+  const roomDescription = enrichedRoom?.description;
 
   const handleRoomCreated = useCallback((room: LiveChatRoom) => {
     refetchRooms();
@@ -146,14 +152,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           
-          <div>
-            <h2 className="font-bold text-white">{roomName}</h2>
-            {rooms.length > 0 && (
+          <div className="min-w-0">
+            <h2 className="font-bold text-white truncate">{roomName}</h2>
+            {roomDescription ? (
+              <p className="text-zinc-500 text-xs truncate max-w-[180px]" title={roomDescription}>
+                {roomDescription}
+              </p>
+            ) : rooms.length > 0 ? (
               <span className="text-zinc-500 text-xs flex items-center gap-1">
                 <Users className="w-3 h-3" />
-                {selectedRoom?.participantCount ?? 0} online
+                {enrichedRoom?.participantCount ?? 0} online
               </span>
-            )}
+            ) : null}
           </div>
         </div>
         
