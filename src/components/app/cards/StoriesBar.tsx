@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -59,8 +59,6 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       return new Set();
     }
   });
-  const [shimmerTick, setShimmerTick] = useState(0);
-  
   const { requireAuth, AuthPromptComponent } = useAuthPrompt();
   const { walletAddress, user } = useAuth();
   const { storyUsers, stories, isLoading: storiesLoading } = useStories();
@@ -68,14 +66,6 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
-
-  // Trigger shimmer every 5 seconds for unwatched stories
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShimmerTick(t => t + 1);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Mark a story as viewed and persist to localStorage
   const markAsViewed = useCallback((storyId: string) => {
@@ -327,10 +317,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               >
                 {item.type === 'story' ? (
                   <div
-                    key={isUnwatched ? `shimmer-${shimmerTick}` : 'static'}
                     className={`rounded-xl p-[2px] transition-all duration-300 ${
                       isUnwatched
-                        ? 'animate-story-shimmer group-hover:animate-story-shimmer'
+                        ? 'animate-story-shimmer'
                         : 'bg-gradient-to-br from-white/15 via-white/8 to-white/3'
                     }`}
                     style={isUnwatched ? {
