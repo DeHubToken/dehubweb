@@ -112,7 +112,7 @@ export function MobileBottomNav() {
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
                         item.label === 'Messages' && 'lg:ml-0',
-                        '-ml-[4px] lg:ml-0'
+                        item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
                       )} 
                     />
                   </NavLink>
@@ -156,7 +156,7 @@ export function MobileBottomNav() {
                           ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                           : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
                         item.label === 'Explore' && 'lg:ml-0 -scale-x-100',
-                        'ml-[3px] lg:ml-0'
+                        'ml-[6px] lg:ml-0'
                       )} 
                     />
                   </NavLink>
@@ -170,7 +170,7 @@ export function MobileBottomNav() {
               >
                 <Sparkles 
                   className={cn(
-                    'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 ml-[3px] lg:ml-0',
+                    'w-5 h-5 md:w-6 md:h-6 transition-all duration-200 ml-[4px] lg:ml-0',
                     isAIActive 
                       ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
                       : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
