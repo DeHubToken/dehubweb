@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Bookmark, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -30,7 +30,7 @@ import { TranslatableText } from '../TranslatableText';
 import { AudioVisualizer } from '../audio';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, editComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, editComment, addCommentWithImage, uploadChatImage, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -365,6 +365,9 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   const recordingTimeRef = useRef(0);
   const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+  const [commentImage, setCommentImage] = useState<File | null>(null);
+  const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const MAX_VOICE_DURATION = 30;
@@ -475,6 +478,30 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       URL.revokeObjectURL(voiceNote.url);
       setVoiceNote(null);
     }
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image must be under 10MB');
+      return;
+    }
+    setCommentImage(file);
+    setCommentImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeCommentImage = () => {
+    if (commentImagePreview) {
+      URL.revokeObjectURL(commentImagePreview);
+    }
+    setCommentImage(null);
+    setCommentImagePreview(null);
+    if (imageInputRef.current) imageInputRef.current.value = '';
   };
 
   const togglePreviewPlayback = () => {
@@ -632,7 +659,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
   };
 
   const handlePostComment = useCallback(async () => {
-    if ((!newComment.trim() && !voiceNote) || isSubmitting) return;
+    if ((!newComment.trim() && !voiceNote && !commentImage) || isSubmitting) return;
     
     if (!isAuthenticated || !user) {
       toast.error('Please connect your wallet to comment');
@@ -654,7 +681,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       likes: 0,
       dislikes: 0,
       timeAgo: 'Just now',
-      createdAt: new Date(), // For sorting - new comments appear at top when sorted by recent
+      createdAt: new Date(),
       voiceNote: voiceNote || undefined,
       replyToId: replyTo?.id,
       address: userAddress,
@@ -662,15 +689,26 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
 
     setOptimisticComments(prev => [tempComment, ...prev]);
     const replyTarget = replyTo;
+    const imageFile = commentImage;
     setReplyTo(null);
     setNewComment('');
     setVoiceNote(null);
+    removeCommentImage();
     setIsSubmitting(true);
 
     try {
-      await postComment(tokenId, newComment, replyTarget?.id);
-      // Wait for refetch to complete BEFORE clearing optimistic comment
-      // This prevents the flash where comment disappears between clear and refetch
+      if (imageFile) {
+        // Upload image first, then post comment with image
+        const { url: imageUrl } = await uploadChatImage(imageFile);
+        await addCommentWithImage({
+          tokenId: parseInt(tokenId, 10),
+          content: newComment,
+          imageUrl,
+          parentId: replyTarget?.id,
+        });
+      } else {
+        await postComment(tokenId, newComment, replyTarget?.id);
+      }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
     } catch (err) {
@@ -680,9 +718,9 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [newComment, voiceNote, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient]);
+  }, [newComment, voiceNote, commentImage, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient]);
 
-  const canPost = (newComment.trim() || voiceNote) && !isSubmitting;
+  const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
   
 
@@ -958,6 +996,32 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
             </div>
           )}
 
+          {/* Image preview */}
+          {commentImagePreview && (
+            <div className="mb-3 relative inline-block">
+              <img 
+                src={commentImagePreview} 
+                alt="Comment attachment" 
+                className="max-h-32 rounded-xl object-cover"
+              />
+              <button
+                onClick={removeCommentImage}
+                className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-lg flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Hidden file input */}
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSelect}
+          />
+
           <div className="flex items-center gap-2 pb-1">
             {isRecording ? (
               /* Recording indicator */
@@ -998,6 +1062,14 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
                     }}
                   />
                 </div>
+                {/* Image attach button */}
+                <button
+                  onClick={() => imageInputRef.current?.click()}
+                  className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors"
+                  aria-label="Attach image"
+                >
+                  <ImagePlus className="w-5 h-5" />
+                </button>
                 {!voiceNote && (
                   <button
                     onClick={startRecording}

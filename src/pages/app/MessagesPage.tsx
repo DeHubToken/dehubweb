@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations } from '@/hooks/use-messages';
-import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
+import { getMediaUrl, getUserOnlineStatus, updateUserOnlineStatus, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
@@ -47,6 +47,19 @@ function ConversationItem({
     ? formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: false })
     : '';
 
+  // Online status
+  const otherAddress = otherUser?.address;
+  const [isOnline, setIsOnline] = useState(false);
+  
+  useEffect(() => {
+    if (!otherAddress) return;
+    let cancelled = false;
+    getUserOnlineStatus(otherAddress)
+      .then((status) => { if (!cancelled) setIsOnline(status.online); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [otherAddress]);
+
   return (
     <button
       onClick={onClick}
@@ -61,6 +74,10 @@ function ConversationItem({
             {displayName.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
+        {/* Online indicator */}
+        {isOnline && (
+          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
+        )}
       </div>
       
       <div className="flex-1 min-w-0">
@@ -95,7 +112,18 @@ export default function MessagesPage() {
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
+
+  // Online status heartbeat - update every 60s while on messages page
+  useEffect(() => {
+    if (!isAuthenticated || !walletAddress) return;
+    // Initial heartbeat
+    updateUserOnlineStatus(walletAddress).catch(() => {});
+    const interval = setInterval(() => {
+      updateUserOnlineStatus(walletAddress).catch(() => {});
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, walletAddress]);
 
   const { 
     conversations, 
