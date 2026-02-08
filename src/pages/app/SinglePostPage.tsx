@@ -14,11 +14,12 @@
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
-import { Loader2, AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2 } from 'lucide-react';
+import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
-import { getNFTInfo, getMediaUrl, type DeHubNFT } from '@/lib/api/dehub';
+import { getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -33,7 +34,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import { formatTimeAgo, formatDuration } from '@/lib/feed-utils';
+import { formatTimeAgo, formatDuration, formatViews } from '@/lib/feed-utils';
+import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 
 /**
@@ -51,17 +53,13 @@ function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
  * Transform API NFT data to VideoItem format
  */
 function toVideoItem(nft: DeHubNFT): VideoItem {
-  const views = nft.views != null ? String(nft.views) : '0';
+  const views = formatViews(nft.views || 0).replace(' views', '');
   const title = nft.title || nft.name || '';
-  // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  // API returns various timestamp fields - check all possibilities
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
-  // Get raw duration in seconds - prioritize numeric field
   const durationSeconds = nft.videoDuration || nft.duration || 0;
   
-  // Extract bounty data from streamInfo if available
   const streamInfo = nft.streamInfo;
   const isW2E = nft.is_w2e || streamInfo?.isAddBounty || false;
   const bountyViews = streamInfo?.addBountyFirstXViewers != null ? Number(streamInfo.addBountyFirstXViewers) : undefined;
@@ -69,26 +67,28 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const bountyAmount = streamInfo?.addBountyAmount;
   const bountyCurrency = streamInfo?.addBountyTokenSymbol || 'DHB';
   
+  // Canonical avatar resolution (matches feed normalization)
+  const rawAvatarPath = extractAvatarPath(nft);
+  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  
   return {
     id: String(nft.tokenId),
     type: 'video',
-    thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
-    videoUrl: nft.tokenId 
-      ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${nft.tokenId}.mp4` 
-      : undefined,
+    thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
+    videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,
     description,
-    channel: nft.minterDisplayName || nft.mintername || 'Unknown',
-    channelAvatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
+    channel: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+    channelAvatar: avatar,
     verified: false,
     views,
     uploadedAgo: formatTimeAgo(timestamp),
     status: nft.status,
     stakedAmount: undefined,
     creatorId: nft.minter,
-    creatorUsername: nft.mintername,
+    creatorUsername: nft.minterUsername || nft.mintername,
     isLiked: nft.isLiked,
     isDisliked: nft.isDisliked,
     likeCount: nft.totalVotes?.for || 0,
@@ -112,24 +112,29 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
  * Transform API NFT data to ImagePost format
  */
 function toImagePost(nft: DeHubNFT): ImagePost {
-  const views = nft.views != null ? String(nft.views) : '0';
-  const imageUrls = nft.imageUrls?.map(url => getMediaUrl(url) || '') || [];
-  const primaryImage = getMediaUrl(nft.imageUrl) || '/placeholder.svg';
+  const views = formatViews(nft.views || 0).replace(' views', '');
+  
+  // Canonical image resolution (matches feed normalization)
+  const primaryImage = buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg';
+  const feedImages = buildFeedImageUrls(nft.imageUrls);
+  const imageUrls = feedImages && feedImages.length > 0 ? feedImages : [primaryImage];
   
   const title = nft.title || nft.name;
-  // Only use description if it's different from title (avoid duplicates)
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  // API returns various timestamp fields - check all possibilities
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  
+  // Canonical avatar resolution (matches feed normalization)
+  const rawAvatarPath = extractAvatarPath(nft);
+  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   return {
     id: String(nft.tokenId),
     type: 'image',
-    username: nft.minterDisplayName || nft.mintername || 'Unknown',
+    username: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
     verified: false,
-    avatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
+    avatar,
     image: primaryImage,
-    imageUrls: imageUrls.length > 0 ? imageUrls : [primaryImage],
+    imageUrls,
     title,
     description,
     likes: nft.totalVotes?.for || 0,
@@ -140,7 +145,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     views,
     timeAgo: formatTimeAgo(timestamp),
     creatorId: nft.minter,
-    creatorUsername: nft.mintername,
+    creatorUsername: nft.minterUsername || nft.mintername,
     isLiked: nft.isLiked,
     isDisliked: nft.isDisliked,
   };
@@ -150,21 +155,24 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  * Transform API NFT data to TextPost format
  */
 function toTextPost(nft: DeHubNFT): TextPost {
-  const views = nft.views != null ? String(nft.views) : '0';
-  // API returns various timestamp fields - check all possibilities
+  const views = formatViews(nft.views || 0).replace(' views', '');
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  
+  // Canonical avatar resolution (matches feed normalization)
+  const rawAvatarPath = extractAvatarPath(nft);
+  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   return {
     id: String(nft.tokenId),
     type: 'post',
-    createdAt: formatTimeAgo(timestamp),
+    createdAt: timestamp || '',
     views,
     status: nft.status,
     author: {
       id: nft.minter,
-      name: nft.minterDisplayName || nft.mintername || 'Unknown',
-      handle: nft.mintername || nft.minter?.slice(0, 8) || 'anonymous',
-      avatarSeed: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
+      name: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+      handle: nft.minterUsername || nft.mintername || nft.minter?.slice(0, 8) || 'anonymous',
+      avatarSeed: avatar,
       verified: false,
       stakedAmount: undefined,
     },
@@ -181,19 +189,23 @@ function toTextPost(nft: DeHubNFT): TextPost {
  * Transform API NFT data to LiveStream format
  */
 function toLiveStream(nft: DeHubNFT): LiveStream {
+  // Canonical avatar resolution (matches feed normalization)
+  const rawAvatarPath = extractAvatarPath(nft);
+  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  
   return {
     id: String(nft.tokenId),
     type: 'live',
-    streamer: nft.minterDisplayName || nft.mintername || 'Unknown',
-    avatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
+    streamer: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+    avatar,
     title: nft.title || nft.name || 'Live Stream',
     game: nft.description || '',
-    viewers: String(nft.views || 0),
-    thumbnail: getMediaUrl(nft.imageUrl) || '/placeholder.svg',
+    viewers: formatViews(nft.views || 0).replace(' views', ''),
+    thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     tags: [],
-    isLive: (nft as any).isLive ?? false, // Default to not live (stream ended)
+    isLive: (nft as any).isLive ?? false,
     creatorId: nft.minter,
-    creatorUsername: nft.mintername,
+    creatorUsername: nft.minterUsername || nft.mintername,
     likeCount: nft.totalVotes?.for || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
   };
@@ -239,8 +251,9 @@ function NotFoundState() {
  */
 function LoadingState() {
   return (
-    <div className="flex items-center justify-center py-16">
-      <Loader2 className="w-8 h-8 text-white animate-spin" />
+    <div className="space-y-3 py-4">
+      <VideoCardSkeleton />
+      <PostCardSkeleton />
     </div>
   );
 }
