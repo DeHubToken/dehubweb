@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
 
@@ -85,7 +86,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         <div className="mb-6 flex items-center justify-between">
           <button onClick={handleLogoClick} className="block cursor-pointer mt-[10px]">
             <img src={dehubLogo} alt="dehub" className="h-[46.2px] w-auto hidden xl:block" />
-            <img src={dehubLogo} alt="dehub" className="h-[28px] w-auto xl:hidden" />
+            <img src={dehubLogoCompact} alt="dehub" className="h-[28px] w-auto xl:hidden" />
           </button>
           {stickToBanner && (
             <div className="mt-[10px] hidden xl:block">
