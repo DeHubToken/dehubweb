@@ -80,6 +80,66 @@ async function fetchFreshAvatar(walletAddress: string): Promise<string | null> {
   }
 }
 
+/**
+ * Template stories shown when no real stories exist.
+ * Uses publicly available stock videos from Pexels CDN.
+ * Remove this array once there's a steady flow of real stories.
+ */
+const TEMPLATE_STORIES: Story[] = [
+  {
+    id: 'template-1',
+    wallet_address: '0xTEMPLATE000000000000000000000000000001',
+    username: 'alex_streams',
+    avatar: null,
+    video_url: 'https://videos.pexels.com/video-files/4057411/4057411-uhd_1440_2560_25fps.mp4',
+    thumbnail_url: null,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 86400000).toISOString(),
+  },
+  {
+    id: 'template-2',
+    wallet_address: '0xTEMPLATE000000000000000000000000000002',
+    username: 'maya_creates',
+    avatar: null,
+    video_url: 'https://videos.pexels.com/video-files/5377684/5377684-uhd_1440_2560_25fps.mp4',
+    thumbnail_url: null,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 86400000).toISOString(),
+  },
+  {
+    id: 'template-3',
+    wallet_address: '0xTEMPLATE000000000000000000000000000003',
+    username: 'kai_fitness',
+    avatar: null,
+    video_url: 'https://videos.pexels.com/video-files/4536108/4536108-uhd_1440_2560_25fps.mp4',
+    thumbnail_url: null,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 86400000).toISOString(),
+  },
+  {
+    id: 'template-4',
+    wallet_address: '0xTEMPLATE000000000000000000000000000004',
+    username: 'luna_music',
+    avatar: null,
+    video_url: 'https://videos.pexels.com/video-files/3571264/3571264-uhd_1440_2560_30fps.mp4',
+    thumbnail_url: null,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 86400000).toISOString(),
+  },
+  {
+    id: 'template-5',
+    wallet_address: '0xTEMPLATE000000000000000000000000000005',
+    username: 'dev_marco',
+    avatar: null,
+    video_url: 'https://videos.pexels.com/video-files/6010489/6010489-uhd_1440_2560_25fps.mp4',
+    thumbnail_url: null,
+    created_at: new Date().toISOString(),
+    expires_at: new Date(Date.now() + 86400000).toISOString(),
+  },
+];
+
+const isTemplateAddress = (address: string) => address.startsWith('0xTEMPLATE');
+
 export function useStories() {
   const queryClient = useQueryClient();
 
@@ -100,17 +160,27 @@ export function useStories() {
     staleTime: 1000 * 60, // 1 minute
   });
 
+  // Use template stories as fallback when no real stories exist
+  const activeStories = stories.length > 0 ? stories : TEMPLATE_STORIES;
+
   // Lazy-load fresh avatars in the background (non-blocking)
-  // This runs after initial render, so StoriesBar shows immediately with cached avatars
-  const { data: enrichedStories = stories } = useQuery({
-    queryKey: ['stories-with-avatars', stories.map(s => s.id).join(',')],
+  // Skip avatar fetching for template stories (they don't exist in DeHub API)
+  const { data: enrichedStories = activeStories } = useQuery({
+    queryKey: ['stories-with-avatars', activeStories.map(s => s.id).join(',')],
     queryFn: async () => {
-      if (stories.length === 0) return [];
+      if (activeStories.length === 0) return [];
       
-      // Get unique wallet addresses
-      const uniqueAddresses = [...new Set(stories.map(s => s.wallet_address))];
+      // Get unique wallet addresses, excluding template addresses
+      const uniqueAddresses = [...new Set(
+        activeStories
+          .filter(s => !isTemplateAddress(s.wallet_address))
+          .map(s => s.wallet_address)
+      )];
       
-      // Fetch fresh avatars for all unique users in parallel
+      // If all stories are templates, skip avatar fetching entirely
+      if (uniqueAddresses.length === 0) return activeStories;
+      
+      // Fetch fresh avatars for all unique real users in parallel
       const avatarMap = new Map<string, string | null>();
       await Promise.all(
         uniqueAddresses.map(async (address) => {
@@ -119,13 +189,15 @@ export function useStories() {
         })
       );
       
-      // Enrich stories with fresh avatars
-      return stories.map(story => ({
+      // Enrich stories with fresh avatars (templates keep null avatar)
+      return activeStories.map(story => ({
         ...story,
-        avatar: avatarMap.get(story.wallet_address.toLowerCase()) || story.avatar,
+        avatar: isTemplateAddress(story.wallet_address)
+          ? story.avatar
+          : avatarMap.get(story.wallet_address.toLowerCase()) || story.avatar,
       }));
     },
-    enabled: stories.length > 0,
+    enabled: activeStories.length > 0 && activeStories.some(s => !isTemplateAddress(s.wallet_address)),
     staleTime: 1000 * 60 * 5, // 5 minutes - avatars don't change often
   });
 
