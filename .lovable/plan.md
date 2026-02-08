@@ -1,74 +1,38 @@
 
 
-# Fix Broken IPTV Channels - Server-Side Validation System
+# Fix: Pausing TV Stream Shows "Stream Unavailable" Error
 
-## Problem
-The current Live TV system fetches ~700 channels from the Free-TV/IPTV GitHub playlist on the client side. While it filters out obvious bad patterns (YouTube, Twitch, HTTP-only, geo-restricted), many remaining channels have dead or broken stream URLs, leading to a poor user experience.
+## Root Cause
 
-## Solution
-Build a **backend channel validation system** that proactively tests every stream URL and only serves verified working channels to users. Additionally, add **community-driven broken channel reporting** so channels that break after validation get flagged and hidden automatically.
+When a user pauses a TV channel, the `stopPlayback()` function sets `videoRef.current.src = ''` to clear the video source. This triggers the browser's native video `error` event, which the error handler interprets as a stream failure and displays "Stream unavailable."
 
-## How It Works
+## The Fix
 
-1. A backend function fetches the Free-TV playlist and tests each channel's stream URL by requesting the `.m3u8` manifest with a short timeout
-2. Only channels that return a valid HLS manifest get stored in the database as "verified"
-3. The app reads from this verified list instead of parsing the raw playlist
-4. When a user encounters a broken channel during playback, it gets reported and hidden after enough reports
+Add a guard flag (`isStoppingRef`) that the `stopPlayback` function sets **before** clearing the video source. The video `error` event handler will check this flag and skip setting the error state if the stop was intentional.
 
-## Technical Details
+## Changes
 
-### Step 1: Create Database Table
+### File: `src/components/app/tv/TVChannelCard.tsx`
 
-Create a `tv_channels_verified` table:
-- `id` (text, primary key) - channel hash ID
-- `name` (text) - channel name
-- `logo` (text, nullable) - logo URL
-- `category` (text) - country category code
-- `stream_url` (text) - the HLS stream URL
-- `country` (text) - country/group name
-- `last_verified_at` (timestamptz) - when the stream was last confirmed working
-- `broken_reports` (integer, default 0) - number of times users reported it broken
-- `is_active` (boolean, default true) - whether to show this channel
+1. Add a new ref to track intentional stops:
+   - `const isStoppingRef = useRef(false);`
 
-RLS: public read access (no auth needed), no public write access.
+2. Update `stopPlayback` to set the flag before clearing:
+   - Set `isStoppingRef.current = true` at the start
+   - After clearing the source, reset `isStoppingRef.current = false`
 
-### Step 2: Create `validate-tv-channels` Edge Function
+3. Update the `handleError` video event listener:
+   - Add an early return if `isStoppingRef.current` is `true`, so intentional stops don't trigger the error state
 
-A backend function that:
-- Fetches the Free-TV GitHub playlist
-- Parses all channels using existing M3U8 parsing logic
-- Tests each stream URL in parallel batches (20 concurrent, 5-second timeout per request)
-- A stream is "valid" if the HEAD/GET request returns a 200 status with content that looks like an HLS manifest
-- Upserts working channels into the `tv_channels_verified` table
-- Removes channels that fail validation
-- Protected by a simple secret key to prevent abuse
+## Technical Detail
 
-### Step 3: Create `report-broken-channel` Edge Function
+```text
+Current flow (buggy):
+  Click Pause --> stopPlayback() --> video.src = '' --> browser fires 'error' event --> hasError = true --> "Stream unavailable"
 
-A lightweight endpoint that:
-- Accepts a channel ID
-- Increments the `broken_reports` counter
-- If reports exceed a threshold (e.g., 3), marks the channel as `is_active = false`
-- Rate-limited per channel to prevent spam
+Fixed flow:
+  Click Pause --> stopPlayback() --> isStoppingRef = true --> video.src = '' --> browser fires 'error' event --> isStoppingRef is true, skip --> no error shown
+```
 
-### Step 4: Update Client Code
-
-Update `src/lib/api/live-tv.ts`:
-- Primary source: read from `tv_channels_verified` table via the database client
-- Fallback: if the table is empty (first run), fall back to existing playlist parsing
-- Filter out channels where `is_active = false`
-
-Update `src/components/app/tv/TVChannelCard.tsx`:
-- On playback error (after retries exhausted), automatically call the `report-broken-channel` endpoint
-- This creates a self-healing system where broken channels get reported and hidden
-
-### Step 5: Initial Validation Run
-
-After deploying the edge function, trigger it once to populate the database with verified channels. This initial run will test all ~700 channels and store only the working ones.
-
-## Expected Outcome
-- Users will only see channels that have been verified as working
-- Channels that break after validation get community-reported and auto-hidden
-- The channel list becomes a curated, reliable set that improves over time
-- Fallback to the raw playlist ensures the system still works even if the database is empty
+This is a minimal, targeted fix — one new ref and two small guard checks. No changes to the UI, layout, or other playback logic.
 
