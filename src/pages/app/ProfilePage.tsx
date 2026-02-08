@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Home, MessageCircle, Image, Video, Star, Play, Radio,
+  Home, MessageCircle, MessageSquare, Image, Video, Star, Play, Radio,
   Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, ChevronLeft, Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -173,7 +173,7 @@ export default function ProfilePage() {
   
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = [
     { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
-    { icon: MessageCircle, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
+    { icon: MessageSquare, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
     { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
     { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
@@ -564,7 +564,7 @@ export default function ProfilePage() {
         if (PROFILE_POSTS.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <MessageCircle className="w-12 h-12 text-muted-foreground mb-3" />
+              <MessageSquare className="w-12 h-12 text-muted-foreground mb-3" />
               <p className="text-muted-foreground text-lg font-medium">No text posts yet</p>
               <p className="text-muted-foreground/70 text-sm mt-1">Text posts will appear here</p>
             </div>
