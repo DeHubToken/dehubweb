@@ -20,7 +20,6 @@ import {
   IProvider,
 } from "@web3auth/base";
 import { MetamaskAdapter } from "@web3auth/metamask-adapter";
-import { PhantomAdapter } from "@web3auth/phantom-adapter";
 import { WalletConnectV2Adapter } from "@web3auth/wallet-connect-v2-adapter";
 import { CoinbaseAdapter } from "@web3auth/coinbase-adapter";
 import { supabase } from "@/integrations/supabase/client";
@@ -187,16 +186,6 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
         chainConfig,
       });
       web3authInstance.configureAdapter(metamaskAdapter);
-
-      // Configure Phantom Adapter
-      console.log("[Web3Auth] Configuring Phantom adapter...");
-      const phantomAdapter = new PhantomAdapter({
-        clientId,
-        sessionTime: 3600,
-        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        chainConfig,
-      });
-      web3authInstance.configureAdapter(phantomAdapter);
 
       // Configure WalletConnect V2 Adapter
       console.log("[Web3Auth] Configuring WalletConnect V2 adapter...");
