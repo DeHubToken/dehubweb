@@ -14,6 +14,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -22,7 +23,7 @@ import { motion } from 'framer-motion';
 import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { getVoteCache, setVoteCache } from '@/lib/vote-cache';
+import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import {
   Drawer,
   DrawerContent,
@@ -104,6 +105,7 @@ export function ActionBar({
 
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
   
   // Sync local state with props when they change, but skip if user recently voted (or cache active)
   useEffect(() => {
@@ -206,6 +208,7 @@ export function ActionBar({
         else { newDisliked = true; newDislikeCount++; }
       }
       setVoteCache(postId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount });
+      patchFeedCaches(queryClient, postId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount });
     });
 
     try {
@@ -247,7 +250,7 @@ export function ActionBar({
     } finally {
       setIsVoting(false);
     }
-  }, [postId, isVoting, isLiked, isDisliked, isAuthenticated]);
+  }, [postId, isVoting, isLiked, isDisliked, isAuthenticated, queryClient]);
 
   const hasVoted = isLiked || isDisliked;
 
