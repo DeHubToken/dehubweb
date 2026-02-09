@@ -79,7 +79,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             type="text"
-            placeholder="Search through hundreds of free TV channels..."
+            placeholder="Search hundreds of free TV channels..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
