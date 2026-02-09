@@ -730,7 +730,7 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="flex flex-col min-h-[400px] max-h-[600px] bg-zinc-900/50 rounded-2xl p-4 mt-3"
+      className="flex flex-col min-h-[400px] max-h-[600px] p-4 mt-3"
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
