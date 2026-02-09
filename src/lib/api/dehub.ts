@@ -1095,6 +1095,93 @@ export async function getCategories(): Promise<DeHubCategory[]> {
   return [];
 }
 
+// ============================================
+// ADDITIONAL USER ENDPOINTS
+// ============================================
+
+/**
+ * Get total registered user count
+ * GET /api/users_count
+ */
+export async function getUsersCount(): Promise<number> {
+  const response = await apiCall<{ result: number } | number>("/api/users_count");
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as number;
+}
+
+/**
+ * Check if current user follows a target user
+ * GET /api/is_following?following={address}
+ */
+export async function isFollowing(targetAddress: string): Promise<boolean> {
+  const response = await apiCall<{ result: boolean } | boolean>("/api/is_following", {
+    params: { following: targetAddress },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result;
+  }
+  return response as boolean;
+}
+
+// ============================================
+// ADDITIONAL VIDEO/CONTENT ENDPOINTS
+// ============================================
+
+/**
+ * Get current server time
+ * GET /api/getServerTime
+ */
+export async function getServerTime(): Promise<{ time: string }> {
+  return apiCall<{ time: string }>("/api/getServerTime");
+}
+
+/**
+ * Get signature to claim bounty reward
+ * GET /api/claim-bounty
+ */
+export async function claimBounty(tokenId: number | string): Promise<{
+  r: string;
+  s: string;
+  v: number;
+  amount: number;
+}> {
+  const response = await apiCall<any>("/api/claim-bounty", {
+    params: { tokenId },
+    requiresAuth: true,
+  });
+  return response?.result || response;
+}
+
+/**
+ * Get unlocked PPV videos for a user
+ * GET /api/unlocked_nfts/{id}
+ */
+export async function getUnlockedNFTs(
+  userId: string,
+  page: number = 0,
+  limit: number = 20
+): Promise<{ result: DeHubNFT[] }> {
+  return apiCall<{ result: DeHubNFT[] }>(`/api/unlocked_nfts/${userId}`, {
+    params: { page, limit },
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Record batch views (optimized for feeds)
+ * POST /api/view/batch
+ */
+export async function recordBatchViews(tokenIds: number[]): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>("/api/view/batch", {
+    method: "POST",
+    body: { tokenIds },
+    requiresAuth: false,
+  });
+}
+
 // Content creation
 export async function mintNFT(data: {
   title: string;
@@ -1763,6 +1850,99 @@ export async function submitReport(data: ReportSubmission): Promise<{ success: b
     console.error('[submitReport] Error:', error);
     throw error;
   }
+}
+
+// ============================================
+// NEW REPORTS API (v2)
+// ============================================
+
+/**
+ * Report reason from API
+ */
+export interface ReportReason {
+  id: string;
+  label: string;
+  description?: string;
+}
+
+/**
+ * Check if you already reported a video/post
+ * GET /api/report/content/status/{tokenId}
+ */
+export async function getContentReportStatus(tokenId: number | string): Promise<{ reported: boolean }> {
+  const response = await apiCall<any>(`/api/report/content/status/${tokenId}`, {
+    requiresAuth: true,
+  });
+  return { reported: response?.result?.reported ?? response?.reported ?? false };
+}
+
+/**
+ * Check if you already reported a user
+ * GET /api/report/user/status/{userId}
+ */
+export async function getUserReportStatus(userId: string): Promise<{ reported: boolean }> {
+  const response = await apiCall<any>(`/api/report/user/status/${userId}`, {
+    requiresAuth: true,
+  });
+  return { reported: response?.result?.reported ?? response?.reported ?? false };
+}
+
+/**
+ * Get available content report reasons
+ * GET /api/report/reasons/content
+ */
+export async function getContentReportReasons(): Promise<ReportReason[]> {
+  const response = await apiCall<{ result: ReportReason[] } | ReportReason[]>("/api/report/reasons/content");
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  return Array.isArray(response) ? response : [];
+}
+
+/**
+ * Get available user report reasons
+ * GET /api/report/reasons/user
+ */
+export async function getUserReportReasons(): Promise<ReportReason[]> {
+  const response = await apiCall<{ result: ReportReason[] } | ReportReason[]>("/api/report/reasons/user");
+  if (response && typeof response === 'object' && 'result' in response) {
+    return response.result || [];
+  }
+  return Array.isArray(response) ? response : [];
+}
+
+/**
+ * Report a video or post
+ * POST /api/report/content
+ */
+export async function reportContent(params: {
+  tokenId: number;
+  reason: string;
+  description?: string;
+}): Promise<{ success: boolean; message?: string }> {
+  const response = await apiCall<any>("/api/report/content", {
+    method: "POST",
+    body: params as Record<string, unknown>,
+    requiresAuth: true,
+  });
+  return { success: response?.success !== false, message: response?.message };
+}
+
+/**
+ * Report a user
+ * POST /api/report/user
+ */
+export async function reportUser(params: {
+  userId: string;
+  reason: string;
+  description?: string;
+}): Promise<{ success: boolean; message?: string }> {
+  const response = await apiCall<any>("/api/report/user", {
+    method: "POST",
+    body: params as Record<string, unknown>,
+    requiresAuth: true,
+  });
+  return { success: response?.success !== false, message: response?.message };
 }
 
 // ============================================
@@ -2866,6 +3046,58 @@ export async function mintPost(params: MintPostParams): Promise<MintResponse> {
   }
   
   return data;
+}
+
+// ============================================
+// EDIT & DELETE POST API
+// ============================================
+
+/**
+ * Edit post details (title, description, categories)
+ * PATCH /api/nft/{tokenId}
+ * Only the content creator (minter) can edit their own content.
+ * All fields are optional — only the fields you send will be updated.
+ */
+export interface EditPostParams {
+  /** Post title (max 140 characters) */
+  name?: string;
+  /** Post description (max 500 characters) */
+  description?: string;
+  /** Array of category names */
+  category?: string[];
+}
+
+export interface EditPostResponse {
+  result: boolean;
+  data?: {
+    tokenId: number;
+    name?: string;
+    description?: string;
+    category?: string[];
+  };
+}
+
+export async function editPost(
+  tokenId: number | string,
+  params: EditPostParams
+): Promise<EditPostResponse> {
+  return apiCall<EditPostResponse>(`/api/nft/${tokenId}`, {
+    method: "PATCH",
+    body: params as Record<string, unknown>,
+    requiresAuth: true,
+  });
+}
+
+/**
+ * Soft delete content
+ * DELETE /api/nft/{tokenId}
+ * Only the content creator (minter) can delete their own content.
+ */
+export async function deletePost(tokenId: number | string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/nft/${tokenId}`, {
+    method: "DELETE",
+    requiresAuth: true,
+  });
 }
 
 // Token visibility types
