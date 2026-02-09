@@ -1,5 +1,16 @@
 import { Check, Clock, Loader2, Star, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan } from '@/lib/api/dehub';
 import { useBuyPlan } from '@/hooks/use-subscriptions';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -100,23 +111,52 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           Subscribed
         </Button>
       ) : (
-        <Button
-          onClick={handleSubscribe}
-          disabled={buyPlanMutation.isPending}
-          className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold"
-        >
-          {buyPlanMutation.isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Subscribing...
-            </>
-          ) : (
-            <>
-              <Star className="w-4 h-4 mr-2" />
-              Subscribe
-            </>
-          )}
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              disabled={buyPlanMutation.isPending}
+              className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold"
+            >
+              {buyPlanMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Subscribing...
+                </>
+              ) : (
+                <>
+                  <Star className="w-4 h-4 mr-2" />
+                  Subscribe
+                </>
+              )}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-white">Confirm Subscription</AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-400">
+                Subscribe to <span className="text-white font-medium">{plan.name}</span> for{' '}
+                <span className="text-yellow-400 font-medium">{plan.price} DHB</span> / {formatDuration(plan.duration)}?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleSubscribe}
+                disabled={buyPlanMutation.isPending}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold"
+              >
+                {buyPlanMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Star className="w-4 h-4 mr-2" />
+                )}
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </div>
   );

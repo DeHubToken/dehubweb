@@ -126,6 +126,21 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [selectedRoomId, isAuthenticated, refetch]);
 
+  const handleUnbanUser = useCallback(async (userId: string, userName: string) => {
+    if (!selectedRoomId || !isAuthenticated) {
+      toast.error('Sign in to moderate');
+      return;
+    }
+    try {
+      await unbanLiveChatUser(selectedRoomId, userId);
+      toast.success(`${userName} has been unbanned`);
+      refetch();
+    } catch (err) {
+      console.error('[PublicChat] Unban failed:', err);
+      toast.error('Failed to unban user');
+    }
+  }, [selectedRoomId, isAuthenticated, refetch]);
+
   // Merge list-level room data with the richer single-room details
   const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
   const enrichedRoom = roomDetails || selectedRoom;
@@ -256,6 +271,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 onPin={handlePinMessage}
                 onUnpin={handleUnpinMessage}
                 onBan={handleBanUser}
+                onUnban={handleUnbanUser}
               />
             ))
           )}

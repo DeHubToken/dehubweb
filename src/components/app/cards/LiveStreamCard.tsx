@@ -57,7 +57,9 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const hlsRef = useRef<Hls | null>(null);
   const videoId = `live-${stream.id}`;
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
+  const isStreamOwner = walletAddress && stream.creatorId && 
+    walletAddress.toLowerCase() === stream.creatorId.toLowerCase();
   const { like, gift, end, isLiking, isSendingGift, isEnding } = useStreamActions();
   const { activities, isLoading: activitiesLoading } = useStreamActivities(
     showActivityLog ? stream.id : null
@@ -283,8 +285,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <EyeOff className="w-4 h-4" /> See Less Like This
               </DropdownMenuItem>
-              {/* End stream - only for the creator while live */}
-              {!streamEnded && isAuthenticated && (
+              {/* End stream - only for the stream creator while live */}
+              {!streamEnded && isAuthenticated && isStreamOwner && (
                 <DropdownMenuItem
                   onClick={handleEndStream}
                   disabled={isEnding}

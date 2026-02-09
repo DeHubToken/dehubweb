@@ -32,6 +32,7 @@ export interface DPayTransaction {
   status: 'pending' | 'completed' | 'failed';
   createdAt: string;
   txHash?: string;
+  chainId?: number;
 }
 
 export interface OnrampSessionRequest {
@@ -259,6 +260,7 @@ export async function getDPayTransactions(): Promise<DPayTransaction[]> {
         status: tx.status || 'completed',
         createdAt: tx.createdAt || tx.created_at,
         txHash: tx.txHash || tx.hash,
+        chainId: tx.chainId || tx.chain_id,
       }));
     }
 
