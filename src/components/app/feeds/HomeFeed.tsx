@@ -449,7 +449,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const shorts = useMemo((): ShortVideo[] => {
     if (!shortsData?.pages) return [];
     const allNFTs = shortsData.pages.flatMap(page => page.data || []);
-    return allNFTs.slice(0, 10).map(mapNFTToShortVideo);
+    // Filter to only video content — exclude text and image posts
+    const videosOnly = allNFTs.filter(nft => {
+      const hasVideo = !!(nft.videoUrl || nft.media_url);
+      const postType = (nft as any).postType || nft.media_type;
+      if (postType === 'image' || postType === 'text') return false;
+      return hasVideo;
+    });
+    return videosOnly.slice(0, 10).map(mapNFTToShortVideo);
   }, [shortsData]);
 
   // Convert pinned post (DeHubNFT) to feed item format
