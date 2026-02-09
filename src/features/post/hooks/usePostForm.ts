@@ -206,67 +206,76 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
     const preview = URL.createObjectURL(file);
     
+    // Instantly show the video in the media list with a loading state
+    // This makes the UI feel fast while heavy thumbnail generation runs in background
+    setMedia([{ 
+      file, 
+      preview, 
+      type: 'video', 
+    }]);
+
+    // Background: load metadata + generate thumbnail, then update the entry
     const video = document.createElement('video');
     video.preload = 'auto';
     video.muted = true;
     video.crossOrigin = 'anonymous';
     video.src = preview;
     
-    // Wait for video metadata and enough data to seek
-    const duration = await new Promise<number>((resolve, reject) => {
-      video.onloadedmetadata = () => {
-        resolve(video.duration);
-      };
-      video.onerror = () => reject(new Error('Failed to load video'));
-    });
-
-    // Generate thumbnail from video frame (at 1 second or 10% of duration)
-    let thumbnailUrl: string | undefined;
-    let thumbnailBlob: Blob | undefined;
-    
     try {
-      const seekTime = Math.min(1, duration * 0.1);
-      
-      await new Promise<void>((resolve, reject) => {
-        video.onseeked = () => resolve();
-        video.onerror = () => reject(new Error('Failed to seek video'));
-        video.currentTime = seekTime;
+      // Wait for video metadata
+      const duration = await new Promise<number>((resolve, reject) => {
+        video.onloadedmetadata = () => resolve(video.duration);
+        video.onerror = () => reject(new Error('Failed to load video'));
       });
+
+      // Generate thumbnail from video frame
+      let thumbnailUrl: string | undefined;
+      let thumbnailBlob: Blob | undefined;
       
-      // Create canvas to capture frame
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      
-      if (ctx && canvas.width > 0 && canvas.height > 0) {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      try {
+        const seekTime = Math.min(1, duration * 0.1);
         
-        // Convert to blob for upload
-        const blob = await new Promise<Blob | null>((resolve) => {
-          canvas.toBlob(resolve, 'image/jpeg', 0.85);
+        await new Promise<void>((resolve, reject) => {
+          video.onseeked = () => resolve();
+          video.onerror = () => reject(new Error('Failed to seek video'));
+          video.currentTime = seekTime;
         });
         
-        if (blob) {
-          thumbnailBlob = blob;
-          thumbnailUrl = URL.createObjectURL(blob);
-          console.log('[Video] Auto-generated thumbnail:', { width: canvas.width, height: canvas.height, size: blob.size });
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        
+        if (ctx && canvas.width > 0 && canvas.height > 0) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          
+          const blob = await new Promise<Blob | null>((resolve) => {
+            canvas.toBlob(resolve, 'image/jpeg', 0.85);
+          });
+          
+          if (blob) {
+            thumbnailBlob = blob;
+            thumbnailUrl = URL.createObjectURL(blob);
+            console.log('[Video] Auto-generated thumbnail:', { width: canvas.width, height: canvas.height, size: blob.size });
+          }
         }
+      } catch (err) {
+        console.warn('[Video] Failed to generate thumbnail:', err);
       }
-    } catch (err) {
-      console.warn('[Video] Failed to generate thumbnail:', err);
-      // Continue without thumbnail - user can add one manually
-    }
 
-    setMedia([{ 
-      file, 
-      preview, 
-      type: 'video', 
-      duration,
-      thumbnail: thumbnailUrl,
-      thumbnailBlob,
-      isAutoThumbnail: !!thumbnailUrl,
-    }]);
+      // Update the media entry with duration + thumbnail
+      setMedia(prev => prev.map(m => 
+        m.file === file ? { 
+          ...m, 
+          duration,
+          thumbnail: thumbnailUrl,
+          thumbnailBlob,
+          isAutoThumbnail: !!thumbnailUrl,
+        } : m
+      ));
+    } catch (err) {
+      console.warn('[Video] Failed to load video metadata:', err);
+    }
   }, [hasImage, hasVideo]);
 
   const removeMedia = useCallback((index: number) => {
