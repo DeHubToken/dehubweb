@@ -120,8 +120,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const creatorUsername = nft.mintername || nft.creator?.username;
   
   // Get stats
-  const likeCount = nft.totalVotes?.for || nft.like_count || 0;
-  const dislikeCount = nft.totalVotes?.against || nft.dislike_count || 0;
+  const likeCount = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
+  const dislikeCount = nft.dislikes ?? nft.totalVotes?.against ?? nft.dislike_count ?? 0;
   const commentCount = nft.commentCount || nft.comment_count || 0;
   
   // Map content access fields from API
@@ -193,7 +193,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   const verified = nft.creator?.is_verified || false;
   
   // Get stats
-  const likes = nft.totalVotes?.for || nft.like_count || 0;
+  const likes = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
   const comments = nft.commentCount || nft.comment_count || 0;
   const viewCount = nft.views || nft.view_count || 0;
   

@@ -316,7 +316,6 @@ export function ImagesFeed({
   } = useDeHubImages({
     unit: 12,
     sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new',
-    address: walletAddress || undefined,
   });
 
   // Refetch when refreshKey changes

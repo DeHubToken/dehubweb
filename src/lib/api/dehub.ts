@@ -149,6 +149,8 @@ export interface DeHubNFT {
   commentCount?: number;
   comment_count?: number;
   totalVotes?: { for?: number; against?: number };
+  likes?: number;       // Flat likes count (new API format)
+  dislikes?: number;    // Flat dislikes count (new API format)
   like_count?: number;
   dislike_count?: number;
 
@@ -187,14 +189,31 @@ export interface DeHubNFT {
     addBountyChainId?: number;
   };
 
-  // User interaction state (returned when address param is provided)
+  // User interaction state (returned via JWT Bearer token)
   isLiked?: boolean;
   isDisliked?: boolean;
+  isSaved?: boolean;
+  isOwner?: boolean;
+  isUnlocked?: boolean;
+
+  // Creator profile (new API format - full profile object)
+  minterUser?: DeHubUser;
+  minterFollowers?: number;
+  minterFollowings?: number;
+
+  // Live stream metadata
+  stream?: {
+    streamId?: string;
+    status?: string;
+    viewerCount?: number;
+    title?: string;
+    category?: string;
+  };
 
   // Blockchain data
   chainId?: number; // 8453 for Base, 56 for BSC/BNB
   mintTxHash?: string; // Transaction hash of the mint
-  status?: string; // "minted", "pending", etc.
+  status?: string; // "minted", "signed", "pending", etc.
 }
 
 export interface DeHubComment {
@@ -224,10 +243,10 @@ export interface SearchNFTsParams {
   /** Post type filter - use "feed-images" for images feed, undefined for home/videos */
   postType?: string;
   search?: string;
-  /** Connected wallet address to get isLiked/isDisliked info */
+  /** @deprecated Viewer context is now extracted from JWT Bearer token */
   address?: string;
-  /** Content status filter - use "minted" to only show confirmed on-chain content */
-  status?: "minted" | "pending" | "failed";
+  /** Content status filter */
+  status?: "minted" | "signed" | "all" | "pending" | "failed";
 }
 
 /**
@@ -244,7 +263,7 @@ export interface UniversalSearchParams {
   type?: "accounts" | "videos" | "livestreams";
   /** Post type filter for videos: "video", "feed-all", "feed", "feed-simple", "feed-images" */
   postType?: string;
-  /** Connected wallet address to get isLiked/isDisliked info */
+  /** @deprecated Viewer context is now extracted from JWT Bearer token */
   address?: string;
 }
 
