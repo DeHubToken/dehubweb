@@ -1,49 +1,54 @@
 
 
-# Fix: Vote State Not Persisting Across Page Navigations
+# Fix: Vote State Not Persisting When Returning to Feed
 
 ## Problem
 
-When you like a post in the feed, then navigate to its dedicated page (or a profile), a brand-new `ActionBar` component mounts. It initializes from the API data (which hasn't updated yet), so the like reverts to "not liked." The existing vote guard only protects against prop changes within the **same** component instance -- it doesn't survive navigation.
+The Home feed uses an "overlay pattern" where the `HomePage` stays mounted (just set to `hidden`) when navigating to a dedicated post page or profile. When you come back, the same `ActionBar` instances are still alive with their original state -- they never remount, so the vote cache is never re-read.
+
+The profile page works because it's a completely fresh mount, so `ActionBar` reads the vote cache during initialization.
+
+## Root Cause
+
+- `ActionBar` only reads `getVoteCache(postId)` once: during `useState` initialization (mount time)
+- The sync `useEffect` hooks only fire when props like `initialIsLiked` change -- but the feed data hasn't refetched, so props don't change
+- Result: the feed's `ActionBar` instances stay stuck on the pre-vote state
 
 ## Solution
 
-Create a lightweight **global in-memory vote store** (a simple `Map`) that:
-1. Gets written to whenever the user votes (in `ActionBar`)
-2. Gets read on mount by any new `ActionBar` instance to override stale API props
-3. Entries auto-expire after 30 seconds (by which time the API should reflect the change)
+Add a single `useEffect` in `ActionBar` that re-checks the vote cache whenever the component becomes "active" again. Since we can't easily detect visibility of a hidden parent, the simplest robust approach is to **re-check the vote cache on an interval or via a focus/visibility listener**.
 
-No React Context needed -- just a plain module-level `Map` for zero overhead.
+However, the cleanest fix is simpler: **update the React Query feed cache directly when a vote is cast**, so the feed items themselves carry the correct `isLiked`/`isDisliked` values. This way, even hidden `ActionBar` instances receive updated props.
 
-## Technical Details
+### Approach: Update Feed Cache on Vote
 
-### 1. New file: `src/lib/vote-cache.ts`
+When a vote is cast in `ActionBar`, in addition to the vote cache, also update the relevant React Query feed caches (`unified-feed`, `dehub-videos`, etc.) so the underlying feed data reflects the vote. This means:
 
-A minimal module exporting three functions:
+1. The hidden Home feed's data gets patched
+2. When the user returns, the `ActionBar` props are already correct
+3. No timers or visibility listeners needed
 
-```typescript
-// In-memory map: postId -> { isLiked, isDisliked, likeCount, dislikeCount, timestamp }
-const cache = new Map();
-const TTL = 30_000; // 30 seconds
+### File Changes
 
-export function setVoteCache(postId, state) { ... }
-export function getVoteCache(postId) { ... } // returns entry or null if expired/missing
-export function clearVoteCache(postId) { ... }
-```
+**`src/components/app/cards/ActionBar.tsx`**
 
-### 2. Update: `src/components/app/cards/ActionBar.tsx`
+- Import `useQueryClient` from `@tanstack/react-query`
+- After computing the new vote state (in the `handleVote` callback), call a helper that patches matching post entries across all feed query caches
+- The helper iterates known feed query keys and updates the matching `postId`'s `isLiked`, `isDisliked`, and vote counts in-place using `queryClient.setQueryData`
 
-- **On mount**: Check `getVoteCache(postId)`. If a valid entry exists, use its values instead of the props from the API.
-- **On vote**: Call `setVoteCache(postId, { isLiked, isDisliked, likeCount, dislikeCount })` alongside the existing optimistic update.
-- **Sync effects**: Also check the vote cache before allowing prop-based sync (strengthens the existing vote guard).
+**`src/lib/vote-cache.ts`** (extend)
 
-### 3. Update: `src/lib/post-cache.ts`
+- Add a new exported function `patchFeedCaches(queryClient, postId, voteState)` that:
+  - Iterates query keys like `['unified-feed']`, `['dehub-videos']`, `['dehub-images']`, `['profile-content']`
+  - For each cached page of data, finds the item matching `postId` and patches its vote fields
+  - Uses `queryClient.setQueriesData` for efficient bulk updates
 
-When building the cached NFT data before navigation (`cacheVideoForNavigation`, `cacheImageForNavigation`, `cacheTextPostForNavigation`), check the vote cache and merge any recent vote state into the cached data. This way, even the initial props passed to `ActionBar` on the dedicated page are already correct.
+This ensures the feed data stays consistent with the user's actions regardless of the overlay pattern, navigation, or cache TTL.
 
 ## What This Fixes
 
-- Like a post in feed, open dedicated page -- like persists
-- Like a post in feed, open creator's profile -- like persists on their posts
-- Like on dedicated page, go back to feed -- like persists
-- Works for dislikes and vote switching too
+- Like a post in the feed, navigate to its page, come back to feed -- like persists
+- Like a post on a profile, go back to the feed -- like persists
+- Works bidirectionally across all navigation patterns
+- No dependency on timers or TTL expiration
+
