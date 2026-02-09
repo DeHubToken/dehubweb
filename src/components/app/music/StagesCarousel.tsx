@@ -120,12 +120,12 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   }
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
           <img src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />
-          Live Stages
+          Stages
           <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length})</span>
         </h3>
         <button 
@@ -138,7 +138,7 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       
       {/* Carousel */}
       <div className="relative">
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
           {liveSpaces.map((space) => (
             <StageCard 
