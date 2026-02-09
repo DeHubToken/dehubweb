@@ -48,8 +48,8 @@ export function useStoryViews(storyId: string | undefined) {
     gcTime: 300000,
   });
 
-  // Use cached value if available, otherwise use fetched value
-  const viewCount = storyId
+  // Use cached value if available, otherwise null (not 0) to avoid flash
+  const viewCount: number | null = storyId
     ? (fetchedCount ?? viewCountCache.get(storyId) ?? null)
     : 0;
 
@@ -74,7 +74,7 @@ export function useStoryViews(storyId: string | undefined) {
   }, [storyId]);
 
   return {
-    viewCount: viewCount ?? 0,
+    viewCount,
     isLoading: isLoading && viewCount === null,
     recordView,
   };
