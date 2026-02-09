@@ -25,7 +25,7 @@ export function RadioGenreFilter({ activeGenre, onGenreChange }: RadioGenreFilte
               key={genre.id}
               onClick={() => onGenreChange(genre.id)}
               className={cn(
-                'px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-colors',
+                'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap transition-colors',
                 activeGenre === genre.id
                   ? 'bg-white text-black'
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
