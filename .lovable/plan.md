@@ -1,37 +1,21 @@
 
 
-# Fix: Stale Closure Bug in Vote Cache Updates
+## Fix Post Modal Color Inconsistencies
 
-## Problem
+### Problem
+Three color issues in the post creation modal:
+1. **Shorts destination badge** shows in green (emerald) when a video qualifies as a Short
+2. **Music destination badge** shows in purple when a video is marked as music
+3. **Music video toggle button** turns green (emerald) when clicked, instead of staying consistent
 
-The `handleVote` function in `ActionBar.tsx` uses `queueMicrotask` to write to the vote cache and patch feed caches. However, inside that microtask, it re-derives the new vote state from the **current closure values** (`isLiked`, `isDisliked`, `localLikeCount`, `localDislikeCount`). These are stale -- React's `setState` calls haven't committed yet, so the microtask reads pre-vote values and computes incorrect cache entries.
+All of these should use the standard neutral liquid glass styling to match the rest of the UI.
 
-This causes:
-- Like count showing 0 instead of 1 in some feeds
-- `isLiked` not being set to `true` in the cache
-- Inconsistent state across feeds
+### Changes
 
-## Solution
+**1. `src/features/post/components/PostContentArea.tsx`** (lines 693-698)
+- Remove colored badge styling for Shorts, Music, and Live destinations
+- Apply uniform neutral styling (`bg-white/10 text-zinc-300`) to all destination badges, keeping them visually consistent
 
-Compute the new vote state **once, upfront** (before any `setState` calls), then use those computed values for both the optimistic `setState` calls AND the cache/feed-patch writes. No microtask needed.
-
-## Technical Changes
-
-### File: `src/components/app/cards/ActionBar.tsx`
-
-Refactor `handleVote` to:
-
-1. Compute `newLiked`, `newDisliked`, `newLikeCount`, `newDislikeCount` at the **top** of the function from the current state values (which are stable within the same render)
-2. Use those computed values to call `setState`, `setVoteCache`, and `patchFeedCaches` directly -- no `queueMicrotask`
-3. Remove the duplicated logic that currently exists inside the microtask
-
-```
-Before (broken):
-  setState(optimistic)  -->  queueMicrotask(re-derive from stale closure)
-
-After (fixed):
-  compute newState  -->  setState(newState)  -->  setVoteCache(newState)  -->  patchFeedCaches(newState)
-```
-
-This is a single function refactor in one file. No new files or dependencies needed.
+**2. `src/features/post/components/PostMediaPreview.tsx`** (lines 808-812)
+- Change the music video toggle's active state from `bg-emerald-500/40 border-emerald-400/40` to a neutral active state like `bg-white/20 border-white/30` so it doesn't flash green when clicked
 
