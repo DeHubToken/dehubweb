@@ -106,18 +106,18 @@ export function CardHeader({
         className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
       >
         {isLive ? (
-          <div className="p-0.5 rounded-xl bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-            <div className="p-0.5 bg-zinc-900 rounded-xl">
-              <Avatar className="w-8 h-8 rounded-xl">
-                {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-xl" />}
-                <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{username[0]?.toUpperCase()}</AvatarFallback>
+          <div className="p-0.5 rounded-lg bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
+            <div className="p-0.5 bg-zinc-900 rounded-lg">
+              <Avatar className="w-9 h-9 rounded-lg">
+                {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-lg" />}
+                <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-lg">{username[0]?.toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
           </div>
         ) : (
-          <Avatar className="w-8 h-8 rounded-xl">
-            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-xl" />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{username[0]?.toUpperCase()}</AvatarFallback>
+          <Avatar className="w-9 h-9 rounded-lg">
+            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-lg" />}
+            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-lg">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
         <div className="flex items-center gap-1.5 min-w-0">
