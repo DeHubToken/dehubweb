@@ -352,7 +352,7 @@ export function ActionBar({
             onClick={toggleBookmark}
             className={cn(
               "transition-colors",
-              isBookmarked ? "text-yellow-500" : "text-white hover:text-zinc-400",
+              isBookmarked ? "text-yellow-500" : "text-zinc-400 hover:text-white",
               isBookmarkLoading && "opacity-50"
             )}
             aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
@@ -364,7 +364,7 @@ export function ActionBar({
           </motion.button>
           <button 
             onClick={handleInfoClick}
-            className="text-white hover:text-zinc-400 transition-colors"
+            className="text-zinc-400 hover:text-white transition-colors"
             aria-label="Post info"
           >
             <Info className="w-5 h-5" />
