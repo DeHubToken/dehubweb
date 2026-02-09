@@ -707,15 +707,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         streamInfo.lockContentChainIds = [BASE_CHAIN_ID];
       }
 
-      // Add PPV settings - DHB only
+      // Add PPV settings
       if (isPPV && ppvAmount) {
         const ppvValue = parseFloat(ppvAmount);
         if (ppvValue > 0) {
           streamInfo.isPayPerView = true;
-          streamInfo.payPerViewContractAddress = DHB_TOKEN.address;
-          streamInfo.payPerViewTokenSymbol = 'DHB';
+          streamInfo.payPerViewTokenSymbol = ppvCurrency;
           streamInfo.payPerViewAmount = ppvValue;
-          streamInfo.payPerViewChainIds = [BASE_CHAIN_ID];
+          if (ppvCurrency === 'DHB') {
+            streamInfo.payPerViewContractAddress = DHB_TOKEN.address;
+            streamInfo.payPerViewChainIds = [BASE_CHAIN_ID];
+          }
         }
       }
 
