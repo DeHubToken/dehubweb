@@ -821,7 +821,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       onClick={isImmersive ? undefined : handleCardClick}
       className={isImmersive 
         ? "bg-black overflow-hidden isolate" 
-        : "bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer isolate"
+        : "overflow-hidden cursor-pointer isolate"
       }
     >
       {/* Header with AI and menu buttons - hidden in immersive mode */}
