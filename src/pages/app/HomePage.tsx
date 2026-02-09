@@ -459,7 +459,7 @@ export default function HomePage() {
       case 'live':
         return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
       case 'music':
-        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} onOpenStages={() => setShowStagesModal(true)} />;
+        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
       default:
         return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />;
     }
