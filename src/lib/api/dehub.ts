@@ -3476,8 +3476,8 @@ export async function voteOnPost(params: {
   const response = await apiCall<{ result: VoteResponse; success?: boolean } | VoteResponse>("/api/request_vote", {
     method: "POST",
     body: {
-      tokenId: params.tokenId,
-      voteType: params.voteType,
+      streamTokenId: params.tokenId,
+      vote: params.voteType === 'for',
     },
     requiresAuth: true,
   });
