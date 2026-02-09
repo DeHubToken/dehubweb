@@ -361,7 +361,7 @@ export function ImagesFeed({
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [fetchNextPage]); // Only depend on fetchNextPage - refs handle the rest
+  }, [fetchNextPage, showCollage, selectedPostId]); // Re-attach when view mode changes
   
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
