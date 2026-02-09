@@ -13,7 +13,7 @@ import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feed
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio';
-import { StagesCarousel } from '@/components/app/music/StagesCarousel';
+
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -406,7 +406,6 @@ function AllSection({
   isLoadingVideos,
   onGoToRadio,
   onGoToVideos,
-  onOpenStages,
 }: { 
   radioStations: RadioStation[];
   musicVideos: VideoItem[];
@@ -414,13 +413,11 @@ function AllSection({
   isLoadingVideos: boolean;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
-  onOpenStages: () => void;
 }) {
   return (
     <div className="space-y-4 pb-32">
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
-      <StagesCarousel onOpenStages={onOpenStages} />
       <TracksCarousel />
       <PodcastsCarousel />
     </div>
@@ -530,10 +527,9 @@ interface MusicFeedProps {
   showFilters?: boolean;
   isRefreshing?: boolean;
   refreshKey?: number;
-  onOpenStages?: () => void;
 }
 
-export function MusicFeed({ showFilters = false, isRefreshing = false, onOpenStages = () => {} }: MusicFeedProps) {
+export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
   const { walletAddress } = useAuth();
 
@@ -614,7 +610,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, onOpenSta
             isLoadingVideos={isLoadingCarouselVideos}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
-            onOpenStages={onOpenStages}
           />
         );
       case 'videos':
