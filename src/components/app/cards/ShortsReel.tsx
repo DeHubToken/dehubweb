@@ -112,7 +112,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <Eye className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">0</span>
+                    <span className="text-white text-xs font-medium">{short.views || '0'}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Heart className="w-3 h-3 text-white" />
