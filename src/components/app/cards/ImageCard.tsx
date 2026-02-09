@@ -408,7 +408,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
     <div 
       ref={viewRef} 
       onClick={handleCardClick}
-      className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer isolate"
+      className="overflow-hidden cursor-pointer isolate"
     >
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
@@ -502,7 +502,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       </SwipeableCarousel>
 
       {/* Info & Actions */}
-      <div className="p-3 space-y-2">
+      <div className="py-3 space-y-2">
         {/* Title & Description */}
         <FeedDescription 
           title={post.title} 

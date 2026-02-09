@@ -85,7 +85,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     <div 
       ref={viewRef} 
       onClick={handleCardClick}
-      className="bg-zinc-900 rounded-2xl overflow-hidden relative cursor-pointer isolate"
+      className="overflow-hidden relative cursor-pointer isolate"
     >
       <CardHeader
         username={post.author.name}
@@ -164,7 +164,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-3 space-y-2">
+      <div className="py-3 space-y-2">
         <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
         {/* Metadata: timestamp and views */}
