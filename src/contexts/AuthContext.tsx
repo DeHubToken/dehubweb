@@ -310,7 +310,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
     
-    toast.success('Successfully logged in!');
+    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
     console.log('[Auth] ✓ DeHub authentication complete (redirect flow)');
   };
 
@@ -393,6 +393,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
     
+    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
     console.log('[Auth] ✓ DeHub authentication complete');
   };
 
