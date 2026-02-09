@@ -16,8 +16,11 @@ import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { TVPreviewCard } from '@/components/app/tv';
+import { StagesCarousel } from '@/components/app/music/StagesCarousel';
+import { AudioSpacesModal } from '@/components/app/spaces';
 import { useQuery } from '@tanstack/react-query';
 import { getTVChannelsByCountry } from '@/lib/api/live-tv';
+import { useState } from 'react';
 
 // Category images
 import apexCategory from '@/assets/apex-category.png';
@@ -49,6 +52,7 @@ interface LiveFeedProps {
 
 export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
+  const [showStagesModal, setShowStagesModal] = useState(false);
   const navigate = useNavigate();
 
   // Fetch 5 TV channels for the carousel preview
@@ -228,8 +232,17 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
               </SwipeableCarousel>
             </div>
           )}
+
+          {/* Stages Carousel */}
+          <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
         </>
       )}
+
+      {/* Stages Modal */}
+      <AudioSpacesModal 
+        isOpen={showStagesModal} 
+        onClose={() => setShowStagesModal(false)} 
+      />
     </div>
   );
 }
