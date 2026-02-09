@@ -86,7 +86,7 @@ export function FollowersListDrawer({
       
       try {
         const type = title === 'Followers' ? 'followers' : 'following';
-        const result = await getFollowList(profileAddress, type, currentUserAddress || undefined);
+        const { items: result } = await getFollowList(profileAddress, type);
 
         // Check if items are raw addresses (no username populated)
         const needsEnrichment = result.length > 0 && result.every(item => !item.username);
