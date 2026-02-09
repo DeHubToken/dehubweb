@@ -144,7 +144,7 @@ function SectionHeader({ icon: Icon, title, count, onSeeAll }: {
 function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSeeAll: () => void }) {
   if (stations.length === 0) {
     return (
-      <div className="bg-zinc-900 rounded-2xl p-4">
+      <div>
         <SectionHeader icon={Radio} title="Radio Stations" />
         <p className="text-zinc-500 text-sm">Loading stations...</p>
       </div>
@@ -152,11 +152,10 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
   }
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
-      {/* Show 50,000+ as the count since that's the radio browser database size */}
+    <div>
       <SectionHeader icon={Radio} title="Radio Stations" onSeeAll={onSeeAll} />
       <div className="relative">
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
           {stations.slice(0, 10).map((station) => (
             <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
@@ -349,7 +348,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   const visibleVideos = videos.slice(0, visibleCount);
   
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div>
       <SectionHeader icon={Play} title="Music Videos" onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
       {isLoading ? (
         <div className="flex items-center justify-center py-8">
@@ -359,7 +358,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
         <p className="text-zinc-500 text-sm">No music videos yet</p>
       ) : (
         <div className="relative">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
           <SwipeableCarousel 
             ref={scrollRef}
             onScroll={handleScroll}
@@ -382,7 +381,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
 
 function TracksCarousel() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div>
       <SectionHeader icon={Disc3} title="Tracks" />
       <p className="text-zinc-500 text-sm">No tracks yet</p>
     </div>
@@ -391,7 +390,7 @@ function TracksCarousel() {
 
 function PodcastsCarousel() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div>
       <SectionHeader icon={Mic2} title="Podcasts" />
       <p className="text-zinc-500 text-sm">No podcasts yet</p>
     </div>
