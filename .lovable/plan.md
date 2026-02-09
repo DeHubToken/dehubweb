@@ -1,71 +1,60 @@
 
 
-# Performance Fix: Stories Thumbnails + Sidebar Tab Order
+# Fix: Shorts Thumbnail Reload on Tab Switch
 
 ## Problem
 
-Two features are causing heavy network load on initial page load:
+When switching between Home and other tabs (Videos, Images, etc.), the Shorts carousel thumbnails visibly reload every time you return to Home. This happens because:
 
-1. **Stories bar**: For each of the 15 template stories (which have no `thumbnail_url`), the `VideoThumbnail` component creates a hidden `<video>` element, downloads video data, seeks to frame 0.1s, and draws it to a canvas. That is **15 concurrent video downloads** firing immediately on mount -- extremely expensive in bandwidth and CPU.
+- The tab system completely unmounts `HomeFeed` when switching away, destroying all image elements
+- When you return, new image elements are created from scratch
+- The thumbnails use `loading="lazy"`, which delays image loading even when they're already in the browser cache
+- This creates a visible flash/shimmer as images re-paint
 
-2. **Who to Follow sidebar panel**: This is the default tab, and on mount it fires `searchNFTs` API calls (2 pages of 100 items each) plus a followings list query. The Leaderboard tab, by contrast, uses a server-side cache that refreshes every 6 hours and is much lighter.
+The data itself is cached (no extra API calls), but the images need to re-render in the DOM each time.
 
 ## Solution
 
-### 1. Stories: Use avatar as thumbnail, load video only on click
+Two changes to eliminate the visual reload:
 
-Instead of downloading videos to extract thumbnails, display the story creator's **avatar image** as the story thumbnail in the bar. The video will only load when the user taps a story to open the `StoryViewerModal`.
+### 1. Remove lazy loading from Shorts thumbnails
 
-**Files to change:**
+The Shorts reel is above the fold on the Home feed, so `loading="lazy"` actually hurts performance here. Removing it ensures images start loading immediately when the component mounts, pulling instantly from browser cache on return visits.
 
-- **`src/components/app/cards/StoriesBar.tsx`**
-  - Remove the `VideoThumbnail` component import and usage entirely
-  - For stories without a `thumbnail_url`, show the avatar (which is already available as a local asset for template stories)
-  - Remove the entire `thumbnailsReady` / `handleThumbnailReady` / `loadedCountRef` / `totalStoriesRef` coordination logic -- this was only needed to wait for video frame extraction
-  - Remove the skeleton overlay that waited for thumbnails to be ready
-  - Remove the `invisible` class toggle on the carousel
-  - The result: stories render instantly with avatar images, zero video downloads
+**File: `src/components/app/cards/ShortsReel.tsx`**
+- Remove `loading="lazy"` from the thumbnail `<img>` tag (line 62)
+- Also remove it from the avatar `<img>` tag (line 70) for consistency
 
-- **`src/components/app/stories/VideoThumbnail.tsx`**
-  - No changes needed (it may still be used elsewhere), but it will no longer be imported by StoriesBar
+### 2. Add module-level image pre-warming cache
 
-### 2. Sidebar: Default to Leaderboard tab, lazy-load Who to Follow
+Use the same pattern that Stories uses for avatar caching -- a persistent module-level `Set` that survives component unmounts. When shorts data arrives, pre-create `Image()` objects for each thumbnail URL. This tells the browser to fetch and cache them immediately, so when the DOM elements are recreated on tab switch, the images are already warm in memory.
 
-**File to change:**
-
-- **`src/components/app/sidebar/TabbedSidePanel.tsx`**
-  - Change default tab from `'follow'` to `'leaderboard'`
-  - Reorder the tabs array so Leaderboard (Trophy icon) comes first, then Follow (SquareUserRound), then Chat (MessagesSquare)
-  - The `WhoToFollow` component will only mount and fetch data when the user clicks its tab -- no wasted API calls on initial load
-
-## Impact
-
-- **Stories**: Eliminates 15 concurrent video downloads on page load. Avatar images are already bundled as local assets (imported in `use-stories.ts`), so they load instantly with zero network cost.
-- **Sidebar**: Defers 2+ API calls (`searchNFTs` pages + followings list) until the user explicitly requests them. The leaderboard data is pre-cached server-side and loads quickly.
-- Combined, this should noticeably improve initial load time and reduce bandwidth consumption.
+**File: `src/components/app/cards/ShortsReel.tsx`**
+- Add a module-level `preloadedThumbnails` Set outside the component
+- Add a `useEffect` that loops through `shorts` and pre-creates `Image()` objects for any URLs not yet in the Set
+- This ensures thumbnails are browser-cached on first load and render instantly on subsequent mounts
 
 ## Technical Details
 
-### StoriesBar changes (simplified render logic)
-
-The story item rendering will be simplified from:
-
 ```text
-if thumbnail_url exists -> show <img>
-else -> show <VideoThumbnail> (downloads video, extracts frame)
+Module-level cache (persists across unmount/remount):
+
+const preloadedThumbnails = new Set<string>();
+
+On mount with shorts data:
+  for each short.thumbnail:
+    if not in preloadedThumbnails:
+      new Image().src = url   // triggers browser cache
+      preloadedThumbnails.add(url)
+
+On render:
+  <img src={short.thumbnail} />  // no loading="lazy", instant from cache
 ```
 
-To:
+## Impact
 
-```text
-if thumbnail_url exists -> show <img>
-else -> show <Avatar> with the story creator's avatar
-```
-
-### TabbedSidePanel changes
-
-```text
-Before: tabs = [follow, leaderboard, chat], default = 'follow'
-After:  tabs = [leaderboard, follow, chat], default = 'leaderboard'
-```
+- Shorts thumbnails will appear instantly when returning to Home tab -- no flicker or reload
+- First visit still loads normally from CDN
+- Zero additional API calls or network overhead (browser cache handles it)
+- Consistent with the caching pattern already used by Stories
 
