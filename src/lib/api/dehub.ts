@@ -1002,11 +1002,21 @@ export async function getFollowList(
   );
   
   // Unwrap { result: [...] } wrapper if present
-  const items: FollowListItem[] | string[] = (response && typeof response === 'object' && 'result' in response)
-    ? (response as { result: FollowListItem[] | string[] }).result
-    : response as FollowListItem[] | string[];
-  
-  if (!Array.isArray(items) || items.length === 0) {
+  const raw: any = (response && typeof response === 'object' && 'result' in response)
+    ? (response as any).result
+    : response;
+
+  // Handle new paginated format: { items: [{ followedAt, user }], pagination }
+  let items: any[];
+  if (raw && typeof raw === 'object' && !Array.isArray(raw) && Array.isArray(raw.items)) {
+    items = raw.items.map((entry: any) => entry.user || entry);
+  } else if (Array.isArray(raw)) {
+    items = raw;
+  } else {
+    return [];
+  }
+
+  if (items.length === 0) {
     return [];
   }
 
