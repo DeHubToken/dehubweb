@@ -80,7 +80,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           creatorId={stream.creatorId}
           creatorUsername={stream.creatorUsername}
         />
-        <div className="flex items-center gap-1 pr-3">
+        <div className="flex items-center gap-1">
           <motion.button
             onClick={handleLike}
             disabled={isLiking || isLiked}

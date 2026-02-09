@@ -836,7 +836,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             creatorId={video.creatorId}
             creatorUsername={video.creatorUsername}
           />
-          <div className="flex items-center gap-1 pr-3">
+          <div className="flex items-center gap-1">
             <motion.button
               onClick={() => setShowAIChat(true)}
               className="text-zinc-400 hover:text-white transition-colors"
