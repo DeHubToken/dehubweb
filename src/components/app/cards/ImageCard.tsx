@@ -502,7 +502,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       </SwipeableCarousel>
 
       {/* Info & Actions */}
-      <div className="py-3 space-y-2">
+      <div className="pt-3 space-y-2">
         {/* Title & Description */}
         <FeedDescription 
           title={post.title} 

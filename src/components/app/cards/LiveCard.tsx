@@ -133,7 +133,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       </div>
 
       {/* Info & Actions */}
-      <div className="p-3">
+      <div className="pt-3 px-3">
         <ActionBar 
           postId={stream.id} 
           className="p-0 mb-2" 

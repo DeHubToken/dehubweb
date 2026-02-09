@@ -164,7 +164,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       </div>
 
       {/* Content */}
-      <div className="py-3 space-y-2">
+      <div className="pt-3 space-y-2">
         <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
         {/* Metadata: timestamp and views */}
