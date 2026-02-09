@@ -658,7 +658,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       {/* Category Pills */}
       <div className="mb-3">
         <div className="relative">
-          
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide px-1 pr-12">
             {/* All option */}
             <button
