@@ -18,19 +18,17 @@ interface UniqueUser {
 }
 
 const PAGE_SIZE = 100;
-const PAGES_PER_BATCH = 5; // Fetch 5 pages at a time for efficiency
+const PAGES_PER_BATCH = 2;
+const VISIBLE_INCREMENT = 15;
 
 // Fetch a batch of pages and extract unique users
 async function fetchUserBatch(batchIndex: number): Promise<{ users: UniqueUser[]; hasMore: boolean }> {
   const startPage = batchIndex * PAGES_PER_BATCH;
-  const endPage = startPage + PAGES_PER_BATCH;
-  
   const seenAddresses = new Set<string>();
   const uniqueUsers: UniqueUser[] = [];
 
-  // Fetch all pages in the batch in parallel
   const pagePromises = [];
-  for (let page = startPage; page < endPage; page++) {
+  for (let page = startPage; page < startPage + PAGES_PER_BATCH; page++) {
     pagePromises.push(searchNFTs({ sortMode: 'new', unit: PAGE_SIZE, page }));
   }
 
@@ -53,9 +51,7 @@ async function fetchUserBatch(batchIndex: number): Promise<{ users: UniqueUser[]
     }
   }
 
-  // If we got less than expected, there's no more data
   const hasMore = totalItems >= PAGES_PER_BATCH * PAGE_SIZE * 0.5;
-
   return { users: uniqueUsers, hasMore };
 }
 
@@ -65,6 +61,7 @@ export function WhoToFollow() {
   const { handleApiError } = useReauthHandler();
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+  const [visibleCount, setVisibleCount] = useState(VISIBLE_INCREMENT);
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 
@@ -82,12 +79,10 @@ export function WhoToFollow() {
 
   // Get following list as a Set for O(1) lookups
   const followingSet = useMemo(() => {
-    // API returns followingsList as the array, followings is just a count
     const followings = currentUserData?.followingsList;
     if (!followings || !Array.isArray(followings)) {
       return new Set<string>();
     }
-    console.log('[WhoToFollow] Following set size:', followings.length);
     return new Set(followings.map(addr => addr.toLowerCase()));
   }, [currentUserData?.followingsList]);
 
@@ -139,16 +134,27 @@ export function WhoToFollow() {
     });
   }, [allUsers, walletAddress, followingSet, followedUsers]);
 
-  // Intersection observer for infinite scroll
+  const visibleSuggestions = suggestions.slice(0, visibleCount);
+  const hasMoreToShow = visibleCount < suggestions.length || hasNextPage;
+
+  // Intersection observer: reveal more from pool first, then fetch
   const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
-    if (entry.isIntersecting && hasNextPage && !isFetchingRef.current) {
+    if (!entry.isIntersecting || isFetchingRef.current) return;
+
+    if (visibleCount < suggestions.length) {
+      // Reveal more from already-fetched pool (instant)
+      setVisibleCount(prev => prev + VISIBLE_INCREMENT);
+    } else if (hasNextPage) {
+      // Fetch more from API
       isFetchingRef.current = true;
-      fetchNextPage().finally(() => {
+      fetchNextPage().then(() => {
+        setVisibleCount(prev => prev + VISIBLE_INCREMENT);
+      }).finally(() => {
         isFetchingRef.current = false;
       });
     }
-  }, [hasNextPage, fetchNextPage]);
+  }, [visibleCount, suggestions.length, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     const loader = loaderRef.current;
@@ -173,11 +179,6 @@ export function WhoToFollow() {
 
   const getDisplayName = (user: UniqueUser) => {
     return user.displayName || user.username || `${user.address.slice(0, 6)}...${user.address.slice(-4)}`;
-  };
-
-  const getHandle = (user: UniqueUser) => {
-    if (user.username) return `@${user.username}`;
-    return `${user.address.slice(0, 6)}...${user.address.slice(-4)}`;
   };
 
   const handleUserClick = (user: UniqueUser) => {
@@ -205,11 +206,9 @@ export function WhoToFollow() {
       setFollowedUsers(prev => new Set(prev).add(user.address));
       toast.success(`Following ${getDisplayName(user)}!`);
     } catch (error: unknown) {
-      // Check if error indicates already following
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
         toast.info(`You're already following ${getDisplayName(user)}`);
-        // Add to followed set to remove from suggestions
         setFollowedUsers(prev => new Set(prev).add(user.address));
       } else {
         handleApiError(error, 'Failed to follow user');
@@ -246,7 +245,7 @@ export function WhoToFollow() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-        {suggestions.map((user) => (
+        {visibleSuggestions.map((user) => (
           <div
             key={user.address}
             onClick={() => handleUserClick(user)}
@@ -278,11 +277,13 @@ export function WhoToFollow() {
         ))}
         
         {/* Infinite scroll loader sentinel */}
-        <div ref={loaderRef} className="flex justify-center py-4">
-          {isFetchingNextPage && (
-            <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-          )}
-        </div>
+        {hasMoreToShow && (
+          <div ref={loaderRef} className="flex justify-center py-4">
+            {isFetchingNextPage && (
+              <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+            )}
+          </div>
+        )}
       </div>
 
       <div className="relative">
