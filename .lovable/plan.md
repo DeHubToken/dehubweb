@@ -1,48 +1,21 @@
 
 
-# Fix: Followers List 403 Error Mishandled as "Session Expired"
+# Fix: Story Views Flashing "0" Before Real Count Loads
 
-## Root Cause
+## Problem
+When a story first loads, the view count briefly shows "0" before the actual count arrives from the API. This happens because the hook defaults to `0` while the query is still in flight.
 
-The `apiCall` function in `src/lib/api/dehub.ts` treats **all** 403 responses as authentication failures and throws an `AuthenticationError("Session expired")`. However, the `/api/follow_list` endpoint returns a 403 when the target user has hidden their followers/following list -- this is a **privacy restriction**, not an auth failure.
+## Solution
+Return `null` from the hook while the view count is still loading, and update the three render locations in `StoryViewerModal.tsx` to only display the view count once it has a real value.
 
-API response:
-```
-Status: 403
-Body: {"status":false,"error":"This user has hidden their followers/following list"}
-```
+## Technical Details
 
-## Changes
+### File 1: `src/hooks/use-story-views.ts`
+- Change the return type of `viewCount` from always-a-number to `number | null`
+- Return `null` instead of `0` when no cached or fetched value is available yet
+- Update `isLoading` to reflect this correctly
 
-### 1. `src/lib/api/dehub.ts` -- Smarten the 403 handling in `apiCall`
-
-Only treat a 403 as an `AuthenticationError` if the error message actually relates to authentication (unauthorized, invalid token, jwt, etc.). Otherwise, throw a regular `Error` with the API's actual error message.
-
-This means changing the logic around lines 414-420 from:
-
-```
-if (response.status === 401 || response.status === 403 || ...)
-  throw new AuthenticationError()
-```
-
-to:
-
-```
-if (response.status === 401 || errorMessage includes auth keywords)
-  throw new AuthenticationError()
-else
-  throw new Error(errorData.error || 'Request failed')
-```
-
-A 403 will only be treated as an auth error if the message contains auth-related keywords.
-
-### 2. `src/components/app/profile/FollowersListDrawer.tsx` -- Show a user-friendly privacy message
-
-Update the catch block to detect privacy-related error messages (e.g., "hidden their followers") and show a clear message like "This user has hidden their followers list" instead of the generic "Failed to load list."
-
-## Impact
-
-- Stops the app from incorrectly logging users out or showing "Session expired" when viewing a private follow list
-- Shows a clear, accurate message to the user
-- All other genuine 401/403 auth errors continue to work as before
+### File 2: `src/components/app/stories/StoryViewerModal.tsx`
+- Wrap the three view count display locations (lines ~412-415, ~562-564, ~615-618) in a conditional that only renders when `viewCount !== null`
+- This means the eye icon and count simply won't appear until the real number is ready -- no flash of "0"
 
