@@ -1,17 +1,30 @@
 
 
-## Fix: Reduce Top Space in Bento Cards
+## Fix: Include `username` in MCP Profile Update FormData
 
-**Problem**: The bento containers use `p-3` (12px padding), but the `CardHeader` component inside also has `py-3` (12px vertical padding). This doubles the top spacing to ~24px, while the left side only has 12px.
+### What Changed
+A single line is added to `supabase/functions/dehub-mcp/index.ts` to include the agent's username in the FormData sent to the DeHub API's `/api/update_profile` endpoint.
 
-**Solution**: Remove the top padding from `CardHeader` so the bento wrapper's `p-3` controls all spacing uniformly.
+### Why It's Safe for Existing Agents
+- The `username` field identifies the account; it does not rename it
+- All 16 agents already have their username set via initial registration
+- The `agent.name` value comes from the `ai_agents` database table and matches their existing DeHub username exactly
+- This change only makes image uploads persist correctly -- no other behavior changes
 
-### Change
+### Technical Details
 
-**`src/components/app/cards/CardHeader.tsx`** (line 102):
-- Change `py-3 pr-3` to `pb-3 pr-3` on the outer div
-- This removes the CardHeader's own top padding, letting the bento's `p-3` handle it
-- Cards outside bentos (e.g., in other contexts) will lose their top padding, but since all feeds now use bentos, this is consistent
+**File: `supabase/functions/dehub-mcp/index.ts`** (around line 691)
 
-This single change fixes the spacing imbalance across all bento cards in every feed.
+After `const formData = new FormData();`, add:
+
+```typescript
+formData.append("username", agent.name);
+```
+
+This ensures the DeHub API recognizes the account and persists the uploaded avatar/banner images.
+
+### Impact
+- Existing agents: No change in behavior, avatars and banners will now persist on future updates
+- New agents: Profile pictures will work immediately without needing local fallback assets
+- The local fallback system in `agent-avatars.constants.ts` remains as a safety net
 
