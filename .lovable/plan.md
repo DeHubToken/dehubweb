@@ -1,36 +1,29 @@
 
 
-# Fix: Story Views Still Flashing "0"
+# Fix: Voting (Likes/Dislikes) Broken Everywhere
 
-## Root Cause
+## Problem
 
-The previous fix correctly changed the *return type* to `number | null`, but there are two remaining issues that still cause `0` to appear:
+There are two vote functions in `src/lib/api/dehub.ts`:
 
-1. **`queryFn` returns `0` as a fallback** (line 31 and line 40) -- once the query resolves with `0`, `fetchedCount` becomes `0`. Since `0` is not nullish, the `??` chain (`fetchedCount ?? cache ?? null`) stops at `0` and never reaches `null`.
+- **`voteOnNFT`** (line 846) -- sends `{ streamTokenId: number, vote: boolean }` -- **correct format**
+- **`voteOnPost`** (line 3472) -- sends `{ tokenId: number, voteType: 'for' | 'against' }` -- **wrong format**
 
-2. **Error fallback returns `0`** (line 36: `viewCountCache.get(storyId) ?? 0`) -- if the fetch fails and there's no cache, it returns `0` instead of letting the value stay unknown.
-
-In short: the query eagerly resolves to `0`, and `??` treats `0` as a valid value, so the UI sees "0 views" before the real count arrives.
+Both `ActionBar` and `ShortsViewer` use `voteOnPost`, which sends the wrong field names. The API rejects the request and every vote fails with "Failed to vote."
 
 ## Fix
 
-### File: `src/hooks/use-story-views.ts`
+### File: `src/lib/api/dehub.ts` (~line 3476-3483)
 
-1. Change `queryFn` to return `null` instead of `0` for all fallback paths (no storyId, fetch error with no cache, API returns no count). Change the return type to `Promise<number | null>`.
+Update the request body in `voteOnPost` to match what the API actually expects (same format that `voteOnNFT` already uses correctly):
 
-2. Update the `viewCount` derivation to treat `fetchedCount === 0` differently from `fetchedCount === null`:
-   - Use an explicit check: if `fetchedCount` is a number (including 0), use it. If it's `null`/`undefined`, fall back to cache, then `null`.
+```text
+Current (broken):
+  body: { tokenId: params.tokenId, voteType: params.voteType }
 
-```
-const viewCount: number | null = storyId
-  ? (fetchedCount !== undefined && fetchedCount !== null
-      ? fetchedCount
-      : viewCountCache.get(storyId) ?? null)
-  : null;
+Fixed:
+  body: { streamTokenId: params.tokenId, vote: params.voteType === 'for' }
 ```
 
-3. Only cache when the count is a real number (not null):
-   - In `queryFn`, only call `viewCountCache.set()` when count is a real number from the API.
-
-This ensures `viewCount` stays `null` until the API actually responds with a number, and the UI hides the view count element entirely during that window.
+That is the only change needed. Both `ActionBar` and `ShortsViewer` call `voteOnPost` with the same interface, so this single fix resolves voting everywhere.
 
