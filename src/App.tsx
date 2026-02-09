@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 
 // App routes
 import { AppLayout } from "./components/app/AppLayout";
+import TVPage from "./pages/app/TVPage";
 import HomePage from "./pages/app/HomePage";
 import ExplorePage from "./pages/app/ExplorePage";
 import ProfilePage from "./pages/app/ProfilePage";
@@ -84,6 +85,7 @@ function AppContent() {
               <Route path="music" element={<MusicPage />} />
               <Route path="buy" element={<BuyCoinsPage />} />
               <Route path="agents" element={<AgentsPage />} />
+              <Route path="tv" element={<TVPage />} />
               <Route path="features" element={<FeaturesPage />} />
               <Route path="post/:postId" element={<SinglePostPage />} />
               <Route path="video/:tokenId" element={<SinglePostPage />} />

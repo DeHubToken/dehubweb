@@ -7,14 +7,17 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useEffect, useRef, useMemo, useState } from 'react';
-import { RefreshCw, Radio, Eye, Loader2, Tv, Video } from 'lucide-react';
+import { useEffect, useRef, useMemo } from 'react';
+import { RefreshCw, Radio, Eye, Loader2, Tv, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { LiveTVSection } from '@/components/app/tv';
+import { TVChannelCard } from '@/components/app/tv';
+import { useQuery } from '@tanstack/react-query';
+import { getTVChannelsByCountry } from '@/lib/api/live-tv';
 
 // Category images
 import apexCategory from '@/assets/apex-category.png';
@@ -40,16 +43,20 @@ const MOCK_CATEGORIES = [
   { id: 'cod', name: 'Call of Duty', image: codCategory, streams: 0, viewers: 0 },
 ];
 
-// Sub-tab options
-type LiveSubTab = 'streams' | 'tv';
-
 interface LiveFeedProps {
   isRefreshing?: boolean;
 }
 
 export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
-  const [activeSubTab, setActiveSubTab] = useState<LiveSubTab>('streams');
+  const navigate = useNavigate();
+
+  // Fetch 5 TV channels for the carousel preview
+  const { data: tvChannels = [] } = useQuery({
+    queryKey: ['tv-channels-preview'],
+    queryFn: () => getTVChannelsByCountry('all', 5),
+    staleTime: 5 * 60 * 1000,
+  });
 
   // Fetch live content from DeHub API
   const {
@@ -69,14 +76,13 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
   // Map API data to LiveStream items
   const streams = useMemo(() => {
     if (!apiData?.pages) return [];
-    
     const allStreams = apiData.pages.flatMap(page => page.data || []);
     return allStreams.map((stream, index) => mapApiLiveStreamToLocal(stream, index));
   }, [apiData]);
 
   // Infinite scroll observer
   useEffect(() => {
-    if (!loaderRef.current || !hasNextPage || activeSubTab !== 'streams') return;
+    if (!loaderRef.current || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -89,7 +95,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, activeSubTab]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const isLoading = isApiLoading || isRefreshing;
 
@@ -116,121 +122,112 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
 
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-4">
-      {/* Sub-tab Navigation */}
-      <div className="flex gap-2 px-1 -ml-[3px]">
-        <button
-          onClick={() => setActiveSubTab('streams')}
-          className={cn(
-            'p-2.5 rounded-xl transition-colors',
-            activeSubTab === 'streams'
-              ? 'bg-white text-black'
-              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-          )}
-          aria-label="Streams"
-        >
-          <Video className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => setActiveSubTab('tv')}
-          className={cn(
-            'p-2.5 rounded-xl transition-colors',
-            activeSubTab === 'tv'
-              ? 'bg-white text-black'
-              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-          )}
-          aria-label="TV"
-        >
-          <Tv className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* TV Sub-tab Content */}
-      {activeSubTab === 'tv' && (
-        <LiveTVSection />
-      )}
-
-      {/* Streams Sub-tab Content */}
-      {activeSubTab === 'streams' && (
+      {isLoading ? (
+        <LiveFeedSkeleton />
+      ) : (
         <>
-          {isLoading ? (
-            <LiveFeedSkeleton />
-          ) : (
-            <>
-              {/* Live Channels */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-1">
-                  <h2 className="font-bold text-white flex items-center gap-2">
-                    <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    Streams
-                  </h2>
-                  <button className="text-red-400 text-sm hover:underline">Show All</button>
-                </div>
-
-                {streams.length === 0 ? (
-                  <EmptyState />
-                ) : (
-                  <>
-                    {streams.map((stream) => (
-                      <LiveCard key={stream.id} stream={stream} />
-                    ))}
-                    
-                    {/* Infinite scroll loader */}
-                    <div ref={loaderRef} className="py-4 flex justify-center">
-                      {isFetchingNextPage && (
-                        <div className="flex items-center gap-2 text-zinc-400">
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          <span className="text-sm">Loading more...</span>
-                        </div>
-                      )}
-                      {!hasNextPage && streams.length > 0 && (
-                        <p className="text-zinc-500 text-sm">No more streams</p>
-                      )}
+          {/* TV Channels Carousel */}
+          {tvChannels.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <h2 className="font-bold text-white flex items-center gap-2">
+                  <Tv className="w-4 h-4" />
+                  TV Channels
+                </h2>
+                <button 
+                  onClick={() => navigate('/app/tv')}
+                  className="text-zinc-400 text-sm hover:text-white transition-colors flex items-center gap-1"
+                >
+                  Show All
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <SwipeableCarousel>
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
+                  {tvChannels.map((channel) => (
+                    <div key={channel.id} className="flex-shrink-0 w-48 sm:w-56">
+                      <TVChannelCard channel={channel} />
                     </div>
-                  </>
-                )}
-              </div>
-
-              {/* Categories Carousel */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-1">
-                  <h2 className="font-bold text-white">Categories</h2>
-                  <button className="text-red-400 text-sm hover:underline">Browse</button>
+                  ))}
                 </div>
-                
-                <SwipeableCarousel>
-                  <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
-                    {MOCK_CATEGORIES.map((category) => (
-                      <button
-                        key={category.id}
-                        className="flex-shrink-0 group"
-                      >
-                        <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
-                          <img 
-                            src={category.image} 
-                            alt={category.name}
-                            className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
-                          />
-                        </div>
-                        <div className="mt-1.5 text-left">
-                          <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
-                          <div className="flex items-center gap-2 text-zinc-500 text-xs">
-                            <span className="flex items-center gap-0.5">
-                              <Radio className="w-3 h-3" />
-                              {category.streams}
-                            </span>
-                            <span className="flex items-center gap-0.5">
-                              <Eye className="w-3 h-3" />
-                              {category.viewers}
-                            </span>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </SwipeableCarousel>
-              </div>
-            </>
+              </SwipeableCarousel>
+            </div>
           )}
+
+          {/* Live Streams */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="font-bold text-white flex items-center gap-2">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                Streams
+              </h2>
+              <button className="text-red-400 text-sm hover:underline">Show All</button>
+            </div>
+
+            {streams.length === 0 ? (
+              <EmptyState />
+            ) : (
+              <>
+                {streams.map((stream) => (
+                  <LiveCard key={stream.id} stream={stream} />
+                ))}
+                
+                {/* Infinite scroll loader */}
+                <div ref={loaderRef} className="py-4 flex justify-center">
+                  {isFetchingNextPage && (
+                    <div className="flex items-center gap-2 text-zinc-400">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span className="text-sm">Loading more...</span>
+                    </div>
+                  )}
+                  {!hasNextPage && streams.length > 0 && (
+                    <p className="text-zinc-500 text-sm">No more streams</p>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Categories Carousel */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="font-bold text-white">Categories</h2>
+              <button className="text-red-400 text-sm hover:underline">Browse</button>
+            </div>
+            
+            <SwipeableCarousel>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
+                {MOCK_CATEGORIES.map((category) => (
+                  <button
+                    key={category.id}
+                    className="flex-shrink-0 group"
+                  >
+                    <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+                      <img 
+                        src={category.image} 
+                        alt={category.name}
+                        className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
+                      />
+                    </div>
+                    <div className="mt-1.5 text-left">
+                      <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
+                      <div className="flex items-center gap-2 text-zinc-500 text-xs">
+                        <span className="flex items-center gap-0.5">
+                          <Radio className="w-3 h-3" />
+                          {category.streams}
+                        </span>
+                        <span className="flex items-center gap-0.5">
+                          <Eye className="w-3 h-3" />
+                          {category.viewers}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </SwipeableCarousel>
+          </div>
         </>
       )}
     </div>
