@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef, useMemo, useState } from 'react';
-import { RefreshCw, Radio, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Radio, Eye, Loader2, Tv, Video } from 'lucide-react';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
@@ -121,24 +121,26 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
         <button
           onClick={() => setActiveSubTab('streams')}
           className={cn(
-            'px-4 py-2 rounded-xl text-sm font-medium transition-colors',
+            'p-2.5 rounded-xl transition-colors',
             activeSubTab === 'streams'
               ? 'bg-white text-black'
               : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
           )}
+          aria-label="Streams"
         >
-          Streams
+          <Video className="w-5 h-5" />
         </button>
         <button
           onClick={() => setActiveSubTab('tv')}
           className={cn(
-            'px-4 py-2 rounded-xl text-sm font-medium transition-colors',
+            'p-2.5 rounded-xl transition-colors',
             activeSubTab === 'tv'
               ? 'bg-white text-black'
               : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
           )}
+          aria-label="TV"
         >
-          TV
+          <Tv className="w-5 h-5" />
         </button>
       </div>
 
