@@ -818,8 +818,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             {(videos.length >= 3 && selectedSort.value === 'latest' ? videos.slice(3) : videos).map((video, index) => {
               const elements: React.ReactNode[] = [];
               
-              // Add video card
-              elements.push(<VideoCard key={video.id} video={video} />);
+              // Add video card wrapped in bento container
+              elements.push(
+                <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                  <VideoCard video={video} />
+                </div>
+              );
               
               // Insert live categories carousel after 5 posts (index 4, since 0-indexed)
               if (index === LIVE_CATEGORIES_INSERT_AFTER - 1) {
