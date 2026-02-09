@@ -411,7 +411,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       className="overflow-hidden cursor-pointer isolate"
     >
       {/* Header with AI and menu buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <CardHeader
           username={post.username}
           handle={post.creatorUsername}

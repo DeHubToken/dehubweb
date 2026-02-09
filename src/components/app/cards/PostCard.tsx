@@ -98,7 +98,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       />
 
       {/* AI Button and Options Drawer - positioned in header area */}
-      <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+      <div className="absolute top-0 right-0 z-10 flex items-center gap-2">
         <motion.button
           onClick={() => setShowAIChat(true)}
           className="text-zinc-400 hover:text-white transition-colors"
