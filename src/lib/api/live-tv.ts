@@ -41,7 +41,6 @@ const FREE_TV_PLAYLIST_URL = 'https://raw.githubusercontent.com/Free-TV/IPTV/mas
 
 /** Friendly display names for countries that need cleanup */
 const COUNTRY_DISPLAY_OVERRIDES: Record<string, string> = {
-  'VOD Italy': 'VOD Italy',
   '日本 / Japan': 'Japan',
   'News (AR)': 'News (Arabic)',
   'News (ES)': 'News (Spanish)',
