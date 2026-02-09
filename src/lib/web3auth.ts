@@ -191,8 +191,10 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       console.log("[Web3Auth] Configuring WalletConnect V2 adapter...");
       const walletConnectV2Adapter = new WalletConnectV2Adapter({
         adapterSettings: {
-          projectID: "0751965bb69056635999763785664539", // Standard DeHub project ID
-        },
+          walletConnectInitOptions: {
+            projectId: "0751965bb69056635999763785664539",
+          },
+        } as any,
         chainConfig,
       });
       web3authInstance.configureAdapter(walletConnectV2Adapter);
