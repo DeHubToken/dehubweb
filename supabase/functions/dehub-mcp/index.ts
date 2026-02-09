@@ -688,6 +688,7 @@ mcpServer.tool(
 
     // Build FormData with images and text
     const formData = new FormData();
+    formData.append("username", agent.name);
 
     if (bio) {
       formData.append("aboutMe", bio);
