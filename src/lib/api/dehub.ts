@@ -2387,56 +2387,79 @@ export async function sendMessage(
       throw new Error("Wallet address not found. Please reconnect your wallet.");
     }
     
-    // Build FormData for /api/dm/upload endpoint
-    // Field names: sender, receiver (for new), conversationId (for existing)
-    const formData = new FormData();
-    formData.append('content', content);
-    formData.append('type', type);
-    formData.append('sender', senderAddress.toLowerCase());
+    const sender = senderAddress.toLowerCase();
+    const hasMedia = !!mediaUrl || (type !== 'text' && type !== 'tip');
     
-    if (isNewConversation && recipientAddress) {
-      // For new conversations, send to recipient address
-      formData.append('receiver', recipientAddress.toLowerCase());
-      console.log('[DM API] Sending to new conversation with recipient:', recipientAddress);
+    let data: any;
+    
+    if (!hasMedia) {
+      // TEXT / TIP messages → JSON via /api/dm/tnx
+      const body: Record<string, unknown> = {
+        sender,
+        content,
+        type,
+      };
+      
+      if (isNewConversation && recipientAddress) {
+        body.receiver = recipientAddress.toLowerCase();
+        console.log('[DM API] Sending text to new conversation with recipient:', recipientAddress);
+      } else {
+        body.conversationId = conversationId;
+      }
+      
+      if (type === 'tip' && tipAmount !== undefined) {
+        body.tipAmount = tipAmount;
+        body.tipCurrency = tipCurrency || 'DHB';
+      }
+      
+      console.log('[DM API] Sending text message via /api/dm/tnx');
+      data = await apiCall<any>('/api/dm/tnx', {
+        method: 'POST',
+        body,
+        requiresAuth: true,
+      });
     } else {
-      // For existing conversations, use conversationId
-      formData.append('conversationId', conversationId);
+      // MEDIA messages → FormData via /api/dm/upload
+      const formData = new FormData();
+      formData.append('content', content);
+      formData.append('type', type);
+      formData.append('sender', sender);
+      
+      if (isNewConversation && recipientAddress) {
+        formData.append('receiver', recipientAddress.toLowerCase());
+        console.log('[DM API] Sending media to new conversation with recipient:', recipientAddress);
+      } else {
+        formData.append('conversationId', conversationId);
+      }
+      
+      if (mediaUrl) {
+        formData.append('mediaUrl', mediaUrl);
+      }
+      
+      console.log('[DM API] Sending media message via /api/dm/upload');
+      const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('[DM API] sendMessage upload error response:', errorData);
+        throw new Error(errorData.message || 'Failed to send message');
+      }
+      
+      data = await response.json();
     }
     
-    if (mediaUrl) {
-      formData.append('mediaUrl', mediaUrl);
-    }
-    
-    // For tip messages, include tip amount and currency
-    if (type === 'tip' && tipAmount !== undefined) {
-      formData.append('tipAmount', String(tipAmount));
-      formData.append('tipCurrency', tipCurrency || 'DHB');
-    }
-    
-    // Use /api/dm/upload for sending messages (FormData)
-    const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        // Don't set Content-Type - browser sets it with multipart boundary
-      },
-      body: formData,
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('[DM API] sendMessage error response:', errorData);
-      throw new Error(errorData.message || 'Failed to send message');
-    }
-    
-    const data = await response.json();
     console.log('[DM API] sendMessage response:', data);
     
     // Handle various response formats
     if (data?.result) {
       return data.result;
     }
-    // If the response itself is the message
     if (data?._id || data?.id) {
       return {
         id: data._id || data.id,
@@ -2448,7 +2471,6 @@ export async function sendMessage(
         createdAt: data.createdAt || new Date().toISOString(),
       };
     }
-    // Handle response with message object
     if (data?.message && typeof data.message === 'object') {
       return data.message;
     }
