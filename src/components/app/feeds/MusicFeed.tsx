@@ -443,8 +443,7 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
         postType: 'video',
         unit: VIDEOS_PAGE_SIZE,
         page: pageParam,
-        sortMode: 'new', // Use 'new' for variety instead of always 'popular'
-        address: walletAddress || undefined,
+        sortMode: 'new',
       });
       // Filter out blocked creators
       const filteredData = (response.data || []).filter((nft: DeHubNFT) => !isBlockedCreator(nft));
@@ -549,9 +548,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       const response = await searchNFTs({
         category: 'Music',
         postType: 'video',
-        unit: 50, // Fetch more, but only show progressively
+        unit: 50,
         sortMode: 'popular',
-        address: walletAddress || undefined,
       });
       
       // Fetch manually tagged music tokens

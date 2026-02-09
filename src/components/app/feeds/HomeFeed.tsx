@@ -426,7 +426,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Fetch shorts separately for the carousel
   const { data: shortsData } = useDeHubVideos({
     unit: 10,
-    address: walletAddress || undefined,
   });
 
   // Fetch radio stations for carousel

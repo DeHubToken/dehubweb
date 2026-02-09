@@ -172,7 +172,7 @@ export function useDeHubProfileByUsername(username?: string, enabled = true) {
 
 interface UseDeHubUserContentOptions {
   userId?: string;
-  /** Viewer's wallet address for personalized data (isLiked, isSaved) */
+  /** @deprecated Viewer context is now extracted from JWT Bearer token */
   viewerAddress?: string;
   enabled?: boolean;
   limit?: number;
@@ -198,10 +198,7 @@ export function useDeHubUserContent({ userId, viewerAddress, enabled = true, lim
       url.searchParams.set('sortOrder', 'desc');
       // Only show minted (confirmed on-chain) content
       url.searchParams.set('status', 'minted');
-      // Pass viewer's address to get isLiked/isSaved states
-      if (viewerAddress) {
-        url.searchParams.set('address', viewerAddress);
-      }
+      // address param is deprecated - viewer context comes from JWT token
       
       const token = getAuthToken();
       const headers: HeadersInit = {

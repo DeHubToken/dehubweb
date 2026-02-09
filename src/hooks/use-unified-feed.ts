@@ -29,9 +29,13 @@ export interface UnifiedFeedParams {
   limit?: number;
   sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random';
   sortOrder?: 'asc' | 'desc';
-  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple';
-  status?: 'minted' | 'pending' | 'failed';
+  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live';
+  status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';
+  search?: string;
+  owner?: string;
+  category?: string;
   minter?: string;
+  /** @deprecated Viewer context is now extracted from JWT Bearer token */
   address?: string;
   isPPV?: boolean;
   isLocked?: boolean;
@@ -53,7 +57,7 @@ export interface UnifiedFeedItem {
   videoUrl?: string;
   minter: string;
   owner?: string;
-  postType: 'video' | 'feed-images' | 'feed-simple';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live';
   status?: string;
   category?: string[];
   views: number;
@@ -61,6 +65,8 @@ export interface UnifiedFeedItem {
     for: number;
     against: number;
   };
+  likes?: number;       // Flat likes count (new API format)
+  dislikes?: number;    // Flat dislikes count (new API format)
   commentCount: number;
   videoDuration?: number;
   minterUsername?: string;
@@ -90,6 +96,24 @@ export interface UnifiedFeedItem {
   isLiked?: boolean;
   isDisliked?: boolean;
   isSaved?: boolean;
+  isOwner?: boolean;
+  isUnlocked?: boolean;
+  minterUser?: {
+    address?: string;
+    username?: string;
+    displayName?: string;
+    avatarImageUrl?: string;
+    isVerified?: boolean;
+  };
+  minterFollowers?: number;
+  minterFollowings?: number;
+  stream?: {
+    streamId?: string;
+    status?: string;
+    viewerCount?: number;
+    title?: string;
+    category?: string;
+  };
   createdAt: string;
   updatedAt?: string;
 }
@@ -176,8 +200,8 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
-    likeCount: item.totalVotes?.for || 0,
-    dislikeCount: item.totalVotes?.against || 0,
+    likeCount: item.likes ?? item.totalVotes?.for ?? 0,
+    dislikeCount: item.dislikes ?? item.totalVotes?.against ?? 0,
     commentCount: item.commentCount || 0,
     isPPV,
     ppvPrice: item.streamInfo?.payPerViewAmount,
@@ -223,7 +247,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     imageUrls,
     title: item.name,
     description: item.description,
-    likes: item.totalVotes?.for || 0,
+    likes: item.likes ?? item.totalVotes?.for ?? 0,
     caption: item.description || item.name || '',
     comments: item.commentCount || 0,
     views: formatViews(item.views).replace(' views', ''),
@@ -270,7 +294,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     stats: {
       comments: item.commentCount || 0,
       reposts: 0,
-      likes: item.totalVotes?.for || 0,
+      likes: item.likes ?? item.totalVotes?.for ?? 0,
     },
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
@@ -290,7 +314,7 @@ function getCacheKey(params: UnifiedFeedParams): string | null {
   
   // Only cache pages 1-5
   if (page < 1 || page > 5) return null;
-  if (params.minter || params.address) return null; // User-specific queries aren't cached
+  if (params.minter) return null; // User-specific queries aren't cached
   if (params.isPPV || params.isLocked || params.hasBounty || params.hasPlans) return null;
   if (params.range || params.from || params.to) return null;
   
@@ -364,7 +388,10 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
   if (params.postType && params.postType !== 'all') url.searchParams.set('postType', params.postType);
   if (params.status) url.searchParams.set('status', params.status);
   if (params.minter) url.searchParams.set('minter', params.minter);
-  if (params.address) url.searchParams.set('address', params.address);
+  // address param is deprecated - viewer context comes from JWT token
+  if (params.search) url.searchParams.set('search', params.search);
+  if (params.owner) url.searchParams.set('owner', params.owner);
+  if (params.category) url.searchParams.set('category', params.category);
   if (params.isPPV !== undefined) url.searchParams.set('isPPV', String(params.isPPV));
   if (params.isLocked !== undefined) url.searchParams.set('isLocked', String(params.isLocked));
   if (params.hasBounty !== undefined) url.searchParams.set('hasBounty', String(params.hasBounty));
@@ -429,8 +456,7 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
   const shuffleSeedRef = { current: '' };
   
   return useInfiniteQuery({
-    // Include address in query key to force cache invalidation on login/logout
-    queryKey: ['unified-feed', params, limit, params.address],
+    queryKey: ['unified-feed', params, limit],
     queryFn: async ({ pageParam = 1 }) => {
       // For random sort: reuse the seed from the first page response for stable pagination
       const queryParams = { ...params };
