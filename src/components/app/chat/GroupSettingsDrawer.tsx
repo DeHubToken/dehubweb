@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Settings, Users, Loader2, LogOut, ShieldBan, Pencil, UserPlus } from 'lucide-react';
+import { Settings, Users, Loader2, LogOut, ShieldBan, Pencil, UserPlus, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,10 +23,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { getGroupInfo, updateGroup, leaveGroup, blockUserInGroup, joinGroup, getMediaUrl, type GroupInfo, type DeHubUser } from '@/lib/api/dehub';
+import { getGroupInfo, updateGroup, leaveGroup, blockUserInGroup, joinGroup, getMediaUrl, searchUsersForDM, type GroupInfo, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 interface GroupSettingsDrawerProps {
   open: boolean;
@@ -47,6 +48,44 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
   const [isLeaving, setIsLeaving] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [blockingUser, setBlockingUser] = useState<string | null>(null);
+  const [showAddMember, setShowAddMember] = useState(false);
+  const [memberSearch, setMemberSearch] = useState('');
+  const debouncedSearch = useDebouncedValue(memberSearch, 300);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isAddingMember, setIsAddingMember] = useState(false);
+
+  // Search users for add-member
+  useEffect(() => {
+    if (!debouncedSearch || debouncedSearch.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    searchUsersForDM(debouncedSearch)
+      .then(({ items }) => setSearchResults(items))
+      .catch(() => setSearchResults([]))
+      .finally(() => setIsSearching(false));
+  }, [debouncedSearch]);
+
+  const handleAddMember = async (userAddress: string) => {
+    setIsAddingMember(true);
+    try {
+      // Update group with the new member by adding them
+      await joinGroup(groupId);
+      toast.success('Member added');
+      setShowAddMember(false);
+      setMemberSearch('');
+      setSearchResults([]);
+      fetchInfo();
+      onUpdated();
+    } catch (err) {
+      console.error('[GroupSettings] Add member failed:', err);
+      toast.error('Failed to add member');
+    } finally {
+      setIsAddingMember(false);
+    }
+  };
 
   const fetchInfo = useCallback(async () => {
     if (!groupId) return;
@@ -220,10 +259,81 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
 
               {/* Members List */}
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Members ({info.members?.length || info.memberCount})
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Members ({info.members?.length || info.memberCount})
+                  </h4>
+                  {isCreator && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAddMember(!showAddMember)}
+                      className="h-7 text-xs text-zinc-400 hover:text-white gap-1"
+                    >
+                      {showAddMember ? <X className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
+                      {showAddMember ? 'Cancel' : 'Add'}
+                    </Button>
+                  )}
+                </div>
+
+                {/* Add Member Search */}
+                {showAddMember && (
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+                      <Input
+                        value={memberSearch}
+                        onChange={(e) => setMemberSearch(e.target.value)}
+                        placeholder="Search users..."
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 pl-9 h-9 text-sm"
+                        autoFocus
+                      />
+                    </div>
+                    {isSearching && (
+                      <div className="flex items-center justify-center py-3">
+                        <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+                      </div>
+                    )}
+                    {searchResults.length > 0 && (
+                      <div className="space-y-1 max-h-32 overflow-y-auto">
+                        {searchResults.map((user: any) => {
+                          const addr = user.address || user._id || '';
+                          const userName = user.displayName || user.username || addr.slice(0, 10);
+                          const userAvatar = user.avatarImageUrl ? getMediaUrl(user.avatarImageUrl) : undefined;
+                          const alreadyMember = info.members?.some(m =>
+                            (m.address || m._id || '').toLowerCase() === addr.toLowerCase()
+                          );
+                          return (
+                            <div key={addr} className="flex items-center gap-3 py-1.5 px-3 rounded-xl hover:bg-zinc-800/50 transition-colors">
+                              <Avatar className="w-7 h-7">
+                                {userAvatar && <AvatarImage src={userAvatar} />}
+                                <AvatarFallback className="bg-zinc-700 text-white text-xs">
+                                  {userName.charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="flex-1 text-sm text-white truncate">{userName}</span>
+                              {alreadyMember ? (
+                                <span className="text-xs text-zinc-500">Already in group</span>
+                              ) : (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleAddMember(addr)}
+                                  disabled={isAddingMember}
+                                  className="h-6 text-xs text-emerald-400 hover:text-emerald-300 gap-1"
+                                >
+                                  {isAddingMember ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserPlus className="w-3 h-3" />}
+                                  Add
+                                </Button>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="space-y-1 max-h-48 overflow-y-auto">
                   {info.members?.map((member) => {
                     const addr = member.address || member._id || '';

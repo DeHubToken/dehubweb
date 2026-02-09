@@ -34,6 +34,7 @@ interface ChatMessageProps {
   onPin?: (messageId: string) => void;
   onUnpin?: (messageId: string) => void;
   onBan?: (userId: string, userName: string) => void;
+  onUnban?: (userId: string, userName: string) => void;
 }
 
 function UserProfilePopover({ address, children }: { address: string; children: React.ReactNode }) {
@@ -101,7 +102,18 @@ function UserProfilePopover({ address, children }: { address: string; children: 
   );
 }
 
-export function ChatMessage({ message, showActions, onPin, onUnpin, onBan }: ChatMessageProps) {
+/** Inline moderator badge shown next to the username */
+function ModeratorBadge({ address }: { address: string }) {
+  const { profile } = useLiveChatUser(address);
+  if (!profile?.isModerator) return null;
+  return (
+    <span className="inline-flex items-center text-emerald-400" title="Moderator">
+      <ShieldCheck className="w-3 h-3" />
+    </span>
+  );
+}
+
+export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
@@ -122,6 +134,7 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan }: Cha
               {message.userName}
             </button>
           </UserProfilePopover>
+          <ModeratorBadge address={message.userId} />
           <span className="text-zinc-500 text-xs">{formatTime(message.timestamp)}</span>
           {message.isPinned && (
             <span className="flex items-center gap-1 text-yellow-500/70 text-xs">
@@ -164,6 +177,15 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan }: Cha
                     <ShieldBan className="w-4 h-4" />
                     Ban User
                   </DropdownMenuItem>
+                  {onUnban && (
+                    <DropdownMenuItem
+                      onClick={() => onUnban(message.userId, message.userName)}
+                      className="text-emerald-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-emerald-300 gap-2"
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      Unban User
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

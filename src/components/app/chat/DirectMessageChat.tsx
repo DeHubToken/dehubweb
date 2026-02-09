@@ -12,8 +12,9 @@ import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMediaUrl, getConversation, blockConversation, unblockConversation, uploadChatImage, getDMPlanSettings, getDMVideos, type DeHubConversation, type DeHubDMMessage } from '@/lib/api/dehub';
+import { getMediaUrl, getConversation, blockConversation, unblockConversation, uploadChatImage, getDMPlanSettings, type DeHubConversation, type DeHubDMMessage } from '@/lib/api/dehub';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
+import { SharedVideosDrawer } from './SharedVideosDrawer';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
@@ -134,6 +135,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isBlocked, setIsBlocked] = useState(conversation.isBlocked ?? false);
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
   const [showGroupSettings, setShowGroupSettings] = useState(false);
+  const [showSharedVideos, setShowSharedVideos] = useState(false);
   const [conversationData, setConversationData] = useState<DeHubConversation>(conversation);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
@@ -350,20 +352,13 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                  </>
                )}
              </DropdownMenuItem>
-             <DropdownMenuItem 
-               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
-               onClick={async () => {
-                 try {
-                   const { items } = await getDMVideos(0, 20);
-                   toast.info(`${items.length} shared video${items.length !== 1 ? 's' : ''} found`);
-                 } catch {
-                   toast.error('Failed to fetch shared videos');
-                 }
-               }}
-             >
-               <Video className="w-4 h-4 mr-2" />
-               Shared Videos
-             </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
+                onClick={() => setShowSharedVideos(true)}
+              >
+                <Video className="w-4 h-4 mr-2" />
+                Shared Videos
+              </DropdownMenuItem>
              <DropdownMenuItem 
                className="text-red-400 focus:text-red-400 focus:bg-zinc-700 cursor-pointer"
                onClick={() => setShowDeleteDialog(true)}
@@ -464,6 +459,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           }}
         />
       )}
+
+      {/* Shared Videos Drawer */}
+      <SharedVideosDrawer
+        open={showSharedVideos}
+        onOpenChange={setShowSharedVideos}
+      />
 
       {/* DM Gated Banner */}
       {dmGateChecked && dmGated && (

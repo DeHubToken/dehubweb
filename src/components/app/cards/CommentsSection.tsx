@@ -82,7 +82,7 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',
     avatar: resolvedAvatar,
-    text: apiComment.content,
+    text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
     likes: apiComment.likeCount ?? 0,
     dislikes: 0,
     timeAgo: formatTimeAgo(apiComment.createdAt),

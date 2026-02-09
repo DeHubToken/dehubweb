@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { TrendingUp, Info, Settings2, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, ComposedChart } from 'recharts';
@@ -6,9 +6,28 @@ import { PieChart, Pie, Cell } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { getDPayTransactions, getDPayTotal, type DPayTransaction } from '@/lib/api/dpay';
 import { useAuth } from '@/contexts/AuthContext';
+import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
+
+/** Get the start-date cutoff for the active time filter */
+function getFilterStartDate(filter: string): Date | null {
+  const now = new Date();
+  switch (filter) {
+    case '1h': return subHours(now, 1);
+    case '1d': return subDays(now, 1);
+    case '1w': return subWeeks(now, 1);
+    case '1m': return subMonths(now, 1);
+    default: return null; // 'Max' — no filtering
+  }
+}
+
+/** Get the correct block explorer URL for a given chainId */
+function getExplorerTxUrl(txHash: string, chainId?: number): string {
+  if (chainId === 56) return `https://bscscan.com/tx/${txHash}`;
+  return `https://basescan.org/tx/${txHash}`;
+}
 
 // Generate chart data from transactions
 function buildChartData(transactions: DPayTransaction[]) {
@@ -72,8 +91,15 @@ export function TransactionsTab() {
     staleTime: 5 * 60_000,
   });
 
-  const chartData = buildChartData(transactions);
-  const breakdownData = buildBreakdown(transactions);
+  // Filter transactions by the selected time window
+  const filteredTransactions = useMemo(() => {
+    const startDate = getFilterStartDate(activeFilter);
+    if (!startDate) return transactions; // 'Max' — return all
+    return transactions.filter((tx) => new Date(tx.createdAt) >= startDate);
+  }, [transactions, activeFilter]);
+
+  const chartData = buildChartData(filteredTransactions);
+  const breakdownData = buildBreakdown(filteredTransactions);
   const totalVolume = totals?.totalVolume ?? 0;
   const totalCount = totals?.totalTransactions ?? 0;
 
@@ -255,6 +281,9 @@ export function TransactionsTab() {
       <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
         <div className="flex items-center justify-between mb-4">
           <span className="text-white font-semibold">Transaction list</span>
+          <span className="text-xs text-zinc-500">
+            {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}
+          </span>
         </div>
 
         {txLoading ? (
@@ -266,9 +295,11 @@ export function TransactionsTab() {
             <AlertCircle className="w-6 h-6" />
             <p className="text-sm">Failed to load transactions</p>
           </div>
-        ) : transactions.length === 0 ? (
+        ) : filteredTransactions.length === 0 ? (
           <div className="text-center py-8 text-zinc-500 text-sm">
-            No transactions found. Make your first purchase!
+            {transactions.length === 0
+              ? 'No transactions found. Make your first purchase!'
+              : 'No transactions in this time period.'}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -284,7 +315,7 @@ export function TransactionsTab() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800">
-                {transactions.map((tx) => {
+                {filteredTransactions.map((tx) => {
                   const date = new Date(tx.createdAt);
                   const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: '2-digit' });
                   const isCredit = tx.type === 'buy';
@@ -309,7 +340,7 @@ export function TransactionsTab() {
                       <td className="py-4">
                         {tx.txHash && (
                           <a
-                            href={`https://basescan.org/tx/${tx.txHash}`}
+                            href={getExplorerTxUrl(tx.txHash, tx.chainId)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-400 hover:text-blue-300 text-xs"
