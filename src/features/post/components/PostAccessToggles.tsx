@@ -50,6 +50,7 @@ export function PostAccessToggles({
   setIsPPV,
   ppvAmount,
   setPpvAmount,
+  ppvCurrency,
   setPpvCurrency,
   isWatch2Earn,
   setIsWatch2Earn,
@@ -76,6 +77,7 @@ export function PostAccessToggles({
 
   // Temp states for drawer inputs
   const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
+  const [tempPpvCurrency, setTempPpvCurrency] = useState<Currency>(ppvCurrency);
   const [tempW2eViews, setTempW2eViews] = useState(w2eViews);
   const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
   const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
@@ -120,6 +122,7 @@ export function PostAccessToggles({
   const handlePpvToggle = (checked: boolean) => {
     if (checked) {
       setTempPpvAmount(ppvAmount);
+      setTempPpvCurrency(ppvCurrency);
       setPpvDrawerOpen(true);
     } else {
       setIsPPV(false);
@@ -148,7 +151,7 @@ export function PostAccessToggles({
 
   const confirmPpv = () => {
     setPpvAmount(tempPpvAmount);
-    setPpvCurrency('DHB'); // Always DHB
+    setPpvCurrency(tempPpvCurrency);
     setIsPPV(true);
     setPpvDrawerOpen(false);
   };
@@ -218,7 +221,7 @@ export function PostAccessToggles({
             <CreditCard className="w-4 h-4 text-white" />
             <span className="text-sm text-white">PPV</span>
             {isPPV && ppvAmount && (
-              <span className="text-xs text-white/50">({ppvAmount} DHB)</span>
+              <span className="text-xs text-white/50">({ppvAmount} {ppvCurrency})</span>
             )}
           </div>
           <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" />
@@ -324,8 +327,29 @@ export function PostAccessToggles({
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-4">
+            {/* Currency selector */}
             <div className="space-y-2">
-              <label className="text-sm text-white/70">Price (DHB)</label>
+              <label className="text-sm text-white/70">Currency</label>
+              <div className="flex gap-2">
+                {(['USD', 'DHB'] as Currency[]).map((cur) => (
+                  <button
+                    key={cur}
+                    type="button"
+                    onClick={() => setTempPpvCurrency(cur)}
+                    className={cn(
+                      "flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors border",
+                      tempPpvCurrency === cur
+                        ? "bg-white/15 text-white border-white/20"
+                        : "bg-transparent text-zinc-400 border-white/10 hover:bg-white/5"
+                    )}
+                  >
+                    {cur}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm text-white/70">Price ({tempPpvCurrency})</label>
               <input
                 type="number"
                 value={tempPpvAmount}
@@ -336,7 +360,9 @@ export function PostAccessToggles({
             </div>
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
-              <span className="text-xs text-white/50">Payments are in DHB on Base chain</span>
+              <span className="text-xs text-white/50">
+                {tempPpvCurrency === 'DHB' ? 'Payments are in DHB on Base chain' : 'Payments are in USD'}
+              </span>
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
