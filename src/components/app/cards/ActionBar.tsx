@@ -131,6 +131,19 @@ export function ActionBar({
     if (postId && getVoteCache(postId)) return;
     setLocalDislikeCount(dislikeCount ?? 0);
   }, [dislikeCount]);
+
+  // Propagate API-sourced like/dislike state to all feed caches
+  // so old likes from previous sessions sync across all feeds
+  useEffect(() => {
+    if (!postId) return;
+    if ((!initialIsLiked && !initialIsDisliked) || getVoteCache(postId)) return;
+    patchFeedCaches(queryClient, postId, {
+      isLiked: initialIsLiked,
+      isDisliked: initialIsDisliked,
+      likeCount: likeCount ?? 0,
+      dislikeCount: dislikeCount ?? 0,
+    });
+  }, [initialIsLiked, initialIsDisliked, postId]);
   
   // Bookmark state from hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
