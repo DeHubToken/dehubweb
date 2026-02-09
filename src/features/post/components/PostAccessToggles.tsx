@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { getCategories, type DeHubCategory } from '@/lib/api/dehub';
 import type { Currency } from '../types';
 
 // DHB is the only supported token
@@ -38,6 +39,8 @@ interface PostAccessTogglesProps {
   setTokenContract: (value: string) => void;
   tokenAmount: string;
   setTokenAmount: (value: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (value: string) => void;
 }
 
 export function PostAccessToggles({
@@ -62,11 +65,14 @@ export function PostAccessToggles({
   setTokenContract,
   tokenAmount,
   setTokenAmount,
+  selectedCategory,
+  setSelectedCategory,
 }: PostAccessTogglesProps) {
   // Mobile drawer states
   const [ppvDrawerOpen, setPpvDrawerOpen] = useState(false);
   const [bountyDrawerOpen, setBountyDrawerOpen] = useState(false);
   const [tokenDrawerOpen, setTokenDrawerOpen] = useState(false);
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
 
   // Temp states for drawer inputs
   const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
@@ -74,6 +80,42 @@ export function PostAccessToggles({
   const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
   const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
   const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
+
+  // Category state
+  const [categories, setCategories] = useState<DeHubCategory[]>([]);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  // Fetch categories when drawer opens
+  useEffect(() => {
+    if (categoryDrawerOpen && categories.length === 0) {
+      setLoadingCategories(true);
+      getCategories()
+        .then(setCategories)
+        .catch(console.error)
+        .finally(() => setLoadingCategories(false));
+    }
+  }, [categoryDrawerOpen, categories.length]);
+
+  const filteredCategories = useMemo(() => {
+    if (!categorySearch.trim()) return categories;
+    const q = categorySearch.toLowerCase();
+    return categories.filter(c => c.name.toLowerCase().includes(q));
+  }, [categories, categorySearch]);
+
+  const handleCategoryToggle = (checked: boolean) => {
+    if (checked) {
+      setCategorySearch('');
+      setCategoryDrawerOpen(true);
+    } else {
+      setSelectedCategory('');
+    }
+  };
+
+  const selectCategory = (name: string) => {
+    setSelectedCategory(name);
+    setCategoryDrawerOpen(false);
+  };
 
   const handlePpvToggle = (checked: boolean) => {
     if (checked) {
@@ -149,6 +191,18 @@ export function PostAccessToggles({
   return (
     <>
       <div className="px-4 py-2 border-t border-white/10 space-y-1">
+        {/* Category */}
+        <div className="flex items-center justify-between py-0.5">
+          <div className="flex items-center gap-2">
+            <Tag className="w-4 h-4 text-white" />
+            <span className="text-sm text-white">Category</span>
+            {selectedCategory && (
+              <span className="text-xs text-white/50">({selectedCategory})</span>
+            )}
+          </div>
+          <Switch checked={!!selectedCategory} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
+        </div>
+
         {/* Subscribers */}
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
@@ -194,6 +248,71 @@ export function PostAccessToggles({
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" />
         </div>
       </div>
+
+      {/* Category Drawer */}
+      <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
+        <DrawerContent glass>
+          <DrawerHeader className="text-left">
+            <DrawerTitle className="flex items-center gap-2 text-white">
+              <Tag className="w-5 h-5" />
+              Select Category
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-4 space-y-3">
+            {/* Search input */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <input
+                type="text"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                placeholder="Search categories..."
+                className={cn(inputClass, "pl-10")}
+                autoFocus
+              />
+              {categorySearch && (
+                <button
+                  type="button"
+                  onClick={() => setCategorySearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Category list */}
+            <div className="max-h-[40vh] overflow-y-auto space-y-1 scrollbar-hide">
+              {loadingCategories ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                </div>
+              ) : filteredCategories.length === 0 ? (
+                <p className="text-center text-sm text-zinc-500 py-8">No categories found</p>
+              ) : (
+                filteredCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => selectCategory(cat.name)}
+                    className={cn(
+                      "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
+                      selectedCategory === cat.name
+                        ? "bg-white/15 text-white border border-white/20"
+                        : "text-zinc-300 hover:bg-white/5 border border-transparent"
+                    )}
+                  >
+                    <span>{cat.name}</span>
+                    {selectedCategory === cat.name && (
+                      <Check className="w-4 h-4 text-white" />
+                    )}
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* PPV Drawer */}
       <Drawer open={ppvDrawerOpen} onOpenChange={setPpvDrawerOpen}>

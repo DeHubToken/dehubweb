@@ -56,6 +56,7 @@ interface UsePostFormReturn {
     recordingTime: number;
     chainId: ChainId;
     isCameraModalOpen: boolean;
+    selectedCategory: string;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -65,6 +66,7 @@ interface UsePostFormReturn {
     startRecording: () => void;
     stopRecording: () => void;
     setChainId: (chainId: ChainId) => void;
+    setSelectedCategory: (category: string) => void;
     insertEmoji: (emoji: string) => void;
     insertGif: (gifUrl: string) => void;
     openCameraCapture: () => void;
@@ -111,6 +113,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -797,7 +800,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         description: postDescription,
         postType,
         chainId,
-        category: ['General'],
+        category: selectedCategory ? [selectedCategory] : ['General'],
         streamInfo,
         files: files.length > 0 ? files : undefined,
         thumbnail,
@@ -990,6 +993,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       recordingTime,
       chainId,
       isCameraModalOpen,
+      selectedCategory,
     },
     actions: {
       setText,
@@ -1035,6 +1039,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       startRecording,
       stopRecording,
       setChainId,
+      setSelectedCategory,
       insertEmoji,
       insertGif,
       openCameraCapture,

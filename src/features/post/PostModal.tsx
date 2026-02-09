@@ -99,6 +99,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed }: P
         setTokenContract={actions.setTokenContract}
         tokenAmount={state.tokenAmount}
         setTokenAmount={actions.setTokenAmount}
+        selectedCategory={state.selectedCategory}
+        setSelectedCategory={actions.setSelectedCategory}
       />
 
       <PostActionBar
