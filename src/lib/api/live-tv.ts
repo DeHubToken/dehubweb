@@ -39,6 +39,11 @@ export interface TVCategory {
 
 const FREE_TV_PLAYLIST_URL = 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8';
 
+/** Strip resolution tags like (270p), (1080p), (720p) etc. from channel names */
+function cleanChannelName(name: string): string {
+  return name.replace(/\s*\(\d+p\)/gi, '').trim();
+}
+
 /** Friendly display names for countries that need cleanup */
 const COUNTRY_DISPLAY_OVERRIDES: Record<string, string> = {
   '日本 / Japan': 'Japan',
@@ -85,7 +90,7 @@ async function fetchVerifiedChannels(): Promise<TVChannel[]> {
 
   return data.map((row) => ({
     id: row.id,
-    name: row.name,
+    name: cleanChannelName(row.name),
     logo: row.logo,
     category: row.category,
     streamUrl: row.stream_url,
@@ -147,7 +152,7 @@ function parseM3U8Playlist(content: string): TVChannel[] {
         }
       }
       
-      const name = nameMatch?.[1] || titleMatch?.[1] || 'Unknown Channel';
+      const name = cleanChannelName(nameMatch?.[1] || titleMatch?.[1] || 'Unknown Channel');
       
       if (!streamUrl || seenUrls.has(streamUrl)) continue;
       if (!isValidStream(streamUrl, name)) continue;
