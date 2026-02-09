@@ -617,7 +617,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                         {formatCount(viewCount)}
                       </span>
                       <span>•</span>
-                      <span>{formatCount(likes)} likes</span>
+                      <span>{formatCount(likes)} {likes === 1 ? 'like' : 'likes'}</span>
                     </div>
                   </div>
                 </button>
