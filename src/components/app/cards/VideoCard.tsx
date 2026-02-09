@@ -848,7 +848,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             </motion.button>
             <Drawer>
               <DrawerTrigger asChild>
-              <button className="text-zinc-400 hover:text-white transition-colors">
+              <button className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-5 h-5" />
                 </button>
               </DrawerTrigger>
