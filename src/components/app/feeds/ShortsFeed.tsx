@@ -525,7 +525,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                             </svg>
                           )}
                         </div>
-                        <p className="text-white text-xs">{short.likes} likes</p>
+                        <p className="text-white text-xs">{short.likes} {short.likes === '1' ? 'like' : 'likes'}</p>
                       </div>
                     </div>
                     {/* View count - bottom right */}
