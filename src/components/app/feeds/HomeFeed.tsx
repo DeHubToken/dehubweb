@@ -837,7 +837,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (radioStations.length === 0) return null;
     
     return (
-      <div className="bg-zinc-900 rounded-2xl p-4">
+      <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-xl p-3">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-white flex items-center gap-2">
             <Radio className="w-5 h-5" />
@@ -849,7 +849,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </button>
         </div>
         <div className="relative">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/40 to-transparent pointer-events-none z-10" />
           <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
             {radioStations.slice(0, 10).map((station) => (
               <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
