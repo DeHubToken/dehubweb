@@ -70,23 +70,24 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-function normalizeUser(userData: Partial<DeHubUser>, fallbackAddress: string): DeHubUser {
+function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallbackAddress: string): DeHubUser {
+  const safe = userData ?? {};
   return {
-    address: userData.address || fallbackAddress,
-    username: userData.username || null,
-    displayName: userData.displayName || null,
-    avatarImageUrl: userData.avatarImageUrl || null,
-    coverImageUrl: userData.coverImageUrl || null,
-    aboutMe: userData.aboutMe || null,
-    followers: typeof userData.followers === 'number' ? userData.followers : 0,
-    likes: typeof userData.likes === 'number' ? userData.likes : 0,
-    uploads: userData.uploads ?? 0,
-    sentTips: userData.sentTips ?? 0,
-    receivedTips: userData.receivedTips ?? 0,
-    customs: userData.customs || {},
-    online: userData.online ?? true,
-    createdAt: userData.createdAt,
-    lastLoginTimestamp: userData.lastLoginTimestamp,
+    address: safe.address || fallbackAddress,
+    username: safe.username || null,
+    displayName: safe.displayName || null,
+    avatarImageUrl: safe.avatarImageUrl || null,
+    coverImageUrl: safe.coverImageUrl || null,
+    aboutMe: safe.aboutMe || null,
+    followers: typeof safe.followers === 'number' ? safe.followers : 0,
+    likes: typeof safe.likes === 'number' ? safe.likes : 0,
+    uploads: safe.uploads ?? 0,
+    sentTips: safe.sentTips ?? 0,
+    receivedTips: safe.receivedTips ?? 0,
+    customs: safe.customs || {},
+    online: safe.online ?? true,
+    createdAt: safe.createdAt,
+    lastLoginTimestamp: safe.lastLoginTimestamp,
   };
 }
 
@@ -149,17 +150,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const closeLoginModal = useCallback(() => {
     connectionAbortedRef.current = true;
-    setIsConnecting(false);
     setIsLoginModalOpen(false);
-    
-    // If we were connecting, reset Web3Auth to clear stuck iframes
-    if (isConnecting) {
-      console.log('[Auth] Force closing modal - resetting Web3Auth state');
+
+    // Only reset Web3Auth if user closed modal mid-connection (not after successful auth)
+    if (isConnecting && !walletAddress) {
+      console.log('[Auth] Force closing modal mid-connection - resetting Web3Auth state');
+      setIsConnecting(false);
       setTimeout(() => {
         resetWeb3AuthState();
       }, 100);
     }
-  }, [isConnecting]);
+  }, [isConnecting, walletAddress]);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -457,43 +458,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const authConnection = mapSocialProvider(provider);
       const web3authProvider = await connectToSocialProvider(authConnection);
-      
+
       // Check if user closed modal during connection
       if (connectionAbortedRef.current) {
         console.log('[Auth] Connection aborted by user');
         return;
       }
-      
+
       if (!web3authProvider) {
         throw new Error('Failed to connect - no provider returned');
       }
 
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
-      closeLoginModal();
-      
+
       console.log(`[Auth] ✓ ${provider} connection complete!`);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
-      
+
       // Always force cleanup after any error to ensure clean state for retry
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
       }
-      
+
       if (isCancellationError(errorMessage)) {
         toast.error('Log in was cancelled');
         return;
       }
-      
+
       handleConnectionError(error);
-      throw error;
     } finally {
       setIsConnecting(false);
     }
-  }, [closeLoginModal]);
+  }, []);
 
   /**
    * Connect with email (passwordless)
@@ -507,36 +506,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         AUTH_CONNECTION.EMAIL_PASSWORDLESS,
         email
       );
-      
+
       if (!web3authProvider) {
         throw new Error('Failed to connect - no provider returned');
       }
 
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
-      closeLoginModal();
-      
+
       console.log('[Auth] ✓ Email connection complete!');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
-      
+
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
       }
-      
+
       if (isCancellationError(errorMessage)) {
         toast.error('Log in was cancelled');
         return;
       }
-      
+
       handleConnectionError(error);
-      throw error;
     } finally {
       setIsConnecting(false);
     }
-  }, [closeLoginModal]);
+  }, []);
 
   /**
    * Connect with SMS (passwordless)
@@ -550,36 +547,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         AUTH_CONNECTION.SMS_PASSWORDLESS,
         phone
       );
-      
+
       if (!web3authProvider) {
         throw new Error('Failed to connect - no provider returned');
       }
 
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
-      closeLoginModal();
-      
+
       console.log('[Auth] ✓ SMS connection complete!');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
-      
+
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
       }
-      
+
       if (isCancellationError(errorMessage)) {
         toast.error('Log in was cancelled');
         return;
       }
-      
+
       handleConnectionError(error);
-      throw error;
     } finally {
       setIsConnecting(false);
     }
-  }, [closeLoginModal]);
+  }, []);
 
   /**
    * Connect with an external wallet (MetaMask, WalletConnect, Coinbase)
@@ -591,36 +586,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const walletConnector = mapWalletProvider(wallet);
       const web3authProvider = await connectToExternalWallet(walletConnector);
-      
+
       if (!web3authProvider) {
         throw new Error('Failed to connect - no provider returned');
       }
 
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
-      closeLoginModal();
-      
+
       console.log(`[Auth] ✓ ${wallet} connection complete!`);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '';
-      
+
       try {
         await forceCleanupWeb3Auth();
       } catch (e) {
         console.warn('[Auth] Cleanup after error failed:', e);
       }
-      
+
       if (isCancellationError(errorMessage)) {
         toast.error('Log in was cancelled');
         return;
       }
-      
+
       handleConnectionError(error);
-      throw error;
     } finally {
       setIsConnecting(false);
     }
-  }, [closeLoginModal]);
+  }, []);
 
   /**
    * Legacy connect method - opens default Web3Auth modal
