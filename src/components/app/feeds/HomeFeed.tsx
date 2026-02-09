@@ -26,8 +26,6 @@ import {
   formatTimeAgo, 
   CONTENT_PATTERN,
   interleaveByPattern,
-  calculateTrendingScore,
-  shuffleWithinBuckets,
   limitCreatorDiversity,
   DEFAULT_MAX_POSTS_PER_CREATOR,
   DEFAULT_MIN_CREATOR_SPACING,
@@ -335,9 +333,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // For trending, we fetch by recency (last month) then sort client-side
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
-      case 'trending':
       case 'following': // Following uses latest sort, filtered client-side
-        return 'createdAt' as const; // Fetch recent, apply trending score client-side
+        return 'createdAt' as const;
       case 'most-liked':
         return 'likes' as const;
       case 'most-viewed':
@@ -354,10 +351,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
   
-  // For trending and following, don't limit range - let pagination go back in time naturally
-  // The trending algorithm's time decay will still prioritize recent content at the top
+  // For following and random, don't limit range
   const range = useMemo(() => {
-    if (selectedSort.value === 'trending' || selectedSort.value === 'following' || selectedSort.value === 'random') {
+    if (selectedSort.value === 'following' || selectedSort.value === 'random') {
       return undefined; // No range limit
     }
     return getDateRange(selectedDate.value);
@@ -381,7 +377,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // For "Most Liked", "Trending", or "Following" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
-  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'trending' || selectedSort.value === 'following' || selectedSort.value === 'random';
+  const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'following' || selectedSort.value === 'random';
   const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
 
   // Fetch videos
@@ -412,14 +408,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     enabled: !useInterleavedFeed,
   });
 
-  // For trending: also fetch all-time most-liked to sprinkle in classic hits
-  const classicsFeed = useUnifiedFeed({
-    limit: PAGE_SIZE,
-    sortBy: 'likes',
-    sortOrder: 'desc',
-    status: 'minted' as const,
-    enabled: selectedSort.value === 'trending' && selectedPostType === 'all',
-  });
+  // Classics feed no longer needed (trending removed)
+  const classicsFeed = { data: undefined } as any;
 
   // Fetch shorts separately for the carousel
   const { data: shortsData } = useDeHubVideos({
@@ -612,16 +602,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
       : allItems;
     
-    // For trending mode: sort by trending score, then shuffle within buckets for variety
-    let sortedItems = filteredItems;
-    if (selectedSort.value === 'trending') {
-      const trendingSorted = [...filteredItems].sort((a, b) => {
-        return calculateTrendingScore(b) - calculateTrendingScore(a);
-      });
-      // Light shuffle: items with similar scores swap positions (bucket size of 5)
-      sortedItems = shuffleWithinBuckets(trendingSorted, 5);
-    }
-    
     // Map to feed item types
     const mapItem = (item: any, index: number): FeedItemType => {
       const inferredType = item.postType || (
@@ -641,34 +621,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       }
     };
     
-    // For trending: blend in all-time most-liked posts every CLASSIC_INSERT_INTERVAL items
-    if (selectedSort.value === 'trending' && classicsFeed.data?.pages) {
-      const classicItems = classicsFeed.data.pages.flatMap(page => page.items || []);
-      // Filter out items already in trending feed and pinned post
-      const trendingIds = new Set(sortedItems.map(item => String(item.tokenId)));
-      const uniqueClassics = classicItems.filter(item => 
-        !trendingIds.has(String(item.tokenId)) && 
-        String(item.tokenId) !== String(pinnedPostId)
-      );
-      
-      const result: FeedItemType[] = [];
-      let classicIdx = 0;
-      
-      sortedItems.forEach((item, index) => {
-        result.push(mapItem(item, index));
-        
-        // Insert a classic post every CLASSIC_INSERT_INTERVAL items
-        if ((index + 1) % CLASSIC_INSERT_INTERVAL === 0 && classicIdx < uniqueClassics.length) {
-          result.push(mapItem(uniqueClassics[classicIdx], 1000 + classicIdx));
-          classicIdx++;
-        }
-      });
-      
-      return result;
-    }
-    
-    return sortedItems.map(mapItem);
-  }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value, classicsFeed.data]);
+    return filteredItems.map(mapItem);
+  }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
 
   // Final items to render with creator diversity limiting
   // This ensures users see content from a variety of creators (max 2 per creator in view)
