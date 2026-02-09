@@ -10,12 +10,15 @@
  * ```
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Play, ChevronRight, Heart, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { ShortsViewer } from './ShortsViewer';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
+
+// Module-level cache: survives unmount/remount, keeps images warm in browser memory
+const preloadedThumbnails = new Set<string>();
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
@@ -24,6 +27,22 @@ interface ShortsReelProps {
 export function ShortsReel({ shorts }: ShortsReelProps) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  // Pre-warm thumbnail images in browser cache on first load
+  useEffect(() => {
+    for (const short of shorts) {
+      if (short.thumbnail && !preloadedThumbnails.has(short.thumbnail)) {
+        const img = new Image();
+        img.src = short.thumbnail;
+        preloadedThumbnails.add(short.thumbnail);
+      }
+      if (short.avatar && !preloadedThumbnails.has(short.avatar)) {
+        const img = new Image();
+        img.src = short.avatar;
+        preloadedThumbnails.add(short.avatar);
+      }
+    }
+  }, [shorts]);
 
   const handleShortClick = (index: number) => {
     setSelectedIndex(index);
@@ -58,7 +77,6 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   src={short.thumbnail}
                   alt=""
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
                 
