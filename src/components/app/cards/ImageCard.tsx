@@ -421,7 +421,7 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           creatorId={post.creatorId}
           creatorUsername={post.creatorUsername}
         />
-        <div className="flex items-center gap-1 pr-3">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => setShowAIChat(true)}
             className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
