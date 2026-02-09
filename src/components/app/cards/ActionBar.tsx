@@ -161,109 +161,53 @@ export function ActionBar({
     // If switching from one vote to another
     const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
 
+    // Compute the final state ONCE upfront from current values (stable within this render)
+    let newLiked = isLiked, newDisliked = isDisliked;
+    let newLikeCount = localLikeCount, newDislikeCount = localDislikeCount;
+
+    if (isRemovingVote) {
+      if (vote) { newLiked = false; newLikeCount = Math.max(0, newLikeCount - 1); }
+      else { newDisliked = false; newDislikeCount = Math.max(0, newDislikeCount - 1); }
+    } else if (isSwitchingVote) {
+      if (vote) { newLiked = true; newDisliked = false; newLikeCount++; newDislikeCount = Math.max(0, newDislikeCount - 1); }
+      else { newDisliked = true; newLiked = false; newDislikeCount++; newLikeCount = Math.max(0, newLikeCount - 1); }
+    } else {
+      if (vote) { newLiked = true; newLikeCount++; }
+      else { newDisliked = true; newDislikeCount++; }
+    }
+
     setIsVoting(true);
     lastVoteTimeRef.current = Date.now();
-    // Optimistic update with animation trigger
-    if (isRemovingVote) {
-      // Removing current vote
-      if (vote) {
-        setIsLiked(false);
-        setLocalLikeCount(prev => Math.max(0, prev - 1));
-      } else {
-        setIsDisliked(false);
-        setLocalDislikeCount(prev => Math.max(0, prev - 1));
-      }
-    } else if (isSwitchingVote) {
-      // Switching vote
-      if (vote) {
-        setIsLiked(true);
-        setIsDisliked(false);
-        setLocalLikeCount(prev => prev + 1);
-        setLocalDislikeCount(prev => Math.max(0, prev - 1));
-        setJustVoted('like');
-      } else {
-        setIsDisliked(true);
-        setIsLiked(false);
-        setLocalDislikeCount(prev => prev + 1);
-        setLocalLikeCount(prev => Math.max(0, prev - 1));
-        setJustVoted('dislike');
-      }
-    } else {
-      // New vote
-      if (vote) {
-        setIsLiked(true);
-        setLocalLikeCount(prev => prev + 1);
-        setJustVoted('like');
-      } else {
-        setIsDisliked(true);
-        setLocalDislikeCount(prev => prev + 1);
-        setJustVoted('dislike');
-      }
-    }
-    
-    // Reset animation state after animation completes
+
+    // Optimistic UI update using computed values
+    setIsLiked(newLiked);
+    setIsDisliked(newDisliked);
+    setLocalLikeCount(newLikeCount);
+    setLocalDislikeCount(newDislikeCount);
+    if (!isRemovingVote) setJustVoted(vote ? 'like' : 'dislike');
     setTimeout(() => setJustVoted(null), 400);
 
-    // We need to write to the global vote cache after state settles.
-    // Use a microtask so the functional setState calls above have resolved.
-    queueMicrotask(() => {
-      // Compute new values inline (mirrors the optimistic logic above)
-      let newLiked = isLiked, newDisliked = isDisliked;
-      let newLikeCount = localLikeCount, newDislikeCount = localDislikeCount;
-      if (isRemovingVote) {
-        if (vote) { newLiked = false; newLikeCount = Math.max(0, newLikeCount - 1); }
-        else { newDisliked = false; newDislikeCount = Math.max(0, newDislikeCount - 1); }
-      } else if (isSwitchingVote) {
-        if (vote) { newLiked = true; newDisliked = false; newLikeCount++; newDislikeCount = Math.max(0, newDislikeCount - 1); }
-        else { newDisliked = true; newLiked = false; newDislikeCount++; newLikeCount = Math.max(0, newLikeCount - 1); }
-      } else {
-        if (vote) { newLiked = true; newLikeCount++; }
-        else { newDisliked = true; newDislikeCount++; }
-      }
-      setVoteCache(postId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount });
-      patchFeedCaches(queryClient, postId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount });
-    });
+    // Sync global vote cache & all feed caches synchronously with computed values
+    const voteState = { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount };
+    setVoteCache(postId, voteState);
+    patchFeedCaches(queryClient, postId, voteState);
 
     try {
       await voteOnPost({ tokenId: parseInt(postId, 10), voteType: vote ? 'for' : 'against' });
-      // No toast on success - animation is enough feedback
     } catch (error: unknown) {
-      // Revert optimistic update on error
-      if (isRemovingVote) {
-        if (vote) {
-          setIsLiked(true);
-          setLocalLikeCount(prev => prev + 1);
-        } else {
-          setIsDisliked(true);
-          setLocalDislikeCount(prev => prev + 1);
-        }
-      } else if (isSwitchingVote) {
-        if (vote) {
-          setIsLiked(false);
-          setIsDisliked(true);
-          setLocalLikeCount(prev => Math.max(0, prev - 1));
-          setLocalDislikeCount(prev => prev + 1);
-        } else {
-          setIsDisliked(false);
-          setIsLiked(true);
-          setLocalDislikeCount(prev => Math.max(0, prev - 1));
-          setLocalLikeCount(prev => prev + 1);
-        }
-      } else {
-        if (vote) {
-          setIsLiked(false);
-          setLocalLikeCount(prev => Math.max(0, prev - 1));
-        } else {
-          setIsDisliked(false);
-          setLocalDislikeCount(prev => Math.max(0, prev - 1));
-        }
-      }
-      
+      // Revert to pre-vote state on error
+      setIsLiked(isLiked);
+      setIsDisliked(isDisliked);
+      setLocalLikeCount(localLikeCount);
+      setLocalDislikeCount(localDislikeCount);
+      const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
+      setVoteCache(postId, revertState);
+      patchFeedCaches(queryClient, postId, revertState);
       toast.error('Failed to vote. Please try again.');
     } finally {
       setIsVoting(false);
     }
-  }, [postId, isVoting, isLiked, isDisliked, isAuthenticated, queryClient]);
+  }, [postId, isVoting, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient]);
 
   const hasVoted = isLiked || isDisliked;
 
