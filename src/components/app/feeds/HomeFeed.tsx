@@ -803,18 +803,33 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // ============================================================================
 
   const renderFeedItem = (item: FeedItemType, index: number) => {
-    switch (item.type) {
-      case 'post':
-        return <PostCard key={`post-${item.data.id}`} post={item.data} />;
-      case 'video':
-        return <VideoCard key={`video-${item.data.id}`} video={item.data} />;
-      case 'image':
-        return <ImageCard key={`image-${item.data.id}`} post={item.data} />;
-      case 'shorts':
-        return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
-      default:
-        return null;
-    }
+    const card = (() => {
+      switch (item.type) {
+        case 'post':
+          return <PostCard key={`post-${item.data.id}`} post={item.data} />;
+        case 'video':
+          return <VideoCard key={`video-${item.data.id}`} video={item.data} />;
+        case 'image':
+          return <ImageCard key={`image-${item.data.id}`} post={item.data} />;
+        case 'shorts':
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+        default:
+          return null;
+      }
+    })();
+
+    // Wrap non-shorts items in a bento container
+    if (item.type === 'shorts' || !card) return card;
+
+    const key = item.type === 'post' ? `bento-post-${item.data.id}`
+              : item.type === 'video' ? `bento-video-${(item.data as VideoItem).id}`
+              : `bento-image-${(item.data as ImagePost).id}`;
+
+    return (
+      <div key={key} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+        {card}
+      </div>
+    );
   };
 
   // Radio carousel component for home feed
