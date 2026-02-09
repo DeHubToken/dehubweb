@@ -481,11 +481,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
             {/* Shorts Grid - TikTok Style */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
               {shorts.map((short, index) => (
-                <motion.div
+                <div
                   key={short.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: (index % 9) * 0.05 }}
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >
@@ -546,7 +543,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                       </svg>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
