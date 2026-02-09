@@ -71,7 +71,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer isolate"
     >
       {/* Header with AI and menu buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <CardHeader
           username={stream.streamer}
           avatarSeed={stream.avatar}
