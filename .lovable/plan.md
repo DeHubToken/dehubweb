@@ -1,29 +1,26 @@
 
 
-# Fix: Voting (Likes/Dislikes) Broken Everywhere
+# Fix: Ad Video Avatar Broken in RelatedVideosFeed
 
 ## Problem
 
-There are two vote functions in `src/lib/api/dehub.ts`:
+The `toVideoItem` function in `RelatedVideosFeed.tsx` builds the avatar URL using `getMediaUrl(nft.minterAvatarUrl)`, which is the generic media URL helper. However, avatars need special handling -- the API often returns relative paths or `api.dehub.io` URLs that must be normalized to the CDN format (`dehubcdn.../avatars/{address}.{ext}`).
 
-- **`voteOnNFT`** (line 846) -- sends `{ streamTokenId: number, vote: boolean }` -- **correct format**
-- **`voteOnPost`** (line 3472) -- sends `{ tokenId: number, voteType: 'for' | 'against' }` -- **wrong format**
-
-Both `ActionBar` and `ShortsViewer` use `voteOnPost`, which sends the wrong field names. The API rejects the request and every vote fails with "Failed to vote."
+The rest of the codebase uses `buildAvatarUrl(address, extractAvatarPath(nft))` from `src/lib/media-url.ts` for exactly this purpose, but the ad video's `toVideoItem` skips that.
 
 ## Fix
 
-### File: `src/lib/api/dehub.ts` (~line 3476-3483)
+### File: `src/components/app/feeds/RelatedVideosFeed.tsx`
 
-Update the request body in `voteOnPost` to match what the API actually expects (same format that `voteOnNFT` already uses correctly):
+1. Import `buildAvatarUrl` and `extractAvatarPath` from `@/lib/media-url`.
+2. In the `toVideoItem` function, replace:
+   ```
+   channelAvatar: getMediaUrl(nft.minterAvatarUrl) || '/placeholder.svg',
+   ```
+   with:
+   ```
+   channelAvatar: buildAvatarUrl(nft.minter, extractAvatarPath(nft)) || '/placeholder.svg',
+   ```
 
-```text
-Current (broken):
-  body: { tokenId: params.tokenId, voteType: params.voteType }
-
-Fixed:
-  body: { streamTokenId: params.tokenId, vote: params.voteType === 'for' }
-```
-
-That is the only change needed. Both `ActionBar` and `ShortsViewer` call `voteOnPost` with the same interface, so this single fix resolves voting everywhere.
+This uses the canonical avatar builder with the minter's wallet address, which correctly normalizes all API avatar path formats to the working CDN URL.
 
