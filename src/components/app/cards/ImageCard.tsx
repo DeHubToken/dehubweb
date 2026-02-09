@@ -138,7 +138,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div className="relative rounded-md overflow-hidden border border-white/[0.08]" onWheel={handleWheel} data-no-navigate>
+    <div className="relative rounded-md overflow-hidden" onWheel={handleWheel} data-no-navigate>
       {/* Carousel container */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">

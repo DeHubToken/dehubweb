@@ -900,7 +900,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         ref={containerRef}
         tabIndex={0}
         data-no-navigate
-        className={`relative bg-zinc-800 cursor-pointer group/thumb outline-none rounded-md overflow-hidden border border-white/[0.08] ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'aspect-video'}`}
+        className={`relative bg-zinc-800 cursor-pointer group/thumb outline-none rounded-md overflow-hidden ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'aspect-video'}`}
         onClick={isTouchDevice ? undefined : handleVideoAreaClick}
         onTouchEnd={isTouchDevice ? handleTouchEnd : undefined}
         onMouseEnter={() => {
