@@ -137,10 +137,15 @@ export function FollowersListDrawer({
           setUsers(mappedUsers);
           setIsLoading(false);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching follow list:', err);
-        setError('Failed to load list. Please try again.');
-        toast.error('Failed to load follow list');
+        const msg = err?.message || '';
+        if (msg.toLowerCase().includes('hidden')) {
+          setError('This user has hidden their followers/following list.');
+        } else {
+          setError('Failed to load list. Please try again.');
+          toast.error('Failed to load follow list');
+        }
         setIsLoading(false);
       }
     };
