@@ -5,7 +5,7 @@
  * Wired to DeHub API for likes, gifts, ending streams, and activity logs.
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, 
@@ -32,6 +32,10 @@ import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
+import { getDHBBalance } from '@/lib/contracts/stream-controller';
+import { fromWei } from '@/lib/contracts/dhb-token';
+import dehubCoin from '@/assets/dehub-coin.png';
+import usdcLogo from '@/assets/usdc-logo.png';
 import type { LiveStream } from '@/types/feed.types';
 
 interface LiveStreamCardProps {
@@ -51,7 +55,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
   const [giftCurrency, setGiftCurrency] = useState('DHB');
-  
+  const [dhbBalance, setDhbBalance] = useState<string | null>(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -65,7 +70,27 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     showActivityLog ? stream.id : null
   );
 
-  // Initialize HLS player for live streams
+  // Fetch DHB balance when gift drawer opens
+  useEffect(() => {
+    if (!showGiftDrawer || !walletAddress) return;
+    let cancelled = false;
+    setBalanceLoading(true);
+    getDHBBalance(walletAddress)
+      .then((bal) => {
+        if (!cancelled) {
+          const formatted = fromWei(bal);
+          setDhbBalance(Number(formatted).toLocaleString(undefined, { maximumFractionDigits: 2 }));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setDhbBalance(null);
+      })
+      .finally(() => {
+        if (!cancelled) setBalanceLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [showGiftDrawer, walletAddress]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !stream.isLive) return;
@@ -409,6 +434,22 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             </DrawerTitle>
           </DrawerHeader>
           <div className="space-y-4">
+            {/* Balance display */}
+            <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5 border border-white/10">
+              <span className="text-xs text-zinc-400">Your balance</span>
+              <div className="flex items-center gap-1.5">
+                <img
+                  src={giftCurrency === 'DHB' ? dehubCoin : usdcLogo}
+                  alt={giftCurrency}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm font-medium text-white">
+                  {balanceLoading ? '...' : giftCurrency === 'DHB' ? (dhbBalance ?? '—') : '—'}
+                </span>
+                <span className="text-xs text-zinc-500">{giftCurrency}</span>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <label className="text-sm text-zinc-400">Amount</label>
               <Input
