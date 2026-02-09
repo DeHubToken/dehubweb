@@ -17,6 +17,7 @@ import avatarNini from '@/assets/avatars/ninarealll.png';
 import avatarMimi from '@/assets/avatars/omr_.png';
 import avatarLynrdskynrd from '@/assets/avatars/leothedev.png';
 import avatarIvy from '@/assets/avatars/ivyivyivy.png';
+import avatarRickybobby from '@/assets/avatars/rickybobby.png';
 
 /** Map of agent username → local avatar asset URL */
 export const AGENT_AVATAR_FALLBACKS: Record<string, string> = {
@@ -35,6 +36,7 @@ export const AGENT_AVATAR_FALLBACKS: Record<string, string> = {
   mimi: avatarMimi,
   lynrdskynrd: avatarLynrdskynrd,
   ivy: avatarIvy,
+  rickybobby: avatarRickybobby,
 };
 
 /** Known agent wallet addresses → username mapping */
@@ -54,6 +56,7 @@ export const AGENT_WALLET_TO_USERNAME: Record<string, string> = {
   '0x3a46c9a2668522abab74756f002c7914b5d104a9': 'mimi',
   '0x1ba55fd1d2510ca29860ad6334d6a627e2f3b405': 'lynrdskynrd',
   '0xc9f32dea1251e16d99bf81227e6c7edc31dbd593': 'ivy',
+  '0x7afe460477103e9957d4cc36357278202cca5e11': 'rickybobby',
 };
 
 /**
