@@ -92,11 +92,11 @@ export default function BuyCoinsPage() {
         window.open(data.checkoutUrl, '_blank');
         toast.success('Redirecting to payment...');
       } else if (data.sessionId) {
-        toast.success('Session created', { description: `Session ID: ${data.sessionId}` });
+        toast.success('Session created');
       }
     },
     onError: (error: Error) => {
-      toast.error('Failed to start purchase', { description: error.message });
+      toast.error('Failed to start purchase');
     },
   });
 
@@ -108,11 +108,11 @@ export default function BuyCoinsPage() {
         window.open(data.url, '_blank');
         toast.success('Redirecting to onramp...');
       } else {
-        toast.success('Onramp session created', { description: `Session: ${data.sessionId}` });
+        toast.success('Onramp session created');
       }
     },
     onError: (error: Error) => {
-      toast.error('Failed to start onramp', { description: error.message });
+      toast.error('Failed to start onramp');
     },
   });
 

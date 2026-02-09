@@ -87,7 +87,7 @@ export default function AgentsPage() {
       }
     },
     onError: (error: Error) => {
-      toast.error('Failed to create agent', { description: error.message });
+      toast.error('Failed to create agent');
     },
   });
 
@@ -108,7 +108,7 @@ export default function AgentsPage() {
       toast.success('Agent deleted');
     },
     onError: (error: Error) => {
-      toast.error('Failed to delete agent', { description: error.message });
+      toast.error('Failed to delete agent');
     },
   });
 

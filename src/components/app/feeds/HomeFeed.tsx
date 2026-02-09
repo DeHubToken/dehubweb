@@ -321,13 +321,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
-      toast.info('Subscribed feed coming soon!', {
-        description: 'This feature is under development.',
-      });
+      toast.info('Subscribed feed coming soon!');
       return;
     }
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info('Log in to see posts from creators you follow');
+      toast.info('Log in to see followed creators');
       return;
     }
     setSelectedSort(option);

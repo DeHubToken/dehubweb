@@ -74,13 +74,13 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleCopyAddress = () => {
     if (!walletAddress) {
-      toast.error('No wallet connected', { description: 'Connect your wallet to copy your address' });
+      toast.error('No wallet connected');
       return;
     }
 
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
-    toast.success('Address Copied', { description: 'Wallet address copied to clipboard' });
+    toast.success('Address copied');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -110,7 +110,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleSendCoins = () => {
     if (!selectedUser || !sendAmount) return;
-    toast.success('Coins Sent', { description: `Sent ${sendAmount} coins to @${selectedUser.username}` });
+    toast.success(`Sent ${sendAmount} coins to @${selectedUser.username}`);
     setIsOpen(false);
     setMenuView('main');
     setSelectedUser(null);
@@ -119,7 +119,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
-    toast.success('Coins Staked', { description: `Successfully staked ${stakeAmount} coins` });
+    toast.success(`Staked ${stakeAmount} coins`);
     setIsOpen(false);
     setMenuView('main');
     setStakeAmount('');
@@ -127,7 +127,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleStakeAll = () => {
     if (balance <= 0) {
-      toast.error('No Coins', { description: 'You have no coins to stake' });
+      toast.error('No coins to stake');
       return;
     }
     setStakeAmount(balance.toString());
@@ -202,7 +202,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
       </button>
       <button
         onClick={() => {
-          toast.info('Coming Soon', { description: 'Cash out feature will be available soon' });
+          toast.info('Cash out coming soon!');
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
@@ -519,40 +519,40 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
 
   const handleCopyAddress = () => {
     if (!walletAddress) {
-      toast.error('No wallet connected', { description: 'Connect your wallet to copy your address' });
+      toast.error('No wallet connected');
       return;
     }
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
-    toast.success('Address Copied', { description: 'Wallet address copied to clipboard' });
+    toast.success('Address copied');
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleBuyWithCard = () => {
-    toast.info('Coming Soon', { description: 'Card payments will be available soon' });
+    toast.info('Card payments coming soon!');
     onClose?.();
   };
 
   const handleBuyWithCrypto = () => {
-    toast.info('Coming Soon', { description: 'Crypto payments will be available soon' });
+    toast.info('Crypto payments coming soon!');
     onClose?.();
   };
 
   const handleSendCoins = () => {
     if (!selectedUser || !sendAmount) return;
-    toast.success('Coins Sent', { description: `Sent ${sendAmount} coins to @${selectedUser.username}` });
+    toast.success(`Sent ${sendAmount} coins to @${selectedUser.username}`);
     onClose?.();
   };
 
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
-    toast.success('Coins Staked', { description: `Successfully staked ${stakeAmount} coins` });
+    toast.success(`Staked ${stakeAmount} coins`);
     onClose?.();
   };
 
   const handleStakeAll = () => {
     if (balance <= 0) {
-      toast.error('No Coins', { description: 'You have no coins to stake' });
+      toast.error('No coins to stake');
       return;
     }
     setStakeAmount(balance.toString());
@@ -813,7 +813,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
       </button>
       <button
         onClick={() => {
-          toast.info('Coming Soon', { description: 'Cash out feature will be available soon' });
+          toast.info('Cash out coming soon!');
         }}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
       >
