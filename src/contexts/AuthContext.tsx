@@ -109,13 +109,17 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 function mapWalletProvider(wallet: WalletProvider): string {
   switch (wallet) {
     case 'metamask':
-    case 'phantom':
     case 'rabby':
     case 'trust':
-      return 'metamask';
-    case 'walletconnect': return 'wallet-connect-v2';
-    case 'coinbase': return 'coinbase';
-    default: return 'metamask';
+      return WALLET_ADAPTERS.METAMASK;
+    case 'phantom':
+      return 'phantom'; // WALLET_ADAPTERS.PHANTOM
+    case 'walletconnect':
+      return WALLET_ADAPTERS.WALLET_CONNECT_V2;
+    case 'coinbase':
+      return 'coinbase'; // WALLET_ADAPTERS.COINBASE
+    default:
+      return WALLET_ADAPTERS.METAMASK;
   }
 }
 
