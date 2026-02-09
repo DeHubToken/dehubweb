@@ -1226,7 +1226,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
       </div>
 
       {/* Info & Actions */}
-      <div className="p-3">
+      <div className="py-3">
         {/* Creator info with action buttons - mobile/tablet immersive view only */}
         {isImmersive && (
           <MobileCreatorInfo
