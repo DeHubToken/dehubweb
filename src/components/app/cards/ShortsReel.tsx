@@ -82,7 +82,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                 
                 {/* Creator info at top */}
                 <div className="absolute top-2 left-2 right-2 flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-md bg-zinc-700 border border-white/30 flex-shrink-0 overflow-hidden">
+                  <div className="w-5 h-5 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
                     {short.avatar ? (
                       <img 
                         src={short.avatar} 

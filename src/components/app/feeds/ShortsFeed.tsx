@@ -500,7 +500,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
                     <div className="flex items-center gap-2">
                       {/* Creator Avatar */}
-                      <div className="w-7 h-7 rounded-md bg-zinc-700 border border-white/30 flex-shrink-0 overflow-hidden">
+                      <div className="w-7 h-7 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
                         {short.avatar ? (
                           <img 
                             src={short.avatar} 
