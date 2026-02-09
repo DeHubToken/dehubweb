@@ -5,7 +5,7 @@
  * Stories are uploaded to storage and expire after 24 hours.
  */
 
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Plus, Video, Mic, Camera, PenSquare } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -26,7 +26,6 @@ import { PostModal } from '@/features/post';
 import { useStories, useUploadStory, useWatchedStories, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { VideoThumbnail } from '@/components/app/stories/VideoThumbnail';
 
 interface StoryUser {
   name: string;
@@ -51,7 +50,6 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const [viewerStartIndex, setViewerStartIndex] = useState(0);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isShortsViewerOpen, setIsShortsViewerOpen] = useState(false);
-  const [thumbnailsReady, setThumbnailsReady] = useState(false);
   const [visibleCount, setVisibleCount] = useState(9);
   const scrollSentinelRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -62,17 +60,6 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const { uploadStory, isUploading } = useUploadStory();
   const { markWatched, isWatched } = useWatchedStories();
 
-  // Track how many thumbnails have loaded so we can reveal all at once
-  const loadedCountRef = useRef(0);
-  const totalStoriesRef = useRef(0);
-
-  const handleThumbnailReady = useCallback(() => {
-    loadedCountRef.current += 1;
-    if (loadedCountRef.current >= totalStoriesRef.current) {
-      setThumbnailsReady(true);
-    }
-  }, []);
-  
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
 
@@ -234,17 +221,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
     return items;
   }, [storyUsers, users, isWatched]);
 
-  // Set the total stories count for coordinated thumbnail loading
-  // Only count visible stories for the initial reveal
   const visibleStoryItems = allStoryItems.slice(0, visibleCount);
   const hasMore = visibleCount < allStoryItems.length;
-  const storyCount = visibleStoryItems.filter(i => i.type === 'story').length;
-  if (storyCount !== totalStoriesRef.current) {
-    totalStoriesRef.current = storyCount;
-    loadedCountRef.current = 0;
-    // If no stories to load, mark ready immediately
-    if (storyCount === 0) setThumbnailsReady(true);
-  }
 
   // Lazy-load more stories when user scrolls near the end
   useEffect(() => {
@@ -320,14 +298,8 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
           {/* Right fade gradient to signal more stories */}
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
           
-          {/* Show skeleton overlay until all thumbnails are ready */}
-          {!thumbnailsReady && storyCount > 0 && (
-            <div className="absolute inset-0 z-20">
-              <StoriesBarSkeleton />
-            </div>
-          )}
           
-          <SwipeableCarousel ref={scrollContainerRef} className={`flex gap-1.5 overflow-x-auto scrollbar-hide px-2 ${!thumbnailsReady && storyCount > 0 ? 'invisible' : ''}`}>
+          <SwipeableCarousel ref={scrollContainerRef} className="flex gap-1.5 overflow-x-auto scrollbar-hide px-2">
             {/* Create Story/Live Button */}
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
               <div onClick={() => setIsOpen(true)}>
@@ -366,24 +338,14 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
                           src={item.thumbnail} 
                           alt={item.name}
                           className="w-full h-full object-cover"
-                          onLoad={handleThumbnailReady}
-                          onError={handleThumbnailReady}
                         />
                       ) : (
-                        <VideoThumbnail
-                          videoUrl={item.story?.video_url || ''}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                          onReady={handleThumbnailReady}
-                          fallback={
-                            <Avatar className="w-full h-full rounded-[10px]">
-                              <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
-                              <AvatarFallback className="bg-zinc-700 rounded-[10px]">
-                                {item.name[0]?.toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                          }
-                        />
+                        <Avatar className="w-full h-full rounded-[10px]">
+                          <AvatarImage src={item.avatar} className="object-cover rounded-[10px]" />
+                          <AvatarFallback className="bg-zinc-700 rounded-[10px]">
+                            {item.name[0]?.toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
                       )}
                     </div>
                   </ShimmerBorder>
