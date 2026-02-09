@@ -505,7 +505,9 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
   return (
     <div className="space-y-3 pb-32">
       {videos.map((video) => (
-        <VideoCard key={video.id} video={video} />
+        <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <VideoCard video={video} />
+        </div>
       ))}
       
       {/* Infinite scroll trigger */}

@@ -257,7 +257,9 @@ function EndlessScrollView({
       
       <div ref={scrollTargetRef} />
       {orderedPosts.map((post) => (
-        <ImageCard key={post.id} post={post} />
+        <div key={post.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <ImageCard post={post} />
+        </div>
       ))}
       
       {/* Infinite scroll loader */}

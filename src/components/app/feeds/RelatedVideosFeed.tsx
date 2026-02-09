@@ -175,7 +175,7 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
     <div className="flex flex-col gap-4 pt-[30px]">
       {/* Ad Video - First Slot */}
       {adVideo && (
-        <div className="relative">
+        <div className="relative rounded-xl border border-white/[0.08] bg-transparent p-3">
           <AdLabel />
           <VideoCard video={toVideoItem(adVideo)} />
         </div>
@@ -183,7 +183,9 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
 
       {/* Latest Videos */}
       {videos.map((video) => (
-        <VideoCard key={video.id} video={video} />
+        <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <VideoCard video={video} />
+        </div>
       ))}
 
       {/* Load More Trigger */}
