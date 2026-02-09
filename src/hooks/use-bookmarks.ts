@@ -144,16 +144,17 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   // Saved posts query with infinite scroll
   const savedQuery = useInfiniteQuery({
     queryKey: ['bookmarks', 'saved', type],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam = 1 }) => {
       const response = await getSavedPosts(pageParam, PAGE_SIZE);
       const data = response.result || [];
+      const hasMore = response.pagination?.hasMore ?? data.length >= PAGE_SIZE;
       return {
         items: data,
-        nextPage: data.length >= PAGE_SIZE ? pageParam + 1 : undefined,
+        nextPage: hasMore ? pageParam + 1 : undefined,
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
+    initialPageParam: 1,
     enabled: isAuthenticated && type !== 'liked' && type !== 'history',
     staleTime: 2 * 60 * 1000,
   });
@@ -179,10 +180,10 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   const likedQuery = useInfiniteQuery({
     queryKey: ['bookmarks', 'liked'],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await getLikedPosts(pageParam, PAGE_SIZE, 'all');
-      const items = response.result?.items || [];
-      const totalCount = response.result?.totalCount || 0;
-      const hasMore = pageParam * PAGE_SIZE < totalCount;
+      const response = await getLikedPosts(pageParam, PAGE_SIZE);
+      const items = response.result || [];
+      const hasMore = response.pagination?.hasMore ?? items.length >= PAGE_SIZE;
+      const totalCount = response.pagination?.totalCount ?? items.length;
       return {
         items,
         nextPage: hasMore ? pageParam + 1 : undefined,
@@ -264,15 +265,15 @@ export function useBookmarkPost(tokenId: string | number) {
   // Check if this post is in the bookmarks
   const { data: savedPages } = useInfiniteQuery({
     queryKey: ['bookmarks', 'saved', 'all'],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam = 1 }) => {
       const response = await getSavedPosts(pageParam, PAGE_SIZE);
       return {
         items: response.result || [],
-        nextPage: (response.result?.length || 0) >= PAGE_SIZE ? pageParam + 1 : undefined,
+        nextPage: (response.pagination?.hasMore ?? (response.result?.length || 0) >= PAGE_SIZE) ? pageParam + 1 : undefined,
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
+    initialPageParam: 1,
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
   });

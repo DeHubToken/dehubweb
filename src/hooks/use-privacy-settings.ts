@@ -47,17 +47,52 @@ export function usePrivacySettings() {
   const isPrivate = customs?.isPrivate === 'true' || customs?.isPrivate === true;
 
   const updateMutation = useMutation({
-    mutationFn: async (newCustoms: Record<string, string>) => {
+    mutationFn: async (updates: {
+      show_followers_following?: boolean;
+      hide_follower_counts?: boolean;
+      default_post_visibility?: 'public' | 'private';
+      is_private?: boolean;
+    }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
-      // Merge with existing customs
-      const existingCustoms = (customs ?? {}) as Record<string, string>;
-      const merged = { ...existingCustoms, ...newCustoms };
+      const profileUpdate: Record<string, any> = {};
 
-      await updateProfile({ customs: merged });
+      // Use direct API fields for hideFollowers and isPrivate
+      if (updates.hide_follower_counts !== undefined || updates.show_followers_following !== undefined) {
+        // hideFollowers = true when visibility is 'hidden'
+        const hideFollowers = updates.hide_follower_counts === true || updates.show_followers_following === false;
+        profileUpdate.hideFollowers = hideFollowers;
+      }
+
+      if (updates.is_private !== undefined) {
+        profileUpdate.isPrivate = updates.is_private;
+      }
+
+      // Keep customs for follow visibility granularity and default post visibility
+      const customsUpdates: Record<string, string> = {};
+      if (updates.show_followers_following !== undefined || updates.hide_follower_counts !== undefined) {
+        let visibility: FollowVisibility;
+        if (updates.hide_follower_counts) {
+          visibility = 'hidden';
+        } else if (updates.show_followers_following === false) {
+          visibility = 'counts-only';
+        } else {
+          visibility = 'public';
+        }
+        customsUpdates.followVisibility = visibility;
+      }
+      if (updates.default_post_visibility !== undefined) {
+        customsUpdates.defaultPostVisibility = updates.default_post_visibility;
+      }
+
+      if (Object.keys(customsUpdates).length > 0) {
+        const existingCustoms = (customs ?? {}) as Record<string, string>;
+        profileUpdate.customs = { ...existingCustoms, ...customsUpdates };
+      }
+
+      await updateProfile(profileUpdate);
     },
     onSuccess: () => {
-      // Invalidate profile queries so the new customs value is picked up
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       toast.success('Privacy settings updated');
     },
@@ -67,40 +102,13 @@ export function usePrivacySettings() {
     },
   });
 
-  /**
-   * Accept the same partial shape the Settings page sends, but translate to
-   * customs fields before persisting.
-   */
   const updateSettings = (updates: {
     show_followers_following?: boolean;
     hide_follower_counts?: boolean;
     default_post_visibility?: 'public' | 'private';
     is_private?: boolean;
   }) => {
-    const newCustoms: Record<string, string> = {};
-
-    // Determine follow visibility if relevant fields are present
-    if (updates.show_followers_following !== undefined || updates.hide_follower_counts !== undefined) {
-      let visibility: FollowVisibility;
-      if (updates.hide_follower_counts) {
-        visibility = 'hidden';
-      } else if (updates.show_followers_following === false) {
-        visibility = 'counts-only';
-      } else {
-        visibility = 'public';
-      }
-      newCustoms.followVisibility = visibility;
-    }
-
-    if (updates.default_post_visibility !== undefined) {
-      newCustoms.defaultPostVisibility = updates.default_post_visibility;
-    }
-
-    if (updates.is_private !== undefined) {
-      newCustoms.isPrivate = String(updates.is_private);
-    }
-
-    updateMutation.mutate(newCustoms);
+    updateMutation.mutate(updates);
   };
 
   return {

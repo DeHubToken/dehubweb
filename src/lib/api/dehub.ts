@@ -487,34 +487,55 @@ export async function authenticateWallet(
   return data;
 }
 
-// NFT/Content functions
+/**
+ * Search NFTs/content — migrated from deprecated /api/search_nfts to /api/feed
+ * Maintains the same interface for backward compatibility.
+ */
 export async function searchNFTs(params: SearchNFTsParams = {}): Promise<PaginatedResponse<DeHubNFT>> {
-  const response = await apiCall<{ result: DeHubNFT[] } | PaginatedResponse<DeHubNFT>>("/api/search_nfts", {
-    params: {
-      page: params.page,
-      unit: params.unit,
-      category: params.category,
-      sortMode: params.sortMode,
-      creator_id: params.creator_id,
-      postType: params.postType,
-      search: params.search,
-      address: params.address,
-      status: params.status,
-    },
+  // Map old sortMode to new sortBy/sortOrder
+  let sortBy: string | undefined;
+  let sortOrder: string | undefined;
+  switch (params.sortMode) {
+    case 'new':
+      sortBy = 'createdAt';
+      sortOrder = 'desc';
+      break;
+    case 'popular':
+      sortBy = 'likes';
+      sortOrder = 'desc';
+      break;
+    case 'trending':
+      sortBy = 'views';
+      sortOrder = 'desc';
+      break;
+  }
+
+  const apiParams: Record<string, string | number | undefined> = {
+    page: params.page !== undefined ? params.page + 1 : 1, // Convert 0-based to 1-based
+    limit: params.unit || 20,
+    sortBy,
+    sortOrder,
+    category: params.category,
+    minter: params.creator_id,
+    postType: params.postType,
+    search: params.search,
+    status: params.status || 'minted',
+  };
+
+  const response = await apiCall<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }>("/api/feed", {
+    params: apiParams,
   });
   
-  // Handle wrapped response from API (returns { result: [...] })
-  if (response && typeof response === 'object' && 'result' in response && Array.isArray(response.result)) {
-    return {
-      data: response.result,
-      total: response.result.length,
-      page: params.page || 0,
-      limit: params.unit || 10,
-      has_more: response.result.length === (params.unit || 10),
-    };
-  }
+  const items = response.result || [];
+  const pagination = response.pagination;
   
-  return response as PaginatedResponse<DeHubNFT>;
+  return {
+    data: items,
+    total: pagination?.totalCount ?? items.length,
+    page: params.page || 0,
+    limit: params.unit || 20,
+    has_more: pagination?.hasMore ?? items.length >= (params.unit || 20),
+  };
 }
 
 /**
@@ -721,7 +742,7 @@ export async function getNFTComments(
 
 export async function recordView(tokenId: string): Promise<void> {
   return apiCall<void>(`/api/record-view/${tokenId}`, {
-    method: "POST",
+    method: "GET",
   });
 }
 
@@ -759,6 +780,9 @@ export interface UpdateProfileData {
   username?: string;
   displayName?: string;
   aboutMe?: string;
+  hideFollowers?: boolean;
+  isPrivate?: boolean;
+  notificationPreferences?: string;
   twitterLink?: string;
   discordLink?: string;
   instagramLink?: string;
@@ -784,6 +808,9 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   if (data.username !== undefined) formData.append("username", data.username);
   if (data.displayName !== undefined) formData.append("displayName", data.displayName);
   if (data.aboutMe !== undefined) formData.append("aboutMe", data.aboutMe);
+  if (data.hideFollowers !== undefined) formData.append("hideFollowers", String(data.hideFollowers));
+  if (data.isPrivate !== undefined) formData.append("isPrivate", String(data.isPrivate));
+  if (data.notificationPreferences !== undefined) formData.append("notificationPreferences", data.notificationPreferences);
   if (data.twitterLink !== undefined) formData.append("twitterLink", data.twitterLink);
   if (data.discordLink !== undefined) formData.append("discordLink", data.discordLink);
   if (data.instagramLink !== undefined) formData.append("instagramLink", data.instagramLink);
@@ -985,18 +1012,27 @@ export interface FollowListItem {
 /**
  * Get followers or following list for a user
  * Uses GET /api/follow_list/{address}?type=followers|following
+ * Supports pagination, sorting, and search per API docs.
  */
 export async function getFollowList(
   address: string, 
   type: 'followers' | 'following',
-  viewerAddress?: string
-): Promise<FollowListItem[]> {
-  const params: Record<string, string> = { type };
-  if (viewerAddress) {
-    params.address = viewerAddress;
+  options?: {
+    page?: number;
+    limit?: number;
+    sortBy?: 'createdAt' | 'username' | 'displayName';
+    sortOrder?: 'asc' | 'desc';
+    search?: string;
   }
+): Promise<{ items: FollowListItem[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
+  const params: Record<string, string | number | undefined> = { type };
+  if (options?.page !== undefined) params.page = options.page;
+  if (options?.limit !== undefined) params.limit = options.limit;
+  if (options?.sortBy) params.sortBy = options.sortBy;
+  if (options?.sortOrder) params.sortOrder = options.sortOrder;
+  if (options?.search) params.search = options.search;
   
-  const response = await apiCall<{ result: FollowListItem[] | string[] } | FollowListItem[] | string[]>(
+  const response = await apiCall<{ result: any; status?: boolean }>(
     `/api/follow_list/${encodeURIComponent(address)}`, 
     { params }
   );
@@ -1008,24 +1044,26 @@ export async function getFollowList(
 
   // Handle new paginated format: { items: [{ followedAt, user }], pagination }
   let items: any[];
+  let pagination: any;
   if (raw && typeof raw === 'object' && !Array.isArray(raw) && Array.isArray(raw.items)) {
     items = raw.items.map((entry: any) => entry.user || entry);
+    pagination = raw.pagination;
   } else if (Array.isArray(raw)) {
     items = raw;
   } else {
-    return [];
+    return { items: [] };
   }
 
   if (items.length === 0) {
-    return [];
+    return { items: [], pagination };
   }
 
   // API may return raw address strings instead of objects — normalise them
   if (typeof items[0] === 'string') {
-    return (items as string[]).map(addr => ({ address: addr.toLowerCase() }));
+    return { items: (items as string[]).map(addr => ({ address: addr.toLowerCase() })), pagination };
   }
 
-  return items as FollowListItem[];
+  return { items: items as FollowListItem[], pagination };
 }
 
 export interface PostCommentResponse {
@@ -1069,26 +1107,25 @@ export async function toggleSavePost(tokenId: string | number): Promise<SavePost
 
 /**
  * Get user's saved/bookmarked posts
- * Uses GET /api/savedPosts with unit (items per page) and page (0-based)
+ * Uses GET /api/savedPosts with limit (items per page) and page (1-based)
  */
-export async function getSavedPosts(page: number = 0, unit: number = 20): Promise<{ result: DeHubNFT[] }> {
-  return apiCall<{ result: DeHubNFT[] }>("/api/savedPosts", {
-    params: { page, unit },
+export async function getSavedPosts(page: number = 1, limit: number = 20): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
+  return apiCall<{ result: DeHubNFT[]; pagination?: any }>("/api/savedPosts", {
+    params: { page, limit },
     requiresAuth: true,
   });
 }
 
 /**
  * Get user's liked posts
- * Uses GET /api/liked_videos with contentType, limit, page (1-based)
+ * Uses GET /api/liked_videos with limit (items per page) and page (1-based)
  */
 export async function getLikedPosts(
   page: number = 1, 
   limit: number = 20, 
-  contentType: 'video' | 'post' | 'all' = 'all'
-): Promise<{ result: { items: DeHubNFT[]; totalCount: number } }> {
-  return apiCall<{ result: { items: DeHubNFT[]; totalCount: number } }>("/api/liked_videos", {
-    params: { page, limit, contentType },
+): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
+  return apiCall<{ result: DeHubNFT[]; pagination?: any }>("/api/liked_videos", {
+    params: { page, limit },
     requiresAuth: true,
   });
 }
@@ -1147,15 +1184,19 @@ export async function getUsersCount(): Promise<number> {
 
 /**
  * Check if current user follows a target user
- * GET /api/is_following?following={address}
+ * GET /api/is_following?target={address}
  */
 export async function isFollowing(targetAddress: string): Promise<boolean> {
-  const response = await apiCall<{ result: boolean } | boolean>("/api/is_following", {
-    params: { following: targetAddress },
+  const response = await apiCall<{ result: { isFollowing: boolean } } | { result: boolean } | boolean>("/api/is_following", {
+    params: { target: targetAddress },
     requiresAuth: true,
   });
   if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
+    const result = (response as any).result;
+    if (typeof result === 'object' && 'isFollowing' in result) {
+      return result.isFollowing;
+    }
+    return result;
   }
   return response as boolean;
 }
