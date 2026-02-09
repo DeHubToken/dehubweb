@@ -14,8 +14,6 @@ import { getAccountByUsername } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 
 // Template bot avatar imports
-import avatarVrgl from '@/assets/avatars/vrgl.png';
-import avatarNotmaya from '@/assets/avatars/notmaya.png';
 import avatar0xkai from '@/assets/avatars/0xkai.png';
 import avatarXluna from '@/assets/avatars/xluna.png';
 import avatarMarcoV from '@/assets/avatars/marco_v.png';
@@ -115,8 +113,6 @@ async function fetchFreshAvatarByUsername(username: string): Promise<string | nu
  * These videos are shown as stories for template agents.
  */
 const TEMPLATE_VIDEO_URLS: Record<string, string> = {
-  'vrgl': 'https://assets.mixkit.co/videos/2213/2213-720.mp4',
-  'notmaya': 'https://assets.mixkit.co/videos/4793/4793-720.mp4',
   '0xkai': 'https://assets.mixkit.co/videos/39878/39878-720.mp4',
   'xluna': 'https://assets.mixkit.co/ngl4vwp6mhwm97fv0212vrgi6iw0',
   'marco_v': 'https://assets.mixkit.co/wwnepv77a959cjk6wicpxqosy1mu',
@@ -136,8 +132,6 @@ const TEMPLATE_VIDEO_URLS: Record<string, string> = {
  * Default avatar images for template bot accounts.
  */
 const TEMPLATE_AVATARS: Record<string, string> = {
-  'vrgl': avatarVrgl,
-  'notmaya': avatarNotmaya,
   '0xkai': avatar0xkai,
   'xluna': avatarXluna,
   'marco_v': avatarMarcoV,
