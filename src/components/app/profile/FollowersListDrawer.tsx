@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Users, UserPlus, UserMinus, X } from 'lucide-react';
+import { Loader2, Users, UserPlus, UserMinus } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,7 +10,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerClose,
 } from '@/components/ui/drawer';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { getFollowList, followUser, unfollowUser, type FollowListItem } from '@/lib/api/dehub';
@@ -211,11 +210,6 @@ export function FollowersListDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass className="max-h-[85vh]" hideHandle>
-        <DrawerClose asChild>
-          <button className="absolute top-4 right-4 p-2 rounded-xl hover:bg-white/10 transition-colors">
-            <X className="w-5 h-5 text-zinc-400" />
-          </button>
-        </DrawerClose>
         <DrawerHeader className="px-4 pb-2">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
