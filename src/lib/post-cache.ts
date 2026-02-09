@@ -10,6 +10,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import { getVoteCache } from '@/lib/vote-cache';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -136,10 +137,27 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
 }
 
 /**
+ * Merge any recent vote cache entry into NFT data
+ */
+function applyVoteCache(postId: string, nft: Partial<DeHubNFT>): Partial<DeHubNFT> {
+  const cached = getVoteCache(postId);
+  if (!cached) return nft;
+  return {
+    ...nft,
+    isLiked: cached.isLiked,
+    isDisliked: cached.isDisliked,
+    totalVotes: {
+      for: cached.likeCount,
+      against: cached.dislikeCount,
+    },
+  };
+}
+
+/**
  * Pre-cache video data before navigation
  */
 export function cacheVideoForNavigation(queryClient: QueryClient, video: VideoItem): void {
-  const nftData = videoItemToNFT(video);
+  const nftData = applyVoteCache(video.id, videoItemToNFT(video));
   queryClient.setQueryData(['single-post', video.id], nftData);
 }
 
@@ -147,7 +165,7 @@ export function cacheVideoForNavigation(queryClient: QueryClient, video: VideoIt
  * Pre-cache image post data before navigation
  */
 export function cacheImageForNavigation(queryClient: QueryClient, post: ImagePost): void {
-  const nftData = imagePostToNFT(post);
+  const nftData = applyVoteCache(post.id, imagePostToNFT(post));
   queryClient.setQueryData(['single-post', post.id], nftData);
 }
 
@@ -155,6 +173,6 @@ export function cacheImageForNavigation(queryClient: QueryClient, post: ImagePos
  * Pre-cache text post data before navigation
  */
 export function cacheTextPostForNavigation(queryClient: QueryClient, post: TextPost): void {
-  const nftData = textPostToNFT(post);
+  const nftData = applyVoteCache(post.id, textPostToNFT(post));
   queryClient.setQueryData(['single-post', post.id], nftData);
 }
