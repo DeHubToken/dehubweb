@@ -539,27 +539,33 @@ export default function ProfilePage() {
           : [];
         
         return (
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-3">
             {/* Render optimistic posts first (only on own profile, deduplicated) */}
             {filteredOptimisticPosts.map((op) => {
-              if (op.type === 'post') {
-                return <PostCard key={op.id} post={op.data as TextPost} />;
-              } else if (op.type === 'image') {
-                return <ImageCard key={op.id} post={op.data as ImagePost} />;
-              } else {
-                return <VideoCard key={op.id} video={op.data as VideoItem} />;
-              }
+              const card = op.type === 'post'
+                ? <PostCard key={op.id} post={op.data as TextPost} />
+                : op.type === 'image'
+                ? <ImageCard key={op.id} post={op.data as ImagePost} />
+                : <VideoCard key={op.id} video={op.data as VideoItem} />;
+              return (
+                <div key={op.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                  {card}
+                </div>
+              );
             })}
             
             {/* Render API content */}
             {ALL_CONTENT.map((item) => {
-              if (item.type === 'post') {
-                return <PostCard key={item.data.id} post={item.data as TextPost} />;
-              } else if (item.type === 'image') {
-                return <ImageCard key={item.data.id} post={item.data as ImagePost} />;
-              } else {
-                return <VideoCard key={item.data.id} video={item.data as VideoItem} />;
-              }
+              const card = item.type === 'post'
+                ? <PostCard key={item.data.id} post={item.data as TextPost} />
+                : item.type === 'image'
+                ? <ImageCard key={item.data.id} post={item.data as ImagePost} />
+                : <VideoCard key={item.data.id} video={item.data as VideoItem} />;
+              return (
+                <div key={item.data.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                  {card}
+                </div>
+              );
             })}
           </div>
         );
@@ -574,9 +580,11 @@ export default function ProfilePage() {
           );
         }
         return (
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-3">
             {PROFILE_POSTS.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <div key={post.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                <PostCard post={post} />
+              </div>
             ))}
           </div>
         );
@@ -591,9 +599,11 @@ export default function ProfilePage() {
           );
         }
         return (
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-3">
             {PROFILE_IMAGES.map((image) => (
-              <ImageCard key={image.id} post={image} />
+              <div key={image.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                <ImageCard post={image} />
+              </div>
             ))}
           </div>
         );
@@ -608,9 +618,11 @@ export default function ProfilePage() {
           );
         }
         return (
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-3">
             {ALL_PROFILE_VIDEOS.map((video) => (
-              <VideoCard key={video.id} video={video} />
+              <div key={video.id} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+                <VideoCard video={video} />
+              </div>
             ))}
           </div>
         );
