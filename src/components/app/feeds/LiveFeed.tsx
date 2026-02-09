@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
 import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import { TVChannelCard } from '@/components/app/tv';
+import { TVPreviewCard } from '@/components/app/tv';
 import { useQuery } from '@tanstack/react-query';
 import { getTVChannelsByCountry } from '@/lib/api/live-tv';
 
@@ -221,7 +221,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
                   {tvChannels.map((channel) => (
                     <div key={channel.id} className="flex-shrink-0 w-48 sm:w-56">
-                      <TVChannelCard channel={channel} />
+                      <TVPreviewCard channel={channel} />
                     </div>
                   ))}
                 </div>
