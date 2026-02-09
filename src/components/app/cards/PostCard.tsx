@@ -12,7 +12,7 @@
 import { useState, memo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -22,6 +22,8 @@ import { PostMetadata } from './PostMetadata';
 import { TranslatableText } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { DeletePostModal } from '../modals/DeletePostModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateTokenVisibility, type TokenVisibility } from '@/lib/api/dehub';
@@ -58,6 +60,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -143,6 +147,18 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                 <>
                   <div className="border-t border-white/10 my-1" />
                   <button
+                    onClick={() => setShowEditModal(true)}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Pencil className="w-5 h-5" /> Edit Post
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Trash2 className="w-5 h-5" /> Delete Post
+                  </button>
+                  <button
                     onClick={async () => {
                       const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
                       try {
@@ -213,6 +229,28 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         onOpenChange={setShowReportModal}
         tokenId={post.id}
         contentType="post"
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={post.id}
+        currentTitle={post.content?.slice(0, 140)}
+        currentDescription=""
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+        }}
+      />
+
+      {/* Delete Post Modal */}
+      <DeletePostModal
+        open={showDeleteModal}
+        onOpenChange={setShowDeleteModal}
+        tokenId={post.id}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+        }}
       />
     </div>
   );
