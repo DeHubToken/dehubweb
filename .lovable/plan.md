@@ -1,40 +1,37 @@
 
 
-# Fix: Old Likes Not Syncing Across All Feeds
+# Fix: Stale Closure Bug in Vote Cache Updates
 
 ## Problem
 
-The vote cache only captures votes cast during the current session. Posts you liked in a previous session rely entirely on API data. Since different feeds (Home, Videos, Profile) fetch independently, one feed may load with `isLiked: true` while another's cache still shows `isLiked: false`. The overlay pattern means the Home feed never remounts to pick up corrected data.
+The `handleVote` function in `ActionBar.tsx` uses `queueMicrotask` to write to the vote cache and patch feed caches. However, inside that microtask, it re-derives the new vote state from the **current closure values** (`isLiked`, `isDisliked`, `localLikeCount`, `localDislikeCount`). These are stale -- React's `setState` calls haven't committed yet, so the microtask reads pre-vote values and computes incorrect cache entries.
+
+This causes:
+- Like count showing 0 instead of 1 in some feeds
+- `isLiked` not being set to `true` in the cache
+- Inconsistent state across feeds
 
 ## Solution
 
-When `ActionBar` receives `isLiked: true` (or `isDisliked: true`) from its props (API data), and there's no active vote cache entry for that post, propagate that state to all other feed caches. This way, whichever feed loads the correct state first will push it to all others.
+Compute the new vote state **once, upfront** (before any `setState` calls), then use those computed values for both the optimistic `setState` calls AND the cache/feed-patch writes. No microtask needed.
 
 ## Technical Changes
 
 ### File: `src/components/app/cards/ActionBar.tsx`
 
-Add a new `useEffect` that fires when `initialIsLiked` or `initialIsDisliked` change. If either is `true` and there's no vote cache entry (meaning this is API-sourced, not a local vote), call `patchFeedCaches` to sync the state across all cached feeds:
+Refactor `handleVote` to:
 
-```typescript
-// Propagate API-sourced like/dislike state to all feed caches
-useEffect(() => {
-  if (!postId) return;
-  // Only propagate if the API says the user has voted AND there's no local override
-  if ((!initialIsLiked && !initialIsDisliked) || getVoteCache(postId)) return;
-  patchFeedCaches(queryClient, postId, {
-    isLiked: initialIsLiked,
-    isDisliked: initialIsDisliked,
-    likeCount: likeCount ?? 0,
-    dislikeCount: dislikeCount ?? 0,
-  });
-}, [initialIsLiked, initialIsDisliked, postId]);
+1. Compute `newLiked`, `newDisliked`, `newLikeCount`, `newDislikeCount` at the **top** of the function from the current state values (which are stable within the same render)
+2. Use those computed values to call `setState`, `setVoteCache`, and `patchFeedCaches` directly -- no `queueMicrotask`
+3. Remove the duplicated logic that currently exists inside the microtask
+
+```
+Before (broken):
+  setState(optimistic)  -->  queueMicrotask(re-derive from stale closure)
+
+After (fixed):
+  compute newState  -->  setState(newState)  -->  setVoteCache(newState)  -->  patchFeedCaches(newState)
 ```
 
-This is a single additional `useEffect` -- no new files, no new abstractions. When the Profile feed mounts and its `ActionBar` receives `isLiked: true` from the API, it will immediately patch the Home feed's React Query cache, so the hidden Home feed `ActionBar` gets updated props.
+This is a single function refactor in one file. No new files or dependencies needed.
 
-## What This Fixes
-
-- Like a post in a previous session, open the app -- like shows on ALL feeds
-- Any feed that loads the correct state first propagates it everywhere
-- Works alongside the existing vote cache for new votes
