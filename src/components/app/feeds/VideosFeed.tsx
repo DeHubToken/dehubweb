@@ -813,7 +813,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         <FilteredEmptyState />
       ) : (
         <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
-          <div className="space-y-3">
+          <div className="space-y-5">
             {/* Skip first 3 videos ONLY if featured row is shown (only for "Latest" sort), then insert carousels at intervals */}
             {(videos.length >= 3 && selectedSort.value === 'latest' ? videos.slice(3) : videos).map((video, index) => {
               const elements: React.ReactNode[] = [];
