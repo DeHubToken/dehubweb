@@ -1,21 +1,26 @@
 
 
-## Fix Post Modal Color Inconsistencies
+# Fix: DMs Failing to Send
 
-### Problem
-Three color issues in the post creation modal:
-1. **Shorts destination badge** shows in green (emerald) when a video qualifies as a Short
-2. **Music destination badge** shows in purple when a video is marked as music
-3. **Music video toggle button** turns green (emerald) when clicked, instead of staying consistent
+## Problem
+The `sendMessage` function in `src/lib/api/dehub.ts` sends all messages (including plain text) to `/api/dm/upload` using `FormData`. This endpoint is designed for file/media uploads. Regular text messages should be sent via the `/api/dm/tnx` endpoint using JSON, which is the standard DM transaction endpoint (already used for marking messages as read and referenced in conversation creation).
 
-All of these should use the standard neutral liquid glass styling to match the rest of the UI.
+## Solution
+Refactor `sendMessage` to use the correct endpoint based on message type:
 
-### Changes
+1. **Text messages** -- Send via `POST /api/dm/tnx` with JSON body containing `conversationId` (or `receiver` for new conversations), `content`, and `sender`
+2. **Media messages** (image, gif, audio, video) -- Continue using `POST /api/dm/upload` with FormData since that endpoint handles file attachments
 
-**1. `src/features/post/components/PostContentArea.tsx`** (lines 693-698)
-- Remove colored badge styling for Shorts, Music, and Live destinations
-- Apply uniform neutral styling (`bg-white/10 text-zinc-300`) to all destination badges, keeping them visually consistent
+## Technical Details
 
-**2. `src/features/post/components/PostMediaPreview.tsx`** (lines 808-812)
-- Change the music video toggle's active state from `bg-emerald-500/40 border-emerald-400/40` to a neutral active state like `bg-white/20 border-white/30` so it doesn't flash green when clicked
+### File: `src/lib/api/dehub.ts` (sendMessage function, ~lines 2364-2462)
 
+Changes:
+- Split the logic into two paths based on whether the message has media
+- For text-only messages: use `apiCall` helper with JSON body to `POST /api/dm/tnx`
+  - Body: `{ sender, conversationId, content, type }` (or `receiver` instead of `conversationId` for new conversations)
+- For media messages: keep the existing FormData + `/api/dm/upload` flow
+- Both paths share the same response normalization logic
+
+### No other files need changes
+The hook (`useSendMessage` in `use-messages.ts`) and the component (`DirectMessageChat.tsx`) call `sendMessage` with the same signature, so the fix is isolated to the API layer.
