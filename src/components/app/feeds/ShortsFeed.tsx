@@ -112,14 +112,14 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
   return {
     id,
     type: 'short',
-    username: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'user',
-    // Use mintername for the @handle, not display name
-    handle: nft.mintername || nft.creator?.username || 'user',
+    username: nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
+    // Use minterUsername for the @handle, not display name
+    handle: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
     avatar: avatarUrl || (minterAddress ? `https://api.dicebear.com/7.x/identicon/svg?seed=${minterAddress}` : undefined),
     likes: String(nft.totalVotes?.for || nft.like_count || 0),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
-    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || '',
+    videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
     description: nft.description || nft.name || nft.title || '',
     sound: 'Original Sound',
     comments: formatLikes(nft.commentCount || nft.comment_count || 0),
@@ -127,7 +127,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     views: formatLikes(viewCount),
     durationSeconds: Math.round(durationSeconds),
     uploadedAgo: nft.uploadedAgo || nft.createdAt || '1d ago',
-    creatorUsername: nft.mintername || nft.creator?.username || 'user',
+    creatorUsername: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     creatorId: minterAddress,
     displayName: nft.minterDisplayName || undefined,
   } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
