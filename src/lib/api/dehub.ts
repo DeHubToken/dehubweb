@@ -409,17 +409,22 @@ async function apiCall<T>(
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     
-    // Detect auth failures (401 Unauthorized, 403 Forbidden, or auth-related messages)
+    // Detect auth failures (401 Unauthorized, or 403 with auth-related messages)
     const errorMessage = (errorData.message || errorData.error || '').toLowerCase();
-    if (
+    const isAuthError = 
       response.status === 401 || 
-      response.status === 403 || 
       errorMessage.includes('unauthorized') ||
       errorMessage.includes('invalid token') ||
       errorMessage.includes('token expired') ||
-      errorMessage.includes('jwt')
-    ) {
-      // Clear stale session
+      errorMessage.includes('jwt');
+
+    // A 403 is only an auth error if the message is auth-related
+    if (response.status === 403 && isAuthError) {
+      clearAuthSession();
+      throw new AuthenticationError('Session expired. Please sign in again.');
+    }
+
+    if (response.status === 401) {
       clearAuthSession();
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
