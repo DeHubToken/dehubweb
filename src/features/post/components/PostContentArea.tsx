@@ -690,13 +690,7 @@ export function PostContentArea({
                   {destinations.map(dest => (
                     <span
                       key={dest}
-                      className={cn(
-                        "text-xs px-1.5 py-0.5 rounded-lg",
-                        dest === 'Shorts' ? 'bg-emerald-500/20 text-emerald-400' :
-                        dest === 'Live' ? 'bg-red-500/20 text-red-400' :
-                        dest === 'Music' ? 'bg-purple-500/20 text-purple-400' :
-                        'bg-zinc-800 text-zinc-400'
-                      )}
+                      className="text-xs px-1.5 py-0.5 rounded-lg bg-white/10 text-zinc-300"
                     >
                       {dest}
                     </span>
