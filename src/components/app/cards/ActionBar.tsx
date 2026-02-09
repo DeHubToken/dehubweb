@@ -13,7 +13,7 @@
  * ```
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -94,23 +94,31 @@ export function ActionBar({
   const [localDislikeCount, setLocalDislikeCount] = useState(dislikeCount ?? 0);
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
+  // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
+  const lastVoteTimeRef = useRef(0);
+  const VOTE_GUARD_MS = 10000; // ignore prop syncs for 10s after a local vote
+
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   
-  // Sync local state with props when they change (e.g., after data refetch or auth change)
+  // Sync local state with props when they change, but skip if user recently voted
   useEffect(() => {
+    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
     setIsLiked(initialIsLiked);
   }, [initialIsLiked]);
 
   useEffect(() => {
+    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
     setIsDisliked(initialIsDisliked);
   }, [initialIsDisliked]);
 
   useEffect(() => {
+    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
     setLocalLikeCount(likeCount ?? 0);
   }, [likeCount]);
 
   useEffect(() => {
+    if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
     setLocalDislikeCount(dislikeCount ?? 0);
   }, [dislikeCount]);
   
@@ -131,7 +139,7 @@ export function ActionBar({
     const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
 
     setIsVoting(true);
-    
+    lastVoteTimeRef.current = Date.now();
     // Optimistic update with animation trigger
     if (isRemovingVote) {
       // Removing current vote
