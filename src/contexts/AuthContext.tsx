@@ -113,7 +113,7 @@ function mapWalletProvider(wallet: WalletProvider): string {
     case 'trust':
       return WALLET_ADAPTERS.METAMASK;
     case 'phantom':
-      return 'phantom'; // WALLET_ADAPTERS.PHANTOM
+      return WALLET_ADAPTERS.METAMASK; // Phantom injects window.ethereum on EVM chains
     case 'walletconnect':
       return WALLET_ADAPTERS.WALLET_CONNECT_V2;
     case 'coinbase':
