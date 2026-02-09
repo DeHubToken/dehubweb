@@ -407,12 +407,14 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
               />
 
               {/* View count */}
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 bg-zinc-800/80 rounded-xl flex items-center justify-center">
-                  <Eye className="w-6 h-6 text-white" />
+              {viewCount !== null && (
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-12 h-12 bg-zinc-800/80 rounded-xl flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-white text-xs">{formatCount(viewCount)}</span>
                 </div>
-                <span className="text-white text-xs">{formatCount(viewCount)}</span>
-              </div>
+              )}
 
               <ActionButton
                 icon={Share2}
@@ -559,10 +561,12 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                 </button>
 
                 {/* View Count */}
-                <div className="flex flex-col items-center gap-1">
-                  <Eye className="w-8 h-8 text-white drop-shadow-lg" />
-                  <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(viewCount)}</span>
-                </div>
+                {viewCount !== null && (
+                  <div className="flex flex-col items-center gap-1">
+                    <Eye className="w-8 h-8 text-white drop-shadow-lg" />
+                    <span className="text-white text-xs font-medium drop-shadow-lg">{formatCount(viewCount)}</span>
+                  </div>
+                )}
                 
                 {/* Share */}
                 <button
@@ -612,11 +616,15 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
                       {currentStory.username ? `@${currentStory.username}` : `${currentStory.wallet_address.slice(0, 6)}...`}
                     </p>
                     <div className="flex items-center gap-2 text-white/60 text-xs lg:text-sm">
-                      <span className="flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        {formatCount(viewCount)}
-                      </span>
-                      <span>•</span>
+                      {viewCount !== null && (
+                        <>
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-3 h-3" />
+                            {formatCount(viewCount)}
+                          </span>
+                          <span>•</span>
+                        </>
+                      )}
                       <span>{formatCount(likes)} {likes === 1 ? 'like' : 'likes'}</span>
                     </div>
                   </div>
