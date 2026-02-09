@@ -287,7 +287,15 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
-    const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
+    // Filter to only video content — exclude text-only posts and images
+    const videosOnly = allRawNFTs.filter(nft => {
+      const hasVideo = !!(nft.videoUrl || nft.media_url);
+      const postType = (nft as any).postType || nft.media_type;
+      // Exclude explicit non-video types
+      if (postType === 'image' || postType === 'text') return false;
+      return hasVideo;
+    });
+    const dateFiltered = filterByDate(videosOnly, selectedUploadDate.value);
     const sorted = applySorting(dateFiltered, selectedSort.value);
     return sorted.map((nft, index) => mapToShortVideo(nft, index));
   }, [allRawNFTs, selectedSort.value, selectedUploadDate.value]);
