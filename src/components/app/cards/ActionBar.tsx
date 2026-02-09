@@ -22,6 +22,7 @@ import { motion } from 'framer-motion';
 import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { getVoteCache, setVoteCache } from '@/lib/vote-cache';
 import {
   Drawer,
   DrawerContent,
@@ -87,38 +88,45 @@ export function ActionBar({
   shareCount,
   isOptimistic = false,
 }: ActionBarProps) {
+  // On mount, check global vote cache for recent votes on this post
+  const cachedVote = postId ? getVoteCache(postId) : null;
+
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(initialIsLiked);
-  const [isDisliked, setIsDisliked] = useState(initialIsDisliked);
-  const [localLikeCount, setLocalLikeCount] = useState(likeCount ?? 0);
-  const [localDislikeCount, setLocalDislikeCount] = useState(dislikeCount ?? 0);
+  const [isLiked, setIsLiked] = useState(cachedVote ? cachedVote.isLiked : initialIsLiked);
+  const [isDisliked, setIsDisliked] = useState(cachedVote ? cachedVote.isDisliked : initialIsDisliked);
+  const [localLikeCount, setLocalLikeCount] = useState(cachedVote ? cachedVote.likeCount : (likeCount ?? 0));
+  const [localDislikeCount, setLocalDislikeCount] = useState(cachedVote ? cachedVote.dislikeCount : (dislikeCount ?? 0));
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
-  const lastVoteTimeRef = useRef(0);
+  const lastVoteTimeRef = useRef(cachedVote ? Date.now() : 0);
   const VOTE_GUARD_MS = 10000; // ignore prop syncs for 10s after a local vote
 
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   
-  // Sync local state with props when they change, but skip if user recently voted
+  // Sync local state with props when they change, but skip if user recently voted (or cache active)
   useEffect(() => {
     if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+    if (postId && getVoteCache(postId)) return;
     setIsLiked(initialIsLiked);
   }, [initialIsLiked]);
 
   useEffect(() => {
     if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+    if (postId && getVoteCache(postId)) return;
     setIsDisliked(initialIsDisliked);
   }, [initialIsDisliked]);
 
   useEffect(() => {
     if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+    if (postId && getVoteCache(postId)) return;
     setLocalLikeCount(likeCount ?? 0);
   }, [likeCount]);
 
   useEffect(() => {
     if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+    if (postId && getVoteCache(postId)) return;
     setLocalDislikeCount(dislikeCount ?? 0);
   }, [dislikeCount]);
   
@@ -180,6 +188,25 @@ export function ActionBar({
     
     // Reset animation state after animation completes
     setTimeout(() => setJustVoted(null), 400);
+
+    // We need to write to the global vote cache after state settles.
+    // Use a microtask so the functional setState calls above have resolved.
+    queueMicrotask(() => {
+      // Compute new values inline (mirrors the optimistic logic above)
+      let newLiked = isLiked, newDisliked = isDisliked;
+      let newLikeCount = localLikeCount, newDislikeCount = localDislikeCount;
+      if (isRemovingVote) {
+        if (vote) { newLiked = false; newLikeCount = Math.max(0, newLikeCount - 1); }
+        else { newDisliked = false; newDislikeCount = Math.max(0, newDislikeCount - 1); }
+      } else if (isSwitchingVote) {
+        if (vote) { newLiked = true; newDisliked = false; newLikeCount++; newDislikeCount = Math.max(0, newDislikeCount - 1); }
+        else { newDisliked = true; newLiked = false; newDislikeCount++; newLikeCount = Math.max(0, newLikeCount - 1); }
+      } else {
+        if (vote) { newLiked = true; newLikeCount++; }
+        else { newDisliked = true; newDislikeCount++; }
+      }
+      setVoteCache(postId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount });
+    });
 
     try {
       await voteOnPost({ tokenId: parseInt(postId, 10), voteType: vote ? 'for' : 'against' });
