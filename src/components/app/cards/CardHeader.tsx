@@ -23,6 +23,7 @@ import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
+import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -78,10 +79,11 @@ export function CardHeader({
 
   // Use live avatar from cache, falling back to feed-provided avatar
   const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
+  const agentFallback = getAgentAvatarFallback(creatorId);
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
   const hasRealAvatar = liveAvatarUrl && liveAvatarUrl.startsWith('http') && !imageError;
-  const avatarSrc = hasRealAvatar ? liveAvatarUrl : undefined;
+  const avatarSrc = hasRealAvatar ? liveAvatarUrl : agentFallback;
 
   const handleProfileClick = () => {
     // Prefer username-based navigation, fallback to ID
