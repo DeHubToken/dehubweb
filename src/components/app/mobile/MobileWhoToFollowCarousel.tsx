@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Loader2, ChevronRight } from 'lucide-react';
+import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -67,7 +67,7 @@ export function MobileWhoToFollowCarousel() {
   });
 
   // Fetch suggestions
-  const { data: allUsers, isLoading } = useQuery({
+  const { data: allUsers, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['mobile-suggestions'],
     queryFn: fetchSuggestions,
     staleTime: 5 * 60 * 1000,
@@ -162,8 +162,31 @@ export function MobileWhoToFollowCarousel() {
     );
   }
 
+
+
   if (suggestions.length === 0) {
-    return null;
+    return (
+      <div className="lg:hidden py-4 border-y border-zinc-800/50">
+        <div className="flex flex-col items-center justify-center gap-3 py-6">
+          <UserPlus className="w-5 h-5 text-zinc-500" />
+          <span className="text-sm text-zinc-500">No follow suggestions yet</span>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="h-8 px-4 text-xs font-semibold rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
+          >
+            {isFetching ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />
+            ) : (
+              <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
+            )}
+            Refresh
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
