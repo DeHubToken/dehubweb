@@ -161,7 +161,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
                 <div className="flex items-center justify-between px-1">
                   <h2 className="font-bold text-white flex items-center gap-2">
                     <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    Live Streams
+                    Streams
                   </h2>
                   <button className="text-red-400 text-sm hover:underline">Show All</button>
                 </div>
