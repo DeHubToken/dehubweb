@@ -7,13 +7,13 @@ import { SidebarChat } from './SidebarChat';
 type TabType = 'follow' | 'leaderboard' | 'chat';
 
 const tabs: { id: TabType; icon: typeof SquareUserRound }[] = [
-  { id: 'follow', icon: SquareUserRound },
   { id: 'leaderboard', icon: Trophy },
+  { id: 'follow', icon: SquareUserRound },
   { id: 'chat', icon: MessagesSquare },
 ];
 
 export function TabbedSidePanel() {
-  const [activeTab, setActiveTab] = useState<TabType>('follow');
+  const [activeTab, setActiveTab] = useState<TabType>('leaderboard');
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden">
