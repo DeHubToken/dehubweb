@@ -1,43 +1,36 @@
 
 
-# Fix: Followers List Returns Empty Due to Changed API Response Shape
+# Fix: Story Views Still Flashing "0"
 
-## Problem
+## Root Cause
 
-The `/api/follow_list` endpoint now returns a **paginated** response with user data nested inside each item:
+The previous fix correctly changed the *return type* to `number | null`, but there are two remaining issues that still cause `0` to appear:
 
-```text
-Old: { result: [ { address, username, ... } ] }
-New: { result: { items: [ { followedAt, user: { address, username, ... } } ], pagination: {...} } }
-```
+1. **`queryFn` returns `0` as a fallback** (line 31 and line 40) -- once the query resolves with `0`, `fetchedCount` becomes `0`. Since `0` is not nullish, the `??` chain (`fetchedCount ?? cache ?? null`) stops at `0` and never reaches `null`.
 
-The current `getFollowList` function unwraps `response.result` and expects it to be an array. Instead it gets an object `{ items: [...], pagination: {...} }`, which fails the `Array.isArray` check and returns `[]` -- hence "No followers yet."
+2. **Error fallback returns `0`** (line 36: `viewCountCache.get(storyId) ?? 0`) -- if the fetch fails and there's no cache, it returns `0` instead of letting the value stay unknown.
 
-## Changes
+In short: the query eagerly resolves to `0`, and `??` treats `0` as a valid value, so the UI sees "0 views" before the real count arrives.
 
-### File: `src/lib/api/dehub.ts` (lines 985-1019)
+## Fix
 
-1. Update `getFollowList` to handle the new paginated response shape:
-   - After unwrapping `result`, check if it's an object with an `items` array
-   - Extract `items` from `result.items` when present
-   - Each item is now `{ followedAt, user: {...} }` -- extract the `.user` object and map it to `FollowListItem`
-   - Keep backward compatibility with the old flat array format
+### File: `src/hooks/use-story-views.ts`
 
-2. Map the nested `user` object fields (`address`, `username`, `displayName`, `avatarImageUrl`, `followers`, `isPrivate`, `hideFollowers`) to the existing `FollowListItem` interface.
+1. Change `queryFn` to return `null` instead of `0` for all fallback paths (no storyId, fetch error with no cache, API returns no count). Change the return type to `Promise<number | null>`.
 
-The updated logic will be roughly:
+2. Update the `viewCount` derivation to treat `fetchedCount === 0` differently from `fetchedCount === null`:
+   - Use an explicit check: if `fetchedCount` is a number (including 0), use it. If it's `null`/`undefined`, fall back to cache, then `null`.
 
 ```
-const raw = response.result;
-let items;
-if (raw && typeof raw === 'object' && 'items' in raw) {
-  // New paginated format: { items: [{ followedAt, user }], pagination }
-  items = raw.items.map(entry => entry.user || entry);
-} else if (Array.isArray(raw)) {
-  items = raw; // Old format
-} else {
-  return [];
-}
+const viewCount: number | null = storyId
+  ? (fetchedCount !== undefined && fetchedCount !== null
+      ? fetchedCount
+      : viewCountCache.get(storyId) ?? null)
+  : null;
 ```
 
-No other files need changes -- `FollowersListDrawer.tsx` and `mapFollowListItem` already handle the `FollowListItem` shape correctly. The `needsEnrichment` path (batch-avatars) will no longer be needed since the new API already returns full user objects, but it stays as a safe fallback.
+3. Only cache when the count is a real number (not null):
+   - In `queryFn`, only call `viewCountCache.set()` when count is a real number from the API.
+
+This ensures `viewCount` stays `null` until the API actually responds with a number, and the UI hides the view count element entirely during that window.
+
