@@ -12,7 +12,7 @@
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -23,6 +23,8 @@ import { PostMetadata } from './PostMetadata';
 import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { DeletePostModal } from '../modals/DeletePostModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
@@ -354,6 +356,8 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
@@ -475,6 +479,18 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
                   <>
                     <div className="border-t border-white/10 my-1" />
                     <button
+                      onClick={() => setShowEditModal(true)}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <Pencil className="w-5 h-5" /> Edit Post
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteModal(true)}
+                      className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <Trash2 className="w-5 h-5" /> Delete Post
+                    </button>
+                    <button
                       onClick={async () => {
                         const next: TokenVisibility = visibility === 'public' ? 'private' : 'public';
                         try {
@@ -572,6 +588,30 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         onOpenChange={setShowReportModal}
         tokenId={post.id}
         contentType="image"
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={post.id}
+        currentTitle={post.title}
+        currentDescription={post.description}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        }}
+      />
+
+      {/* Delete Post Modal */}
+      <DeletePostModal
+        open={showDeleteModal}
+        onOpenChange={setShowDeleteModal}
+        tokenId={post.id}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        }}
       />
     </div>
   );

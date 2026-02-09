@@ -12,7 +12,7 @@
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
@@ -23,10 +23,13 @@ import { PostMetadata } from './PostMetadata';
 import { TranslatableText, SharedTranslationProvider } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { DeletePostModal } from '../modals/DeletePostModal';
 import { CommentsSection } from './CommentsSection';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { useAuth } from '@/contexts/AuthContext';
 
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import {
@@ -427,11 +430,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+  const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -888,6 +895,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                   <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                     <Ban className="w-5 h-5" /> Block Creator
                   </button>
+                  {isOwnPost && (
+                    <>
+                      <div className="border-t border-white/10 my-1" />
+                      <button
+                        onClick={() => setShowEditModal(true)}
+                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                      >
+                        <Pencil className="w-5 h-5" /> Edit Post
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteModal(true)}
+                        className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                      >
+                        <Trash2 className="w-5 h-5" /> Delete Post
+                      </button>
+                    </>
+                  )}
                 </div>
               </DrawerContent>
             </Drawer>
@@ -1349,9 +1373,50 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             >
               <Link2 className="w-5 h-5" /> Copy Link
             </button>
+            {isOwnPost && (
+              <>
+                <div className="border-t border-white/10 my-1" />
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); setShowEditModal(true); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Pencil className="w-5 h-5" /> Edit Post
+                </button>
+                <button
+                  onClick={() => { setShowOptionsDrawer(false); setShowDeleteModal(true); }}
+                  className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Trash2 className="w-5 h-5" /> Delete Post
+                </button>
+              </>
+            )}
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={video.id}
+        currentTitle={video.title}
+        currentDescription={video.description}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+        }}
+      />
+
+      {/* Delete Post Modal */}
+      <DeletePostModal
+        open={showDeleteModal}
+        onOpenChange={setShowDeleteModal}
+        tokenId={video.id}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+        }}
+      />
     </div>
   );
 });

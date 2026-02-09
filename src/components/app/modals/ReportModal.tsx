@@ -2,9 +2,10 @@
  * Report Modal Component
  * ======================
  * Drawer for reporting content violations.
+ * Uses the v2 Reports API with dynamic reasons from backend.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Flag, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,32 +18,76 @@ import {
   DrawerTitle,
   DrawerDescription,
 } from '@/components/ui/drawer';
-import { submitReport } from '@/lib/api/dehub';
+import { reportContent, reportUser, getContentReportReasons, getUserReportReasons, type ReportReason } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 
-const REPORT_REASONS = [
-  { value: 'spam', label: 'Spam or misleading' },
-  { value: 'harassment', label: 'Harassment or bullying' },
-  { value: 'violence', label: 'Violence or dangerous content' },
-  { value: 'nudity', label: 'Explicit sexual content' },
-  { value: 'copyright', label: 'Copyright infringement' },
-  { value: 'scam', label: 'Scam or fraud' },
-  { value: 'other', label: 'Other' },
-] as const;
+/** Fallback reasons if API call fails */
+const FALLBACK_CONTENT_REASONS: ReportReason[] = [
+  { id: 'spam', label: 'Spam or misleading' },
+  { id: 'harassment', label: 'Harassment or bullying' },
+  { id: 'violence', label: 'Violence or dangerous content' },
+  { id: 'nudity', label: 'Explicit sexual content' },
+  { id: 'copyright', label: 'Copyright infringement' },
+  { id: 'scam', label: 'Scam or fraud' },
+  { id: 'other', label: 'Other' },
+];
+
+const FALLBACK_USER_REASONS: ReportReason[] = [
+  { id: 'spam', label: 'Spam account' },
+  { id: 'harassment', label: 'Harassment or bullying' },
+  { id: 'impersonation', label: 'Impersonation' },
+  { id: 'scam', label: 'Scam or fraud' },
+  { id: 'other', label: 'Other' },
+];
 
 interface ReportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  tokenId: number | string;
+  /** Token ID for content reports */
+  tokenId?: number | string;
+  /** User ID/address for user reports */
+  userId?: string;
+  /** Whether this is a content or user report */
+  reportType?: 'content' | 'user';
   contentType?: 'post' | 'video' | 'image' | 'audio';
 }
 
-export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' }: ReportModalProps) {
+export function ReportModal({
+  open,
+  onOpenChange,
+  tokenId,
+  userId,
+  reportType = 'content',
+  contentType = 'post',
+}: ReportModalProps) {
   const { isAuthenticated } = useAuth();
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reasons, setReasons] = useState<ReportReason[]>([]);
+  const [isLoadingReasons, setIsLoadingReasons] = useState(false);
+
+  // Fetch reasons from API when modal opens
+  useEffect(() => {
+    if (!open) return;
+
+    const fetchReasons = async () => {
+      setIsLoadingReasons(true);
+      try {
+        const result = reportType === 'user'
+          ? await getUserReportReasons()
+          : await getContentReportReasons();
+        setReasons(result.length > 0 ? result : (reportType === 'user' ? FALLBACK_USER_REASONS : FALLBACK_CONTENT_REASONS));
+      } catch {
+        setReasons(reportType === 'user' ? FALLBACK_USER_REASONS : FALLBACK_CONTENT_REASONS);
+      } finally {
+        setIsLoadingReasons(false);
+      }
+    };
+
+    fetchReasons();
+  }, [open, reportType]);
 
   const handleSubmit = async () => {
     if (!selectedReason) {
@@ -57,29 +102,31 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
 
     setIsSubmitting(true);
     try {
-      const numericTokenId = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId;
-      
-      if (isNaN(numericTokenId)) {
-        toast.error('Invalid content ID');
-        return;
+      if (reportType === 'user' && userId) {
+        await reportUser({
+          userId,
+          reason: selectedReason,
+          description: description.trim() || undefined,
+        });
+      } else if (tokenId !== undefined) {
+        const numericTokenId = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId;
+        if (isNaN(numericTokenId)) {
+          toast.error('Invalid content ID');
+          return;
+        }
+        await reportContent({
+          tokenId: numericTokenId,
+          reason: selectedReason,
+          description: description.trim() || undefined,
+        });
       }
-      
-      const result = await submitReport({
-        tokenId: numericTokenId,
-        reason: selectedReason,
-        description: description.trim() || undefined,
-      });
 
-      if (result.success) {
-        toast.success(result.message || 'Report submitted successfully. Our team will review it.');
-        handleClose();
-      } else {
-        toast.error('Failed to submit report. Please try again.');
-      }
+      toast.success('Report submitted successfully. Our team will review it.');
+      handleClose();
     } catch (error: any) {
       console.error('[ReportModal] Submit error:', error);
       if (error.message?.includes('already reported')) {
-        toast.error('You have already reported this content');
+        toast.error('You have already reported this');
       } else if (error.message?.includes('Unauthorized')) {
         toast.error('Please log in to submit a report');
       } else {
@@ -96,16 +143,18 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
     onOpenChange(false);
   };
 
+  const title = reportType === 'user' ? 'Report User' : `Report ${contentType}`;
+
   return (
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerContent glass className="max-h-[90vh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Flag className="w-5 h-5 text-red-500" />
-            Report {contentType}
+            {title}
           </DrawerTitle>
           <DrawerDescription className="text-zinc-400">
-            Help us understand what's wrong with this content
+            Help us understand what's wrong
           </DrawerDescription>
         </DrawerHeader>
 
@@ -118,35 +167,41 @@ export function ReportModal({ open, onOpenChange, tokenId, contentType = 'post' 
             <Label className="text-sm font-medium text-zinc-300">
               Why are you reporting this?
             </Label>
-            <RadioGroup 
-              value={selectedReason} 
-              onValueChange={setSelectedReason}
-              className="space-y-2"
-            >
-              {REPORT_REASONS.map((reason) => (
-                <div
-                  key={reason.value}
-                  className={`flex items-center space-x-3 rounded-xl p-3 cursor-pointer transition-colors ${
-                    selectedReason === reason.value
-                      ? 'bg-white/10 border border-white/20'
-                      : 'bg-white/5 border border-transparent hover:bg-white/10'
-                  }`}
-                  onClick={() => setSelectedReason(reason.value)}
-                >
-                  <RadioGroupItem 
-                    value={reason.value} 
-                    id={reason.value} 
-                    className="border-white/40 text-white data-[state=checked]:bg-white data-[state=checked]:border-white"
-                  />
-                  <Label 
-                    htmlFor={reason.value} 
-                    className="text-sm text-white cursor-pointer flex-1"
+            {isLoadingReasons ? (
+              <div className="flex items-center justify-center py-6">
+                <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
+              </div>
+            ) : (
+              <RadioGroup 
+                value={selectedReason} 
+                onValueChange={setSelectedReason}
+                className="space-y-2"
+              >
+                {reasons.map((reason) => (
+                  <div
+                    key={reason.id}
+                    className={`flex items-center space-x-3 rounded-xl p-3 cursor-pointer transition-colors ${
+                      selectedReason === reason.id
+                        ? 'bg-white/10 border border-white/20'
+                        : 'bg-white/5 border border-transparent hover:bg-white/10'
+                    }`}
+                    onClick={() => setSelectedReason(reason.id)}
                   >
-                    {reason.label}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+                    <RadioGroupItem 
+                      value={reason.id} 
+                      id={reason.id} 
+                      className="border-white/40 text-white data-[state=checked]:bg-white data-[state=checked]:border-white"
+                    />
+                    <Label 
+                      htmlFor={reason.id} 
+                      className="text-sm text-white cursor-pointer flex-1"
+                    >
+                      {reason.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            )}
           </div>
 
           {/* Additional Details */}
