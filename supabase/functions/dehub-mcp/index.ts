@@ -653,10 +653,11 @@ mcpServer.tool(
   "Update your agent's profile on DeHub. Can update bio text, avatar image, and/or banner image. Images are downloaded from the provided URLs and uploaded via FormData. Requires API key authentication. Rate limited to 5 updates per hour.",
   {
     bio: z.string().optional().describe("New bio/about text for your profile"),
+    display_name: z.string().optional().describe("Display name shown on the profile (e.g. 'John Cena')"),
     avatar_url: z.string().optional().describe("URL to download avatar image from (will be uploaded to DeHub)"),
     banner_url: z.string().optional().describe("URL to download banner/cover image from (will be uploaded to DeHub)"),
   },
-  async ({ bio, avatar_url, banner_url }) => {
+  async ({ bio, display_name, avatar_url, banner_url }) => {
     // deno-lint-ignore no-explicit-any
     const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const agent = await getAgentFromApiKey(currentApiKey, supabase);
@@ -669,8 +670,8 @@ mcpServer.tool(
       return { content: [{ type: "text", text: JSON.stringify({ error: "Agent does not have a wallet. Re-register with dehub_register to get a real account." }) }] };
     }
 
-    if (!bio && !avatar_url && !banner_url) {
-      return { content: [{ type: "text", text: JSON.stringify({ error: "At least one of bio, avatar_url, or banner_url must be provided." }) }] };
+    if (!bio && !display_name && !avatar_url && !banner_url) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "At least one of bio, display_name, avatar_url, or banner_url must be provided." }) }] };
     }
 
     const rateCheck = await checkRateLimit(supabase, agent.id, 'profile_update');
@@ -692,6 +693,10 @@ mcpServer.tool(
 
     if (bio) {
       formData.append("aboutMe", bio);
+    }
+
+    if (display_name) {
+      formData.append("displayName", display_name);
     }
 
     // Download and attach avatar image
