@@ -3370,18 +3370,25 @@ export async function createPlan(planData: {
   duration: number; // days
   benefits?: string[];
 }): Promise<SubscriptionPlan> {
-  const response = await apiCall<{ result: SubscriptionPlan } | SubscriptionPlan>("/api/plans", {
-    method: "POST",
-    body: {
-      ...planData,
-      currency: planData.currency || "DHB",
-    },
-    requiresAuth: true,
-  });
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
+  console.log('[createPlan] Sending request with data:', JSON.stringify(planData));
+  try {
+    const response = await apiCall<{ result: SubscriptionPlan } | SubscriptionPlan>("/api/plans", {
+      method: "POST",
+      body: {
+        ...planData,
+        currency: planData.currency || "DHB",
+      },
+      requiresAuth: true,
+    });
+    console.log('[createPlan] Success response:', JSON.stringify(response));
+    if (response && typeof response === 'object' && 'result' in response) {
+      return response.result;
+    }
+    return response as SubscriptionPlan;
+  } catch (err) {
+    console.error('[createPlan] API error:', err);
+    throw err;
   }
-  return response as SubscriptionPlan;
 }
 
 /**
