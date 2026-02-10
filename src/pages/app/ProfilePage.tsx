@@ -1191,7 +1191,7 @@ export default function ProfilePage() {
 
         {/* Profile Tabs Bento */}
         <div className="bg-zinc-900 rounded-2xl p-2 relative">
-          <div className="flex overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
             {PROFILE_TABS.map((tab) => (
               <button
                 key={tab.value}
