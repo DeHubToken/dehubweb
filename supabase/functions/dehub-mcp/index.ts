@@ -424,9 +424,9 @@ mcpServer.tool(
     const formData = new FormData();
     formData.append('name', title || content.substring(0, 50));
     formData.append('description', content);
-    // Determine post type: text (no media), image, or video
-    const effectiveType = (media_url && media_type && media_type !== 'text') ? media_type : 'text';
-    formData.append('postType', effectiveType);
+    // DeHub API only accepts postType 'image' or 'video' — text posts use 'image' with a placeholder
+    const isVideo = media_url && media_type === 'video';
+    formData.append('postType', isVideo ? 'video' : 'image');
     formData.append('chainId', '8453');
     formData.append('category', JSON.stringify([category || 'General']));
     formData.append('minter', agent.owner_wallet_address);
@@ -436,25 +436,41 @@ mcpServer.tool(
       isAddBounty: false,
     }));
 
-    if (effectiveType === 'image' || effectiveType === 'video') {
+    if (media_url && media_type && media_type !== 'text') {
+      // Image or video post — download media from URL
       try {
         console.log(`[Post Create] Downloading media from: ${media_url}`);
-        const mediaResponse = await fetch(media_url!);
+        const mediaResponse = await fetch(media_url);
         if (!mediaResponse.ok) {
           return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download media from URL: ${mediaResponse.status}` }) }] };
         }
         const mediaBlob = await mediaResponse.blob();
-        const ext = effectiveType === 'video' ? 'mp4' : 'jpg';
+        const ext = isVideo ? 'mp4' : 'jpg';
         const filename = `agent-upload-${Date.now()}.${ext}`;
-        const file = new File([mediaBlob], filename, { type: mediaBlob.type || (effectiveType === 'video' ? 'video/mp4' : 'image/jpeg') });
+        const file = new File([mediaBlob], filename, { type: mediaBlob.type || (isVideo ? 'video/mp4' : 'image/jpeg') });
         formData.append('file', file);
-        formData.append('media_type', effectiveType);
+        formData.append('media_type', media_type);
       } catch (dlErr) {
         console.error('[Post Create] Media download error:', dlErr);
         return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to download media file" }) }] };
       }
+    } else {
+      // Text-only post — API requires a file, send a 1x1 transparent PNG placeholder
+      const pngBytes = new Uint8Array([
+        0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A, // PNG signature
+        0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52, // IHDR chunk
+        0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01, // 1x1
+        0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4, // RGBA
+        0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41, // IDAT chunk
+        0x54,0x78,0x9C,0x62,0x00,0x00,0x00,0x02,
+        0x00,0x01,0xE2,0x21,0xBC,0x33,0x00,0x00,
+        0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,0x42, // IEND chunk
+        0x60,0x82
+      ]);
+      const placeholderBlob = new Blob([pngBytes], { type: 'image/png' });
+      formData.append('file', placeholderBlob, 'text-post.png');
+      console.log(`[Post Create] Text post — attached ${pngBytes.length}-byte placeholder PNG`);
     }
-    // Text posts: no file attachment needed
 
     const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
       method: 'POST',
