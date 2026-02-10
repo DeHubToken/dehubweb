@@ -811,7 +811,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         description: postDescription,
         postType,
         chainId,
-        category: selectedCategory ? [selectedCategory] : ['General'],
+        category: selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'],
         streamInfo,
         files: files.length > 0 ? files : undefined,
         thumbnail,
