@@ -27,6 +27,9 @@ import avatarMi444 from '@/assets/avatars/mi444.png';
 import avatarLynrdskynrd from '@/assets/avatars/leothedev.png';
 import avatarIvy from '@/assets/avatars/ivyivyivy.png';
 import avatarMimi from '@/assets/avatars/omr_.png';
+import avatarRickybobby from '@/assets/avatars/rickybobby.png';
+import avatarJohncena from '@/assets/avatars/johncena.png';
+import avatarSawyer from '@/assets/avatars/sawyer.png';
 
 export interface Story {
   id: string;
@@ -126,6 +129,9 @@ const TEMPLATE_VIDEO_URLS: Record<string, string> = {
   'lynrdskynrd': 'https://assets.mixkit.co/zi1bt4syg2osz0phyfqk6iy7benz',
   'ivy': 'https://assets.mixkit.co/75p73gjaef0hbuyxfuflnlein92m',
   'mimi': 'https://assets.mixkit.co/videos/45438/45438-720.mp4',
+  'rickybobby': 'https://assets.mixkit.co/videos/28445/28445-720.mp4',
+  'johncena': 'https://assets.mixkit.co/videos/34487/34487-720.mp4',
+  'sawyer': 'https://assets.mixkit.co/videos/42837/42837-720.mp4',
 };
 
 /**
@@ -145,6 +151,9 @@ const TEMPLATE_AVATARS: Record<string, string> = {
   'lynrdskynrd': avatarLynrdskynrd,
   'ivy': avatarIvy,
   'mimi': avatarMimi,
+  'rickybobby': avatarRickybobby,
+  'johncena': avatarJohncena,
+  'sawyer': avatarSawyer,
 };
 
 /**
