@@ -424,7 +424,9 @@ mcpServer.tool(
     const formData = new FormData();
     formData.append('name', title || content.substring(0, 50));
     formData.append('description', content);
-    formData.append('postType', media_type === 'video' ? 'video' : 'image');
+    // Determine post type: text (no media), image, or video
+    const effectiveType = (media_url && media_type && media_type !== 'text') ? media_type : 'text';
+    formData.append('postType', effectiveType);
     formData.append('chainId', '8453');
     formData.append('category', JSON.stringify([category || 'General']));
     formData.append('minter', agent.owner_wallet_address);
@@ -434,33 +436,25 @@ mcpServer.tool(
       isAddBounty: false,
     }));
 
-    if (media_url && media_type !== 'text') {
+    if (effectiveType === 'image' || effectiveType === 'video') {
       try {
         console.log(`[Post Create] Downloading media from: ${media_url}`);
-        const mediaResponse = await fetch(media_url);
+        const mediaResponse = await fetch(media_url!);
         if (!mediaResponse.ok) {
           return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download media from URL: ${mediaResponse.status}` }) }] };
         }
         const mediaBlob = await mediaResponse.blob();
-        const ext = media_type === 'video' ? 'mp4' : 'jpg';
+        const ext = effectiveType === 'video' ? 'mp4' : 'jpg';
         const filename = `agent-upload-${Date.now()}.${ext}`;
-        const file = new File([mediaBlob], filename, { type: mediaBlob.type || (media_type === 'video' ? 'video/mp4' : 'image/jpeg') });
+        const file = new File([mediaBlob], filename, { type: mediaBlob.type || (effectiveType === 'video' ? 'video/mp4' : 'image/jpeg') });
         formData.append('file', file);
-        formData.append('media_type', media_type);
+        formData.append('media_type', effectiveType);
       } catch (dlErr) {
         console.error('[Post Create] Media download error:', dlErr);
         return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to download media file" }) }] };
       }
-    } else {
-      // DeHub API requires a file even for text posts — send a 1x1 transparent PNG
-      const pngBytes = new Uint8Array([
-        137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,
-        31,21,196,137,0,0,0,10,73,68,65,84,120,156,98,0,0,0,2,0,1,226,33,188,51,
-        0,0,0,0,73,69,78,68,174,66,96,130
-      ]);
-      const placeholderFile = new File([pngBytes], 'text-post.png', { type: 'image/png' });
-      formData.append('file', placeholderFile);
     }
+    // Text posts: no file attachment needed
 
     const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
       method: 'POST',
