@@ -18,17 +18,24 @@ interface CreatePlanModalProps {
 }
 
 const DURATION_PRESETS = [
-  { label: '1 Week', days: 7 },
-  { label: '1 Month', days: 30 },
-  { label: '3 Months', days: 90 },
-  { label: '1 Year', days: 365 },
+  { label: '1 Month', months: 1, tier: 1 },
+  { label: '3 Months', months: 3, tier: 2 },
+  { label: '6 Months', months: 6, tier: 3 },
+  { label: '1 Year', months: 12, tier: 4 },
 ];
+
+// DHB token addresses per chain
+const DHB_TOKENS: Record<number, string> = {
+  8453: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', // Base
+  56: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D',   // BSC
+};
 
 export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [duration, setDuration] = useState(30);
+  const [duration, setDuration] = useState(1);
+  const [tier, setTier] = useState(1);
   const [benefits, setBenefits] = useState<string[]>(['']);
   
   const createPlanMutation = useCreatePlan();
@@ -54,20 +61,24 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
     const filteredBenefits = benefits.filter(b => b.trim());
     
     try {
+      const priceNum = parseFloat(price);
       await createPlanMutation.mutateAsync({
         name: name.trim(),
         description: description.trim() || undefined,
-        price: parseFloat(price),
-        currency: 'DHB',
         duration,
+        tier,
         benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
+        chains: [
+          { chainId: 8453, token: DHB_TOKENS[8453], price: priceNum },
+        ],
       });
 
       // Reset form
       setName('');
       setDescription('');
       setPrice('');
-      setDuration(30);
+      setDuration(1);
+      setTier(1);
       setBenefits(['']);
       onOpenChange(false);
     } catch (err) {
@@ -146,10 +157,10 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
             <div className="grid grid-cols-4 gap-2">
               {DURATION_PRESETS.map((preset) => (
                 <button
-                  key={preset.days}
-                  onClick={() => setDuration(preset.days)}
+                  key={preset.months}
+                  onClick={() => { setDuration(preset.months); setTier(preset.tier); }}
                   className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                    duration === preset.days
+                    duration === preset.months
                       ? 'bg-white/20 border-white/30 text-white'
                       : 'bg-white/5 border-white/10 text-zinc-400 hover:bg-white/10'
                   } border`}

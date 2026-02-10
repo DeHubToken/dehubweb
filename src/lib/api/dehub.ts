@@ -3256,16 +3256,27 @@ export async function updateTokenVisibility(
 /**
  * Subscription plan from the DeHub API
  */
+export interface SubscriptionPlanChain {
+  chainId: number;
+  token: string;
+  price: number;
+  isPublished?: boolean;
+  status?: boolean;
+}
+
 export interface SubscriptionPlan {
   _id?: string;
   id?: string;
-  creatorAddress: string;
+  address?: string;
+  creatorAddress?: string;
   name: string;
   description?: string;
-  price: number;
-  currency: string; // e.g., "DHB", "USDC"
-  duration: number; // Duration in days
+  price?: number;
+  currency?: string;
+  duration: number;
+  tier?: number;
   benefits?: string[];
+  chains?: SubscriptionPlanChain[];
   isActive?: boolean;
   subscriberCount?: number;
   createdAt?: string;
@@ -3365,19 +3376,16 @@ export async function getSubscription(subscriptionId: string): Promise<Subscript
 export async function createPlan(planData: {
   name: string;
   description?: string;
-  price: number;
-  currency?: string;
-  duration: number; // days
+  duration: number;
+  tier: number;
   benefits?: string[];
+  chains: { chainId: number; token: string; price: number }[];
 }): Promise<SubscriptionPlan> {
   console.log('[createPlan] Sending request with data:', JSON.stringify(planData));
   try {
     const response = await apiCall<{ result: SubscriptionPlan } | SubscriptionPlan>("/api/plans", {
       method: "POST",
-      body: {
-        ...planData,
-        currency: planData.currency || "DHB",
-      },
+      body: planData,
       requiresAuth: true,
     });
     console.log('[createPlan] Success response:', JSON.stringify(response));
