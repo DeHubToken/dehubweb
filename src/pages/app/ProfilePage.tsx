@@ -19,6 +19,7 @@ import { FollowersListDrawer } from '@/components/app/profile';
 import { cn } from '@/lib/utils';
 import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
+import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -181,7 +182,7 @@ export default function ProfilePage() {
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
     { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
     { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
-    { icon: Play, label: 'Songs', value: 'songs', count: 0 },
+    { icon: Play, label: 'Audio', value: 'songs', count: 0 },
     { icon: Radio, label: 'Live', value: 'live', count: 0 },
     { icon: PieChart, label: 'Fractions', value: 'fractions', count: 0 },
   ];
@@ -728,8 +729,8 @@ export default function ProfilePage() {
       case 'songs':
         return (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Play className="w-12 h-12 text-zinc-600 mb-3" />
-            <p className="text-zinc-400 text-lg font-medium">No songs yet</p>
+            <img src={audio3dIcon} alt="Audio" className="w-16 h-16 mb-3" />
+            <p className="text-zinc-400 text-lg font-medium">No audio yet</p>
             <p className="text-zinc-500 text-sm mt-1">Audio tracks will appear here</p>
           </div>
         );
