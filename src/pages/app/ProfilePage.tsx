@@ -17,6 +17,7 @@ import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageVie
 import { CreatePlanModal, EditPlanModal, PlanCard } from '@/components/app/subscriptions';
 import { FollowersListDrawer } from '@/components/app/profile';
 import { cn } from '@/lib/utils';
+import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -742,7 +743,7 @@ export default function ProfilePage() {
       case 'fractions':
         return (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <PieChart className="w-12 h-12 text-zinc-600 mb-3" />
+            <img src={fractions3dIcon} alt="Fractions" className="w-16 h-16 mb-3 opacity-60" />
             <p className="text-zinc-400 text-lg font-medium">No fractions yet</p>
             <p className="text-zinc-500 text-sm mt-1">Fraction holdings will appear here</p>
           </div>
