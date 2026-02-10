@@ -22,6 +22,7 @@ const DURATION_PRESETS = [
   { label: '3 Months', months: 3, tier: 2 },
   { label: '6 Months', months: 6, tier: 3 },
   { label: '1 Year', months: 12, tier: 4 },
+  { label: 'Lifetime', months: 0, tier: 5 },
 ];
 
 // DHB token addresses per chain

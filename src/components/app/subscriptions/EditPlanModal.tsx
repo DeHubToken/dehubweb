@@ -24,6 +24,7 @@ const DURATION_PRESETS = [
   { label: '1 Month', days: 30 },
   { label: '3 Months', days: 90 },
   { label: '1 Year', days: 365 },
+  { label: 'Lifetime', days: 0 },
 ];
 
 export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) {
