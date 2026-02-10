@@ -510,7 +510,7 @@ export default function ProfilePage() {
         if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={home3dIcon} alt="All" className="w-16 h-16 mb-3" />
+              <img src={home3dIcon} alt="All" className="w-16 h-16 mb-3 opacity-90" />
               <p className="text-muted-foreground text-lg font-medium">No posts yet</p>
               <p className="text-muted-foreground/70 text-sm mt-1">Content will appear here when posted</p>
             </div>
