@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X } from 'lucide-react';
+import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -290,9 +290,22 @@ export function PostAccessToggles({
                 <div className="flex items-center justify-center py-8">
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 </div>
-              ) : filteredCategories.length === 0 ? (
-                <p className="text-center text-sm text-zinc-500 py-8">No categories found</p>
               ) : (
+                <>
+                {/* Custom category option when search doesn't exactly match */}
+                {categorySearch.trim() && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && (
+                  <button
+                    type="button"
+                    onClick={() => selectCategory(categorySearch.trim())}
+                    className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
+                  >
+                    <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Create "<span className="font-medium">{categorySearch.trim()}</span>"</span>
+                  </button>
+                )}
+                {filteredCategories.length === 0 && !categorySearch.trim() ? (
+                  <p className="text-center text-sm text-zinc-500 py-8">No categories found</p>
+                ) : (
                 filteredCategories.map((cat) => (
                   <button
                     key={cat.id}
@@ -311,6 +324,8 @@ export function PostAccessToggles({
                     )}
                   </button>
                 ))
+                )}
+                </>
               )}
             </div>
           </div>
