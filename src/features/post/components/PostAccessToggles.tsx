@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus } from 'lucide-react';
+import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus, Save } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getCategories, type DeHubCategory } from '@/lib/api/dehub';
+import { toast } from 'sonner';
 import type { Currency } from '../types';
 
 // DHB is the only supported token
@@ -235,6 +236,16 @@ export function PostAccessToggles({
                   </button>
                 </span>
               ))}
+              <button
+                type="button"
+                onClick={() => {
+                  localStorage.setItem('post_default_categories', selectedCategory);
+                  toast.success('Default categories saved');
+                }}
+                className="text-xs text-white/50 hover:text-white"
+              >
+                <Save className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
         </div>
