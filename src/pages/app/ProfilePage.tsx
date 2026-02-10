@@ -743,7 +743,7 @@ export default function ProfilePage() {
       case 'fractions':
         return (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <img src={fractions3dIcon} alt="Fractions" className="w-16 h-16 mb-3 opacity-60" />
+            <img src={fractions3dIcon} alt="Fractions" className="w-16 h-16 mb-3" />
             <p className="text-zinc-400 text-lg font-medium">No fractions yet</p>
             <p className="text-zinc-500 text-sm mt-1">Fraction holdings will appear here</p>
           </div>
