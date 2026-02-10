@@ -24,6 +24,8 @@ import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
 import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
 import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
 import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
+import home3dIcon from '@/assets/icons/home-3d-icon.png';
+import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -508,7 +510,7 @@ export default function ProfilePage() {
         if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Home className="w-12 h-12 text-muted-foreground mb-3" />
+              <img src={home3dIcon} alt="All" className="w-16 h-16 mb-3" />
               <p className="text-muted-foreground text-lg font-medium">No posts yet</p>
               <p className="text-muted-foreground/70 text-sm mt-1">Content will appear here when posted</p>
             </div>
@@ -581,7 +583,7 @@ export default function ProfilePage() {
         if (PROFILE_POSTS.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={messagesBubbleIcon} alt="Posts" className="w-16 h-16 mb-3" />
+              <img src={comment3dIcon} alt="Posts" className="w-16 h-16 mb-3" />
               <p className="text-muted-foreground text-lg font-medium">No text posts yet</p>
               <p className="text-muted-foreground/70 text-sm mt-1">Text posts will appear here</p>
             </div>
