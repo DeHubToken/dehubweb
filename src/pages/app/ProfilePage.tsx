@@ -21,6 +21,7 @@ import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
 import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
 import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
+import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -578,7 +579,7 @@ export default function ProfilePage() {
         if (PROFILE_POSTS.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <MessageSquare className="w-12 h-12 text-muted-foreground mb-3" />
+              <img src={messagesBubbleIcon} alt="Posts" className="w-16 h-16 mb-3" />
               <p className="text-muted-foreground text-lg font-medium">No text posts yet</p>
               <p className="text-muted-foreground/70 text-sm mt-1">Text posts will appear here</p>
             </div>
