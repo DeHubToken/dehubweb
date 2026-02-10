@@ -110,6 +110,7 @@ export function useCreatePlan() {
       toast.success('Plan created successfully!');
     },
     onError: (error: Error) => {
+      console.error('[useCreatePlan] Full error:', error);
       toast.error(error.message || 'Failed to create plan');
     },
   });

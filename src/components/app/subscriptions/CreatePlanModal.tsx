@@ -53,22 +53,26 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
 
     const filteredBenefits = benefits.filter(b => b.trim());
     
-    await createPlanMutation.mutateAsync({
-      name: name.trim(),
-      description: description.trim() || undefined,
-      price: parseFloat(price),
-      currency: 'DHB',
-      duration,
-      benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
-    });
+    try {
+      await createPlanMutation.mutateAsync({
+        name: name.trim(),
+        description: description.trim() || undefined,
+        price: parseFloat(price),
+        currency: 'DHB',
+        duration,
+        benefits: filteredBenefits.length > 0 ? filteredBenefits : undefined,
+      });
 
-    // Reset form
-    setName('');
-    setDescription('');
-    setPrice('');
-    setDuration(30);
-    setBenefits(['']);
-    onOpenChange(false);
+      // Reset form
+      setName('');
+      setDescription('');
+      setPrice('');
+      setDuration(30);
+      setBenefits(['']);
+      onOpenChange(false);
+    } catch (err) {
+      console.error('[CreatePlanModal] Plan creation failed:', err);
+    }
   };
 
   const isValid = name.trim() && price && parseFloat(price) > 0;
