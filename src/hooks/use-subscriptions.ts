@@ -22,18 +22,14 @@ export function useCreatorPlans(creatorAddress?: string) {
   // Check if viewing own plans
   const isOwnPlans = creatorAddress?.toLowerCase() === walletAddress?.toLowerCase();
 
+  // Always use the wallet address for fetching plans consistently
+  const resolvedAddress = isOwnPlans ? walletAddress : creatorAddress;
+
   const plansQuery = useQuery({
-    queryKey: ['plans', creatorAddress || 'self'],
-    queryFn: async () => {
-      if (isOwnPlans && isAuthenticated) {
-        // Fetch own plans with auth
-        return getMyPlans();
-      }
-      // Fetch creator's public plans
-      return creatorAddress ? getPlans(creatorAddress) : [];
-    },
-    enabled: !!creatorAddress || isAuthenticated,
-    staleTime: 30000,
+    queryKey: ['plans', resolvedAddress?.toLowerCase() || 'self'],
+    queryFn: () => resolvedAddress ? getPlans(resolvedAddress) : Promise.resolve([]),
+    enabled: !!resolvedAddress,
+    staleTime: 5000,
   });
 
   return {
@@ -106,7 +102,9 @@ export function useCreatePlan() {
       chains: { chainId: number; token: string; price: number }[];
     }) => createPlan(planData),
     onSuccess: () => {
+      // Invalidate all plan queries to ensure immediate refresh
       queryClient.invalidateQueries({ queryKey: ['plans'] });
+      queryClient.refetchQueries({ queryKey: ['plans', walletAddress?.toLowerCase() || 'self'] });
       toast.success('Plan created successfully!');
     },
     onError: (error: Error) => {
