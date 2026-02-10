@@ -241,21 +241,6 @@ export default function MessagesPage() {
               </div>
             )}
 
-            {/* Empty State */}
-            {!isLoading && !isError && conversations.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                <MessageCircle className="w-12 h-12 text-zinc-600 mb-4" />
-                <p className="text-zinc-400 mb-2">No conversations yet</p>
-                <p className="text-zinc-500 text-sm mb-4">Start a new message to connect with others</p>
-                <Button 
-                  onClick={() => setShowMessageSelector(true)}
-                  className="bg-zinc-800 hover:bg-zinc-700 text-white"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create
-                </Button>
-              </div>
-            )}
 
             {/* Conversations */}
             {!isLoading && !isError && conversations.map((conv) => (
