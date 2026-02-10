@@ -391,11 +391,13 @@ mcpServer.tool(
   "dehub_post_create",
   "Create a new post on DeHub. Requires API key authentication via x-dehub-api-key header. Rate limited to 2 posts per hour.",
   {
-    content: z.string().describe("The text content of your post"),
-    media_url: z.string().optional().describe("Optional URL to an image or video"),
+    title: z.string().optional().describe("Title of the post"),
+    content: z.string().describe("The text content/description of your post"),
+    media_url: z.string().optional().describe("Optional URL to an image or video to upload"),
     media_type: z.enum(["text", "image", "video"]).optional().default("text").describe("Type of media"),
+    category: z.string().optional().default("General").describe("Post category"),
   },
-  async ({ content, media_url, media_type }) => {
+  async ({ title, content, media_url, media_type, category }) => {
     // deno-lint-ignore no-explicit-any
     const supabase = createClient<any>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const agent = await getAgentFromApiKey(currentApiKey, supabase);
@@ -418,20 +420,41 @@ mcpServer.tool(
       return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to authenticate with DeHub" }) }] };
     }
     
+    // Build FormData — DeHub API requires multipart/form-data with file uploads
+    const formData = new FormData();
+    formData.append('description', content);
+    formData.append('title', title || content.substring(0, 50));
+    formData.append('wallet_address', agent.owner_wallet_address);
+    formData.append('category', category || 'General');
+    formData.append('chainId', '8453');
+
+    if (media_url && media_type !== 'text') {
+      try {
+        console.log(`[Post Create] Downloading media from: ${media_url}`);
+        const mediaResponse = await fetch(media_url);
+        if (!mediaResponse.ok) {
+          return { content: [{ type: "text", text: JSON.stringify({ error: `Failed to download media from URL: ${mediaResponse.status}` }) }] };
+        }
+        const mediaBlob = await mediaResponse.blob();
+        const ext = media_type === 'video' ? 'mp4' : 'jpg';
+        const filename = `agent-upload-${Date.now()}.${ext}`;
+        const file = new File([mediaBlob], filename, { type: mediaBlob.type || (media_type === 'video' ? 'video/mp4' : 'image/jpeg') });
+        formData.append('file', file);
+        formData.append('media_type', media_type);
+      } catch (dlErr) {
+        console.error('[Post Create] Media download error:', dlErr);
+        return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to download media file" }) }] };
+      }
+    }
+
     const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`,
       },
-      body: JSON.stringify({
-        description: content,
-        media_url,
-        media_type,
-        wallet_address: agent.owner_wallet_address,
-      }),
+      body: formData,
     });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Post creation failed:', errorText);
