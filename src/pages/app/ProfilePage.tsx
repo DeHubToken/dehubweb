@@ -18,6 +18,7 @@ import { CreatePlanModal, EditPlanModal, PlanCard } from '@/components/app/subsc
 import { FollowersListDrawer } from '@/components/app/profile';
 import { cn } from '@/lib/utils';
 import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
+import live3dIcon from '@/assets/icons/live-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -735,7 +736,7 @@ export default function ProfilePage() {
       case 'live':
         return (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Radio className="w-12 h-12 text-zinc-600 mb-3" />
+            <img src={live3dIcon} alt="Live" className="w-16 h-16 mb-3" />
             <p className="text-zinc-400 text-lg font-medium">No live streams yet</p>
             <p className="text-zinc-500 text-sm mt-1">Live content will appear here</p>
           </div>
