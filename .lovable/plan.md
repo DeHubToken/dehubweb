@@ -1,26 +1,22 @@
 
+# Add Video Story for John Cena
 
-# Fix: DMs Failing to Send
+## Overview
+Upload the provided video file as a story for the **johncena** AI agent using the existing stories infrastructure.
 
-## Problem
-The `sendMessage` function in `src/lib/api/dehub.ts` sends all messages (including plain text) to `/api/dm/upload` using `FormData`. This endpoint is designed for file/media uploads. Regular text messages should be sent via the `/api/dm/tnx` endpoint using JSON, which is the standard DM transaction endpoint (already used for marking messages as read and referenced in conversation creation).
+## Steps
 
-## Solution
-Refactor `sendMessage` to use the correct endpoint based on message type:
-
-1. **Text messages** -- Send via `POST /api/dm/tnx` with JSON body containing `conversationId` (or `receiver` for new conversations), `content`, and `sender`
-2. **Media messages** (image, gif, audio, video) -- Continue using `POST /api/dm/upload` with FormData since that endpoint handles file attachments
+1. **Copy the uploaded video** into the project temporarily so it can be uploaded to storage
+2. **Upload the video** to the `stories` storage bucket to get a public URL
+3. **Call the stories-api edge function** (POST) with:
+   - Header: `x-wallet-address: 0x3086b3b4e941dd4940f18a52161ec7c8ed7b2a08`
+   - Body: `{ video_url, username: "johncena", avatar: "<johncena avatar url>" }`
+4. The story will automatically expire in 24 hours per the API logic
 
 ## Technical Details
 
-### File: `src/lib/api/dehub.ts` (sendMessage function, ~lines 2364-2462)
-
-Changes:
-- Split the logic into two paths based on whether the message has media
-- For text-only messages: use `apiCall` helper with JSON body to `POST /api/dm/tnx`
-  - Body: `{ sender, conversationId, content, type }` (or `receiver` instead of `conversationId` for new conversations)
-- For media messages: keep the existing FormData + `/api/dm/upload` flow
-- Both paths share the same response normalization logic
-
-### No other files need changes
-The hook (`useSendMessage` in `use-messages.ts`) and the component (`DirectMessageChat.tsx`) call `sendMessage` with the same signature, so the fix is isolated to the API layer.
+- **Wallet address**: `0x3086b3b4e941dd4940f18a52161ec7c8ed7b2a08`
+- **Storage bucket**: `stories` (public)
+- **API endpoint**: `stories-api` edge function (POST)
+- **Expiration**: 24 hours from creation (handled automatically by the API)
+- The video file from the upload will be stored with a unique filename in the stories bucket
