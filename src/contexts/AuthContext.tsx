@@ -117,8 +117,8 @@ function mapWalletProvider(wallet: WalletProvider): string {
       return WALLET_ADAPTERS.METAMASK; // Phantom injects window.ethereum on EVM chains
     case 'walletconnect':
       return WALLET_ADAPTERS.WALLET_CONNECT_V2;
-    case 'coinbase':
-      return 'coinbase'; // WALLET_ADAPTERS.COINBASE
+   case 'coinbase':
+      return WALLET_ADAPTERS.COINBASE;
     default:
       return WALLET_ADAPTERS.METAMASK;
   }
