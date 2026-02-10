@@ -22,6 +22,7 @@ import live3dIcon from '@/assets/icons/live-3d-icon.png';
 import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
 import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
 import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
+import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -182,7 +183,7 @@ export default function ProfilePage() {
     { icon: Home, label: 'All', value: 'home', count: ALL_CONTENT.length },
     { icon: MessageSquare, label: 'Posts', value: 'posts', count: PROFILE_POSTS.length },
     { icon: Image, label: 'Images', value: 'images', count: PROFILE_IMAGES.length },
-    { icon: Video, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
+    { icon: Film, label: 'Videos', value: 'videos', count: ALL_PROFILE_VIDEOS.length },
     { icon: Star, label: 'Subs', value: 'subscribers', count: 0 },
     { icon: Play, label: 'Audio', value: 'songs', count: 0 },
     { icon: Radio, label: 'Live', value: 'live', count: 0 },
@@ -617,7 +618,7 @@ export default function ProfilePage() {
         if (ALL_PROFILE_VIDEOS.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Film className="w-12 h-12 text-zinc-600 mb-3" />
+              <img src={filmstrip3dIcon} alt="Videos" className="w-16 h-16 mb-3" />
               <p className="text-zinc-400 text-lg font-medium">No videos yet</p>
               <p className="text-zinc-500 text-sm mt-1">Video posts will appear here</p>
             </div>
