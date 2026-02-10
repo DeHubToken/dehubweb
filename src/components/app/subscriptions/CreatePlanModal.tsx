@@ -90,10 +90,10 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900/95 backdrop-blur-xl border-white/10 text-white max-w-md max-h-[85vh] overflow-y-auto">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border-white/10 text-white max-w-md max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
-            <Star className="w-5 h-5 text-yellow-400" />
+            <Star className="w-5 h-5 text-white" />
             Create Subscription Plan
           </DialogTitle>
         </DialogHeader>
@@ -211,23 +211,26 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
           </div>
 
           {/* Submit */}
-          <Button
+          <button
             onClick={handleSubmit}
             disabled={!isValid || createPlanMutation.isPending}
-            className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold"
+            className="relative group w-full overflow-hidden rounded-2xl border border-white/30 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] px-4 py-3 text-white font-semibold text-sm transition-all hover:from-white/25 hover:via-white/15 hover:to-white/10 disabled:opacity-40 disabled:pointer-events-none"
           >
-            {createPlanMutation.isPending ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Star className="w-4 h-4 mr-2" />
-                Create Plan
-              </>
-            )}
-          </Button>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {createPlanMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Star className="w-4 h-4" />
+                  Create Plan
+                </>
+              )}
+            </span>
+          </button>
         </div>
       </DialogContent>
     </Dialog>
