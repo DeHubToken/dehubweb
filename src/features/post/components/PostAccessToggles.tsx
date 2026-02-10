@@ -212,20 +212,33 @@ export function PostAccessToggles({
     <>
       <div className="px-4 py-2 border-t border-white/10 space-y-1">
         {/* Category */}
-        <div className="flex items-center justify-between py-0.5">
-          <div className="flex items-center gap-2 shrink-0">
-            <Tag className="w-4 h-4 text-white" />
-            <span className="text-sm text-white">Category</span>
-            {selectedCategoriesArray.length > 0 && (
-              <span className="text-xs text-white/50">({selectedCategoriesArray.length})</span>
-            )}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between py-0.5">
+            <div className="flex items-center gap-2 shrink-0">
+              <Tag className="w-4 h-4 text-white" />
+              <span className="text-sm text-white">Category</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {selectedCategoriesArray.length < MAX_CATEGORIES && (
+                <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {selectedCategoriesArray.length > 0 && (
-              <button type="button" onClick={() => setCategoryDrawerOpen(true)} className="text-xs text-white/50 hover:text-white">Edit</button>
-            )}
-            <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
-          </div>
+          {selectedCategoriesArray.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pl-6">
+              {selectedCategoriesArray.map((cat) => (
+                <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
+                  {cat}
+                  <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Subscribers */}
