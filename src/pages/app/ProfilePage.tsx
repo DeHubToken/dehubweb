@@ -98,6 +98,7 @@ export default function ProfilePage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const [editingPlan, setEditingPlan] = useState<import('@/lib/api/dehub').SubscriptionPlan | null>(null);
   
   // Refs for pull-to-refresh
@@ -918,31 +919,61 @@ export default function ProfilePage() {
             {/* Avatar - positioned to overlap banner, clickable for story or fullscreen */}
             <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
               <div className="relative">
-                {hasStories ? (
-                  <ShimmerBorder active={hasUnwatchedStories} className="w-24 h-24 sm:w-28 sm:h-28">
-                    <button 
-                      className="w-full h-full rounded-[10px] bg-zinc-900 cursor-pointer hover:opacity-95 transition-opacity overflow-hidden"
-                      onClick={() => {
-                        profileStories.forEach(s => markWatched(s.id));
-                        setIsStoryViewerOpen(true);
-                      }}
-                    >
-                      {profile.avatarUrl ? (
-                        <img 
-                          src={profile.avatarUrl} 
-                          alt={profile.name} 
-                          className="w-full h-full rounded-[10px] object-cover"
-                        />
-                      ) : (
-                        <UserAvatar 
-                          name={profile.name} 
-                          handle={profile.handle} 
-                          size="lg" 
-                          className="w-full h-full rounded-[10px]"
-                        />
-                      )}
-                    </button>
-                  </ShimmerBorder>
+              {hasStories ? (
+                  <div className="relative">
+                    <ShimmerBorder active={hasUnwatchedStories} className="w-24 h-24 sm:w-28 sm:h-28">
+                      <button 
+                        className="w-full h-full rounded-[10px] bg-zinc-900 cursor-pointer hover:opacity-95 transition-opacity overflow-hidden"
+                        onClick={() => setShowAvatarMenu(prev => !prev)}
+                      >
+                        {profile.avatarUrl ? (
+                          <img 
+                            src={profile.avatarUrl} 
+                            alt={profile.name} 
+                            className="w-full h-full rounded-[10px] object-cover"
+                          />
+                        ) : (
+                          <UserAvatar 
+                            name={profile.name} 
+                            handle={profile.handle} 
+                            size="lg" 
+                            className="w-full h-full rounded-[10px]"
+                          />
+                        )}
+                      </button>
+                    </ShimmerBorder>
+                    {/* Story / Photo choice menu */}
+                    {showAvatarMenu && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setShowAvatarMenu(false)} />
+                        <div className="absolute left-0 top-full mt-2 z-50 min-w-[160px] rounded-xl bg-black/80 backdrop-blur-xl border border-white/10 overflow-hidden shadow-xl animate-scale-in">
+                          <button
+                            className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+                            onClick={() => {
+                              setShowAvatarMenu(false);
+                              profileStories.forEach(s => markWatched(s.id));
+                              setIsStoryViewerOpen(true);
+                            }}
+                          >
+                            <Play className="w-4 h-4 text-blue-400" />
+                            View Story
+                          </button>
+                          {profile.avatarUrl && (
+                            <button
+                              className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors border-t border-white/5"
+                              onClick={() => {
+                                setShowAvatarMenu(false);
+                                setFullscreenImage(profile.avatarUrl!);
+                              }}
+                            >
+                              <Image className="w-4 h-4 text-purple-400" />
+                              View Photo
+                            </button>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 ) : (
                   <button 
                     className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
