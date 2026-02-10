@@ -422,11 +422,17 @@ mcpServer.tool(
     
     // Build FormData — DeHub API requires multipart/form-data with file uploads
     const formData = new FormData();
+    formData.append('name', title || content.substring(0, 50));
     formData.append('description', content);
-    formData.append('title', title || content.substring(0, 50));
-    formData.append('wallet_address', agent.owner_wallet_address);
-    formData.append('category', category || 'General');
+    formData.append('postType', media_type === 'video' ? 'video' : media_type === 'image' ? 'image' : 'text');
     formData.append('chainId', '8453');
+    formData.append('category', JSON.stringify([category || 'General']));
+    formData.append('minter', agent.owner_wallet_address);
+    formData.append('streamInfo', JSON.stringify({
+      isLockContent: false,
+      isPayPerView: false,
+      isAddBounty: false,
+    }));
 
     if (media_url && media_type !== 'text') {
       try {
