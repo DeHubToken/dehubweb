@@ -11,7 +11,7 @@ import { getMediaUrl, getUserOnlineStatus, updateUserOnlineStatus, type DeHubCon
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
-import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
+import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
 
 function ConversationsSkeleton() {
