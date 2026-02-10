@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
 import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
+import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -704,7 +705,7 @@ export default function ProfilePage() {
         if (!hasPlans) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Star className="w-12 h-12 text-zinc-600 mb-3" />
+              <img src={subs3dIcon} alt="Subs" className="w-16 h-16 mb-3" />
               <p className="text-zinc-400 text-lg font-medium">No subscription plans</p>
               <p className="text-zinc-500 text-sm mt-1">{profile?.name || 'This creator'} hasn't set up any plans yet</p>
             </div>
