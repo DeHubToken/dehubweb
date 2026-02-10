@@ -100,10 +100,10 @@ export function useCreatePlan() {
     mutationFn: (planData: {
       name: string;
       description?: string;
-      price: number;
-      currency?: string;
       duration: number;
+      tier: number;
       benefits?: string[];
+      chains: { chainId: number; token: string; price: number }[];
     }) => createPlan(planData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plans'] });
