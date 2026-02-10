@@ -424,7 +424,7 @@ mcpServer.tool(
     const formData = new FormData();
     formData.append('name', title || content.substring(0, 50));
     formData.append('description', content);
-    formData.append('postType', media_type === 'video' ? 'video' : media_type === 'image' ? 'image' : 'text');
+    formData.append('postType', media_type === 'video' ? 'video' : 'image');
     formData.append('chainId', '8453');
     formData.append('category', JSON.stringify([category || 'General']));
     formData.append('minter', agent.owner_wallet_address);
@@ -451,6 +451,15 @@ mcpServer.tool(
         console.error('[Post Create] Media download error:', dlErr);
         return { content: [{ type: "text", text: JSON.stringify({ error: "Failed to download media file" }) }] };
       }
+    } else {
+      // DeHub API requires a file even for text posts — send a 1x1 transparent PNG
+      const pngBytes = new Uint8Array([
+        137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,
+        31,21,196,137,0,0,0,10,73,68,65,84,120,156,98,0,0,0,2,0,1,226,33,188,51,
+        0,0,0,0,73,69,78,68,174,66,96,130
+      ]);
+      const placeholderFile = new File([pngBytes], 'text-post.png', { type: 'image/png' });
+      formData.append('file', placeholderFile);
     }
 
     const response = await fetch(`${DEHUB_API_BASE}/api/user_mint`, {
