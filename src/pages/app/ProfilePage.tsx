@@ -21,6 +21,7 @@ import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
 import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
 import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
+import star3dIcon from '@/assets/icons/star-3d-icon.png';
 import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
 import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
 import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
@@ -659,16 +660,14 @@ export default function ProfilePage() {
         if (isViewingOwnProfile && !hasPlans) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-md flex items-center justify-center mx-auto mb-4">
-                <Star className="w-8 h-8 text-yellow-400" />
-              </div>
+              <img src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
               <h3 className="text-white font-bold text-xl mb-2">Create Subscription Plans</h3>
               <p className="text-zinc-400 text-sm mb-6 max-w-xs">
                 Monetize your content by creating subscription plans for your fans
               </p>
               <Button 
                 onClick={() => setCreatePlanModalOpen(true)}
-                className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-semibold gap-2"
+                className="rounded-xl bg-white/10 border border-white/[0.08] hover:bg-white/20 text-white font-semibold gap-2 backdrop-blur-md"
               >
                 <Plus className="w-4 h-4" />
                 Create Your First Plan
