@@ -99,6 +99,13 @@ export function PostAccessToggles({
     }
   }, [categoryDrawerOpen, categories.length]);
 
+  const selectedCategoriesArray = useMemo(() => 
+    selectedCategory ? selectedCategory.split('|||').filter(Boolean) : [],
+    [selectedCategory]
+  );
+
+  const MAX_CATEGORIES = 5;
+
   const filteredCategories = useMemo(() => {
     if (!categorySearch.trim()) return categories;
     const q = categorySearch.toLowerCase();
@@ -114,9 +121,19 @@ export function PostAccessToggles({
     }
   };
 
-  const selectCategory = (name: string) => {
-    setSelectedCategory(name);
-    setCategoryDrawerOpen(false);
+  const toggleCategory = (name: string) => {
+    const current = selectedCategoriesArray;
+    if (current.includes(name)) {
+      const next = current.filter(c => c !== name);
+      setSelectedCategory(next.join('|||'));
+    } else if (current.length < MAX_CATEGORIES) {
+      setSelectedCategory([...current, name].join('|||'));
+    }
+  };
+
+  const removeCategory = (name: string) => {
+    const next = selectedCategoriesArray.filter(c => c !== name);
+    setSelectedCategory(next.join('|||'));
   };
 
   const handlePpvToggle = (checked: boolean) => {
@@ -196,14 +213,19 @@ export function PostAccessToggles({
       <div className="px-4 py-2 border-t border-white/10 space-y-1">
         {/* Category */}
         <div className="flex items-center justify-between py-0.5">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Tag className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Category</span>
-            {selectedCategory && (
-              <span className="text-xs text-white/50">({selectedCategory})</span>
+            {selectedCategoriesArray.length > 0 && (
+              <span className="text-xs text-white/50">({selectedCategoriesArray.length})</span>
             )}
           </div>
-          <Switch checked={!!selectedCategory} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
+          <div className="flex items-center gap-2">
+            {selectedCategoriesArray.length > 0 && (
+              <button type="button" onClick={() => setCategoryDrawerOpen(true)} className="text-xs text-white/50 hover:text-white">Edit</button>
+            )}
+            <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
+          </div>
         </div>
 
         {/* Subscribers */}
@@ -256,12 +278,28 @@ export function PostAccessToggles({
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
         <DrawerContent glass>
           <DrawerHeader className="text-left">
-            <DrawerTitle className="flex items-center gap-2 text-white">
-              <Tag className="w-5 h-5" />
-              Select Category
+            <DrawerTitle className="flex items-center justify-between text-white">
+              <div className="flex items-center gap-2">
+                <Tag className="w-5 h-5" />
+                Select Categories
+              </div>
+              <span className="text-xs font-normal text-zinc-400">{selectedCategoriesArray.length}/{MAX_CATEGORIES}</span>
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-4 space-y-3">
+            {/* Selected chips */}
+            {selectedCategoriesArray.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {selectedCategoriesArray.map((cat) => (
+                  <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-white/15 text-white border border-white/20">
+                    {cat}
+                    <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
             {/* Search input */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -293,10 +331,10 @@ export function PostAccessToggles({
               ) : (
                 <>
                 {/* Custom category option when search doesn't exactly match */}
-                {categorySearch.trim() && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && (
+                {categorySearch.trim() && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
                   <button
                     type="button"
-                    onClick={() => selectCategory(categorySearch.trim())}
+                    onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
                     className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
                   >
                     <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -310,16 +348,19 @@ export function PostAccessToggles({
                   <button
                     key={cat.id}
                     type="button"
-                    onClick={() => selectCategory(cat.name)}
+                    onClick={() => toggleCategory(cat.name)}
+                    disabled={!selectedCategoriesArray.includes(cat.name) && selectedCategoriesArray.length >= MAX_CATEGORIES}
                     className={cn(
                       "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors",
-                      selectedCategory === cat.name
+                      selectedCategoriesArray.includes(cat.name)
                         ? "bg-white/15 text-white border border-white/20"
-                        : "text-zinc-300 hover:bg-white/5 border border-transparent"
+                        : selectedCategoriesArray.length >= MAX_CATEGORIES
+                          ? "text-zinc-600 border border-transparent cursor-not-allowed"
+                          : "text-zinc-300 hover:bg-white/5 border border-transparent"
                     )}
                   >
                     <span>{cat.name}</span>
-                    {selectedCategory === cat.name && (
+                    {selectedCategoriesArray.includes(cat.name) && (
                       <Check className="w-4 h-4 text-white" />
                     )}
                   </button>
