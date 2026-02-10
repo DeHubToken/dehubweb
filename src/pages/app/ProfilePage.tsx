@@ -583,7 +583,7 @@ export default function ProfilePage() {
         if (PROFILE_POSTS.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={comment3dIcon} alt="Posts" className="w-16 h-16 mb-3" />
+              <img src={comment3dIcon} alt="Posts" className="w-16 h-16 mb-3 opacity-90" />
               <p className="text-muted-foreground text-lg font-medium">No text posts yet</p>
               <p className="text-muted-foreground/70 text-sm mt-1">Text posts will appear here</p>
             </div>
