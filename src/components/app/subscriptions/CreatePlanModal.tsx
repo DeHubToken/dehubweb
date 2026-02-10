@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, X, Loader2, Star, Clock, DollarSign, FileText, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,15 +30,47 @@ const DHB_TOKENS: Record<number, string> = {
   56: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D',   // BSC
 };
 
+const CACHE_KEY = 'create_plan_draft';
+
+interface PlanDraft {
+  name: string;
+  description: string;
+  price: string;
+  duration: number;
+  tier: number;
+  benefits: string[];
+}
+
+function loadDraft(): PlanDraft | null {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function saveDraft(draft: PlanDraft) {
+  sessionStorage.setItem(CACHE_KEY, JSON.stringify(draft));
+}
+
+function clearDraft() {
+  sessionStorage.removeItem(CACHE_KEY);
+}
+
 export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [duration, setDuration] = useState(1);
-  const [tier, setTier] = useState(1);
-  const [benefits, setBenefits] = useState<string[]>(['']);
+  const draft = loadDraft();
+  const [name, setName] = useState(draft?.name ?? '');
+  const [description, setDescription] = useState(draft?.description ?? '');
+  const [price, setPrice] = useState(draft?.price ?? '');
+  const [duration, setDuration] = useState(draft?.duration ?? 1);
+  const [tier, setTier] = useState(draft?.tier ?? 1);
+  const [benefits, setBenefits] = useState<string[]>(draft?.benefits ?? ['']);
   
   const createPlanMutation = useCreatePlan();
+
+  // Auto-save draft on changes
+  useEffect(() => {
+    saveDraft({ name, description, price, duration, tier, benefits });
+  }, [name, description, price, duration, tier, benefits]);
 
   const handleAddBenefit = () => {
     setBenefits([...benefits, '']);
@@ -73,7 +105,8 @@ export function CreatePlanModal({ open, onOpenChange }: CreatePlanModalProps) {
         ],
       });
 
-      // Reset form
+      // Reset form and clear draft
+      clearDraft();
       setName('');
       setDescription('');
       setPrice('');
