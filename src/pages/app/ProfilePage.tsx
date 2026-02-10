@@ -23,6 +23,7 @@ import audio3dIcon from '@/assets/icons/audio-3d-icon.png';
 import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
 import messagesBubbleIcon from '@/assets/icons/messages-bubble-icon.png';
 import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
+import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
 import { toast } from 'sonner';
 import {
   Drawer,
@@ -599,7 +600,7 @@ export default function ProfilePage() {
         if (PROFILE_IMAGES.length === 0) {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Image className="w-12 h-12 text-zinc-600 mb-3" />
+              <img src={imageFrame3dIcon} alt="Images" className="w-16 h-16 mb-3" />
               <p className="text-zinc-400 text-lg font-medium">No images yet</p>
               <p className="text-zinc-500 text-sm mt-1">Image posts will appear here</p>
             </div>
