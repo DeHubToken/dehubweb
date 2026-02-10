@@ -943,8 +943,9 @@ export default function ProfilePage() {
                         {/* Liquid glass overlay - desktop: hover, mobile: tap toggle */}
                         <div className={cn(
                           "absolute inset-0 flex rounded-[10px] overflow-hidden transition-all duration-200",
-                          "opacity-0 md:group-hover:opacity-100",
-                          showAvatarOverlay && "opacity-100"
+                          "opacity-0 pointer-events-none",
+                          "md:group-hover:opacity-100 md:group-hover:pointer-events-auto",
+                          showAvatarOverlay && "opacity-100 !pointer-events-auto"
                         )}>
                           <button
                             className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md border-r border-white/10"
