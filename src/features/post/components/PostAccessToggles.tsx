@@ -218,17 +218,15 @@ export function PostAccessToggles({
               <Tag className="w-4 h-4 text-white" />
               <span className="text-sm text-white">Category</span>
             </div>
-            <div className="flex items-center gap-2">
+            <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
+          </div>
+          {selectedCategoriesArray.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 pl-6">
               {selectedCategoriesArray.length < MAX_CATEGORIES && (
                 <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
-              <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" />
-            </div>
-          </div>
-          {selectedCategoriesArray.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pl-6">
               {selectedCategoriesArray.map((cat) => (
                 <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
                   {cat}
@@ -289,16 +287,16 @@ export function PostAccessToggles({
 
       {/* Category Drawer */}
       <Drawer open={categoryDrawerOpen} onOpenChange={setCategoryDrawerOpen}>
-        <DrawerContent glass>
-          <DrawerHeader className="text-left">
-            <DrawerTitle className="flex items-center justify-between text-white">
-              <div className="flex items-center gap-2">
-                <Tag className="w-5 h-5" />
-                Select Categories
-              </div>
-              <span className="text-xs font-normal text-zinc-400">{selectedCategoriesArray.length}/{MAX_CATEGORIES}</span>
-            </DrawerTitle>
-          </DrawerHeader>
+        <DrawerContent glass hideHandle>
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
+            <div className="flex items-center gap-2 text-white font-medium">
+              <Tag className="w-5 h-5" />
+              Select Categories
+            </div>
+            <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
+              Done
+            </button>
+          </div>
           <div className="px-4 pb-4 space-y-3">
             {/* Selected chips */}
             {selectedCategoriesArray.length > 0 && (
@@ -344,7 +342,7 @@ export function PostAccessToggles({
               ) : (
                 <>
                 {/* Custom category option when search doesn't exactly match */}
-                {categorySearch.trim() && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
+                {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
                   <button
                     type="button"
                     onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
