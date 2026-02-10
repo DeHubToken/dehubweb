@@ -98,6 +98,7 @@ export default function ProfilePage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
+  const [showAvatarOverlay, setShowAvatarOverlay] = useState(false);
   const [editingPlan, setEditingPlan] = useState<import('@/lib/api/dehub').SubscriptionPlan | null>(null);
   
   // Refs for pull-to-refresh
@@ -921,7 +922,10 @@ export default function ProfilePage() {
               {hasStories ? (
                   <div className="relative">
                     <ShimmerBorder active={hasUnwatchedStories} className="w-24 h-24 sm:w-28 sm:h-28">
-                      <div className="w-full h-full rounded-[10px] bg-zinc-900 overflow-hidden relative">
+                      <div 
+                        className="w-full h-full rounded-[10px] bg-zinc-900 overflow-hidden relative group"
+                        onClick={() => setShowAvatarOverlay(prev => !prev)}
+                      >
                         {profile.avatarUrl ? (
                           <img 
                             src={profile.avatarUrl} 
@@ -936,27 +940,41 @@ export default function ProfilePage() {
                             className="w-full h-full rounded-[10px]"
                           />
                         )}
-                        {/* Liquid glass overlay split in half */}
-                        <div className="absolute inset-0 flex rounded-[10px] overflow-hidden">
+                        {/* Liquid glass overlay - desktop: hover, mobile: tap toggle */}
+                        <div className={cn(
+                          "absolute inset-0 flex rounded-[10px] overflow-hidden transition-all duration-200",
+                          "opacity-0 md:group-hover:opacity-100",
+                          showAvatarOverlay && "opacity-100"
+                        )}>
                           <button
-                            className="flex-1 flex items-center justify-center bg-black/0 hover:bg-black/40 backdrop-blur-0 hover:backdrop-blur-md transition-all duration-200 border-r border-white/10"
-                            onClick={() => {
+                            className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md border-r border-white/10"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowAvatarOverlay(false);
                               profileStories.forEach(s => markWatched(s.id));
                               setIsStoryViewerOpen(true);
                             }}
                           >
-                            <Play className="w-5 h-5 text-white drop-shadow-lg opacity-70 hover:opacity-100 transition-opacity" fill="white" />
+                            <Play className="w-5 h-5 text-white drop-shadow-lg" fill="white" />
                           </button>
                           <button
-                            className="flex-1 flex items-center justify-center bg-black/0 hover:bg-black/40 backdrop-blur-0 hover:backdrop-blur-md transition-all duration-200"
-                            onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
+                            className="flex-1 flex items-center justify-center bg-black/40 backdrop-blur-md"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowAvatarOverlay(false);
+                              if (profile.avatarUrl) setFullscreenImage(profile.avatarUrl);
+                            }}
                             disabled={!profile.avatarUrl}
                           >
-                            <Image className="w-5 h-5 text-white drop-shadow-lg opacity-70 hover:opacity-100 transition-opacity" />
+                            <Image className="w-5 h-5 text-white drop-shadow-lg" />
                           </button>
                         </div>
                       </div>
                     </ShimmerBorder>
+                    {/* Dismiss overlay on outside tap (mobile) */}
+                    {showAvatarOverlay && (
+                      <div className="fixed inset-0 z-[-1] md:hidden" onClick={() => setShowAvatarOverlay(false)} />
+                    )}
                   </div>
                 ) : (
                   <button 
