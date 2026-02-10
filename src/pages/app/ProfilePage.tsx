@@ -98,7 +98,6 @@ export default function ProfilePage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
-  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const [editingPlan, setEditingPlan] = useState<import('@/lib/api/dehub').SubscriptionPlan | null>(null);
   
   // Refs for pull-to-refresh
@@ -922,10 +921,7 @@ export default function ProfilePage() {
               {hasStories ? (
                   <div className="relative">
                     <ShimmerBorder active={hasUnwatchedStories} className="w-24 h-24 sm:w-28 sm:h-28">
-                      <button 
-                        className="w-full h-full rounded-[10px] bg-zinc-900 cursor-pointer hover:opacity-95 transition-opacity overflow-hidden"
-                        onClick={() => setShowAvatarMenu(prev => !prev)}
-                      >
+                      <div className="w-full h-full rounded-[10px] bg-zinc-900 overflow-hidden relative">
                         {profile.avatarUrl ? (
                           <img 
                             src={profile.avatarUrl} 
@@ -940,39 +936,27 @@ export default function ProfilePage() {
                             className="w-full h-full rounded-[10px]"
                           />
                         )}
-                      </button>
-                    </ShimmerBorder>
-                    {/* Story / Photo choice menu */}
-                    {showAvatarMenu && (
-                      <>
-                        <div className="fixed inset-0 z-40" onClick={() => setShowAvatarMenu(false)} />
-                        <div className="absolute left-0 top-full mt-2 z-50 min-w-[160px] rounded-xl bg-black/80 backdrop-blur-xl border border-white/10 overflow-hidden shadow-xl animate-scale-in">
+                        {/* Liquid glass overlay split in half */}
+                        <div className="absolute inset-0 flex rounded-[10px] overflow-hidden">
                           <button
-                            className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+                            className="flex-1 flex items-center justify-center bg-black/0 hover:bg-black/40 backdrop-blur-0 hover:backdrop-blur-md transition-all duration-200 border-r border-white/10"
                             onClick={() => {
-                              setShowAvatarMenu(false);
                               profileStories.forEach(s => markWatched(s.id));
                               setIsStoryViewerOpen(true);
                             }}
                           >
-                            <Play className="w-4 h-4 text-blue-400" />
-                            View Story
+                            <Play className="w-5 h-5 text-white drop-shadow-lg opacity-70 hover:opacity-100 transition-opacity" fill="white" />
                           </button>
-                          {profile.avatarUrl && (
-                            <button
-                              className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors border-t border-white/5"
-                              onClick={() => {
-                                setShowAvatarMenu(false);
-                                setFullscreenImage(profile.avatarUrl!);
-                              }}
-                            >
-                              <Image className="w-4 h-4 text-purple-400" />
-                              View Photo
-                            </button>
-                          )}
+                          <button
+                            className="flex-1 flex items-center justify-center bg-black/0 hover:bg-black/40 backdrop-blur-0 hover:backdrop-blur-md transition-all duration-200"
+                            onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
+                            disabled={!profile.avatarUrl}
+                          >
+                            <Image className="w-5 h-5 text-white drop-shadow-lg opacity-70 hover:opacity-100 transition-opacity" />
+                          </button>
                         </div>
-                      </>
-                    )}
+                      </div>
+                    </ShimmerBorder>
                   </div>
                 ) : (
                   <button 
