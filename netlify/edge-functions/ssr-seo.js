@@ -19,7 +19,7 @@ const BOT_AGENTS = [
   'oggrabber'
 ];
 
-const SYSTEM_ROUTES = ['app', 'post', 'video', 'explore', 'notifications', 'messages', 'settings', 'delete-account', 'creators', 'jobs', 'features', 'skill.md', '_netlify', 'favicon.ico', 'assets', 'og-image.png'];
+const SYSTEM_ROUTES = ['app', 'post', 'explore', 'notifications', 'messages', 'settings', 'delete-account', 'creators', 'jobs', 'features', 'skill.md', '_netlify', 'favicon.ico', 'assets', 'og-image.png'];
 
 export default async (request, context) => {
   const url = new URL(request.url);
@@ -28,7 +28,8 @@ export default async (request, context) => {
 
   const cleanPath = url.pathname.replace(/^\//, '');
   const firstSegment = cleanPath.split('/')[0].toLowerCase();
-  const isPostPath = url.pathname.includes('/post/') || url.pathname.includes('/video/');
+  // Unified: all posts (image + video) use /app/post/{tokenId}
+  const isPostPath = url.pathname.includes('/post/');
   // Profile: any top-level path that isn't a system route (with or without @)
   const isProfilePath = firstSegment && !SYSTEM_ROUTES.includes(firstSegment.replace('@', '')) && !firstSegment.includes('.');
 

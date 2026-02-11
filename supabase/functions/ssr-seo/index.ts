@@ -101,6 +101,25 @@ function buildProxiedImageUrl(functionBaseUrl: string, imageUrl: string): string
     return `${functionBaseUrl}?image_url=${encodeURIComponent(imageUrl)}`;
 }
 
+function buildVideoUrl(nft: DeHubNFT): string | null {
+    const videoPath = nft.videoUrl;
+    if (!videoPath) return null;
+    if (videoPath.startsWith("http")) return videoPath;
+    return `${DEHUB_CDN_BASE}videos/${nft.tokenId}.mp4`;
+}
+
+function getVideoMimeType(url: string): string {
+    const ext = url.split("?")[0].match(/\.([a-zA-Z0-9]+)$/)?.[1]?.toLowerCase();
+    switch (ext) {
+        case "webm":
+            return "video/webm";
+        case "mov":
+            return "video/quicktime";
+        default:
+            return "video/mp4";
+    }
+}
+
 function generateMetaHTML(data: {
     title: string;
     description: string;
@@ -112,16 +131,42 @@ function generateMetaHTML(data: {
     imageHeight?: number;
     functionBaseUrl?: string;
     isBot: boolean;
+    videoUrl?: string | null;
 }): string {
     const title = data.title.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const description = data.description.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const imageUrl = ensureAbsoluteUrl(data.image);
     // For og:image tags, use proxied URL so scrapers get correct Content-Type
     const ogImageUrl = data.functionBaseUrl ? buildProxiedImageUrl(data.functionBaseUrl, imageUrl) : imageUrl;
-    const twitterCard = data.twitterCard || "summary_large_image";
     const imgWidth = data.imageWidth || 1200;
     const imgHeight = data.imageHeight || 630;
     const mimeType = getMimeType(imageUrl);
+
+    const isVideo = !!data.videoUrl;
+    const ogType = isVideo ? "video.other" : (data.type || "website");
+    const twitterCard = isVideo ? "player" : (data.twitterCard || "summary_large_image");
+
+    // Build video-specific OG tags
+    let videoTags = "";
+    if (isVideo && data.videoUrl) {
+        const videoMime = getVideoMimeType(data.videoUrl);
+        videoTags = `
+  <!-- Video OG Tags -->
+  <meta property="og:video" content="${data.videoUrl}">
+  <meta property="og:video:secure_url" content="${data.videoUrl}">
+  <meta property="og:video:type" content="${videoMime}">
+  <meta property="og:video:width" content="1280">
+  <meta property="og:video:height" content="720">`;
+    }
+
+    // Build Twitter player tags for video
+    let twitterVideoTags = "";
+    if (isVideo && data.videoUrl) {
+        twitterVideoTags = `
+  <meta name="twitter:player" content="${data.videoUrl}">
+  <meta name="twitter:player:width" content="1280">
+  <meta name="twitter:player:height" content="720">`;
+    }
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -134,7 +179,7 @@ function generateMetaHTML(data: {
   <meta name="description" content="${description}">
 
   <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="${data.type || "website"}">
+  <meta property="og:type" content="${ogType}">
   <meta property="og:url" content="${data.url}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
@@ -143,7 +188,7 @@ function generateMetaHTML(data: {
   <meta property="og:image:type" content="${mimeType}">
   <meta property="og:image:width" content="${imgWidth}">
   <meta property="og:image:height" content="${imgHeight}">
-  <meta property="fb:app_id" content="966242223397117">
+  <meta property="fb:app_id" content="966242223397117">${videoTags}
 
   <!-- Twitter -->
   <meta name="twitter:card" content="${twitterCard}">
@@ -151,7 +196,7 @@ function generateMetaHTML(data: {
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${ogImageUrl}">
-  <meta name="twitter:site" content="@DeHubApp">
+  <meta name="twitter:site" content="@DeHubApp">${twitterVideoTags}
 
   ${!data.isBot
             ? `
@@ -217,7 +262,7 @@ serve(async (req) => {
 
         // 1. Profile Handling (/@username or /username)
         const possibleUsername = pathParts[0] || "";
-        const isSystemRoute = ["post", "video", "app", "explore", "notifications", "messages", "settings"].includes(
+        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings"].includes(
             possibleUsername.toLowerCase(),
         );
 
@@ -249,10 +294,9 @@ serve(async (req) => {
             }
         }
 
-        // 2. Post / Video Handling
-        if (cleanPath.includes("/post/") || cleanPath.includes("/video/")) {
-            const splitChar = cleanPath.includes("/post/") ? "/post/" : "/video/";
-            const postId = cleanPath.split(splitChar)[1].split("/")[0];
+        // 2. Unified Post Handling (/app/post/{tokenId} for both image and video posts)
+        if (cleanPath.includes("/post/")) {
+            const postId = cleanPath.split("/post/")[1].split("/")[0];
 
             const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`);
             const nftData = await response.json();
@@ -263,14 +307,16 @@ serve(async (req) => {
                 const title = nft.title || nft.name || `Post by ${posterName} on DeHub`;
                 const description = nft.description || `View this post by ${posterName} on DeHub`;
                 const postUrl = `${APP_URL}/app/post/${postId}`;
+                const videoUrl = buildVideoUrl(nft);
                 const html = generateMetaHTML({
                     title,
                     description,
-                    image: buildPostImageUrl(nft),
+                    image: videoUrl ? ensureAbsoluteUrl(nft.thumbnail_url || nft.imageUrl || "") : buildPostImageUrl(nft),
                     url: postUrl,
                     type: "article",
                     functionBaseUrl,
                     isBot,
+                    videoUrl,
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
             }
