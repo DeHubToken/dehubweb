@@ -9,27 +9,46 @@ const corsHeaders = {
 // ── Contract addresses ──────────────────────────────────────────────
 const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
 const DHB_BNB = "0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7";
-const STAKING_CONTRACT = "0x26d2Cd7763106FDcE443faDD36163E2ad33A76E6";
-const BALANCE_OF_SELECTOR = "0x70a08231";
+const STAKING_CONTRACT = "0x26d2Cd7763106FDcE443faDD36163E2ad33A76E6"; // BNB only
+
+// Function selectors
+const BALANCE_OF_SELECTOR = "0x70a08231"; // balanceOf(address)
+const USER_INFOS_SELECTOR = "0x43b0215f"; // userInfos(address) → first slot = totalAmount
+
+// Public BNB RPCs as fallback
+const BNB_PUBLIC_RPCS = [
+  "https://bsc-dataseed1.binance.org",
+  "https://bsc-dataseed2.binance.org",
+  "https://bsc-dataseed3.binance.org",
+];
 
 // ── DeHub API (for address list + profile data) ─────────────────────
 const DEHUB_API_BASE = "https://api.dehub.io";
-
-// Non-holdings categories still fetched from DeHub API
 const API_SORT_MODES = ["sentTips", "receivedTips"] as const;
 const PERIODS = ["day", "week", "month", "year", "all"] as const;
 
 // ── Helpers ─────────────────────────────────────────────────────────
 
-function encodeBalanceOf(address: string): string {
+function encodeCall(selector: string, address: string): string {
   const cleaned = address.replace("0x", "").toLowerCase().padStart(64, "0");
-  return BALANCE_OF_SELECTOR + cleaned;
+  return selector + cleaned;
 }
 
 function hexToNumber(hex: string): number {
   if (!hex || hex === "0x" || hex === "0x0") return 0;
   try {
     return Number(BigInt(hex)) / 1e18;
+  } catch {
+    return 0;
+  }
+}
+
+/** Parse first 32-byte slot from hex return data (for tuple returns like userInfos) */
+function hexFirstSlotToNumber(hex: string): number {
+  if (!hex || hex === "0x" || hex === "0x0") return 0;
+  try {
+    const firstSlot = hex.length >= 66 ? "0x" + hex.slice(2, 66) : hex;
+    return Number(BigInt(firstSlot)) / 1e18;
   } catch {
     return 0;
   }
@@ -51,33 +70,63 @@ async function rpcCall(
     }),
   });
   const json = await res.json();
+  if (json.error) {
+    console.error(
+      `[rpc-error] to=${to} data=${data.slice(0, 10)} error=`,
+      json.error
+    );
+  }
   return json.result || "0x0";
 }
 
-/** Get on-chain DHB total for a single address (Base holdings + BNB holdings + staking on both chains) */
+/** Call BNB with fallback to public RPCs if Alchemy returns empty */
+async function bnbRpcCall(
+  alchemyBnbRpc: string,
+  to: string,
+  data: string
+): Promise<string> {
+  const result = await rpcCall(alchemyBnbRpc, to, data);
+  if (result && result !== "0x0" && result !== "0x") {
+    return result;
+  }
+
+  for (const rpc of BNB_PUBLIC_RPCS) {
+    try {
+      const fallbackResult = await rpcCall(rpc, to, data);
+      if (fallbackResult && fallbackResult !== "0x0" && fallbackResult !== "0x") {
+        return fallbackResult;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return result;
+}
+
+/** Get on-chain DHB total for a single address */
 async function getOnChainBalance(
   address: string,
   baseRpc: string,
   bnbRpc: string
 ): Promise<number> {
-  const callData = encodeBalanceOf(address);
+  const holdingsData = encodeCall(BALANCE_OF_SELECTOR, address);
+  const stakingData = encodeCall(USER_INFOS_SELECTOR, address);
 
-  const [baseHoldings, bnbHoldings, baseStaked, bnbStaked] = await Promise.all([
-    rpcCall(baseRpc, DHB_BASE, callData),
-    rpcCall(bnbRpc, DHB_BNB, callData),
-    rpcCall(baseRpc, STAKING_CONTRACT, callData),
-    rpcCall(bnbRpc, STAKING_CONTRACT, callData),
+  const [baseHoldings, bnbHoldings, bnbStaked] = await Promise.all([
+    rpcCall(baseRpc, DHB_BASE, holdingsData),
+    bnbRpcCall(bnbRpc, DHB_BNB, holdingsData),
+    bnbRpcCall(bnbRpc, STAKING_CONTRACT, stakingData),
   ]);
 
   return (
     hexToNumber(baseHoldings) +
     hexToNumber(bnbHoldings) +
-    hexToNumber(baseStaked) +
-    hexToNumber(bnbStaked)
+    hexFirstSlotToNumber(bnbStaked)
   );
 }
 
-/** Fetch the DeHub leaderboard for a given sort/period (used for non-holdings categories and to seed the address list) */
+/** Fetch the DeHub leaderboard for a given sort/period */
 async function fetchDeHubLeaderboard(
   sort: string,
   period: string
@@ -133,14 +182,10 @@ Deno.serve(async (req) => {
 
     // ────────────────────────────────────────────────────────────────
     // 1. ON-CHAIN HOLDINGS LEADERBOARD
-    //    - Pull the address list + profile data from DeHub API
-    //    - Re-query on-chain balances for every address
-    //    - Re-sort by on-chain total
     // ────────────────────────────────────────────────────────────────
     try {
       console.log("Fetching holdings leaderboard (on-chain)...");
 
-      // Get address list & profile data from DeHub (all-time holdings)
       const dehubData = (await fetchDeHubLeaderboard(
         "holdings",
         "all"
@@ -151,7 +196,6 @@ Deno.serve(async (req) => {
       const rawEntries = dehubData?.result?.byWalletBalance ?? [];
       console.log(`Got ${rawEntries.length} addresses from DeHub`);
 
-      // Batch-query on-chain balances (10 at a time to avoid RPC overload)
       const BATCH_SIZE = 10;
       const enriched: Array<{
         account: string;
@@ -194,27 +238,21 @@ Deno.serve(async (req) => {
         });
 
         if (i + BATCH_SIZE < rawEntries.length) {
-          // Small delay between batches to avoid rate limiting
           await new Promise((r) => setTimeout(r, 200));
         }
       }
 
-      // Sort by on-chain total descending
       enriched.sort((a, b) => b.total - a.total);
-
-      // Filter out zero-balance entries
       const nonZero = enriched.filter((e) => e.total > 0);
 
       console.log(
         `On-chain holdings: ${nonZero.length} holders with balance > 0`
       );
 
-      // Build response in the same format the frontend expects
       const holdingsData = {
         result: { byWalletBalance: nonZero },
       };
 
-      // Cache for all periods (holdings don't change by period — it's a live on-chain snapshot)
       for (const period of PERIODS) {
         const { error } = await supabase.from("leaderboard_cache").upsert(
           {
@@ -248,7 +286,6 @@ Deno.serve(async (req) => {
 
     // ────────────────────────────────────────────────────────────────
     // 2. API-BASED CATEGORIES (sentTips, receivedTips)
-    //    Still sourced from DeHub API
     // ────────────────────────────────────────────────────────────────
     for (const sort of API_SORT_MODES) {
       for (const period of PERIODS) {
