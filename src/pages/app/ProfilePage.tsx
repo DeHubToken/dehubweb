@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useBadgeBalance } from '@/hooks/use-badge-balance';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -159,6 +160,10 @@ export default function ProfilePage() {
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   // Also check if profile wallet matches current user's wallet (for /{username} routes)
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
+  
+  // Fetch on-chain badge balance
+  const { badgeBalance } = useBadgeBalance(apiProfile?.walletAddress);
+  const badgeUrl = getBadgeUrl(badgeBalance);
   
   // Process API content - separate by type AND create unified feed sorted by date
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, ALL_CONTENT } = useMemo(() => {
@@ -1068,9 +1073,9 @@ export default function ProfilePage() {
                   {profile.handle}
                 </button>
                 {profile.verified && <VerifiedBadge className="w-5 h-5" />}
-                {profile.staked != null && (
+                {badgeUrl && (
                   <img 
-                    src={getBadgeUrl(profile.staked)} 
+                    src={badgeUrl} 
                     alt="Badge tier" 
                     className="w-5 h-5 shrink-0" 
                   />

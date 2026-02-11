@@ -4,18 +4,7 @@
  * Universal header for all feed card types.
  * Displays avatar with gradient ring, username, verified badge, and content type label.
  * Clickable to navigate to creator's profile.
- * 
- * @example
- * ```tsx
- * <CardHeader
- *   username="TechGuru"
- *   avatarSeed="tech"
- *   verified={true}
- *   contentType="video"
- *   creatorId="123"
- *   creatorUsername="techguru"
- * />
- * ```
+ * Badge is fetched on-chain via useBadgeBalance hook.
  */
 
 import { useState } from 'react';
@@ -25,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useBadgeBalance } from '@/hooks/use-badge-balance';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -49,8 +39,6 @@ interface CardHeaderProps {
   timestamp?: string;
   /** View count to show next to timestamp */
   viewCount?: string | number;
-  /** Badge balance (holdings + staked) for tier badge icon */
-  stakedAmount?: number;
 }
 
 /**
@@ -75,7 +63,6 @@ export function CardHeader({
   creatorUsername,
   timestamp,
   viewCount,
-  stakedAmount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
@@ -84,6 +71,10 @@ export function CardHeader({
   // Use live avatar from cache, falling back to feed-provided avatar
   const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
   const agentFallback = getAgentAvatarFallback(creatorId);
+  
+  // Fetch on-chain badge balance
+  const { badgeBalance } = useBadgeBalance(creatorId);
+  const badgeUrl = getBadgeUrl(badgeBalance);
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored
   const hasRealAvatar = liveAvatarUrl && liveAvatarUrl.startsWith('http') && !imageError;
@@ -132,9 +123,9 @@ export function CardHeader({
             <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
           )}
           {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
-          {stakedAmount != null && (
+          {badgeUrl && (
             <img 
-              src={getBadgeUrl(stakedAmount)} 
+              src={badgeUrl} 
               alt="Badge" 
               className="w-4 h-4 shrink-0" 
             />
