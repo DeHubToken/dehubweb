@@ -227,12 +227,13 @@ serve(async (req) => {
 
             if (user && (user.username || user.address)) {
                 const displayName = user.displayName || user.username || "DeHub User";
+                const profileUrl = `${APP_URL}/${user.username || username}`;
                 const html = generateMetaHTML({
                     title: `Join @${user.username || username} on DeHub today!`,
                     description:
                         user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
                     image: buildAvatarUrl(user),
-                    url: canonicalUrl,
+                    url: profileUrl,
                     twitterCard: "summary",
                     imageWidth: 400,
                     imageHeight: 400,
