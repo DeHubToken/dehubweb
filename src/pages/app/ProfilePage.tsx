@@ -16,6 +16,7 @@ import { LoginModal } from '@/components/app/LoginModal';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { CreatePlanModal, EditPlanModal, PlanCard } from '@/components/app/subscriptions';
 import { FollowersListDrawer } from '@/components/app/profile';
+import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { cn } from '@/lib/utils';
 import fractions3dIcon from '@/assets/icons/fractions-3d-icon.png';
 import live3dIcon from '@/assets/icons/live-3d-icon.png';
@@ -509,13 +510,7 @@ export default function ProfilePage() {
         const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
         
         if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={home3dIcon} alt="All" className="w-16 h-16 mb-3 opacity-90" />
-              <p className="text-muted-foreground text-lg font-medium">No posts yet</p>
-              <p className="text-muted-foreground/70 text-sm mt-1">Content will appear here when posted</p>
-            </div>
-          );
+          return <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
         }
         // Filter optimistic posts - only remove when a MINTED match exists in API
         const filteredOptimisticPosts = isViewingOwnProfile 
@@ -582,13 +577,7 @@ export default function ProfilePage() {
         );
       case 'posts':
         if (PROFILE_POSTS.length === 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={comment3dIcon} alt="Posts" className="w-16 h-16 mb-3 opacity-90" />
-              <p className="text-muted-foreground text-lg font-medium">No text posts yet</p>
-              <p className="text-muted-foreground/70 text-sm mt-1">Text posts will appear here</p>
-            </div>
-          );
+          return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No text posts yet" subtitle="Text posts will appear here" />;
         }
         return (
           <div className="space-y-3">
@@ -601,13 +590,7 @@ export default function ProfilePage() {
         );
       case 'images':
         if (PROFILE_IMAGES.length === 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={imageFrame3dIcon} alt="Images" className="w-16 h-16 mb-3" />
-              <p className="text-zinc-400 text-lg font-medium">No images yet</p>
-              <p className="text-zinc-500 text-sm mt-1">Image posts will appear here</p>
-            </div>
-          );
+          return <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />;
         }
         return (
           <div className="space-y-3">
@@ -620,13 +603,7 @@ export default function ProfilePage() {
         );
       case 'videos':
         if (ALL_PROFILE_VIDEOS.length === 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <img src={filmstrip3dIcon} alt="Videos" className="w-16 h-16 mb-3" />
-              <p className="text-zinc-400 text-lg font-medium">No videos yet</p>
-              <p className="text-zinc-500 text-sm mt-1">Video posts will appear here</p>
-            </div>
-          );
+          return <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />;
         }
         return (
           <div className="space-y-3">
@@ -732,29 +709,11 @@ export default function ProfilePage() {
           </div>
         );
       case 'songs':
-        return (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <img src={audio3dIcon} alt="Audio" className="w-16 h-16 mb-3" />
-            <p className="text-zinc-400 text-lg font-medium">No audio yet</p>
-            <p className="text-zinc-500 text-sm mt-1">Audio tracks will appear here</p>
-          </div>
-        );
+        return <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title="No audio yet" subtitle="Audio tracks will appear here" />;
       case 'live':
-        return (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <img src={live3dIcon} alt="Live" className="w-16 h-16 mb-3" />
-            <p className="text-zinc-400 text-lg font-medium">No live streams yet</p>
-            <p className="text-zinc-500 text-sm mt-1">Live content will appear here</p>
-          </div>
-        );
+        return <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />;
       case 'fractions':
-        return (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <img src={fractions3dIcon} alt="Fractions" className="w-16 h-16 mb-3" />
-            <p className="text-zinc-400 text-lg font-medium">No fractions yet</p>
-            <p className="text-zinc-500 text-sm mt-1">Fraction holdings will appear here</p>
-          </div>
-        );
+        return <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />;
       default:
         return null;
     }
