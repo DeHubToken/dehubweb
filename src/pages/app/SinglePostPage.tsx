@@ -73,8 +73,11 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const bountyCurrency = streamInfo?.addBountyTokenSymbol || 'DHB';
   
   // Canonical avatar resolution (matches feed normalization)
-  const rawAvatarPath = extractAvatarPath(nft);
-  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  const creatorObj = (nft as any).creator;
+  const ownerObj = (nft as any).owner;
+  const rawAvatarPath = extractAvatarPath(nft) || extractAvatarPath(creatorObj);
+  const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
+  const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   return {
     id: String(nft.tokenId),
@@ -85,15 +88,15 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title,
     description,
-    channel: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+    channel: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     channelAvatar: avatar,
     verified: false,
     views,
     uploadedAgo: formatTimeAgo(timestamp),
     status: nft.status,
     stakedAmount: undefined,
-    creatorId: nft.minter,
-    creatorUsername: nft.minterUsername || nft.mintername,
+    creatorId: resolvedAddress,
+    creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     isLiked: nft.isLiked,
     isDisliked: nft.isDisliked,
     likeCount: nft.totalVotes?.for || 0,
@@ -129,13 +132,16 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
   // Canonical avatar resolution (matches feed normalization)
-  const rawAvatarPath = extractAvatarPath(nft);
-  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  const creatorObj = (nft as any).creator;
+  const ownerObj = (nft as any).owner;
+  const rawAvatarPath = extractAvatarPath(nft) || extractAvatarPath(creatorObj);
+  const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
+  const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   return {
     id: String(nft.tokenId),
     type: 'image',
-    username: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+    username: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     verified: false,
     avatar,
     image: primaryImage,
@@ -149,8 +155,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     stakedAmount: undefined,
     views,
     timeAgo: formatTimeAgo(timestamp),
-    creatorId: nft.minter,
-    creatorUsername: nft.minterUsername || nft.mintername,
+    creatorId: resolvedAddress,
+    creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     isLiked: nft.isLiked,
     isDisliked: nft.isDisliked,
   };
@@ -164,8 +170,11 @@ function toTextPost(nft: DeHubNFT): TextPost {
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   
   // Canonical avatar resolution (matches feed normalization)
-  const rawAvatarPath = extractAvatarPath(nft);
-  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  const creatorObj = (nft as any).creator;
+  const ownerObj = (nft as any).owner;
+  const rawAvatarPath = extractAvatarPath(nft) || extractAvatarPath(creatorObj);
+  const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
+  const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   return {
     id: String(nft.tokenId),
@@ -174,9 +183,9 @@ function toTextPost(nft: DeHubNFT): TextPost {
     views,
     status: nft.status,
     author: {
-      id: nft.minter,
-      name: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
-      handle: nft.minterUsername || nft.mintername || nft.minter?.slice(0, 8) || 'anonymous',
+      id: resolvedAddress,
+      name: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
+      handle: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username || resolvedAddress?.slice(0, 8) || 'anonymous',
       avatarSeed: avatar,
       verified: false,
       stakedAmount: undefined,
@@ -195,13 +204,16 @@ function toTextPost(nft: DeHubNFT): TextPost {
  */
 function toLiveStream(nft: DeHubNFT): LiveStream {
   // Canonical avatar resolution (matches feed normalization)
-  const rawAvatarPath = extractAvatarPath(nft);
-  const avatar = rawAvatarPath ? buildAvatarUrl(nft.minter, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  const creatorObj = (nft as any).creator;
+  const ownerObj = (nft as any).owner;
+  const rawAvatarPath = extractAvatarPath(nft) || extractAvatarPath(creatorObj);
+  const resolvedAddress = nft.minter || creatorObj?.id || creatorObj?.address;
+  const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
   
   return {
     id: String(nft.tokenId),
     type: 'live',
-    streamer: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+    streamer: nft.minterDisplayName || nft.minterUsername || nft.mintername || creatorObj?.display_name || creatorObj?.username || ownerObj?.username || 'Unknown',
     avatar,
     title: nft.title || nft.name || 'Live Stream',
     game: nft.description || '',
@@ -209,8 +221,8 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     tags: [],
     isLive: (nft as any).isLive ?? false,
-    creatorId: nft.minter,
-    creatorUsername: nft.minterUsername || nft.mintername,
+    creatorId: resolvedAddress,
+    creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     likeCount: nft.totalVotes?.for || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
   };
