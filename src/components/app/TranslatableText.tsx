@@ -22,11 +22,16 @@ import { cn } from '@/lib/utils';
 
 // URL regex pattern for detecting links (with or without protocol)
 // Only matches common TLDs to avoid false positives like "higher.mp4"
-const COMMON_TLDS = 'com|org|net|io|ai|co|uk|de|fr|es|it|nl|be|ru|jp|cn|kr|in|au|ca|br|mx|app|dev|xyz|info|biz|me|tv|cc|gg|ly|to|fm|so|is|sh';
-const URL_REGEX = new RegExp(
-  `(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`,
-  'gi'
-);
+const COMMON_TLDS = 'com|org|net|io|ai|co|uk|de|fr|es|it|nl|be|ru|jp|cn|kr|in|au|ca|br|mx|app|dev|xyz|info|biz|me|tv|cc|gg|ly|to|fm|so|is|sh|digital|store|online|site|tech|world|club|live|space|art|design|social|link|page|one|pro|media|studio|agency|blog|shop|network|land|zone|fund|games|gaming|vc|nft|crypto|dao|eth';
+
+// TLD-restricted regex for non-www links (avoids false positives like "file.mp4")
+const TLD_URL_REGEX_SRC = `(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
+
+// www. prefix always means a link, regardless of TLD
+const WWW_URL_REGEX_SRC = '(?:https?:\\/\\/)?www\\.[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z]{2,63}\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)';
+
+// Combined: match www. links (any TLD) OR TLD-restricted links
+const URL_REGEX = new RegExp(`(?:${WWW_URL_REGEX_SRC})|(?:${TLD_URL_REGEX_SRC})`, 'gi');
 
 interface TranslatableTextProps {
   text: string;
