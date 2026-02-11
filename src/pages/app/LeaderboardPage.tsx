@@ -350,7 +350,7 @@ export default function LeaderboardPage() {
                         <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
                         {(() => {
                           const badgeUrl = getBadgeUrl(entry.badgeBalance ?? entry.total);
-                          return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-4 h-4 shrink-0" /> : null;
+                          return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-3.5 h-3.5 shrink-0 -mt-0.5" /> : null;
                         })()}
                       </div>
                       <span className="text-zinc-500 text-sm">{getHandle(entry)}</span>
