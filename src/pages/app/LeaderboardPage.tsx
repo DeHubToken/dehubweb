@@ -77,6 +77,7 @@ export default function LeaderboardPage() {
     queryKey: ['leaderboard', apiSortMode, timePeriod],
     queryFn: () => getLeaderboard(apiSortMode, timePeriod),
     staleTime: 60_000, // 1 minute
+    placeholderData: (prev) => prev, // Keep previous data while loading new tab
   });
 
   // Categories that require client-side sorting (not natively supported by API)
