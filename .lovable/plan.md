@@ -1,20 +1,15 @@
 
 
-## Disable JWT Verification for ssr-seo Edge Function
+## Redeploy ssr-seo Edge Function
 
 ### What
-Add `verify_jwt = false` for the `ssr-seo` function in `supabase/config.toml`.
+Trigger a redeployment of the `ssr-seo` edge function without any code changes.
 
-### Technical Details
+### Why
+The user has requested a redeployment, possibly to pick up configuration changes (like the recently added `verify_jwt = false` setting) or to refresh the running instance.
 
-**File: `supabase/config.toml`**
+### Steps
+1. Use the deploy edge functions tool to redeploy `ssr-seo`
+2. Verify the deployment succeeded
 
-Add the following entry:
-
-```toml
-[functions.ssr-seo]
-verify_jwt = false
-```
-
-This is a one-line addition to the config file, consistent with all the other edge functions in the project which already have JWT verification disabled.
-
+No code changes are needed -- this is a deployment-only action.
