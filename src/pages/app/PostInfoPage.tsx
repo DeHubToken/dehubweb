@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+import { EditPostModal } from '@/components/app/modals/EditPostModal';
 
 // Visibility options configuration
 const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
@@ -215,6 +216,7 @@ export default function PostInfoPage() {
   
   // Check if current user is the owner/minter
   const isOwner = walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase();
+  const [showEditModal, setShowEditModal] = useState(false);
   
   // Current visibility state (default to 'public' if not set)
   const currentVisibility: TokenVisibility = (nftInfo as any)?.visibility || 'public';
@@ -384,7 +386,16 @@ export default function PostInfoPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold text-white">Post Info</h1>
-          <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-white/10 rounded-lg text-white/80">
+          {isOwner && (
+            <button
+              onClick={() => setShowEditModal(true)}
+              className="ml-auto p-2 text-white/60 hover:text-white transition-colors"
+              aria-label="Edit post"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
+          <span className={`${isOwner ? '' : 'ml-auto '}px-2.5 py-1 text-xs font-medium bg-white/10 rounded-lg text-white/80`}>
             {chainInfo.name}
           </span>
         </div>
@@ -729,6 +740,19 @@ export default function PostInfoPage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Post Modal */}
+      {isOwner && nftInfo && (
+        <EditPostModal
+          open={showEditModal}
+          onOpenChange={setShowEditModal}
+          tokenId={nftInfo.tokenId}
+          currentTitle={nftInfo.title || nftInfo.name || ''}
+          currentDescription={nftInfo.description || ''}
+          currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['nft-info', postId] })}
+        />
+      )}
     </div>
   );
 }
