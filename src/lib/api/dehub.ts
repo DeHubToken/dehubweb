@@ -1517,6 +1517,7 @@ export interface LeaderboardEntry {
   likes?: number;
   subscribers?: number;
   delta?: number;
+  badgeBalance?: number;
 }
 
 export interface LeaderboardResponse {
