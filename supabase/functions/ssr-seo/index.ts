@@ -1,8 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -10,89 +10,84 @@ const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const APP_URL = "https://dehub.io"; // Change to actual production URL if different
 
 interface DeHubUser {
-  username?: string;
-  displayName?: string;
-  avatarImageUrl?: string;
-  aboutMe?: string;
-  address?: string;
+    username?: string;
+    displayName?: string;
+    avatarImageUrl?: string;
+    aboutMe?: string;
+    address?: string;
 }
 
 interface DeHubNFT {
-  tokenId: number;
-  name: string;
-  title?: string;
-  description?: string;
-  imageUrl?: string;
-  videoUrl?: string;
-  thumbnail_url?: string;
-  postType?: string;
-  minterUsername?: string;
+    tokenId: number;
+    name: string;
+    title?: string;
+    description?: string;
+    imageUrl?: string;
+    videoUrl?: string;
+    thumbnail_url?: string;
+    postType?: string;
+    minterUsername?: string;
 }
 
 function getExtension(path: string): string {
-  const match = path.match(/\.([a-zA-Z0-9-]+)$/);
-  if (!match) return "png";
-  return match[1].toLowerCase();
+    const match = path.match(/\.([a-zA-Z0-9-]+)$/);
+    if (!match) return "png";
+    return match[1].toLowerCase();
 }
 
-/**
- * Fix for DigitalOcean binary/octet-stream issue.
- * We use images.weserv.nl to proxy the image and return correct Content-Type.
- * This prevents social crawlers from rejecting the image as a download.
- */
 function buildProxyImageUrl(url: string): string {
-  if (!url || url.includes("dehub.io/og-image.png")) return url;
-  // Proxies the image and forces inline display with correct Content-Type
-  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&default=${encodeURIComponent(url)}`;
+    if (!url || url.includes("dehub.io/og-image.png")) return url;
+    // Clean URL without 'default' parameter to avoid scraper confusion
+    // Use output=png to force correct mime type
+    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=png`;
 }
 
 /**
  * Sync with frontend src/lib/media-url.ts
  */
 function buildAvatarUrl(user: DeHubUser): string {
-  const apiPath = user.avatarImageUrl;
-  if (!apiPath) return "https://dehub.io/og-image.png";
-  if (apiPath.startsWith("http")) return apiPath;
+    const apiPath = user.avatarImageUrl;
+    if (!apiPath) return "https://dehub.io/og-image.png";
+    if (apiPath.startsWith("http")) return apiPath;
 
-  // Frontend logic: cdn/avatars/{address}.{ext}
-  if (user.address) {
-    const ext = getExtension(apiPath);
-    return `${DEHUB_CDN_BASE}avatars/${user.address}.${ext}`;
-  }
+    // Frontend logic: cdn/avatars/{address}.{ext}
+    if (user.address) {
+        const ext = getExtension(apiPath);
+        return `${DEHUB_CDN_BASE}avatars/${user.address}.${ext}`;
+    }
 
-  // Fallback: strip statics/ and append relative path
-  return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
+    // Fallback: strip statics/ and append relative path
+    return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
 }
 
 function buildPostImageUrl(nft: DeHubNFT): string {
-  const apiPath = nft.imageUrl || nft.thumbnail_url;
-  if (!apiPath) return "https://dehub.io/og-image.png";
-  if (apiPath.startsWith("http")) return apiPath;
+    const apiPath = nft.imageUrl || nft.thumbnail_url;
+    if (!apiPath) return "https://dehub.io/og-image.png";
+    if (apiPath.startsWith("http")) return apiPath;
 
-  // Frontend logic: cdn/images/{tokenId}.{ext}
-  if (nft.tokenId) {
-    const ext = getExtension(apiPath);
-    return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
-  }
+    // Frontend logic: cdn/images/{tokenId}.{ext}
+    if (nft.tokenId) {
+        const ext = getExtension(apiPath);
+        return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
+    }
 
-  return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
+    return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
 }
 
 function generateMetaHTML(data: {
-  title: string;
-  description: string;
-  image: string;
-  url: string;
-  type?: string;
-  isBot: boolean;
+    title: string;
+    description: string;
+    image: string;
+    url: string;
+    type?: string;
+    isBot: boolean;
 }): string {
-  const title = data.title.replace(/"/g, "&quot;");
-  const description = data.description.replace(/"/g, "&quot;");
-  const proxyImage = buildProxyImageUrl(data.image);
-  const ext = getExtension(data.image);
-  const mimeType = ext === "png" ? "image/png" : "image/jpeg";
+    const title = data.title.replace(/"/g, "&quot;");
+    const description = data.description.replace(/"/g, "&quot;");
+    const proxyImage = buildProxyImageUrl(data.image);
+    const mimeType = "image/png"; // Forced by weserv output=png
 
-  return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -122,14 +117,13 @@ function generateMetaHTML(data: {
   <meta name="twitter:image" content="${proxyImage}">
   <meta name="twitter:site" content="@DeHubApp">
 
-  ${
-    !data.isBot
-      ? `
+  ${!data.isBot
+            ? `
   <meta http-equiv="refresh" content="0; url=${data.url}">
   <script>window.location.href = '${data.url}';</script>
   `
-      : ""
-  }
+            : ""
+        }
 </head>
 <body style="font-family: sans-serif; background: black; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
   <div style="max-width: 600px; text-align: center; padding: 20px;">
@@ -143,88 +137,88 @@ function generateMetaHTML(data: {
 }
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  try {
-    const url = new URL(req.url);
-    const userAgent = req.headers.get("user-agent") || "";
-    const isBot = /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
-
-    let fullPath = url.searchParams.get("path") || "/";
-    const originalUrl = url.searchParams.get("original_url");
-    const canonicalUrl = originalUrl || `${APP_URL}${fullPath}`;
-
-    let cleanPath = fullPath.split("?")[0];
-    if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
-    const pathParts = cleanPath.split("/").filter(Boolean);
-
-    // 1. Profile Handling (/@username or /username)
-    const possibleUsername = pathParts[0] || "";
-    const isSystemRoute = ["post", "video", "app", "explore", "notifications", "messages", "settings"].includes(
-      possibleUsername.toLowerCase(),
-    );
-
-    if (possibleUsername && !isSystemRoute) {
-      // Remove leading @ if present
-      const username = possibleUsername.startsWith("@") ? possibleUsername.substring(1) : possibleUsername;
-      console.log(`[SSR] Profile detected for: ${username}`);
-
-      const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`);
-      const userData = await response.json();
-      const user: DeHubUser = userData.result || userData;
-
-      if (user && (user.username || user.address)) {
-        const displayName = user.displayName || user.username || "DeHub User";
-        const html = generateMetaHTML({
-          title: `Join @${user.username || username} on DeHub today!`,
-          description:
-            user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
-          image: buildAvatarUrl(user),
-          url: canonicalUrl,
-          isBot,
-        });
-        return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
-      }
+    if (req.method === "OPTIONS") {
+        return new Response(null, { headers: corsHeaders });
     }
 
-    // 2. Post / Video Handling
-    if (cleanPath.includes("/post/") || cleanPath.includes("/video/")) {
-      const splitChar = cleanPath.includes("/post/") ? "/post/" : "/video/";
-      const postId = cleanPath.split(splitChar)[1].split("/")[0];
+    try {
+        const url = new URL(req.url);
+        const userAgent = req.headers.get("user-agent") || "";
+        const isBot = /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
 
-      const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`);
-      const nftData = await response.json();
-      const nft: DeHubNFT = nftData.result || nftData;
+        let fullPath = url.searchParams.get("path") || "/";
+        const originalUrl = url.searchParams.get("original_url");
+        const canonicalUrl = originalUrl || `${APP_URL}${fullPath}`;
 
-      if (nft) {
-        const title = nft.title || nft.name || "DeHub Post";
-        const description = nft.description || "View this post on DeHub";
+        let cleanPath = fullPath.split("?")[0];
+        if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
+        const pathParts = cleanPath.split("/").filter(Boolean);
+
+        // 1. Profile Handling (/@username or /username)
+        const possibleUsername = pathParts[0] || "";
+        const isSystemRoute = ["post", "video", "app", "explore", "notifications", "messages", "settings"].includes(
+            possibleUsername.toLowerCase(),
+        );
+
+        if (possibleUsername && !isSystemRoute) {
+            // Remove leading @ if present
+            const username = possibleUsername.startsWith("@") ? possibleUsername.substring(1) : possibleUsername;
+            console.log(`[SSR] Profile detected for: ${username}`);
+
+            const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`);
+            const userData = await response.json();
+            const user: DeHubUser = userData.result || userData;
+
+            if (user && (user.username || user.address)) {
+                const displayName = user.displayName || user.username || "DeHub User";
+                const html = generateMetaHTML({
+                    title: `Join @${user.username || username} on DeHub today!`,
+                    description:
+                        user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
+                    image: buildAvatarUrl(user),
+                    url: canonicalUrl,
+                    isBot,
+                });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+            }
+        }
+
+        // 2. Post / Video Handling
+        if (cleanPath.includes("/post/") || cleanPath.includes("/video/")) {
+            const splitChar = cleanPath.includes("/post/") ? "/post/" : "/video/";
+            const postId = cleanPath.split(splitChar)[1].split("/")[0];
+
+            const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`);
+            const nftData = await response.json();
+            const nft: DeHubNFT = nftData.result || nftData;
+
+            if (nft) {
+                const title = nft.title || nft.name || "DeHub Post";
+                const description = nft.description || "View this post on DeHub";
+                const html = generateMetaHTML({
+                    title,
+                    description,
+                    image: buildPostImageUrl(nft),
+                    url: canonicalUrl,
+                    type: "article",
+                    isBot,
+                });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+            }
+        }
+
+        // Default Fallback
         const html = generateMetaHTML({
-          title,
-          description,
-          image: buildPostImageUrl(nft),
-          url: canonicalUrl,
-          type: "article",
-          isBot,
+            title: "DeHub",
+            description:
+                "DeHub is an open source, user owned alternative to legacy media for true censorship resistance with freedom of speech and reach.",
+            image: "https://dehub.io/og-image.png",
+            url: canonicalUrl,
+            isBot,
         });
         return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
-      }
+    } catch (e) {
+        console.error("SSR SEO Error:", e);
+        return new Response("Error", { status: 500 });
     }
-
-    // Default Fallback
-    const html = generateMetaHTML({
-      title: "DeHub",
-      description:
-        "DeHub is an open source, user owned alternative to legacy media for true censorship resistance with freedom of speech and reach.",
-      image: "https://dehub.io/og-image.png",
-      url: canonicalUrl,
-      isBot,
-    });
-    return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
-  } catch (e) {
-    console.error("SSR SEO Error:", e);
-    return new Response("Error", { status: 500 });
-  }
 });
