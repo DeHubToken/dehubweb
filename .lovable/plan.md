@@ -1,13 +1,18 @@
 
-
-## Fix: Profile Picture Goes See-Through on Hover
+## Fix: Square-Edged Story Overlay on Profile Avatar
 
 ### Problem
-In `src/components/app/cards/CardHeader.tsx` (line 108), the clickable profile area has `hover:opacity-80`, which reduces the opacity of the entire container -- including the avatar image -- to 80% on hover, making it appear see-through.
+When hovering over a profile avatar that has an active story, the "liquid glass" overlay (Play / Image split buttons) appears with square edges. The overlay `div` at line 909 in `ProfilePage.tsx` has `absolute inset-0` but no border-radius, so it doesn't match the parent container's `rounded-[10px]`.
 
 ### Solution
-Remove `hover:opacity-80 transition-opacity` from the profile button wrapper. This will keep the avatar fully opaque on hover while still showing the pointer cursor for clickable profiles.
+Add `rounded-[10px]` to the overlay container on line 910. The parent already has `overflow-hidden`, but the overlay itself should also match the rounding for visual consistency.
 
 ### File Changed
-- **src/components/app/cards/CardHeader.tsx** (line 108): Remove `hover:opacity-80 transition-opacity` from the className.
-
+- **src/pages/app/ProfilePage.tsx** (line 910): Add `rounded-[10px]` to the overlay's className string, changing:
+  ```
+  "absolute inset-0 flex overflow-hidden transition-all duration-200"
+  ```
+  to:
+  ```
+  "absolute inset-0 flex overflow-hidden rounded-[10px] transition-all duration-200"
+  ```
