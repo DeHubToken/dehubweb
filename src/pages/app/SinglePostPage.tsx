@@ -94,7 +94,6 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     views,
     uploadedAgo: formatTimeAgo(timestamp),
     status: nft.status,
-    stakedAmount: nft.minterUser?.badgeBalance ?? (nft as any).minterStaked,
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     isLiked: nft.isLiked,
@@ -152,7 +151,6 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     caption: description || '',
     comments: nft.commentCount || nft.comment_count || 0,
     status: nft.status,
-    stakedAmount: nft.minterUser?.badgeBalance ?? (nft as any).minterStaked,
     views,
     timeAgo: formatTimeAgo(timestamp),
     creatorId: resolvedAddress,
@@ -188,7 +186,6 @@ function toTextPost(nft: DeHubNFT): TextPost {
       handle: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username || resolvedAddress?.slice(0, 8) || 'anonymous',
       avatarSeed: avatar,
       verified: false,
-      stakedAmount: nft.minterUser?.badgeBalance ?? (nft as any).minterStaked,
     },
     content: nft.description || nft.title || nft.name || '',
     stats: {

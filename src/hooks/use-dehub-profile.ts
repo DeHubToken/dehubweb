@@ -39,8 +39,7 @@ export interface ProfileData {
   followersList?: string[];
   /** Raw array of following wallet addresses (for list display) */
   followingsList?: string[];
-  /** Staked DHB amount for tier badge */
-  staked?: number;
+  /** Raw customs data from API */
   /** Raw customs data from API */
   customs?: Record<string, unknown>;
 }
@@ -99,9 +98,6 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
     followersList,
     followingsList,
-    staked: user.badgeBalance ?? (typeof user.staked === 'number' 
-      ? user.staked 
-      : user.balanceData?.[0]?.staked),
     customs: user.customs as Record<string, unknown> | undefined,
   };
 }

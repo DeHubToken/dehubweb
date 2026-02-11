@@ -14,20 +14,23 @@ interface BadgeDef {
 }
 
 const BADGE_LEVELS: BadgeDef[] = [
-  { name: "Tortoise", min: 0 },
-  { name: "Crab", min: 100 },
-  { name: "Piranha", min: 250 },
-  { name: "Lobster", min: 500 },
-  { name: "Octopus", min: 1000 },
-  { name: "Cobra", min: 2500 },
-  { name: "Crocodite", min: 5000 },
-  { name: "Dolphin", min: 7500 },
-  { name: "Tiger Shark", min: 10000 },
-  { name: "Great White Shark", min: 15000 },
-  { name: "Killer Whale", min: 25000 },
-  { name: "Blue Whale", min: 50000 },
-  { name: "Meglodon", min: 100000 },
+  { name: "Crab", min: 10000 },
+  { name: "Lobster", min: 25000 },
+  { name: "Piranha", min: 50000 },
+  { name: "Tortoise", min: 100000 },
+  { name: "Cobra", min: 250000 },
+  { name: "Octopus", min: 500000 },
+  { name: "Crocodite", min: 1000000 },
+  { name: "Dolphin", min: 2000000 },
+  { name: "Tiger Shark", min: 3000000 },
+  { name: "Killer Whale", min: 5000000 },
+  { name: "Great White Shark", min: 10000000 },
+  { name: "Blue Whale", min: 25000000 },
+  { name: "Meglodon", min: 50000000 },
 ];
+
+/** Minimum DHB to qualify for any badge */
+const MIN_BADGE_THRESHOLD = 10000;
 
 // Import all badge images
 import TortoiseBadge from '@/assets/badges/Tortoise.png';
@@ -63,18 +66,18 @@ const BADGE_IMAGES: Record<string, string> = {
 /**
  * Get badge name based on badge balance (holdings + staked)
  */
-export function getBadgeName(badgeBalance: number | string | undefined | null): string {
+export function getBadgeName(badgeBalance: number | string | undefined | null): string | null {
   if (badgeBalance === undefined || badgeBalance === null) {
-    return BADGE_LEVELS[0].name;
+    return null;
   }
   
   const amt = typeof badgeBalance === "string" 
     ? parseFloat(badgeBalance) 
     : badgeBalance;
     
-  if (!Number.isFinite(amt)) return BADGE_LEVELS[0].name;
+  if (!Number.isFinite(amt) || amt < MIN_BADGE_THRESHOLD) return null;
   
-  let current = BADGE_LEVELS[0].name;
+  let current: string | null = null;
   for (const b of BADGE_LEVELS) {
     if (amt >= b.min) current = b.name;
     else break;
@@ -85,24 +88,26 @@ export function getBadgeName(badgeBalance: number | string | undefined | null): 
 /**
  * Get badge image URL based on badge balance (holdings + staked)
  */
-export function getBadgeUrl(badgeBalance: number | string | undefined | null): string {
+export function getBadgeUrl(badgeBalance: number | string | undefined | null): string | null {
   const badge = getBadgeName(badgeBalance);
-  return BADGE_IMAGES[badge] || BADGE_IMAGES["Tortoise"];
+  if (!badge) return null;
+  return BADGE_IMAGES[badge] || null;
 }
 
 /**
  * Get badge tier info (name, min, and image)
  */
 export function getBadgeInfo(badgeBalance: number | string | undefined | null): {
-  name: string;
-  imageUrl: string;
+  name: string | null;
+  imageUrl: string | null;
   minStake: number;
 } {
   const name = getBadgeName(badgeBalance);
+  if (!name) return { name: null, imageUrl: null, minStake: MIN_BADGE_THRESHOLD };
   const level = BADGE_LEVELS.find(b => b.name === name) || BADGE_LEVELS[0];
   return {
     name,
-    imageUrl: BADGE_IMAGES[name] || BADGE_IMAGES["Tortoise"],
+    imageUrl: BADGE_IMAGES[name] || null,
     minStake: level.min,
   };
 }
