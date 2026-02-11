@@ -172,7 +172,7 @@ interface EnrichedEntry {
 // These wallets are queried on-chain and injected into the holdings leaderboard
 const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avatarUrl?: string }> = {
   maldoteth: { wallet: "0xbb0265021e03a048a6e8dcf249cd5067f35db45d", displayName: "mal", avatarUrl: "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/0x9324840523a5d17dd12a2f11a9472e5a199c1937.jpg" },
-  outoforrder: { wallet: "0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5", displayName: "outoforrder", avatarUrl: "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/statics/avatars/0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5.jpeg" },
+  outoforrder: { wallet: "0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5", displayName: "outoforrder", avatarUrl: "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5.jpeg" },
 };
 
 // ── Main handler ────────────────────────────────────────────────────
