@@ -36,6 +36,17 @@ function getExtension(path: string): string {
 }
 
 /**
+ * Fix for DigitalOcean binary/octet-stream issue.
+ * We use images.weserv.nl to proxy the image and return correct Content-Type.
+ * This prevents social crawlers from rejecting the image as a download.
+ */
+function buildProxyImageUrl(url: string): string {
+    if (!url || url.includes("dehub.io/og-image.png")) return url;
+    // Proxies the image and forces inline display with correct Content-Type
+    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&default=${encodeURIComponent(url)}`;
+}
+
+/**
  * Sync with frontend src/lib/media-url.ts
  */
 function buildAvatarUrl(user: DeHubUser): string {
@@ -77,6 +88,7 @@ function generateMetaHTML(data: {
 }): string {
     const title = data.title.replace(/"/g, '&quot;');
     const description = data.description.replace(/"/g, '&quot;');
+    const proxyImage = buildProxyImageUrl(data.image);
     const ext = getExtension(data.image);
     const mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';
 
@@ -95,8 +107,8 @@ function generateMetaHTML(data: {
   <meta property="og:url" content="${data.url}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
-  <meta property="og:image" content="${data.image}">
-  <meta property="og:image:secure_url" content="${data.image}">
+  <meta property="og:image" content="${proxyImage}">
+  <meta property="og:image:secure_url" content="${proxyImage}">
   <meta property="og:image:type" content="${mimeType}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -107,7 +119,7 @@ function generateMetaHTML(data: {
   <meta name="twitter:url" content="${data.url}">
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
-  <meta name="twitter:image" content="${data.image}">
+  <meta name="twitter:image" content="${proxyImage}">
   <meta name="twitter:site" content="@DeHubApp">
 
   ${!data.isBot ? `
