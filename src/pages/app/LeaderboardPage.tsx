@@ -322,11 +322,11 @@ export default function LeaderboardPage() {
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2">
                     {rank <= 6 ? (
-                      <div className={`medal-shine-container ${rank <= 3 ? 'w-10 h-10' : 'w-8 h-8'}`}>
+                      <div className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}>
                         <img 
                           src={[medal1, medal2, medal3, medal4, medal5, medal6][rank - 1]} 
                           alt={`Rank ${rank}`} 
-                          className={`${rank <= 3 ? 'w-10 h-10' : 'w-8 h-8'} object-contain`}
+                          className={`${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'} object-contain`}
                         />
                         <div 
                           className="medal-shine-overlay"
