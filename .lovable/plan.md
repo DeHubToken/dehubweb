@@ -1,23 +1,27 @@
 
+# Fix outoforrder's Avatar and Check for Missing Wallets
 
-# Fix Leaderboard Build Error and Restore "outoforrder"
+## Problem 1: Broken Avatar
+The avatar URL for outoforrder in `EXTRA_WALLETS` includes `statics/` in the path:
+```
+https://dehubcdn.ams3.cdn.digitaloceanspaces.com/statics/avatars/0xf96e...jpeg
+```
+The `buildAvatarUrl` function sees it starts with `https://dehubcdn` and returns it unchanged -- but the `statics/` prefix makes it a broken URL on the CDN. Maldoteth's entry uses the correct clean path (without `statics/`).
 
-## What Went Wrong
+## Problem 2: Missing Wallets
+Based on the cached data, no other previously-present wallets appear to have fallen out. The current cache has 20+ entries and the rankings look consistent. The DeHub `account_info` API returns "No result" for outoforrder's wallet, which suggests an API-side issue with that specific account -- but the leaderboard cache already has their data injected correctly via `EXTRA_WALLETS`.
 
-The last change added `badgeBalance` to line 255 of the edge function but forgot to add it to the `EnrichedEntry` type definition (line 156-168). This caused a **TypeScript build error that prevented the edge function from deploying**. Since the function can't deploy, the leaderboard cache stopped refreshing -- which is why everything looks stale/broken.
+## Fix
 
-## Changes
+**File**: `supabase/functions/refresh-leaderboard-cache/index.ts` (line 175)
 
-### 1. Fix the type error in `supabase/functions/refresh-leaderboard-cache/index.ts`
-- Add `badgeBalance?: number;` to the `EnrichedEntry` interface (line 168)
+Change the avatar URL from:
+```
+https://dehubcdn.ams3.cdn.digitaloceanspaces.com/statics/avatars/0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5.jpeg
+```
+to:
+```
+https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5.jpeg
+```
 
-### 2. Add "outoforrder" to `EXTRA_WALLETS`
-- Wallet: `0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5`
-- Username: `outoforrder`
-- Display name: `outoforrder`
-- Avatar: `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/statics/avatars/0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5.jpeg`
-
-### 3. Deploy and refresh
-- Deploy the fixed edge function
-- Trigger a leaderboard cache refresh so both maldoteth and outoforrder appear with correct data and badges
-
+Then redeploy the edge function and trigger a cache refresh so the corrected URL propagates.
