@@ -45,6 +45,7 @@ import { followUser, unfollowUser } from '@/lib/api/dehub';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
+import { TranslatableText } from '@/components/app/TranslatableText';
 
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -1090,7 +1091,7 @@ export default function ProfilePage() {
               )}
               
               {profile.bio && (
-                <p className="mt-3 text-white/90 text-sm sm:text-base">{profile.bio}</p>
+                <TranslatableText text={profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />
               )}
               
               <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
