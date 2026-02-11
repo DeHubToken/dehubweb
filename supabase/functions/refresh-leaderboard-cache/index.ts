@@ -8,7 +8,7 @@ const corsHeaders = {
 
 // ── Contract addresses ──────────────────────────────────────────────
 const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
-const DHB_BNB = "0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7";
+const DHB_BNB = "0x680d3113caf77b61b510f332d5ef4cf5b41a761d";
 const STAKING_CONTRACT = "0x26d2Cd7763106FDcE443faDD36163E2ad33A76E6"; // BNB only
 
 // Function selectors
