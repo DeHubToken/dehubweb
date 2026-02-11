@@ -11,6 +11,7 @@ import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
 import medal4 from '@/assets/medal-4.png';
+import medal5 from '@/assets/medal-5.png';
 
 const PERIODS = ['1d', '1w', '1m', '1y', 'All'] as const;
 const PERIOD_MAP: Record<string, string> = {
@@ -173,17 +174,17 @@ export function SidebarLeaderboard() {
                 >
                   {/* Rank */}
                   <div className="w-7 flex-shrink-0 flex items-center justify-center">
-                    {rank <= 4 ? (
+                    {rank <= 5 ? (
                       <div className="medal-shine-container w-6 h-6">
                         <img 
-                          src={rank === 1 ? medal1 : rank === 2 ? medal2 : rank === 3 ? medal3 : medal4} 
+                          src={[medal1, medal2, medal3, medal4, medal5][rank - 1]} 
                           alt={`Rank ${rank}`} 
                           className="w-6 h-6 object-contain"
                         />
                         <div 
                           key={shimmerKey}
                           className="medal-shine-overlay"
-                          style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : rank === 3 ? medal3 : medal4})` } as React.CSSProperties}
+                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5][rank - 1]})` } as React.CSSProperties}
                         />
                       </div>
                     ) : (
