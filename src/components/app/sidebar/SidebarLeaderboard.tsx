@@ -31,9 +31,20 @@ export function SidebarLeaderboard() {
   });
 
   // Only show users with usernames, filter out wallet-only entries
-  const hiddenUsernames = ['microsoft'];
+  // Manual balance overrides
+  const balanceOverrides: Record<string, number> = {
+    'microsoft': 11_000_000,
+  };
+
   const entries = (data?.result?.byWalletBalance || [])
-    .filter((entry: LeaderboardEntry) => entry.username && !hiddenUsernames.includes(entry.username.toLowerCase()))
+    .filter((entry: LeaderboardEntry) => entry.username)
+    .map((entry: LeaderboardEntry) => {
+      const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
+      if (override !== undefined) {
+        return { ...entry, total: override };
+      }
+      return entry;
+    })
     .slice(0, 50);
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
