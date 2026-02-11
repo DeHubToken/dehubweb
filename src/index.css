@@ -339,7 +339,8 @@ html {
   );
   background-size: 300% 100%;
   background-position: 100% 0;
-  animation: medal-sweep 8s ease-in-out infinite;
+  animation: medal-sweep 3s ease-in-out infinite;
+  animation-fill-mode: both;
   pointer-events: none;
   -webkit-mask-image: var(--medal-mask);
   mask-image: var(--medal-mask);
@@ -352,10 +353,10 @@ html {
 }
 
 @keyframes medal-sweep {
-  0%, 80%, 100% {
+  0%, 60%, 100% {
     background-position: 100% 0;
   }
-  90% {
+  80% {
     background-position: -100% 0;
   }
 }
