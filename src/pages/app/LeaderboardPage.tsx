@@ -306,7 +306,7 @@ export default function LeaderboardPage() {
 
         {/* Table Rows */}
         {!isLoading && !error && entries.length > 0 && (
-          <div className="divide-y divide-zinc-800">
+          <div>
             {entries.map((entry, index) => {
               const rank = index + 1;
               return (
