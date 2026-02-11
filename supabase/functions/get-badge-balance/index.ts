@@ -9,31 +9,47 @@ const corsHeaders = {
 const DHB_BASE = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c';
 const DHB_BNB = '0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7';
 
-// Staking contract (same on both chains)
+// Staking contract (BNB only — does not exist on Base)
 const STAKING_CONTRACT = '0x26d2Cd7763106FDcE443faDD36163E2ad33A76E6';
 
-// ERC20 balanceOf selector: 0x70a08231
-const BALANCE_OF_SELECTOR = '0x70a08231';
+// Function selectors
+const BALANCE_OF_SELECTOR = '0x70a08231'; // balanceOf(address)
+const USER_INFOS_SELECTOR = '0x43b0215f'; // userInfos(address) → first slot = totalAmount
 
-// In-memory cache: address -> { total, timestamp }
+// Public BNB RPCs as fallback (Alchemy BNB can return empty results)
+const BNB_PUBLIC_RPCS = [
+  'https://bsc-dataseed1.binance.org',
+  'https://bsc-dataseed2.binance.org',
+  'https://bsc-dataseed3.binance.org',
+];
+
+// In-memory cache
 const cache = new Map<string, { total: number; timestamp: number }>();
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-
-// Batch cache for multiple addresses
+const CACHE_TTL_MS = 5 * 60 * 1000;
 const batchCache = new Map<string, { results: Record<string, number>; timestamp: number }>();
 
-function encodeBalanceOf(address: string): string {
+function encodeCall(selector: string, address: string): string {
   const cleaned = address.replace('0x', '').toLowerCase().padStart(64, '0');
-  return BALANCE_OF_SELECTOR + cleaned;
+  return selector + cleaned;
+}
+
+/** Parse first 32-byte slot from hex return data */
+function hexFirstSlotToNumber(hex: string): number {
+  if (!hex || hex === '0x' || hex === '0x0') return 0;
+  try {
+    // Take first 32 bytes (64 hex chars) after 0x prefix
+    const firstSlot = hex.length >= 66 ? '0x' + hex.slice(2, 66) : hex;
+    const raw = BigInt(firstSlot);
+    return Number(raw) / 1e18;
+  } catch {
+    return 0;
+  }
 }
 
 function hexToNumber(hex: string): number {
   if (!hex || hex === '0x' || hex === '0x0') return 0;
   try {
-    // Parse as BigInt then convert to number (DHB has 18 decimals)
-    const raw = BigInt(hex);
-    // Convert from wei (18 decimals) to human-readable
-    return Number(raw) / 1e18;
+    return Number(BigInt(hex)) / 1e18;
   } catch {
     return 0;
   }
@@ -51,11 +67,36 @@ async function rpcCall(rpcUrl: string, to: string, data: string): Promise<string
     }),
   });
   const json = await res.json();
+  if (json.error) {
+    console.error(`[rpc-error] to=${to} data=${data.slice(0, 10)} error=`, json.error);
+  }
   return json.result || '0x0';
 }
 
+/** Call BNB with fallback to public RPCs if Alchemy returns empty */
+async function bnbRpcCall(alchemyBnbRpc: string, to: string, data: string): Promise<string> {
+  // Try Alchemy first
+  const result = await rpcCall(alchemyBnbRpc, to, data);
+  if (result && result !== '0x0' && result !== '0x') {
+    return result;
+  }
+  
+  // Fallback to public RPCs
+  for (const rpc of BNB_PUBLIC_RPCS) {
+    try {
+      const fallbackResult = await rpcCall(rpc, to, data);
+      if (fallbackResult && fallbackResult !== '0x0' && fallbackResult !== '0x') {
+        return fallbackResult;
+      }
+    } catch {
+      continue;
+    }
+  }
+  
+  return result; // Return whatever Alchemy gave us
+}
+
 async function getBalanceForAddress(address: string, alchemyKey: string): Promise<number> {
-  // Check cache
   const cached = cache.get(address.toLowerCase());
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
     return cached.total;
@@ -63,29 +104,25 @@ async function getBalanceForAddress(address: string, alchemyKey: string): Promis
 
   const baseRpc = `https://base-mainnet.g.alchemy.com/v2/${alchemyKey}`;
   const bnbRpc = `https://bnb-mainnet.g.alchemy.com/v2/${alchemyKey}`;
-  const callData = encodeBalanceOf(address);
 
-  // Query all 4 balances in parallel:
-  // 1. DHB holdings on Base
-  // 2. DHB holdings on BNB
-  // 3. Staking balance on Base
-  // 4. Staking balance on BNB
-  const [baseHoldings, bnbHoldings, baseStaked, bnbStaked] = await Promise.all([
-    rpcCall(baseRpc, DHB_BASE, callData),
-    rpcCall(bnbRpc, DHB_BNB, callData),
-    rpcCall(baseRpc, STAKING_CONTRACT, callData),
-    rpcCall(bnbRpc, STAKING_CONTRACT, callData),
+  const holdingsData = encodeCall(BALANCE_OF_SELECTOR, address);
+  const stakingData = encodeCall(USER_INFOS_SELECTOR, address);
+
+  // Query: Base holdings, BNB holdings (with fallback), BNB staking (staking only on BNB)
+  const [baseHoldingsHex, bnbHoldingsHex, bnbStakedHex] = await Promise.all([
+    rpcCall(baseRpc, DHB_BASE, holdingsData),
+    bnbRpcCall(bnbRpc, DHB_BNB, holdingsData),
+    bnbRpcCall(bnbRpc, STAKING_CONTRACT, stakingData),
   ]);
 
-  const total =
-    hexToNumber(baseHoldings) +
-    hexToNumber(bnbHoldings) +
-    hexToNumber(baseStaked) +
-    hexToNumber(bnbStaked);
+  const baseHoldings = hexToNumber(baseHoldingsHex);
+  const bnbHoldings = hexToNumber(bnbHoldingsHex);
+  const bnbStaked = hexFirstSlotToNumber(bnbStakedHex); // userInfos returns tuple, first slot = totalAmount
+  const total = baseHoldings + bnbHoldings + bnbStaked;
 
-  // Cache result
+  console.log(`[balance] ${address}: base=${baseHoldings}, bnb=${bnbHoldings}, staked=${bnbStaked}, total=${total}`);
+
   cache.set(address.toLowerCase(), { total, timestamp: Date.now() });
-
   return total;
 }
 
@@ -107,7 +144,7 @@ serve(async (req) => {
     const address = url.searchParams.get('address');
     const addressesParam = url.searchParams.get('addresses');
 
-    // Batch mode: multiple addresses
+    // Batch mode
     if (addressesParam) {
       const addresses = addressesParam.split(',').map(a => a.trim()).filter(Boolean).slice(0, 50);
       
@@ -118,7 +155,6 @@ serve(async (req) => {
         );
       }
 
-      // Create batch cache key
       const batchKey = addresses.map(a => a.toLowerCase()).sort().join(',');
       const batchCached = batchCache.get(batchKey);
       if (batchCached && Date.now() - batchCached.timestamp < CACHE_TTL_MS) {
@@ -129,7 +165,6 @@ serve(async (req) => {
       }
 
       const results: Record<string, number> = {};
-      // Process in batches of 10 to avoid overwhelming RPC
       for (let i = 0; i < addresses.length; i += 10) {
         const batch = addresses.slice(i, i + 10);
         const balances = await Promise.all(
