@@ -83,12 +83,25 @@ export default function LeaderboardPage() {
   const clientSortedCategories: CategoryType[] = ['followers', 'likes', 'subscribers'];
   const isClientSorted = clientSortedCategories.includes(category);
 
+  // Manual balance overrides (username -> total override)
+  const balanceOverrides: Record<string, number> = {
+    'microsoft': 11_000_000,
+  };
+
   const entries = useMemo(() => {
     let list = data?.result?.byWalletBalance || [];
     
-    // Filter out wallet-only entries and hidden users
-    const hiddenUsernames = ['microsoft'];
-    list = list.filter(entry => entry.username && !hiddenUsernames.includes(entry.username.toLowerCase()));
+    // Filter out wallet-only entries (no username)
+    list = list.filter(entry => entry.username);
+
+    // Apply manual balance overrides
+    list = list.map(entry => {
+      const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
+      if (override !== undefined) {
+        return { ...entry, total: override };
+      }
+      return entry;
+    });
     
     // Client-side sorting for social metrics
     if (category === 'followers') {
