@@ -169,8 +169,8 @@ interface EnrichedEntry {
 
 // ── Extra wallets to include (username -> wallet address) ───────────
 // These wallets are queried on-chain and injected into the holdings leaderboard
-const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string }> = {
-  maldoteth: { wallet: "0xbb0265021e03a048a6e8dcf249cd5067f35db45d", displayName: "maldoteth" },
+const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avatarUrl?: string }> = {
+  maldoteth: { wallet: "0xbb0265021e03a048a6e8dcf249cd5067f35db45d", displayName: "mal", avatarUrl: "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/0x9324840523a5d17dd12a2f11a9472e5a199c1937.jpg" },
 };
 
 // ── Main handler ────────────────────────────────────────────────────
@@ -272,6 +272,7 @@ Deno.serve(async (req) => {
                 total: balance,
                 username,
                 userDisplayName: config.displayName,
+                avatarUrl: config.avatarUrl,
                 sentTips: 0,
                 receivedTips: 0,
               });
