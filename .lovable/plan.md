@@ -1,15 +1,13 @@
 
 
-## Redeploy ssr-seo Edge Function
+## Fix: Profile Picture Goes See-Through on Hover
 
-### What
-Trigger a redeployment of the `ssr-seo` edge function without any code changes.
+### Problem
+In `src/components/app/cards/CardHeader.tsx` (line 108), the clickable profile area has `hover:opacity-80`, which reduces the opacity of the entire container -- including the avatar image -- to 80% on hover, making it appear see-through.
 
-### Why
-The user has requested a redeployment, possibly to pick up configuration changes (like the recently added `verify_jwt = false` setting) or to refresh the running instance.
+### Solution
+Remove `hover:opacity-80 transition-opacity` from the profile button wrapper. This will keep the avatar fully opaque on hover while still showing the pointer cursor for clickable profiles.
 
-### Steps
-1. Use the deploy edge functions tool to redeploy `ssr-seo`
-2. Verify the deployment succeeded
+### File Changed
+- **src/components/app/cards/CardHeader.tsx** (line 108): Remove `hover:opacity-80 transition-opacity` from the className.
 
-No code changes are needed -- this is a deployment-only action.
