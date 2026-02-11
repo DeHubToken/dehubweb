@@ -37,8 +37,8 @@ export function ProfileEmptyState({ iconSrc, iconAlt, title, subtitle, iconClass
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
       <img src={iconSrc} alt={iconAlt} className={`w-16 h-16 mb-3 ${iconClassName ?? ''}`} />
-      <p className="text-muted-foreground text-lg font-medium">{title}</p>
-      <p className="text-muted-foreground/70 text-sm mt-1">{subtitle}</p>
+      <p className="text-white text-lg font-medium">{title}</p>
+      <p className="text-white/70 text-sm mt-1">{subtitle}</p>
     </div>
   );
 }
