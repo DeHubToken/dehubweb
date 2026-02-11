@@ -167,6 +167,12 @@ interface EnrichedEntry {
   delta?: number;
 }
 
+// ── Extra wallets to include (username -> wallet address) ───────────
+// These wallets are queried on-chain and injected into the holdings leaderboard
+const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string }> = {
+  maldoteth: { wallet: "0xbb0265021e03a048a6e8dcf249cd5067f35db45d", displayName: "maldoteth" },
+};
+
 // ── Main handler ────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -251,6 +257,29 @@ Deno.serve(async (req) => {
 
         if (i + BATCH_SIZE < rawEntries.length) {
           await new Promise((r) => setTimeout(r, 200));
+        }
+      }
+
+      // ── Inject extra wallets ──────────────────────────────────────
+      const existingAccounts = new Set(enriched.map(e => e.account.toLowerCase()));
+      for (const [username, config] of Object.entries(EXTRA_WALLETS)) {
+        if (!existingAccounts.has(config.wallet.toLowerCase())) {
+          try {
+            const balance = await getOnChainBalance(config.wallet, baseRpc, bnbRpc);
+            if (balance > 0) {
+              enriched.push({
+                account: config.wallet.toLowerCase(),
+                total: balance,
+                username,
+                userDisplayName: config.displayName,
+                sentTips: 0,
+                receivedTips: 0,
+              });
+              console.log(`Extra wallet ${username} (${config.wallet}): ${balance}`);
+            }
+          } catch (err) {
+            console.error(`Failed to query extra wallet ${username}:`, err);
+          }
         }
       }
 
