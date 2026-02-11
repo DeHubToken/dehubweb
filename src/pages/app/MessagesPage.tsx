@@ -210,7 +210,7 @@ export default function MessagesPage() {
               onClick={() => setShowPublicChat(true)}
               className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left border-b border-zinc-800"
             >
-              <div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
                 <img 
                   src={dehubLogo} 
                   alt="Public Chat" 
