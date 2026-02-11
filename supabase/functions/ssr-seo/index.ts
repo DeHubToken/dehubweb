@@ -67,7 +67,10 @@ function generateMetaHTML(data: {
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="${data.image}">
-  <meta property="fb:app_id" content="966242223397117"> <!-- Added DeHub App ID -->
+  <meta property="og:image:type" content="image/png"> <!-- Hint for binary/octet-stream -->
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="fb:app_id" content="966242223397117">
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
