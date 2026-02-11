@@ -16,6 +16,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
+import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -28,7 +29,7 @@ const tabs: { label: string; value: NotificationTypeFilter; icon: React.ElementT
   { label: 'All', value: 'all', icon: Bell },
   { label: 'Likes', value: 'likes', icon: Heart },
   { label: 'Follows', value: 'follows', icon: UserPlus },
-  { label: 'Comments', value: 'comments', icon: MessageCircle },
+  { label: 'Comments', value: 'comments', icon: () => <img src={comment3dIcon} alt="Comments" className="w-4 h-4 object-contain" /> },
   { label: 'Reposts', value: 'reposts', icon: Repeat2 },
   { label: 'Subs', value: 'subscriptions', icon: Users },
   { label: 'Tips', value: 'tips', icon: DollarSign },
@@ -53,7 +54,7 @@ function getNotificationIcon(type: DeHubNotification['type']) {
       return <Heart className="w-4 h-4 text-pink-500" />;
     case 'comment':
     case 'comment_reply':
-      return <MessageCircle className="w-4 h-4 text-blue-500" />;
+      return <img src={comment3dIcon} alt="Comment" className="w-4 h-4 object-contain" />;
     case 'tip':
       return <DollarSign className="w-4 h-4 text-yellow-500" />;
     case 'subscription':
