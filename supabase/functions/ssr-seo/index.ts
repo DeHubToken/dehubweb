@@ -9,6 +9,9 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const APP_URL = "https://dehub.io"; // Change to actual production URL if different
 
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
+const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
+
 interface DeHubUser {
     username?: string;
     displayName?: string;
@@ -197,8 +200,7 @@ serve(async (req) => {
         const userAgent = req.headers.get("user-agent") || "";
         const isBot = /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
 
-        // Derive the base URL for image proxy from current request
-        const functionBaseUrl = `${url.origin}${url.pathname}`;
+        const functionBaseUrl = IMAGE_PROXY_BASE;
 
         let fullPath = url.searchParams.get("path") || "/";
         const originalUrl = url.searchParams.get("original_url");
