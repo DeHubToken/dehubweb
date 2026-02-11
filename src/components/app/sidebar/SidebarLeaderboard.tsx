@@ -138,7 +138,7 @@ export function SidebarLeaderboard() {
         <Button
           variant="ghost"
           onClick={() => navigate('/app/leaderboard')}
-          className="w-full mt-2 text-white/70 hover:text-white hover:bg-zinc-800/50"
+          className="w-full mt-2 text-white/50 hover:text-white hover:bg-transparent"
         >
           View All
         </Button>
