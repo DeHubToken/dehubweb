@@ -368,18 +368,20 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               <div ref={scrollSentinelRef} className="flex-shrink-0 w-1 h-1" />
             )}
 
-            {/* Trailing Create button at end of stories */}
-            <div
-              className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer"
-              onClick={() => setIsOpen(true)}
-            >
-              <div className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 p-[2px]">
-                <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
-                  <Plus className="w-5 h-5 md:w-6 md:h-6 text-zinc-500" />
+            {/* Trailing Create button at end of stories - only show if more than 9 stories */}
+            {allStoryItems.length > 9 && (
+              <div
+                className="flex flex-col items-center gap-0.5 md:gap-1 flex-shrink-0 cursor-pointer"
+                onClick={() => setIsOpen(true)}
+              >
+                <div className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 p-[2px]">
+                  <div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] rounded-[10px] bg-zinc-900 flex items-center justify-center">
+                    <Plus className="w-5 h-5 md:w-6 md:h-6 text-zinc-500" />
+                  </div>
                 </div>
+                <span className="text-[10px] md:text-xs text-zinc-500 truncate w-14 md:w-16 text-center">Create</span>
               </div>
-              <span className="text-[10px] md:text-xs text-zinc-500 truncate w-14 md:w-16 text-center">Create</span>
-            </div>
+            )}
           </SwipeableCarousel>
         </div>
       </div>
