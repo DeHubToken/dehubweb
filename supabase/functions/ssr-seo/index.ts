@@ -35,11 +35,10 @@ function getExtension(path: string): string {
     return match[1].toLowerCase();
 }
 
-function buildProxyImageUrl(url: string): string {
-    if (!url || url.includes("dehub.io/og-image.png")) return url;
-    // Clean URL without 'default' parameter to avoid scraper confusion
-    // Use output=png to force correct mime type
-    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&output=png`;
+function ensureAbsoluteUrl(url: string): string {
+    if (!url) return "https://dehub.io/og-image.png";
+    if (url.startsWith("http")) return url;
+    return `${DEHUB_CDN_BASE}${url.replace(/^statics\//, "")}`;
 }
 
 /**
@@ -74,18 +73,47 @@ function buildPostImageUrl(nft: DeHubNFT): string {
     return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
 }
 
+function getMimeType(url: string): string {
+    const ext = url.split("?")[0].match(/\.([a-zA-Z0-9]+)$/)?.[1]?.toLowerCase();
+    switch (ext) {
+        case "jpg":
+        case "jpeg":
+            return "image/jpeg";
+        case "gif":
+            return "image/gif";
+        case "webp":
+            return "image/webp";
+        default:
+            return "image/png";
+    }
+}
+
+function buildProxiedImageUrl(functionBaseUrl: string, imageUrl: string): string {
+    // Use our own edge function as image proxy to serve correct Content-Type
+    return `${functionBaseUrl}?image_url=${encodeURIComponent(imageUrl)}`;
+}
+
 function generateMetaHTML(data: {
     title: string;
     description: string;
     image: string;
     url: string;
     type?: string;
+    twitterCard?: string;
+    imageWidth?: number;
+    imageHeight?: number;
+    functionBaseUrl?: string;
     isBot: boolean;
 }): string {
-    const title = data.title.replace(/"/g, "&quot;");
-    const description = data.description.replace(/"/g, "&quot;");
-    const proxyImage = buildProxyImageUrl(data.image);
-    const mimeType = "image/png"; // Forced by weserv output=png
+    const title = data.title.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const description = data.description.replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const imageUrl = ensureAbsoluteUrl(data.image);
+    // For og:image tags, use proxied URL so scrapers get correct Content-Type
+    const ogImageUrl = data.functionBaseUrl ? buildProxiedImageUrl(data.functionBaseUrl, imageUrl) : imageUrl;
+    const twitterCard = data.twitterCard || "summary_large_image";
+    const imgWidth = data.imageWidth || 1200;
+    const imgHeight = data.imageHeight || 630;
+    const mimeType = getMimeType(imageUrl);
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -93,28 +121,28 @@ function generateMetaHTML(data: {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
-  
+
   <!-- SEO Meta Tags -->
   <meta name="description" content="${description}">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="${data.type || "website"}">
   <meta property="og:url" content="${data.url}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
-  <meta property="og:image" content="${proxyImage}">
-  <meta property="og:image:secure_url" content="${proxyImage}">
+  <meta property="og:image" content="${ogImageUrl}">
+  <meta property="og:image:secure_url" content="${ogImageUrl}">
   <meta property="og:image:type" content="${mimeType}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="${imgWidth}">
+  <meta property="og:image:height" content="${imgHeight}">
   <meta property="fb:app_id" content="966242223397117">
-  
+
   <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:card" content="${twitterCard}">
   <meta name="twitter:url" content="${data.url}">
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
-  <meta name="twitter:image" content="${proxyImage}">
+  <meta name="twitter:image" content="${ogImageUrl}">
   <meta name="twitter:site" content="@DeHubApp">
 
   ${!data.isBot
@@ -129,7 +157,7 @@ function generateMetaHTML(data: {
   <div style="max-width: 600px; text-align: center; padding: 20px;">
     <h1>${title}</h1>
     <p>${description}</p>
-    <img src="${data.image}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+    <img src="${imageUrl}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
     <p style="margin-top: 30px;"><a href="${data.url}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on DeHub</a></p>
   </div>
 </body>
@@ -143,8 +171,34 @@ serve(async (req) => {
 
     try {
         const url = new URL(req.url);
+
+        // Image proxy: serves CDN images with correct Content-Type headers
+        // Facebook/Twitter scrapers need proper MIME types to display images
+        const proxyImageUrl = url.searchParams.get("image_url");
+        if (proxyImageUrl) {
+            // Only allow dehub CDN and dehub.io URLs for security
+            if (!proxyImageUrl.startsWith(DEHUB_CDN_BASE) && !proxyImageUrl.startsWith("https://dehub.io/")) {
+                return new Response("Forbidden", { status: 403 });
+            }
+            const imgResp = await fetch(proxyImageUrl);
+            if (!imgResp.ok) {
+                return new Response("Image not found", { status: 404 });
+            }
+            const body = await imgResp.arrayBuffer();
+            return new Response(body, {
+                headers: {
+                    ...corsHeaders,
+                    "Content-Type": getMimeType(proxyImageUrl),
+                    "Cache-Control": "public, max-age=86400",
+                },
+            });
+        }
+
         const userAgent = req.headers.get("user-agent") || "";
         const isBot = /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
+
+        // Derive the base URL for image proxy from current request
+        const functionBaseUrl = `${url.origin}${url.pathname}`;
 
         let fullPath = url.searchParams.get("path") || "/";
         const originalUrl = url.searchParams.get("original_url");
@@ -177,6 +231,10 @@ serve(async (req) => {
                         user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
                     image: buildAvatarUrl(user),
                     url: canonicalUrl,
+                    twitterCard: "summary",
+                    imageWidth: 400,
+                    imageHeight: 400,
+                    functionBaseUrl,
                     isBot,
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
@@ -201,6 +259,7 @@ serve(async (req) => {
                     image: buildPostImageUrl(nft),
                     url: canonicalUrl,
                     type: "article",
+                    functionBaseUrl,
                     isBot,
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
@@ -214,6 +273,7 @@ serve(async (req) => {
                 "DeHub is an open source, user owned alternative to legacy media for true censorship resistance with freedom of speech and reach.",
             image: "https://dehub.io/og-image.png",
             url: canonicalUrl,
+            functionBaseUrl,
             isBot,
         });
         return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
