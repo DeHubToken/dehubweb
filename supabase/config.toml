@@ -74,3 +74,6 @@ verify_jwt = false
 
 [functions.batch-follow]
 verify_jwt = false
+
+[functions.ssr-seo]
+verify_jwt = false
