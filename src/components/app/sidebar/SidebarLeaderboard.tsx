@@ -34,6 +34,7 @@ export function SidebarLeaderboard() {
   const navigate = useNavigate();
   const [activePeriod, setActivePeriod] = useState<string>('All');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const [shimmerKey, setShimmerKey] = useState(0);
 
   const apiPeriod = PERIOD_MAP[activePeriod] || 'all';
 
@@ -52,6 +53,7 @@ export function SidebarLeaderboard() {
         const idx = PERIODS.indexOf(prev as typeof PERIODS[number]);
         return PERIODS[(idx + 1) % PERIODS.length];
       });
+      setShimmerKey(k => k + 1);
     }, 5000);
     return () => clearInterval(interval);
   }, [isAutoRotating]);
@@ -59,6 +61,7 @@ export function SidebarLeaderboard() {
   const handlePeriodClick = useCallback((period: string) => {
     setActivePeriod(period);
     setIsAutoRotating(false);
+    setShimmerKey(k => k + 1);
     // Resume auto-rotation after 30 seconds of inactivity
     setTimeout(() => setIsAutoRotating(true), 30000);
   }, []);
@@ -157,6 +160,7 @@ export function SidebarLeaderboard() {
                       className="w-6 h-6 object-contain"
                     />
                     <div 
+                      key={shimmerKey}
                       className="medal-shine-overlay"
                       style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
                     />
