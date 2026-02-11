@@ -4,7 +4,7 @@
  * Displays top DHB token holders and tippers from the DeHub API.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck } from 'lucide-react';
 import trophyIcon from '@/assets/trophy-icon.png';
@@ -20,6 +20,7 @@ import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
+import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 
@@ -72,6 +73,7 @@ export default function LeaderboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState<CategoryType>('holdings');
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
+  const [shimmerKey, setShimmerKey] = useState(0);
   const navigate = useNavigate();
 
   // Map category to API sort mode
@@ -140,6 +142,10 @@ export default function LeaderboardPage() {
     
     return list;
   }, [data, searchQuery, category, isClientSorted]);
+
+  // Batch fetch badge balances for all visible entries
+  const walletAddresses = useMemo(() => entries.map(e => e.account), [entries]);
+  const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
 
   const handleUserClick = (entry: LeaderboardEntry) => {
     if (entry.username) {
@@ -226,7 +232,7 @@ export default function LeaderboardPage() {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => setCategory(cat.id)}
+                  onClick={() => { setCategory(cat.id); setShimmerKey(k => k + 1); }}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
                       ? 'bg-white text-black'
@@ -250,7 +256,10 @@ export default function LeaderboardPage() {
                 <button
                   key={period.id}
                   type="button"
-                  onClick={() => setTimePeriod(period.id)}
+                  onClick={() => {
+                    setTimePeriod(period.id);
+                    setShimmerKey(k => k + 1);
+                  }}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
                       ? 'bg-zinc-700 text-white'
@@ -329,6 +338,7 @@ export default function LeaderboardPage() {
                           className={`${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'} object-contain`}
                         />
                         <div 
+                          key={shimmerKey}
                           className="medal-shine-overlay"
                           style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5][rank - 1]})` } as React.CSSProperties}
                         />
@@ -352,7 +362,7 @@ export default function LeaderboardPage() {
                       <div className="flex items-center gap-1">
                         <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
                         {(() => {
-                          const badgeUrl = getBadgeUrl(entry.badgeBalance ?? entry.total);
+                          const badgeUrl = getBadgeUrl(badgeBalances[entry.account.toLowerCase()]);
                           return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-3 h-3 shrink-0 -mt-1" /> : null;
                         })()}
                       </div>
