@@ -27,6 +27,14 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const API_SORT_MODES = ["sentTips", "receivedTips"] as const;
 const PERIODS = ["day", "week", "month", "year", "all"] as const;
 
+// Period to days-ago mapping for snapshot deltas
+const PERIOD_DAYS: Record<string, number> = {
+  day: 1,
+  week: 7,
+  month: 30,
+  year: 365,
+};
+
 // ── Helpers ─────────────────────────────────────────────────────────
 
 function encodeCall(selector: string, address: string): string {
@@ -144,6 +152,21 @@ async function fetchDeHubLeaderboard(
   return response.json();
 }
 
+// ── Enriched entry type ─────────────────────────────────────────────
+interface EnrichedEntry {
+  account: string;
+  total: number;
+  username?: string;
+  userDisplayName?: string;
+  avatarUrl?: string;
+  sentTips: number;
+  receivedTips: number;
+  followers?: number;
+  likes?: number;
+  subscribers?: number;
+  delta?: number;
+}
+
 // ── Main handler ────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -197,18 +220,7 @@ Deno.serve(async (req) => {
       console.log(`Got ${rawEntries.length} addresses from DeHub`);
 
       const BATCH_SIZE = 10;
-      const enriched: Array<{
-        account: string;
-        total: number;
-        username?: string;
-        userDisplayName?: string;
-        avatarUrl?: string;
-        sentTips: number;
-        receivedTips: number;
-        followers?: number;
-        likes?: number;
-        subscribers?: number;
-      }> = [];
+      const enriched: EnrichedEntry[] = [];
 
       for (let i = 0; i < rawEntries.length; i += BATCH_SIZE) {
         const batch = rawEntries.slice(i, i + BATCH_SIZE);
@@ -249,31 +261,134 @@ Deno.serve(async (req) => {
         `On-chain holdings: ${nonZero.length} holders with balance > 0`
       );
 
-      const holdingsData = {
+      // ── Snapshot: upsert today's balances (once per day) ──────────
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+      // Check if today's snapshot already exists
+      const { count: snapshotCount } = await supabase
+        .from("leaderboard_snapshots")
+        .select("id", { count: "exact", head: true })
+        .eq("snapshot_date", today);
+
+      if (!snapshotCount || snapshotCount === 0) {
+        console.log(`Creating daily snapshot for ${today}...`);
+        const snapshotRows = nonZero.map((e) => ({
+          account: e.account.toLowerCase(),
+          balance: e.total,
+          snapshot_date: today,
+        }));
+
+        // Upsert in batches of 100
+        for (let i = 0; i < snapshotRows.length; i += 100) {
+          const batch = snapshotRows.slice(i, i + 100);
+          const { error: snapErr } = await supabase
+            .from("leaderboard_snapshots")
+            .upsert(batch, { onConflict: "account,snapshot_date" });
+          if (snapErr) {
+            console.error(`Snapshot upsert error (batch ${i}):`, snapErr);
+          }
+        }
+        console.log(`Snapshot saved: ${snapshotRows.length} entries`);
+
+        // Cleanup old snapshots
+        try {
+          await supabase.rpc("cleanup_old_leaderboard_snapshots");
+          console.log("Old snapshots cleaned up");
+        } catch (cleanupErr) {
+          console.error("Snapshot cleanup error:", cleanupErr);
+        }
+      } else {
+        console.log(`Snapshot for ${today} already exists, skipping`);
+      }
+
+      // ── Cache "all" period (sorted by total balance, no change) ───
+      const allTimeData = {
         result: { byWalletBalance: nonZero },
       };
 
-      for (const period of PERIODS) {
-        const { error } = await supabase.from("leaderboard_cache").upsert(
-          {
-            sort_mode: "holdings",
-            period,
-            data: holdingsData,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: "sort_mode,period" }
-        );
+      const { error: allErr } = await supabase.from("leaderboard_cache").upsert(
+        {
+          sort_mode: "holdings",
+          period: "all",
+          data: allTimeData,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "sort_mode,period" }
+      );
 
-        if (error) {
-          console.error(`Error caching holdings/${period}:`, error);
-          results.push({
-            sort: "holdings",
-            period,
-            success: false,
-            error: error.message,
+      if (allErr) {
+        console.error("Error caching holdings/all:", allErr);
+        results.push({ sort: "holdings", period: "all", success: false, error: allErr.message });
+      } else {
+        results.push({ sort: "holdings", period: "all", success: true });
+      }
+
+      // ── Cache time-based periods (sorted by delta) ────────────────
+      for (const period of ["day", "week", "month", "year"] as const) {
+        try {
+          const daysAgo = PERIOD_DAYS[period];
+          const pastDate = new Date();
+          pastDate.setDate(pastDate.getDate() - daysAgo);
+          const pastDateStr = pastDate.toISOString().split("T")[0];
+
+          // Fetch historical snapshots for comparison
+          const { data: snapshots, error: snapFetchErr } = await supabase
+            .from("leaderboard_snapshots")
+            .select("account, balance")
+            .eq("snapshot_date", pastDateStr);
+
+          if (snapFetchErr) {
+            console.error(`Error fetching snapshots for ${period}:`, snapFetchErr);
+          }
+
+          // Build lookup map: account -> past balance
+          const pastBalanceMap = new Map<string, number>();
+          if (snapshots) {
+            for (const snap of snapshots) {
+              pastBalanceMap.set(snap.account.toLowerCase(), snap.balance);
+            }
+          }
+
+          // Compute deltas
+          const withDeltas: EnrichedEntry[] = nonZero.map((entry) => {
+            const pastBalance = pastBalanceMap.get(entry.account.toLowerCase());
+            const delta = pastBalance !== undefined
+              ? entry.total - pastBalance
+              : 0; // No historical data = 0 delta (not new to leaderboard)
+            return { ...entry, delta };
           });
-        } else {
-          results.push({ sort: "holdings", period, success: true });
+
+          // Sort by delta descending, filter to positive deltas only
+          const sorted = withDeltas
+            .filter((e) => e.delta !== undefined && e.delta > 0)
+            .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
+
+          const periodData = {
+            result: { byWalletBalance: sorted },
+            hasHistoricalData: pastBalanceMap.size > 0,
+          };
+
+          const { error } = await supabase.from("leaderboard_cache").upsert(
+            {
+              sort_mode: "holdings",
+              period,
+              data: periodData,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "sort_mode,period" }
+          );
+
+          if (error) {
+            console.error(`Error caching holdings/${period}:`, error);
+            results.push({ sort: "holdings", period, success: false, error: error.message });
+          } else {
+            console.log(`holdings/${period}: ${sorted.length} entries with positive delta (${pastBalanceMap.size} historical snapshots)`);
+            results.push({ sort: "holdings", period, success: true });
+          }
+        } catch (periodErr) {
+          const msg = periodErr instanceof Error ? periodErr.message : "Unknown error";
+          console.error(`Error computing holdings/${period}:`, msg);
+          results.push({ sort: "holdings", period, success: false, error: msg });
         }
       }
     } catch (err) {
