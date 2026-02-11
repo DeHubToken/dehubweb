@@ -31,8 +31,9 @@ export function SidebarLeaderboard() {
   });
 
   // Only show users with usernames, filter out wallet-only entries
+  const hiddenUsernames = ['microsoft'];
   const entries = (data?.result?.byWalletBalance || [])
-    .filter((entry: LeaderboardEntry) => entry.username)
+    .filter((entry: LeaderboardEntry) => entry.username && !hiddenUsernames.includes(entry.username.toLowerCase()))
     .slice(0, 50);
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {

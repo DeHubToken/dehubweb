@@ -86,8 +86,9 @@ export default function LeaderboardPage() {
   const entries = useMemo(() => {
     let list = data?.result?.byWalletBalance || [];
     
-    // Filter out wallet-only entries (no username)
-    list = list.filter(entry => entry.username);
+    // Filter out wallet-only entries and hidden users
+    const hiddenUsernames = ['microsoft'];
+    list = list.filter(entry => entry.username && !hiddenUsernames.includes(entry.username.toLowerCase()));
     
     // Client-side sorting for social metrics
     if (category === 'followers') {
