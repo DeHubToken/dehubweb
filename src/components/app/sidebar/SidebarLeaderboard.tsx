@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
 import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
@@ -35,6 +36,7 @@ export function SidebarLeaderboard() {
   const [activePeriod, setActivePeriod] = useState<string>('All');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [shimmerKey, setShimmerKey] = useState(0);
+  const directionRef = useRef(1); // 1 = forward, -1 = backward
 
   const apiPeriod = PERIOD_MAP[activePeriod] || 'all';
 
@@ -49,6 +51,7 @@ export function SidebarLeaderboard() {
   useEffect(() => {
     if (!isAutoRotating) return;
     const interval = setInterval(() => {
+      directionRef.current = 1;
       setActivePeriod(prev => {
         const idx = PERIODS.indexOf(prev as typeof PERIODS[number]);
         return PERIODS[(idx + 1) % PERIODS.length];
@@ -59,12 +62,14 @@ export function SidebarLeaderboard() {
   }, [isAutoRotating]);
 
   const handlePeriodClick = useCallback((period: string) => {
+    const oldIdx = PERIODS.indexOf(activePeriod as typeof PERIODS[number]);
+    const newIdx = PERIODS.indexOf(period as typeof PERIODS[number]);
+    directionRef.current = newIdx >= oldIdx ? 1 : -1;
     setActivePeriod(period);
     setIsAutoRotating(false);
     setShimmerKey(k => k + 1);
-    // Resume auto-rotation after 30 seconds of inactivity
     setTimeout(() => setIsAutoRotating(true), 30000);
-  }, []);
+  }, [activePeriod]);
 
   const balanceOverrides: Record<string, number> = {};
   const blockedLeaderboardUsers = ['microsoft'];
@@ -141,58 +146,75 @@ export function SidebarLeaderboard() {
       </div>
 
       {/* Scrollable list */}
-      <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
-        {entries.map((entry, index) => {
-          const rank = index + 1;
-          return (
-            <div
-              key={entry.account}
-              onClick={() => handleUserClick(entry)}
-              className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
-            >
-              {/* Rank */}
-              <div className="w-7 flex-shrink-0 flex items-center justify-center">
-                {rank <= 3 ? (
-                  <div className="medal-shine-container w-6 h-6">
-                    <img 
-                      src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
-                      alt={`Rank ${rank}`} 
-                      className="w-6 h-6 object-contain"
-                    />
-                    <div 
-                      key={shimmerKey}
-                      className="medal-shine-overlay"
-                      style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
-                    />
+      <div className="flex-1 overflow-hidden relative">
+        <AnimatePresence mode="popLayout" initial={false} custom={directionRef.current}>
+          <motion.div
+            key={activePeriod}
+            custom={directionRef.current}
+            variants={{
+              enter: (d: number) => ({ x: `${d * 100}%`, opacity: 0 }),
+              center: { x: 0, opacity: 1 },
+              exit: (d: number) => ({ x: `${d * -100}%`, opacity: 0 }),
+            }}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            className="overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent h-full"
+          >
+            {entries.map((entry, index) => {
+              const rank = index + 1;
+              return (
+                <div
+                  key={entry.account}
+                  onClick={() => handleUserClick(entry)}
+                  className="flex items-center gap-3 py-2 px-4 hover:bg-zinc-800/50 transition-colors cursor-pointer"
+                >
+                  {/* Rank */}
+                  <div className="w-7 flex-shrink-0 flex items-center justify-center">
+                    {rank <= 3 ? (
+                      <div className="medal-shine-container w-6 h-6">
+                        <img 
+                          src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3} 
+                          alt={`Rank ${rank}`} 
+                          className="w-6 h-6 object-contain"
+                        />
+                        <div 
+                          key={shimmerKey}
+                          className="medal-shine-overlay"
+                          style={{ '--medal-mask': `url(${rank === 1 ? medal1 : rank === 2 ? medal2 : medal3})` } as React.CSSProperties}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
+                        {rank}
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="w-5 h-5 rounded-lg bg-zinc-700 flex items-center justify-center text-xs font-bold text-white">
-                    {rank}
+
+                  {/* Avatar */}
+                  <LeaderboardUserAvatar
+                    avatarUrl={getAvatarUrl(entry)}
+                    fallbackSeed={entry.account}
+                    displayName={getDisplayName(entry)}
+                    size="sm"
+                  />
+
+                  {/* User Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</div>
+                    <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
                   </div>
-                )}
-              </div>
 
-              {/* Avatar */}
-              <LeaderboardUserAvatar
-                avatarUrl={getAvatarUrl(entry)}
-                fallbackSeed={entry.account}
-                displayName={getDisplayName(entry)}
-                size="sm"
-              />
-
-              {/* User Info */}
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</div>
-                <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
-              </div>
-
-              {/* Value */}
-              <div className="text-right flex-shrink-0">
-                <span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
-              </div>
-            </div>
-          );
-        })}
+                  {/* Value */}
+                  <div className="text-right flex-shrink-0">
+                    <span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Bottom fade gradient */}
