@@ -54,11 +54,6 @@ import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import dehubCoin from '@/assets/dehub-coin.png';
 
-// Cosmetic wallet overrides: show a different address on profile without changing backend logic
-const DISPLAY_WALLET_OVERRIDES: Record<string, string> = {
-  '0x9324840523a5d17dd12a2f11a9472e5a199c1937': '0xbb0265021e03a048a6e8dcf249cd5067f35db45d',
-};
-
 // Default banner templates for users without custom covers
 import defaultBanner1 from '@/assets/banners/default-banner-1.png';
 import defaultBanner2 from '@/assets/banners/default-banner-2.png';
@@ -302,8 +297,7 @@ export default function ProfilePage() {
       toast.error('No wallet address available');
       return;
     }
-    const displayAddress = DISPLAY_WALLET_OVERRIDES[profile.walletAddress.toLowerCase()] || profile.walletAddress;
-    navigator.clipboard.writeText(displayAddress);
+    navigator.clipboard.writeText(profile.walletAddress);
     toast.success('Address copied to clipboard');
     setShareSheetOpen(false);
   };
@@ -1093,24 +1087,21 @@ export default function ProfilePage() {
                 )}
               </div>
               
-              {profile.walletAddress && (() => {
-                const displayAddr = DISPLAY_WALLET_OVERRIDES[profile.walletAddress!.toLowerCase()] || profile.walletAddress!;
-                return (
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(displayAddr);
-                      toast.success('Address copied to clipboard');
-                    }}
-                    className="flex items-center gap-1.5 mt-1 text-zinc-500 text-sm hover:text-zinc-300 transition-colors group"
-                  >
-                    <Wallet className="w-3.5 h-3.5" />
-                    <span className="font-mono">
-                      {displayAddr.slice(0, 6)}...{displayAddr.slice(-4)}
-                    </span>
-                    <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                );
-              })()}
+              {profile.walletAddress && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(profile.walletAddress!);
+                    toast.success('Address copied to clipboard');
+                  }}
+                  className="flex items-center gap-1.5 mt-1 text-zinc-500 text-sm hover:text-zinc-300 transition-colors group"
+                >
+                  <Wallet className="w-3.5 h-3.5" />
+                  <span className="font-mono">
+                    {profile.walletAddress.slice(0, 6)}...{profile.walletAddress.slice(-4)}
+                  </span>
+                  <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+              )}
               
               {profile.bio && (
                 <TranslatableText text={profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />

@@ -252,7 +252,6 @@ Deno.serve(async (req) => {
             followers: (entry.followers as number) ?? undefined,
             likes: (entry.likes as number) ?? undefined,
             subscribers: (entry.subscribers as number) ?? undefined,
-            badgeBalance: (entry.badgeBalance as number) ?? undefined,
           });
         });
 
