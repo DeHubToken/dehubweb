@@ -99,9 +99,9 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
     followersList,
     followingsList,
-    staked: typeof user.staked === 'number' 
+    staked: user.badgeBalance ?? (typeof user.staked === 'number' 
       ? user.staked 
-      : user.balanceData?.[0]?.staked,
+      : user.balanceData?.[0]?.staked),
     customs: user.customs as Record<string, unknown> | undefined,
   };
 }

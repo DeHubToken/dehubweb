@@ -90,6 +90,8 @@ export interface DeHubUser {
 
   // Staking (can be returned directly or inside balanceData)
   staked?: number;
+  /** Combined holdings + staked amount for badge tier */
+  badgeBalance?: number;
 
   // Timestamps
   createdAt?: string;

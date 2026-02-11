@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -1067,6 +1068,13 @@ export default function ProfilePage() {
                   {profile.handle}
                 </button>
                 {profile.verified && <VerifiedBadge className="w-5 h-5" />}
+                {profile.staked != null && (
+                  <img 
+                    src={getBadgeUrl(profile.staked)} 
+                    alt="Badge tier" 
+                    className="w-5 h-5 shrink-0" 
+                  />
+                )}
                 {!isViewingOwnProfile && apiProfile?.followsYou && (
                   <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                     Follows you

@@ -61,16 +61,16 @@ const BADGE_IMAGES: Record<string, string> = {
 };
 
 /**
- * Get badge name based on staking amount
+ * Get badge name based on badge balance (holdings + staked)
  */
-export function getBadgeName(stakingAmount: number | string | undefined | null): string {
-  if (stakingAmount === undefined || stakingAmount === null) {
+export function getBadgeName(badgeBalance: number | string | undefined | null): string {
+  if (badgeBalance === undefined || badgeBalance === null) {
     return BADGE_LEVELS[0].name;
   }
   
-  const amt = typeof stakingAmount === "string" 
-    ? parseFloat(stakingAmount) 
-    : stakingAmount;
+  const amt = typeof badgeBalance === "string" 
+    ? parseFloat(badgeBalance) 
+    : badgeBalance;
     
   if (!Number.isFinite(amt)) return BADGE_LEVELS[0].name;
   
@@ -83,22 +83,22 @@ export function getBadgeName(stakingAmount: number | string | undefined | null):
 }
 
 /**
- * Get badge image URL based on staking amount
+ * Get badge image URL based on badge balance (holdings + staked)
  */
-export function getBadgeUrl(stakingAmount: number | string | undefined | null): string {
-  const badge = getBadgeName(stakingAmount);
+export function getBadgeUrl(badgeBalance: number | string | undefined | null): string {
+  const badge = getBadgeName(badgeBalance);
   return BADGE_IMAGES[badge] || BADGE_IMAGES["Tortoise"];
 }
 
 /**
  * Get badge tier info (name, min, and image)
  */
-export function getBadgeInfo(stakingAmount: number | string | undefined | null): {
+export function getBadgeInfo(badgeBalance: number | string | undefined | null): {
   name: string;
   imageUrl: string;
   minStake: number;
 } {
-  const name = getBadgeName(stakingAmount);
+  const name = getBadgeName(badgeBalance);
   const level = BADGE_LEVELS.find(b => b.name === name) || BADGE_LEVELS[0];
   return {
     name,

@@ -853,6 +853,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             contentType="video"
             creatorId={video.creatorId}
             creatorUsername={video.creatorUsername}
+            stakedAmount={video.stakedAmount}
           />
           <div className="flex items-center gap-1">
             <motion.button
