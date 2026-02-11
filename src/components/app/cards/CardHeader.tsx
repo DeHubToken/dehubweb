@@ -119,9 +119,6 @@ export function CardHeader({
         )}
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
-          {formattedHandle && (
-            <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
-          )}
           {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
           {badgeUrl && (
             <img 
@@ -129,6 +126,9 @@ export function CardHeader({
               alt="Badge" 
               className="w-3 h-3 shrink-0 -mt-1" 
             />
+          )}
+          {formattedHandle && (
+            <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
           )}
           {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
         </div>
