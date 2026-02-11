@@ -1,13 +1,23 @@
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
-import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
+import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
+
+const PERIODS = ['1d', '1w', '1m', '1y', 'All'] as const;
+const PERIOD_MAP: Record<string, string> = {
+  '1d': 'day',
+  '1w': 'week',
+  '1m': 'month',
+  '1y': 'year',
+  'All': 'all',
+};
 
 const formatNumber = (num: number | undefined): string => {
   if (num === undefined || num === null) return '0';
@@ -22,19 +32,38 @@ const formatDHB = (num: number): string => {
 
 export function SidebarLeaderboard() {
   const navigate = useNavigate();
+  const [activePeriod, setActivePeriod] = useState<string>('All');
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
+
+  const apiPeriod = PERIOD_MAP[activePeriod] || 'all';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['sidebar-leaderboard', 'holdings', 'all'],
-    queryFn: () => getLeaderboard('holdings', 'all'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    queryKey: ['sidebar-leaderboard', 'holdings', apiPeriod],
+    queryFn: () => getLeaderboard('holdings', apiPeriod as LeaderboardPeriod),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 
-  // Only show users with usernames, filter out wallet-only entries
-  // Manual balance overrides
-  const balanceOverrides: Record<string, number> = {};
+  // Auto-rotate through periods every 5 seconds
+  useEffect(() => {
+    if (!isAutoRotating) return;
+    const interval = setInterval(() => {
+      setActivePeriod(prev => {
+        const idx = PERIODS.indexOf(prev as typeof PERIODS[number]);
+        return PERIODS[(idx + 1) % PERIODS.length];
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isAutoRotating]);
 
-  // Usernames to exclude from leaderboard
+  const handlePeriodClick = useCallback((period: string) => {
+    setActivePeriod(period);
+    setIsAutoRotating(false);
+    // Resume auto-rotation after 30 seconds of inactivity
+    setTimeout(() => setIsAutoRotating(true), 30000);
+  }, []);
+
+  const balanceOverrides: Record<string, number> = {};
   const blockedLeaderboardUsers = ['microsoft'];
 
   const entries = (data?.result?.byWalletBalance || [])
@@ -70,7 +99,7 @@ export function SidebarLeaderboard() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && entries.length === 0) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
@@ -78,7 +107,7 @@ export function SidebarLeaderboard() {
     );
   }
 
-  if (entries.length === 0) {
+  if (!isLoading && entries.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
@@ -91,6 +120,23 @@ export function SidebarLeaderboard() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Period filter row */}
+      <div className="flex items-center justify-between px-4 py-2">
+        {PERIODS.map((period) => (
+          <button
+            key={period}
+            onClick={() => handlePeriodClick(period)}
+            className={`text-xs font-medium transition-colors ${
+              activePeriod === period
+                ? 'text-white'
+                : 'text-white/40 hover:text-white/70'
+            }`}
+          >
+            {period}
+          </button>
+        ))}
+      </div>
+
       {/* Scrollable list */}
       <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
         {entries.map((entry, index) => {
