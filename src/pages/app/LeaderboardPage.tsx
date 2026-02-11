@@ -13,7 +13,7 @@ import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
 import medal4 from '@/assets/medal-4.png';
 import medal5 from '@/assets/medal-5.png';
-import medal6 from '@/assets/medal-6.png';
+
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
@@ -321,16 +321,16 @@ export default function LeaderboardPage() {
                 >
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2">
-                    {rank <= 6 ? (
+                    {rank <= 5 ? (
                       <div className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}>
                         <img 
-                          src={[medal1, medal2, medal3, medal4, medal5, medal6][rank - 1]} 
+                          src={[medal1, medal2, medal3, medal4, medal5][rank - 1]} 
                           alt={`Rank ${rank}`} 
                           className={`${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'} object-contain`}
                         />
                         <div 
                           className="medal-shine-overlay"
-                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5, medal6][rank - 1]})` } as React.CSSProperties}
+                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5][rank - 1]})` } as React.CSSProperties}
                         />
                       </div>
                     ) : (
