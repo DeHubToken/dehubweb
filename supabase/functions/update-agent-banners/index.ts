@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
       const body = await req.json();
       if (body?.agents && Array.isArray(body.agents) && body.agents.length > 0) {
         targetAgents = body.agents.map((a: string) => a.toLowerCase().trim());
-        console.log(`[BannerUpdate] Targeting specific agents: ${targetAgents.join(", ")}`);
+        console.log(`[BannerUpdate] Targeting specific agents: ${targetAgents!.join(", ")}`);
       }
     } catch {
       // No body or invalid JSON — process all agents
