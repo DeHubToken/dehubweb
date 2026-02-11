@@ -7,6 +7,8 @@ import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
 import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
 import medal3 from '@/assets/medal-3.png';
@@ -86,6 +88,10 @@ export function SidebarLeaderboard() {
       return entry;
     })
     .slice(0, 50);
+
+  // Batch fetch badge balances for all visible entries
+  const walletAddresses = entries.map((e: LeaderboardEntry) => e.account);
+  const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
 
   const getAvatarUrl = (entry: LeaderboardEntry) => {
     if (entry.avatarUrl && entry.account) {
@@ -204,7 +210,15 @@ export function SidebarLeaderboard() {
 
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</div>
+                    <div className="flex items-center gap-1">
+                      <span className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</span>
+                      {(() => {
+                        const badgeUrl = getBadgeUrl(badgeBalances[entry.account.toLowerCase()]);
+                        return badgeUrl ? (
+                          <img src={badgeUrl} alt="Badge" className="w-3 h-3 flex-shrink-0 -mt-1" />
+                        ) : null;
+                      })()}
+                    </div>
                     <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
                   </div>
 
