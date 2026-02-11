@@ -26,10 +26,12 @@ interface DeHubNFT {
     title?: string;
     description?: string;
     imageUrl?: string;
+    imageUrls?: string[];
     videoUrl?: string;
     thumbnail_url?: string;
     postType?: string;
     minterUsername?: string;
+    minterDisplayName?: string;
 }
 
 function getExtension(path: string): string {
@@ -63,17 +65,20 @@ function buildAvatarUrl(user: DeHubUser): string {
 }
 
 function buildPostImageUrl(nft: DeHubNFT): string {
+    // 1. Multi-image feed posts: imageUrls array → cdn/feed-images/{filename}
+    if (nft.imageUrls && nft.imageUrls.length > 0) {
+        const firstImg = nft.imageUrls[0];
+        if (firstImg.startsWith("http")) return firstImg;
+        const filename = firstImg.split("/").pop() || "";
+        if (filename) return `${DEHUB_CDN_BASE}feed-images/${filename}`;
+    }
+
+    // 2. Single NFT image: imageUrl → cdn/images/{tokenId}.{ext}
     const apiPath = nft.imageUrl || nft.thumbnail_url;
     if (!apiPath) return "https://dehub.io/og-image.png";
     if (apiPath.startsWith("http")) return apiPath;
-
-    // Frontend logic: cdn/images/{tokenId}.{ext}
-    if (nft.tokenId) {
-        const ext = getExtension(apiPath);
-        return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
-    }
-
-    return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, "")}`;
+    const ext = getExtension(apiPath);
+    return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
 }
 
 function getMimeType(url: string): string {
@@ -254,13 +259,15 @@ serve(async (req) => {
             const nft: DeHubNFT = nftData.result || nftData;
 
             if (nft) {
-                const title = nft.title || nft.name || "DeHub Post";
-                const description = nft.description || "View this post on DeHub";
+                const posterName = nft.minterDisplayName || nft.minterUsername || "someone";
+                const title = nft.title || nft.name || `Post by ${posterName} on DeHub`;
+                const description = nft.description || `View this post by ${posterName} on DeHub`;
+                const postUrl = `${APP_URL}/app/post/${postId}`;
                 const html = generateMetaHTML({
                     title,
                     description,
                     image: buildPostImageUrl(nft),
-                    url: canonicalUrl,
+                    url: postUrl,
                     type: "article",
                     functionBaseUrl,
                     isBot,
