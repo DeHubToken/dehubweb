@@ -138,8 +138,8 @@ function generateMetaHTML(data: {
     const imageUrl = ensureAbsoluteUrl(data.image);
     // For og:image tags, use proxied URL so scrapers get correct Content-Type
     const ogImageUrl = data.functionBaseUrl ? buildProxiedImageUrl(data.functionBaseUrl, imageUrl) : imageUrl;
-    const imgWidth = data.imageWidth || 1200;
-    const imgHeight = data.imageHeight || 630;
+    const imgWidth = data.imageWidth;
+    const imgHeight = data.imageHeight;
     const mimeType = getMimeType(imageUrl);
 
     const isVideo = !!data.videoUrl;
@@ -185,9 +185,9 @@ function generateMetaHTML(data: {
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="${ogImageUrl}">
   <meta property="og:image:secure_url" content="${ogImageUrl}">
-  <meta property="og:image:type" content="${mimeType}">
-  <meta property="og:image:width" content="${imgWidth}">
-  <meta property="og:image:height" content="${imgHeight}">
+  <meta property="og:image:type" content="${mimeType}">${imgWidth ? `
+  <meta property="og:image:width" content="${imgWidth}">` : ""}${imgHeight ? `
+  <meta property="og:image:height" content="${imgHeight}">` : ""}
   <meta property="fb:app_id" content="966242223397117">${videoTags}
 
   <!-- Twitter -->
