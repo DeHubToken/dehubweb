@@ -109,6 +109,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         contentType="post"
         creatorId={post.author.id}
         creatorUsername={post.author.handle}
+        stakedAmount={post.author.stakedAmount}
       />
 
       {/* AI Button and Options Drawer - positioned in header area */}

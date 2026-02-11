@@ -104,6 +104,7 @@ export interface UnifiedFeedItem {
     displayName?: string;
     avatarImageUrl?: string;
     isVerified?: boolean;
+    badgeBalance?: number;
   };
   minterFollowers?: number;
   minterFollowings?: number;
@@ -195,7 +196,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     views: formatViews(item.views),
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
-    stakedAmount: item.minterStaked,
+    stakedAmount: item.minterUser?.badgeBalance ?? item.minterStaked,
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
@@ -253,7 +254,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     views: formatViews(item.views).replace(' views', ''),
     timeAgo: formatTimeAgo(item.createdAt),
     status: item.status,
-    stakedAmount: item.minterStaked,
+    stakedAmount: item.minterUser?.badgeBalance ?? item.minterStaked,
     creatorId: item.minter,
     creatorUsername: item.minterUsername,
     isLiked: item.isLiked ?? false,
@@ -284,7 +285,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
       handle: item.minterUsername || item.minter,
       avatarSeed: avatarUrl,
       verified: false,
-      stakedAmount: item.minterStaked,
+      stakedAmount: item.minterUser?.badgeBalance ?? item.minterStaked,
     },
     content: item.description || item.name || '',
     // Store raw timestamp - PostMetadata handles formatting

@@ -149,6 +149,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     uploadedAgo: formatTimeAgo(createdAt),
     creatorId,
     creatorUsername,
+    stakedAmount: nft.minterUser?.badgeBalance,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
     likeCount,
@@ -226,6 +227,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     timeAgo: formatTimeAgo(createdAt),
     creatorId,
     creatorUsername,
+    stakedAmount: nft.minterUser?.badgeBalance,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
   };

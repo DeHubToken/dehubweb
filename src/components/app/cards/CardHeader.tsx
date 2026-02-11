@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
+import { getBadgeUrl } from '@/lib/staking-badges';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -48,6 +49,8 @@ interface CardHeaderProps {
   timestamp?: string;
   /** View count to show next to timestamp */
   viewCount?: string | number;
+  /** Badge balance (holdings + staked) for tier badge icon */
+  stakedAmount?: number;
 }
 
 /**
@@ -72,6 +75,7 @@ export function CardHeader({
   creatorUsername,
   timestamp,
   viewCount,
+  stakedAmount,
 }: CardHeaderProps) {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
@@ -128,6 +132,13 @@ export function CardHeader({
             <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
           )}
           {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
+          {stakedAmount != null && (
+            <img 
+              src={getBadgeUrl(stakedAmount)} 
+              alt="Badge" 
+              className="w-4 h-4 shrink-0" 
+            />
+          )}
           {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
         </div>
       </button>
