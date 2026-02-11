@@ -1,46 +1,51 @@
 
 
-## Fix "Unknown" Author on Single Post Page
+## Fix "Unknown" Usernames in Image & Video Feed Mappers
 
 ### Problem
-When viewing post 2776 (and potentially others), the author shows as "unknown" because the API response for this post provides creator info in the `creator` object (e.g., `creator.username`, `creator.display_name`) rather than in the flat `minterDisplayName`/`minterUsername`/`mintername` fields. The feed components already handle this fallback, but `SinglePostPage.tsx` does not.
+The `mapNFTToImagePost` and `mapNFTToVideoItem` functions in `src/hooks/use-dehub-feed.ts` are missing key fallback fields (`minterDisplayName`, `minterUsername`) when resolving creator names. Many API responses provide these fields instead of `mintername`, causing usernames to show as "unknown".
 
 ### Root Cause
-The four transformation functions in `SinglePostPage.tsx` (`toVideoItem`, `toImagePost`, `toTextPost`, `toLiveStream`) only check flat fields:
-```
-nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown'
-```
+- `mapNFTToImagePost` (line 187): only checks `nft.mintername || nft.creator?.username`
+- `mapNFTToVideoItem` (line 98): checks `nft.minterDisplayName || nft.mintername` but skips `nft.minterUsername`
+- Both functions' `creatorUsername` fields also miss `minterUsername`
 
-Feed components (VideosFeed, ShortsFeed, MusicFeed, HomeFeed) additionally check:
-```
-nft.creator?.display_name || nft.creator?.username
-```
+Other mappers (ShortsFeed, SinglePostPage, mapNFTToLiveStream) already use the full chain: `minterDisplayName || minterUsername || mintername || creator?.display_name || creator?.username`.
 
 ### Fix
-**File: `src/pages/app/SinglePostPage.tsx`**
+**File: `src/hooks/use-dehub-feed.ts`**
 
-Update all four transform functions to include `creator` and `owner` fallbacks, matching the pattern used in feed components:
-
-1. **Name resolution** (in all 4 functions): Change from:
+1. **`mapNFTToImagePost` username (line 187)**: Change from:
    ```
-   nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown'
+   nft.mintername || nft.creator?.username || 'unknown'
    ```
    To:
    ```
-   nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.display_name || nft.creator?.username || nft.owner?.username || 'Unknown'
+   nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.display_name || nft.creator?.username || 'unknown'
    ```
 
-2. **Username/handle resolution** (in `toVideoItem`, `toTextPost`): Add creator fallback:
+2. **`mapNFTToImagePost` creatorUsername (line 205)**: Change from:
    ```
-   nft.minterUsername || nft.mintername || nft.creator?.username || nft.owner?.username
+   nft.mintername || nft.creator?.username
+   ```
+   To:
+   ```
+   nft.minterUsername || nft.mintername || nft.creator?.username
    ```
 
-3. **Creator ID resolution**: Add fallback:
+3. **`mapNFTToVideoItem` channel (line 98)**: Add `nft.minterUsername` between DisplayName and mintername:
    ```
-   nft.minter || nft.creator?.id || nft.creator?.address
+   nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.display_name || nft.creator?.username || 'Unknown Creator'
    ```
 
-4. **Avatar resolution**: Add creator avatar fallback in the `rawAvatarPath` logic where `extractAvatarPath` is called -- also try `extractAvatarPath(nft.creator)` as the feed components do.
+4. **`mapNFTToVideoItem` creatorUsername (line 120)**: Change from:
+   ```
+   nft.mintername || nft.creator?.username
+   ```
+   To:
+   ```
+   nft.minterUsername || nft.mintername || nft.creator?.username
+   ```
 
 ### Scope
-Only one file changes: `src/pages/app/SinglePostPage.tsx` -- four small edits within the existing transform functions.
+One file changed: `src/hooks/use-dehub-feed.ts` -- four small edits to align fallback chains with the rest of the codebase.
