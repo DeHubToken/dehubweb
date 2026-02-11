@@ -19,13 +19,18 @@ const BOT_AGENTS = [
   'oggrabber'
 ];
 
+const SYSTEM_ROUTES = ['app', 'post', 'video', 'explore', 'notifications', 'messages', 'settings', 'delete-account', 'creators', 'jobs', 'features', 'skill.md', '_netlify', 'favicon.ico', 'assets', 'og-image.png'];
+
 export default async (request, context) => {
   const url = new URL(request.url);
   const userAgent = request.headers.get('User-Agent') || '';
   const isBot = BOT_AGENTS.some(bot => userAgent.toLowerCase().includes(bot));
 
-  const isProfilePath = url.pathname.startsWith('/@');
+  const cleanPath = url.pathname.replace(/^\//, '');
+  const firstSegment = cleanPath.split('/')[0].toLowerCase();
   const isPostPath = url.pathname.includes('/post/') || url.pathname.includes('/video/');
+  // Profile: any top-level path that isn't a system route (with or without @)
+  const isProfilePath = firstSegment && !SYSTEM_ROUTES.includes(firstSegment.replace('@', '')) && !firstSegment.includes('.');
 
   if (isBot && (isProfilePath || isPostPath)) {
     // We pass both path and original_url to ensure Supabase has everything it needs
