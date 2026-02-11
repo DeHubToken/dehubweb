@@ -84,15 +84,16 @@ export default function LeaderboardPage() {
   const isClientSorted = clientSortedCategories.includes(category);
 
   // Manual balance overrides (username -> total override)
-  const balanceOverrides: Record<string, number> = {
-    'microsoft': 11_000_000,
-  };
+  const balanceOverrides: Record<string, number> = {};
+
+  // Usernames to exclude from leaderboard
+  const blockedLeaderboardUsers = ['microsoft'];
 
   const entries = useMemo(() => {
     let list = data?.result?.byWalletBalance || [];
     
-    // Filter out wallet-only entries (no username)
-    list = list.filter(entry => entry.username);
+    // Filter out wallet-only entries (no username) and blocked users
+    list = list.filter(entry => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()));
 
     // Apply manual balance overrides (All Time only)
     if (timePeriod === 'all') {

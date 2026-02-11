@@ -32,12 +32,13 @@ export function SidebarLeaderboard() {
 
   // Only show users with usernames, filter out wallet-only entries
   // Manual balance overrides
-  const balanceOverrides: Record<string, number> = {
-    'microsoft': 11_000_000,
-  };
+  const balanceOverrides: Record<string, number> = {};
+
+  // Usernames to exclude from leaderboard
+  const blockedLeaderboardUsers = ['microsoft'];
 
   const entries = (data?.result?.byWalletBalance || [])
-    .filter((entry: LeaderboardEntry) => entry.username)
+    .filter((entry: LeaderboardEntry) => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()))
     .map((entry: LeaderboardEntry) => {
       const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
       if (override !== undefined) {
