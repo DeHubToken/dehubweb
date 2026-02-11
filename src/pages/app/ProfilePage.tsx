@@ -638,11 +638,8 @@ export default function ProfilePage() {
           return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <img src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
-              <h3 className="text-white font-bold text-xl mb-2">Create Subscription Plans</h3>
-              <p className="text-zinc-400 text-sm mb-6 max-w-xs">
-                Monetize your content by creating subscription plans for your fans
-              </p>
-              <Button 
+              <h3 className="text-white font-bold text-xl mb-3">Subscriber Content</h3>
+              <Button
                 onClick={() => setCreatePlanModalOpen(true)}
                 className="rounded-xl bg-white/10 border border-white/[0.08] hover:bg-white/20 text-white font-semibold gap-2 backdrop-blur-md"
               >
