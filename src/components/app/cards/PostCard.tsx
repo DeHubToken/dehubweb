@@ -19,7 +19,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { PostMetadata } from './PostMetadata';
-import { TranslatableText } from '../TranslatableText';
+import { TranslatableText, useTranslation } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
@@ -72,6 +72,16 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
+
+  // Translation hook for post content
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslateLoading,
+    error: translateError,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTranslation(post.content);
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
@@ -181,10 +191,20 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* Content */}
       <div className="pt-3 space-y-2">
-        <TranslatableText text={post.content} className="text-white/90 text-sm sm:text-base" as="p" />
+        <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
 
         {/* Metadata: timestamp and views */}
-        <PostMetadata timestamp={post.createdAt} viewCount={post.views} />
+        <PostMetadata 
+          timestamp={post.createdAt} 
+          viewCount={post.views}
+          translateControl={{
+            isTranslated,
+            isLoading: isTranslateLoading,
+            error: translateError,
+            onTranslate: handleTranslate,
+            onShowOriginal: handleShowOriginal,
+          }}
+        />
 
         <div className="pt-1">
           <ActionBar 
