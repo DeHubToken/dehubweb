@@ -1083,7 +1083,7 @@ export default function ProfilePage() {
                   <img 
                     src={badgeUrl} 
                     alt="Badge tier" 
-                    className="w-4 h-4 shrink-0 -mt-px" 
+                    className="w-4 h-4 shrink-0 -mt-1" 
                   />
                 )}
                 {!isViewingOwnProfile && apiProfile?.followsYou && (

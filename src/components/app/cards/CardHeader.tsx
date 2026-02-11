@@ -127,7 +127,7 @@ export function CardHeader({
             <img 
               src={badgeUrl} 
               alt="Badge" 
-              className="w-3 h-3 shrink-0 -mt-px" 
+              className="w-3 h-3 shrink-0 -mt-1" 
             />
           )}
           {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
