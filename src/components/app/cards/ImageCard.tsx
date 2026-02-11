@@ -229,31 +229,19 @@ function ImageCarousel({
  */
 function FeedDescription({ 
   title, 
-  description 
+  description,
+  isTranslated,
+  translatedText,
 }: { 
   title?: string; 
   description?: string;
+  isTranslated?: boolean;
+  translatedText?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
   const MAX_LENGTH = 150;
   
   if (!title && !description) return null;
-  
-  // Combine texts for translation (use newlines to split later)
-  const fullText = [title, description].filter(Boolean).join('\n\n');
-  
-  const {
-    userLang,
-    isTranslated,
-    translatedText,
-    sourceLang,
-    isLoading,
-    error,
-    isDetecting,
-    shouldOfferTranslation,
-    handleTranslate,
-    handleShowOriginal,
-  } = useTranslation(fullText);
   
   // Parse translated text back into title/description
   const [displayTitle, displayDescription] = useMemo(() => {
@@ -271,53 +259,6 @@ function FeedDescription({
   const shownDescription = expanded || !hasLongDescription 
     ? displayDescription 
     : `${displayDescription.slice(0, MAX_LENGTH)}...`;
-  
-  // Render translation control
-  const renderTranslateControl = () => {
-    if (isTranslated) {
-      return (
-        <button
-          onClick={handleShowOriginal}
-          className="flex items-center gap-1.5 text-xs text-white hover:text-zinc-300 transition-colors mt-1"
-        >
-          <span>
-            Translated from {LANGUAGE_NAMES[sourceLang || ''] || sourceLang}
-            {' • Show original'}
-          </span>
-        </button>
-      );
-    }
-
-    if (isDetecting) {
-      return (
-        <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
-          <span>Detecting language...</span>
-        </span>
-      );
-    }
-
-    if (shouldOfferTranslation) {
-      return (
-        <button
-          onClick={handleTranslate}
-          disabled={isLoading}
-          className={`flex items-center gap-1.5 text-xs transition-colors mt-1 ${
-            error ? 'text-red-400' : 'text-white hover:text-zinc-300'
-          }`}
-        >
-          {isLoading ? (
-            <span>Translating...</span>
-          ) : error ? (
-            <span>{error}</span>
-          ) : (
-            <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
-          )}
-        </button>
-      );
-    }
-
-    return null;
-  };
   
   return (
     <div className="space-y-1">
@@ -345,7 +286,6 @@ function FeedDescription({
           )}
         </div>
       )}
-      {renderTranslateControl()}
     </div>
   );
 }
@@ -369,7 +309,16 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
   
-  // Image translation hook
+  // Translation hook for text content
+  const descriptionText = [post.title, post.description].filter(Boolean).join('\n\n');
+  const {
+    isTranslated,
+    translatedText,
+    isLoading: isTranslateLoading,
+    error: translateError,
+    handleTranslate,
+    handleShowOriginal,
+  } = useTranslation(descriptionText);
   const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
 
   // Get images array - use imageUrls if available, otherwise fall back to single image
@@ -522,11 +471,23 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
         {/* Title & Description */}
         <FeedDescription 
           title={post.title} 
-          description={post.description} 
+          description={post.description}
+          isTranslated={isTranslated}
+          translatedText={translatedText}
         />
         
         {/* Metadata: timestamp and views */}
-        <PostMetadata timestamp={post.timeAgo} viewCount={post.views} />
+        <PostMetadata 
+          timestamp={post.timeAgo} 
+          viewCount={post.views}
+          translateControl={{
+            isTranslated,
+            isLoading: isTranslateLoading,
+            error: translateError,
+            onTranslate: handleTranslate,
+            onShowOriginal: handleShowOriginal,
+          }}
+        />
         
         <ActionBar 
           postId={post.id} 

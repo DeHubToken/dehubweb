@@ -20,7 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { PostMetadata } from './PostMetadata';
-import { TranslatableText, SharedTranslationProvider } from '../TranslatableText';
+import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
@@ -458,6 +458,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   
   // View tracking - fires view after watching threshold
   const { onTimeUpdate: trackView } = useVideoViewTracking(video.id);
+
+  // Translation hook for video text content
+  const videoText = [video.title, video.description].filter(Boolean).join('\n\n');
+  const {
+    isTranslated: isVideoTranslated,
+    translatedText: videoTranslatedText,
+    isLoading: isTranslateLoading,
+    error: translateError,
+    handleTranslate: handleVideoTranslate,
+    handleShowOriginal: handleVideoShowOriginal,
+  } = useTranslation(videoText);
 
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
@@ -1286,7 +1297,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         <div className="mb-3">
           <PostMetadata 
             timestamp={video.uploadedAgo} 
-            viewCount={video.views?.replace(' views', '') || '0'} 
+            viewCount={video.views?.replace(' views', '') || '0'}
+            translateControl={{
+              isTranslated: isVideoTranslated,
+              isLoading: isTranslateLoading,
+              error: translateError,
+              onTranslate: handleVideoTranslate,
+              onShowOriginal: handleVideoShowOriginal,
+            }}
           />
         </div>
         <ActionBar

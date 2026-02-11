@@ -17,7 +17,6 @@ import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 
 // Re-export for convenience
 export { LANGUAGE_NAMES };
-import { getCachedLanguage, cacheLanguage } from '@/lib/language-detection-cache';
 import { cn } from '@/lib/utils';
 
 // URL regex pattern for detecting links (with or without protocol)
@@ -166,6 +165,7 @@ export function SharedTranslationProvider({ children }: { children: ReactNode })
 const MIN_TEXT_LENGTH_FOR_TRANSLATION = 10;
 
 // Custom hook for translation logic (shared between components)
+// On-demand only: no auto-detection, translate-text is called when user clicks
 export function useTranslation(text: string) {
   const { language: userLang } = useUserLanguage();
   const [isTranslated, setIsTranslated] = useState(false);
@@ -173,75 +173,13 @@ export function useTranslation(text: string) {
   const [sourceLang, setSourceLang] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [detectedLang, setDetectedLang] = useState<string | null>(null);
-  const [isDetecting, setIsDetecting] = useState(false);
 
-  // Early exit for very short text - skip all detection
+  // Too short to bother translating
   const isTooShort = text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION;
 
-  const nonLatinLang = useMemo(() => {
-    if (isTooShort) return null;
-    return detectNonLatinScript(text);
-  }, [text, isTooShort]);
-  
-  const needsAIDetection = useMemo(() => {
-    if (isTooShort) return false;
-    if (nonLatinLang) return false;
-    if (text.length < MIN_TEXT_LENGTH_FOR_DETECTION) return false;
-    if (!isLatinText(text)) return false;
-    return true;
-  }, [text, nonLatinLang, isTooShort]);
-
-  useEffect(() => {
-    if (!needsAIDetection) {
-      setDetectedLang(nonLatinLang);
-      return;
-    }
-
-    const cached = getCachedLanguage(text);
-    if (cached) {
-      setDetectedLang(cached);
-      return;
-    }
-
-    const detectLanguage = async () => {
-      setIsDetecting(true);
-      try {
-        const { data, error: fnError } = await supabase.functions.invoke('detect-language', {
-          body: { text: text.slice(0, 100) },
-        });
-
-        if (fnError) {
-          console.error('Language detection error:', fnError);
-          setDetectedLang(null);
-          return;
-        }
-
-        const lang = data?.language || null;
-        if (lang) {
-          cacheLanguage(text, lang);
-          setDetectedLang(lang);
-        }
-      } catch (err) {
-        console.error('Language detection failed:', err);
-        setDetectedLang(null);
-      } finally {
-        setIsDetecting(false);
-      }
-    };
-
-    detectLanguage();
-  }, [text, needsAIDetection, nonLatinLang]);
-
-  const shouldOfferTranslation = useMemo(() => {
-    const langToCheck = detectedLang || nonLatinLang;
-    if (!langToCheck) return false;
-    if (langToCheck === userLang) return false;
-    if (userLang === 'en' && langToCheck === 'en') return false;
-    return true;
-  }, [detectedLang, nonLatinLang, userLang]);
-
   const handleTranslate = async () => {
+    if (isTooShort) return;
+
     const cacheKey = `${text}-${userLang}`;
     
     if (translationCache.has(cacheKey)) {
@@ -263,7 +201,14 @@ export function useTranslation(text: string) {
       if (fnError) throw fnError;
 
       const translated = data.translatedText;
-      const detected = data.detectedLanguage?.language || detectedLang || nonLatinLang || 'unknown';
+      const detected = data.detectedLanguage?.language || 'unknown';
+
+      // If detected language matches user language, show brief message
+      if (detected === userLang || translated === text) {
+        setError('Already in your language');
+        setTimeout(() => setError(null), 2000);
+        return;
+      }
 
       translationCache.set(cacheKey, { translated, sourceLang: detected });
 
@@ -289,8 +234,7 @@ export function useTranslation(text: string) {
     sourceLang,
     isLoading,
     error,
-    isDetecting,
-    shouldOfferTranslation,
+    isTooShort,
     handleTranslate,
     handleShowOriginal,
   };
@@ -313,8 +257,7 @@ export function TranslatableText({
     sourceLang,
     isLoading,
     error,
-    isDetecting,
-    shouldOfferTranslation,
+    isTooShort,
     handleTranslate,
     handleShowOriginal,
   } = useTranslation(text);
@@ -325,7 +268,7 @@ export function TranslatableText({
 
   useEffect(() => {
     if (!sharedCtx) return;
-    if (sharedCtx.translateSignal > lastTranslateSignal && !isTranslated && shouldOfferTranslation) {
+    if (sharedCtx.translateSignal > lastTranslateSignal && !isTranslated && !isTooShort) {
       setLastTranslateSignal(sharedCtx.translateSignal);
       handleTranslate();
     }
@@ -350,68 +293,6 @@ export function TranslatableText({
     sharedCtx?.requestOriginal();
   };
 
-  // If no translation needed and not detecting, just render the text
-  if (!shouldOfferTranslation && !isDetecting) {
-    return <Component className={cn("whitespace-pre-wrap", className)}>{renderTextWithLinks(text)}</Component>;
-  }
-
-  const renderTranslateControl = () => {
-    if (isTranslated) {
-      return (
-        <button
-          onClick={onShowOriginal}
-          className="flex items-center gap-1.5 text-xs text-white hover:text-zinc-300 transition-colors mt-1"
-        >
-          <RotateCcw className="w-3 h-3" />
-          <span>
-            Translated from {LANGUAGE_NAMES[sourceLang || ''] || sourceLang}
-            {' • Show original'}
-          </span>
-        </button>
-      );
-    }
-
-    if (isDetecting) {
-      return (
-        <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
-          <Loader2 className="w-3 h-3 animate-spin" />
-          <span>Detecting language...</span>
-        </span>
-      );
-    }
-
-    if (shouldOfferTranslation) {
-      return (
-        <button
-          onClick={onTranslate}
-          disabled={isLoading}
-          className={cn(
-            "flex items-center gap-1.5 text-xs transition-colors mt-1",
-            error 
-              ? "text-red-400" 
-              : "text-white hover:text-zinc-300"
-          )}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-3 h-3 animate-spin" />
-              <span>Translating...</span>
-            </>
-          ) : error ? (
-            <span>{error}</span>
-          ) : (
-            <>
-              <Globe className="w-3 h-3" />
-              <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
-            </>
-          )}
-        </button>
-      );
-    }
-
-    return null;
-  };
-
   return (
     <>
       <AnimatePresence mode="wait">
@@ -427,7 +308,6 @@ export function TranslatableText({
           </Component>
         </motion.div>
       </AnimatePresence>
-      {!hideControls && renderTranslateControl()}
     </>
   );
 }
@@ -443,54 +323,6 @@ interface TranslatableGroupProps {
 }
 
 export function TranslatableGroup({ text, children }: TranslatableGroupProps) {
-  const {
-    userLang,
-    isLoading,
-    error,
-    isDetecting,
-    shouldOfferTranslation,
-    handleTranslate,
-  } = useTranslation(text);
-
-  // If no translation needed, just render children
-  if (!shouldOfferTranslation && !isDetecting) {
-    return <>{children}</>;
-  }
-
-  return (
-    <>
-      {children}
-      {isDetecting ? (
-        <span className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
-          <Loader2 className="w-3 h-3 animate-spin" />
-          <span>Detecting language...</span>
-        </span>
-      ) : shouldOfferTranslation ? (
-        <button
-          onClick={handleTranslate}
-          disabled={isLoading}
-          className={cn(
-            "flex items-center gap-1.5 text-xs transition-colors mt-1",
-            error 
-              ? "text-red-400" 
-              : "text-white hover:text-zinc-300"
-          )}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-3 h-3 animate-spin" />
-              <span>Translating...</span>
-            </>
-          ) : error ? (
-            <span>{error}</span>
-          ) : (
-            <>
-              <Globe className="w-3 h-3" />
-              <span>Translate to {LANGUAGE_NAMES[userLang] || 'English'}</span>
-            </>
-          )}
-        </button>
-      ) : null}
-    </>
-  );
+  // TranslatableGroup now just renders children — translation controls are in PostMetadata
+  return <>{children}</>;
 }
