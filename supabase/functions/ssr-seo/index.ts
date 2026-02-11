@@ -108,14 +108,17 @@ serve(async (req) => {
         const canonicalUrl = originalUrl || `${APP_URL}${fullPath}`;
 
         // Normalize path for logic
-        const cleanPath = fullPath.split('?')[0].replace(/\/$/, '');
+        let cleanPath = fullPath.split('?')[0];
+        if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
         const pathParts = cleanPath.split('/').filter(Boolean);
 
-        console.log(`[SSR] Path: ${cleanPath}, Parts:`, pathParts);
+        console.log(`[SSR] FullPath: ${fullPath}, CleanPath: ${cleanPath}, Parts:`, pathParts);
 
         // 1. Profile Handling (/@username)
-        if (pathParts.length === 1 && pathParts[0].startsWith('@')) {
-            const username = pathParts[0].substring(1);
+        // Check if the first part starts with @ or if the whole path is just the username
+        const possibleUsername = pathParts[0] || '';
+        if (possibleUsername.startsWith('@')) {
+            const username = possibleUsername.substring(1);
             console.log(`[SSR] Profile detected for: ${username}`);
 
             const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`);
