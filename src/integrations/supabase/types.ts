@@ -407,6 +407,30 @@ export type Database = {
         }
         Relationships: []
       }
+      leaderboard_snapshots: {
+        Row: {
+          account: string
+          balance: number
+          created_at: string
+          id: string
+          snapshot_date: string
+        }
+        Insert: {
+          account: string
+          balance?: number
+          created_at?: string
+          id?: string
+          snapshot_date?: string
+        }
+        Update: {
+          account?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          snapshot_date?: string
+        }
+        Relationships: []
+      }
       raise_hand_requests: {
         Row: {
           avatar: string | null
@@ -700,6 +724,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       get_request_wallet_address: { Args: never; Returns: string }
     }
     Enums: {

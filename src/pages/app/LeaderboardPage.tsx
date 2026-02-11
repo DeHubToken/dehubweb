@@ -94,14 +94,16 @@ export default function LeaderboardPage() {
     // Filter out wallet-only entries (no username)
     list = list.filter(entry => entry.username);
 
-    // Apply manual balance overrides
-    list = list.map(entry => {
-      const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
-      if (override !== undefined) {
-        return { ...entry, total: override };
-      }
-      return entry;
-    });
+    // Apply manual balance overrides (All Time only)
+    if (timePeriod === 'all') {
+      list = list.map(entry => {
+        const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
+        if (override !== undefined) {
+          return { ...entry, total: override };
+        }
+        return entry;
+      });
+    }
     
     // Client-side sorting for social metrics
     if (category === 'followers') {
@@ -155,6 +157,10 @@ export default function LeaderboardPage() {
     return `${entry.account.slice(0, 6)}...${entry.account.slice(-4)}`;
   };
 
+  // Check if we're viewing a time-based holdings period (shows delta)
+  const isHoldingsDelta = category === 'holdings' && timePeriod !== 'all';
+  const hasHistoricalData = data?.hasHistoricalData !== false;
+
   const getSortValue = (entry: LeaderboardEntry): number => {
     switch (category) {
       case 'sentTips':
@@ -168,8 +174,23 @@ export default function LeaderboardPage() {
       case 'subscribers':
         return entry.subscribers ?? 0;
       default:
+        // For time-based holdings, use delta if available
+        if (isHoldingsDelta && entry.delta !== undefined) {
+          return entry.delta;
+        }
         return entry.total ?? 0;
     }
+  };
+
+  const formatDisplayValue = (entry: LeaderboardEntry): string => {
+    const value = getSortValue(entry);
+    if (isHoldingsDelta && hasHistoricalData) {
+      return `+${formatNumber(value)} DHB`;
+    }
+    if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
+      return formatDHB(value);
+    }
+    return formatNumber(value);
   };
 
   const currentCategory = categories.find(c => c.id === category);
@@ -329,10 +350,7 @@ export default function LeaderboardPage() {
 
                   {/* Value */}
                   <div className="col-span-3 sm:col-span-6 text-right text-white font-medium">
-                    {category === 'holdings' || category === 'sentTips' || category === 'receivedTips'
-                      ? formatDHB(getSortValue(entry))
-                      : formatNumber(getSortValue(entry))
-                    }
+                    {formatDisplayValue(entry)}
                   </div>
                 </div>
               );

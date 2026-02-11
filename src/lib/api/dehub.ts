@@ -1516,12 +1516,14 @@ export interface LeaderboardEntry {
   followers?: number;
   likes?: number;
   subscribers?: number;
+  delta?: number;
 }
 
 export interface LeaderboardResponse {
   result: {
     byWalletBalance: LeaderboardEntry[];
   };
+  hasHistoricalData?: boolean;
 }
 
 export type LeaderboardSortMode = 'holdings' | 'sentTips' | 'receivedTips';
