@@ -32,7 +32,11 @@ interface DeHubNFT {
 function getMediaUrl(relativePath?: string): string {
     if (!relativePath) return "https://dehub.io/og-image.png"; // Default fallback
     if (relativePath.startsWith("http")) return relativePath;
-    return `${DEHUB_CDN_BASE}${relativePath}`;
+
+    // Fix: Remove 'statics/' prefix if present
+    const cleanPath = relativePath.replace(/^statics\//, '');
+
+    return `${DEHUB_CDN_BASE}${cleanPath}`;
 }
 
 function generateMetaHTML(data: {
