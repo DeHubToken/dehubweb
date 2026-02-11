@@ -96,6 +96,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   
   // Get creator info from various possible fields
   const channel = nft.minterDisplayName || 
+                  nft.minterUsername || 
                   nft.mintername || 
                   nft.creator?.display_name || 
                   nft.creator?.username || 
@@ -117,7 +118,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
-  const creatorUsername = nft.mintername || nft.creator?.username;
+  const creatorUsername = nft.minterUsername || nft.mintername || nft.creator?.username;
   
   // Get stats
   const likeCount = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
@@ -184,7 +185,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
                        FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
   
   // Get creator info
-  const username = nft.mintername || nft.creator?.username || 'unknown';
+  const username = nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.display_name || nft.creator?.username || 'unknown';
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
   const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
@@ -202,7 +203,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
-  const creatorUsername = nft.mintername || nft.creator?.username;
+  const creatorUsername = nft.minterUsername || nft.mintername || nft.creator?.username;
   
   // Get title and description
   const title = nft.name || nft.title || '';
