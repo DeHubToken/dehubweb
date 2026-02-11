@@ -29,14 +29,42 @@ interface DeHubNFT {
     minterUsername?: string;
 }
 
-function getMediaUrl(relativePath?: string): string {
-    if (!relativePath) return "https://dehub.io/og-image.png"; // Default fallback
-    if (relativePath.startsWith("http")) return relativePath;
+function getExtension(path: string): string {
+    const match = path.match(/\.([a-zA-Z0-9-]+)$/);
+    if (!match) return 'png';
+    return match[1].toLowerCase();
+}
 
-    // Fix: Remove 'statics/' prefix if present
-    const cleanPath = relativePath.replace(/^statics\//, '');
+/**
+ * Sync with frontend src/lib/media-url.ts
+ */
+function buildAvatarUrl(user: DeHubUser): string {
+    const apiPath = user.avatarImageUrl;
+    if (!apiPath) return "https://dehub.io/og-image.png";
+    if (apiPath.startsWith('http')) return apiPath;
 
-    return `${DEHUB_CDN_BASE}${cleanPath}`;
+    // Frontend logic: cdn/avatars/{address}.{ext}
+    if (user.address) {
+        const ext = getExtension(apiPath);
+        return `${DEHUB_CDN_BASE}avatars/${user.address}.${ext}`;
+    }
+
+    // Fallback: strip statics/ and append relative path
+    return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, '')}`;
+}
+
+function buildPostImageUrl(nft: DeHubNFT): string {
+    const apiPath = nft.imageUrl || nft.thumbnail_url;
+    if (!apiPath) return "https://dehub.io/og-image.png";
+    if (apiPath.startsWith('http')) return apiPath;
+
+    // Frontend logic: cdn/images/{tokenId}.{ext}
+    if (nft.tokenId) {
+        const ext = getExtension(apiPath);
+        return `${DEHUB_CDN_BASE}images/${nft.tokenId}.${ext}`;
+    }
+
+    return `${DEHUB_CDN_BASE}${apiPath.replace(/^statics\//, '')}`;
 }
 
 function generateMetaHTML(data: {
@@ -47,9 +75,10 @@ function generateMetaHTML(data: {
     type?: string;
     isBot: boolean;
 }): string {
-    // Escaping strings to prevent HTML breakage
     const title = data.title.replace(/"/g, '&quot;');
     const description = data.description.replace(/"/g, '&quot;');
+    const ext = getExtension(data.image);
+    const mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -67,7 +96,8 @@ function generateMetaHTML(data: {
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="${data.image}">
-  <meta property="og:image:type" content="image/png"> <!-- Hint for binary/octet-stream -->
+  <meta property="og:image:secure_url" content="${data.image}">
+  <meta property="og:image:type" content="${mimeType}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="fb:app_id" content="966242223397117">
@@ -85,12 +115,12 @@ function generateMetaHTML(data: {
   <script>window.location.href = '${data.url}';</script>
   ` : ''}
 </head>
-<body style="font-family: sans-serif; background: black; color: white;">
-  <div style="max-width: 600px; margin: 40px auto; text-align: center; padding: 20px;">
+<body style="font-family: sans-serif; background: black; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="max-width: 600px; text-align: center; padding: 20px;">
     <h1>${title}</h1>
     <p>${description}</p>
-    <img src="${data.image}" style="max-width: 100%; border-radius: 12px; margin-top: 20px;" />
-    <p><a href="${data.url}" style="color: #00ff00;">View on DeHub</a></p>
+    <img src="${data.image}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+    <p style="margin-top: 30px;"><a href="${data.url}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on DeHub</a></p>
   </div>
 </body>
 </html>`;
@@ -104,30 +134,20 @@ serve(async (req) => {
     try {
         const url = new URL(req.url);
         const userAgent = req.headers.get('user-agent') || '';
-        // Better bot detection
         const isBot = /bot|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i.test(userAgent);
 
-        // Path handling - Support both direct path and original_url query param
         let fullPath = url.searchParams.get('path') || '/';
         const originalUrl = url.searchParams.get('original_url');
-
-        // Canonical URL for meta tags
         const canonicalUrl = originalUrl || `${APP_URL}${fullPath}`;
 
-        // Normalize path for logic
         let cleanPath = fullPath.split('?')[0];
         if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
         const pathParts = cleanPath.split('/').filter(Boolean);
 
-        console.log(`[SSR] FullPath: ${fullPath}, CleanPath: ${cleanPath}, Parts:`, pathParts);
-
         // 1. Profile Handling (/@username)
-        // Check if the first part starts with @ or if the whole path is just the username
         const possibleUsername = pathParts[0] || '';
         if (possibleUsername.startsWith('@')) {
             const username = possibleUsername.substring(1);
-            console.log(`[SSR] Profile detected for: ${username}`);
-
             const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`);
             const userData = await response.json();
             const user: DeHubUser = userData.result || userData;
@@ -137,7 +157,7 @@ serve(async (req) => {
                 const html = generateMetaHTML({
                     title: `Join @${user.username || username} on DeHub today!`,
                     description: user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
-                    image: getMediaUrl(user.avatarImageUrl),
+                    image: buildAvatarUrl(user),
                     url: canonicalUrl,
                     isBot
                 });
@@ -149,7 +169,6 @@ serve(async (req) => {
         if (cleanPath.includes('/post/') || cleanPath.includes('/video/')) {
             const splitChar = cleanPath.includes('/post/') ? '/post/' : '/video/';
             const postId = cleanPath.split(splitChar)[1].split('/')[0];
-            console.log(`[SSR] Post detected: ${postId}`);
 
             const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`);
             const nftData = await response.json();
@@ -158,12 +177,10 @@ serve(async (req) => {
             if (nft) {
                 const title = nft.title || nft.name || "DeHub Post";
                 const description = nft.description || "View this post on DeHub";
-                const image = getMediaUrl(nft.imageUrl || nft.thumbnail_url);
-
                 const html = generateMetaHTML({
                     title,
                     description,
-                    image,
+                    image: buildPostImageUrl(nft),
                     url: canonicalUrl,
                     type: 'article',
                     isBot
