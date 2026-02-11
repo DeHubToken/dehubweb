@@ -274,12 +274,14 @@ export default function LeaderboardPage() {
 
       {/* Leaderboard Table */}
       <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-        {/* Table Header */}
-        <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">
-          <div className="col-span-1">Rank</div>
-          <div className="col-span-5">User</div>
-          <div className="col-span-6 text-right">{currentCategory?.label || 'Value'}</div>
-        </div>
+        {/* Table Header - only render when we have entries to avoid border flash */}
+        {entries.length > 0 && (
+          <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">
+            <div className="col-span-1">Rank</div>
+            <div className="col-span-5">User</div>
+            <div className="col-span-6 text-right">{currentCategory?.label || 'Value'}</div>
+          </div>
+        )}
 
         {/* Loading State */}
         {isLoading && (
