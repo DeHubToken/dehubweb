@@ -1,33 +1,32 @@
 
-
-## Fix: Badge Not Showing for All Qualified Users on Leaderboard
+## Fix: Populate `badgeBalance` in the Leaderboard Cache
 
 ### Problem
-Badges only appear for some users on the leaderboard, even though everyone with 10k+ DHB should have one. The root cause is that the leaderboard makes a **separate** on-chain RPC call (`useBatchBadgeBalances`) using `entry.account` to determine badges, but this can fail or return 0 for some users due to RPC inconsistencies or address mismatches.
+Every entry in the leaderboard cache has `badgeBalance: null`. The `refresh-leaderboard-cache` edge function computes on-chain totals (Base holdings + BNB holdings + BNB staked) and stores them as `total`, but never populates the `badgeBalance` field. The DeHub API doesn't provide it either, so the previous fix (prioritizing `entry.badgeBalance`) still falls back to the batch RPC call, which is unreliable.
 
-Meanwhile, the leaderboard cache **already has** the correct `badgeBalance` pre-computed on each entry (populated by the `refresh-leaderboard-cache` function), but it's completely ignored.
+### Root Cause
+Line 257 of `refresh-leaderboard-cache/index.ts` reads `badgeBalance` from the DeHub API response, which never includes it. Meanwhile, the `total` field already represents exactly what `badgeBalance` should be (combined holdings + staked).
 
 ### Solution
-Use the pre-computed `entry.badgeBalance` from the leaderboard data as the primary source for badge display, falling back to the batch RPC result only if the cached value is missing. This also removes unnecessary RPC calls, improving performance.
+Set `badgeBalance` equal to the on-chain `total` that was already computed, instead of trying to read it from the API response.
 
 ---
 
 ### Technical Changes
 
-**`src/pages/app/LeaderboardPage.tsx`**
+**`supabase/functions/refresh-leaderboard-cache/index.ts`**
 
-- Change badge lookup on line 365 from:
-  ```
-  getBadgeUrl(badgeBalances[entry.account.toLowerCase()])
-  ```
-  to:
-  ```
-  getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()])
-  ```
-- This prioritizes the already-available cached balance while keeping the batch call as a fallback.
+On line 257, change:
+```typescript
+badgeBalance: (entry.badgeBalance as number) ?? undefined,
+```
+to:
+```typescript
+badgeBalance: balances[idx],
+```
 
-**`src/components/app/sidebar/SidebarLeaderboard.tsx`**
+This uses the already-computed on-chain balance (which includes Base holdings + BNB holdings + BNB staked) as the badge balance for each entry.
 
-- Apply the same fix: use `entry.badgeBalance` as the primary badge source, with the batch RPC as fallback.
+Also for the extra wallets injection (around line 273), add `badgeBalance: balance` to the pushed entry so those users get badges too.
 
-This ensures every leaderboard user with 10k+ DHB (holdings + staked) shows their badge, using data that's already been computed and cached.
+After deploying, the next cache refresh (runs every 5 minutes) will populate `badgeBalance` for all entries. Every user with 10k+ total will then show their badge on both the main leaderboard and the sidebar.
