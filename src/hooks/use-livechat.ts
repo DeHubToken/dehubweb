@@ -17,12 +17,22 @@ const POLL_INTERVAL = 4000; // 4 seconds
 export function useLiveChatRooms() {
   const [rooms, setRooms] = useState<LiveChatRoom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchRooms = useCallback(() => {
     setIsLoading(true);
+    setError(null);
     getLiveChatRooms()
-      .then((data) => setRooms(data))
-      .catch((err) => console.error('[LiveChat] Failed to fetch rooms:', err))
+      .then((data) => {
+        setRooms(data);
+        if (data.length === 0) {
+          console.warn('[LiveChat] Rooms loaded but list is empty');
+        }
+      })
+      .catch((err) => {
+        console.error('[LiveChat] Failed to fetch rooms:', err);
+        setError(err?.message || 'Failed to load chat rooms');
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -30,7 +40,7 @@ export function useLiveChatRooms() {
     fetchRooms();
   }, [fetchRooms]);
 
-  return { rooms, isLoading, refetch: fetchRooms };
+  return { rooms, isLoading, error, refetch: fetchRooms };
 }
 
 export function useLiveChatMessages(roomId: string | null) {

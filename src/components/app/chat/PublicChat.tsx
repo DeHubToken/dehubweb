@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -42,7 +42,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const { isAuthenticated } = useAuth();
 
   // Fetch rooms, use the first available room
-  const { rooms, isLoading: roomsLoading, refetch: refetchRooms } = useLiveChatRooms();
+  const { rooms, isLoading: roomsLoading, error: roomsError, refetch: refetchRooms } = useLiveChatRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [createRoomOpen, setCreateRoomOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -244,7 +244,28 @@ export function PublicChat({ onBack }: PublicChatProps) {
           ref={scrollContainerRef}
           className="absolute inset-0 overflow-y-auto py-2"
         >
-          {isLoading ? (
+          {roomsError ? (
+            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
+              <AlertCircle className="w-12 h-12 text-red-500/60" />
+              <p className="text-sm text-red-400">Failed to load chat</p>
+              <p className="text-xs text-zinc-600">{roomsError}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetchRooms()}
+                className="border-zinc-700 text-white hover:bg-zinc-800 mt-2"
+              >
+                <RefreshCw className="w-3 h-3 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          ) : !roomsLoading && rooms.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
+              <MessageCircle className="w-12 h-12 text-zinc-700" />
+              <p className="text-sm">No chat rooms available</p>
+              <p className="text-xs text-zinc-600">Check back later or create a new room</p>
+            </div>
+          ) : isLoading ? (
             <div className="space-y-3 p-4">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex gap-3">

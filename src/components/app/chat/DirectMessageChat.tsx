@@ -5,7 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
@@ -139,6 +139,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [conversationData, setConversationData] = useState<DeHubConversation>(conversation);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
+  const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
   const isInitialMount = useRef(true);
 
   const isGroupChat = conversation.isGroup || !!conversation.groupInfo;
@@ -177,16 +178,18 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
   const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username || 'User';
 
-  const { 
-    messages, 
-    isLoading, 
-    fetchNextPage, 
-    hasNextPage, 
+  const {
+    messages,
+    isLoading,
+    isError: messagesError,
+    refetch: refetchMessages,
+    fetchNextPage,
+    hasNextPage,
     isFetchingNextPage,
     markAsRead,
-  } = useMessages(conversation.id);
+  } = useMessages(resolvedConversationId);
 
-  const sendMessageMutation = useSendMessage(conversation.id);
+  const sendMessageMutation = useSendMessage(resolvedConversationId);
   const deleteConversationMutation = useDeleteConversation();
 
   // Scroll to bottom on initial load
@@ -246,7 +249,13 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     sendMessageMutation.mutate(
       { content, type, mediaUrl: finalMediaUrl },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          // Resolve virtual conversation ID after first message creates a real one
+          const realId = data?.conversationId;
+          if (realId && realId !== resolvedConversationId && !realId.startsWith('new_')) {
+            console.log('[DM] Resolved virtual conversation ID:', resolvedConversationId, '->', realId);
+            setResolvedConversationId(realId);
+          }
           setTimeout(scrollToBottom, 100);
         },
         onError: () => {
@@ -373,6 +382,20 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       {/* Messages */}
       {isLoading ? (
         <MessagesSkeleton />
+      ) : messagesError ? (
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
+          <AlertCircle className="w-12 h-12 text-red-500/60 mb-3" />
+          <p className="text-red-400 mb-2">Failed to load messages</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetchMessages()}
+            className="border-zinc-700 text-white hover:bg-zinc-800"
+          >
+            <RefreshCw className="w-3 h-3 mr-2" />
+            Try Again
+          </Button>
+        </div>
       ) : (
         <div 
           ref={scrollContainerRef}

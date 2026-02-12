@@ -2199,10 +2199,10 @@ export async function getConversations(
       };
     } catch (error) {
       console.error('[DM API] Failed to fetch conversations:', error);
-      return { items: [], totalCount: 0, hasMore: false };
+      throw error;
     }
   }
-  
+
   // With search query, use the search endpoint
   console.log('[DM API] Searching conversations with query:', searchQuery);
   try {
@@ -2211,7 +2211,7 @@ export async function getConversations(
       requiresAuth: true,
     });
     console.log('[DM API] Search response:', response);
-    
+
     // Handle various response formats
     if (response?.result?.items) {
       return response.result;
@@ -2222,11 +2222,11 @@ export async function getConversations(
     if (Array.isArray(response)) {
       return { items: response, totalCount: response.length, hasMore: response.length >= limit };
     }
-    
+
     return { items: [], totalCount: 0, hasMore: false };
   } catch (error) {
     console.error('[DM API] Search failed:', error);
-    return { items: [], totalCount: 0, hasMore: false };
+    throw error;
   }
 }
 
@@ -2352,7 +2352,7 @@ export async function getMessages(
     return { items: [], totalCount: 0, hasMore: false };
   } catch (error) {
     console.error('[DM API] getMessages failed:', error);
-    return { items: [], totalCount: 0, hasMore: false };
+    throw error;
   }
 }
 
@@ -2959,7 +2959,10 @@ export async function updateUserOnlineStatus(address: string): Promise<{ success
   try {
     const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
       method: "POST",
-      body: {},
+      body: {
+        online: true,
+        address: address.toLowerCase(),
+      },
       requiresAuth: true,
     });
     console.log('[DM API] updateUserOnlineStatus response:', response);
@@ -3714,16 +3717,24 @@ export interface LiveChatUserProfile {
  * GET /api/livechat/rooms
  */
 export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
-  const response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
-    requiresAuth: false,
-  });
-  // API returns { rooms: [...], total: N }
-  if (response && typeof response === 'object') {
-    if ('rooms' in response && Array.isArray(response.rooms)) return response.rooms as LiveChatRoom[];
-    if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatRoom[];
+  try {
+    const response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
+      requiresAuth: false,
+    });
+    console.log('[LiveChat API] getLiveChatRooms raw response:', response);
+    // API returns { rooms: [...], total: N }
+    if (response && typeof response === 'object') {
+      if ('rooms' in response && Array.isArray(response.rooms)) return response.rooms as LiveChatRoom[];
+      if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatRoom[];
+      if ('data' in response && Array.isArray(response.data)) return response.data as LiveChatRoom[];
+    }
+    if (Array.isArray(response)) return response as unknown as LiveChatRoom[];
+    console.warn('[LiveChat API] getLiveChatRooms: unexpected response format, returning []');
+    return [];
+  } catch (error) {
+    console.error('[LiveChat API] getLiveChatRooms failed:', error);
+    throw error;
   }
-  if (Array.isArray(response)) return response as unknown as LiveChatRoom[];
-  return [];
 }
 
 /**
@@ -3748,24 +3759,32 @@ export async function getLiveChatMessages(
   roomId: string,
   params?: { page?: number; limit?: number; before?: string }
 ): Promise<LiveChatMessage[]> {
-  const response = await apiCall<Record<string, unknown>>(
-    `/api/livechat/rooms/${roomId}/messages`,
-    {
-      params: {
-        page: params?.page,
-        limit: params?.limit,
-        before: params?.before,
-      },
-      requiresAuth: false,
+  try {
+    const response = await apiCall<Record<string, unknown>>(
+      `/api/livechat/rooms/${roomId}/messages`,
+      {
+        params: {
+          page: params?.page,
+          limit: params?.limit,
+          before: params?.before,
+        },
+        requiresAuth: false,
+      }
+    );
+    console.log('[LiveChat API] getLiveChatMessages raw response:', response);
+    // API may return { messages: [...] } or { result: [...] }
+    if (response && typeof response === 'object') {
+      if ('messages' in response && Array.isArray(response.messages)) return response.messages as LiveChatMessage[];
+      if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatMessage[];
+      if ('data' in response && Array.isArray(response.data)) return response.data as LiveChatMessage[];
     }
-  );
-  // API may return { messages: [...] } or { result: [...] }
-  if (response && typeof response === 'object') {
-    if ('messages' in response && Array.isArray(response.messages)) return response.messages as LiveChatMessage[];
-    if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatMessage[];
+    if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
+    console.warn('[LiveChat API] getLiveChatMessages: unexpected response format, returning []');
+    return [];
+  } catch (error) {
+    console.error('[LiveChat API] getLiveChatMessages failed:', error);
+    throw error;
   }
-  if (Array.isArray(response)) return response as unknown as LiveChatMessage[];
-  return [];
 }
 
 /**
