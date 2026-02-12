@@ -2955,21 +2955,34 @@ export async function getUserOnlineStatus(address: string): Promise<UserOnlineSt
  */
 export async function updateUserOnlineStatus(address: string): Promise<{ success: boolean }> {
   console.log('[DM API] updateUserOnlineStatus called', { address });
-  
+
   try {
+    // Try PUT first (mirrors the GET user-status pattern)
     const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
-      method: "POST",
-      body: {
-        status: "online",
-      },
+      method: "PUT",
+      body: { status: "online" },
       requiresAuth: true,
     });
     console.log('[DM API] updateUserOnlineStatus response:', response);
-    
     return { success: response?.success !== false };
-  } catch (error) {
-    console.error('[DM API] updateUserOnlineStatus failed:', error);
-    return { success: false };
+  } catch (putError) {
+    console.warn('[DM API] updateUserOnlineStatus PUT failed, trying POST without body:', putError);
+    try {
+      // Fallback: POST with no body — endpoint may only need URL address + auth header
+      const token = getAuthToken();
+      const res = await fetch(`${DEHUB_API_BASE}/api/dm/user-status/${address}`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      console.log('[DM API] updateUserOnlineStatus POST-no-body response:', res.status, data);
+      return { success: res.ok };
+    } catch (postError) {
+      console.error('[DM API] updateUserOnlineStatus all attempts failed:', postError);
+      return { success: false };
+    }
   }
 }
 
