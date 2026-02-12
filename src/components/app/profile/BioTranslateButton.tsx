@@ -6,7 +6,8 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Globe, RotateCcw, Loader2 } from 'lucide-react';
+import { RotateCcw, Loader2 } from 'lucide-react';
+import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage } from '@/hooks/use-user-language';
 
@@ -73,7 +74,7 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
       className="text-muted-foreground hover:text-foreground transition-colors"
       title="Translate bio"
     >
-      <Globe className="w-3.5 h-3.5" />
+      <img src={translateGlobeIcon} alt="Translate" className="w-3.5 h-3.5 opacity-50 brightness-200 invert" />
     </button>
   );
 }
