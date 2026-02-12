@@ -329,7 +329,7 @@ export default function LeaderboardPage() {
                   className="grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 hover:bg-zinc-800/50 transition-colors items-center cursor-pointer"
                 >
                   {/* Rank */}
-                  <div className="col-span-2 sm:col-span-1 flex items-center justify-center w-12">
+                  <div className="col-span-2 sm:col-span-1 flex items-center justify-start">
                     {rank <= 5 ? (
                       <div className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}>
                         <img 
