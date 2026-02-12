@@ -1,29 +1,36 @@
 
+# Fix Sidebar Leaderboard to Match Main Leaderboard Page
 
-## Fix: Vertically Center-Align All Rank Indicators
+## Problem
+The sidebar leaderboard (`SidebarLeaderboard.tsx`) always displays `entry.total` (the all-time DHB balance) regardless of which time period is selected. The main leaderboard page correctly shows `entry.delta` (the growth amount) when a time-based period (1d, 1w, 1m, 1y) is selected.
 
-### Problem
-The rank column uses `justify-start` (left-aligned), but the three types of rank indicators have different widths:
-- Ranks 1-3: medals at 48px wide
-- Ranks 4-5: plaques at 32px wide  
-- Ranks 6+: number badges at 28px wide
+For example, @aaron shows "+5M" on the main page (correct delta) but "29M" in the sidebar (total balance, not delta).
 
-Since they're all left-aligned, their visual centers are offset from each other.
+## Fix
 
-### Solution
-Give the rank column a fixed width matching the largest element (48px) and center all indicators within it. This ensures medals, plaques, and number badges all share the same vertical center line.
+**File: `src/components/app/sidebar/SidebarLeaderboard.tsx`**
 
-### Technical Changes
+1. Update the value display logic (line 227) to check the active period and show the delta when viewing a time-based period, matching the main leaderboard's behavior:
+   - If the period is **not** "All", display `entry.delta` with a "+" prefix (e.g., "+5.2M DHB")
+   - If the period **is** "All", display `entry.total` as it does now (e.g., "29.3M DHB")
+   - Handle cases where `delta` is 0 or undefined gracefully (show "0 DHB" or skip)
 
-**`src/pages/app/LeaderboardPage.tsx`** (lines 332-351)
+2. Add a helper or inline logic similar to the main page's `getSortValue` / `formatDisplayValue` pattern.
 
-1. Change the rank container from `justify-start` to `justify-center` and set a fixed width of `w-12` (48px) so all items center within the same space.
-2. Remove the `-ml-1` offset on medal containers since centering handles alignment now.
+## Technical Details
 
-This way:
-- 48px medals fill the full width, naturally centered
-- 32px plaques center within 48px
-- 28px number badges center within 48px
+The change is isolated to one section in `SidebarLeaderboard.tsx`:
 
-All rank indicators will share the same vertical center axis.
+```tsx
+// Line 226-228: Current (broken)
+<span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
 
+// Fixed: show delta for time-based periods
+const isTimeDelta = activePeriod !== 'All';
+const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
+const prefix = isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? '+' : '';
+// Then render:
+<span className="text-zinc-400 text-xs">{prefix}{formatDHB(displayValue)}</span>
+```
+
+This ensures the sidebar and main leaderboard page show identical values for the same time period.
