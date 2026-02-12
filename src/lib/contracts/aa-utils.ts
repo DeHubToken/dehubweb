@@ -136,7 +136,21 @@ function applyGasMargin(gasEstimate: bigint): bigint {
  * Parse transaction error into user-friendly message
  */
 export function parseTxError(error: unknown, context: string = 'transaction'): string {
-  const errorStr = error instanceof Error ? error.message : String(error);
+  // Extract message from nested error objects (viem/ethers/provider errors)
+  let errorStr = '';
+  if (error instanceof Error) {
+    errorStr = error.message;
+  } else if (typeof error === 'string') {
+    errorStr = error;
+  } else if (error && typeof error === 'object') {
+    const e = error as Record<string, any>;
+    errorStr = e.message || e.shortMessage || e.reason || 
+               e.error?.message || e.data?.message || e.details ||
+               (() => { try { return JSON.stringify(error).slice(0, 300); } catch { return 'Unknown error'; } })();
+  } else {
+    errorStr = String(error);
+  }
+
   const lowerError = errorStr.toLowerCase();
   
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
@@ -144,6 +158,10 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   }
   if (lowerError.includes('insufficient funds')) {
     return 'Insufficient funds for gas. Please add ETH to your wallet.';
+  }
+  if (lowerError.includes('paymaster') || lowerError.includes('sponsor') ||
+      lowerError.includes('aa21') || lowerError.includes('aa25') || lowerError.includes('aa31')) {
+    return 'Gas sponsorship failed. Please add ETH to your wallet for gas fees.';
   }
   if (lowerError.includes('nonce')) {
     return 'Transaction nonce error. Please try again.';
@@ -158,13 +176,11 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Signature verification failed on-chain.';
   }
   if (lowerError.includes('execution reverted')) {
-    // Try to extract reason
     const match = errorStr.match(/reason="([^"]+)"/);
     if (match) return `Transaction reverted: ${match[1]}`;
     return 'Transaction reverted by the contract.';
   }
   
-  // For known context errors
   if (context === 'approval') {
     return 'Token approval failed. Please try again.';
   }
