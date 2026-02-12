@@ -1,52 +1,54 @@
 
 
-# Fix Medal Shimmer Breaking During Auto-Rotation
+## Fix: Improve Error Handling for Post Minting Failures
 
-## Root Cause
+### Problem
+When a post fails to mint, the toast shows "Post failed: [object Object]" because the error from the wallet provider is a complex object that doesn't stringify properly. This is most likely a gas/insufficient funds error from the Pimlico paymaster rejecting the transaction.
 
-The medal shine animation (`medal-sweep`) runs on an **8-second cycle**, but the leaderboard auto-rotates every **5 seconds**. Each rotation triggers a React re-render that either:
-- Remounts the medal DOM elements (if the top-3 users change between periods), restarting the animation from 0%
-- Causes a brief layout recalculation that disrupts the animation timing
+### Root Cause
+In `src/lib/contracts/aa-utils.ts`, the `parseTxError` function uses `String(error)` as a fallback, which produces `[object Object]` for structured error objects from wallet providers.
 
-Since the sweep only fires between 80%-90% of the 8s cycle (i.e., at ~6.4s-7.2s), the 5-second rotation resets it before the shine ever appears.
+### Changes
 
-## Fix
+**1. `src/lib/contracts/aa-utils.ts` - Improve `parseTxError` to handle complex error objects**
 
-### 1. Shorten the animation cycle to fit within the rotation window
-**File**: `src/index.css` (line 342)
+- Use `JSON.stringify` as a fallback instead of `String(error)` for non-Error objects
+- Recursively check nested `error.message`, `error.error`, `error.data`, `error.details`, and `error.shortMessage` fields (common in viem/ethers/provider errors)
+- Add detection for paymaster-related errors (e.g., "paymaster", "sponsor", "aa21", "aa25", "aa31" prefunded errors) with a user-friendly message like "Gas sponsorship unavailable. Please add ETH to your wallet."
 
-Change the animation duration from `8s` to `3s` so the shine sweep completes well within each 5-second rotation window. Adjust the keyframe percentages so the sweep still feels natural:
+**2. `src/features/post/hooks/usePostForm.ts` - Add deeper error extraction in the catch block**
 
-```css
-animation: medal-sweep 3s ease-in-out infinite;
-```
+- Before displaying the toast, attempt to extract nested error messages (e.g., `error.error?.message`, `error.data?.message`)
+- Log the full error object with `JSON.stringify` for debugging
 
-Update the keyframes (lines 354-361) to:
-```css
-@keyframes medal-sweep {
-  0%, 60%, 100% {
-    background-position: 100% 0;
+### Technical Details
+
+The key improvement in `parseTxError`:
+
+```typescript
+export function parseTxError(error: unknown, context: string = 'transaction'): string {
+  // Extract message from nested error objects
+  let errorStr = '';
+  if (error instanceof Error) {
+    errorStr = error.message;
+  } else if (typeof error === 'string') {
+    errorStr = error;
+  } else if (error && typeof error === 'object') {
+    const e = error as Record<string, any>;
+    errorStr = e.message || e.shortMessage || e.reason || 
+               e.error?.message || e.data?.message || 
+               JSON.stringify(error).slice(0, 300);
+  } else {
+    errorStr = String(error);
   }
-  80% {
-    background-position: -100% 0;
+  
+  // ... existing checks plus new paymaster checks ...
+  if (lowerError.includes('paymaster') || lowerError.includes('aa21') || 
+      lowerError.includes('aa25') || lowerError.includes('aa31')) {
+    return 'Gas sponsorship failed. Please add ETH to your wallet for gas fees.';
   }
 }
 ```
 
-This ensures the shine sweeps once every 3 seconds, completing at least one full cycle before the next rotation at 5 seconds.
-
-### 2. Add `animation-fill-mode` to prevent flicker on remount
-**File**: `src/index.css` (line 342, same block)
-
-Add to `.medal-shine-overlay`:
-```css
-animation-fill-mode: both;
-```
-
-This ensures even if the element remounts, it starts from a clean visual state without a flash.
-
-## Summary
-- Single file change: `src/index.css`
-- Shortens medal animation cycle from 8s to 3s so it completes before the 5s auto-rotation resets it
-- Adds `animation-fill-mode: both` to prevent visual glitches on remount
+This ensures any error -- whether from Pimlico, the AA bundler, or the on-chain contract -- produces a readable message instead of `[object Object]`.
 
