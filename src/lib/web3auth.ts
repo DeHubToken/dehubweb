@@ -25,24 +25,13 @@ import { CoinbaseAdapter } from "@web3auth/coinbase-adapter";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Detect if running on a mobile device based on user agent + touch support.
- * iPadOS 13+ reports a desktop UA, so we also check maxTouchPoints.
+ * Detect if running on a mobile device based on user agent
  */
 export function isMobileDevice(): boolean {
   if (typeof navigator === 'undefined') return false;
-  // Standard mobile user-agent check
-  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    return true;
-  }
-  // iPadOS 13+ reports macOS UA but has touch support
-  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) {
-    return true;
-  }
-  // Fallback: small screen + touch (catches edge cases)
-  if ('ontouchstart' in window && window.innerWidth <= 1024) {
-    return true;
-  }
-  return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
 }
 
 // Re-export for use in other files
@@ -106,42 +95,12 @@ if (import.meta.hot) {
 }
 
 /**
- * Save the current path before mobile redirect so we can restore it after auth.
- */
-export function savePreLoginPath(): void {
-  if (isMobileDevice()) {
-    const currentPath = window.location.pathname + window.location.search;
-    sessionStorage.setItem('dehub_pre_login_path', currentPath);
-    console.log('[Web3Auth] Saved pre-login path:', currentPath);
-  }
-}
-
-/**
- * Get and clear the saved pre-login path (consumed once after redirect).
- */
-export function consumePreLoginPath(): string | null {
-  const path = sessionStorage.getItem('dehub_pre_login_path');
-  if (path) {
-    sessionStorage.removeItem('dehub_pre_login_path');
-    console.log('[Web3Auth] Consumed pre-login path:', path);
-  }
-  return path;
-}
-
-/**
- * Check if URL contains Web3Auth redirect parameters.
- * Web3Auth v8 may attach params in hash OR search, and may use
- * `b64Params`, `sessionId`, or `sessionNamespace`.
+ * Check if URL contains Web3Auth redirect parameters
  */
 export function hasRedirectResult(): boolean {
   const hash = window.location.hash;
   const search = window.location.search;
-  const combined = hash + search;
-  return (
-    combined.includes('b64Params') ||
-    combined.includes('sessionId') ||
-    combined.includes('sessionNamespace')
-  );
+  return hash.includes('b64Params') || search.includes('b64Params');
 }
 
 async function getWeb3AuthClientId(): Promise<string> {
@@ -207,19 +166,12 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       console.log("[Web3Auth] Web3AuthNoModal instance created");
 
       // Configure Openlogin adapter for social/email/sms logins
-      // On mobile (REDIRECT mode), redirect back to /app so user doesn't
-      // land on the marketing landing page after OAuth completes.
-      const mobile = isMobileDevice();
-      const redirectUrl = mobile
-        ? window.location.origin + '/app'
-        : window.location.origin;
       console.log("[Web3Auth] Configuring Openlogin adapter...");
-      console.log("[Web3Auth] redirectUrl:", redirectUrl);
       const openloginAdapter = new OpenloginAdapter({
         privateKeyProvider,
         adapterSettings: {
-          uxMode: mobile ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-          redirectUrl,
+          uxMode: isMobileDevice() ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+          redirectUrl: window.location.origin,
         },
       });
       web3authInstance.configureAdapter(openloginAdapter);
@@ -259,27 +211,19 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
 
       console.log("[Web3Auth] External wallet adapters configured");
 
-      // Initialize (reuse `mobile` from adapter config above)
-      const timeoutMs = mobile ? 30000 : 15000;
-      console.log(`[Web3Auth] Calling init() (timeout: ${timeoutMs}ms, mobile: ${mobile})...`);
+      // Initialize
+      console.log("[Web3Auth] Calling init()...");
 
       const initWithTimeout = Promise.race([
         web3authInstance.init(),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Web3Auth init timeout")), timeoutMs)
+          setTimeout(() => reject(new Error("Web3Auth init timeout")), 15000)
         )
       ]);
 
       await initWithTimeout;
       console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
-
-      // After init, if connected (e.g. redirect return), track the adapter
-      if (web3authInstance.connected && !lastConnectedAdapter) {
-        // After redirect, the SDK reconnects via openlogin adapter
-        lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN;
-        console.log("[Web3Auth] Auto-detected connection after init, set adapter to OPENLOGIN");
-      }
 
       console.log("[Web3Auth] INITIALIZATION COMPLETE (No-Modal v8 + PrivateKeyProvider), status:", web3authInstance.status);
       return web3authInstance;
@@ -323,9 +267,6 @@ export async function connectToSocialProvider(
 
   let provider: IProvider | null;
   try {
-    // Save current path before redirect (mobile only) so we can restore after auth
-    savePreLoginPath();
-
     console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_ADAPTERS.OPENLOGIN}, { loginProvider: ${authConnection} })`);
     provider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
       loginProvider: authConnection,
