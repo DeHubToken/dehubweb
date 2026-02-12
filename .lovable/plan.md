@@ -1,32 +1,29 @@
 
-## Fix: Populate `badgeBalance` in the Leaderboard Cache
+
+## Fix: Vertically Center-Align All Rank Indicators
 
 ### Problem
-Every entry in the leaderboard cache has `badgeBalance: null`. The `refresh-leaderboard-cache` edge function computes on-chain totals (Base holdings + BNB holdings + BNB staked) and stores them as `total`, but never populates the `badgeBalance` field. The DeHub API doesn't provide it either, so the previous fix (prioritizing `entry.badgeBalance`) still falls back to the batch RPC call, which is unreliable.
+The rank column uses `justify-start` (left-aligned), but the three types of rank indicators have different widths:
+- Ranks 1-3: medals at 48px wide
+- Ranks 4-5: plaques at 32px wide  
+- Ranks 6+: number badges at 28px wide
 
-### Root Cause
-Line 257 of `refresh-leaderboard-cache/index.ts` reads `badgeBalance` from the DeHub API response, which never includes it. Meanwhile, the `total` field already represents exactly what `badgeBalance` should be (combined holdings + staked).
+Since they're all left-aligned, their visual centers are offset from each other.
 
 ### Solution
-Set `badgeBalance` equal to the on-chain `total` that was already computed, instead of trying to read it from the API response.
-
----
+Give the rank column a fixed width matching the largest element (48px) and center all indicators within it. This ensures medals, plaques, and number badges all share the same vertical center line.
 
 ### Technical Changes
 
-**`supabase/functions/refresh-leaderboard-cache/index.ts`**
+**`src/pages/app/LeaderboardPage.tsx`** (lines 332-351)
 
-On line 257, change:
-```typescript
-badgeBalance: (entry.badgeBalance as number) ?? undefined,
-```
-to:
-```typescript
-badgeBalance: balances[idx],
-```
+1. Change the rank container from `justify-start` to `justify-center` and set a fixed width of `w-12` (48px) so all items center within the same space.
+2. Remove the `-ml-1` offset on medal containers since centering handles alignment now.
 
-This uses the already-computed on-chain balance (which includes Base holdings + BNB holdings + BNB staked) as the badge balance for each entry.
+This way:
+- 48px medals fill the full width, naturally centered
+- 32px plaques center within 48px
+- 28px number badges center within 48px
 
-Also for the extra wallets injection (around line 273), add `badgeBalance: balance` to the pushed entry so those users get badges too.
+All rank indicators will share the same vertical center axis.
 
-After deploying, the next cache refresh (runs every 5 minutes) will populate `badgeBalance` for all entries. Every user with 10k+ total will then show their badge on both the main leaderboard and the sidebar.
