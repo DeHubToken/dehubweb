@@ -2957,30 +2957,27 @@ export async function updateUserOnlineStatus(address: string): Promise<{ success
   console.log('[DM API] updateUserOnlineStatus called', { address });
 
   try {
-    // Try PUT first (mirrors the GET user-status pattern)
+    // Try POST with body (the backend may not support PUT on this route)
     const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
-      method: "PUT",
+      method: "POST",
       body: { status: "online" },
       requiresAuth: true,
     });
     console.log('[DM API] updateUserOnlineStatus response:', response);
     return { success: response?.success !== false };
-  } catch (putError) {
-    console.warn('[DM API] updateUserOnlineStatus PUT failed, trying POST without body:', putError);
+  } catch (postError) {
+    console.warn('[DM API] updateUserOnlineStatus POST failed, trying PATCH:', postError);
     try {
-      // Fallback: POST with no body — endpoint may only need URL address + auth header
-      const token = getAuthToken();
-      const res = await fetch(`${DEHUB_API_BASE}/api/dm/user-status/${address}`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
+      // Fallback: PATCH (some REST APIs use PATCH for status updates)
+      const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
+        method: "PATCH",
+        body: { status: "online" },
+        requiresAuth: true,
       });
-      const data = await res.json().catch(() => ({}));
-      console.log('[DM API] updateUserOnlineStatus POST-no-body response:', res.status, data);
-      return { success: res.ok };
-    } catch (postError) {
-      console.error('[DM API] updateUserOnlineStatus all attempts failed:', postError);
+      console.log('[DM API] updateUserOnlineStatus PATCH response:', response);
+      return { success: response?.success !== false };
+    } catch (patchError) {
+      console.error('[DM API] updateUserOnlineStatus all attempts failed:', patchError);
       return { success: false };
     }
   }
@@ -3683,14 +3680,35 @@ export async function editComment(params: {
  */
 export interface LiveChatRoom {
   id: string;
+  roomId?: string;
   name?: string;
   topic?: string;
   description?: string;
+  roomType?: string;
   participantCount?: number;
+  activeUsers?: number;
   messageCount?: number;
   createdAt?: string;
   settings?: Record<string, unknown>;
   moderators?: string[];
+  slowMode?: boolean;
+  slowModeSeconds?: number;
+  subscribersOnly?: boolean;
+  minStakeRequired?: number;
+  pinnedMessages?: string[];
+}
+
+/** Normalize API room response — maps `roomId` to `id` if `id` is missing */
+function normalizeRoom(raw: any): LiveChatRoom {
+  if (!raw || typeof raw !== 'object') return raw;
+  return {
+    ...raw,
+    id: raw.id || raw.roomId || raw._id || '',
+  };
+}
+
+function normalizeRooms(raw: any[]): LiveChatRoom[] {
+  return raw.map(normalizeRoom);
 }
 
 /**
@@ -3733,14 +3751,34 @@ export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
     const response = await apiCall<Record<string, unknown>>("/api/livechat/rooms", {
       requiresAuth: false,
     });
-    console.log('[LiveChat API] getLiveChatRooms raw response:', response);
-    // API returns { rooms: [...], total: N }
+    console.log('[LiveChat API] getLiveChatRooms raw response:', JSON.stringify(response, null, 2));
+
+    // Direct array response
+    if (Array.isArray(response)) return normalizeRooms(response);
+
+    // Object response — check known wrapper keys
     if (response && typeof response === 'object') {
-      if ('rooms' in response && Array.isArray(response.rooms)) return response.rooms as LiveChatRoom[];
-      if ('result' in response && Array.isArray(response.result)) return response.result as LiveChatRoom[];
-      if ('data' in response && Array.isArray(response.data)) return response.data as LiveChatRoom[];
+      if ('rooms' in response && Array.isArray(response.rooms)) return normalizeRooms(response.rooms);
+      if ('result' in response && Array.isArray(response.result)) return normalizeRooms(response.result);
+      if ('data' in response && Array.isArray(response.data)) return normalizeRooms(response.data);
+      if ('items' in response && Array.isArray(response.items)) return normalizeRooms(response.items);
+      if ('topicRooms' in response && Array.isArray(response.topicRooms)) return normalizeRooms(response.topicRooms);
+
+      // If the object itself looks like a single room (has roomId or id), wrap it in an array
+      if ('roomId' in response || 'id' in response) return [normalizeRoom(response)];
+
+      // Last resort: find the first array value in the response object
+      const keys = Object.keys(response);
+      console.log('[LiveChat API] getLiveChatRooms response keys:', keys);
+      for (const key of keys) {
+        const val = response[key];
+        if (Array.isArray(val) && val.length > 0 && typeof val[0] === 'object' && val[0] !== null) {
+          console.log('[LiveChat API] getLiveChatRooms: using array from key:', key);
+          return normalizeRooms(val);
+        }
+      }
     }
-    if (Array.isArray(response)) return response as unknown as LiveChatRoom[];
+
     console.warn('[LiveChat API] getLiveChatRooms: unexpected response format, returning []');
     return [];
   } catch (error) {
@@ -3758,9 +3796,9 @@ export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
     requiresAuth: false,
   });
   if (response && typeof response === 'object' && 'result' in response && !Array.isArray(response.result)) {
-    return response.result;
+    return normalizeRoom(response.result);
   }
-  return response as LiveChatRoom;
+  return normalizeRoom(response);
 }
 
 /**
@@ -3828,9 +3866,9 @@ export async function createTopicRoom(params: {
     requiresAuth: true,
   });
   if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
+    return normalizeRoom(response.result);
   }
-  return response as LiveChatRoom;
+  return normalizeRoom(response);
 }
 
 /**
