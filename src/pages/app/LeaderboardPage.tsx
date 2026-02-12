@@ -28,9 +28,9 @@ const categories: { id: CategoryType; label: string; icon: typeof Wallet; apiSor
   { id: 'holdings', label: 'Holdings', icon: Wallet, apiSort: 'holdings' },
   { id: 'sentTips', label: 'Spent', icon: ArrowUpRight, apiSort: 'sentTips' },
   { id: 'receivedTips', label: 'Paid', icon: CreditCard, apiSort: 'receivedTips' },
-  { id: 'followers', label: 'Followers', icon: Users, apiSort: 'holdings' },
-  { id: 'likes', label: 'Likes', icon: Heart, apiSort: 'holdings' },
-  { id: 'subscribers', label: 'Subscribers', icon: UserCheck, apiSort: 'holdings' },
+  { id: 'followers', label: 'Followers', icon: Users, apiSort: 'followers' },
+  { id: 'likes', label: 'Likes', icon: Heart, apiSort: 'likes' },
+  { id: 'subscribers', label: 'Subscribers', icon: UserCheck, apiSort: 'subscribers' },
 ];
 
 const timePeriods: { id: LeaderboardPeriod; label: string }[] = [
@@ -86,9 +86,6 @@ export default function LeaderboardPage() {
     placeholderData: (prev) => prev, // Keep previous data while loading new tab
   });
 
-  // Categories that require client-side sorting (not natively supported by API)
-  const clientSortedCategories: CategoryType[] = ['followers', 'likes', 'subscribers'];
-  const isClientSorted = clientSortedCategories.includes(category);
 
   // Manual balance overrides (username -> total override)
   const balanceOverrides: Record<string, number> = {};
@@ -113,22 +110,8 @@ export default function LeaderboardPage() {
       });
     }
     
-    // Client-side sorting for social metrics
-    if (category === 'followers') {
-      list = [...list].sort((a, b) => (b.followers ?? 0) - (a.followers ?? 0));
-    } else if (category === 'likes') {
-      list = [...list].sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0));
-    } else if (category === 'subscribers') {
-      list = [...list].sort((a, b) => (b.subscribers ?? 0) - (a.subscribers ?? 0));
-    }
-    
-    // Filter out entries with 0 value for client-sorted categories
-    if (isClientSorted) {
-      list = list.filter(entry => {
-        const value = entry[category as keyof LeaderboardEntry];
-        return typeof value === 'number' && value > 0;
-      });
-    }
+    // For social metrics with time periods, data is already sorted by the cache
+    // For "all" period, data is sorted by current value; for time periods, sorted by delta
     
     // Apply search filter
     if (searchQuery.trim()) {
@@ -141,7 +124,7 @@ export default function LeaderboardPage() {
     }
     
     return list;
-  }, [data, searchQuery, category, isClientSorted]);
+  }, [data, searchQuery, category]);
 
   // Batch fetch badge balances for all visible entries
   const walletAddresses = useMemo(() => entries.map(e => e.account), [entries]);
@@ -169,11 +152,15 @@ export default function LeaderboardPage() {
     return `${entry.account.slice(0, 6)}...${entry.account.slice(-4)}`;
   };
 
-  // Check if we're viewing a time-based holdings period (shows delta)
-  const isHoldingsDelta = category === 'holdings' && timePeriod !== 'all';
+  // Check if we're viewing a time-based period (shows delta)
+  const isTimeDelta = timePeriod !== 'all';
   const hasHistoricalData = data?.hasHistoricalData !== false;
 
   const getSortValue = (entry: LeaderboardEntry): number => {
+    // For time-based periods, use delta if available
+    if (isTimeDelta && entry.delta !== undefined) {
+      return entry.delta;
+    }
     switch (category) {
       case 'sentTips':
         return entry.sentTips ?? 0;
@@ -186,18 +173,17 @@ export default function LeaderboardPage() {
       case 'subscribers':
         return entry.subscribers ?? 0;
       default:
-        // For time-based holdings, use delta if available
-        if (isHoldingsDelta && entry.delta !== undefined) {
-          return entry.delta;
-        }
         return entry.total ?? 0;
     }
   };
 
   const formatDisplayValue = (entry: LeaderboardEntry): string => {
     const value = getSortValue(entry);
-    if (isHoldingsDelta && hasHistoricalData) {
-      return `+${formatNumber(value)} DHB`;
+    if (isTimeDelta && hasHistoricalData && entry.delta !== undefined && entry.delta > 0) {
+      if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
+        return `+${formatNumber(value)} DHB`;
+      }
+      return `+${formatNumber(value)}`;
     }
     if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
       return formatDHB(value);
@@ -247,31 +233,29 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Time Period Tabs - Hidden for client-sorted categories */}
-        {!isClientSorted && (
-          <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
-            {timePeriods.map((period) => {
-              const isActive = timePeriod === period.id;
-              return (
-                <button
-                  key={period.id}
-                  type="button"
-                  onClick={() => {
-                    setTimePeriod(period.id);
-                    setShimmerKey(k => k + 1);
-                  }}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive
-                      ? 'bg-zinc-700 text-white'
-                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-                  }`}
-                >
-                  {period.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        {/* Time Period Tabs */}
+        <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
+          {timePeriods.map((period) => {
+            const isActive = timePeriod === period.id;
+            return (
+              <button
+                key={period.id}
+                type="button"
+                onClick={() => {
+                  setTimePeriod(period.id);
+                  setShimmerKey(k => k + 1);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                  isActive
+                    ? 'bg-zinc-700 text-white'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                }`}
+              >
+                {period.label}
+              </button>
+            );
+          })}
+        </div>
 
         {/* Search */}
         <div className="relative">

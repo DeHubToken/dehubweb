@@ -412,22 +412,31 @@ export type Database = {
           account: string
           balance: number
           created_at: string
+          followers: number | null
           id: string
+          likes: number | null
           snapshot_date: string
+          subscribers: number | null
         }
         Insert: {
           account: string
           balance?: number
           created_at?: string
+          followers?: number | null
           id?: string
+          likes?: number | null
           snapshot_date?: string
+          subscribers?: number | null
         }
         Update: {
           account?: string
           balance?: number
           created_at?: string
+          followers?: number | null
           id?: string
+          likes?: number | null
           snapshot_date?: string
+          subscribers?: number | null
         }
         Relationships: []
       }

@@ -1527,7 +1527,7 @@ export interface LeaderboardResponse {
   hasHistoricalData?: boolean;
 }
 
-export type LeaderboardSortMode = 'holdings' | 'sentTips' | 'receivedTips';
+export type LeaderboardSortMode = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
 export type LeaderboardPeriod = 'day' | 'week' | 'month' | 'year' | 'all';
 
 /**
