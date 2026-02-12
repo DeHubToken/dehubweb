@@ -968,8 +968,20 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       navigate('/app');
     } catch (error) {
       console.error('[Mint] Failed to mint post:', error);
+      try { console.error('[Mint] Error details:', JSON.stringify(error, null, 2)); } catch {}
       toast.dismiss('mint-progress');
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      // Extract nested error messages from wallet/provider errors
+      let errorMsg = 'Unknown error';
+      if (error instanceof Error) {
+        errorMsg = error.message;
+      } else if (typeof error === 'string') {
+        errorMsg = error;
+      } else if (error && typeof error === 'object') {
+        const e = error as Record<string, any>;
+        errorMsg = e.message || e.shortMessage || e.reason || 
+                   e.error?.message || e.data?.message || 
+                   (() => { try { return JSON.stringify(error).slice(0, 200); } catch { return 'Unknown error'; } })();
+      }
       toast.error(`Post failed: ${errorMsg}`);
     } finally {
       setIsPosting(false);
