@@ -81,6 +81,8 @@ let initPromise: Promise<Web3AuthNoModal> | null = null;
 let cachedClientId: string | null = null;
 // Track which adapter was last used (for detecting social login vs external wallet)
 let lastConnectedAdapter: string | null = null;
+// Track if we've detected that popups are blocked and should use redirect
+let forceRedirectMode = false;
 
 /**
  * Reset all Web3Auth module state - used for HMR and error recovery
@@ -94,6 +96,7 @@ export function resetWeb3AuthState(): void {
   isInitializing = false;
   initPromise = null;
   lastConnectedAdapter = null;
+  // Don't reset forceRedirectMode - once we know popups are blocked, keep using redirect
   console.log("[Web3Auth] Module state reset");
 }
 
@@ -207,23 +210,24 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       console.log("[Web3Auth] Web3AuthNoModal instance created");
 
       // Configure Openlogin adapter for social/email/sms logins
-      // On mobile (REDIRECT mode), redirect back to /app so user doesn't
-      // land on the marketing landing page after OAuth completes.
+      // Use REDIRECT mode on mobile OR if popups were previously blocked.
       const mobile = isMobileDevice();
-      const redirectUrl = mobile
+      const useRedirect = mobile || forceRedirectMode;
+      const redirectUrl = useRedirect
         ? window.location.origin + '/app'
         : window.location.origin;
       console.log("[Web3Auth] Configuring Openlogin adapter...");
+      console.log("[Web3Auth] mobile:", mobile, "forceRedirect:", forceRedirectMode, "useRedirect:", useRedirect);
       console.log("[Web3Auth] redirectUrl:", redirectUrl);
       const openloginAdapter = new OpenloginAdapter({
         privateKeyProvider,
         adapterSettings: {
-          uxMode: mobile ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+          uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
           redirectUrl,
         },
       });
       web3authInstance.configureAdapter(openloginAdapter);
-      console.log("[Web3Auth] Openlogin adapter configured");
+      console.log("[Web3Auth] Openlogin adapter configured (uxMode:", useRedirect ? "REDIRECT" : "POPUP", ")");
 
       // Configure MetaMask Adapter
       console.log("[Web3Auth] Configuring MetaMask adapter...");
@@ -296,8 +300,17 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
 }
 
 /**
+ * Check if an error is a popup-blocked error
+ */
+function isPopupBlockedError(err: unknown): boolean {
+  const msg = (err instanceof Error ? err.message : String(err)).toLowerCase();
+  return msg.includes('popup') && (msg.includes('blocked') || msg.includes('closed'));
+}
+
+/**
  * Connect to a specific social login provider using connectTo()
- * This bypasses any modal completely - direct provider connection
+ * This bypasses any modal completely - direct provider connection.
+ * If popup is blocked, automatically switches to REDIRECT mode and retries.
  */
 export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
@@ -321,21 +334,43 @@ export async function connectToSocialProvider(
     extraLoginOptions.login_hint = loginHint;
   }
 
+  // Save current path before potential redirect
+  savePreLoginPath();
+
   let provider: IProvider | null;
   try {
-    // Save current path before redirect (mobile only) so we can restore after auth
-    savePreLoginPath();
-
     console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_ADAPTERS.OPENLOGIN}, { loginProvider: ${authConnection} })`);
     provider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
       loginProvider: authConnection,
       extraLoginOptions,
     });
-    lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN; // Track that this was a social login
+    lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN;
     console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT_OK provider=${provider ? 'received' : 'null'}`);
   } catch (err) {
-    console.error(`[Web3Auth] connectToSocialProvider: phase=CONNECT_FAILED`, err);
-    throw err;
+    // If popup was blocked, switch to REDIRECT mode and retry automatically
+    if (isPopupBlockedError(err) && !forceRedirectMode) {
+      console.warn('[Web3Auth] Popup blocked! Switching to REDIRECT mode and retrying...');
+      forceRedirectMode = true;
+
+      // Re-initialize with REDIRECT mode
+      web3authInstance = null;
+      isInitializing = false;
+      initPromise = null;
+
+      web3auth = await initWeb3Auth();
+
+      console.log('[Web3Auth] Re-initialized with REDIRECT mode, retrying connectTo...');
+      // This will redirect the browser (won't return on mobile)
+      provider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: authConnection,
+        extraLoginOptions,
+      });
+      lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN;
+      console.log(`[Web3Auth] connectToSocialProvider: phase=REDIRECT_CONNECT_OK`);
+    } else {
+      console.error(`[Web3Auth] connectToSocialProvider: phase=CONNECT_FAILED`, err);
+      throw err;
+    }
   }
 
   console.log(`[Web3Auth] connectToSocialProvider: phase=DONE status=${web3auth.status} connected=${web3auth.connected}`);

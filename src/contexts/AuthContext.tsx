@@ -292,6 +292,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
+    // Log Web3Auth user info for diagnostics (verifier + verifierId determine the key)
+    try {
+      const w3aInstance = await getOrInitWeb3Auth();
+      const userInfo = await w3aInstance.getUserInfo();
+      console.log('[Auth] [DIAG-REDIRECT] Web3Auth userInfo:', JSON.stringify({
+        email: userInfo.email,
+        verifier: userInfo.verifier,
+        verifierId: userInfo.verifierId,
+        typeOfLogin: userInfo.typeOfLogin,
+        aggregateVerifier: userInfo.aggregateVerifier,
+      }));
+    } catch (e) {
+      console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
+    }
+
     // Redirect flow is always from social login (email/SMS)
     // Get private key and sign with ethers for standard ECDSA signature
     console.log('[Auth] Redirect - Getting private key for direct signing...');
@@ -349,6 +364,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check if this is a social login (embedded wallet)
     const isSocial = isSocialLoginConnected();
     console.log('[Auth] Is social login:', isSocial);
+
+    // Log Web3Auth user info for diagnostics (verifier + verifierId determine the key)
+    if (isSocial) {
+      try {
+        const w3aInstance = await getOrInitWeb3Auth();
+        const userInfo = await w3aInstance.getUserInfo();
+        console.log('[Auth] [DIAG-POPUP] Web3Auth userInfo:', JSON.stringify({
+          email: userInfo.email,
+          verifier: userInfo.verifier,
+          verifierId: userInfo.verifierId,
+          typeOfLogin: userInfo.typeOfLogin,
+          aggregateVerifier: userInfo.aggregateVerifier,
+        }));
+      } catch (e) {
+        console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);
+      }
+    }
 
     if (isSocial) {
       // Social login: get private key and sign with ethers for standard ECDSA signature
@@ -456,7 +488,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
       userFriendlyMessage = 'Connection timed out. Please try again.';
     } else if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
-      userFriendlyMessage = 'Popup was blocked. Please allow popups and try again.';
+      userFriendlyMessage = 'Redirecting to login page...';
     } else if (errorMessage.includes('bundler') || errorMessage.includes('paymaster')) {
       userFriendlyMessage = 'Account setup failed. Please try again.';
     } else if (errorMessage.includes('Invalid auth connection') || errorMessage.includes('invalid auth connection')) {
