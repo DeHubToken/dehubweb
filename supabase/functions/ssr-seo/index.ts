@@ -225,7 +225,6 @@ serve(async (req) => {
     try {
         const url = new URL(req.url);
 
-        // Image proxy: serves CDN images with correct Content-Type headers
         // Facebook/Twitter scrapers need proper MIME types to display images
         const proxyImageUrl = url.searchParams.get("image_url");
         if (proxyImageUrl) {
