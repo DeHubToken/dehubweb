@@ -254,7 +254,7 @@ Deno.serve(async (req) => {
             followers: (entry.followers as number) ?? undefined,
             likes: (entry.likes as number) ?? undefined,
             subscribers: (entry.subscribers as number) ?? undefined,
-            badgeBalance: (entry.badgeBalance as number) ?? undefined,
+            badgeBalance: balances[idx],
           });
         });
 
@@ -278,6 +278,7 @@ Deno.serve(async (req) => {
                 avatarUrl: config.avatarUrl,
                 sentTips: 0,
                 receivedTips: 0,
+                badgeBalance: balance,
               });
               console.log(`Extra wallet ${username} (${config.wallet}): ${balance}`);
             }
