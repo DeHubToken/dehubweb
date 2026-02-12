@@ -290,11 +290,31 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
 }
 
 /**
- * Check if an error is a popup-blocked error
+ * Check if an error is a popup-blocked error.
+ * Web3Auth wraps the real error in a WalletLoginError, so we need to
+ * check the full error chain (message + cause + string representation).
  */
 function isPopupBlockedError(err: unknown): boolean {
-  const msg = (err instanceof Error ? err.message : String(err)).toLowerCase();
-  return msg.includes('popup') && (msg.includes('blocked') || msg.includes('closed'));
+  // Build a combined string from the error + its cause chain
+  let combined = '';
+  let current: unknown = err;
+  for (let depth = 0; depth < 5 && current; depth++) {
+    if (current instanceof Error) {
+      combined += ' ' + current.message;
+      current = (current as any).cause;
+    } else {
+      combined += ' ' + String(current);
+      break;
+    }
+  }
+  // Also check toString() which often includes "Caused by:"
+  combined += ' ' + String(err);
+  const lower = combined.toLowerCase();
+  return (
+    (lower.includes('popup') && (lower.includes('blocked') || lower.includes('closed'))) ||
+    lower.includes('allow-popups') ||
+    lower.includes('sandboxed frame')
+  );
 }
 
 /**
