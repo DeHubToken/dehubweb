@@ -49,6 +49,7 @@ import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
 import { TranslatableText } from '@/components/app/TranslatableText';
+import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -117,6 +118,7 @@ export default function ProfilePage() {
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [translatedBio, setTranslatedBio] = useState<string | null>(null);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
   const [showAvatarOverlay, setShowAvatarOverlay] = useState(false);
   const [editingPlan, setEditingPlan] = useState<import('@/lib/api/dehub').SubscriptionPlan | null>(null);
@@ -129,6 +131,7 @@ export default function ProfilePage() {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+    setTranslatedBio(null);
   }, [routeUsername, userId]);
   
   // Determine lookup method: route param username > query param id > current user
@@ -1125,12 +1128,20 @@ export default function ProfilePage() {
               })()}
               
               {profile.bio && (
-                <TranslatableText text={profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />
+                <TranslatableText text={translatedBio || profile.bio} className="mt-3 text-white/90 text-sm sm:text-base block" as="p" />
               )}
               
               <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
                 <Calendar className="w-4 h-4" />
                 <span>Joined {profile.joinedDate}</span>
+                {profile.bio && !isViewingOwnProfile && (
+                  <BioTranslateButton
+                    bio={profile.bio}
+                    isTranslated={!!translatedBio}
+                    onTranslated={(t) => setTranslatedBio(t)}
+                    onShowOriginal={() => setTranslatedBio(null)}
+                  />
+                )}
               </div>
               
               {/* Show followers/following section based on privacy settings */}
