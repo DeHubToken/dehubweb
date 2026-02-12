@@ -218,7 +218,7 @@ export default function LeaderboardPage() {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => { setCategory(cat.id); setShimmerKey(k => k + 1); }}
+                  onClick={() => setCategory(cat.id)}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
                       ? 'bg-white text-black'
