@@ -1132,7 +1132,6 @@ export default function ProfilePage() {
               )}
               
               <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
-                <Calendar className="w-4 h-4" />
                 <span>Joined {profile.joinedDate}</span>
                 {profile.bio && !isViewingOwnProfile && (
                   <BioTranslateButton
