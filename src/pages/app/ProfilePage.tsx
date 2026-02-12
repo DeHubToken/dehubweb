@@ -15,6 +15,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { AppLayout } from '@/components/app/AppLayout';
 import { LoginModal } from '@/components/app/LoginModal';
+import { AuthGate } from '@/components/app/AuthGate';
 import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { CreatePlanModal, EditPlanModal, PlanCard } from '@/components/app/subscriptions';
 import { FollowersListDrawer } from '@/components/app/profile';
@@ -746,6 +747,17 @@ export default function ProfilePage() {
     return loadingContent;
   }
 
+
+  // Own profile route but not authenticated → show AuthGate
+  if (isOwnProfile && !isAuthenticated) {
+    const authGateContent = (
+      <AuthGate description="Log in to view and manage your profile." />
+    );
+    if (needsLayoutWrapper) {
+      return <AppLayout>{authGateContent}</AppLayout>;
+    }
+    return authGateContent;
+  }
 
   // Show "Username available" state when visiting /{username} route with no profile found
   if (!profile) {
