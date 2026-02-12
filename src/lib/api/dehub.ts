@@ -2960,8 +2960,7 @@ export async function updateUserOnlineStatus(address: string): Promise<{ success
     const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
       method: "POST",
       body: {
-        online: true,
-        address: address.toLowerCase(),
+        status: "online",
       },
       requiresAuth: true,
     });
