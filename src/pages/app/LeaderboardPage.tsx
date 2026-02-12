@@ -216,8 +216,8 @@ export default function LeaderboardPage() {
             <img src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">DHB Leaderboard</h1>
-            <p className="text-zinc-500 text-sm">Top token holders and tippers</p>
+            <h1 className="text-xl font-bold text-white">Leaderboards</h1>
+            <p className="text-zinc-500 text-sm">Automatically updates every 5 minutes</p>
           </div>
         </div>
 
