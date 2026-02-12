@@ -74,7 +74,7 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
       className="text-muted-foreground hover:text-foreground transition-colors"
       title="Translate bio"
     >
-      <img src={translateGlobeIcon} alt="Translate" className="w-6 h-6 opacity-50 brightness-200 invert" />
+      <img src={translateGlobeIcon} alt="Translate" className="w-6 h-6 -mt-0.5 opacity-50 brightness-200 invert" />
     </button>
   );
 }
