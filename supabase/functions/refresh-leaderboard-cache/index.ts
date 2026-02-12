@@ -309,6 +309,9 @@ Deno.serve(async (req) => {
         const snapshotRows = nonZero.map((e) => ({
           account: e.account.toLowerCase(),
           balance: e.total,
+          followers: e.followers ?? 0,
+          likes: e.likes ?? 0,
+          subscribers: e.subscribers ?? 0,
           snapshot_date: today,
         }));
 
@@ -434,7 +437,128 @@ Deno.serve(async (req) => {
     }
 
     // ────────────────────────────────────────────────────────────────
-    // 2. API-BASED CATEGORIES (sentTips, receivedTips)
+    // 2. SOCIAL METRICS (followers, likes, subscribers) with time-based deltas
+    // ────────────────────────────────────────────────────────────────
+    const SOCIAL_METRICS = ["followers", "likes", "subscribers"] as const;
+
+    // We need the "all" holdings data which has social metrics embedded
+    try {
+      const { data: holdingsCache } = await supabase
+        .from("leaderboard_cache")
+        .select("data")
+        .eq("sort_mode", "holdings")
+        .eq("period", "all")
+        .single();
+
+      const allEntries: EnrichedEntry[] = (holdingsCache?.data as any)?.result?.byWalletBalance ?? [];
+
+      for (const metric of SOCIAL_METRICS) {
+        // "all" period: sort by current value
+        const sortedAll = [...allEntries]
+          .filter((e) => (e[metric] ?? 0) > 0)
+          .sort((a, b) => (b[metric] ?? 0) - (a[metric] ?? 0));
+
+        const allData = {
+          result: { byWalletBalance: sortedAll },
+        };
+
+        const { error: allMetricErr } = await supabase.from("leaderboard_cache").upsert(
+          {
+            sort_mode: metric,
+            period: "all",
+            data: allData,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "sort_mode,period" }
+        );
+
+        if (allMetricErr) {
+          console.error(`Error caching ${metric}/all:`, allMetricErr);
+          results.push({ sort: metric, period: "all", success: false, error: allMetricErr.message });
+        } else {
+          console.log(`${metric}/all: ${sortedAll.length} entries`);
+          results.push({ sort: metric, period: "all", success: true });
+        }
+
+        // Time-based periods: compute deltas
+        for (const period of ["day", "week", "month", "year"] as const) {
+          try {
+            const daysAgo = PERIOD_DAYS[period];
+            const pastDate = new Date();
+            pastDate.setDate(pastDate.getDate() - daysAgo);
+            const pastDateStr = pastDate.toISOString().split("T")[0];
+
+            const { data: snapshots, error: snapFetchErr } = await supabase
+              .from("leaderboard_snapshots")
+              .select(`account, ${metric}`)
+              .eq("snapshot_date", pastDateStr);
+
+            if (snapFetchErr) {
+              console.error(`Error fetching ${metric} snapshots for ${period}:`, snapFetchErr);
+            }
+
+            const pastMap = new Map<string, number>();
+            if (snapshots) {
+              for (const snap of snapshots) {
+                pastMap.set(snap.account.toLowerCase(), (snap as any)[metric] ?? 0);
+              }
+            }
+
+            const withDeltas: EnrichedEntry[] = allEntries
+              .filter((e) => (e[metric] ?? 0) > 0)
+              .map((entry) => {
+                const pastVal = pastMap.get(entry.account.toLowerCase());
+                const delta = pastVal !== undefined
+                  ? (entry[metric] ?? 0) - pastVal
+                  : 0;
+                return { ...entry, delta };
+              });
+
+            const sorted = withDeltas
+              .filter((e) => e.delta !== undefined && e.delta > 0)
+              .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
+
+            const periodData = {
+              result: { byWalletBalance: sorted },
+              hasHistoricalData: pastMap.size > 0,
+            };
+
+            const { error } = await supabase.from("leaderboard_cache").upsert(
+              {
+                sort_mode: metric,
+                period,
+                data: periodData,
+                updated_at: new Date().toISOString(),
+              },
+              { onConflict: "sort_mode,period" }
+            );
+
+            if (error) {
+              console.error(`Error caching ${metric}/${period}:`, error);
+              results.push({ sort: metric, period, success: false, error: error.message });
+            } else {
+              console.log(`${metric}/${period}: ${sorted.length} entries with positive delta`);
+              results.push({ sort: metric, period, success: true });
+            }
+          } catch (periodErr) {
+            const msg = periodErr instanceof Error ? periodErr.message : "Unknown error";
+            console.error(`Error computing ${metric}/${period}:`, msg);
+            results.push({ sort: metric, period, success: false, error: msg });
+          }
+        }
+      }
+    } catch (socialErr) {
+      const msg = socialErr instanceof Error ? socialErr.message : "Unknown error";
+      console.error("Error building social metrics leaderboards:", msg);
+      for (const metric of SOCIAL_METRICS) {
+        PERIODS.forEach((period) =>
+          results.push({ sort: metric, period, success: false, error: msg })
+        );
+      }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // 3. API-BASED CATEGORIES (sentTips, receivedTips)
     // ────────────────────────────────────────────────────────────────
     for (const sort of API_SORT_MODES) {
       for (const period of PERIODS) {
