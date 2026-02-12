@@ -62,10 +62,15 @@ function hexFirstSlotToNumber(hex: string): number {
   }
 }
 
+// Block time estimates for historical queries
+const BASE_BLOCKS_PER_DAY = 43200; // ~2 sec/block
+const BNB_BLOCKS_PER_DAY = 28800;  // ~3 sec/block
+
 async function rpcCall(
   rpcUrl: string,
   to: string,
-  data: string
+  data: string,
+  blockTag: string = "latest"
 ): Promise<string> {
   const res = await fetch(rpcUrl, {
     method: "POST",
@@ -74,33 +79,44 @@ async function rpcCall(
       jsonrpc: "2.0",
       id: 1,
       method: "eth_call",
-      params: [{ to, data }, "latest"],
+      params: [{ to, data }, blockTag],
     }),
   });
   const json = await res.json();
   if (json.error) {
     console.error(
-      `[rpc-error] to=${to} data=${data.slice(0, 10)} error=`,
+      `[rpc-error] to=${to} block=${blockTag} data=${data.slice(0, 10)} error=`,
       json.error
     );
   }
   return json.result || "0x0";
 }
 
+async function getCurrentBlockNumber(rpcUrl: string): Promise<number> {
+  const res = await fetch(rpcUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_blockNumber", params: [] }),
+  });
+  const json = await res.json();
+  return Number(BigInt(json.result));
+}
+
 /** Call BNB with fallback to public RPCs if Alchemy returns empty */
 async function bnbRpcCall(
   alchemyBnbRpc: string,
   to: string,
-  data: string
+  data: string,
+  blockTag: string = "latest"
 ): Promise<string> {
-  const result = await rpcCall(alchemyBnbRpc, to, data);
+  const result = await rpcCall(alchemyBnbRpc, to, data, blockTag);
   if (result && result !== "0x0" && result !== "0x") {
     return result;
   }
 
   for (const rpc of BNB_PUBLIC_RPCS) {
     try {
-      const fallbackResult = await rpcCall(rpc, to, data);
+      const fallbackResult = await rpcCall(rpc, to, data, blockTag);
       if (fallbackResult && fallbackResult !== "0x0" && fallbackResult !== "0x") {
         return fallbackResult;
       }
@@ -112,19 +128,21 @@ async function bnbRpcCall(
   return result;
 }
 
-/** Get on-chain DHB total for a single address */
+/** Get on-chain DHB total for a single address, optionally at a specific block */
 async function getOnChainBalance(
   address: string,
   baseRpc: string,
-  bnbRpc: string
+  bnbRpc: string,
+  baseBlock: string = "latest",
+  bnbBlock: string = "latest"
 ): Promise<number> {
   const holdingsData = encodeCall(BALANCE_OF_SELECTOR, address);
   const stakingData = encodeCall(USER_INFOS_SELECTOR, address);
 
   const [baseHoldings, bnbHoldings, bnbStaked] = await Promise.all([
-    rpcCall(baseRpc, DHB_BASE, holdingsData),
-    bnbRpcCall(bnbRpc, DHB_BNB, holdingsData),
-    bnbRpcCall(bnbRpc, STAKING_CONTRACT, stakingData),
+    rpcCall(baseRpc, DHB_BASE, holdingsData, baseBlock),
+    bnbRpcCall(bnbRpc, DHB_BNB, holdingsData, bnbBlock),
+    bnbRpcCall(bnbRpc, STAKING_CONTRACT, stakingData, bnbBlock),
   ]);
 
   return (
@@ -360,38 +378,55 @@ Deno.serve(async (req) => {
         results.push({ sort: "holdings", period: "all", success: true });
       }
 
-      // ── Cache time-based periods (sorted by delta) ────────────────
+      // ── Cache time-based periods (sorted by delta, on-chain historical) ──
+      // Get current block numbers for historical queries
+      const [currentBaseBlock, currentBnbBlock] = await Promise.all([
+        getCurrentBlockNumber(baseRpc),
+        getCurrentBlockNumber(bnbRpc),
+      ]);
+      console.log(`Current blocks - Base: ${currentBaseBlock}, BNB: ${currentBnbBlock}`);
+
       for (const period of ["day", "week", "month", "year"] as const) {
         try {
           const daysAgo = PERIOD_DAYS[period];
-          const pastDate = new Date();
-          pastDate.setDate(pastDate.getDate() - daysAgo);
-          const pastDateStr = pastDate.toISOString().split("T")[0];
+          const targetBaseBlock = currentBaseBlock - (BASE_BLOCKS_PER_DAY * daysAgo);
+          const targetBnbBlock = currentBnbBlock - (BNB_BLOCKS_PER_DAY * daysAgo);
 
-          // Fetch historical snapshots for comparison
-          const { data: snapshots, error: snapFetchErr } = await supabase
-            .from("leaderboard_snapshots")
-            .select("account, balance")
-            .eq("snapshot_date", pastDateStr);
-
-          if (snapFetchErr) {
-            console.error(`Error fetching snapshots for ${period}:`, snapFetchErr);
+          if (targetBaseBlock < 0 || targetBnbBlock < 0) {
+            console.log(`Skipping ${period}: block would be negative`);
+            results.push({ sort: "holdings", period, success: true });
+            continue;
           }
 
-          // Build lookup map: account -> past balance
+          const baseBlockHex = "0x" + targetBaseBlock.toString(16);
+          const bnbBlockHex = "0x" + targetBnbBlock.toString(16);
+
+          console.log(`Computing holdings/${period}: querying balances at Base block ${targetBaseBlock}, BNB block ${targetBnbBlock}`);
+
+          // Query historical balances on-chain in batches
+          const HIST_BATCH_SIZE = 10;
           const pastBalanceMap = new Map<string, number>();
-          if (snapshots) {
-            for (const snap of snapshots) {
-              pastBalanceMap.set(snap.account.toLowerCase(), snap.balance);
+
+          for (let i = 0; i < nonZero.length; i += HIST_BATCH_SIZE) {
+            const batch = nonZero.slice(i, i + HIST_BATCH_SIZE);
+            const historicalBalances = await Promise.all(
+              batch.map((entry) =>
+                getOnChainBalance(entry.account, baseRpc, bnbRpc, baseBlockHex, bnbBlockHex)
+              )
+            );
+            batch.forEach((entry, idx) => {
+              pastBalanceMap.set(entry.account.toLowerCase(), historicalBalances[idx]);
+            });
+
+            if (i + HIST_BATCH_SIZE < nonZero.length) {
+              await new Promise((r) => setTimeout(r, 200));
             }
           }
 
           // Compute deltas
           const withDeltas: EnrichedEntry[] = nonZero.map((entry) => {
-            const pastBalance = pastBalanceMap.get(entry.account.toLowerCase());
-            const delta = pastBalance !== undefined
-              ? entry.total - pastBalance
-              : 0; // No historical data = 0 delta (not new to leaderboard)
+            const pastBalance = pastBalanceMap.get(entry.account.toLowerCase()) ?? 0;
+            const delta = entry.total - pastBalance;
             return { ...entry, delta };
           });
 
@@ -402,7 +437,7 @@ Deno.serve(async (req) => {
 
           const periodData = {
             result: { byWalletBalance: sorted },
-            hasHistoricalData: pastBalanceMap.size > 0,
+            hasHistoricalData: true,
           };
 
           const { error } = await supabase.from("leaderboard_cache").upsert(
@@ -419,7 +454,7 @@ Deno.serve(async (req) => {
             console.error(`Error caching holdings/${period}:`, error);
             results.push({ sort: "holdings", period, success: false, error: error.message });
           } else {
-            console.log(`holdings/${period}: ${sorted.length} entries with positive delta (${pastBalanceMap.size} historical snapshots)`);
+            console.log(`holdings/${period}: ${sorted.length} entries with positive delta (on-chain at block -${daysAgo}d)`);
             results.push({ sort: "holdings", period, success: true });
           }
         } catch (periodErr) {
@@ -488,20 +523,33 @@ Deno.serve(async (req) => {
             pastDate.setDate(pastDate.getDate() - daysAgo);
             const pastDateStr = pastDate.toISOString().split("T")[0];
 
-            const { data: snapshots, error: snapFetchErr } = await supabase
+            // Find closest snapshot date on or before target
+            const { data: closestSnap } = await supabase
               .from("leaderboard_snapshots")
-              .select(`account, ${metric}`)
-              .eq("snapshot_date", pastDateStr);
+              .select("snapshot_date")
+              .lte("snapshot_date", pastDateStr)
+              .order("snapshot_date", { ascending: false })
+              .limit(1);
 
-            if (snapFetchErr) {
-              console.error(`Error fetching ${metric} snapshots for ${period}:`, snapFetchErr);
-            }
-
+            const closestDate = closestSnap?.[0]?.snapshot_date;
             const pastMap = new Map<string, number>();
-            if (snapshots) {
-              for (const snap of snapshots) {
-                pastMap.set(snap.account.toLowerCase(), (snap as any)[metric] ?? 0);
+
+            if (closestDate) {
+              const { data: snapshots, error: snapFetchErr } = await supabase
+                .from("leaderboard_snapshots")
+                .select(`account, ${metric}`)
+                .eq("snapshot_date", closestDate);
+
+              if (snapFetchErr) {
+                console.error(`Error fetching ${metric} snapshots for ${period}:`, snapFetchErr);
               }
+
+              if (snapshots) {
+                for (const snap of snapshots) {
+                  pastMap.set(snap.account.toLowerCase(), (snap as any)[metric] ?? 0);
+                }
+              }
+              console.log(`${metric}/${period}: using snapshot from ${closestDate} (target was ${pastDateStr}), ${pastMap.size} entries`);
             }
 
             const withDeltas: EnrichedEntry[] = allEntries
