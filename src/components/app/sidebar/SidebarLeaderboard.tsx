@@ -181,7 +181,7 @@ export function SidebarLeaderboard() {
                   {/* Rank */}
                   <div className="w-7 flex-shrink-0 flex items-center justify-center">
                     {rank <= 5 ? (
-                      <div className={`medal-shine-container ${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6 ml-1.5'}`}>
+                      <div className={`medal-shine-container ${rank <= 3 ? 'w-10 h-10' : 'w-6 h-6 ml-[5px]'}`}>
                         <img 
                           src={[medal1, medal2, medal3, medal4, medal5][rank - 1]} 
                           alt={`Rank ${rank}`} 
