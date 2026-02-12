@@ -94,6 +94,31 @@ export default function LeaderboardPage() {
   // Usernames to exclude from leaderboard
   const blockedLeaderboardUsers = ['microsoft'];
 
+  // Check if we're viewing a time-based period (shows delta)
+  const isTimeDelta = timePeriod !== 'all';
+  const hasHistoricalData = data?.hasHistoricalData !== false;
+
+  const getSortValue = useCallback((entry: LeaderboardEntry): number => {
+    // For time-based periods, use delta if available
+    if (isTimeDelta && entry.delta !== undefined) {
+      return entry.delta;
+    }
+    switch (category) {
+      case 'sentTips':
+        return entry.sentTips ?? 0;
+      case 'receivedTips':
+        return entry.receivedTips ?? 0;
+      case 'followers':
+        return entry.followers ?? 0;
+      case 'likes':
+        return entry.likes ?? 0;
+      case 'subscribers':
+        return entry.subscribers ?? 0;
+      default:
+        return entry.total ?? 0;
+    }
+  }, [isTimeDelta, category]);
+
   const entries = useMemo(() => {
     let list = data?.result?.byWalletBalance || [];
     
@@ -129,7 +154,7 @@ export default function LeaderboardPage() {
     });
     
     return list;
-  }, [data, searchQuery, category, sortDirection]);
+  }, [data, searchQuery, category, sortDirection, timePeriod, getSortValue]);
 
   // Batch fetch badge balances for all visible entries
   const walletAddresses = useMemo(() => entries.map(e => e.account), [entries]);
@@ -157,30 +182,6 @@ export default function LeaderboardPage() {
     return `${entry.account.slice(0, 6)}...${entry.account.slice(-4)}`;
   };
 
-  // Check if we're viewing a time-based period (shows delta)
-  const isTimeDelta = timePeriod !== 'all';
-  const hasHistoricalData = data?.hasHistoricalData !== false;
-
-  const getSortValue = (entry: LeaderboardEntry): number => {
-    // For time-based periods, use delta if available
-    if (isTimeDelta && entry.delta !== undefined) {
-      return entry.delta;
-    }
-    switch (category) {
-      case 'sentTips':
-        return entry.sentTips ?? 0;
-      case 'receivedTips':
-        return entry.receivedTips ?? 0;
-      case 'followers':
-        return entry.followers ?? 0;
-      case 'likes':
-        return entry.likes ?? 0;
-      case 'subscribers':
-        return entry.subscribers ?? 0;
-      default:
-        return entry.total ?? 0;
-    }
-  };
 
   const formatDisplayValue = (entry: LeaderboardEntry): string => {
     const value = getSortValue(entry);
