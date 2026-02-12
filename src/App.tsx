@@ -49,16 +49,24 @@ const queryClient = new QueryClient({
 
 // Inner app component that uses auth context
 function AppContent() {
-  const { isLoginModalOpen, closeLoginModal } = useAuth();
-  
+  const { isLoginModalOpen, closeLoginModal, isProcessingRedirect } = useAuth();
+
   // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
-  
+
   return (
     <>
       <Sonner />
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
+
+      {/* Mobile redirect processing overlay */}
+      {isProcessingRedirect && (
+        <div className="fixed inset-0 z-[99999] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+          <div className="w-10 h-10 border-3 border-white/20 border-t-white rounded-full animate-spin" />
+          <p className="text-white/80 text-sm">Completing login...</p>
+        </div>
+      )}
       <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />

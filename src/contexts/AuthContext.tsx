@@ -30,6 +30,7 @@ import {
   connectToExternalWallet,
   hasRedirectResult,
   isSocialLoginConnected,
+  consumePreLoginPath,
   AUTH_CONNECTION,
   WALLET_ADAPTERS,
   getOrInitWeb3Auth,
@@ -218,42 +219,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     init();
   }, []);
 
-  // Handle Web3Auth redirect result (mobile email/SMS login)
+  // Handle Web3Auth redirect result (mobile social/email/SMS login)
   useEffect(() => {
     const processRedirect = async () => {
       // Only process once and only if redirect params present
       if (redirectProcessedRef.current || !hasRedirectResult()) {
         return;
       }
-      
+
       redirectProcessedRef.current = true;
       console.log('[Auth] Processing Web3Auth redirect result...');
+      console.log('[Auth] Current URL:', window.location.href);
       setIsProcessingRedirect(true);
 
       try {
         // Initialize Web3Auth - this will automatically process the redirect params
         const web3authInstance = await initWeb3Auth();
         setWeb3auth(web3authInstance);
-        
+
         console.log('[Auth] Web3Auth initialized after redirect, status:', web3authInstance.status);
         console.log('[Auth] Web3Auth connected:', web3authInstance.connected);
 
         // If Web3Auth is connected after processing redirect, complete DeHub auth
+        let authSucceeded = false;
+
         if (web3authInstance.connected && web3authInstance.provider) {
           console.log('[Auth] Completing DeHub auth after redirect...');
           await completeDeHubAuthAfterRedirect(web3authInstance.provider);
+          authSucceeded = true;
         } else {
-          console.warn('[Auth] Web3Auth not connected after redirect processing');
-          toast.error('Login failed. Please try again.');
+          // Retry once - some mobile browsers need a moment for the SDK to process
+          console.log('[Auth] Not connected yet, waiting 2s and retrying...');
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          if (web3authInstance.connected && web3authInstance.provider) {
+            console.log('[Auth] Retry succeeded - completing DeHub auth...');
+            await completeDeHubAuthAfterRedirect(web3authInstance.provider);
+            authSucceeded = true;
+          } else {
+            console.warn('[Auth] Web3Auth not connected after redirect processing');
+            console.warn('[Auth] SDK status:', web3authInstance.status);
+            toast.error('Login failed. Please try again.');
+          }
         }
 
-        // Clear URL parameters to prevent reprocessing on refresh
-        window.history.replaceState({}, '', window.location.pathname);
+        // Clean redirect params from URL - user is already on /app
+        // (redirectUrl is set to origin + '/app' for mobile)
+        consumePreLoginPath();
+        window.history.replaceState({}, '', '/app');
       } catch (error) {
         console.error('[Auth] Redirect result processing failed:', error);
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        console.error('[Auth] Redirect error details:', errorMsg);
         toast.error('Login failed. Please try again.');
-        // Clear params even on error to prevent infinite loop
-        window.history.replaceState({}, '', window.location.pathname);
+        // Clear params and go to app even on error
+        consumePreLoginPath();
+        window.history.replaceState({}, '', '/app');
       } finally {
         setIsProcessingRedirect(false);
         setIsLoading(false);
