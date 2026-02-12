@@ -290,7 +290,7 @@ export default function LeaderboardPage() {
         {/* Table Header - only render when we have entries to avoid border flash */}
         {entries.length > 0 && (
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">
-            <div className="col-span-1">Rank</div>
+            <div className="col-span-1 text-center">Rank</div>
             <div className="col-span-5">User</div>
             <div className="col-span-6 text-right">{currentCategory?.label || 'Value'}</div>
           </div>
