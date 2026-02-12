@@ -229,7 +229,6 @@ serve(async (req) => {
         // Facebook/Twitter scrapers need proper MIME types to display images
         const proxyImageUrl = url.searchParams.get("image_url");
         if (proxyImageUrl) {
-            // Only allow dehub CDN and dehub.io URLs for security
             if (!proxyImageUrl.startsWith(DEHUB_CDN_BASE) && !proxyImageUrl.startsWith("https://dehub.io/")) {
                 return new Response("Forbidden", { status: 403 });
             }

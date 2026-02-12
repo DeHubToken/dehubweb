@@ -224,7 +224,14 @@ export function SidebarLeaderboard() {
 
                   {/* Value */}
                   <div className="text-right flex-shrink-0">
-                    <span className="text-zinc-400 text-xs">{formatDHB(entry.total ?? 0)}</span>
+                    <span className="text-zinc-400 text-xs">
+                      {(() => {
+                        const isTimeDelta = activePeriod !== 'All';
+                        const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
+                        const prefix = isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? '+' : '';
+                        return `${prefix}${formatDHB(displayValue)}`;
+                      })()}
+                    </span>
                   </div>
                 </div>
               );

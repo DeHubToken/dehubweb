@@ -112,11 +112,9 @@ if (import.meta.hot) {
  * Save the current path before mobile redirect so we can restore it after auth.
  */
 export function savePreLoginPath(): void {
-  if (isMobileDevice()) {
-    const currentPath = window.location.pathname + window.location.search;
-    sessionStorage.setItem('dehub_pre_login_path', currentPath);
-    console.log('[Web3Auth] Saved pre-login path:', currentPath);
-  }
+  const currentPath = window.location.pathname + window.location.search;
+  sessionStorage.setItem('dehub_pre_login_path', currentPath);
+  console.log('[Web3Auth] Saved pre-login path:', currentPath);
 }
 
 /**
@@ -263,27 +261,19 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
 
       console.log("[Web3Auth] External wallet adapters configured");
 
-      // Initialize (reuse `mobile` from adapter config above)
-      const timeoutMs = mobile ? 30000 : 15000;
-      console.log(`[Web3Auth] Calling init() (timeout: ${timeoutMs}ms, mobile: ${mobile})...`);
+      // Initialize
+      console.log("[Web3Auth] Calling init()...");
 
       const initWithTimeout = Promise.race([
         web3authInstance.init(),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Web3Auth init timeout")), timeoutMs)
+          setTimeout(() => reject(new Error("Web3Auth init timeout")), 15000)
         )
       ]);
 
       await initWithTimeout;
       console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
-
-      // After init, if connected (e.g. redirect return), track the adapter
-      if (web3authInstance.connected && !lastConnectedAdapter) {
-        // After redirect, the SDK reconnects via openlogin adapter
-        lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN;
-        console.log("[Web3Auth] Auto-detected connection after init, set adapter to OPENLOGIN");
-      }
 
       console.log("[Web3Auth] INITIALIZATION COMPLETE (No-Modal v8 + PrivateKeyProvider), status:", web3authInstance.status);
       return web3authInstance;

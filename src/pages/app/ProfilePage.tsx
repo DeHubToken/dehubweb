@@ -50,6 +50,7 @@ import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { StoryViewerModal } from '@/components/app/stories/StoryViewerModal';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
+import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -1132,7 +1133,6 @@ export default function ProfilePage() {
               )}
               
               <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
-                <Calendar className="w-4 h-4" />
                 <span>Joined {profile.joinedDate}</span>
                 {profile.bio && !isViewingOwnProfile && (
                   <BioTranslateButton
@@ -1185,6 +1185,11 @@ export default function ProfilePage() {
                     </div>
                   )}
                 </div>
+              )}
+
+              {/* Mutual followers - only on other users' profiles */}
+              {!isViewingOwnProfile && (
+                <MutualFollowers profileAddress={apiProfile?.walletAddress} />
               )}
             </div>
           </div>

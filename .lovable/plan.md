@@ -1,29 +1,80 @@
 
 
-## Fix: Vertically Center-Align All Rank Indicators
+# Leaderboard: Show Negative Deltas + Sort Direction Toggle
 
-### Problem
-The rank column uses `justify-start` (left-aligned), but the three types of rank indicators have different widths:
-- Ranks 1-3: medals at 48px wide
-- Ranks 4-5: plaques at 32px wide  
-- Ranks 6+: number badges at 28px wide
+## Current Behavior
+- Time-based periods (Day/Week/Month/Year) only display positive deltas with a "+" prefix
+- Negative deltas are shown as plain numbers without a "-" prefix or red styling
+- There is no way to flip sort order -- the list is always descending (highest first)
 
-Since they're all left-aligned, their visual centers are offset from each other.
+## Changes
 
-### Solution
-Give the rank column a fixed width matching the largest element (48px) and center all indicators within it. This ensures medals, plaques, and number badges all share the same vertical center line.
+### 1. Show Negative Deltas Properly
+- Update `formatDisplayValue` to display negative deltas with a "-" prefix and red text color
+- Ensure entries with negative deltas are not hidden -- they should appear in the list
 
-### Technical Changes
+### 2. Add Sort Direction Toggle
+- Add a new state `sortDirection` (`'desc' | 'asc'`) defaulting to `'desc'`
+- Add a small toggle button (arrow icon) next to the time period tabs or the column header
+- When toggled to ascending, reverse the `entries` array so losers appear at the top
+- This is especially useful for time-based periods to see who lost the most
 
-**`src/pages/app/LeaderboardPage.tsx`** (lines 332-351)
+### 3. Style Negative vs Positive
+- Positive deltas: green text with "+" prefix (currently white with "+")
+- Negative deltas: red text with "-" prefix
+- Zero/neutral: default white text
 
-1. Change the rank container from `justify-start` to `justify-center` and set a fixed width of `w-12` (48px) so all items center within the same space.
-2. Remove the `-ml-1` offset on medal containers since centering handles alignment now.
+## Technical Details
 
-This way:
-- 48px medals fill the full width, naturally centered
-- 32px plaques center within 48px
-- 28px number badges center within 48px
+### File: `src/pages/app/LeaderboardPage.tsx`
 
-All rank indicators will share the same vertical center axis.
+**New state:**
+```typescript
+const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc');
+```
+
+**Updated `entries` memo** -- add a sort step at the end:
+```typescript
+// After filtering, sort by the current sort direction
+list = [...list].sort((a, b) => {
+  const aVal = getSortValue(a);
+  const bVal = getSortValue(b);
+  return sortDirection === 'desc' ? bVal - aVal : aVal - bVal;
+});
+```
+
+**Updated `formatDisplayValue`** -- handle negatives:
+```typescript
+if (isTimeDelta && hasHistoricalData && entry.delta !== undefined && entry.delta !== 0) {
+  const prefix = value > 0 ? '+' : ''; // negative numbers already have "-"
+  if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
+    return `${prefix}${formatNumber(value)} DHB`;
+  }
+  return `${prefix}${formatNumber(value)}`;
+}
+```
+
+**Updated value display** -- add color based on delta sign:
+```tsx
+<div className={cn(
+  "col-span-3 sm:col-span-6 text-right font-medium",
+  isTimeDelta && entry.delta !== undefined && entry.delta > 0 && "text-green-400",
+  isTimeDelta && entry.delta !== undefined && entry.delta < 0 && "text-red-400",
+  !(isTimeDelta && entry.delta !== undefined && entry.delta !== 0) && "text-white"
+)}>
+  {formatDisplayValue(entry)}
+</div>
+```
+
+**Sort toggle UI** -- add an `ArrowUpDown` or `ArrowDown/ArrowUp` icon button next to the time period row:
+```tsx
+<button
+  onClick={() => setSortDirection(d => d === 'desc' ? 'asc' : 'desc')}
+  className="p-1.5 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white"
+>
+  {sortDirection === 'desc' ? <ArrowDown className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
+</button>
+```
+
+**Reset sort direction** when switching categories or time periods to avoid confusion.
 

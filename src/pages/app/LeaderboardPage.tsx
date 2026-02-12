@@ -6,7 +6,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck } from 'lucide-react';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp } from 'lucide-react';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
@@ -74,6 +74,7 @@ export default function LeaderboardPage() {
   const [category, setCategory] = useState<CategoryType>('holdings');
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
   const [shimmerKey, setShimmerKey] = useState(0);
+  const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc');
   const navigate = useNavigate();
 
   // Map category to API sort mode
@@ -110,9 +111,6 @@ export default function LeaderboardPage() {
       });
     }
     
-    // For social metrics with time periods, data is already sorted by the cache
-    // For "all" period, data is sorted by current value; for time periods, sorted by delta
-    
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -122,9 +120,16 @@ export default function LeaderboardPage() {
         entry.account.toLowerCase().includes(query)
       );
     }
+
+    // Sort by current direction
+    list = [...list].sort((a, b) => {
+      const aVal = getSortValue(a);
+      const bVal = getSortValue(b);
+      return sortDirection === 'desc' ? bVal - aVal : aVal - bVal;
+    });
     
     return list;
-  }, [data, searchQuery, category]);
+  }, [data, searchQuery, category, sortDirection]);
 
   // Batch fetch badge balances for all visible entries
   const walletAddresses = useMemo(() => entries.map(e => e.account), [entries]);
@@ -179,11 +184,12 @@ export default function LeaderboardPage() {
 
   const formatDisplayValue = (entry: LeaderboardEntry): string => {
     const value = getSortValue(entry);
-    if (isTimeDelta && hasHistoricalData && entry.delta !== undefined && entry.delta > 0) {
+    if (isTimeDelta && hasHistoricalData && entry.delta !== undefined && entry.delta !== 0) {
+      const prefix = value > 0 ? '+' : '';
       if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
-        return `+${formatNumber(value)} DHB`;
+        return `${prefix}${formatNumber(value)} DHB`;
       }
-      return `+${formatNumber(value)}`;
+      return `${prefix}${formatNumber(value)}`;
     }
     if (category === 'holdings' || category === 'sentTips' || category === 'receivedTips') {
       return formatDHB(value);
@@ -218,7 +224,7 @@ export default function LeaderboardPage() {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => { setCategory(cat.id); setShimmerKey(k => k + 1); }}
+                  onClick={() => { setCategory(cat.id); setSortDirection('desc'); }}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
                       ? 'bg-white text-black'
@@ -233,28 +239,39 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        {/* Time Period Tabs */}
-        <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
-          {timePeriods.map((period) => {
-            const isActive = timePeriod === period.id;
-            return (
-              <button
-                key={period.id}
-                type="button"
-                onClick={() => {
-                  setTimePeriod(period.id);
-                  setShimmerKey(k => k + 1);
-                }}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                  isActive
-                    ? 'bg-zinc-700 text-white'
-                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-                }`}
-              >
-                {period.label}
-              </button>
-            );
-          })}
+        {/* Time Period Tabs + Sort Toggle */}
+        <div className="flex items-center gap-2 mb-4">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-invisible">
+            {timePeriods.map((period) => {
+              const isActive = timePeriod === period.id;
+              return (
+                <button
+                  key={period.id}
+                  type="button"
+                  onClick={() => {
+                    setTimePeriod(period.id);
+                    setShimmerKey(k => k + 1);
+                    setSortDirection('desc');
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive
+                      ? 'bg-zinc-700 text-white'
+                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                  }`}
+                >
+                  {period.label}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            onClick={() => setSortDirection(d => d === 'desc' ? 'asc' : 'desc')}
+            className="p-1.5 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-colors shrink-0"
+            title={sortDirection === 'desc' ? 'Showing highest first' : 'Showing lowest first'}
+          >
+            {sortDirection === 'desc' ? <ArrowDown className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Search */}
@@ -355,7 +372,11 @@ export default function LeaderboardPage() {
                   </div>
 
                   {/* Value */}
-                  <div className="col-span-3 sm:col-span-6 text-right text-white font-medium">
+                  <div className={`col-span-3 sm:col-span-6 text-right font-medium ${
+                    isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? 'text-green-400' :
+                    isTimeDelta && entry.delta !== undefined && entry.delta < 0 ? 'text-red-400' :
+                    'text-white'
+                  }`}>
                     {formatDisplayValue(entry)}
                   </div>
                 </div>
