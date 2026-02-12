@@ -290,7 +290,7 @@ export default function LeaderboardPage() {
         {/* Table Header - only render when we have entries to avoid border flash */}
         {entries.length > 0 && (
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">
-            <div className="col-span-1 text-center">Rank</div>
+            <div className="col-span-1 text-center -ml-1">Rank</div>
             <div className="col-span-5">User</div>
             <div className="col-span-6 text-right">{currentCategory?.label || 'Value'}</div>
           </div>
@@ -329,7 +329,7 @@ export default function LeaderboardPage() {
                   className="grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 hover:bg-zinc-800/50 transition-colors items-center cursor-pointer"
                 >
                   {/* Rank */}
-                  <div className="col-span-2 sm:col-span-1 flex items-center justify-center">
+                  <div className="col-span-2 sm:col-span-1 flex items-center justify-center -ml-1">
                     {rank <= 5 ? (
                       <div className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}>
                         <img 
