@@ -673,14 +673,26 @@ Deno.serve(async (req) => {
               console.log(`${metric}/${period}: using snapshot from ${closestDate} (target was ${pastDateStr}), ${pastMap.size} entries`);
             }
 
+            // For short periods (day/week), only count real deltas where
+            // we have genuine past data (> 0). Old snapshots stored 0 for
+            // social fields before tracking was added.
+            const requireRealPast = period === "day" || period === "week";
+
             const withDeltas: EnrichedEntry[] = allEntries
               .filter((e) => (e[metric] ?? 0) > 0)
               .map((entry) => {
                 const pastVal = pastMap.get(entry.account.toLowerCase());
-                const delta = pastVal !== undefined
-                  ? (entry[metric] ?? 0) - pastVal
-                  : 0;
-                return { ...entry, delta };
+                const currentVal = entry[metric] ?? 0;
+                if (requireRealPast) {
+                  // Only compute delta if past value exists and is > 0 (real tracked data)
+                  const hasTruePastData = pastVal !== undefined && pastVal > 0;
+                  const delta = hasTruePastData ? currentVal - pastVal : 0;
+                  return { ...entry, delta };
+                } else {
+                  // For month/year, use total as delta if past is unknown/zero
+                  const delta = pastVal !== undefined ? currentVal - pastVal : 0;
+                  return { ...entry, delta };
+                }
               });
 
             const sorted = withDeltas
