@@ -6,6 +6,8 @@ export interface LiquidGlassBubbleProps extends React.HTMLAttributes<HTMLDivElem
   tail?: 'left' | 'right' | 'none';
   /** Enable hover shimmer effect */
   shimmer?: boolean;
+  /** Hide the border */
+  noBorder?: boolean;
   /** Children content */
   children: React.ReactNode;
 }
@@ -24,7 +26,7 @@ export interface LiquidGlassBubbleProps extends React.HTMLAttributes<HTMLDivElem
  * ```
  */
 const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProps>(
-  ({ className, tail = 'none', shimmer = true, children, ...props }, ref) => {
+  ({ className, tail = 'none', shimmer = true, noBorder = false, children, ...props }, ref) => {
     const tailClasses = {
       left: 'rounded-2xl rounded-bl-md',
       right: 'rounded-2xl rounded-br-md',
@@ -43,7 +45,7 @@ const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProp
             // Backdrop blur effect
             "backdrop-blur-xl",
             // Border
-            "border border-white/30",
+            noBorder ? "" : "border border-white/30",
             // Complex shadow for depth
             "shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
             // Top shine overlay (before pseudo-element styles)

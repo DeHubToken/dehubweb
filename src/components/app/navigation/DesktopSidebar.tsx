@@ -150,13 +150,14 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         {/* Post / Login Button */}
         <div className="mt-3 flex items-center justify-center xl:block">
           <LiquidGlassBubble 
-            shimmer 
+            shimmer
+            noBorder
             className={cn("cursor-pointer w-full", isConnecting && "opacity-70 pointer-events-none")}
             onClick={handlePostClick}
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              "py-2 xl:py-3 text-[13.5px]"
+              "py-3 xl:py-4 text-[13.5px]"
             )}>
               {isAuthenticated ? (
                 <>
