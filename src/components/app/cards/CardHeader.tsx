@@ -118,15 +118,17 @@ export function CardHeader({
           </Avatar>
         )}
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+          <span className="relative inline-flex items-baseline shrink min-w-0">
+            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+            {badgeUrl && (
+              <img 
+                src={badgeUrl} 
+                alt="Badge" 
+                className="w-2.5 h-2.5 shrink-0 absolute -top-0.5 -right-3" 
+              />
+            )}
+          </span>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
-          {badgeUrl && (
-            <img 
-              src={badgeUrl} 
-              alt="Badge" 
-              className="w-3 h-3 shrink-0 -mt-1" 
-            />
-          )}
           {formattedHandle && (
             <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
           )}
