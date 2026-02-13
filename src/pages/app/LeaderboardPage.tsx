@@ -6,7 +6,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, ShieldCheck } from 'lucide-react';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp } from 'lucide-react';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';
 import medal2 from '@/assets/medal-2.png';
@@ -22,7 +22,7 @@ import medal10 from '@/assets/medal-10.png';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
-import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod, type LeaderboardResponse } from '@/lib/api/dehub';
+import { getLeaderboard, type LeaderboardSortMode, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { useBatchBadgeBalances } from '@/hooks/use-badge-balance';
@@ -102,7 +102,6 @@ export default function LeaderboardPage() {
   // Check if we're viewing a time-based period (shows delta)
   const isTimeDelta = timePeriod !== 'all';
   const hasHistoricalData = data?.hasHistoricalData !== false;
-  const isOnChainVerified = data?.onChainVerified === true;
 
   const getSortValue = useCallback((entry: LeaderboardEntry): number => {
     // For time-based periods, use delta if available
@@ -216,15 +215,7 @@ export default function LeaderboardPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">Leaderboards</h1>
-            <div className="flex items-center gap-2">
-              <p className="text-zinc-500 text-sm">Automatically updates every 5 minutes</p>
-              {isOnChainVerified && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 text-xs font-medium">
-                  <ShieldCheck className="w-3 h-3" />
-                  On-chain
-                </span>
-              )}
-            </div>
+            <p className="text-zinc-500 text-sm">Automatically updates every 5 minutes</p>
           </div>
         </div>
 

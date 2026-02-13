@@ -704,36 +704,6 @@ export type Database = {
         }
         Relationships: []
       }
-      tip_leaderboard_cache: {
-        Row: {
-          chain_id: number
-          id: string
-          period: string
-          received_total: number
-          sent_total: number
-          updated_at: string
-          wallet_address: string
-        }
-        Insert: {
-          chain_id?: number
-          id?: string
-          period?: string
-          received_total?: number
-          sent_total?: number
-          updated_at?: string
-          wallet_address: string
-        }
-        Update: {
-          chain_id?: number
-          id?: string
-          period?: string
-          received_total?: number
-          sent_total?: number
-          updated_at?: string
-          wallet_address?: string
-        }
-        Relationships: []
-      }
       tv_channels_verified: {
         Row: {
           broken_reports: number

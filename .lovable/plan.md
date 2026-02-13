@@ -1,66 +1,112 @@
 
 
-# On-Chain Tip Tracking for Leaderboard (Spent/Paid)
+# Decompose ProfilePage.tsx (1,336 lines) into Sub-Components and Hooks
 
-## Current Situation
+## Overview
+Split the monolithic ProfilePage into 6 focused files while keeping ProfilePage.tsx as the thin orchestrator. Every function, handler, and UI element is preserved exactly -- just relocated.
 
-The leaderboard's **Spent** (sentTips) and **Paid** (receivedTips) categories rely entirely on the **DeHub API** (`/api/leaderboard`), which returns pre-aggregated `sentTips` and `receivedTips` numbers per user. These values come from the DeHub backend's internal database -- there's no on-chain querying happening for tips today.
+## New File Structure
 
-## Why On-Chain Tip Tracking Is Possible
+```text
+src/pages/app/ProfilePage.tsx                    ~200 lines  (orchestrator - wires everything together)
+src/hooks/use-profile-page.ts                    ~180 lines  (all data fetching + state + derived values)
+src/hooks/use-profile-follow.ts                  ~100 lines  (follow/unfollow logic + optimistic updates)
+src/components/app/profile/ProfileHeader.tsx      ~350 lines  (banner, avatar, stories overlay, info, stats)
+src/components/app/profile/ProfileTabContent.tsx  ~280 lines  (renderTabContent switch + all tab cases)
+src/components/app/profile/ProfileOptionsDrawer.tsx ~150 lines (share sheet + offer drawer + all option handlers)
+src/components/app/profile/ProfileConstants.ts     ~50 lines  (DEFAULT_BANNERS, DISPLAY_WALLET_OVERRIDES, getDefaultBanner, TabValue type)
+```
 
-Tips on DeHub are **DHB ERC-20 token transfers**. Every tip generates a standard `Transfer(address from, address to, uint256 value)` event on the DHB token contract:
-- **Base**: `0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c`
-- **BNB**: `0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7`
+## What Goes Where
 
-These events are publicly queryable, timestamped by block number, and permanent -- meaning we can build historical aggregations (day/week/month/year) from real on-chain data.
+### 1. `ProfileConstants.ts` (~50 lines)
+- `DISPLAY_WALLET_OVERRIDES` record
+- `DEFAULT_BANNERS` array + all 9 banner imports
+- `getDefaultBanner()` function
+- `TabValue` type export
 
-## Architecture
+### 2. `use-profile-page.ts` hook (~180 lines)
+Consolidates all data fetching and derived state into a single hook:
+- Route params resolution (`lookupUsername`, `lookupUserId`)
+- `useDeHubProfile` + `useDeHubUserContent` calls
+- `isOwnProfile` / `isViewingOwnProfile` derivation
+- Badge balance fetching
+- Content separation (`useMemo` for `ALL_CONTENT`, `PROFILE_POSTS`, etc.)
+- `PROFILE_TABS` array construction
+- Subscription plans fetching (`useCreatorPlans`, `useIsSubscribed`)
+- Privacy settings (`useUserPrivacySettings`)
+- Stories filtering + `profileStoryStartIndex`
+- Optimistic posts
+- Pull-to-refresh setup
+- Returns a single flat object with all values needed by sub-components
 
-The approach mirrors the existing `token-holders.ts` pattern (which already queries `TransferSingle` events via Alchemy RPC for fraction ownership):
+### 3. `use-profile-follow.ts` hook (~100 lines)
+Extracted from lines 326-390:
+- `handleFollow()` with private account awareness + optimistic update via `setFollowStatus`
+- `handleUnfollow()` with optimistic revert
+- `isFollowLoading` state
+- Takes `profile`, `isAuthenticated`, `isTargetPrivate`, `setFollowStatus`, `handleApiError` as params
 
-1. **Backend Edge Function** (`query-tip-history`) -- Runs the heavy RPC queries server-side to avoid rate limits and slow client-side scans
-2. **Caching Layer** -- Store aggregated results in a `tip_leaderboard_cache` database table, refreshed every 5 minutes
-3. **Frontend Integration** -- Update the leaderboard to use on-chain data for Spent/Paid categories with real time-period deltas
+### 4. `ProfileHeader.tsx` component (~350 lines)
+The banner + avatar + profile info card (lines 908-1220):
+- Cover photo with fullscreen click
+- Avatar with stories overlay (ShimmerBorder, liquid glass Play/Image buttons)
+- Action buttons row (Edit Profile / Follow / Subscribe / Requested / Subscribed + options drawer trigger)
+- Profile name, handle, verified badge, staking badge, "Follows you" chip
+- Wallet address display
+- Bio with TranslatableText + BioTranslateButton
+- Joined date
+- Followers/Following counts with privacy gating
+- MutualFollowers
+- Props: receives all needed data from the orchestrator (profile, badges, stories, follow state, handlers)
 
-## Implementation Steps
+### 5. `ProfileTabContent.tsx` component (~280 lines)
+The `renderTabContent()` switch (lines 505-747):
+- Private account gate
+- Loading state
+- All 8 tab cases (home with optimistic posts, posts, images, videos, subscribers with plan management, songs, live, fractions)
+- Props: `activeTab`, content arrays, plan data, profile info, modal openers
 
-### Step 1: Database Table for Caching
+### 6. `ProfileOptionsDrawer.tsx` component (~150 lines)
+The ShareOptions component + offer drawer (lines 407-503, 1249-1284):
+- Copy URL / username / address handlers
+- Message, Send coins, Notify, Make Offer buttons
+- Unfollow + Block buttons
+- Offer drawer with DHB input
+- Props: `profile`, `isViewingOwnProfile`, `isFollowing`, handlers
 
-Create a `tip_leaderboard_cache` table to store aggregated tip data:
-- `wallet_address` (text) -- the tipper/recipient
-- `chain_id` (int) -- 8453 or 56
-- `sent_total` (numeric) -- total DHB sent as tips
-- `received_total` (numeric) -- total DHB received as tips
-- `period` (text) -- 'day', 'week', 'month', 'year', 'all'
-- `updated_at` (timestamptz)
-- Public read RLS policy (leaderboard is public data)
+### 7. `ProfilePage.tsx` orchestrator (~200 lines)
+Slim file that:
+- Calls `useProfilePage()` to get all data
+- Calls `useProfileFollow()` for follow actions
+- Manages UI-only state (modals open/close, fullscreen image, active tab)
+- Renders loading / auth gate / username-available states
+- Composes `ProfileHeader`, tab bar, `ProfileTabContent`, `ProfileOptionsDrawer`
+- Renders modals (CreatePlanModal, EditPlanModal, FollowersListDrawer, StoryViewerModal, LoginModal, FullscreenImageViewer)
 
-### Step 2: Edge Function -- `query-tip-history`
+## Safety Guarantees
 
-A backend function that:
-1. Uses the Alchemy RPC (via the existing `ALCHEMY_API_KEY` secret) to query `Transfer` events on the DHB token contract
-2. Calculates block ranges for each period (day = ~43,200 blocks on Base, week = ~302,400, etc.)
-3. Aggregates sent/received totals per wallet address
-4. Upserts results into `tip_leaderboard_cache`
-5. Can be triggered on a schedule or on-demand
+- **Zero import changes** in any consumer file -- only `App.tsx` imports ProfilePage, and the default export stays
+- **All state flows preserved** -- `setFollowStatus` from `useDeHubProfile` is passed through exactly as before
+- **Optimistic update chain intact** -- `useProfileFollow` receives `setFollowStatus` from the profile hook and calls it identically
+- **Pull-to-refresh handlers** stay wired to the same container ref
+- **Story viewer** keeps the same `allStories` array and `profileStoryStartIndex` calculation
+- **Tab content** receives the exact same content arrays and renders identical JSX
+- **Privacy gating** logic (hideFollowerCounts, showFollowersFollowing, isTargetPrivate) flows through props unchanged
+- **Conditional AppLayout wrapper** for `/:username` routes stays in the orchestrator
 
-### Step 3: Update Leaderboard API Layer
+## Technical Details
 
-Modify `src/lib/api/dehub/leaderboard.ts`:
-- When `sort` is `sentTips` or `receivedTips`, query `tip_leaderboard_cache` instead of (or merged with) the DeHub API
-- Support real delta calculations for day/week/month/year periods
-- Fall back to the DeHub API if on-chain data isn't available yet
+### Cross-component state that must be threaded carefully:
+1. `setFollowStatus` (from useDeHubProfile) -- used by follow handlers AND optimistically updates `isFollowing`
+2. `setActiveTab` -- used by Subscribe button in header (navigates to subs tab) AND by tab bar
+3. `setCreatePlanModalOpen` -- triggered from both subscribers tab empty state AND header
+4. `shareSheetOpen` / `setShareSheetOpen` -- used by options drawer AND closed by follow handlers
+5. `fullscreenImage` -- set by avatar click, cover click, and image overlay; cleared by FullscreenImageViewer
 
-### Step 4: Update Leaderboard Page
+All of these are managed in the orchestrator and passed as props/callbacks.
 
-Minor updates to `LeaderboardPage.tsx`:
-- Show "On-chain verified" indicator for Spent/Paid categories
-- Proper delta display for all time periods (currently only works when the API returns deltas)
-
-## Technical Considerations
-
-- **Block scanning depth**: Base produces ~1 block/2s, so 1 year is roughly 15.7M blocks. Alchemy supports large range queries but we may need to paginate.
-- **Distinguishing tips from regular transfers**: Not all DHB transfers are tips. We could filter by looking at transfers where the `from` or `to` is a known DeHub user (cross-referenced with the leaderboard user list), or by checking if transfers go through a specific tipping contract.
-- **Rate limits**: Running this server-side via the edge function (with the existing Alchemy key) avoids client-side rate limits.
-- **Dual chain support**: Query both Base and BNB contracts, then merge the results.
-
+### Import deduplication:
+- Lucide icons are imported only where used (e.g., `Copy`, `Wallet` in ProfileOptionsDrawer, not ProfileHeader)
+- `cn`, `toast`, drawer components imported only in files that use them
+- 3D icon assets imported only in ProfileTabContent (where empty states render)
