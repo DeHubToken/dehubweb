@@ -72,7 +72,7 @@ export function useLiveChatMessages(roomId: string | null) {
     if (!roomId) return;
     if (showLoading) setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('livechat_messages')
         .select('*')
         .eq('room_id', roomId)
@@ -82,7 +82,7 @@ export function useLiveChatMessages(roomId: string | null) {
       if (error) {
         console.error('[LiveChat] Supabase fetch error:', error);
       } else {
-        setMessages(data as SupabaseLiveChatMessage[]);
+        setMessages((data || []) as SupabaseLiveChatMessage[]);
       }
     } catch (err) {
       console.error('[LiveChat] Failed to fetch messages:', err);
