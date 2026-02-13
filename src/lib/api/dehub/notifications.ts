@@ -61,6 +61,13 @@ interface RawNotification {
   actorAddress?: string;
   actorUsername?: string;
   actorAvatar?: string;
+  actor?: {
+    address?: string;
+    username?: string;
+    displayName?: string;
+    avatarImageUrl?: string;
+    avatarUrl?: string;
+  };
   tokenId?: number;
   tokenTitle?: string;
   tokenThumbnail?: string;
@@ -87,13 +94,17 @@ interface UnreadCountApiResponse {
 }
 
 function normalizeNotification(raw: RawNotification): DeHubNotification {
+  // Resolve avatar: prefer nested actor object (from API), fall back to flat actorAvatar field
+  const actorAvatarPath = raw.actor?.avatarImageUrl || raw.actor?.avatarUrl || raw.actorAvatar;
+  
   return {
     ...raw,
     id: raw._id,
+    actorAvatar: actorAvatarPath,
     actor: raw.actorUsername || raw.actorAddress ? {
       address: raw.actorAddress,
       username: raw.actorUsername,
-      avatarImageUrl: raw.actorAvatar,
+      avatarImageUrl: actorAvatarPath,
     } : undefined,
     post: raw.tokenId ? {
       tokenId: raw.tokenId,
