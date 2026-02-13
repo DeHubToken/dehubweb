@@ -440,6 +440,48 @@ export type Database = {
         }
         Relationships: []
       }
+      livechat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          image_url: string | null
+          is_pinned: boolean
+          message_type: string
+          room_id: string
+          sender_address: string
+          sender_avatar_url: string | null
+          sender_display_name: string | null
+          sender_username: string | null
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_pinned?: boolean
+          message_type?: string
+          room_id: string
+          sender_address: string
+          sender_avatar_url?: string | null
+          sender_display_name?: string | null
+          sender_username?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_pinned?: boolean
+          message_type?: string
+          room_id?: string
+          sender_address?: string
+          sender_avatar_url?: string | null
+          sender_display_name?: string | null
+          sender_username?: string | null
+        }
+        Relationships: []
+      }
       raise_hand_requests: {
         Row: {
           avatar: string | null
