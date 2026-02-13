@@ -148,7 +148,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Post / Login Button */}
-        <div className="mt-3 flex items-center justify-center xl:block">
+        <div className="mt-3 flex items-center justify-center xl:block bg-zinc-900 rounded-2xl p-1 xl:p-2.5">
           <LiquidGlassBubble 
             shimmer
             noBorder
