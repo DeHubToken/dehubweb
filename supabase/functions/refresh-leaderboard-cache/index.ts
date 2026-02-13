@@ -27,11 +27,11 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const API_SORT_MODES = ["sentTips", "receivedTips"] as const;
 const PERIODS = ["day", "week", "month", "year", "all"] as const;
 
-// ERC-20 Transfer(address,address,uint256) event topic
-const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
-
 // Minimum DHB balance to include from discovery (10,000 DHB)
 const DISCOVERY_MIN_BALANCE = 10_000;
+
+// Search prefixes for API-based profile discovery (a-z, 0-9)
+const SEARCH_PREFIXES = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 
 // Period to days-ago mapping for snapshot deltas
 const PERIOD_DAYS: Record<string, number> = {
@@ -202,164 +202,101 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
   waifu: { wallet: "0xb4ba0e4b4596b7e8a074fe6156d4f666ebdba000", displayName: "waifu" },
 };
 
-// ── On-chain holder discovery ───────────────────────────────────────
+// ── API-based profile discovery ─────────────────────────────────────
 
-async function fetchTransferLogs(
-  rpcUrl: string,
-  tokenAddress: string,
-  fromBlock: string,
-  toBlock: string,
-): Promise<string[]> {
-  const res = await fetch(rpcUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "eth_getLogs",
-      params: [{
-        address: tokenAddress,
-        topics: [TRANSFER_TOPIC],
-        fromBlock,
-        toBlock,
-      }],
-    }),
-  });
-  const json = await res.json();
-  if (json.error) {
-    console.error(`[eth_getLogs error] ${tokenAddress}:`, json.error);
+/** Search DeHub API for registered accounts using a prefix */
+async function searchProfiles(prefix: string): Promise<Array<Record<string, unknown>>> {
+  try {
+    const res = await fetch(
+      `${DEHUB_API_BASE}/api/feed?type=accounts&search=${encodeURIComponent(prefix)}&limit=50`,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    const items = data?.result?.items || data?.result || [];
+    return Array.isArray(items) ? items : [];
+  } catch {
     return [];
   }
-  const logs = json.result || [];
-  // Extract unique 'to' addresses from topic[2]
-  const addresses = new Set<string>();
-  for (const log of logs) {
-    if (log.topics && log.topics.length >= 3) {
-      const toAddr = "0x" + log.topics[2].slice(26).toLowerCase();
-      addresses.add(toAddr);
-    }
-  }
-  return [...addresses];
 }
 
-async function discoverOnChainHolders(
+/** Discover holders by searching all registered DeHub profiles, then checking on-chain balances */
+async function discoverProfileHolders(
   baseRpc: string,
   bnbRpc: string,
   existingAddresses: Set<string>,
 ): Promise<EnrichedEntry[]> {
-  console.log("[Discovery] Starting on-chain holder scan...");
+  console.log("[Discovery] Starting API-based profile discovery...");
   const discovered: EnrichedEntry[] = [];
 
   try {
-    // Get current block numbers
-    const [baseBlock, bnbBlock] = await Promise.all([
-      getCurrentBlockNumber(baseRpc),
-      getCurrentBlockNumber(bnbRpc),
-    ]);
+    // 1. Search DeHub API with all prefixes to gather registered accounts
+    const profileMap = new Map<string, Record<string, unknown>>();
 
-    // Scan last ~1M blocks on Base (~23 days), ~500k on BNB (~17 days)
-    const baseFromBlock = Math.max(0, baseBlock - 1_000_000);
-    const bnbFromBlock = Math.max(0, bnbBlock - 500_000);
-
-    const [baseAddrs, bnbAddrs] = await Promise.all([
-      fetchTransferLogs(
-        baseRpc, DHB_BASE,
-        "0x" + baseFromBlock.toString(16),
-        "0x" + baseBlock.toString(16),
-      ),
-      fetchTransferLogs(
-        bnbRpc, DHB_BNB,
-        "0x" + bnbFromBlock.toString(16),
-        "0x" + bnbBlock.toString(16),
-      ),
-    ]);
-
-    // Combine and filter out already-known addresses
-    const allNew = new Set<string>();
-    for (const addr of [...baseAddrs, ...bnbAddrs]) {
-      if (!existingAddresses.has(addr.toLowerCase())) {
-        allNew.add(addr.toLowerCase());
+    // Process prefixes in batches of 6 to avoid hammering the API
+    const PREFIX_BATCH = 6;
+    for (let i = 0; i < SEARCH_PREFIXES.length; i += PREFIX_BATCH) {
+      const batch = SEARCH_PREFIXES.slice(i, i + PREFIX_BATCH);
+      const results = await Promise.all(batch.map(searchProfiles));
+      for (const items of results) {
+        for (const item of items) {
+          const addr = ((item.account || item.address || item.walletAddress || "") as string).toLowerCase();
+          if (addr && addr.startsWith("0x") && !existingAddresses.has(addr)) {
+            profileMap.set(addr, item);
+          }
+        }
+      }
+      if (i + PREFIX_BATCH < SEARCH_PREFIXES.length) {
+        await new Promise((r) => setTimeout(r, 300));
       }
     }
 
-    console.log(`[Discovery] Found ${allNew.size} new unique addresses from Transfer logs`);
-    if (allNew.size === 0) return [];
+    console.log(`[Discovery] Found ${profileMap.size} new unique profiles from API search`);
+    if (profileMap.size === 0) return [];
 
-    // Batch-query balances for new addresses
-    const newAddrs = [...allNew];
+    // 2. Batch-query on-chain balances for discovered addresses
+    const addresses = [...profileMap.keys()];
     const BATCH = 10;
-    const significantHolders: { address: string; balance: number }[] = [];
+    const significantHolders: { address: string; balance: number; profile: Record<string, unknown> }[] = [];
 
-    for (let i = 0; i < newAddrs.length; i += BATCH) {
-      const batch = newAddrs.slice(i, i + BATCH);
+    for (let i = 0; i < addresses.length; i += BATCH) {
+      const batch = addresses.slice(i, i + BATCH);
       const balances = await Promise.all(
         batch.map((addr) => getOnChainBalance(addr, baseRpc, bnbRpc))
       );
       batch.forEach((addr, idx) => {
         if (balances[idx] >= DISCOVERY_MIN_BALANCE) {
-          significantHolders.push({ address: addr, balance: balances[idx] });
+          significantHolders.push({ address: addr, balance: balances[idx], profile: profileMap.get(addr)! });
         }
       });
-      if (i + BATCH < newAddrs.length) {
+      if (i + BATCH < addresses.length) {
         await new Promise((r) => setTimeout(r, 200));
       }
     }
 
-    console.log(`[Discovery] ${significantHolders.length} addresses with balance >= ${DISCOVERY_MIN_BALANCE} DHB`);
+    console.log(`[Discovery] ${significantHolders.length} profiles with balance >= ${DISCOVERY_MIN_BALANCE} DHB`);
 
-    // Resolve to DeHub profiles
+    // 3. Build enriched entries from discovered holders
     for (const holder of significantHolders) {
-      try {
-        const res = await fetch(
-          `${DEHUB_API_BASE}/api/feed?type=accounts&search=${holder.address}`,
-          { headers: { "Content-Type": "application/json" } }
-        );
-        if (!res.ok) {
-          // No profile found, add with just the address
-          discovered.push({
-            account: holder.address,
-            total: holder.balance,
-            sentTips: 0,
-            receivedTips: 0,
-            badgeBalance: holder.balance,
-          });
-          continue;
-        }
-        const data = await res.json();
-        const items = data?.result?.items || data?.result || [];
-        const profile = Array.isArray(items) ? items[0] : null;
-
-        discovered.push({
-          account: holder.address,
-          total: holder.balance,
-          username: profile?.username || undefined,
-          userDisplayName: profile?.userDisplayName || profile?.displayName || undefined,
-          avatarUrl: profile?.avatarUrl || undefined,
-          followers: profile?.followers ?? undefined,
-          likes: profile?.likes ?? undefined,
-          subscribers: profile?.subscribers ?? undefined,
-          sentTips: profile?.sentTips ?? 0,
-          receivedTips: profile?.receivedTips ?? 0,
-          badgeBalance: holder.balance,
-        });
-
-        // Small delay between API calls
-        await new Promise((r) => setTimeout(r, 100));
-      } catch (err) {
-        // Silently add without profile data
-        discovered.push({
-          account: holder.address,
-          total: holder.balance,
-          sentTips: 0,
-          receivedTips: 0,
-          badgeBalance: holder.balance,
-        });
-      }
+      const p = holder.profile;
+      discovered.push({
+        account: holder.address,
+        total: holder.balance,
+        username: (p.username as string) || undefined,
+        userDisplayName: (p.userDisplayName as string) || (p.displayName as string) || undefined,
+        avatarUrl: (p.avatarUrl as string) || undefined,
+        followers: (p.followers as number) ?? undefined,
+        likes: (p.likes as number) ?? undefined,
+        subscribers: (p.subscribers as number) ?? undefined,
+        sentTips: (p.sentTips as number) ?? 0,
+        receivedTips: (p.receivedTips as number) ?? 0,
+        badgeBalance: holder.balance,
+      });
     }
 
     console.log(`[Discovery] Resolved ${discovered.length} new holders for leaderboard`);
   } catch (err) {
-    console.error("[Discovery] Error during holder scan:", err);
+    console.error("[Discovery] Error during profile discovery:", err);
   }
 
   return discovered;
@@ -478,13 +415,13 @@ Deno.serve(async (req) => {
         }
       }
 
-      // ── Auto-discover on-chain holders ────────────────────────────
+      // ── Auto-discover holders via API profile search ─────────────
       const existingAccountsForDiscovery = new Set(enriched.map(e => e.account.toLowerCase()));
       try {
-        const discoveredHolders = await discoverOnChainHolders(baseRpc, bnbRpc, existingAccountsForDiscovery);
+        const discoveredHolders = await discoverProfileHolders(baseRpc, bnbRpc, existingAccountsForDiscovery);
         if (discoveredHolders.length > 0) {
           enriched.push(...discoveredHolders);
-          console.log(`Added ${discoveredHolders.length} auto-discovered holders`);
+          console.log(`Added ${discoveredHolders.length} API-discovered holders`);
         }
       } catch (discErr) {
         console.error("Discovery step failed (non-fatal):", discErr);
