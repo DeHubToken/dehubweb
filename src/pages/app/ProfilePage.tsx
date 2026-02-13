@@ -1097,37 +1097,40 @@ export default function ProfilePage() {
 
             {/* Profile Info */}
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="relative inline-flex items-baseline">
-                  <h2 className="text-xl font-bold text-white">{profile.name}</h2>
-                  {badgeUrl && (
-                    <img 
-                      src={badgeUrl} 
-                      alt="Badge tier" 
-                      className="w-3.5 h-3.5 shrink-0 absolute -top-1 -right-4" 
-                    />
-                  )}
-                </span>
-                <span className="w-[6px] shrink-0" />
-                {isTargetPrivate && !isViewingOwnProfile && (
-                  <Lock className="w-4 h-4 text-zinc-500" />
-                )}
-                <button
-                  onClick={() => {
-                    const username = profile.handle.replace('@', '');
-                    navigator.clipboard.writeText(`https://dehub.io/${username}`);
-                    toast.success('Profile URL copied to clipboard');
-                  }}
-                  className="text-zinc-500 text-lg hover:text-zinc-300 transition-colors"
-                >
-                  {profile.handle}
-                </button>
-                {profile.verified && <VerifiedBadge className="w-5 h-5" />}
-                {!isViewingOwnProfile && apiProfile?.followsYou && (
-                  <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
-                    Follows you
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="relative inline-flex items-baseline">
+                    <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                    {badgeUrl && (
+                      <img 
+                        src={badgeUrl} 
+                        alt="Badge tier" 
+                        className="w-3.5 h-3.5 shrink-0 absolute -top-1 -right-4" 
+                      />
+                    )}
                   </span>
-                )}
+                  {isTargetPrivate && !isViewingOwnProfile && (
+                    <Lock className="w-4 h-4 text-zinc-500" />
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const username = profile.handle.replace('@', '');
+                      navigator.clipboard.writeText(`https://dehub.io/${username}`);
+                      toast.success('Profile URL copied to clipboard');
+                    }}
+                    className="text-zinc-500 text-lg hover:text-zinc-300 transition-colors"
+                  >
+                    {profile.handle}
+                  </button>
+                  {profile.verified && <VerifiedBadge className="w-5 h-5" />}
+                  {!isViewingOwnProfile && apiProfile?.followsYou && (
+                    <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
+                      Follows you
+                    </span>
+                  )}
+                </div>
               </div>
               
               {profile.walletAddress && (() => {
