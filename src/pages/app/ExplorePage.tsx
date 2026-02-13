@@ -253,7 +253,11 @@ const UserResultCard = ({
               <span className="truncate">{user.name}</span>
               {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
             </p>
-            <span className="text-zinc-500 font-normal text-sm truncate">{user.handle}</span>
+            <span className="text-zinc-500 font-normal text-sm truncate">
+              {user.handle.replace('@', '').startsWith('0x') && user.handle.length > 14
+                ? `@${user.handle.replace('@', '').slice(0, 6)}...${user.handle.replace('@', '').slice(-4)}`
+                : user.handle}
+            </span>
           </div>
           {user.bio && (
             <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5 hidden md:block">{user.bio}</p>
