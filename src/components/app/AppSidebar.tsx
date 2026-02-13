@@ -47,7 +47,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       <div className="mt-4 pt-4 border-t border-zinc-700/50">
         <Button 
           onClick={() => setIsPostModalOpen(true)}
-          className="w-full rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-6 text-base gap-2"
+          className="w-full rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/15 font-semibold py-6 text-base gap-2"
         >
           {isAuthenticated ? (
             <>
