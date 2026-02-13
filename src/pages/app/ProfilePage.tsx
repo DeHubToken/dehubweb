@@ -1099,6 +1099,13 @@ export default function ProfilePage() {
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                {badgeUrl && (
+                  <img 
+                    src={badgeUrl} 
+                    alt="Badge tier" 
+                    className="w-4 h-4 shrink-0 -mt-1" 
+                  />
+                )}
                 {isTargetPrivate && !isViewingOwnProfile && (
                   <Lock className="w-4 h-4 text-zinc-500" />
                 )}
@@ -1113,13 +1120,6 @@ export default function ProfilePage() {
                   {profile.handle}
                 </button>
                 {profile.verified && <VerifiedBadge className="w-5 h-5" />}
-                {badgeUrl && (
-                  <img 
-                    src={badgeUrl} 
-                    alt="Badge tier" 
-                    className="w-4 h-4 shrink-0 -mt-1" 
-                  />
-                )}
                 {!isViewingOwnProfile && apiProfile?.followsYou && (
                   <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                     Follows you
