@@ -353,7 +353,7 @@ export default function ProfilePage() {
 
   const handleFollow = async () => {
     if (!isAuthenticated) {
-      toast.error('Please connect your wallet first');
+      setLoginModalOpen(true);
       return;
     }
     
@@ -1069,7 +1069,13 @@ export default function ProfilePage() {
                     )}
                   </>
                 )}
-                <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
+                <Drawer open={shareSheetOpen} onOpenChange={(open) => {
+                  if (!isAuthenticated && open) {
+                    setLoginModalOpen(true);
+                    return;
+                  }
+                  setShareSheetOpen(open);
+                }}>
                   <DrawerTrigger asChild>
                     <Button 
                       variant="outline" 
@@ -1309,6 +1315,9 @@ export default function ProfilePage() {
         initialIndex={profileStoryStartIndex}
         onStoryWatched={markWatched}
       />
+
+      {/* Login Modal for unauthenticated actions */}
+      <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
     </div>
   );
 
