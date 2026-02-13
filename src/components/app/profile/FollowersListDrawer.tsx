@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Users, UserPlus, UserMinus } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -19,6 +19,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+
+const MAX_PAGES = 3;
+const PAGE_SIZE = 30;
 
 /** Truncate a hex address to 0x1234…abcd */
 function truncateAddress(address: string): string {
@@ -59,6 +62,22 @@ function mapFollowListItem(item: FollowListItem): UserListItem {
   };
 }
 
+/**
+ * Enrich raw-address users via the batch-avatars edge function.
+ * Returns a map keyed by lowercase address.
+ */
+async function enrichAddresses(addresses: string[]): Promise<Record<string, { avatarUrl: string | null; username: string | null; displayName: string | null }>> {
+  try {
+    const { data, error } = await supabase.functions.invoke('batch-avatars', {
+      body: { addresses },
+    });
+    if (!error && data?.avatars) return data.avatars;
+  } catch (e) {
+    console.warn('Avatar enrichment failed:', e);
+  }
+  return {};
+}
+
 export function FollowersListDrawer({
   open,
   onOpenChange,
@@ -73,69 +92,65 @@ export function FollowersListDrawer({
   const [loadingFollows, setLoadingFollows] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch follow list when drawer opens, then enrich raw addresses via batch-avatars
-  useEffect(() => {
-    if (!open || !profileAddress) {
-      return;
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  /** Process a batch of items: map or enrich, then return UserListItem[] */
+  const processItems = useCallback(async (items: FollowListItem[]): Promise<UserListItem[]> => {
+    const needsEnrichment = items.length > 0 && items.every(item => !item.username);
+
+    if (needsEnrichment) {
+      const placeholders = items.map(item => ({
+        address: item.address,
+        username: undefined,
+        displayName: truncateAddress(item.address),
+        avatarUrl: undefined,
+      } as UserListItem));
+
+      // Start enrichment
+      const addresses = items.map(item => item.address);
+      const avatarMap = await enrichAddresses(addresses);
+
+      return placeholders.map(user => {
+        const enriched = avatarMap[user.address.toLowerCase()];
+        if (!enriched) return user;
+        return {
+          ...user,
+          username: enriched.username || undefined,
+          displayName: enriched.displayName || enriched.username || truncateAddress(user.address),
+          avatarUrl: buildAvatarUrl(user.address, enriched.avatarUrl || undefined),
+        };
+      });
     }
 
-    const fetchFollowList = async () => {
+    return items.map(mapFollowListItem);
+  }, []);
+
+  // Fetch initial page when drawer opens
+  useEffect(() => {
+    if (!open || !profileAddress) return;
+
+    const fetchInitialPage = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       try {
         const type = title === 'Followers' ? 'followers' : 'following';
-        const { items: result } = await getFollowList(profileAddress, type);
+        const { items, pagination } = await getFollowList(profileAddress, type, {
+          page: 1,
+          limit: PAGE_SIZE,
+        });
 
-        // Check if items are raw addresses (no username populated)
-        const needsEnrichment = result.length > 0 && result.every(item => !item.username);
-
-        if (needsEnrichment) {
-          // Show placeholder items immediately while enriching
-          const placeholders = result.map(item => ({
-            address: item.address,
-            username: undefined,
-            displayName: truncateAddress(item.address),
-            avatarUrl: undefined,
-          } as UserListItem));
-          setUsers(placeholders);
-          setIsLoading(false);
-
-          // Enrich via batch-avatars edge function
-          try {
-            const addresses = result.map(item => item.address);
-            const { data: enrichData, error: enrichErr } = await supabase.functions.invoke('batch-avatars', {
-              body: { addresses },
-            });
-
-            if (!enrichErr && enrichData?.avatars) {
-              const avatarMap = enrichData.avatars as Record<string, {
-                avatarUrl: string | null;
-                username: string | null;
-                displayName: string | null;
-              }>;
-
-              setUsers(prev => prev.map(user => {
-                const enriched = avatarMap[user.address.toLowerCase()];
-                if (!enriched) return user;
-                return {
-                  ...user,
-                  username: enriched.username || undefined,
-                  displayName: enriched.displayName || enriched.username || truncateAddress(user.address),
-                  avatarUrl: buildAvatarUrl(user.address, enriched.avatarUrl || undefined),
-                };
-              }));
-            }
-          } catch (enrichError) {
-            console.warn('Avatar enrichment failed, showing addresses:', enrichError);
-            // Keep the placeholder items — still usable
-          }
-        } else {
-          // Already enriched objects from API
-          const mappedUsers = result.map(mapFollowListItem);
-          setUsers(mappedUsers);
-          setIsLoading(false);
-        }
+        const processed = await processItems(items);
+        setUsers(processed);
+        setCurrentPage(1);
+        setHasMore(pagination?.hasMore ?? false);
+        setTotalCount(pagination?.totalCount ?? null);
       } catch (err: any) {
         console.error('Error fetching follow list:', err);
         const msg = err?.message || '';
@@ -145,18 +160,65 @@ export function FollowersListDrawer({
           setError('Failed to load list. Please try again.');
           toast.error('Failed to load follow list');
         }
+      } finally {
         setIsLoading(false);
       }
     };
 
-    fetchFollowList();
-  }, [open, profileAddress, title, currentUserAddress]);
+    fetchInitialPage();
+  }, [open, profileAddress, title, processItems]);
+
+  // Load more pages
+  const loadMore = useCallback(async () => {
+    if (isLoadingMore || !hasMore || currentPage >= MAX_PAGES) return;
+
+    setIsLoadingMore(true);
+    try {
+      const type = title === 'Followers' ? 'followers' : 'following';
+      const nextPage = currentPage + 1;
+      const { items, pagination } = await getFollowList(profileAddress, type, {
+        page: nextPage,
+        limit: PAGE_SIZE,
+      });
+
+      const processed = await processItems(items);
+      setUsers(prev => [...prev, ...processed]);
+      setCurrentPage(nextPage);
+      setHasMore(pagination?.hasMore ?? false);
+    } catch (err) {
+      console.warn('Failed to load more followers:', err);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, processItems]);
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    if (!open) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          loadMore();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [open, loadMore]);
 
   // Reset state when drawer closes
   useEffect(() => {
     if (!open) {
       setUsers([]);
       setError(null);
+      setCurrentPage(1);
+      setHasMore(false);
+      setTotalCount(null);
     }
   }, [open]);
 
@@ -207,13 +269,17 @@ export function FollowersListDrawer({
   const isCurrentUser = (address: string) => 
     currentUserAddress?.toLowerCase() === address.toLowerCase();
 
+  const titleWithCount = totalCount !== null && totalCount > 0
+    ? `${title} (${totalCount})`
+    : title;
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent glass className="max-h-[85vh]" hideHandle>
         <DrawerHeader className="px-4 pb-2">
           <DrawerTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
-            {title}
+            {titleWithCount}
           </DrawerTitle>
         </DrawerHeader>
 
@@ -328,6 +394,18 @@ export function FollowersListDrawer({
                   )}
                 </button>
               ))}
+
+              {/* Loading more spinner */}
+              {isLoadingMore && (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
+                </div>
+              )}
+
+              {/* Sentinel for IntersectionObserver */}
+              {hasMore && currentPage < MAX_PAGES && (
+                <div ref={sentinelRef} className="h-1" />
+              )}
             </div>
           )}
         </div>

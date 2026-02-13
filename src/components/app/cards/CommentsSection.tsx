@@ -11,6 +11,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
@@ -770,15 +771,19 @@ export function CommentsSection({ tokenId, onClose }: CommentsSectionProps) {
           >
             <Search className="w-5 h-5" />
           </button>
-          <button
-            type="button"
-            onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
-            className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
-            title={sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}
-          >
-            <ArrowUpDown className="w-5 h-5" />
-            <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
+                className="px-4 py-2 flex items-center justify-center gap-2 transition-colors rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              >
+                <ArrowUpDown className="w-5 h-5" />
+                <span className="text-xs">{sortBy === 'recent' ? 'Recent' : sortBy === 'oldest' ? 'Oldest' : 'Liked'}</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{sortBy === 'recent' ? 'Sorted by Most Recent' : sortBy === 'oldest' ? 'Sorted by Oldest' : 'Sorted by Most Liked'}</TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Right side - Post action buttons (desktop/tablet only) */}

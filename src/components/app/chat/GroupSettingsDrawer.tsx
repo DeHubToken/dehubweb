@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Settings, Users, Loader2, LogOut, ShieldBan, Pencil, UserPlus, Search, X } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -361,20 +362,24 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                         </div>
                         {/* Block button - only for creator, not for self */}
                         {isCreator && !isSelf && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleBlockUser(addr)}
-                            disabled={blockingUser === addr}
-                            className="h-7 w-7 text-zinc-500 hover:text-red-400"
-                            title="Block user from group"
-                          >
-                            {blockingUser === addr ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                              <ShieldBan className="w-3.5 h-3.5" />
-                            )}
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleBlockUser(addr)}
+                                disabled={blockingUser === addr}
+                                className="h-7 w-7 text-zinc-500 hover:text-red-400"
+                              >
+                                {blockingUser === addr ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <ShieldBan className="w-3.5 h-3.5" />
+                                )}
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Block user from group</TooltipContent>
+                          </Tooltip>
                         )}
                       </div>
                     );

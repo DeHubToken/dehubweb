@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
@@ -173,9 +174,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
           <div className="min-w-0">
             <h2 className="font-bold text-white truncate">{roomName}</h2>
             {roomDescription ? (
-              <p className="text-zinc-500 text-xs truncate max-w-[180px]" title={roomDescription}>
-                {roomDescription}
-              </p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p className="text-zinc-500 text-xs truncate max-w-[180px]">
+                    {roomDescription}
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent>{roomDescription}</TooltipContent>
+              </Tooltip>
             ) : rooms.length > 0 ? (
               <span className="text-zinc-500 text-xs flex items-center gap-1">
                 <Users className="w-3 h-3" />
@@ -201,25 +207,33 @@ export function PublicChat({ onBack }: PublicChatProps) {
             </select>
           )}
           {isAuthenticated && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-zinc-400 hover:text-white"
-              onClick={() => setCreateRoomOpen(true)}
-              title="Create new room"
-            >
-              <MessageSquarePlus className="w-4 h-4" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-zinc-400 hover:text-white"
+                  onClick={() => setCreateRoomOpen(true)}
+                >
+                  <MessageSquarePlus className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Create new room</TooltipContent>
+            </Tooltip>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-zinc-400 hover:text-white"
-            onClick={() => setSettingsOpen(true)}
-            title="Room settings"
-          >
-            <Settings className="w-4 h-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-zinc-400 hover:text-white"
+                onClick={() => setSettingsOpen(true)}
+              >
+                <Settings className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Room settings</TooltipContent>
+          </Tooltip>
         </div>
       </div>
 

@@ -8,6 +8,7 @@
  */
 
 import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minus } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks';
@@ -202,22 +203,30 @@ export function RadioMiniPlayer() {
             </div>
             
             {/* Minimize Button */}
-            <button
-              onClick={() => setIsMinimized(true)}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-              title="Minimize player"
-            >
-              <Minus className="w-4 h-4 text-zinc-400" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsMinimized(true)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                >
+                  <Minus className="w-4 h-4 text-zinc-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Minimize player</TooltipContent>
+            </Tooltip>
             
             {/* Fullscreen Visualizer Button */}
-            <button
-              onClick={() => setShowVisualizer(true)}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-              title="Fullscreen visualizer"
-            >
-              <Maximize2 className="w-4 h-4 text-zinc-400" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setShowVisualizer(true)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                >
+                  <Maximize2 className="w-4 h-4 text-zinc-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Fullscreen visualizer</TooltipContent>
+            </Tooltip>
             
             {/* Play/Pause Button */}
             <button
