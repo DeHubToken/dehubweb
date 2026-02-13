@@ -147,16 +147,16 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           })}
         </div>
 
-        {/* Post / Login Button Bento */}
-        <div className="mt-3 bg-zinc-900 rounded-2xl p-1 xl:p-2.5 flex items-center justify-center xl:block">
+        {/* Post / Login Button */}
+        <div className="mt-3 flex items-center justify-center xl:block">
           <LiquidGlassBubble 
             shimmer 
-            className={cn("cursor-pointer", isConnecting && "opacity-70 pointer-events-none")}
+            className={cn("cursor-pointer w-full", isConnecting && "opacity-70 pointer-events-none")}
             onClick={handlePostClick}
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              "text-[13.5px]"
+              "py-2 xl:py-3 text-[13.5px]"
             )}>
               {isAuthenticated ? (
                 <>
