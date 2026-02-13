@@ -17,6 +17,7 @@ import medal6 from '@/assets/medal-6.png';
 import medal7 from '@/assets/medal-7.png';
 import medal8 from '@/assets/medal-8.png';
 import medal9 from '@/assets/medal-9.png';
+import medal10 from '@/assets/medal-10.png';
 
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -336,17 +337,17 @@ export default function LeaderboardPage() {
                 >
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center justify-center -ml-[5.5px]">
-                    {rank <= 9 ? (
+                    {rank <= 10 ? (
                       <div className={`medal-shine-container ${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'}`}>
                         <img 
-                          src={[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9][rank - 1]} 
+                          src={[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10][rank - 1]} 
                           alt={`Rank ${rank}`} 
                           className={`${rank <= 3 ? 'w-12 h-12' : 'w-8 h-8'} object-contain`}
                         />
                         <div 
                           key={shimmerKey}
                           className="medal-shine-overlay"
-                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9][rank - 1]})` } as React.CSSProperties}
+                          style={{ '--medal-mask': `url(${[medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10][rank - 1]})` } as React.CSSProperties}
                         />
                       </div>
                     ) : (
