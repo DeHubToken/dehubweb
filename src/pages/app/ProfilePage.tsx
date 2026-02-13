@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, MessageCircle, MessageSquare, Image, Video, Star, Play, Radio,
-  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, ChevronLeft, Clock
+  Calendar, UserPlus, UserMinus, Copy, AtSign, Wallet, Send, Plus, Bell, Lock, CreditCard, PieChart, Tag, Handshake, Loader2, Film, Pencil, ChevronLeft, Clock, Ban
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -485,6 +485,18 @@ export default function ProfilePage() {
               <span className="text-red-400 font-medium">Unfollow</span>
             </button>
           )}
+          <button
+            onClick={() => {
+              toast.info('User blocked');
+              setShareSheetOpen(false);
+            }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-red-500/10 backdrop-blur-md border border-red-500/20 hover:bg-red-500/20 transition-colors text-left"
+          >
+            <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
+              <Ban className="w-4 h-4 text-red-400" />
+            </div>
+            <span className="text-red-400 font-medium">Block</span>
+          </button>
         </>
       )}
     </div>
