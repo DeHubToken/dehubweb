@@ -105,22 +105,26 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 }
 
 // Map wallet providers to Web3Auth adapters
-// Note: External wallet adapters are not currently configured
-// TODO: Add MetaMask, WalletConnect, Coinbase adapters when needed
+// On mobile: MetaMask/Phantom/Rabby/Trust don't inject window.ethereum,
+// so route them through WalletConnect which uses deep linking to open wallet apps.
 function mapWalletProvider(wallet: WalletProvider): string {
+  const mobile = typeof navigator !== 'undefined' &&
+    (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+
   switch (wallet) {
     case 'metamask':
     case 'rabby':
     case 'trust':
-      return WALLET_ADAPTERS.METAMASK;
     case 'phantom':
-      return WALLET_ADAPTERS.METAMASK; // Phantom injects window.ethereum on EVM chains
+      // On mobile, window.ethereum doesn't exist — use WalletConnect deep linking instead
+      return mobile ? WALLET_ADAPTERS.WALLET_CONNECT_V2 : WALLET_ADAPTERS.METAMASK;
     case 'walletconnect':
       return WALLET_ADAPTERS.WALLET_CONNECT_V2;
-   case 'coinbase':
+    case 'coinbase':
       return WALLET_ADAPTERS.COINBASE;
     default:
-      return WALLET_ADAPTERS.METAMASK;
+      return mobile ? WALLET_ADAPTERS.WALLET_CONNECT_V2 : WALLET_ADAPTERS.METAMASK;
   }
 }
 
