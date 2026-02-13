@@ -194,8 +194,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       
       <MobileBottomNav />
       
-      {/* Development Notice Modal */}
-      <DevelopmentNoticeModal />
       
       {/* Radio Mini Player */}
       <RadioMiniPlayer />
