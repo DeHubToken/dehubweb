@@ -37,7 +37,7 @@ const formatNumber = (num: number | undefined): string => {
 };
 
 const formatDHB = (num: number): string => {
-  return `${formatNumber(num)} DHB`;
+  return formatNumber(num);
 };
 
 export function SidebarLeaderboard() {
@@ -228,19 +228,18 @@ export function SidebarLeaderboard() {
                         })()}
                       </span>
                     </div>
-                    <div className="text-zinc-500 text-xs truncate">{getHandle(entry)}</div>
-                  </div>
-
-                  {/* Value */}
-                  <div className="text-right flex-shrink-0">
-                    <span className="text-zinc-400 text-xs">
-                      {(() => {
-                        const isTimeDelta = activePeriod !== 'All';
-                        const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
-                        const prefix = isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? '+' : '';
-                        return `${prefix}${formatDHB(displayValue)}`;
-                      })()}
-                    </span>
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="text-zinc-500 truncate">{getHandle(entry)}</span>
+                      <span className="text-zinc-600">·</span>
+                      <span className="text-zinc-400 shrink-0">
+                        {(() => {
+                          const isTimeDelta = activePeriod !== 'All';
+                          const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
+                          const prefix = isTimeDelta && entry.delta !== undefined && entry.delta > 0 ? '+' : '';
+                          return `${prefix}${formatDHB(displayValue)}`;
+                        })()}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
