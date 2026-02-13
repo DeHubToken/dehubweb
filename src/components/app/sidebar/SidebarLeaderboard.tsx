@@ -216,12 +216,14 @@ export function SidebarLeaderboard() {
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-0 min-w-0">
-                      <span className="font-semibold text-white text-sm truncate min-w-0">
-                        {getDisplayName(entry)}
+                      <span className="relative inline-flex items-baseline shrink min-w-0">
+                        <span className="font-semibold text-white text-sm truncate min-w-0">
+                          {getDisplayName(entry)}
+                        </span>
                         {(() => {
                           const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
                           return badgeUrl ? (
-                            <img src={badgeUrl} alt="Badge" className="w-3 h-3 inline-block align-middle -mt-1 ml-1 flex-shrink-0" />
+                            <img src={badgeUrl} alt="Badge" className="w-2.5 h-2.5 shrink-0 absolute -top-0.5 -right-3" />
                           ) : null;
                         })()}
                       </span>

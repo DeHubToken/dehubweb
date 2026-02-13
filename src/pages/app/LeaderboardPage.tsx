@@ -367,11 +367,13 @@ export default function LeaderboardPage() {
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1">
-                        <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
-                        {(() => {
-                          const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
-                          return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-3 h-3 shrink-0 -mt-2" /> : null;
-                        })()}
+                        <span className="relative inline-flex items-baseline shrink min-w-0">
+                          <span className="font-semibold text-white truncate">{getDisplayName(entry)}</span>
+                          {(() => {
+                            const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
+                            return badgeUrl ? <img src={badgeUrl} alt="Badge" className="w-2.5 h-2.5 shrink-0 absolute -top-0.5 -right-3" /> : null;
+                          })()}
+                        </span>
                       </div>
                       <span className="text-zinc-500 text-sm">{getHandle(entry)}</span>
                     </div>
