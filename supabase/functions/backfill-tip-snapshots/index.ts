@@ -8,7 +8,7 @@ const corsHeaders = {
 
 // DHB Token addresses (we query Transfer events on these)
 const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
-const DHB_BNB = "0x680d3113caf77b61b510f332d5ef4cf5b41a761d";
+const DHB_BNB = "0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7";
 
 // Contracts that receive/send DHB for tips and bounties
 // On Base, tip + bounty share the same address
@@ -27,6 +27,10 @@ const BNB_PUBLIC_RPCS = [
 
 const BASE_BLOCKS_PER_DAY = 43200;
 const BNB_BLOCKS_PER_DAY = 28800;
+
+// Chunk sizes for eth_getLogs to stay within RPC limits
+const BNB_CHUNK_SIZE = 5_000;
+const BASE_CHUNK_SIZE = 50_000;
 
 const PERIODS = [
   { name: "day", daysAgo: 1 },
@@ -84,6 +88,38 @@ async function getLogs(
   return json.result || [];
 }
 
+// Chunked getLogs: splits large block ranges into smaller chunks to avoid RPC limits
+async function getLogsChunked(
+  rpcUrl: string,
+  tokenAddress: string,
+  fromBlock: number,
+  toBlock: number,
+  topics: (string | null)[],
+  chunkSize: number,
+  isBnb: boolean,
+  alchemyRpc: string
+): Promise<Array<{ topics: string[]; data: string }>> {
+  const allLogs: Array<{ topics: string[]; data: string }> = [];
+  for (let cursor = fromBlock; cursor <= toBlock; cursor += chunkSize) {
+    const chunkEnd = Math.min(cursor + chunkSize - 1, toBlock);
+    const fromHex = "0x" + cursor.toString(16);
+    const toHex = "0x" + chunkEnd.toString(16);
+
+    let logs: Array<{ topics: string[]; data: string }>;
+    if (isBnb) {
+      logs = await bnbGetLogs(alchemyRpc, tokenAddress, fromHex, toHex, topics);
+    } else {
+      logs = await getLogs(rpcUrl, tokenAddress, fromHex, toHex, topics);
+    }
+    allLogs.push(...logs);
+
+    if (cursor + chunkSize <= toBlock) {
+      await new Promise((r) => setTimeout(r, 200));
+    }
+  }
+  return allLogs;
+}
+
 // BNB getLogs with public RPC fallback
 async function bnbGetLogs(
   alchemyRpc: string,
@@ -129,51 +165,42 @@ function mergeMaps(a: Map<string, number>, b: Map<string, number>): void {
   }
 }
 
-// Query spent/earned for a block range on a single chain
-// Returns { spent: Map<wallet, total>, earned: Map<wallet, total> }
+// Query spent/earned for a block range on a single chain using chunked fetching
 async function queryChainTips(
   rpcUrl: string,
   tokenAddress: string,
-  contractAddresses: string[], // tip/bounty contracts to check
-  fromBlock: string,
-  toBlock: string,
+  contractAddresses: string[],
+  fromBlock: number,
+  toBlock: number,
   isBnb: boolean,
   alchemyRpc: string
 ): Promise<{ spent: Map<string, number>; earned: Map<string, number> }> {
   const spent = new Map<string, number>();
   const earned = new Map<string, number>();
-
-  const fetchLogs = isBnb
-    ? (token: string, from: string, to: string, topics: (string | null)[]) =>
-        bnbGetLogs(alchemyRpc, token, from, to, topics)
-    : (token: string, from: string, to: string, topics: (string | null)[]) =>
-        getLogs(rpcUrl, token, from, to, topics);
+  const chunkSize = isBnb ? BNB_CHUNK_SIZE : BASE_CHUNK_SIZE;
 
   for (const contract of contractAddresses) {
     const paddedContract = padAddress(contract);
 
     // Spent: Transfer where to = contract (user sent DHB to contract)
-    const spentLogs = await fetchLogs(tokenAddress, fromBlock, toBlock, [
+    const spentLogs = await getLogsChunked(rpcUrl, tokenAddress, fromBlock, toBlock, [
       TRANSFER_TOPIC,
-      null, // from = any user
-      paddedContract, // to = contract
-    ]);
+      null,
+      paddedContract,
+    ], chunkSize, isBnb, alchemyRpc);
 
     // Earned: Transfer where from = contract (contract sent DHB to user)
-    const earnedLogs = await fetchLogs(tokenAddress, fromBlock, toBlock, [
+    const earnedLogs = await getLogsChunked(rpcUrl, tokenAddress, fromBlock, toBlock, [
       TRANSFER_TOPIC,
-      paddedContract, // from = contract
-      null, // to = any user
-    ]);
+      paddedContract,
+      null,
+    ], chunkSize, isBnb, alchemyRpc);
 
-    // Aggregate: for spent, extract the sender (topic[1])
     mergeMaps(spent, aggregateLogs(spentLogs, 1));
-    // For earned, extract the receiver (topic[2])
     mergeMaps(earned, aggregateLogs(earnedLogs, 2));
 
     console.log(`  Contract ${contract}: ${spentLogs.length} spent logs, ${earnedLogs.length} earned logs`);
 
-    // Rate limit between contract queries
     await new Promise((r) => setTimeout(r, 200));
   }
 
@@ -203,6 +230,20 @@ Deno.serve(async (req) => {
 
     console.log("Starting tip/bounty historical backfill...");
 
+    // Parse optional ?period= query param to run a single period
+    const url = new URL(req.url);
+    const periodFilter = url.searchParams.get("period"); // day|week|month|year
+    const periodsToRun = periodFilter
+      ? PERIODS.filter((p) => p.name === periodFilter)
+      : PERIODS;
+
+    if (periodFilter && periodsToRun.length === 0) {
+      return new Response(
+        JSON.stringify({ error: `Invalid period: ${periodFilter}. Use day|week|month|year` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // Get current block numbers
     const [currentBaseBlock, currentBnbBlock] = await Promise.all([
       getCurrentBlockNumber(baseRpc),
@@ -212,7 +253,7 @@ Deno.serve(async (req) => {
 
     const results: { period: string; wallets: number; errors: number }[] = [];
 
-    for (const period of PERIODS) {
+    for (const period of periodsToRun) {
       const targetBaseBlock = currentBaseBlock - (BASE_BLOCKS_PER_DAY * period.daysAgo);
       const targetBnbBlock = currentBnbBlock - (BNB_BLOCKS_PER_DAY * period.daysAgo);
 
@@ -222,29 +263,26 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const baseFromHex = "0x" + targetBaseBlock.toString(16);
-      const bnbFromHex = "0x" + targetBnbBlock.toString(16);
-
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() - period.daysAgo);
       const dateStr = targetDate.toISOString().split("T")[0];
 
       console.log(`\nProcessing ${period.name} (${dateStr})...`);
+      console.log(`  Block range - Base: ${targetBaseBlock} to ${currentBaseBlock} (${currentBaseBlock - targetBaseBlock} blocks, chunk ${BASE_CHUNK_SIZE})`);
+      console.log(`  Block range - BNB: ${targetBnbBlock} to ${currentBnbBlock} (${currentBnbBlock - targetBnbBlock} blocks, chunk ${BNB_CHUNK_SIZE})`);
 
-      // Query both chains
-      // Base: single contract for both tips and bounties
+      // Query both chains with chunked fetching
       const baseResult = await queryChainTips(
         baseRpc, DHB_BASE,
         [BASE_TIP_CONTRACT],
-        baseFromHex, "latest",
+        targetBaseBlock, currentBaseBlock,
         false, baseRpc
       );
 
-      // BNB: separate tip and bounty contracts
       const bnbResult = await queryChainTips(
         bnbRpc, DHB_BNB,
         [BNB_TIP_CONTRACT, BNB_BOUNTY_CONTRACT],
-        bnbFromHex, "latest",
+        targetBnbBlock, currentBnbBlock,
         true, bnbRpc
       );
 
@@ -256,7 +294,6 @@ Deno.serve(async (req) => {
       mergeMaps(totalEarned, baseResult.earned);
       mergeMaps(totalEarned, bnbResult.earned);
 
-      // Get all unique wallets
       const allWallets = new Set([...totalSpent.keys(), ...totalEarned.keys()]);
       console.log(`${period.name}: ${allWallets.size} unique wallets with tip/bounty activity`);
 
@@ -279,8 +316,6 @@ Deno.serve(async (req) => {
           received_tips: totalEarned.get(wallet) || 0,
         }));
 
-        // We use upsert - for wallets that already have a snapshot row
-        // (from balance backfill), this updates just the tip columns
         const { error: upsertErr } = await supabase
           .from("leaderboard_snapshots")
           .upsert(rows, { onConflict: "account,snapshot_date" });
