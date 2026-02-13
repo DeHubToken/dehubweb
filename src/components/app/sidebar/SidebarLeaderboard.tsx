@@ -215,8 +215,8 @@ export function SidebarLeaderboard() {
 
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1 min-w-0">
-                      <span className="font-semibold text-white text-sm truncate min-w-0 flex-1">{getDisplayName(entry)}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="font-semibold text-white text-sm truncate">{getDisplayName(entry)}</span>
                       {(() => {
                         const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
                         return badgeUrl ? (
