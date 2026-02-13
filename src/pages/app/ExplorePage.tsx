@@ -942,11 +942,11 @@ export default function ExplorePage() {
                     {recentSearches.map((term) => (
                       <div
                         key={term}
-                        className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
+                        className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors max-w-full"
                       >
                         <button
                           onClick={() => setSearchQuery(term)}
-                          className="px-3 sm:px-4 py-2 text-white text-sm"
+                          className="px-3 sm:px-4 py-2 text-white text-sm text-left break-all"
                         >
                           {term}
                         </button>
