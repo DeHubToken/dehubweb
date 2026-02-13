@@ -130,6 +130,7 @@ export function WhoToFollow() {
       if (walletAddress && addressLower === walletAddress.toLowerCase()) return false;
       if (followingSet.has(addressLower)) return false;
       if (followedUsers.has(user.address)) return false;
+      if (!user.avatarUrl) return false;
       return true;
     });
   }, [allUsers, walletAddress, followingSet, followedUsers]);
