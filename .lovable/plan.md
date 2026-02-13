@@ -1,40 +1,68 @@
 
 
-# Fix: Missing Leaderboard Accounts (sixseven, lowkeyfr)
+# Auto-Discover Missing Leaderboard Holders
 
-## Root Cause
+## Problem
+New users with large DHB bags don't appear on the leaderboard because the DeHub API hasn't indexed them yet. Currently we manually add wallets to `EXTRA_WALLETS`, which doesn't scale.
 
-The `refresh-leaderboard-cache` edge function builds the holdings leaderboard by:
-1. Fetching the holder list from the DeHub API (`/api/leaderboard?sort=holdings`)
-2. Querying on-chain balances only for those returned addresses
+## Solution
+Add a **holder discovery step** to the `refresh-leaderboard-cache` edge function that:
 
-New accounts not yet indexed by the DeHub API are never queried, so they don't appear -- even if they hold large balances.
+1. **Scans on-chain Transfer events** for the DHB token on both Base and BNB to collect all unique holder addresses
+2. **Batch-queries balances** for any addresses not already in the leaderboard set
+3. **Cross-references against the DeHub API** (via `/api/feed?type=accounts&search=...` or profile lookup by address) to find registered usernames
+4. **Merges discovered holders** into the leaderboard data
 
-## Short-Term Fix: Add to EXTRA_WALLETS
+## Implementation Steps
 
-Add the wallet addresses for `sixseven` and `lowkeyfr` to the `EXTRA_WALLETS` map in `supabase/functions/refresh-leaderboard-cache/index.ts` (lines 191-194). This is the same pattern used for `maldoteth` and `outoforrder`.
+### Step 1: Add Transfer event scanning to the edge function
 
-**Requires**: The wallet addresses for both accounts from the user.
+In `supabase/functions/refresh-leaderboard-cache/index.ts`, after fetching the DeHub leaderboard (line ~248), add a function that uses `eth_getLogs` to scan ERC-20 Transfer events on both chains:
 
 ```text
-File: supabase/functions/refresh-leaderboard-cache/index.ts
+ERC-20 Transfer event topic:
+0xddf252ad1be2c89b69c2b63afed7a5cf3e9ce6b1aac6bfd916af828623799ee4
 
-EXTRA_WALLETS = {
-  maldoteth: { ... },
-  outoforrder: { ... },
-+ sixseven: { wallet: "0x...", displayName: "sixseven" },
-+ lowkeyfr: { wallet: "0x...", displayName: "lowkeyfr" },
-};
+Scan last ~500k blocks on Base and ~200k blocks on BNB
+Collect all unique 'to' addresses from Transfer logs
 ```
 
-## Long-Term Fix (Optional): Auto-Discovery
+### Step 2: Filter to new addresses only
 
-To avoid manually adding every new large holder, we could enhance the refresh function to also query the DeHub API's user search or profile endpoint for known usernames, extracting their wallet addresses and including them automatically. This would be a separate follow-up task.
+Remove any addresses already present in the `enriched` array (from the DeHub API response + EXTRA_WALLETS). This avoids redundant RPC calls.
+
+### Step 3: Batch-query balances for new addresses
+
+Use the existing `getOnChainBalance()` function in batches of 10, keeping only addresses with balance > 10,000 DHB (the minimum staking tier threshold). This filters out dust holders and keeps the query count manageable.
+
+### Step 4: Resolve addresses to DeHub usernames
+
+For each discovered address with a significant balance, call the DeHub API to check if it's a registered user:
+- Use `GET /api/feed?type=accounts&search={address}` to look up the address
+- If a match is found, extract the username, displayName, and avatarUrl
+- If no match, still include them in the leaderboard with just the wallet address
+
+### Step 5: Merge into enriched results
+
+Add discovered holders to the `enriched` array before sorting and caching. They'll automatically get included in delta calculations for time-based periods too.
 
 ## Technical Details
 
-- **File changed**: `supabase/functions/refresh-leaderboard-cache/index.ts` (line ~191)
-- **Deployment**: The edge function will auto-deploy after the edit
-- **Effect**: On the next 5-minute cache refresh cycle, both accounts will appear in the leaderboard with their correct on-chain balances
-- **Blocker**: Need wallet addresses from the user before implementation
+**File changed:** `supabase/functions/refresh-leaderboard-cache/index.ts`
+
+**New function to add:**
+- `discoverOnChainHolders(baseRpc, bnbRpc, existingAddresses)` -- scans Transfer events, queries balances, resolves usernames
+
+**RPC calls added per refresh:**
+- 2 `eth_getLogs` calls (one per chain) for Transfer event scanning
+- ~N balance queries for newly discovered addresses (batched, only for non-dust holders)
+- ~N DeHub API calls for username resolution
+
+**Performance considerations:**
+- Only scans addresses NOT already in the leaderboard, so the extra load is minimal after the first run
+- 10,000 DHB minimum threshold filters out most dust/bot addresses
+- Results get cached, so discovered holders persist across refreshes
+- The `EXTRA_WALLETS` map can still be used for manual overrides when needed
+
+**Estimated added time per refresh:** 5-15 seconds depending on how many new holders are discovered
 
