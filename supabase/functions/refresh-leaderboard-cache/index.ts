@@ -199,6 +199,7 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
   outoforrder: { wallet: "0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5", displayName: "outoforrder", avatarUrl: "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/avatars/0xf96e30ac710ff61e93f82e2010b7b9852b0a25b5.jpeg" },
   sixseven: { wallet: "0x1451ec8a6d19b0544bb21b3ba66810bc10ed41e7", displayName: "sixseven" },
   lowkeyfr: { wallet: "0xcdda8166c4eec11277ab0575fd54785fb321b1a6", displayName: "lowkeyfr" },
+  waifu: { wallet: "0xb4ba0e4b4596b7e8a074fe6156d4f666ebdba000", displayName: "waifu" },
 };
 
 // ── On-chain holder discovery ───────────────────────────────────────
@@ -256,9 +257,9 @@ async function discoverOnChainHolders(
       getCurrentBlockNumber(bnbRpc),
     ]);
 
-    // Scan last ~500k blocks on Base (~12 days), ~200k on BNB (~7 days)
-    const baseFromBlock = Math.max(0, baseBlock - 500_000);
-    const bnbFromBlock = Math.max(0, bnbBlock - 200_000);
+    // Scan last ~1M blocks on Base (~23 days), ~500k on BNB (~17 days)
+    const baseFromBlock = Math.max(0, baseBlock - 1_000_000);
+    const bnbFromBlock = Math.max(0, bnbBlock - 500_000);
 
     const [baseAddrs, bnbAddrs] = await Promise.all([
       fetchTransferLogs(
