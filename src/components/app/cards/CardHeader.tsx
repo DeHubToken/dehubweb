@@ -100,7 +100,7 @@ export function CardHeader({
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
-        className={`flex items-center gap-3 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+        className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
       >
         {isLive ? (
           <div className="p-0.5 rounded-md bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
