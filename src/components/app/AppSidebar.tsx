@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PenSquare, LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
 import { DesktopSidebar } from './navigation/DesktopSidebar';
@@ -45,22 +45,21 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
       {/* Post Button */}
       <div className="mt-4 pt-4 border-t border-zinc-700/50">
-        <Button 
-          onClick={() => setIsPostModalOpen(true)}
-          className="w-full rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/15 font-semibold py-6 text-base gap-2"
-        >
-          {isAuthenticated ? (
-            <>
-              <PenSquare className="w-5 h-5" />
-              Post
-            </>
-          ) : (
-            <>
-              <LogIn className="w-5 h-5" />
-              Log in
-            </>
-          )}
-        </Button>
+        <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
+          <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
+            {isAuthenticated ? (
+              <>
+                <PenSquare className="w-5 h-5" />
+                Post
+              </>
+            ) : (
+              <>
+                <LogIn className="w-5 h-5" />
+                Log in
+              </>
+            )}
+          </div>
+        </LiquidGlassBubble>
       </div>
     </>
   );
