@@ -22,7 +22,10 @@ import {
 import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 import { WalletConnectV2Adapter } from "@web3auth/wallet-connect-v2-adapter";
 import { CoinbaseAdapter } from "@web3auth/coinbase-adapter";
+import { WalletConnectModal } from "@walletconnect/modal";
 import { supabase } from "@/integrations/supabase/client";
+
+const WALLETCONNECT_PROJECT_ID = "0751965bb69056635999763785664539";
 
 /**
  * Detect if running on a mobile device based on user agent + touch support.
@@ -280,11 +283,18 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       web3authInstance.configureAdapter(metamaskAdapter);
 
       // Configure WalletConnect V2 Adapter
+      // Uses @walletconnect/modal to show QR code (desktop) or wallet list (mobile deep linking)
       console.log("[Web3Auth] Configuring WalletConnect V2 adapter...");
+      const wcModal = new WalletConnectModal({
+        projectId: WALLETCONNECT_PROJECT_ID,
+        themeMode: "dark",
+        themeVariables: { "--wcm-z-index": "999999" },
+      });
       const walletConnectV2Adapter = new WalletConnectV2Adapter({
         adapterSettings: {
+          qrcodeModal: wcModal,
           walletConnectInitOptions: {
-            projectId: "0751965bb69056635999763785664539",
+            projectId: WALLETCONNECT_PROJECT_ID,
           },
         } as any,
         chainConfig,

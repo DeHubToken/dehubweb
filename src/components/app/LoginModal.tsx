@@ -192,12 +192,19 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {
     setActiveProvider(wallet);
+    // Close the login modal first so WalletConnect modal isn't blocked behind it
+    // (especially important on mobile where z-index conflicts can prevent interaction)
+    onOpenChange(false);
     try {
       await connectWithWallet(wallet);
-      handleClose();
+      // Reset state after successful connection
+      setStep('main');
+      setActiveProvider(null);
     } catch (error) {
       console.error(`${wallet} login failed:`, error);
       setActiveProvider(null);
+      // Re-open the modal so user can try again
+      onOpenChange(true);
     }
   };
 
