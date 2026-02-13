@@ -230,8 +230,8 @@ export function SidebarLeaderboard() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs">
                       <span className="text-zinc-500 truncate">{getHandle(entry)}</span>
-                      <span className="text-zinc-600">·</span>
-                      <span className="text-zinc-400 shrink-0">
+                      <span className="flex-1" />
+                      <span className="text-zinc-400 shrink-0 tabular-nums">
                         {(() => {
                           const isTimeDelta = activePeriod !== 'All';
                           const displayValue = isTimeDelta && entry.delta !== undefined ? entry.delta : (entry.total ?? 0);
