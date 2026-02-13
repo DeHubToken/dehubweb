@@ -4,7 +4,7 @@
  * Displays top DHB token holders and tippers from the DeHub API.
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useLayoutEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp } from 'lucide-react';
 import trophyIcon from '@/assets/trophy-icon.png';
@@ -75,6 +75,7 @@ const formatDHB = (num: number): string => {
 };
 
 export default function LeaderboardPage() {
+  useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState<CategoryType>('holdings');
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
