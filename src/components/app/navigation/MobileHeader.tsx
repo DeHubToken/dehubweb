@@ -8,6 +8,7 @@ import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import { useCallback } from 'react';
 
 interface MobileHeaderProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, openLoginModal } = useAuth();
   const { stickToBanner } = useCoinPlacement();
   const { data: unreadCount } = useUnreadNotificationCount();
 
@@ -38,6 +39,11 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   };
 
   const isNotificationsActive = location.pathname === '/app/notifications';
+  const handleMenuClick = useCallback(() => {
+    if (!isAuthenticated) {
+      openLoginModal();
+    }
+  }, [isAuthenticated, openLoginModal]);
 
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between">
@@ -69,42 +75,52 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           <CoinBalanceMenu balance={coinBalance} variant="mobile" />
         )}
         
-        {/* Menu Button - Avatar when authenticated, burger when not */}
-        <Drawer open={isOpen} onOpenChange={onToggle}>
-          <DrawerTrigger asChild>
-            {isAuthenticated && user ? (
-              <button
-                className="hover:opacity-80 transition-opacity"
-                aria-label="Toggle menu"
-              >
-                <Avatar className="w-[27px] h-[27px]">
-                  {user.avatarImageUrl && user.address && (
-                    <AvatarImage
-                      src={buildAvatarUrl(user.address, user.avatarImageUrl)}
-                      alt={`${user.displayName || user.username}'s avatar`}
-                      className="object-cover"
-                    />
-                  )}
-                  <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-                    {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-              </button>
-            ) : (
-              <button
-                className="p-2 rounded-full transition-colors mr-[-16.5px]"
-                aria-label="Toggle menu"
-              >
-                <Menu className="w-[33px] h-[33px] text-zinc-400" />
-              </button>
-            )}
-          </DrawerTrigger>
-          <DrawerContent glass className="max-h-[85vh]">
-            <div className="p-4 pb-8 overflow-y-auto">
-              {children}
-            </div>
-          </DrawerContent>
-        </Drawer>
+        {/* Menu Button - Avatar drawer when authenticated, login prompt when not */}
+        {isAuthenticated ? (
+          <Drawer open={isOpen} onOpenChange={onToggle}>
+            <DrawerTrigger asChild>
+              {user ? (
+                <button
+                  className="hover:opacity-80 transition-opacity"
+                  aria-label="Toggle menu"
+                >
+                  <Avatar className="w-[27px] h-[27px]">
+                    {user.avatarImageUrl && user.address && (
+                      <AvatarImage
+                        src={buildAvatarUrl(user.address, user.avatarImageUrl)}
+                        alt={`${user.displayName || user.username}'s avatar`}
+                        className="object-cover"
+                      />
+                    )}
+                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                      {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              ) : (
+                <button
+                  className="p-2 rounded-full transition-colors mr-[-16.5px]"
+                  aria-label="Toggle menu"
+                >
+                  <Menu className="w-[33px] h-[33px] text-zinc-400" />
+                </button>
+              )}
+            </DrawerTrigger>
+            <DrawerContent glass className="max-h-[85vh]">
+              <div className="p-4 pb-8 overflow-y-auto">
+                {children}
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+          <button
+            onClick={handleMenuClick}
+            className="p-2 rounded-full transition-colors mr-[-16.5px]"
+            aria-label="Log in"
+          >
+            <Menu className="w-[33px] h-[33px] text-zinc-400" />
+          </button>
+        )}
       </div>
     </header>
   );
