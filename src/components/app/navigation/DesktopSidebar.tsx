@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { PenSquare, Sparkles, LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
@@ -149,36 +149,38 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
         {/* Post / Login Button Bento */}
         <div className="mt-3 bg-zinc-900 rounded-2xl p-1 xl:p-2.5 flex items-center justify-center xl:block">
-          <Button 
+          <LiquidGlassBubble 
+            shimmer 
+            className={cn("cursor-pointer", isConnecting && "opacity-70 pointer-events-none")}
             onClick={handlePostClick}
-            disabled={isConnecting}
-            className={cn(
-              "rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 font-semibold gap-2 disabled:opacity-70",
-              "w-9 h-9 p-0 xl:w-full xl:h-auto xl:py-5 xl:px-4 text-[13.5px]"
-            )}
           >
-            {isAuthenticated ? (
-              <>
-                <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
-                <span className="hidden xl:inline">Create</span>
-              </>
-            ) : isConnecting ? (
-              <>
-                <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                <span className="hidden xl:inline">Connecting...</span>
-              </>
-            ) : needsSignature ? (
-              <>
-                <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                <span className="hidden xl:inline">Sign message</span>
-              </>
-            ) : (
-              <>
-                <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                <span className="hidden xl:inline">Log in</span>
-              </>
-            )}
-          </Button>
+            <div className={cn(
+              "flex items-center gap-2 font-semibold text-white justify-center",
+              "text-[13.5px]"
+            )}>
+              {isAuthenticated ? (
+                <>
+                  <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
+                  <span className="hidden xl:inline">Create</span>
+                </>
+              ) : isConnecting ? (
+                <>
+                  <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
+                  <span className="hidden xl:inline">Connecting...</span>
+                </>
+              ) : needsSignature ? (
+                <>
+                  <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                  <span className="hidden xl:inline">Sign message</span>
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                  <span className="hidden xl:inline">Log in</span>
+                </>
+              )}
+            </div>
+          </LiquidGlassBubble>
         </div>
       </aside>
 
