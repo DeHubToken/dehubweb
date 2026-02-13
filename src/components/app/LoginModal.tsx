@@ -380,15 +380,48 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
 
-  // Wallet list — on mobile: hide WalletConnect (blocked by ad-blockers) and Rabby (desktop-only extension)
+  // Wallet list
   const walletOptions = useMemo(() => {
+    const hasInjected = typeof window !== 'undefined' && !!(window as any).ethereum;
+    
     const all: { id: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust'; label: string; mobileLabel: string; Icon: React.FC; desktopOnly?: boolean }[] = [
-      { id: 'metamask', label: 'MetaMask', mobileLabel: 'Open in MetaMask', Icon: MetaMaskIcon },
-      { id: 'walletconnect', label: 'WalletConnect', mobileLabel: '', Icon: WalletConnectIcon, desktopOnly: true },
-      { id: 'phantom', label: 'Phantom', mobileLabel: 'Open in Phantom', Icon: PhantomIcon },
-      { id: 'trust', label: 'Trust Wallet', mobileLabel: 'Open in Trust Wallet', Icon: TrustWalletIcon },
-      { id: 'coinbase', label: 'Coinbase Wallet', mobileLabel: 'Open in Coinbase', Icon: CoinbaseIcon },
-      { id: 'rabby', label: 'Rabby', mobileLabel: '', Icon: RabbyIcon, desktopOnly: true },
+      { 
+        id: 'metamask', 
+        label: 'MetaMask', 
+        mobileLabel: hasInjected ? 'Connect MetaMask' : 'Open in MetaMask', 
+        Icon: MetaMaskIcon 
+      },
+      { 
+        id: 'walletconnect', 
+        label: 'WalletConnect', 
+        mobileLabel: 'WalletConnect', 
+        Icon: WalletConnectIcon 
+      },
+      { 
+        id: 'phantom', 
+        label: 'Phantom', 
+        mobileLabel: hasInjected ? 'Connect Phantom' : 'Open in Phantom', 
+        Icon: PhantomIcon 
+      },
+      { 
+        id: 'trust', 
+        label: 'Trust Wallet', 
+        mobileLabel: hasInjected ? 'Connect Trust Wallet' : 'Open in Trust Wallet', 
+        Icon: TrustWalletIcon 
+      },
+      { 
+        id: 'coinbase', 
+        label: 'Coinbase Wallet', 
+        mobileLabel: hasInjected ? 'Connect Coinbase' : 'Open in Coinbase', 
+        Icon: CoinbaseIcon 
+      },
+      { 
+        id: 'rabby', 
+        label: 'Rabby', 
+        mobileLabel: 'Rabby', 
+        Icon: RabbyIcon, 
+        desktopOnly: true 
+      },
     ];
     return isMobile ? all.filter(w => !w.desktopOnly) : all;
   }, [isMobile]);
@@ -413,7 +446,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
       {isMobile && (
         <p className="text-white/40 text-xs text-center pt-1">
-          Tapping will open the wallet app. Log in from its built-in browser.
+          {typeof window !== 'undefined' && !!(window as any).ethereum 
+            ? "Log in using your current wallet's browser."
+            : "Tapping will open the wallet app. Log in from its built-in browser."}
         </p>
       )}
     </div>

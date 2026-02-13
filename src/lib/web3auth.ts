@@ -284,29 +284,25 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       });
       web3authInstance.configureAdapter(metamaskAdapter);
 
-      // Configure WalletConnect V2 Adapter (desktop only)
-      // On mobile we use deep links instead — WalletConnect Explorer API is often
-      // blocked by ad-blockers (Nano Defender) and the modal fails to load listings.
-      if (!mobile) {
-        console.log("[Web3Auth] Configuring WalletConnect V2 adapter (desktop)...");
-        const wcModal = new WalletConnectModal({
-          projectId: WALLETCONNECT_PROJECT_ID,
-          themeMode: "dark",
-          themeVariables: { "--wcm-z-index": "999999" },
-        });
-        const walletConnectV2Adapter = new WalletConnectV2Adapter({
-          adapterSettings: {
-            qrcodeModal: wcModal,
-            walletConnectInitOptions: {
-              projectId: WALLETCONNECT_PROJECT_ID,
-            },
-          } as any,
-          chainConfig,
-        });
-        web3authInstance.configureAdapter(walletConnectV2Adapter);
-      } else {
-        console.log("[Web3Auth] Skipping WalletConnect V2 adapter on mobile (using deep links)");
-      }
+      // Configure WalletConnect V2 Adapter
+      // Enabled on both mobile and desktop. On mobile, deep links are
+      // often more reliable but users may prefer the official modal.
+      console.log("[Web3Auth] Configuring WalletConnect V2 adapter...");
+      const wcModal = new WalletConnectModal({
+        projectId: WALLETCONNECT_PROJECT_ID,
+        themeMode: "dark",
+        themeVariables: { "--wcm-z-index": "999999" },
+      });
+      const walletConnectV2Adapter = new WalletConnectV2Adapter({
+        adapterSettings: {
+          qrcodeModal: wcModal,
+          walletConnectInitOptions: {
+            projectId: WALLETCONNECT_PROJECT_ID,
+          },
+        } as any,
+        chainConfig,
+      });
+      web3authInstance.configureAdapter(walletConnectV2Adapter);
 
       // Configure Coinbase Adapter
       console.log("[Web3Auth] Configuring Coinbase adapter...");
