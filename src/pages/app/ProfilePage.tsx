@@ -1108,7 +1108,7 @@ export default function ProfilePage() {
                     />
                   )}
                 </span>
-                <span className="w-[9px] shrink-0" />
+                <span className="w-[6px] shrink-0" />
                 {isTargetPrivate && !isViewingOwnProfile && (
                   <Lock className="w-4 h-4 text-zinc-500" />
                 )}
