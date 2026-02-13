@@ -1098,14 +1098,16 @@ export default function ProfilePage() {
             {/* Profile Info */}
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-xl font-bold text-white">{profile.name}</h2>
-                {badgeUrl && (
-                  <img 
-                    src={badgeUrl} 
-                    alt="Badge tier" 
-                    className="w-4 h-4 shrink-0 -mt-1" 
-                  />
-                )}
+                <span className="relative inline-flex items-baseline">
+                  <h2 className="text-xl font-bold text-white">{profile.name}</h2>
+                  {badgeUrl && (
+                    <img 
+                      src={badgeUrl} 
+                      alt="Badge tier" 
+                      className="w-3.5 h-3.5 shrink-0 absolute -top-1 -right-4" 
+                    />
+                  )}
+                </span>
                 {isTargetPrivate && !isViewingOwnProfile && (
                   <Lock className="w-4 h-4 text-zinc-500" />
                 )}
