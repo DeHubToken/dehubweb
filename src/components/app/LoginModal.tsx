@@ -5,7 +5,7 @@
  * Uses connectTo() for direct provider connections.
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -202,7 +202,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {
     // On mobile: deep link to wallet app's in-app browser (most reliable)
     // The wallet's browser injects window.ethereum so MetaMask adapter works directly
-    if (isMobile && wallet !== 'walletconnect') {
+    // If window.ethereum is already present (we are likely already in a wallet's in-app browser),
+    // proceed with the normal adapter connection instead of deep linking.
+    if (isMobile && !(window as any).ethereum && wallet !== 'walletconnect') {
       const deepLink = WALLET_DEEP_LINKS[wallet] || WALLET_DEEP_LINKS.metamask;
       console.log(`[LoginModal] Mobile deep link to ${wallet}:`, deepLink);
       window.location.href = deepLink;
@@ -378,85 +380,42 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
 
+  // Wallet list — on mobile: hide WalletConnect (blocked by ad-blockers) and Rabby (desktop-only extension)
+  const walletOptions = useMemo(() => {
+    const all: { id: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust'; label: string; mobileLabel: string; Icon: React.FC; desktopOnly?: boolean }[] = [
+      { id: 'metamask', label: 'MetaMask', mobileLabel: 'Open in MetaMask', Icon: MetaMaskIcon },
+      { id: 'walletconnect', label: 'WalletConnect', mobileLabel: '', Icon: WalletConnectIcon, desktopOnly: true },
+      { id: 'phantom', label: 'Phantom', mobileLabel: 'Open in Phantom', Icon: PhantomIcon },
+      { id: 'trust', label: 'Trust Wallet', mobileLabel: 'Open in Trust Wallet', Icon: TrustWalletIcon },
+      { id: 'coinbase', label: 'Coinbase Wallet', mobileLabel: 'Open in Coinbase', Icon: CoinbaseIcon },
+      { id: 'rabby', label: 'Rabby', mobileLabel: '', Icon: RabbyIcon, desktopOnly: true },
+    ];
+    return isMobile ? all.filter(w => !w.desktopOnly) : all;
+  }, [isMobile]);
+
   const renderWalletsStep = () => (
     <div className={`space-y-3 transition-opacity duration-200 ${walletIconsReady ? 'opacity-100' : 'opacity-0'}`}>
-      <Button
-        onClick={() => handleWalletConnect('metamask')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'metamask' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <MetaMaskIcon />
-        )}
-        <span>MetaMask</span>
-      </Button>
+      {walletOptions.map(({ id, label, mobileLabel, Icon }) => (
+        <Button
+          key={id}
+          onClick={() => handleWalletConnect(id)}
+          disabled={isConnecting}
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
+        >
+          {activeProvider === id ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Icon />
+          )}
+          <span>{isMobile ? mobileLabel : label}</span>
+        </Button>
+      ))}
 
-      <Button
-        onClick={() => handleWalletConnect('walletconnect')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'walletconnect' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <WalletConnectIcon />
-        )}
-        <span>WalletConnect</span>
-      </Button>
-
-      <Button
-        onClick={() => handleWalletConnect('phantom')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'phantom' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <PhantomIcon />
-        )}
-        <span>Phantom</span>
-      </Button>
-
-      <Button
-        onClick={() => handleWalletConnect('rabby')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'rabby' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <RabbyIcon />
-        )}
-        <span>Rabby</span>
-      </Button>
-
-      <Button
-        onClick={() => handleWalletConnect('trust')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'trust' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <TrustWalletIcon />
-        )}
-        <span>Trust Wallet</span>
-      </Button>
-
-      <Button
-        onClick={() => handleWalletConnect('coinbase')}
-        disabled={isConnecting}
-        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-      >
-        {activeProvider === 'coinbase' ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <CoinbaseIcon />
-        )}
-        <span>Coinbase Wallet</span>
-      </Button>
+      {isMobile && (
+        <p className="text-white/40 text-xs text-center pt-1">
+          Tapping will open the wallet app. Log in from its built-in browser.
+        </p>
+      )}
     </div>
   );
 

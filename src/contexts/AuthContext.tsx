@@ -31,6 +31,7 @@ import {
   hasRedirectResult,
   isSocialLoginConnected,
   AUTH_CONNECTION,
+  isMobileDevice,
   WALLET_ADAPTERS,
   getOrInitWeb3Auth,
 } from '@/lib/web3auth';
@@ -105,26 +106,31 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 }
 
 // Map wallet providers to Web3Auth adapters
-// On mobile: MetaMask/Phantom/Rabby/Trust don't inject window.ethereum,
-// so route them through WalletConnect which uses deep linking to open wallet apps.
 function mapWalletProvider(wallet: WalletProvider): string {
-  const mobile = typeof navigator !== 'undefined' &&
-    (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+  const mobile = isMobileDevice();
+  const hasInjected = typeof window !== 'undefined' && !!(window as any).ethereum;
+
+  // On mobile in-app browsers, window.ethereum is injected.
+  // In this case we should use the MetaMask adapter directly.
+  if (mobile && hasInjected && wallet !== 'walletconnect' && wallet !== 'coinbase') {
+    return WALLET_ADAPTERS.METAMASK;
+  }
 
   switch (wallet) {
     case 'metamask':
     case 'rabby':
     case 'trust':
     case 'phantom':
-      // On mobile, window.ethereum doesn't exist — use WalletConnect deep linking instead
-      return mobile ? WALLET_ADAPTERS.WALLET_CONNECT_V2 : WALLET_ADAPTERS.METAMASK;
+      // On mobile without injected provider, we rely on deep links from the Modal.
+      // But if this is called, fallback to MetaMask adapter (which handles extension detection).
+      // Note: WALLET_CONNECT_V2 is disabled on mobile in web3auth.ts to avoid ad-blocker issues.
+      return WALLET_ADAPTERS.METAMASK;
     case 'walletconnect':
       return WALLET_ADAPTERS.WALLET_CONNECT_V2;
     case 'coinbase':
       return WALLET_ADAPTERS.COINBASE;
     default:
-      return mobile ? WALLET_ADAPTERS.WALLET_CONNECT_V2 : WALLET_ADAPTERS.METAMASK;
+      return WALLET_ADAPTERS.METAMASK;
   }
 }
 

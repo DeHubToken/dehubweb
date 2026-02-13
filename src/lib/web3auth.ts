@@ -113,7 +113,9 @@ export function resetWeb3AuthState(): void {
 }
 
 // HMR cleanup - reset state when module is replaced during development
+// @ts-ignore
 if (import.meta.hot) {
+  // @ts-ignore
   import.meta.hot.dispose(() => {
     console.log("[Web3Auth] HMR dispose - cleaning up...");
     resetWeb3AuthState();
@@ -282,24 +284,29 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       });
       web3authInstance.configureAdapter(metamaskAdapter);
 
-      // Configure WalletConnect V2 Adapter
-      // Uses @walletconnect/modal to show QR code (desktop) or wallet list (mobile deep linking)
-      console.log("[Web3Auth] Configuring WalletConnect V2 adapter...");
-      const wcModal = new WalletConnectModal({
-        projectId: WALLETCONNECT_PROJECT_ID,
-        themeMode: "dark",
-        themeVariables: { "--wcm-z-index": "999999" },
-      });
-      const walletConnectV2Adapter = new WalletConnectV2Adapter({
-        adapterSettings: {
-          qrcodeModal: wcModal,
-          walletConnectInitOptions: {
-            projectId: WALLETCONNECT_PROJECT_ID,
-          },
-        } as any,
-        chainConfig,
-      });
-      web3authInstance.configureAdapter(walletConnectV2Adapter);
+      // Configure WalletConnect V2 Adapter (desktop only)
+      // On mobile we use deep links instead — WalletConnect Explorer API is often
+      // blocked by ad-blockers (Nano Defender) and the modal fails to load listings.
+      if (!mobile) {
+        console.log("[Web3Auth] Configuring WalletConnect V2 adapter (desktop)...");
+        const wcModal = new WalletConnectModal({
+          projectId: WALLETCONNECT_PROJECT_ID,
+          themeMode: "dark",
+          themeVariables: { "--wcm-z-index": "999999" },
+        });
+        const walletConnectV2Adapter = new WalletConnectV2Adapter({
+          adapterSettings: {
+            qrcodeModal: wcModal,
+            walletConnectInitOptions: {
+              projectId: WALLETCONNECT_PROJECT_ID,
+            },
+          } as any,
+          chainConfig,
+        });
+        web3authInstance.configureAdapter(walletConnectV2Adapter);
+      } else {
+        console.log("[Web3Auth] Skipping WalletConnect V2 adapter on mobile (using deep links)");
+      }
 
       // Configure Coinbase Adapter
       console.log("[Web3Auth] Configuring Coinbase adapter...");
