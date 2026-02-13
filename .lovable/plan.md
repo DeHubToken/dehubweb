@@ -1,57 +1,112 @@
 
-# Split `dehub.ts` into Domain Modules -- Verified Safe
 
-## Verification Summary
+# Decompose ProfilePage.tsx (1,336 lines) into Sub-Components and Hooks
 
-Audited all 67 consumer files. Every import uses `'@/lib/api/dehub'` with named imports. The barrel re-export strategy guarantees zero breaking changes.
-
-**Risks checked and cleared:**
-- No default exports exist
-- `DEHUB_API_BASE` is not exported (private const); consumers that need it define their own
-- `VoteResponse` is duplicated (lines 861 and 3517) but never imported externally -- will consolidate
-- `voteOnNFT` is dead code (never imported) -- will remove
-- `dpay.ts` imports `getAuthToken` from `'./dehub'` -- resolves correctly to `./dehub/index.ts`
-- No existing `src/lib/api/dehub/` directory to conflict with
+## Overview
+Split the monolithic ProfilePage into 6 focused files while keeping ProfilePage.tsx as the thin orchestrator. Every function, handler, and UI element is preserved exactly -- just relocated.
 
 ## New File Structure
 
 ```text
-src/lib/api/
-  dehub.ts              --> replaced with: export * from './dehub/index'
-  dehub/
-    index.ts            ~50 lines   - Barrel re-export
-    core.ts             ~110 lines  - DEHUB_API_BASE, apiCall, auth token helpers, AuthenticationError
-    types.ts            ~220 lines  - DeHubUser, DeHubNFT, DeHubCategory, PaginatedResponse, etc.
-    auth.ts             ~60 lines   - authenticateWallet, checkUsernameAvailability
-    users.ts            ~120 lines  - getAccountInfo, getAccountByUsername, updateProfile, getUsersCount, getUserNFTs
-    feed.ts             ~200 lines  - searchNFTs, universalSearch, searchSuggestions, getNFTInfo, recordView, getCategories, getSavedPosts, getLikedPosts, getWatchHistory, recordBatchViews
-    social.ts           ~180 lines  - followUser, unfollowUser, isFollowing, getFollowList, toggleFollow, voteOnPost, VoteResponse, FollowResponse, toggleCommentLike
-    comments.ts         ~120 lines  - getNFTComments, postComment, addComment, addCommentWithImage, editComment + related types
-    notifications.ts    ~180 lines  - Notification types + getNotifications, markAsRead, etc.
-    reports.ts          ~120 lines  - Report types + functions (v1 + v2)
-    dm.ts               ~500 lines  - DM/messaging types + all conversation/message/group functions
-    livestream.ts       ~200 lines  - Livestream types + functions + getDHBPrice
-    content.ts          ~200 lines  - mintPost, mintNFT, editPost, deletePost, updateTokenVisibility + types
-    subscriptions.ts    ~150 lines  - Plan and subscription types + functions
-    livechat.ts         ~200 lines  - LiveChat room/message types + functions
-    leaderboard.ts      ~70 lines   - LeaderboardEntry type + getLeaderboard
+src/pages/app/ProfilePage.tsx                    ~200 lines  (orchestrator - wires everything together)
+src/hooks/use-profile-page.ts                    ~180 lines  (all data fetching + state + derived values)
+src/hooks/use-profile-follow.ts                  ~100 lines  (follow/unfollow logic + optimistic updates)
+src/components/app/profile/ProfileHeader.tsx      ~350 lines  (banner, avatar, stories overlay, info, stats)
+src/components/app/profile/ProfileTabContent.tsx  ~280 lines  (renderTabContent switch + all tab cases)
+src/components/app/profile/ProfileOptionsDrawer.tsx ~150 lines (share sheet + offer drawer + all option handlers)
+src/components/app/profile/ProfileConstants.ts     ~50 lines  (DEFAULT_BANNERS, DISPLAY_WALLET_OVERRIDES, getDefaultBanner, TabValue type)
 ```
 
-## How It Works
+## What Goes Where
 
-1. Each domain module imports shared utilities from `./core` and types from `./types`
-2. `index.ts` does `export * from './core'; export * from './types'; export * from './auth';` etc.
-3. The original `dehub.ts` becomes a one-liner: `export * from './dehub/index';`
-4. All 67 consumer files continue importing from `'@/lib/api/dehub'` unchanged
+### 1. `ProfileConstants.ts` (~50 lines)
+- `DISPLAY_WALLET_OVERRIDES` record
+- `DEFAULT_BANNERS` array + all 9 banner imports
+- `getDefaultBanner()` function
+- `TabValue` type export
 
-## Cleanup
+### 2. `use-profile-page.ts` hook (~180 lines)
+Consolidates all data fetching and derived state into a single hook:
+- Route params resolution (`lookupUsername`, `lookupUserId`)
+- `useDeHubProfile` + `useDeHubUserContent` calls
+- `isOwnProfile` / `isViewingOwnProfile` derivation
+- Badge balance fetching
+- Content separation (`useMemo` for `ALL_CONTENT`, `PROFILE_POSTS`, etc.)
+- `PROFILE_TABS` array construction
+- Subscription plans fetching (`useCreatorPlans`, `useIsSubscribed`)
+- Privacy settings (`useUserPrivacySettings`)
+- Stories filtering + `profileStoryStartIndex`
+- Optimistic posts
+- Pull-to-refresh setup
+- Returns a single flat object with all values needed by sub-components
 
-- Remove dead `voteOnNFT` function (never imported anywhere)
-- Consolidate duplicate `VoteResponse` into a single definition in `social.ts`
+### 3. `use-profile-follow.ts` hook (~100 lines)
+Extracted from lines 326-390:
+- `handleFollow()` with private account awareness + optimistic update via `setFollowStatus`
+- `handleUnfollow()` with optimistic revert
+- `isFollowLoading` state
+- Takes `profile`, `isAuthenticated`, `isTargetPrivate`, `setFollowStatus`, `handleApiError` as params
 
-## What Does NOT Change
+### 4. `ProfileHeader.tsx` component (~350 lines)
+The banner + avatar + profile info card (lines 908-1220):
+- Cover photo with fullscreen click
+- Avatar with stories overlay (ShimmerBorder, liquid glass Play/Image buttons)
+- Action buttons row (Edit Profile / Follow / Subscribe / Requested / Subscribed + options drawer trigger)
+- Profile name, handle, verified badge, staking badge, "Follows you" chip
+- Wallet address display
+- Bio with TranslatableText + BioTranslateButton
+- Joined date
+- Followers/Following counts with privacy gating
+- MutualFollowers
+- Props: receives all needed data from the orchestrator (profile, badges, stories, follow state, handlers)
 
-- No consumer file imports are modified
-- No function signatures change
-- No type definitions change (except removing the unused duplicate)
-- `dpay.ts`, `view-tracker.ts`, and edge functions are untouched
+### 5. `ProfileTabContent.tsx` component (~280 lines)
+The `renderTabContent()` switch (lines 505-747):
+- Private account gate
+- Loading state
+- All 8 tab cases (home with optimistic posts, posts, images, videos, subscribers with plan management, songs, live, fractions)
+- Props: `activeTab`, content arrays, plan data, profile info, modal openers
+
+### 6. `ProfileOptionsDrawer.tsx` component (~150 lines)
+The ShareOptions component + offer drawer (lines 407-503, 1249-1284):
+- Copy URL / username / address handlers
+- Message, Send coins, Notify, Make Offer buttons
+- Unfollow + Block buttons
+- Offer drawer with DHB input
+- Props: `profile`, `isViewingOwnProfile`, `isFollowing`, handlers
+
+### 7. `ProfilePage.tsx` orchestrator (~200 lines)
+Slim file that:
+- Calls `useProfilePage()` to get all data
+- Calls `useProfileFollow()` for follow actions
+- Manages UI-only state (modals open/close, fullscreen image, active tab)
+- Renders loading / auth gate / username-available states
+- Composes `ProfileHeader`, tab bar, `ProfileTabContent`, `ProfileOptionsDrawer`
+- Renders modals (CreatePlanModal, EditPlanModal, FollowersListDrawer, StoryViewerModal, LoginModal, FullscreenImageViewer)
+
+## Safety Guarantees
+
+- **Zero import changes** in any consumer file -- only `App.tsx` imports ProfilePage, and the default export stays
+- **All state flows preserved** -- `setFollowStatus` from `useDeHubProfile` is passed through exactly as before
+- **Optimistic update chain intact** -- `useProfileFollow` receives `setFollowStatus` from the profile hook and calls it identically
+- **Pull-to-refresh handlers** stay wired to the same container ref
+- **Story viewer** keeps the same `allStories` array and `profileStoryStartIndex` calculation
+- **Tab content** receives the exact same content arrays and renders identical JSX
+- **Privacy gating** logic (hideFollowerCounts, showFollowersFollowing, isTargetPrivate) flows through props unchanged
+- **Conditional AppLayout wrapper** for `/:username` routes stays in the orchestrator
+
+## Technical Details
+
+### Cross-component state that must be threaded carefully:
+1. `setFollowStatus` (from useDeHubProfile) -- used by follow handlers AND optimistically updates `isFollowing`
+2. `setActiveTab` -- used by Subscribe button in header (navigates to subs tab) AND by tab bar
+3. `setCreatePlanModalOpen` -- triggered from both subscribers tab empty state AND header
+4. `shareSheetOpen` / `setShareSheetOpen` -- used by options drawer AND closed by follow handlers
+5. `fullscreenImage` -- set by avatar click, cover click, and image overlay; cleared by FullscreenImageViewer
+
+All of these are managed in the orchestrator and passed as props/callbacks.
+
+### Import deduplication:
+- Lucide icons are imported only where used (e.g., `Copy`, `Wallet` in ProfileOptionsDrawer, not ProfileHeader)
+- `cn`, `toast`, drawer components imported only in files that use them
+- 3D icon assets imported only in ProfileTabContent (where empty states render)
