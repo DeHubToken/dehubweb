@@ -897,7 +897,7 @@ export default function ProfilePage() {
           
           {/* Cover Photo - clickable for fullscreen, uses default banner if no custom cover */}
           <button 
-            className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer hover:opacity-95 transition-opacity"
+            className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
             onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
           >
             <img 
@@ -972,7 +972,7 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                   <button 
-                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer hover:opacity-95 transition-opacity disabled:cursor-default"
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer disabled:cursor-default"
                     onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
                     disabled={!profile.avatarUrl}
                   >
