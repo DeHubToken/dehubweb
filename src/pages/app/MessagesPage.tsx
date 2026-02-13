@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations, useUserOnlineStatus } from '@/hooks/use-messages';
-import { getMediaUrl, updateUserOnlineStatus, type DeHubConversation } from '@/lib/api/dehub';
+import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
@@ -106,30 +106,7 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { isAuthenticated, walletAddress } = useAuth();
 
-  // Online status heartbeat - update every 60s, stop after 3 consecutive failures
-  const heartbeatFailCount = useRef(0);
-  useEffect(() => {
-    if (!isAuthenticated || !walletAddress) return;
-
-    const doHeartbeat = () => {
-      if (heartbeatFailCount.current >= 3) {
-        console.warn('[Heartbeat] Stopped after 3 consecutive failures');
-        return;
-      }
-      updateUserOnlineStatus(walletAddress)
-        .then((res) => {
-          if (res.success) heartbeatFailCount.current = 0;
-          else heartbeatFailCount.current++;
-        })
-        .catch(() => { heartbeatFailCount.current++; });
-    };
-
-    doHeartbeat();
-    const interval = setInterval(doHeartbeat, 60_000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated, walletAddress]);
-
-  const { 
+  const{ 
     conversations, 
     isLoading, 
     isError, 

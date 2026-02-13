@@ -83,3 +83,6 @@ verify_jwt = false
 
 [functions.backfill-leaderboard-snapshots]
 verify_jwt = false
+
+[functions.livechat-send]
+verify_jwt = false

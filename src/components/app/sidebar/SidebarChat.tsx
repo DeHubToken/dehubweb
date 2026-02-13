@@ -4,8 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TranslatableText } from '../TranslatableText';
-import { useLiveChatRooms, useLiveChatMessages } from '@/hooks/use-livechat';
-import { getMediaUrl, type LiveChatMessage } from '@/lib/api/dehub';
+import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
+import { getMediaUrl } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -19,6 +19,7 @@ export function SidebarChat() {
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
   const roomId = rooms[0]?.id || null;
   const { messages, isLoading: messagesLoading, isSending, send } = useLiveChatMessages(roomId);
+  const { onlineCount } = useLiveChatPresence(roomId);
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -59,7 +60,7 @@ export function SidebarChat() {
       <div className="flex items-center gap-2 pb-3 border-b border-zinc-800">
         <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded">LIVE</span>
         <span className="text-zinc-400 text-xs flex items-center gap-1">
-          <Users className="w-3 h-3" /> {rooms[0]?.participantCount ?? 0} online
+          <Users className="w-3 h-3" /> {onlineCount} online
         </span>
       </div>
 
@@ -88,8 +89,8 @@ export function SidebarChat() {
             </div>
           ) : (
             messages.map((msg) => {
-              const avatarUrl = getMediaUrl(msg.sender?.avatarImageUrl);
-              const name = msg.sender?.displayName || msg.sender?.username || msg.sender?.address?.slice(0, 8) || 'Anon';
+              const avatarUrl = getMediaUrl(msg.sender_avatar_url ?? undefined);
+              const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
               return (
                 <div key={msg.id} className="flex items-start gap-2">
                   <Avatar className="w-6 h-6 flex-shrink-0">
@@ -100,10 +101,10 @@ export function SidebarChat() {
                   </Avatar>
                   <div className="min-w-0">
                     <span className="text-xs font-semibold text-white">{name}</span>
-                    {msg.type === 'image' && msg.imageUrl ? (
-                      <img src={getMediaUrl(msg.imageUrl)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
-                    ) : msg.type === 'gif' && msg.imageUrl ? (
-                      <img src={msg.imageUrl} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                    {msg.message_type === 'image' && msg.image_url ? (
+                      <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
+                    ) : msg.message_type === 'gif' && msg.image_url ? (
+                      <img src={msg.image_url} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                     ) : (
                       <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
                     )}

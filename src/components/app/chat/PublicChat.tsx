@@ -5,8 +5,8 @@ import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
-import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails } from '@/hooks/use-livechat';
-import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatMessage as ApiMessage, type LiveChatRoom } from '@/lib/api/dehub';
+import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
+import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatRoom } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -21,18 +21,18 @@ interface PublicChatProps {
   onBack: () => void;
 }
 
-/** Map API livechat message to local ChatMessage format */
-function toLocalMessage(msg: ApiMessage): Message {
+/** Map Supabase livechat message to local ChatMessage format */
+function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
   return {
     id: msg.id,
-    userId: msg.sender?.address || 'unknown',
-    userName: msg.sender?.displayName || msg.sender?.username || msg.sender?.address?.slice(0, 8) || 'Anon',
-    userAvatar: getMediaUrl(msg.sender?.avatarImageUrl) || undefined,
+    userId: msg.sender_address || 'unknown',
+    userName: msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon',
+    userAvatar: getMediaUrl(msg.sender_avatar_url ?? undefined) || undefined,
     content: msg.content || '',
-    timestamp: new Date(msg.createdAt),
-    type: (msg.type as Message['type']) || 'text',
-    imageUrl: msg.imageUrl ? getMediaUrl(msg.imageUrl) : undefined,
-    isPinned: msg.isPinned || false,
+    timestamp: new Date(msg.created_at),
+    type: (msg.message_type as Message['type']) || 'text',
+    imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : undefined,
+    isPinned: msg.is_pinned || false,
   };
 }
 
@@ -58,6 +58,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Fetch full room details (description, moderators, messageCount) for the selected room
   const { room: roomDetails } = useLiveChatRoomDetails(selectedRoomId);
+
+  // Online presence
+  const { onlineCount } = useLiveChatPresence(selectedRoomId);
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
@@ -176,7 +179,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             ) : rooms.length > 0 ? (
               <span className="text-zinc-500 text-xs flex items-center gap-1">
                 <Users className="w-3 h-3" />
-                {enrichedRoom?.participantCount ?? 0} online
+                {onlineCount} online
               </span>
             ) : null}
           </div>

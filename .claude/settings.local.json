@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "WebFetch(domain:web3auth.io)"
+      "WebFetch(domain:web3auth.io)",
+      "Bash(curl:*)",
+      "Bash(findstr:*)"
     ]
   }
 }

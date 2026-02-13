@@ -24,7 +24,6 @@ import {
   blockUserInGroup,
   uploadChatImage,
   getUserOnlineStatus,
-  updateUserOnlineStatus,
   getDMVideos,
   type DeHubConversation,
   type DeHubDMMessage,
@@ -428,17 +427,6 @@ export function useUserOnlineStatus(address: string | null) {
     enabled: isAuthenticated && !!address,
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 60 * 1000, // Refresh every minute
-  });
-}
-
-/**
- * Hook for updating user's own online status (heartbeat)
- */
-export function useUpdateOnlineStatus() {
-  const { user } = useAuth();
-
-  return useMutation({
-    mutationFn: () => updateUserOnlineStatus(user?.address || ''),
   });
 }
 

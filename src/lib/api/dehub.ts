@@ -2949,39 +2949,6 @@ export async function getUserOnlineStatus(address: string): Promise<UserOnlineSt
   }
 }
 
-/**
- * Update user's online status (heartbeat)
- * POST /api/dm/user-status/{address}
- */
-export async function updateUserOnlineStatus(address: string): Promise<{ success: boolean }> {
-  console.log('[DM API] updateUserOnlineStatus called', { address });
-
-  try {
-    // Try POST with body (the backend may not support PUT on this route)
-    const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
-      method: "POST",
-      body: { status: "online" },
-      requiresAuth: true,
-    });
-    console.log('[DM API] updateUserOnlineStatus response:', response);
-    return { success: response?.success !== false };
-  } catch (postError) {
-    console.warn('[DM API] updateUserOnlineStatus POST failed, trying PATCH:', postError);
-    try {
-      // Fallback: PATCH (some REST APIs use PATCH for status updates)
-      const response = await apiCall<any>(`/api/dm/user-status/${address}`, {
-        method: "PATCH",
-        body: { status: "online" },
-        requiresAuth: true,
-      });
-      console.log('[DM API] updateUserOnlineStatus PATCH response:', response);
-      return { success: response?.success !== false };
-    } catch (patchError) {
-      console.error('[DM API] updateUserOnlineStatus all attempts failed:', patchError);
-      return { success: false };
-    }
-  }
-}
 
 // ============================================
 // DM: SUBSCRIPTION-GATED DMs
@@ -3869,41 +3836,6 @@ export async function createTopicRoom(params: {
     return normalizeRoom(response.result);
   }
   return normalizeRoom(response);
-}
-
-/**
- * Send a message to a livechat room
- * Uses the DM upload endpoint pattern for sending messages
- * POST /api/livechat/rooms/{roomId}/messages (if separate endpoint exists)
- * Falls back to a simulated send via the DM upload pattern
- */
-export async function sendLiveChatMessage(
-  roomId: string,
-  content: string,
-  type: 'text' | 'image' | 'gif' = 'text',
-  imageUrl?: string
-): Promise<LiveChatMessage> {
-  const senderAddress = localStorage.getItem('dehub_wallet') || '';
-  const body: Record<string, unknown> = {
-    roomId,
-    content,
-    type,
-    senderAddress: senderAddress.toLowerCase(),
-  };
-  if (imageUrl) body.imageUrl = imageUrl;
-
-  const response = await apiCall<{ result: LiveChatMessage } | LiveChatMessage>(
-    `/api/livechat/rooms/${roomId}/messages`,
-    {
-      method: "POST",
-      body,
-      requiresAuth: true,
-    }
-  );
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as LiveChatMessage;
 }
 
 /**
