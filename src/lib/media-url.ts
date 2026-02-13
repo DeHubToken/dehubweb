@@ -16,7 +16,7 @@ import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
  */
 export function extractAvatarPath(obj: Record<string, any> | null | undefined): string | undefined {
   if (!obj) return undefined;
-  return obj.avatarImageUrl || obj.avatarUrl || obj.avatar_url || obj.minterAvatarUrl || undefined;
+  return obj.avatarImageUrl || obj.avatarUrl || obj.avatar_url || obj.minterAvatarUrl || obj.actorAvatar || undefined;
 }
 
 /**
