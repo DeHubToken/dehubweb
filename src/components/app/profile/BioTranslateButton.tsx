@@ -10,6 +10,7 @@ import { RotateCcw, Loader2 } from 'lucide-react';
 import translateGlobeIcon from '@/assets/icons/translate-globe-icon.png';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage } from '@/hooks/use-user-language';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 interface BioTranslateButtonProps {
   bio: string;
@@ -58,23 +59,31 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
 
   if (isTranslated) {
     return (
-      <button
-        onClick={onShowOriginal}
-        className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-        title="Show original"
-      >
-        <RotateCcw className="w-3.5 h-3.5" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={onShowOriginal}
+            className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>Show original</TooltipContent>
+      </Tooltip>
     );
   }
 
   return (
-    <button
-      onClick={handleTranslate}
-      className="text-muted-foreground hover:text-foreground transition-colors"
-      title="Translate bio"
-    >
-      <img src={translateGlobeIcon} alt="Translate" className="w-6 h-6 -mt-0.5 opacity-50 brightness-200 invert" />
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={handleTranslate}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <img src={translateGlobeIcon} alt="Translate" className="w-6 h-6 -mt-0.5 opacity-50 brightness-200 invert" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>Translate bio</TooltipContent>
+    </Tooltip>
   );
 }
