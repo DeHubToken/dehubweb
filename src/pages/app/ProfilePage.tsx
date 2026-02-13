@@ -1105,7 +1105,7 @@ export default function ProfilePage() {
                       <img 
                         src={badgeUrl} 
                         alt="Badge tier" 
-                        className="w-3.5 h-3.5 shrink-0 absolute -top-1 -right-4" 
+                        className="w-3 h-3 shrink-0 absolute -top-1 -right-3.5" 
                       />
                     )}
                   </span>
