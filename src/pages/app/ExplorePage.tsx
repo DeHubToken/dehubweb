@@ -785,7 +785,7 @@ export default function ExplorePage() {
               <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white">
+                    <h2 className="text-lg sm:text-xl font-bold text-white break-all">
                       Results for "{searchQuery}"
                     </h2>
                     {!showLoading && searchResults.total > 0 && (
