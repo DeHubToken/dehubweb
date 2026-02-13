@@ -10,6 +10,7 @@
  */
 
 import { useState, useMemo, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Globe, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,17 +66,20 @@ function renderTextWithLinks(text: string): ReactNode[] {
     // Ensure URL has protocol for the href
     const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
     parts.push(
-      <a
-        key={`${url}-${match.index}`}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center hover:scale-110 transition-transform"
-        onClick={(e) => e.stopPropagation()}
-        title={url}
-      >
-        🔗
-      </a>
+      <Tooltip key={`${url}-${match.index}`}>
+        <TooltipTrigger asChild>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center hover:scale-110 transition-transform"
+            onClick={(e) => e.stopPropagation()}
+          >
+            🔗
+          </a>
+        </TooltipTrigger>
+        <TooltipContent>{url}</TooltipContent>
+      </Tooltip>
     );
     
     lastIndex = regex.lastIndex;

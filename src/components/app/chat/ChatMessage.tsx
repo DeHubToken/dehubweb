@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2 } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText } from '../TranslatableText';
 import { useLiveChatUser } from '@/hooks/use-livechat';
@@ -107,9 +108,14 @@ function ModeratorBadge({ address }: { address: string }) {
   const { profile } = useLiveChatUser(address);
   if (!profile?.isModerator) return null;
   return (
-    <span className="inline-flex items-center text-emerald-400" title="Moderator">
-      <ShieldCheck className="w-3 h-3" />
-    </span>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="inline-flex items-center text-emerald-400">
+          <ShieldCheck className="w-3 h-3" />
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>Moderator</TooltipContent>
+    </Tooltip>
   );
 }
 

@@ -13,6 +13,7 @@ import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare, Pencil, Trash2 } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
@@ -1174,13 +1175,17 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
-            <button 
-              className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
-              onClick={handlePictureInPicture}
-              title="Picture in Picture (P)"
-            >
-              <PictureInPicture2 className="h-4 w-4" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
+                  onClick={handlePictureInPicture}
+                >
+                  <PictureInPicture2 className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Picture in Picture (P)</TooltipContent>
+            </Tooltip>
             <button 
               className="h-8 w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10"
               onClick={handleFullscreen}
