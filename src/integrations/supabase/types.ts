@@ -415,6 +415,8 @@ export type Database = {
           followers: number | null
           id: string
           likes: number | null
+          received_tips: number
+          sent_tips: number
           snapshot_date: string
           subscribers: number | null
         }
@@ -425,6 +427,8 @@ export type Database = {
           followers?: number | null
           id?: string
           likes?: number | null
+          received_tips?: number
+          sent_tips?: number
           snapshot_date?: string
           subscribers?: number | null
         }
@@ -435,6 +439,8 @@ export type Database = {
           followers?: number | null
           id?: string
           likes?: number | null
+          received_tips?: number
+          sent_tips?: number
           snapshot_date?: string
           subscribers?: number | null
         }
@@ -701,6 +707,36 @@ export type Database = {
           story_id?: string
           viewed_at?: string
           viewer_wallet_address?: string | null
+        }
+        Relationships: []
+      }
+      tip_leaderboard_cache: {
+        Row: {
+          chain_id: number
+          id: string
+          period: string
+          received_total: number
+          sent_total: number
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          chain_id?: number
+          id?: string
+          period?: string
+          received_total?: number
+          sent_total?: number
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          chain_id?: number
+          id?: string
+          period?: string
+          received_total?: number
+          sent_total?: number
+          updated_at?: string
+          wallet_address?: string
         }
         Relationships: []
       }

@@ -11,6 +11,12 @@ const DHB_BASE = "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c";
 const DHB_BNB = "0x680d3113caf77b61b510f332d5ef4cf5b41a761d";
 const STAKING_CONTRACT = "0x26d2Cd7763106FDcE443faDD36163E2ad33A76E6"; // BNB only
 
+// Tip & bounty contracts (for Transfer event tracing)
+const BASE_TIP_CONTRACT = "0x4fa30dAef50c6dc8593470750F3c721CA3275581";
+const BNB_TIP_CONTRACT = "0x6E19ba22da239C46941582530c0Ef61400B0e3e6";
+const BNB_BOUNTY_CONTRACT = "0x9f8012074d27F8596C0E5038477ACB52057BC934";
+const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+
 // Function selectors
 const BALANCE_OF_SELECTOR = "0x70a08231"; // balanceOf(address)
 const USER_INFOS_SELECTOR = "0x43b0215f"; // userInfos(address) → first slot = totalAmount
@@ -42,6 +48,10 @@ const PERIOD_DAYS: Record<string, number> = {
 };
 
 // ── Helpers ─────────────────────────────────────────────────────────
+
+function padAddress(address: string): string {
+  return "0x" + address.replace("0x", "").toLowerCase().padStart(64, "0");
+}
 
 function encodeCall(selector: string, address: string): string {
   const cleaned = address.replace("0x", "").toLowerCase().padStart(64, "0");
@@ -108,7 +118,116 @@ async function getCurrentBlockNumber(rpcUrl: string): Promise<number> {
   return Number(BigInt(json.result));
 }
 
-/** Call BNB with fallback to public RPCs if Alchemy returns empty */
+// ── Transfer event log helpers (for tip/bounty tracking) ────────────
+
+async function getLogs(
+  rpcUrl: string,
+  tokenAddress: string,
+  fromBlock: string,
+  toBlock: string,
+  topics: (string | null)[]
+): Promise<Array<{ topics: string[]; data: string }>> {
+  const res = await fetch(rpcUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0", id: 1, method: "eth_getLogs",
+      params: [{ address: tokenAddress, fromBlock, toBlock, topics }],
+    }),
+  });
+  const json = await res.json();
+  if (json.error) {
+    console.error(`[getLogs-error] token=${tokenAddress}`, json.error);
+    return [];
+  }
+  return json.result || [];
+}
+
+async function bnbGetLogs(
+  alchemyRpc: string,
+  tokenAddress: string,
+  fromBlock: string,
+  toBlock: string,
+  topics: (string | null)[]
+): Promise<Array<{ topics: string[]; data: string }>> {
+  const result = await getLogs(alchemyRpc, tokenAddress, fromBlock, toBlock, topics);
+  if (result.length > 0) return result;
+  for (const rpc of BNB_PUBLIC_RPCS) {
+    try {
+      const fallback = await getLogs(rpc, tokenAddress, fromBlock, toBlock, topics);
+      if (fallback.length > 0) return fallback;
+    } catch { continue; }
+  }
+  return result;
+}
+
+function aggregateTransferLogs(
+  logs: Array<{ topics: string[]; data: string }>,
+  topicIndex: number
+): Map<string, number> {
+  const totals = new Map<string, number>();
+  for (const log of logs) {
+    const rawAddr = log.topics[topicIndex];
+    if (!rawAddr) continue;
+    const addr = "0x" + rawAddr.slice(26).toLowerCase();
+    const value = hexToNumber(log.data);
+    totals.set(addr, (totals.get(addr) || 0) + value);
+  }
+  return totals;
+}
+
+function mergeMaps(a: Map<string, number>, b: Map<string, number>): void {
+  for (const [k, v] of b) {
+    a.set(k, (a.get(k) || 0) + v);
+  }
+}
+
+/** Query tip/bounty Transfer events for a block range, returns spent/earned per wallet */
+async function queryTipEvents(
+  baseRpc: string,
+  bnbRpc: string,
+  baseFromBlock: string,
+  bnbFromBlock: string,
+): Promise<{ spent: Map<string, number>; earned: Map<string, number> }> {
+  const spent = new Map<string, number>();
+  const earned = new Map<string, number>();
+
+  // Base: single contract covers tips + bounties
+  const basePadded = padAddress(BASE_TIP_CONTRACT);
+  const [baseSpentLogs, baseEarnedLogs] = await Promise.all([
+    getLogs(baseRpc, DHB_BASE, baseFromBlock, "latest", [TRANSFER_TOPIC, null, basePadded]),
+    getLogs(baseRpc, DHB_BASE, baseFromBlock, "latest", [TRANSFER_TOPIC, basePadded, null]),
+  ]);
+  mergeMaps(spent, aggregateTransferLogs(baseSpentLogs, 1));
+  mergeMaps(earned, aggregateTransferLogs(baseEarnedLogs, 2));
+  console.log(`  Base tip logs: ${baseSpentLogs.length} spent, ${baseEarnedLogs.length} earned`);
+
+  // BNB: tip contract
+  const bnbTipPadded = padAddress(BNB_TIP_CONTRACT);
+  const [bnbTipSpent, bnbTipEarned] = await Promise.all([
+    bnbGetLogs(bnbRpc, DHB_BNB, bnbFromBlock, "latest", [TRANSFER_TOPIC, null, bnbTipPadded]),
+    bnbGetLogs(bnbRpc, DHB_BNB, bnbFromBlock, "latest", [TRANSFER_TOPIC, bnbTipPadded, null]),
+  ]);
+  mergeMaps(spent, aggregateTransferLogs(bnbTipSpent, 1));
+  mergeMaps(earned, aggregateTransferLogs(bnbTipEarned, 2));
+  console.log(`  BNB tip logs: ${bnbTipSpent.length} spent, ${bnbTipEarned.length} earned`);
+
+  await new Promise((r) => setTimeout(r, 200));
+
+  // BNB: bounty (StreamController) contract
+  const bnbBountyPadded = padAddress(BNB_BOUNTY_CONTRACT);
+  const [bnbBountySpent, bnbBountyEarned] = await Promise.all([
+    bnbGetLogs(bnbRpc, DHB_BNB, bnbFromBlock, "latest", [TRANSFER_TOPIC, null, bnbBountyPadded]),
+    bnbGetLogs(bnbRpc, DHB_BNB, bnbFromBlock, "latest", [TRANSFER_TOPIC, bnbBountyPadded, null]),
+  ]);
+  mergeMaps(spent, aggregateTransferLogs(bnbBountySpent, 1));
+  mergeMaps(earned, aggregateTransferLogs(bnbBountyEarned, 2));
+  console.log(`  BNB bounty logs: ${bnbBountySpent.length} spent, ${bnbBountyEarned.length} earned`);
+
+  return { spent, earned };
+}
+
+
 async function bnbRpcCall(
   alchemyBnbRpc: string,
   to: string,
@@ -434,7 +553,14 @@ Deno.serve(async (req) => {
         `On-chain holdings: ${nonZero.length} holders with balance > 0`
       );
 
-      // ── Snapshot: upsert today's balances (once per day) ──────────
+      // Get current block numbers (needed for snapshots + historical queries)
+      const [currentBaseBlock, currentBnbBlock] = await Promise.all([
+        getCurrentBlockNumber(baseRpc),
+        getCurrentBlockNumber(bnbRpc),
+      ]);
+      console.log(`Current blocks - Base: ${currentBaseBlock}, BNB: ${currentBnbBlock}`);
+
+      // ── Snapshot: upsert today's balances + tip data (once per day) ──
       const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
       // Check if today's snapshot already exists
@@ -442,6 +568,25 @@ Deno.serve(async (req) => {
         .from("leaderboard_snapshots")
         .select("id", { count: "exact", head: true })
         .eq("snapshot_date", today);
+
+      // Query today's tip/bounty activity (last 24h) for the snapshot
+      let todaySpent = new Map<string, number>();
+      let todayEarned = new Map<string, number>();
+      if (!snapshotCount || snapshotCount === 0) {
+        try {
+          const oneDayBaseBlock = "0x" + (currentBaseBlock - BASE_BLOCKS_PER_DAY).toString(16);
+          const oneDayBnbBlock = "0x" + (currentBnbBlock - BNB_BLOCKS_PER_DAY).toString(16);
+          console.log("Querying tip/bounty events for today's snapshot...");
+          const tipResult = await queryTipEvents(baseRpc, bnbRpc, oneDayBaseBlock, oneDayBnbBlock);
+          todaySpent = tipResult.spent;
+          todayEarned = tipResult.earned;
+        } catch (tipErr) {
+          console.error("Tip event query failed (non-fatal):", tipErr);
+        }
+      }
+
+
+
 
       if (!snapshotCount || snapshotCount === 0) {
         console.log(`Creating daily snapshot for ${today}...`);
@@ -451,6 +596,8 @@ Deno.serve(async (req) => {
           followers: e.followers ?? 0,
           likes: e.likes ?? 0,
           subscribers: e.subscribers ?? 0,
+          sent_tips: todaySpent.get(e.account.toLowerCase()) || 0,
+          received_tips: todayEarned.get(e.account.toLowerCase()) || 0,
           snapshot_date: today,
         }));
 
@@ -500,12 +647,6 @@ Deno.serve(async (req) => {
       }
 
       // ── Cache time-based periods (sorted by delta, on-chain historical) ──
-      // Get current block numbers for historical queries
-      const [currentBaseBlock, currentBnbBlock] = await Promise.all([
-        getCurrentBlockNumber(baseRpc),
-        getCurrentBlockNumber(bnbRpc),
-      ]);
-      console.log(`Current blocks - Base: ${currentBaseBlock}, BNB: ${currentBnbBlock}`);
 
       for (const period of ["day", "week", "month", "year"] as const) {
         try {
@@ -739,40 +880,135 @@ Deno.serve(async (req) => {
     }
 
     // ────────────────────────────────────────────────────────────────
-    // 3. API-BASED CATEGORIES (sentTips, receivedTips)
+    // 3. TIP/BOUNTY CATEGORIES (sentTips, receivedTips) - on-chain + snapshot deltas
     // ────────────────────────────────────────────────────────────────
-    for (const sort of API_SORT_MODES) {
-      for (const period of PERIODS) {
+    try {
+      // "all" period: use DeHub API as before (cumulative totals)
+      for (const sort of API_SORT_MODES) {
         try {
-          console.log(`Fetching ${sort}/${period} from API...`);
-          const data = await fetchDeHubLeaderboard(sort, period);
-
+          console.log(`Fetching ${sort}/all from API...`);
+          const data = await fetchDeHubLeaderboard(sort, "all");
           const { error } = await supabase.from("leaderboard_cache").upsert(
-            {
-              sort_mode: sort,
-              period,
-              data,
-              updated_at: new Date().toISOString(),
-            },
+            { sort_mode: sort, period: "all", data, updated_at: new Date().toISOString() },
             { onConflict: "sort_mode,period" }
           );
-
           if (error) {
-            console.error(`Error caching ${sort}/${period}:`, error);
-            results.push({
-              sort,
-              period,
-              success: false,
-              error: error.message,
-            });
+            console.error(`Error caching ${sort}/all:`, error);
+            results.push({ sort, period: "all", success: false, error: error.message });
           } else {
-            results.push({ sort, period, success: true });
+            results.push({ sort, period: "all", success: true });
           }
         } catch (err) {
           const msg = err instanceof Error ? err.message : "Unknown error";
-          console.error(`Error fetching ${sort}/${period}:`, msg);
-          results.push({ sort, period, success: false, error: msg });
+          console.error(`Error fetching ${sort}/all:`, msg);
+          results.push({ sort, period: "all", success: false, error: msg });
         }
+      }
+
+      // Time-based periods: use snapshot deltas for sent_tips/received_tips
+      // Get the holdings/all cache to have the full user list with profile data
+      const { data: holdingsCacheForTips } = await supabase
+        .from("leaderboard_cache")
+        .select("data")
+        .eq("sort_mode", "holdings")
+        .eq("period", "all")
+        .single();
+
+      const allEntriesForTips: EnrichedEntry[] = (holdingsCacheForTips?.data as any)?.result?.byWalletBalance ?? [];
+
+      for (const tipSort of ["sentTips", "receivedTips"] as const) {
+        const snapshotField = tipSort === "sentTips" ? "sent_tips" : "received_tips";
+
+        for (const period of ["day", "week", "month", "year"] as const) {
+          try {
+            const daysAgo = PERIOD_DAYS[period];
+            const pastDate = new Date();
+            pastDate.setDate(pastDate.getDate() - daysAgo);
+            const pastDateStr = pastDate.toISOString().split("T")[0];
+
+            // Find closest snapshot
+            const { data: closestSnap } = await supabase
+              .from("leaderboard_snapshots")
+              .select("snapshot_date")
+              .lte("snapshot_date", pastDateStr)
+              .order("snapshot_date", { ascending: false })
+              .limit(1);
+
+            const closestDate = closestSnap?.[0]?.snapshot_date;
+            const pastMap = new Map<string, number>();
+
+            if (closestDate) {
+              const { data: snapshots } = await supabase
+                .from("leaderboard_snapshots")
+                .select(`account, ${snapshotField}`)
+                .eq("snapshot_date", closestDate);
+
+              if (snapshots) {
+                for (const snap of snapshots) {
+                  pastMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
+                }
+              }
+              console.log(`${tipSort}/${period}: using snapshot from ${closestDate}, ${pastMap.size} entries`);
+            }
+
+            // Get current snapshot values
+            const todayStr = new Date().toISOString().split("T")[0];
+            const { data: currentSnaps } = await supabase
+              .from("leaderboard_snapshots")
+              .select(`account, ${snapshotField}`)
+              .eq("snapshot_date", todayStr);
+
+            const currentMap = new Map<string, number>();
+            if (currentSnaps) {
+              for (const snap of currentSnaps) {
+                currentMap.set(snap.account.toLowerCase(), (snap as any)[snapshotField] ?? 0);
+              }
+            }
+
+            // Compute deltas between current and past snapshots
+            const withDeltas: EnrichedEntry[] = allEntriesForTips.map((entry) => {
+              const addr = entry.account.toLowerCase();
+              const currentVal = currentMap.get(addr) || 0;
+              const pastVal = pastMap.get(addr) || 0;
+              const delta = currentVal - pastVal;
+              return { ...entry, delta };
+            });
+
+            const sorted = withDeltas
+              .filter((e) => e.delta !== undefined && e.delta > 0)
+              .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
+
+            const periodData = {
+              result: { byWalletBalance: sorted },
+              hasHistoricalData: pastMap.size > 0,
+            };
+
+            const { error } = await supabase.from("leaderboard_cache").upsert(
+              { sort_mode: tipSort, period, data: periodData, updated_at: new Date().toISOString() },
+              { onConflict: "sort_mode,period" }
+            );
+
+            if (error) {
+              console.error(`Error caching ${tipSort}/${period}:`, error);
+              results.push({ sort: tipSort, period, success: false, error: error.message });
+            } else {
+              console.log(`${tipSort}/${period}: ${sorted.length} entries with positive delta`);
+              results.push({ sort: tipSort, period, success: true });
+            }
+          } catch (periodErr) {
+            const msg = periodErr instanceof Error ? periodErr.message : "Unknown error";
+            console.error(`Error computing ${tipSort}/${period}:`, msg);
+            results.push({ sort: tipSort, period, success: false, error: msg });
+          }
+        }
+      }
+    } catch (tipErr) {
+      const msg = tipErr instanceof Error ? tipErr.message : "Unknown error";
+      console.error("Error building tip leaderboards:", msg);
+      for (const sort of API_SORT_MODES) {
+        PERIODS.forEach((period) =>
+          results.push({ sort, period, success: false, error: msg })
+        );
       }
     }
 
