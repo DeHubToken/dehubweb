@@ -190,20 +190,36 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
+  // Deep link URLs for wallet in-app browsers on mobile
+  // When opened, the wallet loads dehub.io in its built-in browser where window.ethereum is available
+  const WALLET_DEEP_LINKS: Record<string, string> = {
+    metamask: `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`,
+    trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(window.location.origin)}`,
+    phantom: `https://phantom.app/ul/browse/${encodeURIComponent(window.location.origin)}?ref=${encodeURIComponent(window.location.origin)}`,
+    coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(window.location.origin)}`,
+  };
+
   const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {
+    // On mobile: deep link to wallet app's in-app browser (most reliable)
+    // The wallet's browser injects window.ethereum so MetaMask adapter works directly
+    if (isMobile && wallet !== 'walletconnect') {
+      const deepLink = WALLET_DEEP_LINKS[wallet] || WALLET_DEEP_LINKS.metamask;
+      console.log(`[LoginModal] Mobile deep link to ${wallet}:`, deepLink);
+      window.location.href = deepLink;
+      return;
+    }
+
+    // Desktop: use Web3Auth adapter (window.ethereum available from extensions)
+    // WalletConnect: use WalletConnect V2 adapter on both mobile and desktop
     setActiveProvider(wallet);
-    // Close the login modal first so WalletConnect modal isn't blocked behind it
-    // (especially important on mobile where z-index conflicts can prevent interaction)
     onOpenChange(false);
     try {
       await connectWithWallet(wallet);
-      // Reset state after successful connection
       setStep('main');
       setActiveProvider(null);
     } catch (error) {
       console.error(`${wallet} login failed:`, error);
       setActiveProvider(null);
-      // Re-open the modal so user can try again
       onOpenChange(true);
     }
   };
