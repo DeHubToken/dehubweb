@@ -948,9 +948,7 @@ export default function ExplorePage() {
                           onClick={() => setSearchQuery(term)}
                           className="px-3 sm:px-4 py-2 text-white text-sm"
                         >
-                          {term.startsWith('0x') && term.length > 14
-                            ? `${term.slice(0, 6)}...${term.slice(-4)}`
-                            : term}
+                          {term}
                         </button>
                         <button
                           onClick={(e) => {
