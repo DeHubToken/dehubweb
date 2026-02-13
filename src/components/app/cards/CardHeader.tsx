@@ -117,22 +117,24 @@ export function CardHeader({
             <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
         )}
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="relative inline-flex items-baseline shrink min-w-0">
-            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
-            {badgeUrl && (
-              <img 
-                src={badgeUrl} 
-                alt="Badge" 
-                className="w-2.5 h-2.5 shrink-0 absolute -top-0.5 -right-3" 
-              />
-            )}
-          </span>
-          {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
+        <div className="flex flex-col min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="relative inline-flex items-baseline shrink min-w-0">
+              <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+              {badgeUrl && (
+                <img 
+                  src={badgeUrl} 
+                  alt="Badge" 
+                  className="w-2.5 h-2.5 shrink-0 absolute -top-0.5 -right-3" 
+                />
+              )}
+            </span>
+            {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
+            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
+          </div>
           {formattedHandle && (
-            <span className="text-zinc-500 text-sm truncate max-w-[80px] sm:max-w-none">{formattedHandle}</span>
+            <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
           )}
-          {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
         </div>
       </button>
     </div>
