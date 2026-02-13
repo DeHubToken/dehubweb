@@ -461,6 +461,17 @@ export default function FeaturesPage() {
           </Button>
         </div>
 
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            placeholder="Search feature requests..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+          />
+        </div>
+
         {/* Page Tabs: Requests / Shipped */}
         <div className="flex gap-1 bg-zinc-800 rounded-xl p-1 mb-3">
           <button
@@ -518,7 +529,7 @@ export default function FeaturesPage() {
             </div>
 
             {/* Sort Tabs */}
-            <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-invisible">
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-invisible">
               {SORTS.map((s) => (
                 <button
                   key={s.id}
@@ -533,17 +544,6 @@ export default function FeaturesPage() {
                   {s.label}
                 </button>
               ))}
-            </div>
-
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-              <Input
-                placeholder="Search feature requests..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-              />
             </div>
           </>
         )}
