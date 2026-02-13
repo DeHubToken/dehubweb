@@ -21,6 +21,18 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
   const mobileNavContent = (
     <>
+      {/* Log in Button - shown at top when not authenticated */}
+      {!isAuthenticated && (
+        <div className="mb-4 pb-4 border-b border-zinc-700/50">
+          <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
+            <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
+              <LogIn className="w-5 h-5" />
+              Log in
+            </div>
+          </LiquidGlassBubble>
+        </div>
+      )}
+
       {/* Navigation Items */}
       <nav className="space-y-1">
         {NAV_ITEMS.map((item) => {
@@ -43,24 +55,17 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         })}
       </nav>
 
-      {/* Post Button */}
-      <div className="mt-4 pt-4 border-t border-zinc-700/50">
-        <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
-          <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
-            {isAuthenticated ? (
-              <>
-                <PenSquare className="w-5 h-5" />
-                Post
-              </>
-            ) : (
-              <>
-                <LogIn className="w-5 h-5" />
-                Log in
-              </>
-            )}
-          </div>
-        </LiquidGlassBubble>
-      </div>
+      {/* Post Button - only shown when authenticated */}
+      {isAuthenticated && (
+        <div className="mt-4 pt-4 border-t border-zinc-700/50">
+          <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
+            <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
+              <PenSquare className="w-5 h-5" />
+              Post
+            </div>
+          </LiquidGlassBubble>
+        </div>
+      )}
     </>
   );
 
