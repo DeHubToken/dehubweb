@@ -75,7 +75,27 @@ const formatDHB = (num: number): string => {
 };
 
 export default function LeaderboardPage() {
-  useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
+  useLayoutEffect(() => {
+    // Force scroll to top immediately and repeatedly to override any residual scroll position
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // Additional attempts after paint to beat any async scroll restoration
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+    
+    const t = setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 50);
+    
+    return () => clearTimeout(t);
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState<CategoryType>('holdings');
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
