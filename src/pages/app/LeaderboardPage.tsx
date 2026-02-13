@@ -32,7 +32,7 @@ type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'li
 const categories: { id: CategoryType; label: string; icon: typeof Wallet; apiSort: LeaderboardSortMode }[] = [
   { id: 'holdings', label: 'Holdings', icon: Wallet, apiSort: 'holdings' },
   { id: 'sentTips', label: 'Spent', icon: ArrowUpRight, apiSort: 'sentTips' },
-  { id: 'receivedTips', label: 'Paid', icon: CreditCard, apiSort: 'receivedTips' },
+  { id: 'receivedTips', label: 'Earned', icon: CreditCard, apiSort: 'receivedTips' },
   { id: 'followers', label: 'Followers', icon: Users, apiSort: 'followers' },
   { id: 'likes', label: 'Likes', icon: Heart, apiSort: 'likes' },
   { id: 'subscribers', label: 'Subscribers', icon: UserCheck, apiSort: 'subscribers' },
