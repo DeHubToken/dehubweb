@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Settings, Heart, MessageCircle, DollarSign, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Repeat2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -19,8 +19,16 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
+import { supabase } from '@/integrations/supabase/client';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
+
+// Batch avatar enrichment cache for fresh profile pictures
+interface EnrichedAvatar {
+  avatarUrl: string | null;
+  username: string | null;
+  displayName: string | null;
+}
 
 // Notification type tabs
 type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams';
@@ -136,18 +144,23 @@ function NotificationItem({
   notification, 
   onMarkAsRead,
   isMarkingAsRead,
+  enrichedAvatars,
 }: { 
   notification: DeHubNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
+  enrichedAvatars: Map<string, EnrichedAvatar>;
 }) {
   const navigate = useNavigate();
   
-  // Build proper avatar URL using the canonical utility
-  const rawAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
+  // Prefer fresh enriched avatar over stale API snapshot
+  const enriched = notification.actorAddress ? enrichedAvatars.get(notification.actorAddress.toLowerCase()) : undefined;
+  const freshAvatarPath = enriched?.avatarUrl;
+  const staleAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
+  
   const avatarUrl = notification.actorAddress 
-    ? buildAvatarUrl(notification.actorAddress, rawAvatarPath)
-    : rawAvatarPath?.startsWith('http') ? rawAvatarPath : undefined;
+    ? buildAvatarUrl(notification.actorAddress, freshAvatarPath || staleAvatarPath)
+    : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
   
   // Dicebear fallback for when no avatar exists
   const fallbackAvatar = notification.actorAddress 
@@ -230,7 +243,7 @@ function NotificationItem({
         )}
         
         <p className="text-xs text-zinc-500 mt-1">
-          {formatDistanceToNow(new Date(notification.updatedAt || notification.createdAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
       </div>
 
@@ -290,6 +303,42 @@ export default function NotificationsPage() {
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
+  
+  // Batch-avatar enrichment for fresh profile pictures
+  const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
+  const enrichedRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!allNotifications.length) return;
+    
+    const newAddresses = allNotifications
+      .map(n => n.actorAddress?.toLowerCase())
+      .filter((addr): addr is string => Boolean(addr) && !enrichedRef.current.has(addr));
+    
+    const uniqueNew = [...new Set(newAddresses)];
+    if (uniqueNew.length === 0) return;
+    
+    // Mark as in-flight immediately to prevent duplicate calls
+    uniqueNew.forEach(addr => enrichedRef.current.add(addr));
+    
+    supabase.functions.invoke('batch-avatars', {
+      body: { addresses: uniqueNew },
+    }).then(({ data }) => {
+      if (data?.success && data.avatars) {
+        setEnrichedAvatars(prev => {
+          const next = new Map(prev);
+          for (const [addr, info] of Object.entries(data.avatars)) {
+            next.set(addr, info as EnrichedAvatar);
+          }
+          return next;
+        });
+      }
+    }).catch(err => {
+      console.warn('Failed to enrich notification avatars:', err);
+    });
+  }, [allNotifications]);
+
+  const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
 
   if (!isAuthenticated) {
     return (
@@ -300,8 +349,6 @@ export default function NotificationsPage() {
   const handleMarkAllAsRead = () => {
     markAllAsRead.mutate(undefined);
   };
-
-  const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
 
   const handleMarkAsRead = (notificationId: string) => {
     setMarkingNotificationId(notificationId);
@@ -580,6 +627,7 @@ export default function NotificationsPage() {
                   notification={notification}
                   onMarkAsRead={handleMarkAsRead}
                   isMarkingAsRead={markingNotificationId === notification.id}
+                  enrichedAvatars={enrichedAvatars}
                 />
               ))}
               
