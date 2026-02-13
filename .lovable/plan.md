@@ -1,112 +1,130 @@
 
 
-# Decompose ProfilePage.tsx (1,336 lines) into Sub-Components and Hooks
+# Historical Tip and Bounty Data for Leaderboard
 
-## Overview
-Split the monolithic ProfilePage into 6 focused files while keeping ProfilePage.tsx as the thin orchestrator. Every function, handler, and UI element is preserved exactly -- just relocated.
+## Summary
 
-## New File Structure
+Populate the "Spent" and "Paid" (earnings) leaderboard categories with historical on-chain data by tracing DHB Transfer events involving **four contracts** across two chains: the tip contracts and the StreamController (bounty) contracts.
 
-```text
-src/pages/app/ProfilePage.tsx                    ~200 lines  (orchestrator - wires everything together)
-src/hooks/use-profile-page.ts                    ~180 lines  (all data fetching + state + derived values)
-src/hooks/use-profile-follow.ts                  ~100 lines  (follow/unfollow logic + optimistic updates)
-src/components/app/profile/ProfileHeader.tsx      ~350 lines  (banner, avatar, stories overlay, info, stats)
-src/components/app/profile/ProfileTabContent.tsx  ~280 lines  (renderTabContent switch + all tab cases)
-src/components/app/profile/ProfileOptionsDrawer.tsx ~150 lines (share sheet + offer drawer + all option handlers)
-src/components/app/profile/ProfileConstants.ts     ~50 lines  (DEFAULT_BANNERS, DISPLAY_WALLET_OVERRIDES, getDefaultBanner, TabValue type)
+## What Counts as Spent vs Earned
+
+| Action | DHB Flow | Category |
+|--------|----------|----------|
+| Send a tip | User transfers DHB to Tip Contract | **Spent** |
+| Receive a tip | Tip Contract transfers DHB to User | **Earned (Paid)** |
+| Mint a bounty post | User transfers DHB to StreamController | **Spent** |
+| Claim a bounty | StreamController transfers DHB to User | **Earned (Paid)** |
+
+## Contracts to Trace
+
+| Chain | Contract | Address | Role |
+|-------|----------|---------|------|
+| Base | Tip Contract | `0x4fa30dAef50c6dc8593470750F3c721CA3275581` | Tips |
+| Base | StreamController | `0x4fa30dAef50c6dc8593470750F3c721CA3275581` | Bounties (same address as tip on Base) |
+| BNB | Tip Contract | `0x6E19ba22da239C46941582530c0Ef61400B0e3e6` | Tips |
+| BNB | StreamController | `0x9f8012074d27F8596C0E5038477ACB52057BC934` | Bounties |
+
+Note: On Base, the tip contract and StreamController are the same address, so we only need to trace one address. On BNB, they are different, so we trace both.
+
+## DHB Token Addresses (for Transfer event logs)
+
+| Chain | DHB Token |
+|-------|-----------|
+| Base | `0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c` |
+| BNB | `0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7` |
+
+## Changes
+
+### 1. Database Migration
+
+Add `sent_tips` and `received_tips` columns to `leaderboard_snapshots`:
+
+```sql
+ALTER TABLE leaderboard_snapshots
+  ADD COLUMN IF NOT EXISTS sent_tips numeric NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS received_tips numeric NOT NULL DEFAULT 0;
 ```
 
-## What Goes Where
+### 2. New Edge Function: `backfill-tip-snapshots`
 
-### 1. `ProfileConstants.ts` (~50 lines)
-- `DISPLAY_WALLET_OVERRIDES` record
-- `DEFAULT_BANNERS` array + all 9 banner imports
-- `getDefaultBanner()` function
-- `TabValue` type export
+A one-time backfill function that:
 
-### 2. `use-profile-page.ts` hook (~180 lines)
-Consolidates all data fetching and derived state into a single hook:
-- Route params resolution (`lookupUsername`, `lookupUserId`)
-- `useDeHubProfile` + `useDeHubUserContent` calls
-- `isOwnProfile` / `isViewingOwnProfile` derivation
-- Badge balance fetching
-- Content separation (`useMemo` for `ALL_CONTENT`, `PROFILE_POSTS`, etc.)
-- `PROFILE_TABS` array construction
-- Subscription plans fetching (`useCreatorPlans`, `useIsSubscribed`)
-- Privacy settings (`useUserPrivacySettings`)
-- Stories filtering + `profileStoryStartIndex`
-- Optimistic posts
-- Pull-to-refresh setup
-- Returns a single flat object with all values needed by sub-components
+1. Gets the holder list from `leaderboard_cache` (holdings/all)
+2. For each period (1d, 7d, 30d, 365d), calculates target blocks on Base and BNB
+3. Queries `eth_getLogs` on the DHB token contracts for `Transfer` events where:
+   - **Spent**: `to` is any of the tip/bounty contracts (user sent DHB in)
+   - **Earned**: `from` is any of the tip/bounty contracts (user received DHB out)
+4. Aggregates totals per wallet address
+5. Upserts into `leaderboard_snapshots` with `sent_tips` and `received_tips`
 
-### 3. `use-profile-follow.ts` hook (~100 lines)
-Extracted from lines 326-390:
-- `handleFollow()` with private account awareness + optimistic update via `setFollowStatus`
-- `handleUnfollow()` with optimistic revert
-- `isFollowLoading` state
-- Takes `profile`, `isAuthenticated`, `isTargetPrivate`, `setFollowStatus`, `handleApiError` as params
+On BNB, two separate contract addresses must be checked (tip + StreamController). On Base, they share the same address so one query covers both.
 
-### 4. `ProfileHeader.tsx` component (~350 lines)
-The banner + avatar + profile info card (lines 908-1220):
-- Cover photo with fullscreen click
-- Avatar with stories overlay (ShimmerBorder, liquid glass Play/Image buttons)
-- Action buttons row (Edit Profile / Follow / Subscribe / Requested / Subscribed + options drawer trigger)
-- Profile name, handle, verified badge, staking badge, "Follows you" chip
-- Wallet address display
-- Bio with TranslatableText + BioTranslateButton
-- Joined date
-- Followers/Following counts with privacy gating
-- MutualFollowers
-- Props: receives all needed data from the orchestrator (profile, badges, stories, follow state, handlers)
+### 3. Update `refresh-leaderboard-cache`
 
-### 5. `ProfileTabContent.tsx` component (~280 lines)
-The `renderTabContent()` switch (lines 505-747):
-- Private account gate
-- Loading state
-- All 8 tab cases (home with optimistic posts, posts, images, videos, subscribers with plan management, songs, live, fractions)
-- Props: `activeTab`, content arrays, plan data, profile info, modal openers
+Modify Section 3 (currently API-based for sentTips/receivedTips) to:
 
-### 6. `ProfileOptionsDrawer.tsx` component (~150 lines)
-The ShareOptions component + offer drawer (lines 407-503, 1249-1284):
-- Copy URL / username / address handlers
-- Message, Send coins, Notify, Make Offer buttons
-- Unfollow + Block buttons
-- Offer drawer with DHB input
-- Props: `profile`, `isViewingOwnProfile`, `isFollowing`, handlers
+- During daily snapshots, also query recent Transfer events and store `sent_tips`/`received_tips`
+- For time-based periods (day, week, month, year), compute deltas from snapshots rather than relying on the DeHub API
+- Keep DeHub API as fallback for the "all" period
 
-### 7. `ProfilePage.tsx` orchestrator (~200 lines)
-Slim file that:
-- Calls `useProfilePage()` to get all data
-- Calls `useProfileFollow()` for follow actions
-- Manages UI-only state (modals open/close, fullscreen image, active tab)
-- Renders loading / auth gate / username-available states
-- Composes `ProfileHeader`, tab bar, `ProfileTabContent`, `ProfileOptionsDrawer`
-- Renders modals (CreatePlanModal, EditPlanModal, FollowersListDrawer, StoryViewerModal, LoginModal, FullscreenImageViewer)
+### 4. No Frontend Changes
 
-## Safety Guarantees
-
-- **Zero import changes** in any consumer file -- only `App.tsx` imports ProfilePage, and the default export stays
-- **All state flows preserved** -- `setFollowStatus` from `useDeHubProfile` is passed through exactly as before
-- **Optimistic update chain intact** -- `useProfileFollow` receives `setFollowStatus` from the profile hook and calls it identically
-- **Pull-to-refresh handlers** stay wired to the same container ref
-- **Story viewer** keeps the same `allStories` array and `profileStoryStartIndex` calculation
-- **Tab content** receives the exact same content arrays and renders identical JSX
-- **Privacy gating** logic (hideFollowerCounts, showFollowersFollowing, isTargetPrivate) flows through props unchanged
-- **Conditional AppLayout wrapper** for `/:username` routes stays in the orchestrator
+The leaderboard UI already supports `sentTips`/`receivedTips` categories with delta display. Once the cache is populated with historical data, it works automatically.
 
 ## Technical Details
 
-### Cross-component state that must be threaded carefully:
-1. `setFollowStatus` (from useDeHubProfile) -- used by follow handlers AND optimistically updates `isFollowing`
-2. `setActiveTab` -- used by Subscribe button in header (navigates to subs tab) AND by tab bar
-3. `setCreatePlanModalOpen` -- triggered from both subscribers tab empty state AND header
-4. `shareSheetOpen` / `setShareSheetOpen` -- used by options drawer AND closed by follow handlers
-5. `fullscreenImage` -- set by avatar click, cover click, and image overlay; cleared by FullscreenImageViewer
+### Transfer Event Signature
+```text
+topic0 = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+```
 
-All of these are managed in the orchestrator and passed as props/callbacks.
+### Query Pattern (eth_getLogs)
 
-### Import deduplication:
-- Lucide icons are imported only where used (e.g., `Copy`, `Wallet` in ProfileOptionsDrawer, not ProfileHeader)
-- `cn`, `toast`, drawer components imported only in files that use them
-- 3D icon assets imported only in ProfileTabContent (where empty states render)
+For **Spent** (user -> contract):
+```json
+{
+  "address": "<DHB_TOKEN>",
+  "fromBlock": "<TARGET_BLOCK>",
+  "toBlock": "latest",
+  "topics": [
+    "0xddf252ad...",
+    null,
+    "<CONTRACT_ADDRESS_PADDED>"
+  ]
+}
+```
+
+For **Earned** (contract -> user):
+```json
+{
+  "address": "<DHB_TOKEN>",
+  "fromBlock": "<TARGET_BLOCK>",
+  "toBlock": "latest",
+  "topics": [
+    "0xddf252ad...",
+    "<CONTRACT_ADDRESS_PADDED>",
+    null
+  ]
+}
+```
+
+On BNB, we run these queries for both the tip contract and StreamController separately, then merge the results. On Base, one query per direction suffices since both are the same address.
+
+### Block Estimation
+
+Same approach as existing `backfill-leaderboard-snapshots`:
+- Base: ~43,200 blocks/day (2s block time)
+- BNB: ~28,800 blocks/day (3s block time)
+
+### Rate Limiting
+
+- 200ms between RPC batches
+- Alchemy primary with BNB public RPC fallbacks (same pattern as existing code)
+
+## Execution Order
+
+1. Run database migration (add columns)
+2. Deploy `backfill-tip-snapshots` edge function
+3. Update `refresh-leaderboard-cache` to track tips/bounties daily
+4. Run backfill once to populate historical data
+5. Daily refresh handles it going forward
