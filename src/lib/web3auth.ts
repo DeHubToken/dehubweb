@@ -78,11 +78,20 @@ const chainConfig = {
 let web3authInstance: Web3AuthNoModal | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3AuthNoModal> | null = null;
-let cachedClientId: string | null = null;
 // Track which adapter was last used (for detecting social login vs external wallet)
 let lastConnectedAdapter: string | null = null;
 // Track if we've detected that popups are blocked and should use redirect
 let forceRedirectMode = false;
+
+// Cached config from edge function
+interface Web3AuthConfig {
+  clientId: string;
+  aggregateVerifier?: string;
+  googleSubVerifier?: string;
+  emailSubVerifier?: string;
+  googleClientId?: string;
+}
+let cachedConfig: Web3AuthConfig | null = null;
 
 /**
  * Reset all Web3Auth module state - used for HMR and error recovery
@@ -96,7 +105,7 @@ export function resetWeb3AuthState(): void {
   isInitializing = false;
   initPromise = null;
   lastConnectedAdapter = null;
-  // Don't reset forceRedirectMode - once we know popups are blocked, keep using redirect
+  // Don't reset cachedConfig or forceRedirectMode - persist across resets
   console.log("[Web3Auth] Module state reset");
 }
 
@@ -145,14 +154,23 @@ export function hasRedirectResult(): boolean {
   );
 }
 
-async function getWeb3AuthClientId(): Promise<string> {
-  if (cachedClientId) return cachedClientId;
-  console.log("[Web3Auth] Fetching client ID from edge function...");
+async function getWeb3AuthConfig(): Promise<Web3AuthConfig> {
+  if (cachedConfig) return cachedConfig;
+  console.log("[Web3Auth] Fetching config from edge function...");
   const { data, error } = await supabase.functions.invoke("get-web3auth-config");
   console.log("[Web3Auth] get-web3auth-config response:", { data, error });
   if (!error && data?.clientId) {
-    cachedClientId = data.clientId;
-    return cachedClientId;
+    cachedConfig = {
+      clientId: data.clientId,
+      aggregateVerifier: data.aggregateVerifier || undefined,
+      googleSubVerifier: data.googleSubVerifier || undefined,
+      emailSubVerifier: data.emailSubVerifier || undefined,
+      googleClientId: data.googleClientId || undefined,
+    };
+    if (cachedConfig.aggregateVerifier) {
+      console.log("[Web3Auth] Aggregate verifier configured:", cachedConfig.aggregateVerifier);
+    }
+    return cachedConfig;
   }
   throw new Error("Web3Auth client ID not configured");
 }
@@ -183,9 +201,10 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
 
   initPromise = (async () => {
     try {
-      // Fetch Web3Auth client ID
+      // Fetch Web3Auth configuration (client ID + optional aggregate verifier)
       console.log("[Web3Auth] Fetching configuration...");
-      const clientId = await getWeb3AuthClientId();
+      const config = await getWeb3AuthConfig();
+      const clientId = config.clientId;
       console.log("[Web3Auth] Client ID fetched:", clientId?.substring(0, 15) + "...");
 
       // Create private key provider for direct key access
@@ -217,12 +236,35 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       console.log("[Web3Auth] Configuring Openlogin adapter...");
       console.log("[Web3Auth] mobile:", mobile, "forceRedirect:", forceRedirectMode, "useRedirect:", useRedirect);
       console.log("[Web3Auth] redirectUrl:", redirectUrl);
+
+      // Build loginConfig for aggregate verifier (if configured)
+      // This ensures Google + Email Passwordless produce the SAME wallet address for the same email.
+      const adapterSettings: Record<string, unknown> = {
+        uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+        redirectUrl,
+      };
+
+      if (config.aggregateVerifier && config.googleSubVerifier && config.emailSubVerifier && config.googleClientId) {
+        console.log("[Web3Auth] Using aggregate verifier:", config.aggregateVerifier);
+        adapterSettings.loginConfig = {
+          google: {
+            verifier: config.aggregateVerifier,
+            verifierSubIdentifier: config.googleSubVerifier,
+            typeOfLogin: "google",
+            clientId: config.googleClientId,
+          },
+          email_passwordless: {
+            verifier: config.aggregateVerifier,
+            verifierSubIdentifier: config.emailSubVerifier,
+            typeOfLogin: "email_passwordless",
+            clientId: clientId,
+          },
+        };
+      }
+
       const openloginAdapter = new OpenloginAdapter({
         privateKeyProvider,
-        adapterSettings: {
-          uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-          redirectUrl,
-        },
+        adapterSettings,
       });
       web3authInstance.configureAdapter(openloginAdapter);
       console.log("[Web3Auth] Openlogin adapter configured (uxMode:", useRedirect ? "REDIRECT" : "POPUP", ")");
@@ -342,6 +384,12 @@ export async function connectToSocialProvider(
   // Add login hint for email/sms passwordless
   if (loginHint) {
     extraLoginOptions.login_hint = loginHint;
+  }
+
+  // When using aggregate verifier with email_passwordless, must set connection: "email"
+  // so the sub-verifier correctly identifies the login type
+  if (authConnection === AUTH_CONNECTION.EMAIL_PASSWORDLESS && cachedConfig?.aggregateVerifier) {
+    extraLoginOptions.connection = "email";
   }
 
   // Save current path before potential redirect
