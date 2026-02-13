@@ -152,7 +152,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <LiquidGlassBubble 
             shimmer
             noBorder
-            className={cn("cursor-pointer w-full", isConnecting && "opacity-70 pointer-events-none")}
+            className={cn("cursor-pointer w-full [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
             onClick={handlePostClick}
           >
             <div className={cn(

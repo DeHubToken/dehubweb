@@ -23,8 +23,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     <>
       {/* Log in Button - shown at top when not authenticated */}
       {!isAuthenticated && (
-        <div className="mb-4 pb-4 border-b border-zinc-700/50">
-          <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
+        <div className="mb-4 pb-4">
+          <LiquidGlassBubble shimmer noBorder className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <LogIn className="w-5 h-5" />
               Log in
