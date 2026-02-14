@@ -145,6 +145,14 @@ function SortFilterSection({
   onContentFilterToggle,
   onReset,
 }: FilterSectionProps) {
+  const [categorySearch, setCategorySearch] = useState('');
+
+  const filteredCategories = useMemo(() => {
+    if (!categorySearch.trim()) return categories;
+    const q = categorySearch.toLowerCase();
+    return categories.filter(cat => cat.name.toLowerCase().includes(q));
+  }, [categories, categorySearch]);
+
   return (
     <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
@@ -174,10 +182,17 @@ function SortFilterSection({
       {/* Category Filter */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <input
+          type="text"
+          value={categorySearch}
+          onChange={e => setCategorySearch(e.target.value)}
+          placeholder="Search categories..."
+          className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
+        />
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             <button
-              onClick={() => onCategorySelect('all')}
+              onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                 selectedCategory === 'all'
@@ -187,10 +202,10 @@ function SortFilterSection({
             >
               All
             </button>
-            {categories.map((cat) => (
+            {filteredCategories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => onCategorySelect(cat.id)}
+                onClick={() => { onCategorySelect(cat.id); setCategorySearch(''); }}
                 className={cn(
                   'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                   selectedCategory === cat.id
@@ -201,6 +216,9 @@ function SortFilterSection({
                 {cat.name}
               </button>
             ))}
+            {filteredCategories.length === 0 && categorySearch.trim() && (
+              <span className="text-xs text-zinc-500 py-1.5">No matches</span>
+            )}
           </div>
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
         </div>
