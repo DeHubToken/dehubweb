@@ -109,14 +109,9 @@ export function WhatsHappening() {
                 'hover:bg-zinc-800 text-left group'
               )}
             >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className="text-zinc-500 text-xs font-medium w-4 text-right flex-shrink-0">
-                  {index + 1}
-                </span>
-                <span className="text-white font-medium truncate">
-                  {cat.name}
-                </span>
-              </div>
+              <span className="text-white font-medium truncate min-w-0">
+                {cat.name}
+              </span>
               {cat.nft_count > 0 && (
                 <span className="text-zinc-500 text-xs flex-shrink-0 ml-2">
                   {cat.nft_count.toLocaleString()}
