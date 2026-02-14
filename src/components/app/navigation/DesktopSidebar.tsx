@@ -157,7 +157,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              "py-3 xl:py-4 text-[13.5px]"
+              "py-2.5 xl:py-4 text-[13.5px]"
             )}>
               {isAuthenticated ? (
                 <>
