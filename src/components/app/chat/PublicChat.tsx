@@ -29,6 +29,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     id: msg.id,
     userId: msg.sender_address || 'unknown',
     userName: msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon',
+    userHandle: msg.sender_username || undefined,
     userAvatar: buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url) || undefined,
     content: msg.content || '',
     timestamp: new Date(msg.created_at),
