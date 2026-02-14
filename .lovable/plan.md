@@ -1,37 +1,58 @@
 
 
-# Leaderboard: Show All Users with Infinite Scroll Pagination
+## Fix: Notification Avatars Not Refreshing for Aggregated Entries
 
-## Overview
-Remove the zero-value filters from the backend so all users appear, and add client-side infinite scroll pagination to the leaderboard page so it loads in batches (e.g., 25 at a time) as the user scrolls down.
+### Problem
+Aggregated notifications (e.g., "okanbey started following you" with "okanbey, usa, outforrder") show a stale or default avatar for the primary actor. Two root causes:
 
-## Changes
+1. **No cache-busting on CDN avatar URLs** -- `buildAvatarUrl` produces a static URL like `dehubcdn.../avatars/0xabc.jpg`. When a user updates their profile picture, the filename stays the same, so the browser serves a cached version of the old (or default) image indefinitely.
 
-### 1. Backend: Remove Zero-Value Filters
-**File:** `supabase/functions/refresh-leaderboard-cache/index.ts`
+2. **Batch-avatars may return a full URL that gets double-processed** -- If the `batch-avatars` edge function returns a full `https://dehubcdn...` URL, `buildAvatarUrl` returns it as-is (correct). But if it returns a relative path, the function rebuilds it using the actor's address, which may produce a URL the CDN doesn't recognize for that user.
 
-- **Line 550**: Remove `.filter((e) => e.total > 0)` so users with 0 holdings are included
-- **Line 755**: Remove `.filter((e) => (e[metric] ?? 0) > 0)` so users with 0 followers/likes/subscribers are included
+### Solution
 
-All users will still be sorted by value (descending), so zero-value users naturally appear at the bottom.
+#### 1. Add cache-busting timestamp to avatar URLs
+Append a time-based query parameter to CDN avatar URLs so browsers always fetch the latest version. Use a coarse timestamp (rounded to every 5 minutes) to still benefit from short-term caching.
 
-### 2. Frontend: Add Infinite Scroll Pagination
-**File:** `src/pages/app/LeaderboardPage.tsx`
+**File:** `src/lib/media-url.ts`
+- In `buildAvatarUrl`, append `?v={timestamp}` to the final CDN URL where the timestamp is rounded to the nearest 5-minute window.
 
-- Add a `visibleCount` state starting at 25
-- Slice the filtered/sorted `entries` array to only render the first `visibleCount` items
-- Add an `IntersectionObserver` on a sentinel element at the bottom of the list
-- When the sentinel becomes visible, increase `visibleCount` by 25 (loading the next batch)
-- Reset `visibleCount` to 25 when the user changes category, time period, or search query
-- Show a small loading spinner at the bottom while more items exist beyond the current view
+#### 2. Prefer enriched full URL directly when available
+When `batch-avatars` returns a complete avatar URL (starting with `https://`), use it directly instead of re-processing through `buildAvatarUrl`.
+
+**File:** `src/pages/app/NotificationsPage.tsx`
+- In `NotificationItem`, if the enriched avatar URL is already a full URL, use it directly with cache-busting instead of passing it through `buildAvatarUrl`.
 
 ### Technical Details
 
-| Area | Detail |
-|------|--------|
-| Batch size | 25 entries per load |
-| Reset triggers | Category change, time period change, search input |
-| Scroll detection | `IntersectionObserver` on a div rendered after the last visible entry |
-| Badge batching | Only fetch badge balances for the currently visible slice (not all entries) |
-| No backend pagination needed | Data is already fully cached; slicing happens client-side for simplicity |
+**media-url.ts change:**
+```typescript
+export function buildAvatarUrl(address: string, apiAvatarPath: string | undefined | null): string | undefined {
+  // ... existing logic ...
+  // Before returning any CDN URL, append cache-bust param
+  const cacheBust = Math.floor(Date.now() / 300000); // 5-min windows
+  return `${cdnUrl}?v=${cacheBust}`;
+}
+```
 
+**NotificationsPage.tsx change:**
+```typescript
+// If enriched avatar is a full URL, use it directly with cache-busting
+const cacheBust = Math.floor(Date.now() / 300000);
+const freshAvatar = enriched?.avatarUrl;
+const avatarUrl = freshAvatar?.startsWith('http')
+  ? `${freshAvatar}${freshAvatar.includes('?') ? '&' : '?'}v=${cacheBust}`
+  : notification.actorAddress
+    ? buildAvatarUrl(notification.actorAddress, freshAvatar || staleAvatarPath)
+    : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
+```
+
+### Build Error Fix
+The existing build errors (`Property 'ethereum' does not exist on type 'Window'`) are unrelated to this change but will be fixed by adding a `Window` interface extension in a global type declaration file.
+
+**New file:** `src/types/global.d.ts`
+```typescript
+interface Window {
+  ethereum?: any;
+}
+```
