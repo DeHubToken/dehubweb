@@ -323,14 +323,21 @@ export default function HomePage() {
   const handleTouchStart = (e: React.TouchEvent) => {
     // Skip entire gesture if touch originated inside a no-swipe zone (filter panel)
     const target = e.target as HTMLElement;
-    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
-    if (touchInsideNoSwipe.current) return;
+    const noSwipeEl = target.closest('[data-no-swipe]');
+    touchInsideNoSwipe.current = !!noSwipeEl;
+    
+    console.log('[SWIPE DEBUG] touchStart target:', target.tagName, target.className?.slice(0, 50), 'noSwipe:', !!noSwipeEl);
+    
+    if (touchInsideNoSwipe.current) {
+      console.log('[SWIPE DEBUG] BLOCKING - inside no-swipe zone');
+      return;
+    }
 
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchEndX.current = null;
     touchEndY.current = null;
-    touchGestureTriggered.current = false; // New gesture starting
+    touchGestureTriggered.current = false;
     pullHandlers.onTouchStart(e);
   };
 
