@@ -117,6 +117,63 @@ Deno.serve(async (req) => {
       }
     }
     
+    // ========================================================================
+    // TRENDING CATEGORIES: Compute from cached feed data
+    // ========================================================================
+    try {
+      console.log("Computing trending categories from cached feed pages...");
+      
+      // Read all cached latest feed pages to count category occurrences
+      const { data: cachedPages } = await supabase
+        .from("feed_cache")
+        .select("data")
+        .like("cache_key", "feed_latest_page%");
+      
+      const categoryCounts: Record<string, number> = {};
+      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      
+      if (cachedPages) {
+        for (const page of cachedPages) {
+          const feedData = page.data as { result?: any[] };
+          const items = feedData?.result || [];
+          for (const item of items) {
+            // Only count posts from the last week
+            const createdAt = item.createdAt ? new Date(item.createdAt).getTime() : 0;
+            if (createdAt < oneWeekAgo) continue;
+            
+            // Handle category as string or array
+            const cats = Array.isArray(item.category) ? item.category : item.category ? [item.category] : [];
+            for (const cat of cats) {
+              if (typeof cat === 'string' && cat.trim()) {
+                categoryCounts[cat.trim()] = (categoryCounts[cat.trim()] || 0) + 1;
+              }
+            }
+          }
+        }
+      }
+      
+      // Sort by count descending, take top 10
+      const trending = Object.entries(categoryCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([name, count]) => ({ id: name, name, slug: name.toLowerCase(), post_count: count }));
+      
+      console.log(`Found ${trending.length} trending categories:`, trending.map(t => `${t.name}(${t.post_count})`).join(', '));
+      
+      // Cache trending categories
+      await supabase
+        .from("feed_cache")
+        .upsert({
+          cache_key: "trending_categories",
+          data: { categories: trending, computed_at: new Date().toISOString() },
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "cache_key" });
+      
+      console.log("Trending categories cached successfully");
+    } catch (trendingError) {
+      console.error("Failed to compute trending categories:", trendingError);
+    }
+    
     const successCount = results.filter(r => r.success).length;
     const totalItems = results.reduce((sum, r) => sum + (r.itemCount || 0), 0);
     
