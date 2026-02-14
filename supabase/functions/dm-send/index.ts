@@ -55,15 +55,17 @@ Deno.serve(async (req) => {
     }
 
     // Build the request body for DeHub API
+    // API expects: senderAddress, receiverAddress, content, type
     const dmBody: Record<string, unknown> = {
-      sender: sender || walletAddress,
+      senderAddress: sender || walletAddress,
       content,
       type,
     };
 
     if (receiver) {
-      dmBody.receiver = receiver.toLowerCase();
-    } else {
+      dmBody.receiverAddress = receiver.toLowerCase();
+    }
+    if (conversationId) {
       dmBody.conversationId = conversationId;
     }
 
