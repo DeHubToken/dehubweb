@@ -223,7 +223,7 @@ export function SidebarLeaderboard() {
                         {(() => {
                           const badgeUrl = getBadgeUrl(entry.badgeBalance ?? badgeBalances[entry.account.toLowerCase()]);
                           return badgeUrl ? (
-                            <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-2.5" />
+                            <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
                           ) : null;
                         })()}
                       </span>
