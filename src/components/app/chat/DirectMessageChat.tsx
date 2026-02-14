@@ -132,6 +132,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
+  const [newMessageCount, setNewMessageCount] = useState(0);
+  const prevMessagesLenRef = useRef(0);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isBlocked, setIsBlocked] = useState(conversation.isBlocked ?? false);
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
@@ -199,10 +201,31 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     if (isInitialMount.current && messages.length > 0) {
       bottomRef.current?.scrollIntoView({ behavior: 'auto' });
       isInitialMount.current = false;
+      prevMessagesLenRef.current = messages.length;
       // Mark as read when opening
       markAsRead();
     }
   }, [messages.length, markAsRead]);
+
+  // Auto-scroll on new messages (like WhatsApp)
+  useEffect(() => {
+    if (isInitialMount.current) return;
+    const prevLen = prevMessagesLenRef.current;
+    if (messages.length > prevLen) {
+      const container = scrollContainerRef.current;
+      if (container) {
+        const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+        if (distanceFromBottom < 150) {
+          // User is near bottom - auto scroll
+          setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+        } else {
+          // User is scrolled up - show badge count
+          setNewMessageCount(prev => prev + (messages.length - prevLen));
+        }
+      }
+    }
+    prevMessagesLenRef.current = messages.length;
+  }, [messages.length]);
 
   // Handle scroll for infinite loading and jump button
   const handleScroll = useCallback(() => {
@@ -212,6 +235,10 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     // Show jump to latest when scrolled up
     const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
     setShowJumpToLatest(distanceFromBottom > 100);
+    // Reset new message count when user scrolls to bottom
+    if (distanceFromBottom < 50) {
+      setNewMessageCount(0);
+    }
 
     // Load more when near top
     if (container.scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
@@ -228,6 +255,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setNewMessageCount(0);
   };
 
   const handleSendMessage = async (content: string, type: 'text' | 'image' | 'gif' | 'audio', imageUrl?: string) => {
@@ -433,16 +461,18 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
-      {/* Jump to latest button */}
-      {showJumpToLatest && (
-        <Button
-          onClick={scrollToBottom}
-          className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full shadow-lg"
-          size="sm"
-        >
-          <ArrowDown className="w-4 h-4 mr-1" />
-          Jump to latest
-        </Button>
+      {/* Jump to latest button with new message badge */}
+      {(showJumpToLatest || newMessageCount > 0) && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10">
+          <Button
+            onClick={scrollToBottom}
+            className="bg-zinc-800 hover:bg-zinc-700 text-white rounded-full shadow-lg relative"
+            size="sm"
+          >
+            <ArrowDown className="w-4 h-4 mr-1" />
+            {newMessageCount > 0 ? `${newMessageCount} new message${newMessageCount > 1 ? 's' : ''}` : 'Jump to latest'}
+          </Button>
+        </div>
       )}
 
       {/* Input */}
