@@ -227,7 +227,8 @@ export function ProfileHeader({
                 {!isFollowing && !isPending && (
                   <Button 
                     size="sm" 
-                    className="rounded-xl bg-white text-black hover:bg-zinc-200 gap-2"
+                    variant="glass"
+                    className="rounded-xl gap-2"
                     onClick={handleFollow}
                     disabled={isFollowLoading}
                   >

@@ -66,7 +66,8 @@ export function AuthGate({ description }: AuthGateProps) {
           <Button 
             onClick={handleLogin}
             disabled={isConnecting}
-            className="rounded-xl bg-white text-black hover:bg-white/90 font-semibold px-6 min-w-[120px]"
+            variant="glass"
+            className="rounded-xl font-semibold px-6 min-w-[120px]"
           >
             {isConnecting ? (
               <span className="flex items-center gap-2">

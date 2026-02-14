@@ -444,13 +444,14 @@ export function PostAccessToggles({
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
-            <Button variant="outline" onClick={cancelPpv} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
+            <Button variant="glass" onClick={cancelPpv} className="flex-1 rounded-xl">
               Cancel
             </Button>
             <Button 
               onClick={confirmPpv} 
               disabled={!tempPpvAmount.trim()}
-              className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="glass"
+              className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
               Confirm
@@ -515,13 +516,14 @@ export function PostAccessToggles({
             )}
           </div>
           <DrawerFooter className="flex-row gap-2">
-            <Button variant="outline" onClick={cancelBounty} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
+            <Button variant="glass" onClick={cancelBounty} className="flex-1 rounded-xl">
               Cancel
             </Button>
             <Button 
               onClick={confirmBounty} 
               disabled={!tempW2eViews.trim() || !tempW2eTotal.trim()}
-              className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="glass"
+              className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
               Confirm
@@ -558,13 +560,14 @@ export function PostAccessToggles({
             </div>
           </div>
           <DrawerFooter className="flex-row gap-2">
-            <Button variant="outline" onClick={cancelToken} className="flex-1 rounded-xl border-white/20 bg-white text-black hover:bg-white/90">
+            <Button variant="glass" onClick={cancelToken} className="flex-1 rounded-xl">
               Cancel
             </Button>
             <Button 
               onClick={confirmToken} 
               disabled={!tempTokenAmount.trim()}
-              className="flex-1 rounded-xl bg-white text-black hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="glass"
+              className="flex-1 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Check className="w-4 h-4 mr-2" />
               Confirm

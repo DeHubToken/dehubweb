@@ -347,7 +347,8 @@ export default function BuyCoinsPage() {
         <Button
           onClick={handlePurchase}
           disabled={effectiveAmount < 5 || isPending}
-          className="w-full py-6 text-lg font-semibold bg-white text-black hover:bg-zinc-200 rounded-xl disabled:opacity-50"
+          variant="glass"
+          className="w-full py-6 text-lg font-semibold rounded-xl disabled:opacity-50"
         >
           {isPending ? (
             <Loader2 className="w-5 h-5 animate-spin mr-2" />

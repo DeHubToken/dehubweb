@@ -243,7 +243,8 @@ export function VideoPaywallModal({
             Cancel
           </Button>
           <Button
-            className="flex-1 bg-white text-black hover:bg-white/90 font-medium"
+            variant="glass"
+            className="flex-1 font-medium"
             onClick={onConfirm}
             disabled={loading || !hasEnoughBalance || isGenerating}
           >
