@@ -1,8 +1,8 @@
 /**
- * WhatsHappening / Categories Sidebar Widget
- * ============================================
- * Shows top categories by content count. Clicking navigates to
- * the home feed pre-filtered to that category.
+ * WhatsHappening / Talk of the Town Sidebar Widget
+ * ==================================================
+ * Shows top categories ranked by content volume.
+ * Clicking navigates to the home feed pre-filtered to that category.
  * 
  * @module components/app/WhatsHappening
  */
@@ -17,22 +17,58 @@ import { cn } from '@/lib/utils';
 /** Max categories shown in sidebar */
 const MAX_CATEGORIES = 8;
 
+const DEHUB_API_BASE = "https://api.dehub.io";
+
+/**
+ * Fetch total post count for a single category using the unified feed endpoint.
+ * Uses limit=1 so we only get the totalCount from pagination, not actual data.
+ */
+async function fetchCategoryCount(category: string): Promise<number> {
+  try {
+    const url = new URL('/api/feed', DEHUB_API_BASE);
+    url.searchParams.set('category', category);
+    url.searchParams.set('limit', '1');
+    url.searchParams.set('status', 'minted');
+    
+    const res = await fetch(url.toString());
+    if (!res.ok) return 0;
+    const data = await res.json();
+    return data?.result?.pagination?.totalCount ?? data?.pagination?.totalCount ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * Fetch all categories with their post counts, sorted by count descending.
+ */
+async function getCategoriesWithCounts() {
+  const categories = await getCategories();
+  if (categories.length === 0) return [];
+
+  // Fetch counts in parallel
+  const counts = await Promise.all(
+    categories.map(cat => fetchCategoryCount(cat.id))
+  );
+
+  return categories
+    .map((cat, i) => ({ ...cat, nft_count: counts[i] }))
+    .sort((a, b) => b.nft_count - a.nft_count)
+    .filter(cat => cat.nft_count > 0);
+}
+
 export function WhatsHappening() {
   const navigate = useNavigate();
 
-  const { data: categories = [], isLoading } = useQuery({
-    queryKey: ['dehub-categories'],
-    queryFn: getCategories,
-    staleTime: 5 * 60 * 1000,
+  const { data: topCategories = [], isLoading } = useQuery({
+    queryKey: ['dehub-categories-with-counts'],
+    queryFn: getCategoriesWithCounts,
+    staleTime: 10 * 60 * 1000, // 10 min — counts don't change fast
   });
 
-  // Sort by nft_count descending, take top N
-  const topCategories = [...categories]
-    .sort((a, b) => (b.nft_count ?? 0) - (a.nft_count ?? 0))
-    .slice(0, MAX_CATEGORIES);
+  const displayed = topCategories.slice(0, MAX_CATEGORIES);
 
   const handleCategoryClick = (categoryId: string) => {
-    // Pre-set the home feed category filter before navigating
     setFilterValue('home', 'category', categoryId);
     navigate('/app');
   };
@@ -40,7 +76,7 @@ export function WhatsHappening() {
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4 pr-1.5">
-        <h3 className="font-bold text-lg text-white">Categories</h3>
+        <h3 className="font-bold text-lg text-white">Talk of the Town</h3>
         <Link 
           to="/app/explore" 
           className="text-sm text-white/50 hover:text-white transition-colors font-medium"
@@ -55,7 +91,7 @@ export function WhatsHappening() {
             <div key={i} className="h-9 rounded-lg bg-zinc-800 animate-pulse" />
           ))}
         </div>
-      ) : topCategories.length === 0 ? (
+      ) : displayed.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
             <LayoutGrid className="w-6 h-6 text-zinc-500" />
@@ -64,7 +100,7 @@ export function WhatsHappening() {
         </div>
       ) : (
         <div className="flex flex-col gap-1">
-          {topCategories.map((cat, index) => (
+          {displayed.map((cat, index) => (
             <button
               key={cat.id}
               onClick={() => handleCategoryClick(cat.id)}
@@ -81,7 +117,7 @@ export function WhatsHappening() {
                   {cat.name}
                 </span>
               </div>
-              {cat.nft_count != null && (
+              {cat.nft_count > 0 && (
                 <span className="text-zinc-500 text-xs flex-shrink-0 ml-2">
                   {cat.nft_count.toLocaleString()}
                 </span>
