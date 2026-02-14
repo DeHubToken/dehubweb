@@ -17,56 +17,16 @@ import { cn } from '@/lib/utils';
 /** Max categories shown in sidebar */
 const MAX_CATEGORIES = 8;
 
-const DEHUB_API_BASE = "https://api.dehub.io";
-
-/**
- * Fetch total post count for a single category using the unified feed endpoint.
- * Uses limit=1 so we only get the totalCount from pagination, not actual data.
- */
-async function fetchCategoryCount(category: string): Promise<number> {
-  try {
-    const url = new URL('/api/feed', DEHUB_API_BASE);
-    url.searchParams.set('category', category);
-    url.searchParams.set('limit', '1');
-    url.searchParams.set('status', 'minted');
-    
-    const res = await fetch(url.toString());
-    if (!res.ok) return 0;
-    const data = await res.json();
-    return data?.result?.pagination?.totalCount ?? data?.pagination?.totalCount ?? 0;
-  } catch {
-    return 0;
-  }
-}
-
-/**
- * Fetch all categories with their post counts, sorted by count descending.
- */
-async function getCategoriesWithCounts() {
-  const categories = await getCategories();
-  if (categories.length === 0) return [];
-
-  // Fetch counts in parallel
-  const counts = await Promise.all(
-    categories.map(cat => fetchCategoryCount(cat.id))
-  );
-
-  return categories
-    .map((cat, i) => ({ ...cat, nft_count: counts[i] }))
-    .sort((a, b) => b.nft_count - a.nft_count)
-    .filter(cat => cat.nft_count > 0);
-}
-
 export function WhatsHappening() {
   const navigate = useNavigate();
 
-  const { data: topCategories = [], isLoading } = useQuery({
-    queryKey: ['dehub-categories-with-counts'],
-    queryFn: getCategoriesWithCounts,
-    staleTime: 10 * 60 * 1000, // 10 min — counts don't change fast
+  const { data: allCategories = [], isLoading } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 1000 * 60 * 30,
   });
 
-  const displayed = topCategories.slice(0, MAX_CATEGORIES);
+  const displayed = allCategories.slice(0, MAX_CATEGORIES);
 
   const handleCategoryClick = (categoryId: string) => {
     // Pre-set the home feed category filter
@@ -115,11 +75,6 @@ export function WhatsHappening() {
               <span className="text-white font-medium truncate min-w-0">
                 {cat.name}
               </span>
-              {cat.nft_count > 0 && (
-                <span className="text-zinc-500 text-xs flex-shrink-0 ml-2">
-                  {cat.nft_count.toLocaleString()}
-                </span>
-              )}
             </button>
           ))}
         </div>
