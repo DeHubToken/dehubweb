@@ -247,6 +247,9 @@ export type Database = {
           message_type: string
           receiver_address: string
           sender_address: string
+          sender_avatar_url: string | null
+          sender_display_name: string | null
+          sender_username: string | null
         }
         Insert: {
           content?: string
@@ -257,6 +260,9 @@ export type Database = {
           message_type?: string
           receiver_address: string
           sender_address: string
+          sender_avatar_url?: string | null
+          sender_display_name?: string | null
+          sender_username?: string | null
         }
         Update: {
           content?: string
@@ -267,6 +273,9 @@ export type Database = {
           message_type?: string
           receiver_address?: string
           sender_address?: string
+          sender_avatar_url?: string | null
+          sender_display_name?: string | null
+          sender_username?: string | null
         }
         Relationships: []
       }
