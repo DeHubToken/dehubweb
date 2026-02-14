@@ -45,6 +45,12 @@ export interface RadioStation {
   clickcount: number;
   clicktrend: number;
   codec: string;
+  lastcheckok?: number;
+}
+
+/** Filter out stations without a working stream URL */
+function filterWorkingStations(stations: RadioStation[]): RadioStation[] {
+  return stations.filter(s => s.url_resolved || s.url);
 }
 
 export interface RadioTag {
@@ -293,9 +299,10 @@ async function fetchWithFallback<T>(endpoint: string): Promise<T> {
  * Get top voted stations
  */
 export async function getTopStations(limit = 50): Promise<RadioStation[]> {
-  return fetchWithFallback<RadioStation[]>(
-    `/stations/topvote?limit=${limit}&hidebroken=true`
+  const stations = await fetchWithFallback<RadioStation[]>(
+    `/stations/topvote?limit=${Math.round(limit * 1.5)}&hidebroken=true&lastcheckok=1`
   );
+  return filterWorkingStations(stations).slice(0, limit);
 }
 
 /**
@@ -303,9 +310,10 @@ export async function getTopStations(limit = 50): Promise<RadioStation[]> {
  */
 export async function getStationsByTag(tag: string, limit = 50): Promise<RadioStation[]> {
   const encodedTag = encodeURIComponent(tag);
-  return fetchWithFallback<RadioStation[]>(
-    `/stations/bytag/${encodedTag}?limit=${limit}&hidebroken=true&order=votes&reverse=true`
+  const stations = await fetchWithFallback<RadioStation[]>(
+    `/stations/bytag/${encodedTag}?limit=${Math.round(limit * 1.5)}&hidebroken=true&lastcheckok=1&order=votes&reverse=true`
   );
+  return filterWorkingStations(stations).slice(0, limit);
 }
 
 /**
@@ -313,9 +321,10 @@ export async function getStationsByTag(tag: string, limit = 50): Promise<RadioSt
  */
 export async function searchStations(query: string, limit = 50): Promise<RadioStation[]> {
   const encodedQuery = encodeURIComponent(query);
-  return fetchWithFallback<RadioStation[]>(
-    `/stations/search?name=${encodedQuery}&limit=${limit}&hidebroken=true&order=votes&reverse=true`
+  const stations = await fetchWithFallback<RadioStation[]>(
+    `/stations/search?name=${encodedQuery}&limit=${Math.round(limit * 1.5)}&hidebroken=true&lastcheckok=1&order=votes&reverse=true`
   );
+  return filterWorkingStations(stations).slice(0, limit);
 }
 
 export interface AdvancedSearchParams {
@@ -341,14 +350,16 @@ export async function searchStationsAdvanced(params: AdvancedSearchParams): Prom
     searchParams.set('countrycode', countryCode);
   }
   
-  searchParams.set('limit', limit.toString());
+  searchParams.set('limit', Math.round(limit * 1.5).toString());
   searchParams.set('hidebroken', 'true');
+  searchParams.set('lastcheckok', '1');
   searchParams.set('order', 'votes');
   searchParams.set('reverse', 'true');
   
-  return fetchWithFallback<RadioStation[]>(
+  const stations = await fetchWithFallback<RadioStation[]>(
     `/stations/search?${searchParams.toString()}`
   );
+  return filterWorkingStations(stations).slice(0, limit);
 }
 
 /**
