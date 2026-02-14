@@ -364,9 +364,12 @@ export async function sendMessage(
     // Handle {success: true, data: {...}} from DeHub API via edge function
     if (data?.success && data?.data) {
       const d = data.data;
+      // Use _id as conversationId when no explicit conversationId returned
+      // This resolves the virtual "new_0x..." conversation to a real one
+      const resolvedConversationId = d.conversationId || d._id || conversationId;
       return {
         id: d._id || d.id || `msg-${Date.now()}`,
-        conversationId: d.conversationId || conversationId,
+        conversationId: resolvedConversationId,
         sender: d.sender || { address: d.senderAddress },
         content: d.content || content,
         type: d.type || type,
