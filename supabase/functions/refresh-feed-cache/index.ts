@@ -123,14 +123,13 @@ Deno.serve(async (req) => {
     try {
       console.log("Computing trending categories from cached feed pages...");
       
-      // Read all cached latest feed pages to count category occurrences
+      // Read only page 1 of latest feed so counts match what users see on click
       const { data: cachedPages } = await supabase
         .from("feed_cache")
         .select("data")
-        .like("cache_key", "feed_latest_page%");
+        .eq("cache_key", "feed_latest_page1");
       
       const categoryCounts: Record<string, number> = {};
-      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
       
       // Collect all usernames to filter them out of categories
       const allUsernames = new Set<string>();
@@ -149,11 +148,8 @@ Deno.serve(async (req) => {
       const isValidCategory = (cat: string): boolean => {
         const lower = cat.toLowerCase().trim();
         if (!lower || lower.length < 2) return false;
-        // Filter out usernames used as categories
         if (allUsernames.has(lower)) return false;
-        // Filter out underscored names that look like usernames (e.g. "Da_Mystic_Cryptic")
         if (lower.includes('_') && /^[a-z0-9_]+$/i.test(lower)) return false;
-        // Filter out generic/spam-like entries
         if (['others', 'other', 'none', 'n/a', 'general'].includes(lower)) return false;
         return true;
       };
@@ -163,8 +159,6 @@ Deno.serve(async (req) => {
           const feedData = page.data as { result?: any[] };
           const items = feedData?.result || [];
           for (const item of items) {
-            const createdAt = item.createdAt ? new Date(item.createdAt).getTime() : 0;
-            if (createdAt < oneWeekAgo) continue;
             
             const cats = Array.isArray(item.category) ? item.category : item.category ? [item.category] : [];
             for (const cat of cats) {
