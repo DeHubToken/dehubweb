@@ -19,7 +19,6 @@ import lofi247Logo from '@/assets/radio/lofi247-logo.png';
 import moewifiLogo from '@/assets/radio/moewifi-logo.png';
 import niaLofiLogo from '@/assets/radio/nia-lofi-logo.png';
 import nightwavePlazaLogo from '@/assets/radio/nightwave-plaza-logo.png';
-import iranRadioLogo from '@/assets/radio/iran-radio.png';
 
 // Map station name patterns to custom logos
 const CUSTOM_LOGOS: Record<string, string> = {
@@ -35,9 +34,6 @@ const CUSTOM_LOGOS: Record<string, string> = {
   'nia lofi': niaLofiLogo,
   'nightwave plaza': nightwavePlazaLogo,
   'nightwave': nightwavePlazaLogo,
-  'iran radio': iranRadioLogo,
-  'radio iran': iranRadioLogo,
-  'irib': iranRadioLogo,
 };
 
 function getCustomLogo(stationName: string): string | null {
