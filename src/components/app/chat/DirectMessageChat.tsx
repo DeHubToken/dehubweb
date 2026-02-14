@@ -47,7 +47,8 @@ function MessageBubble({
   isOwnMessage: boolean;
 }) {
   const avatarUrl = getMediaUrl(message.sender?.avatarImageUrl || message.sender?.avatarUrl);
-  const displayName = message.sender?.displayName || message.sender?.display_name || message.sender?.username || 'User';
+  const displayName = message.sender?.displayName || message.sender?.display_name || message.sender?.username || 
+    (message.sender?.address ? `${message.sender.address.slice(0, 6)}...${message.sender.address.slice(-4)}` : 'User');
   
   return (
     <div className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
@@ -176,7 +177,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     conversation.participants?.[0];
 
   const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
-  const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username || 'User';
+  const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username || 
+    (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
 
   const {
     messages,

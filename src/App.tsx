@@ -47,12 +47,17 @@ const queryClient = new QueryClient({
   },
 });
 
+import { useDMRealtime } from "@/hooks/use-dm-realtime";
+
 // Inner app component that uses auth context
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
   
   // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
+  
+  // Subscribe to global DM updates
+  useDMRealtime();
   
   return (
     <>

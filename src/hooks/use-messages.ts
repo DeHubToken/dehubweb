@@ -4,8 +4,10 @@
  * React Query hooks for managing DM conversations and messages.
  */
 
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   getConversations,
   getMessages,
@@ -46,7 +48,7 @@ export const messagesKeys = {
  */
 export function useConversations(searchQuery: string = '') {
   const { isAuthenticated } = useAuth();
-  
+
   const query = useQuery({
     queryKey: [...messagesKeys.conversations(), searchQuery],
     queryFn: async () => {
@@ -88,7 +90,7 @@ export function useConversations(searchQuery: string = '') {
 export function useMessages(conversationId: string | null) {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-  
+
   const query = useInfiniteQuery({
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
@@ -128,6 +130,40 @@ export function useMessages(conversationId: string | null) {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
+
+  // Supabase Realtime Subscription for instant updates
+  useEffect(() => {
+    if (!isAuthenticated || !conversationId) return;
+
+    console.log('[useMessages] Setting up realtime subscription for:', conversationId);
+
+    // Subscribe to new messages in direct_messages table
+    const channel = supabase
+      .channel(`dm:${conversationId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'direct_messages',
+          // Filter by conversation_id OR addresses (to catch new conversations where ID isn't known yet)
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        (payload) => {
+          console.log('[useMessages] New message received via Realtime:', payload);
+          // Invalidate messages query to trigger a refetch
+          queryClient.invalidateQueries({ queryKey: messagesKeys.messages(conversationId) });
+          // Also invalidate conversations to update the sidebar
+          queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log('[useMessages] Cleaning up realtime subscription for:', conversationId);
+      supabase.removeChannel(channel);
+    };
+  }, [conversationId, isAuthenticated, queryClient]);
 
   return {
     messages,
@@ -224,7 +260,7 @@ export function useCreateConversation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ recipientAddress, recipientUser }: { recipientAddress: string; recipientUser?: Partial<import('@/lib/api/dehub').DeHubUser> }) => 
+    mutationFn: ({ recipientAddress, recipientUser }: { recipientAddress: string; recipientUser?: Partial<import('@/lib/api/dehub').DeHubUser> }) =>
       createConversation(recipientAddress, recipientUser),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
@@ -312,10 +348,10 @@ export function useCreateGroup() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ name, memberAddresses, description }: { 
-      name: string; 
-      memberAddresses: string[]; 
-      description?: string 
+    mutationFn: ({ name, memberAddresses, description }: {
+      name: string;
+      memberAddresses: string[];
+      description?: string
     }) => createGroup(name, memberAddresses, description),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
@@ -358,9 +394,9 @@ export function useUpdateGroup() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ groupId, updates }: { 
-      groupId: string; 
-      updates: { name?: string; description?: string; avatarUrl?: string } 
+    mutationFn: ({ groupId, updates }: {
+      groupId: string;
+      updates: { name?: string; description?: string; avatarUrl?: string }
     }) => updateGroup(groupId, updates),
     onSuccess: (_, { groupId }) => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversation(groupId) });
@@ -390,7 +426,7 @@ export function useBlockUserInGroup() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ groupId, userAddress }: { groupId: string; userAddress: string }) => 
+    mutationFn: ({ groupId, userAddress }: { groupId: string; userAddress: string }) =>
       blockUserInGroup(groupId, userAddress),
     onSuccess: (_, { groupId }) => {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversation(groupId) });

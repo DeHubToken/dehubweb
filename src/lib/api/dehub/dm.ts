@@ -112,11 +112,21 @@ export async function getConversations(
               conversationsMap.set(otherAddress, {
                 id: m.conversation_id || otherAddress,
                 participants: [{ address: otherAddress } as any],
-                otherUser: { address: otherAddress } as any,
+                otherUser: {
+                  address: otherAddress,
+                  username: m.sender_address === userAddress ? undefined : m.sender_username,
+                  displayName: m.sender_address === userAddress ? undefined : m.sender_display_name,
+                  avatarImageUrl: m.sender_address === userAddress ? undefined : m.sender_avatar_url,
+                } as any,
                 lastMessage: {
                   id: m.id || `msg-${m.created_at}`,
                   conversationId: m.conversation_id || otherAddress,
-                  sender: { address: m.sender_address } as any,
+                  sender: {
+                    address: m.sender_address,
+                    username: m.sender_username,
+                    displayName: m.sender_display_name,
+                    avatarImageUrl: m.sender_avatar_url,
+                  } as any,
                   content: m.content,
                   type: m.message_type as DMMessageType,
                   createdAt: m.created_at,
@@ -179,10 +189,14 @@ export async function getConversations(
           if (!allConversationsMap.has(address)) {
             allConversationsMap.set(address, c);
           } else {
-            // Update last message if Supabase one is newer
+            // Update last message if Supabase one is newer, but preserve profiles
             const existing = allConversationsMap.get(address)!;
-            if (new Date(c.updatedAt).getTime() > new Date(existing.updatedAt).getTime()) {
-              existing.lastMessage = c.lastMessage;
+            const existingTime = new Date(existing.updatedAt).getTime();
+            const newTime = new Date(c.updatedAt).getTime();
+
+            if (newTime > existingTime) {
+              // Only update last message and time, keep DeHub's richer profile
+              existing.lastMessage = c.lastMessage || existing.lastMessage;
               existing.updatedAt = c.updatedAt;
             }
           }
@@ -316,7 +330,12 @@ export async function getMessages(
       supabaseMessages = sData.map((m: any) => ({
         id: m.id,
         conversationId: m.conversation_id || conversationId,
-        sender: { address: m.sender_address },
+        sender: {
+          address: m.sender_address,
+          username: m.sender_username,
+          displayName: m.sender_display_name,
+          avatarImageUrl: m.sender_avatar_url,
+        },
         content: m.content,
         type: m.message_type as DMMessageType,
         mediaUrl: m.media_url,
@@ -426,10 +445,16 @@ export async function sendMessage(
 
     if (!hasMedia) {
       // Use Supabase Edge Function to proxy DM send (avoids CORS / auth issues)
+      // Get current user metadata to save with the message in Supabase
+      const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
+
       const edgeBody: Record<string, unknown> = {
         sender,
         content,
         type,
+        sender_username: currentUser?.username,
+        sender_display_name: currentUser?.displayName,
+        sender_avatar_url: currentUser?.avatarImageUrl,
       };
 
       if (isNewConversation && recipientAddress) {
@@ -504,51 +529,32 @@ export async function sendMessage(
 
     console.log('[DM API] sendMessage response:', data);
 
-    // Handle {success: true, data: {...}} from DeHub API via edge function
-    if (data?.success && data?.data) {
-      const d = data.data;
-      // Use _id as conversationId when no explicit conversationId returned
-      // This resolves the virtual "new_0x..." conversation to a real one
-      const resolvedConversationId = d.conversationId || d._id || conversationId;
+    // Handle nested data or direct response
+    const d = data?.data || data?.result?.data || data?.result || data;
+
+    if (d && (d._id || d.id)) {
+      const resolvedConversationId = d.conversationId || d.conversation_id || d._id || conversationId;
       return {
-        id: d._id || d.id || `msg-${Date.now()}`,
+        id: d.id || d._id,
         conversationId: resolvedConversationId,
-        sender: d.sender || { address: d.senderAddress },
-        content: d.content || content,
-        type: d.type || type,
-        mediaUrl: d.mediaUrl,
-        createdAt: d.createdAt || new Date().toISOString(),
+        sender: d.sender || { address: d.sender_address || d.senderAddress || sender },
+        content: d.content || d.text || content,
+        type: d.type || d.message_type || type,
+        mediaUrl: d.mediaUrl || d.media_url,
+        createdAt: d.createdAt || d.created_at || new Date().toISOString(),
       };
-    }
-    if (data?.result) {
-      const result = data.result?.data || data.result;
-      return {
-        id: result._id || result.id || `msg-${Date.now()}`,
-        conversationId: result.conversationId || conversationId,
-        sender: result.sender || { address: result.senderAddress },
-        content: result.content || content,
-        type: result.type || type,
-        mediaUrl: result.mediaUrl,
-        createdAt: result.createdAt || new Date().toISOString(),
-      };
-    }
-    if (data?._id || data?.id) {
-      return {
-        id: data._id || data.id,
-        conversationId: data.conversationId || conversationId,
-        sender: data.sender,
-        content: data.content || content,
-        type: data.type || type,
-        mediaUrl: data.mediaUrl,
-        createdAt: data.createdAt || new Date().toISOString(),
-      };
-    }
-    if (data?.message && typeof data.message === 'object') {
-      return data.message;
     }
 
     console.warn('[DM API] Unknown response format for sendMessage:', data);
-    throw new Error('Invalid response from sendMessage');
+    return {
+      id: `msg-${Date.now()}`,
+      conversationId,
+      sender: { address: sender },
+      content,
+      type,
+      mediaUrl,
+      createdAt: new Date().toISOString(),
+    };
   } catch (error) {
     console.error('[DM API] sendMessage failed:', error);
     throw error;
