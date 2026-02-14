@@ -80,7 +80,9 @@ export function SidebarLeaderboard() {
     setTimeout(() => setIsAutoRotating(true), 30000);
   }, [activePeriod]);
 
-  const balanceOverrides: Record<string, number> = {};
+  const balanceOverrides: Record<string, number> = {
+    maldoteth: 273298163.18321,
+  };
   const blockedLeaderboardUsers = ['microsoft'];
 
   const entries = (data?.result?.byWalletBalance || [])
