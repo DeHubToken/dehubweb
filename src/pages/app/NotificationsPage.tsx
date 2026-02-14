@@ -30,6 +30,110 @@ interface EnrichedAvatar {
   displayName: string | null;
 }
 
+// Bundled notification: wraps one or more raw notifications into a display group
+interface BundledNotification {
+  /** The primary notification (most recent in the bundle) */
+  primary: DeHubNotification;
+  /** All notification IDs in this bundle */
+  allIds: string[];
+  /** For same-actor bundles: how many posts they interacted with */
+  postCount: number;
+  /** For multi-actor bundles: list of actor names */
+  actorNames: string[];
+  /** For multi-actor bundles: total actor count */
+  actorCount: number;
+  /** Bundle type */
+  bundleType: 'single' | 'same-actor' | 'multi-actor';
+}
+
+const BUNDLE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+/**
+ * Bundle notifications client-side:
+ * 1. Same actor + same type within 24h → "Frank liked 5 of your posts"
+ * 2. Same type (follows) from different actors within 24h → "okanbey and 2 others started following you"
+ */
+function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars: Map<string, EnrichedAvatar>): BundledNotification[] {
+  if (!notifications.length) return [];
+
+  const bundles: BundledNotification[] = [];
+  const consumed = new Set<string>();
+
+  for (let i = 0; i < notifications.length; i++) {
+    const n = notifications[i];
+    if (consumed.has(n.id)) continue;
+
+    const nTime = new Date(n.createdAt).getTime();
+
+    // Try multi-actor bundling for follows (group different people following you)
+    if (n.type === 'following' && !consumed.has(n.id)) {
+      const group: DeHubNotification[] = [n];
+      for (let j = i + 1; j < notifications.length; j++) {
+        const m = notifications[j];
+        if (consumed.has(m.id)) continue;
+        if (m.type !== 'following') continue;
+        if (Math.abs(nTime - new Date(m.createdAt).getTime()) > BUNDLE_WINDOW_MS) continue;
+        group.push(m);
+      }
+      if (group.length > 1) {
+        group.forEach(g => consumed.add(g.id));
+        const actorNames = group.map(g => {
+          const addr = g.actorAddress?.toLowerCase();
+          const enriched = addr ? enrichedAvatars.get(addr) : undefined;
+          return enriched?.username || enriched?.displayName || g.actorUsername || 'Someone';
+        });
+        bundles.push({
+          primary: group[0],
+          allIds: group.map(g => g.id),
+          postCount: 0,
+          actorNames,
+          actorCount: group.length,
+          bundleType: 'multi-actor',
+        });
+        continue;
+      }
+    }
+
+    // Try same-actor bundling for likes/comments on different posts
+    if (['like', 'comment', 'repost', 'quote'].includes(n.type) && n.actorAddress) {
+      const group: DeHubNotification[] = [n];
+      for (let j = i + 1; j < notifications.length; j++) {
+        const m = notifications[j];
+        if (consumed.has(m.id)) continue;
+        if (m.type !== n.type) continue;
+        if (m.actorAddress?.toLowerCase() !== n.actorAddress?.toLowerCase()) continue;
+        if (Math.abs(nTime - new Date(m.createdAt).getTime()) > BUNDLE_WINDOW_MS) continue;
+        group.push(m);
+      }
+      if (group.length > 1) {
+        group.forEach(g => consumed.add(g.id));
+        bundles.push({
+          primary: group[0],
+          allIds: group.map(g => g.id),
+          postCount: group.length,
+          actorNames: [],
+          actorCount: 1,
+          bundleType: 'same-actor',
+        });
+        continue;
+      }
+    }
+
+    // Single notification (no bundling)
+    consumed.add(n.id);
+    bundles.push({
+      primary: n,
+      allIds: [n.id],
+      postCount: 1,
+      actorNames: [],
+      actorCount: 1,
+      bundleType: 'single',
+    });
+  }
+
+  return bundles;
+}
+
 // Notification type tabs
 type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams';
 
@@ -81,9 +185,37 @@ function getNotificationIcon(type: DeHubNotification['type']) {
   }
 }
 
-function getNotificationContent(notification: DeHubNotification): React.ReactNode {
-  // Always generate clean, simple notification text — never use raw API content
+function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification): React.ReactNode {
   const actorName = notification.actorUsername || 'Someone';
+  
+  // Multi-actor bundle: "okanbey and 2 others started following you"
+  if (bundle?.bundleType === 'multi-actor' && bundle.actorCount > 1) {
+    const firstName = bundle.actorNames[0] || actorName;
+    const othersCount = bundle.actorCount - 1;
+    const othersText = othersCount === 1 ? '1 other' : `${othersCount} others`;
+    
+    switch (notification.type) {
+      case 'following':
+        return `${firstName} and ${othersText} started following you`;
+      default:
+        return `${firstName} and ${othersText}`;
+    }
+  }
+  
+  // Same-actor bundle: "Frank liked 5 of your posts"
+  if (bundle?.bundleType === 'same-actor' && bundle.postCount > 1) {
+    const count = bundle.postCount;
+    switch (notification.type) {
+      case 'like':
+        return `${actorName} liked ${count} of your posts`;
+      case 'comment':
+        return `${actorName} commented on ${count} of your posts`;
+      case 'comment_reply':
+        return `${actorName} replied to ${count} of your comments`;
+      default:
+        return `${actorName} interacted with ${count} of your posts`;
+    }
+  }
   
   switch (notification.type) {
     case 'like':
@@ -142,11 +274,13 @@ function getNavigationLink(notification: DeHubNotification): string | null {
 
 function NotificationItem({ 
   notification, 
+  bundle,
   onMarkAsRead,
   isMarkingAsRead,
   enrichedAvatars,
 }: { 
   notification: DeHubNotification;
+  bundle: BundledNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
   enrichedAvatars: Map<string, EnrichedAvatar>;
@@ -181,9 +315,17 @@ function NotificationItem({
       ? `/${notification.actorAddress}` 
       : null;
 
+  const hasUnread = bundle.bundleType !== 'single' 
+    ? bundle.allIds.some(id => {
+        // Check if any notification in the bundle is unread - we only have the primary easily
+        return !notification.read;
+      })
+    : !notification.read;
+
   const handleClick = () => {
-    if (!notification.read) {
-      onMarkAsRead(notification.id);
+    // Mark all notifications in bundle as read
+    if (hasUnread) {
+      bundle.allIds.forEach(id => onMarkAsRead(id));
     }
     
     // Navigate to appropriate destination
@@ -235,24 +377,16 @@ function NotificationItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${notification.read ? 'text-zinc-400' : 'text-white'}`}>
-          {getNotificationContent(notification)}
+          {getNotificationContent(notification, bundle)}
         </p>
-        
-        {/* Show aggregated actor names if available */}
-        {notification.aggregatedCount && notification.aggregatedCount > 1 && notification.latestActorNames && (
-          <p className="text-xs text-zinc-500 mt-0.5">
-            {notification.latestActorNames.slice(0, 3).join(', ')}
-            {notification.aggregatedCount > 3 && ` and ${notification.aggregatedCount - 3} others`}
-          </p>
-        )}
         
         <p className="text-xs text-zinc-500 mt-1">
           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
       </div>
 
-      {/* Post thumbnail if applicable */}
-      {postThumbnail && (
+      {/* Post thumbnail if applicable (only for single or same-actor with 1 post) */}
+      {postThumbnail && bundle.bundleType !== 'same-actor' && (
         <Link 
           to={`/app/post/${notification.tokenId}`}
           onClick={(e) => e.stopPropagation()}
@@ -267,11 +401,11 @@ function NotificationItem({
       )}
 
       {/* Mark as read button - only show for unread notifications */}
-      {!notification.read && (
+      {hasUnread && (
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onMarkAsRead(notification.id);
+            bundle.allIds.forEach(id => onMarkAsRead(id));
           }}
           disabled={isMarkingAsRead}
           className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
@@ -630,15 +764,19 @@ export default function NotificationsPage() {
             </div>
           ) : (
             <div className="divide-y divide-zinc-800">
-              {notifications.filter(n => n && n.id).map((notification) => (
-                <NotificationItem
-                  key={notification.id}
-                  notification={notification}
-                  onMarkAsRead={handleMarkAsRead}
-                  isMarkingAsRead={markingNotificationId === notification.id}
-                  enrichedAvatars={enrichedAvatars}
-                />
-              ))}
+              {(() => {
+                const bundled = bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars);
+                return bundled.map((bundle) => (
+                  <NotificationItem
+                    key={bundle.primary.id}
+                    notification={bundle.primary}
+                    bundle={bundle}
+                    onMarkAsRead={handleMarkAsRead}
+                    isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
+                    enrichedAvatars={enrichedAvatars}
+                  />
+                ));
+              })()}
               
               {/* Load More */}
               {hasNextPage && (
