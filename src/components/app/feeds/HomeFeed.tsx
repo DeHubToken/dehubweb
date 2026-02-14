@@ -166,6 +166,9 @@ function SortFilterSection({
     return filtered;
   }, [categories, categorySearch, selectedCategory, selectedCategoryObj]);
 
+  const activeFilterClass = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+  const inactiveFilterClass = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
+
   return (
     <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
@@ -178,10 +181,10 @@ function SortFilterSection({
                 key={option.label}
                 onClick={() => onSortSelect(option)}
                 className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                   selectedSort.label === option.label
-                    ? 'bg-white text-black'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? activeFilterClass
+                    : inactiveFilterClass
                 )}
               >
                 {option.label}
@@ -208,19 +211,19 @@ function SortFilterSection({
             {selectedCategoryObj && (
               <button
                 onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
-                className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-black transition-colors"
+                className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
               >
                 {selectedCategoryObj.name}
-                <span className="ml-0.5 text-black/50 hover:text-black">✕</span>
+                <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
               </button>
             )}
             <button
               onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
               className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                 selectedCategory === 'all'
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  ? activeFilterClass
+                  : inactiveFilterClass
               )}
             >
               All
@@ -230,10 +233,10 @@ function SortFilterSection({
                 key={cat.id}
                 onClick={() => { onCategorySelect(cat.id); setCategorySearch(''); }}
                 className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                   selectedCategory === cat.id
-                    ? 'bg-white text-black'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? activeFilterClass
+                    : inactiveFilterClass
                 )}
               >
                 {cat.name}
@@ -257,10 +260,10 @@ function SortFilterSection({
                 key={option.value}
                 onClick={() => onDateSelect(option)}
                 className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                   selectedDate.value === option.value
-                    ? 'bg-white text-black'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? activeFilterClass
+                    : inactiveFilterClass
                 )}
               >
                 {option.label}
@@ -281,10 +284,10 @@ function SortFilterSection({
                 key={option.value}
                 onClick={() => onPostTypeSelect(option.value)}
                 className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                   selectedPostType === option.value
-                    ? 'bg-white text-black'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? activeFilterClass
+                    : inactiveFilterClass
                 )}
               >
                 {option.label}
@@ -305,10 +308,10 @@ function SortFilterSection({
                 key={filter.value}
                 onClick={() => onContentFilterToggle(filter.value)}
                 className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                   contentFilters[filter.value]
-                    ? 'bg-white text-black'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? activeFilterClass
+                    : inactiveFilterClass
                 )}
               >
                 {filter.label}
