@@ -204,6 +204,16 @@ function SortFilterSection({
         />
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+            {/* Pinned selected category chip (before All) */}
+            {selectedCategoryObj && (
+              <button
+                onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
+                className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-black transition-colors"
+              >
+                {selectedCategoryObj.name}
+                <span className="ml-0.5 text-black/50 hover:text-black">✕</span>
+              </button>
+            )}
             <button
               onClick={() => { onCategorySelect('all'); setCategorySearch(''); }}
               className={cn(
