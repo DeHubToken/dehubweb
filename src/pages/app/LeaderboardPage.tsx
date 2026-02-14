@@ -122,7 +122,7 @@ export default function LeaderboardPage() {
   };
 
   // Usernames to exclude from leaderboard
-  const blockedLeaderboardUsers = ['microsoft', 'd'];
+  const blockedLeaderboardUsers = ['d'];
 
   // Check if we're viewing a time-based period (shows delta)
   const isTimeDelta = timePeriod !== 'all';
