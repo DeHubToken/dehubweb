@@ -382,11 +382,13 @@ function ContentTypeFilterSection({
 function CategoryFilterSection({ 
   categories, 
   selectedCategory, 
-  onSelect 
+  onSelect,
+  isLoading 
 }: { 
   categories: DeHubCategory[]; 
   selectedCategory: string | null; 
-  onSelect: (cat: string | null) => void 
+  onSelect: (cat: string | null) => void;
+  isLoading?: boolean;
 }) {
   const [search, setSearch] = useState('');
   
@@ -406,6 +408,18 @@ function CategoryFilterSection({
     }
     return list;
   }, [categories, search, selectedCategory, selectedObj]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <div className="flex items-center justify-center py-3">
+          <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+          <span className="text-xs text-zinc-500 ml-2">Loading categories...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -479,11 +493,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const { walletAddress } = useAuth();
 
   // Fetch categories from API
-  const { data: apiCategories } = useQuery({
+  const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 1000 * 60 * 30,
     retry: 2,
+    enabled: showFilters,
   });
 
   // Use API categories with fallback
@@ -701,7 +716,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               <CategoryFilterSection 
                 categories={categories} 
                 selectedCategory={selectedCategory} 
-                onSelect={setSelectedCategory} 
+                onSelect={setSelectedCategory}
+                isLoading={categoriesLoading}
               />
               <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
               <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
