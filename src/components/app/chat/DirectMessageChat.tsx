@@ -65,7 +65,7 @@ function MessageBubble({
         <div 
           className={`inline-block rounded-2xl px-4 py-2 ${
             isOwnMessage 
-              ? 'bg-primary text-primary-foreground rounded-br-md' 
+              ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] text-white rounded-br-md' 
               : 'bg-zinc-800 text-white rounded-bl-md'
           }`}
         >
