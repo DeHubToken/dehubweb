@@ -4,7 +4,7 @@
  * Displays top DHB token holders and tippers from the DeHub API.
  */
 
-import { useState, useMemo, useCallback, useLayoutEffect } from 'react';
+import { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp } from 'lucide-react';
 import trophyIcon from '@/assets/trophy-icon.png';
@@ -101,6 +101,8 @@ export default function LeaderboardPage() {
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
   const [shimmerKey, setShimmerKey] = useState(0);
   const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc');
+  const [visibleCount, setVisibleCount] = useState(25);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // Map category to API sort mode
@@ -184,8 +186,34 @@ export default function LeaderboardPage() {
     return list;
   }, [data, searchQuery, category, sortDirection, timePeriod, getSortValue]);
 
-  // Batch fetch badge balances for all visible entries
-  const walletAddresses = useMemo(() => entries.map(e => e.account), [entries]);
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(25);
+  }, [category, timePeriod, searchQuery, sortDirection]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount(prev => prev + 25);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [entries.length]);
+
+  const visibleEntries = useMemo(() => entries.slice(0, visibleCount), [entries, visibleCount]);
+  const hasMore = visibleCount < entries.length;
+
+  // Batch fetch badge balances for visible entries only
+  const walletAddresses = useMemo(() => visibleEntries.map(e => e.account), [visibleEntries]);
   const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
 
   const handleUserClick = (entry: LeaderboardEntry) => {
@@ -350,7 +378,7 @@ export default function LeaderboardPage() {
         {/* Table Rows */}
         {!isLoading && !error && entries.length > 0 && (
           <div>
-            {entries.map((entry, index) => {
+            {visibleEntries.map((entry, index) => {
               const rank = index + 1;
               return (
                 <div
@@ -413,6 +441,13 @@ export default function LeaderboardPage() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Infinite scroll sentinel */}
+        {!isLoading && !error && entries.length > 0 && (
+          <div ref={sentinelRef} className="py-4 flex justify-center">
+            {hasMore && <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />}
           </div>
         )}
       </div>
