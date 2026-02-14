@@ -324,8 +324,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     processRedirect();
   }, []);
 
-  // Note: Auto-connect in wallet in-app browsers is now handled by wagmi/AppKit natively.
-  // AppKit detects injected providers (window.ethereum) and auto-reconnects.
+  // Auto-connect in wallet in-app browsers (Trust Wallet, MetaMask mobile, etc.)
+  // When user opens our dApp via deep link, window.ethereum is injected by the wallet.
+  // We detect this and auto-connect so the user doesn't need to tap "Connect Wallet".
+  useEffect(() => {
+    const autoConnectInAppBrowser = async () => {
+      // Only on mobile, only if window.ethereum exists, only if not already connected/loading
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const hasInjected = typeof window !== 'undefined' && !!window.ethereum;
+      const alreadyAttempted = sessionStorage.getItem('dehub_wallet_auto_connect_attempted');
+
+      if (!isMobile || !hasInjected || isLoading || isConnecting || isAuthenticated || alreadyAttempted) {
+        return;
+      }
+
+      // Mark as attempted to prevent retry loops
+      sessionStorage.setItem('dehub_wallet_auto_connect_attempted', 'true');
+
+      console.log('[Auth] Mobile in-app browser detected, auto-connecting...');
+      const injectedConnector = connectors.find(c => c.id === 'injected');
+      if (!injectedConnector) return;
+
+      wagmiAuthIntentRef.current = true;
+      try {
+        await connectAsync({ connector: injectedConnector });
+      } catch (err) {
+        console.warn('[Auth] In-app browser auto-connect failed:', err);
+        wagmiAuthIntentRef.current = false;
+      }
+    };
+
+    autoConnectInAppBrowser();
+  }, [isLoading, isConnecting, isAuthenticated, connectors, connectAsync]);
 
   /**
    * Complete DeHub auth using Wagmi (Sign Message)
@@ -743,13 +773,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     wagmiAuthIntentRef.current = true;
 
     try {
-      setIsConnecting(true);
+      // Don't set isConnecting here - the wagmi auto-connect useEffect will set it
+      // when it detects the connection and starts the auth flow.
+      // Setting it here would block the useEffect (it checks !isConnecting).
       console.log('[Auth] Connecting via injected connector...');
       await connectAsync({ connector: injectedConnector });
       // Auth flow continues in the useEffect hook monitoring wagmi state
     } catch (error: unknown) {
       wagmiAuthIntentRef.current = false;
-      setIsConnecting(false);
       const msg = error instanceof Error ? error.message : String(error);
       console.error('[Auth] Wallet connection failed:', msg);
 
