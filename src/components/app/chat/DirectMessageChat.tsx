@@ -332,7 +332,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   return (
     <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900/95 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/95 backdrop-blur-sm">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
