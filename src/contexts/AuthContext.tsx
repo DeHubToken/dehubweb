@@ -12,8 +12,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useAccount, useSignMessage, useDisconnect } from 'wagmi';
-import { appKit, clearWagmiStorage } from '@/lib/wagmi';
+import { useAccount, useSignMessage, useDisconnect, useConnect } from 'wagmi';
+import { clearWagmiStorage } from '@/lib/wagmi';
 import {
   authenticateWallet,
   getAccountInfo,
@@ -124,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { disconnect: wagmiDisconnect } = useDisconnect();
+  const { connectAsync, connectors } = useConnect();
   
   // Ref to track if connection should be aborted when modal is closed
   const connectionAbortedRef = useRef(false);
@@ -726,16 +727,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   /**
-   * Connect with an external wallet (now using AppKit/Wagmi)
+   * Connect with an external wallet using wagmi connectors directly
    */
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
-    console.log(`[Auth] connectWithWallet(${wallet}) called - delegating to AppKit`);
+    console.log(`[Auth] connectWithWallet(${wallet}) called`);
+
+    // Find the injected connector (handles MetaMask, Trust, Coinbase, etc.)
+    const injectedConnector = connectors.find(c => c.id === 'injected');
+    if (!injectedConnector) {
+      toast.error('No wallet detected. Please install MetaMask or use a wallet browser.');
+      return;
+    }
+
     // Set intent flag so the wagmi auto-connect effect knows this was user-initiated
     wagmiAuthIntentRef.current = true;
-    // AppKit handles the UI and connection logic.
-    // Auth flow (signing) continues in the useEffect hook monitoring Wagmi state.
-    await appKit.open();
-  }, []);
+
+    try {
+      setIsConnecting(true);
+      console.log('[Auth] Connecting via injected connector...');
+      await connectAsync({ connector: injectedConnector });
+      // Auth flow continues in the useEffect hook monitoring wagmi state
+    } catch (error: unknown) {
+      wagmiAuthIntentRef.current = false;
+      setIsConnecting(false);
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error('[Auth] Wallet connection failed:', msg);
+
+      if (msg.includes('not found') || msg.includes('not installed')) {
+        toast.error('MetaMask not found. Please install the MetaMask extension.');
+      } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('cancelled')) {
+        toast.error('Connection was cancelled.');
+      } else {
+        toast.error('Failed to connect wallet. Please try again.');
+      }
+    }
+  }, [connectors, connectAsync]);
 
   /**
    * Legacy connect method - opens default Web3Auth modal

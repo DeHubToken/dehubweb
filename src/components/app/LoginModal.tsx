@@ -112,13 +112,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   };
 
   const handleConnectWallet = async () => {
-    // Close our modal and open AppKit modal (handles all wallets, deep links, WalletConnect)
-    onOpenChange(false);
+    setActiveProvider('wallet');
     try {
-      await connectWithWallet('metamask'); // Parameter is ignored - AppKit handles wallet selection
+      await connectWithWallet('metamask');
+      handleClose();
     } catch (error) {
       console.error('Wallet connection failed:', error);
-      onOpenChange(true);
+      setActiveProvider(null);
     }
   };
 
@@ -176,14 +176,18 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <Separator className="flex-1 bg-white/10" />
       </div>
 
-      {/* Wallet - opens AppKit modal which handles all wallets */}
+      {/* Wallet - connects directly via wagmi injected connector */}
       <Button
         onClick={handleConnectWallet}
         disabled={isConnecting}
         variant="outline"
         className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10"
       >
-        <Wallet className="w-5 h-5" />
+        {activeProvider === 'wallet' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <Wallet className="w-5 h-5" />
+        )}
         <span>Connect Wallet</span>
       </Button>
     </div>
