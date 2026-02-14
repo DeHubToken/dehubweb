@@ -547,10 +547,10 @@ Deno.serve(async (req) => {
       }
 
       enriched.sort((a, b) => b.total - a.total);
-      const nonZero = enriched.filter((e) => e.total > 0);
+      const nonZero = enriched; // Include all users, even with 0 balance
 
       console.log(
-        `On-chain holdings: ${nonZero.length} holders with balance > 0`
+        `On-chain holdings: ${nonZero.length} total holders`
       );
 
       // Get current block numbers (needed for snapshots + historical queries)
@@ -752,7 +752,6 @@ Deno.serve(async (req) => {
       for (const metric of SOCIAL_METRICS) {
         // "all" period: sort by current value
         const sortedAll = [...allEntries]
-          .filter((e) => (e[metric] ?? 0) > 0)
           .sort((a, b) => (b[metric] ?? 0) - (a[metric] ?? 0));
 
         const allData = {
