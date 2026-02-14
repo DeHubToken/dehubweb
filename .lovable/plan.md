@@ -1,61 +1,30 @@
 
 
-# Convert Plain White Action Buttons to Liquid Glass Style
+# Add Category Filter to Home Feed Sort Menu
 
 ## Overview
-Replace all solid white (`bg-white text-black`) action buttons across the app with the `LiquidGlassBubble` frosted glass aesthetic. Filter tabs, category pills, and active-state indicators will remain unchanged.
+Add a horizontally scrollable category pill row inside the existing sort/filter dropdown, placed directly below the "Sort" row (Latest, Following, etc.). Selecting a category filters the feed to show all content types (posts, images, videos) within that category.
 
-## Approach
+## Changes
 
-Rather than wrapping every button in a `LiquidGlassBubble` div (which would break button semantics and layout), we will create a **reusable CSS class or button variant** that applies the liquid glass visual properties directly to button elements.
+### File: `src/components/app/feeds/HomeFeed.tsx`
 
-### Step 1: Add a `glass` variant to the Button component
+1. **Import `getCategories`** -- already partially imported from `@/lib/api/dehub`, just needs to be added to the import list
+2. **Add `selectedCategory` state** using `usePersistedFeedFilter('home', 'category', 'all')` alongside the existing filter states
+3. **Fetch categories** with `useQuery` calling `getCategories()`, with a 5-minute stale time
+4. **Extend `FilterSectionProps`** to include `selectedCategory`, `onCategorySelect`, and `categories` array
+5. **Add a "Category" row in `SortFilterSection`** directly below the Sort row, using the same pill pattern (horizontal scroll, white active state, zinc-800 inactive, right fade gradient). An "All" pill will be prepended to the fetched list
+6. **Pass `category` into `commonParams`** so all feed queries include it when a specific category is selected
+7. **Update `resetAllFilters`** to also reset `selectedCategory` to `'all'`
 
-Add a new `glass` variant in `src/components/ui/button.tsx` that applies the liquid glass aesthetic:
-- Gradient background: `bg-gradient-to-br from-white/20 via-white/10 to-white/5`
-- Backdrop blur: `backdrop-blur-xl`
-- Border: `border border-white/30`
-- Inset shadows for depth
-- White text instead of black
-- Hover: shimmer/brightening effect
-
-### Step 2: Replace white button styles across ~18 files
-
-Swap `bg-white text-black hover:bg-white/90` (and similar) classes with the new `glass` variant or equivalent liquid glass classes on action buttons in these files:
-
-| File | Button(s) |
-|------|-----------|
-| `AuthGate.tsx` | Log in |
-| `ProfileHeader.tsx` | Follow |
-| `ProfilePage.tsx` | Sign Up |
-| `BuyCoinsPage.tsx` | Purchase |
-| `SettingsPage.tsx` | Apply Changes / Save |
-| `ReportModal.tsx` | Submit Report |
-| `EditPostModal.tsx` | Save Changes |
-| `GoLiveModal.tsx` | Open Stream |
-| `CreateTopicRoomModal.tsx` | Create Room |
-| `VideoPaywallModal.tsx` | Confirm Purchase |
-| `PostAccessToggles.tsx` | Cancel / Confirm PPV |
-| `CommentsSection.tsx` | Post comment |
-| `StoryCommentsDrawer.tsx` | Send comment |
-| `StoryViewerModal.tsx` | Follow |
-| `FeaturesPage.tsx` | Submit / Comment |
-| `BookmarksPage.tsx` | Try Again |
-| `PostContentArea.tsx` | Post button |
-| `W2EFeed.tsx` | Earnings badge (minor) |
-
-### What will NOT change
-- Active-state pills/tabs in feeds (Videos, Shorts, Radio, Notifications)
-- Story text style toggles
-- Category filter buttons
-- Any conditional `bg-white text-black` used for selected state indicators
-
-## Technical Details
-
-The new `glass` variant will be defined as:
-```
-glass: "bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+### Visual placement (inside the filter dropdown)
+```text
+Sort:        [Latest] [Following] [Most Liked] ...
+Category:    [All] [Art] [Music] [Gaming] ...     <-- NEW
+Upload Date: [All] [1d] [1w] [1m] [1y]
+Post Type:   [All] [Video] [Image] [Text]
+Content:     [PPV] [W2E] [Locked]
 ```
 
-This keeps the button element semantics intact, works with the existing `Button` component API, and matches the `LiquidGlassBubble` visual language.
-
+### No other files need changes
+The `useUnifiedFeed` hook already accepts and forwards a `category` parameter to the API. The `getCategories` function is already implemented.
