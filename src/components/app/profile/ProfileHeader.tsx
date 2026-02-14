@@ -298,7 +298,7 @@ export function ProfileHeader({
                   <img 
                     src={badgeUrl} 
                     alt="Badge tier" 
-                    className="w-[13px] h-[13px] shrink-0 absolute -top-1 -right-3.5" 
+                    className="w-[12px] h-[12px] shrink-0 absolute -top-1 -right-3.5" 
                   />
                 )}
               </span>
