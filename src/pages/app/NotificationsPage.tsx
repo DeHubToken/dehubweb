@@ -380,6 +380,13 @@ function NotificationItem({
           {getNotificationContent(notification, bundle)}
         </p>
         
+        {/* Show individual actor names below multi-actor bundles */}
+        {bundle.bundleType === 'multi-actor' && bundle.actorNames.length > 1 && (
+          <p className="text-xs text-zinc-500 mt-0.5">
+            {bundle.actorNames.join(', ')}
+          </p>
+        )}
+        
         <p className="text-xs text-zinc-500 mt-1">
           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
