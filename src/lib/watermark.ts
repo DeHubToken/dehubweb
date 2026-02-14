@@ -33,7 +33,6 @@ export async function addWatermarkClient(imageDataUrl: string): Promise<string> 
         // Draw main image
         ctx.drawImage(mainImage, 0, 0);
         
-        // Load and draw watermark
         const logoImage = new Image();
         logoImage.onload = () => {
           try {
