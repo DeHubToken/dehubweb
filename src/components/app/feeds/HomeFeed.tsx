@@ -146,7 +146,7 @@ function SortFilterSection({
   onReset,
 }: FilterSectionProps) {
   return (
-    <div className="relative flex flex-col gap-4" onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+    <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
@@ -956,7 +956,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="overflow-hidden"
               >
-                <div className="bg-zinc-900 rounded-2xl p-4 mb-3">
+                <div className="bg-zinc-900 rounded-2xl p-4 mb-3" onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
                   <SortFilterSection 
                     selectedSort={selectedSort} 
                     onSortSelect={handleSortSelect}
