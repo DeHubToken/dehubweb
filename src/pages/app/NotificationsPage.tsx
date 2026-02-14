@@ -65,34 +65,8 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 
     const nTime = new Date(n.createdAt).getTime();
 
-    // Try multi-actor bundling for follows (group different people following you)
-    if (n.type === 'following' && !consumed.has(n.id)) {
-      const group: DeHubNotification[] = [n];
-      for (let j = i + 1; j < notifications.length; j++) {
-        const m = notifications[j];
-        if (consumed.has(m.id)) continue;
-        if (m.type !== 'following') continue;
-        if (Math.abs(nTime - new Date(m.createdAt).getTime()) > BUNDLE_WINDOW_MS) continue;
-        group.push(m);
-      }
-      if (group.length > 1) {
-        group.forEach(g => consumed.add(g.id));
-        const actorNames = group.map(g => {
-          const addr = g.actorAddress?.toLowerCase();
-          const enriched = addr ? enrichedAvatars.get(addr) : undefined;
-          return enriched?.username || enriched?.displayName || g.actorUsername || 'Someone';
-        });
-        bundles.push({
-          primary: group[0],
-          allIds: group.map(g => g.id),
-          postCount: 0,
-          actorNames,
-          actorCount: group.length,
-          bundleType: 'multi-actor',
-        });
-        continue;
-      }
-    }
+    // No client-side multi-actor bundling for follows — each follow stays individual.
+    // Backend-aggregated follows (with aggregatedCount > 1) are handled in getNotificationContent.
 
     // Try same-actor bundling for likes/comments on different posts
     if (['like', 'comment', 'repost', 'quote'].includes(n.type) && n.actorAddress) {
@@ -188,18 +162,11 @@ function getNotificationIcon(type: DeHubNotification['type']) {
 function getNotificationContent(notification: DeHubNotification, bundle?: BundledNotification): React.ReactNode {
   const actorName = notification.actorUsername || 'Someone';
   
-  // Multi-actor bundle: "okanbey and 2 others started following you"
-  if (bundle?.bundleType === 'multi-actor' && bundle.actorCount > 1) {
-    const firstName = bundle.actorNames[0] || actorName;
-    const othersCount = bundle.actorCount - 1;
+  // Backend-aggregated follow: "okanbey and 2 others started following you"
+  if (notification.type === 'following' && (notification as any).aggregatedCount > 1) {
+    const othersCount = (notification as any).aggregatedCount - 1;
     const othersText = othersCount === 1 ? '1 other' : `${othersCount} others`;
-    
-    switch (notification.type) {
-      case 'following':
-        return `${firstName} and ${othersText} started following you`;
-      default:
-        return `${firstName} and ${othersText}`;
-    }
+    return `${actorName} and ${othersText} started following you`;
   }
   
   // Same-actor bundle: "Frank liked 5 of your posts"
@@ -380,10 +347,10 @@ function NotificationItem({
           {getNotificationContent(notification, bundle)}
         </p>
         
-        {/* Show individual actor names below multi-actor bundles */}
-        {bundle.bundleType === 'multi-actor' && bundle.actorNames.length > 1 && (
+        {/* Show individual actor names below backend-aggregated follows */}
+        {notification.type === 'following' && (notification as any).latestActorNames?.length > 1 && (
           <p className="text-xs text-zinc-500 mt-0.5">
-            {bundle.actorNames.join(', ')}
+            {(notification as any).latestActorNames.join(', ')}
           </p>
         )}
         
