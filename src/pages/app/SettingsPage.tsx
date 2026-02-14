@@ -983,7 +983,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       </div>
 
       <div>
-        <Button className="w-full bg-white text-black hover:bg-zinc-200">
+        <Button variant="glass" className="w-full">
           Apply Changes
         </Button>
       </div>

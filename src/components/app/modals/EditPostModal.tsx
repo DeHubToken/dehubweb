@@ -209,7 +209,8 @@ export function EditPostModal({
             <Button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-1 bg-white text-black hover:bg-white/90"
+              variant="glass"
+              className="flex-1"
             >
               {isSubmitting ? (
                 <>

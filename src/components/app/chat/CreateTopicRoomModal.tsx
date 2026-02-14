@@ -88,7 +88,8 @@ export function CreateTopicRoomModal({ open, onOpenChange, onCreated }: CreateTo
           <Button
             onClick={handleCreate}
             disabled={isCreating || !topic.trim()}
-            className="w-full rounded-xl bg-white text-black hover:bg-zinc-200 font-semibold gap-2"
+            variant="glass"
+            className="w-full rounded-xl font-semibold gap-2"
           >
             {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageSquarePlus className="w-4 h-4" />}
             Create Room

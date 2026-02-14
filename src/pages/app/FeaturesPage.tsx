@@ -314,7 +314,8 @@ function SubmitFeatureDrawer({
           <Button
             onClick={handleSubmit}
             disabled={submitMutation.isPending}
-            className="w-full bg-white text-black hover:bg-zinc-200 rounded-xl font-semibold"
+            variant="glass"
+            className="w-full rounded-xl font-semibold"
           >
             {submitMutation.isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -453,7 +454,8 @@ export default function FeaturesPage() {
           </div>
           <Button
             onClick={handleSubmitClick}
-            className="bg-white text-black hover:bg-zinc-200 rounded-xl font-semibold text-sm"
+            variant="glass"
+            className="rounded-xl font-semibold text-sm"
             size="sm"
           >
             <Plus className="w-4 h-4" />
@@ -575,7 +577,8 @@ export default function FeaturesPage() {
               <p className="text-zinc-500 text-sm mb-4">Be the first to suggest an idea!</p>
               <Button
                 onClick={handleSubmitClick}
-                className="bg-white text-black hover:bg-zinc-200 rounded-xl font-semibold"
+                variant="glass"
+                className="rounded-xl font-semibold"
               >
                 <Plus className="w-4 h-4" />
                 Submit Feature Request

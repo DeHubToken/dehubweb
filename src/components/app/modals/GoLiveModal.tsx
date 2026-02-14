@@ -308,7 +308,8 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
               </Button>
               <Button
                 onClick={() => window.open(streamData.playbackUrl, '_blank')}
-                className="flex-1 bg-white text-black hover:bg-zinc-200"
+                variant="glass"
+                className="flex-1"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 View Stream
