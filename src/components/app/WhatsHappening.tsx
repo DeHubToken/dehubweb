@@ -69,7 +69,10 @@ export function WhatsHappening() {
   const displayed = topCategories.slice(0, MAX_CATEGORIES);
 
   const handleCategoryClick = (categoryId: string) => {
+    // Pre-set the home feed category filter
     setFilterValue('home', 'category', categoryId);
+    // Dispatch event so HomeFeed re-syncs its state from sessionStorage
+    window.dispatchEvent(new CustomEvent('category-filter-changed', { detail: categoryId }));
     navigate('/app');
   };
 
