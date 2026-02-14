@@ -110,17 +110,15 @@ export async function getConversations(
 
             if (!conversationsMap.has(otherAddress)) {
               conversationsMap.set(otherAddress, {
-                id: m.conversation_id || otherAddress,
+                id: otherAddress, // Always use address as conversation ID
                 participants: [{ address: otherAddress } as any],
                 otherUser: {
                   address: otherAddress,
-                  username: m.sender_address === userAddress ? undefined : m.sender_username,
-                  displayName: m.sender_address === userAddress ? undefined : m.sender_display_name,
-                  avatarImageUrl: m.sender_address === userAddress ? undefined : m.sender_avatar_url,
+                  // Will be enriched with profile data below
                 } as any,
                 lastMessage: {
                   id: m.id || `msg-${m.created_at}`,
-                  conversationId: m.conversation_id || otherAddress,
+                  conversationId: otherAddress,
                   sender: {
                     address: m.sender_address,
                     username: m.sender_username,
@@ -136,8 +134,49 @@ export async function getConversations(
                 updatedAt: m.created_at,
               });
             }
+
+            // Try to enrich otherUser profile from messages sent BY the other user
+            if (m.sender_address !== userAddress) {
+              const conv = conversationsMap.get(otherAddress)!;
+              const ou = conv.otherUser as any;
+              if (!ou.username && m.sender_username) ou.username = m.sender_username;
+              if (!ou.displayName && m.sender_display_name) ou.displayName = m.sender_display_name;
+              if (!ou.avatarImageUrl && m.sender_avatar_url) ou.avatarImageUrl = m.sender_avatar_url;
+            }
           });
+
           supabaseConversations = Array.from(conversationsMap.values());
+
+          // Fetch profiles from DeHub for any conversations missing user info
+          const addressesNeedingProfile = supabaseConversations
+            .filter(c => !(c.otherUser as any)?.username && !(c.otherUser as any)?.displayName)
+            .map(c => (c.otherUser as any)?.address)
+            .filter(Boolean);
+
+          if (addressesNeedingProfile.length > 0) {
+            const profilePromises = addressesNeedingProfile.map(async (addr: string) => {
+              try {
+                const res = await apiCall<any>(`/api/account_info/${addr}`, {});
+                return { address: addr, profile: res?.result || res };
+              } catch {
+                return { address: addr, profile: null };
+              }
+            });
+            const profiles = await Promise.all(profilePromises);
+
+            profiles.forEach(({ address: addr, profile }) => {
+              if (!profile) return;
+              const conv = supabaseConversations.find(c => (c.otherUser as any)?.address === addr);
+              if (conv) {
+                const ou = conv.otherUser as any;
+                ou.username = profile.username || ou.username;
+                ou.displayName = profile.displayName || profile.display_name || ou.displayName;
+                ou.avatarImageUrl = profile.avatarImageUrl || profile.avatarUrl || ou.avatarImageUrl;
+                ou.isVerified = profile.isVerified || profile.is_verified;
+              }
+            });
+          }
+
           console.log(`[DM API] Found ${supabaseConversations.length} conversations in Supabase`);
         }
       } catch (err) {
@@ -533,10 +572,13 @@ export async function sendMessage(
     const d = data?.data || data?.result?.data || data?.result || data;
 
     if (d && (d._id || d.id)) {
-      const resolvedConversationId = d.conversationId || d.conversation_id || d._id || conversationId;
+      // Use the receiver address as conversationId (matches Supabase storage)
+      // Don't use DeHub _id as it breaks Supabase queries
+      const receiverAddr = recipientAddress?.toLowerCase() || d.receiverAddress || d.receiver_address;
+      const finalConversationId = d.conversationId || d.conversation_id || receiverAddr || conversationId;
       return {
         id: d.id || d._id,
-        conversationId: resolvedConversationId,
+        conversationId: finalConversationId,
         sender: d.sender || { address: d.sender_address || d.senderAddress || sender },
         content: d.content || d.text || content,
         type: d.type || d.message_type || type,

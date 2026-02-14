@@ -120,8 +120,9 @@ Deno.serve(async (req) => {
     }
 
     // 2. Always save to Supabase for reliability and Realtime
-    // Use the conversationId from DeHub if available, or the one provided
-    const resolvedConversationId = dehubData?.result?.data?._id || dehubData?.result?._id || conversationId;
+    // Use the receiver address as conversation_id for consistent querying
+    // (getMessages queries by sender_address/receiver_address, not DeHub _id)
+    const resolvedConversationId = targetReceiver || conversationId;
 
     const { data: supabaseData, error: supabaseError } = await supabase
       .from('direct_messages')

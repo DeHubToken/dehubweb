@@ -252,11 +252,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       { content, type, mediaUrl: finalMediaUrl },
       {
         onSuccess: (data) => {
-          // Resolve virtual conversation ID after first message creates a real one
-          const realId = data?.conversationId;
-          if (realId && realId !== resolvedConversationId && !realId.startsWith('new_')) {
-            console.log('[DM] Resolved virtual conversation ID:', resolvedConversationId, '->', realId);
-            setResolvedConversationId(realId);
+          // Only resolve virtual "new_0x..." conversation IDs to the other user's address
+          // Do NOT resolve to DeHub transaction _id (like 699059...) as Supabase stores by address
+          if (resolvedConversationId.startsWith('new_')) {
+            const otherAddress = resolvedConversationId.replace('new_', '');
+            console.log('[DM] Resolved virtual conversation ID:', resolvedConversationId, '->', otherAddress);
+            setResolvedConversationId(otherAddress);
           }
           setTimeout(scrollToBottom, 100);
         },
