@@ -38,13 +38,18 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   if (!apiAvatarPath) return undefined;
   if (!address) return undefined;
   
-  // If it's already a dehubcdn URL, return as-is
-  if (apiAvatarPath.startsWith('https://dehubcdn')) return apiAvatarPath;
+  // Cache-bust param: 5-minute windows so browsers fetch latest avatars
+  const cacheBust = Math.floor(Date.now() / 300000);
+  
+  // If it's already a dehubcdn URL, append cache-bust and return
+  if (apiAvatarPath.startsWith('https://dehubcdn')) {
+    return `${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
+  }
   
   // If it's any api.dehub.io URL (avatars or other paths), extract extension and rebuild with CDN
   if (apiAvatarPath.includes('api.dehub.io')) {
     const ext = getExtension(apiAvatarPath);
-    return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+    return `${DEHUB_CDN_BASE}avatars/${address}.${ext}?v=${cacheBust}`;
   }
   
   // Other full URLs (dicebear, external CDNs, etc.) - return as-is
@@ -52,7 +57,7 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
   
   // Relative path - build CDN URL
   const ext = getExtension(apiAvatarPath);
-  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}`;
+  return `${DEHUB_CDN_BASE}avatars/${address}.${ext}?v=${cacheBust}`;
 }
 
 /**
