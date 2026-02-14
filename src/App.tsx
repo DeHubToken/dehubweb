@@ -108,15 +108,20 @@ function AppContent() {
     );
 }
 
+import { WagmiProvider } from 'wagmi';
+import { wagmiConfig } from '@/lib/wagmi';
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <OptimisticPostsProvider>
-        <TooltipProvider>
-          <AppContent />
-        </TooltipProvider>
-      </OptimisticPostsProvider>
-    </AuthProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <AuthProvider>
+        <OptimisticPostsProvider>
+          <TooltipProvider>
+            <AppContent />
+          </TooltipProvider>
+        </OptimisticPostsProvider>
+      </AuthProvider>
+    </WagmiProvider>
   </QueryClientProvider>
 );
 

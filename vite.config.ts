@@ -33,6 +33,8 @@ export default defineConfig(({ mode }) => ({
       "@toruslabs/ethereum-controllers",
       "permissionless",
       "viem",
+      "@wagmi/core",
+      "@wagmi/connectors",
     ],
   },
   define: {

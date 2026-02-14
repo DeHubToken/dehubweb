@@ -19,13 +19,7 @@ import {
   UX_MODE,
   IProvider,
 } from "@web3auth/base";
-import { MetamaskAdapter } from "@web3auth/metamask-adapter";
-import { WalletConnectV2Adapter } from "@web3auth/wallet-connect-v2-adapter";
-import { CoinbaseAdapter } from "@web3auth/coinbase-adapter";
-import { WalletConnectModal } from "@walletconnect/modal";
 import { supabase } from "@/integrations/supabase/client";
-
-const WALLETCONNECT_PROJECT_ID = "0751965bb69056635999763785664539";
 
 /**
  * Detect if running on a mobile device based on user agent + touch support.
@@ -327,47 +321,8 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       web3authInstance.configureAdapter(openloginAdapter);
       console.log("[Web3Auth] Openlogin adapter configured (uxMode:", useRedirect ? "REDIRECT" : "POPUP", ")");
 
-      // Configure MetaMask Adapter
-      console.log("[Web3Auth] Configuring MetaMask adapter...");
-      const metamaskAdapter = new MetamaskAdapter({
-        clientId,
-        sessionTime: 3600,
-        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        chainConfig,
-      });
-      web3authInstance.configureAdapter(metamaskAdapter);
-
-      // Configure WalletConnect V2 Adapter
-      // Enabled on both mobile and desktop. On mobile, deep links are
-      // often more reliable but users may prefer the official modal.
-      console.log("[Web3Auth] Configuring WalletConnect V2 adapter...");
-      const wcModal = new WalletConnectModal({
-        projectId: WALLETCONNECT_PROJECT_ID,
-        themeMode: "dark",
-        themeVariables: { "--wcm-z-index": "999999" },
-      });
-      const walletConnectV2Adapter = new WalletConnectV2Adapter({
-        adapterSettings: {
-          qrcodeModal: wcModal,
-          walletConnectInitOptions: {
-            projectId: WALLETCONNECT_PROJECT_ID,
-          },
-        } as any,
-        chainConfig,
-      });
-      web3authInstance.configureAdapter(walletConnectV2Adapter);
-
-      // Configure Coinbase Adapter
-      console.log("[Web3Auth] Configuring Coinbase adapter...");
-      const coinbaseAdapter = new CoinbaseAdapter({
-        clientId,
-        sessionTime: 3600,
-        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        chainConfig,
-      });
-      web3authInstance.configureAdapter(coinbaseAdapter);
-
-      console.log("[Web3Auth] External wallet adapters configured");
+      // Note: External wallet adapters (MetaMask, WalletConnect, Coinbase) removed.
+      // Wallet connections are now handled by wagmi + Reown AppKit.
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -499,33 +454,6 @@ export async function connectToSocialProvider(
 
   console.log(`[Web3Auth] connectToSocialProvider: phase=DONE status=${web3auth.status} connected=${web3auth.connected}`);
   console.log(`[Web3Auth] Connected to ${authConnection}`);
-  return provider;
-}
-
-/**
- * Connect to an external wallet (MetaMask, WalletConnect, etc.)
- * Note: External wallet adapters need to be configured separately
- */
-export async function connectToExternalWallet(
-  walletAdapter: string
-): Promise<IProvider | null> {
-  const web3auth = await getOrInitWeb3Auth();
-
-  console.log(`[Web3Auth] Connecting to external wallet: ${walletAdapter}...`);
-
-  // Add timeout for WalletConnect on mobile to prevent infinite spinning
-  const timeoutMs = walletAdapter === WALLET_ADAPTERS.WALLET_CONNECT_V2 && isMobileDevice() ? 30000 : 60000;
-
-  const provider = await Promise.race([
-    web3auth.connectTo(walletAdapter),
-    new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`Wallet connection timed out after ${timeoutMs / 1000}s. Please try again.`)), timeoutMs)
-    ),
-  ]);
-
-  lastConnectedAdapter = walletAdapter; // Track that this was an external wallet
-
-  console.log(`[Web3Auth] Connected to ${walletAdapter}`);
   return provider;
 }
 

@@ -9,11 +9,32 @@
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
 import { getWeb3AuthProvider, getOrInitWeb3Auth } from '@/lib/web3auth';
+import { getConnectorClient } from '@wagmi/core';
+import { getAccount } from '@wagmi/core';
+import { wagmiConfig } from '@/lib/wagmi';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
+
+/**
+ * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet)
+ */
+async function getActiveProvider(): Promise<any> {
+  // Try Web3Auth first (social login sessions)
+  const web3authProvider = getWeb3AuthProvider();
+  if (web3authProvider) return web3authProvider;
+
+  // Fall back to wagmi (external wallet via AppKit)
+  try {
+    const client = await getConnectorClient(wagmiConfig);
+    // viem WalletClient supports EIP-1193 .request() method
+    return client;
+  } catch {
+    throw new Error('No wallet connected. Please sign in first.');
+  }
+}
 
 /**
  * Convert chain ID to hex format
@@ -26,10 +47,7 @@ function chainIdToHex(chainId: ChainId): Hex {
  * Switch the wallet to a different chain
  */
 export async function switchChain(chainId: ChainId): Promise<void> {
-  const provider = getWeb3AuthProvider();
-  if (!provider) {
-    throw new Error('Web3Auth not connected. Please sign in first.');
-  }
+  const provider = await getActiveProvider();
   
   const chainConfig = CHAIN_CONFIGS[chainId];
   if (!chainConfig) {
@@ -102,17 +120,18 @@ export async function isSmartAccountSession(): Promise<boolean> {
  * Get the current wallet address from Web3Auth provider
  */
 export async function getWalletAddress(): Promise<string> {
-  const provider = getWeb3AuthProvider();
-  if (!provider) {
-    throw new Error('Web3Auth not connected. Please sign in first.');
+  // Try Web3Auth first
+  const web3authProvider = getWeb3AuthProvider();
+  if (web3authProvider) {
+    const accounts = await web3authProvider.request({ method: 'eth_accounts' }) as string[];
+    if (accounts?.length) return accounts[0];
   }
-  
-  const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-  if (!accounts || accounts.length === 0) {
-    throw new Error('No accounts available');
-  }
-  
-  return accounts[0];
+
+  // Fall back to wagmi
+  const account = getAccount(wagmiConfig);
+  if (account.address) return account.address;
+
+  throw new Error('No wallet connected. Please sign in first.');
 }
 
 /**
@@ -217,11 +236,7 @@ export async function writeContractAA(
     context?: string;
   }
 ): Promise<AAWriteResult> {
-  const provider = getWeb3AuthProvider();
-  if (!provider) {
-    throw new Error('Web3Auth not connected. Please sign in first.');
-  }
-  
+  const provider = await getActiveProvider();
   const context = options?.context || 'send transaction';
   
   // Encode the function call
@@ -323,11 +338,7 @@ export async function readContract<T>(
   functionName: string,
   args: unknown[] = []
 ): Promise<T> {
-  const provider = getWeb3AuthProvider();
-  if (!provider) {
-    throw new Error('Web3Auth not connected. Please sign in first.');
-  }
-  
+  const provider = await getActiveProvider();
   const data = contractInterface.encodeFunctionData(functionName, args);
   
   const result = await provider.request({

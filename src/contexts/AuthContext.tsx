@@ -12,6 +12,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useAccount, useSignMessage, useDisconnect } from 'wagmi';
+import { appKit } from '@/lib/wagmi';
 import {
   authenticateWallet,
   getAccountInfo,
@@ -27,14 +29,9 @@ import {
   resetWeb3AuthState,
   forceCleanupWeb3Auth,
   connectToSocialProvider,
-  connectToExternalWallet,
   hasRedirectResult,
   isSocialLoginConnected,
   AUTH_CONNECTION,
-  isMobileDevice,
-  isWalletInAppBrowser,
-  getWalletBrowserName,
-  WALLET_ADAPTERS,
   getOrInitWeb3Auth,
 } from '@/lib/web3auth';
 import type { Web3AuthNoModal } from '@web3auth/no-modal';
@@ -54,6 +51,7 @@ interface AuthContextType {
   requiresUsername: boolean;
   needsSignature: boolean;
   web3auth: Web3AuthNoModal | null;
+  connectionSource: 'web3auth' | 'wagmi' | null;
   // Legacy connect method (opens default modal)
   connect: () => Promise<void>;
   // New custom UI methods
@@ -107,35 +105,6 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
   }
 }
 
-// Map wallet providers to Web3Auth adapters
-function mapWalletProvider(wallet: WalletProvider): string {
-  const mobile = isMobileDevice();
-  const hasInjected = typeof window !== 'undefined' && !!(window as any).ethereum;
-
-  // On mobile in-app browsers, window.ethereum is injected.
-  // In this case we should use the MetaMask adapter directly.
-  if (mobile && hasInjected && wallet !== 'walletconnect' && wallet !== 'coinbase') {
-    return WALLET_ADAPTERS.METAMASK;
-  }
-
-  switch (wallet) {
-    case 'metamask':
-    case 'rabby':
-    case 'trust':
-    case 'phantom':
-      // On mobile without injected provider, we rely on deep links from the Modal.
-      // But if this is called, fallback to MetaMask adapter (which handles extension detection).
-      // Note: WALLET_CONNECT_V2 is disabled on mobile in web3auth.ts to avoid ad-blocker issues.
-      return WALLET_ADAPTERS.METAMASK;
-    case 'walletconnect':
-      return WALLET_ADAPTERS.WALLET_CONNECT_V2;
-    case 'coinbase':
-      return WALLET_ADAPTERS.COINBASE;
-    default:
-      return WALLET_ADAPTERS.METAMASK;
-  }
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
   const [user, setUser] = useState<DeHubUser | null>(null);
@@ -147,6 +116,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [needsSignature, setNeedsSignature] = useState(false);
   const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [connectionSource, setConnectionSource] = useState<'web3auth' | 'wagmi' | null>(
+    (localStorage.getItem('dehub_connection_source') as 'web3auth' | 'wagmi' | null) || null
+  );
+
+  // Wagmi hooks
+  const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { disconnect: wagmiDisconnect } = useDisconnect();
   
   // Ref to track if connection should be aborted when modal is closed
   const connectionAbortedRef = useRef(false);
@@ -154,6 +131,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const redirectProcessedRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
+
+  // Persist connection source
+  useEffect(() => {
+    if (connectionSource) {
+      localStorage.setItem('dehub_connection_source', connectionSource);
+    } else {
+      localStorage.removeItem('dehub_connection_source');
+    }
+  }, [connectionSource]);
+
 
   const openLoginModal = useCallback(() => {
     connectionAbortedRef.current = false;
@@ -165,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoginModalOpen(false);
 
     // Only reset Web3Auth if user closed modal mid-connection (not after successful auth)
-    if (isConnecting && !walletAddress) {
+    if (isConnecting && !walletAddress && connectionSource === 'web3auth') {
       console.log('[Auth] Force closing modal mid-connection - resetting Web3Auth state');
       setIsConnecting(false);
       setTimeout(() => {
@@ -230,6 +217,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     init();
   }, []);
 
+  // Wagmi Auto-connect logic
+  useEffect(() => {
+    const handleWagmiConnect = async () => {
+      // If Wagmi connects (via AppKit or injected) and we are not authed yet
+      if (isWagmiConnected && wagmiAddress && !isConnecting && !isLoading) {
+        
+        // CASE A: Already authed with same address -> Sync state
+        if (isAuthenticated && walletAddress && walletAddress.toLowerCase() === wagmiAddress.toLowerCase()) {
+           if (connectionSource !== 'wagmi') {
+             setConnectionSource('wagmi');
+           }
+           return;
+        }
+
+        // CASE B: Already authed with DIFFERENT address -> Disconnect old session
+        if (walletAddress && walletAddress.toLowerCase() !== wagmiAddress.toLowerCase()) {
+           console.log('[Auth] Address mismatch (Wagmi vs Session), requiring re-auth');
+           clearAuthSession();
+           localStorage.removeItem('dehub_user');
+           setWalletAddress(null);
+           setUser(null);
+        }
+
+        // CASE C: Not authed -> Start auth flow
+        console.log('[Auth] Wagmi connected (no session), starting auth:', wagmiAddress);
+
+        try {
+          setIsConnecting(true);
+          setConnectionSource('wagmi');
+          await completeDeHubAuthWagmi(wagmiAddress);
+          closeLoginModal();
+        } catch (err) {
+          console.error('[Auth] Wagmi auth failed:', err);
+          // If signature fails, reset connection source but keep wallet connected (user might try again)
+          setConnectionSource(null);
+        } finally {
+          setIsConnecting(false);
+        }
+      }
+    };
+
+    handleWagmiConnect();
+  }, [isWagmiConnected, wagmiAddress, isAuthenticated, isConnecting, isLoading, walletAddress, connectionSource]);
+
+
   // Handle Web3Auth redirect result (mobile email/SMS login)
   useEffect(() => {
     const processRedirect = async () => {
@@ -275,61 +307,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     processRedirect();
   }, []);
 
-  // Auto-connect when running inside a wallet's in-app browser
-  // This handles the case where user taps deep link → wallet opens its browser → dehub.io loads
-  // Instead of making the user click login again, we auto-trigger wallet connection
-  useEffect(() => {
-    const autoConnect = async () => {
-      // Only auto-connect if:
-      // 1. We're in a wallet in-app browser
-      // 2. User is not already authenticated
-      // 3. Not already connecting or loading
-      // 4. Not processing a redirect
-      if (!isWalletInAppBrowser()) return;
-      if (isAuthenticated || walletAddress) return;
-      if (isConnecting || isProcessingRedirect) return;
-      if (hasRedirectResult()) return;
+  // Note: Auto-connect in wallet in-app browsers is now handled by wagmi/AppKit natively.
+  // AppKit detects injected providers (window.ethereum) and auto-reconnects.
 
-      // Wait for initial session check to complete
-      if (isLoading) return;
+  /**
+   * Complete DeHub auth using Wagmi (Sign Message)
+   */
+  const completeDeHubAuthWagmi = async (address: string) => {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const displayedDate = new Date(timestamp * 1000);
+    const authAddress = address.toLowerCase();
 
-      // Check if we already have a valid session (restored from localStorage)
-      const token = getAuthToken();
-      const savedWallet = localStorage.getItem('dehub_wallet');
-      if (token && savedWallet && !isTokenExpired()) return;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    
+    toast.info('Please sign the message in your wallet...');
+    
+    const signature = await signMessageAsync({ 
+      message,
+      account: authAddress as `0x${string}`
+    });
+    
+    console.log('[Auth] Wagmi signature received');
 
-      // Check if auto-connect was already attempted this session
-      const autoConnectAttempted = sessionStorage.getItem('dehub_wallet_auto_connect_attempted');
-      if (autoConnectAttempted) return;
-      sessionStorage.setItem('dehub_wallet_auto_connect_attempted', 'true');
+    const BASE_CHAIN_ID = 8453;
+    const authResponse = await authenticateWallet(
+      authAddress,
+      signature,
+      timestamp,
+      BASE_CHAIN_ID
+    );
 
-      const walletName = getWalletBrowserName() || 'Wallet';
-      console.log(`[Auth] Detected ${walletName} in-app browser - auto-connecting...`);
-      toast.info(`Connecting with ${walletName}...`);
+    const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
-      try {
-        setIsConnecting(true);
-        const walletConnector = WALLET_ADAPTERS.METAMASK; // All wallet in-app browsers expose window.ethereum
-        const web3authProvider = await connectToExternalWallet(walletConnector);
+    localStorage.setItem('dehub_wallet', authAddress);
+    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
-        if (!web3authProvider) {
-          throw new Error('Failed to auto-connect - no provider returned');
-        }
+    setWalletAddress(authAddress);
+    setUser(normalizedUser);
 
-        await completeDeHubAuth(web3authProvider);
-        console.log(`[Auth] ✓ Auto-connected via ${walletName} in-app browser`);
-      } catch (error) {
-        console.error(`[Auth] Auto-connect failed:`, error);
-        // Don't show error toast for auto-connect failures - user can still manually login
-        // Just clear the flag so they can try again
-        sessionStorage.removeItem('dehub_wallet_auto_connect_attempted');
-      } finally {
-        setIsConnecting(false);
-      }
-    };
+    if (!normalizedUser.username) {
+      setRequiresUsername(true);
+    }
 
-    autoConnect();
-  }, [isLoading, isAuthenticated, walletAddress, isConnecting, isProcessingRedirect]);
+    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+
+    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
+    console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
+  };
 
   /**
    * Complete DeHub auth specifically after redirect flow
@@ -570,8 +596,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Failed to connect - no provider returned');
       }
 
+      setConnectionSource('web3auth');
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
+      closeLoginModal();
 
       console.log(`[Auth] ✓ ${provider} connection complete!`);
     } catch (error: unknown) {
@@ -612,8 +640,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Failed to connect - no provider returned');
       }
 
+      setConnectionSource('web3auth');
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
+      closeLoginModal();
 
       console.log('[Auth] ✓ Email connection complete!');
     } catch (error: unknown) {
@@ -653,8 +683,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Failed to connect - no provider returned');
       }
 
+      setConnectionSource('web3auth');
       await completeDeHubAuth(web3authProvider);
       setNeedsSignature(false);
+      closeLoginModal();
 
       console.log('[Auth] ✓ SMS connection complete!');
     } catch (error: unknown) {
@@ -678,42 +710,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   /**
-   * Connect with an external wallet (MetaMask, WalletConnect, Coinbase)
+   * Connect with an external wallet (now using AppKit/Wagmi)
    */
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
-    console.log(`[Auth] connectWithWallet(${wallet}) called`);
-    setIsConnecting(true);
-
-    try {
-      const walletConnector = mapWalletProvider(wallet);
-      const web3authProvider = await connectToExternalWallet(walletConnector);
-
-      if (!web3authProvider) {
-        throw new Error('Failed to connect - no provider returned');
-      }
-
-      await completeDeHubAuth(web3authProvider);
-      setNeedsSignature(false);
-
-      console.log(`[Auth] ✓ ${wallet} connection complete!`);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '';
-
-      try {
-        await forceCleanupWeb3Auth();
-      } catch (e) {
-        console.warn('[Auth] Cleanup after error failed:', e);
-      }
-
-      if (isCancellationError(errorMessage)) {
-        toast.error('Log in was cancelled');
-        return;
-      }
-
-      handleConnectionError(error);
-    } finally {
-      setIsConnecting(false);
-    }
+    console.log(`[Auth] connectWithWallet(${wallet}) called - delegating to AppKit`);
+    // AppKit handles the UI and connection logic.
+    // Auth flow (signing) continues in the useEffect hook monitoring Wagmi state.
+    await appKit.open();
   }, []);
 
   /**
@@ -727,19 +730,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const disconnect = useCallback(async () => {
     try {
-      await disconnectWeb3Auth();
+      if (connectionSource === 'wagmi') {
+        wagmiDisconnect();
+      } else {
+        await disconnectWeb3Auth();
+      }
     } catch (error) {
-      console.error('Web3Auth disconnect error:', error);
+      console.error('Disconnect error:', error);
     }
     
     clearAuthSession();
     localStorage.removeItem('dehub_user');
     sessionStorage.removeItem('dehub_wallet_auto_connect_attempted');
+    setConnectionSource(null);
     setUser(null);
     setWalletAddress(null);
     setRequiresUsername(false);
     setNeedsSignature(false);
-  }, []);
+    closeLoginModal();
+  }, [connectionSource, wagmiDisconnect, closeLoginModal]);
 
   const refreshUser = useCallback(async () => {
     if (!walletAddress) return;
@@ -767,8 +776,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Returns true if refresh succeeded, false if full sign-in is needed.
    */
   const refreshSession = useCallback(async (): Promise<boolean> => {
-    console.log('[Auth] Attempting seamless session refresh...');
+    console.log('[Auth] Attempting seamless session refresh with source:', connectionSource);
     
+    if (connectionSource === 'wagmi') {
+       if (isWagmiConnected && wagmiAddress) {
+         try {
+           await completeDeHubAuthWagmi(wagmiAddress);
+           return true; 
+         } catch(e) {
+           console.error('[Auth] Wagmi session refresh failed:', e);
+           return false;
+         }
+       }
+       return false;
+    }
+
     try {
       const web3authInstance = await getOrInitWeb3Auth();
       
@@ -789,7 +811,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] Session refresh failed:', error);
       return false;
     }
-  }, []);
+  }, [connectionSource, isWagmiConnected, wagmiAddress]);
 
   return (
     <AuthContext.Provider
@@ -803,6 +825,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         requiresUsername,
         needsSignature,
         web3auth,
+        connectionSource,
         connect,
         connectWithProvider,
         connectWithEmail,

@@ -4,7 +4,8 @@
       "WebSearch",
       "WebFetch(domain:web3auth.io)",
       "Bash(curl:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(npm install:*)"
     ]
   }
 }

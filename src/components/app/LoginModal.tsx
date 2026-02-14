@@ -1,21 +1,19 @@
 /**
  * Custom Login Modal Component
  * ============================
- * Fully branded login experience without Web3Auth/MetaMask branding.
- * Uses connectTo() for direct provider connections.
+ * Fully branded login experience.
+ * Social logins via Web3Auth, wallet connections via Reown AppKit.
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
+import { isMobileDevice } from '@/lib/web3auth';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import phantomLogo from '@/assets/icons/phantom-logo.png';
-import rabbyLogo from '@/assets/icons/rabby-logo.png';
 
 // Social provider icons as SVG components
 const GoogleIcon = () => (
@@ -33,64 +31,12 @@ const XIcon = () => (
   </svg>
 );
 
-// Wallet icons as SVG components
-const MetaMaskIcon = () => (
-  <svg viewBox="0 0 35 33" className="w-5 h-5">
-    <path fill="#E17726" d="M32.958 1l-13.134 9.718 2.442-5.727z"/>
-    <path fill="#E27625" d="M2.663 1l13.017 9.809-2.325-5.818zM28.229 23.533l-3.495 5.339 7.483 2.06 2.143-7.282zM.638 23.65l2.13 7.282 7.47-2.06-3.481-5.339z"/>
-    <path fill="#E27625" d="M9.875 14.471l-2.079 3.14 7.405.337-.247-7.969zM25.746 14.471l-5.158-4.587-.169 8.064 7.405-.337zM10.238 28.872l4.486-2.18-3.876-3.024zM20.897 26.692l4.472 2.18-.596-5.204z"/>
-    <path fill="#D5BFB2" d="M25.369 28.872l-4.472-2.18.364 2.903-.039 1.231zM10.238 28.872l4.147 1.954-.026-1.231.351-2.903z"/>
-    <path fill="#233447" d="M14.463 21.607l-3.733-1.1 2.636-1.205zM21.158 21.607l1.097-2.305 2.649 1.205z"/>
-    <path fill="#CC6228" d="M10.238 28.872l.611-5.339-4.092.117zM24.758 23.533l.611 5.339 3.481-5.222zM27.825 17.611l-7.405.337.689 3.659 1.097-2.305 2.649 1.205zM10.73 20.507l2.636-1.205 1.097 2.305.689-3.659-7.405-.337z"/>
-    <path fill="#E27625" d="M7.747 17.611l3.12 6.083-.104-3.029zM24.904 20.665l-.117 3.029 3.133-6.083zM15.152 17.948l-.689 3.659.871 4.496.195-5.926zM20.42 17.948l-.364 2.216.169 5.939.884-4.496z"/>
-    <path fill="#F5841F" d="M21.109 21.607l-.884 4.496.637.449 3.876-3.024.117-3.029zM10.73 20.507l.104 3.029 3.876 3.024.637-.449-.884-4.496z"/>
-    <path fill="#C0AC9D" d="M21.187 30.826l.039-1.231-.338-.286h-4.957l-.325.286.026 1.231-4.147-1.954 1.449 1.192 2.948 2.033h5.048l2.961-2.033 1.449-1.192z"/>
-    <path fill="#161616" d="M20.897 26.692l-.637-.449h-3.699l-.637.449-.351 2.903.325-.286h4.957l.338.286z"/>
-    <path fill="#763E1A" d="M33.517 11.353l1.114-5.364L32.958 1l-12.061 8.966 4.64 3.924 6.56 1.914 1.449-1.688-.631-.455 1.001-.914-.767-.597 1.001-.767zM.99 5.989l1.127 5.364-.72.539 1.001.767-.767.597 1.001.914-.631.455 1.449 1.688 6.56-1.914 4.64-3.924L2.663 1z"/>
-    <path fill="#F5841F" d="M32.049 15.84l-6.56-1.914 1.98 3.14-2.948 5.705 3.889-.052h5.809zM9.875 13.926l-6.56 1.914-2.182 7.81h5.796l3.889.052-2.948-5.705zM20.42 17.948l.416-7.234 1.902-5.141h-8.436l1.889 5.141.429 7.234.156 2.229.013 5.913h3.699l.026-5.913z"/>
-  </svg>
-);
-
-const WalletConnectIcon = () => (
-  <svg viewBox="0 0 300 185" className="w-5 h-5">
-    <path fill="#3B99FC" d="M61.439 36.256c48.91-47.888 128.212-47.888 177.123 0l5.886 5.764a6.041 6.041 0 0 1 0 8.67l-20.136 19.716a3.179 3.179 0 0 1-4.428 0l-8.101-7.931c-34.122-33.408-89.444-33.408-123.566 0l-8.675 8.494a3.179 3.179 0 0 1-4.428 0L54.978 51.253a6.041 6.041 0 0 1 0-8.67l6.461-6.327zM280.206 77.03l17.922 17.547a6.041 6.041 0 0 1 0 8.67l-80.81 79.122a6.357 6.357 0 0 1-8.856 0l-57.354-56.155a1.59 1.59 0 0 0-2.214 0L91.54 182.369a6.357 6.357 0 0 1-8.856 0L1.872 103.247a6.041 6.041 0 0 1 0-8.67l17.922-17.547a6.357 6.357 0 0 1 8.856 0l57.354 56.155a1.59 1.59 0 0 0 2.214 0l57.354-56.155a6.357 6.357 0 0 1 8.856 0l57.354 56.155a1.59 1.59 0 0 0 2.214 0l57.354-56.155a6.357 6.357 0 0 1 8.856 0z"/>
-  </svg>
-);
-
-const PhantomIcon = () => (
-  <img src={phantomLogo} alt="Phantom" className="w-5 h-5 rounded-md" />
-);
-
-const RabbyIcon = () => (
-  <img src={rabbyLogo} alt="Rabby" className="w-5 h-5 rounded-full" />
-);
-
-const TrustWalletIcon = () => (
-  <svg viewBox="0 0 32 32" className="w-5 h-5">
-    <defs>
-      <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#0500FF" />
-        <stop offset="100%" stopColor="#00D9B8" />
-      </linearGradient>
-    </defs>
-    <circle cx="16" cy="16" r="16" fill="url(#trustGradient)"/>
-    <path fill="#fff" d="M16 7c-2.5 0-6 1.8-6 1.8v7.7c0 4 6 7.5 6 7.5s6-3.5 6-7.5V8.8S18.5 7 16 7zm4 9.5c0 2.8-4 5.2-4 5.2s-4-2.4-4-5.2v-5.8s2.5-1.2 4-1.2 4 1.2 4 1.2v5.8z"/>
-  </svg>
-);
-
-const CoinbaseIcon = () => (
-  <svg viewBox="0 0 32 32" className="w-5 h-5">
-    <circle cx="16" cy="16" r="16" fill="#0052FF"/>
-    <path fill="#fff" d="M16 6C10.5 6 6 10.5 6 16s4.5 10 10 10 10-4.5 10-10S21.5 6 16 6zm0 15c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"/>
-  </svg>
-);
-
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
+type LoginStep = 'main' | 'email' | 'sms';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, isConnecting } = useAuth();
@@ -100,33 +46,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
-  
-  // Memoize mobile detection to avoid recalculating on every render
+
   const isMobile = useMemo(() => isMobileDevice(), []);
 
-  // Preload wallet icon images so they appear simultaneously with SVG icons
-  const [walletIconsReady, setWalletIconsReady] = useState(false);
-  useEffect(() => {
-    if (!open) {
-      setWalletIconsReady(false);
-      return;
-    }
-    const sources = [phantomLogo, rabbyLogo];
-    let loaded = 0;
-    const onLoad = () => {
-      loaded++;
-      if (loaded >= sources.length) setWalletIconsReady(true);
-    };
-    sources.forEach(src => {
-      const img = new Image();
-      img.onload = onLoad;
-      img.onerror = onLoad; // don't block on failure
-      img.src = src;
-    });
-  }, [open]);
-
   const handleClose = () => {
-    // Always allow closing - user should never be trapped
     setStep('main');
     setEmail('');
     setPhone('');
@@ -150,14 +73,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setEmailError('');
-    
-    // Basic email validation
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setEmailError('Please enter a valid email address');
       return;
     }
-    
+
     setActiveProvider('email');
     try {
       await connectWithEmail(email);
@@ -171,15 +93,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const handleSMSSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPhoneError('');
-    
-    // Basic phone validation (international format)
+
     const phoneRegex = /^\+?[1-9]\d{6,14}$/;
     const cleanedPhone = phone.replace(/[\s\-\(\)]/g, '');
     if (!phoneRegex.test(cleanedPhone)) {
       setPhoneError('Please enter a valid phone number with country code');
       return;
     }
-    
+
     setActiveProvider('sms');
     try {
       await connectWithSMS(cleanedPhone);
@@ -190,45 +111,19 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  // Deep link URLs for wallet in-app browsers on mobile
-  // When opened, the wallet loads dehub.io in its built-in browser where window.ethereum is available
-  const WALLET_DEEP_LINKS: Record<string, string> = {
-    metamask: `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`,
-    trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(window.location.origin)}`,
-    phantom: `https://phantom.app/ul/browse/${encodeURIComponent(window.location.origin)}?ref=${encodeURIComponent(window.location.origin)}`,
-    coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(window.location.origin)}`,
-  };
-
-  const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {
-    // On mobile: deep link to wallet app's in-app browser (most reliable)
-    // The wallet's browser injects window.ethereum so MetaMask adapter works directly
-    // If window.ethereum is already present (we are likely already in a wallet's in-app browser),
-    // proceed with the normal adapter connection instead of deep linking.
-    if (isMobile && !(window as any).ethereum && wallet !== 'walletconnect') {
-      const deepLink = WALLET_DEEP_LINKS[wallet] || WALLET_DEEP_LINKS.metamask;
-      console.log(`[LoginModal] Mobile deep link to ${wallet}:`, deepLink);
-      window.location.href = deepLink;
-      return;
-    }
-
-    // Desktop: use Web3Auth adapter (window.ethereum available from extensions)
-    // WalletConnect: use WalletConnect V2 adapter on both mobile and desktop
-    setActiveProvider(wallet);
+  const handleConnectWallet = async () => {
+    // Close our modal and open AppKit modal (handles all wallets, deep links, WalletConnect)
     onOpenChange(false);
     try {
-      await connectWithWallet(wallet);
-      setStep('main');
-      setActiveProvider(null);
+      await connectWithWallet('metamask'); // Parameter is ignored - AppKit handles wallet selection
     } catch (error) {
-      console.error(`${wallet} login failed:`, error);
-      setActiveProvider(null);
+      console.error('Wallet connection failed:', error);
       onOpenChange(true);
     }
   };
 
   const renderMainStep = () => (
     <div className="space-y-4">
-      {/* Email first, then social logins */}
       <div className="space-y-3">
         <Button
           onClick={() => setStep('email')}
@@ -281,9 +176,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <Separator className="flex-1 bg-white/10" />
       </div>
 
-      {/* Wallet option */}
+      {/* Wallet - opens AppKit modal which handles all wallets */}
       <Button
-        onClick={() => setStep('wallets')}
+        onClick={handleConnectWallet}
         disabled={isConnecting}
         variant="outline"
         className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-3 border-white/10"
@@ -296,7 +191,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderEmailStep = () => (
     <div className="space-y-4">
-
       <form onSubmit={handleEmailSubmit} className="space-y-4">
         <div className="space-y-2">
           <Input
@@ -329,8 +223,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
 
         <p className="text-white/40 text-xs text-center">
-          {isMobile 
-            ? "You'll be redirected to enter a verification code" 
+          {isMobile
+            ? "You'll be redirected to enter a verification code"
             : "We'll send you a magic link to sign in"}
         </p>
       </form>
@@ -339,7 +233,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderSMSStep = () => (
     <div className="space-y-4">
-
       <form onSubmit={handleSMSSubmit} className="space-y-4">
         <div className="space-y-2">
           <Input
@@ -372,85 +265,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
 
         <p className="text-white/40 text-xs text-center">
-          {isMobile 
-            ? "You'll be redirected to enter a verification code" 
+          {isMobile
+            ? "You'll be redirected to enter a verification code"
             : "We'll send you a verification code via SMS"}
         </p>
       </form>
-    </div>
-  );
-
-  // Wallet list
-  const walletOptions = useMemo(() => {
-    const hasInjected = typeof window !== 'undefined' && !!(window as any).ethereum;
-    
-    const all: { id: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust'; label: string; mobileLabel: string; Icon: React.FC; desktopOnly?: boolean }[] = [
-      { 
-        id: 'metamask', 
-        label: 'MetaMask', 
-        mobileLabel: hasInjected ? 'Connect MetaMask' : 'Open in MetaMask', 
-        Icon: MetaMaskIcon 
-      },
-      { 
-        id: 'walletconnect', 
-        label: 'WalletConnect', 
-        mobileLabel: 'WalletConnect', 
-        Icon: WalletConnectIcon 
-      },
-      { 
-        id: 'phantom', 
-        label: 'Phantom', 
-        mobileLabel: hasInjected ? 'Connect Phantom' : 'Open in Phantom', 
-        Icon: PhantomIcon 
-      },
-      { 
-        id: 'trust', 
-        label: 'Trust Wallet', 
-        mobileLabel: hasInjected ? 'Connect Trust Wallet' : 'Open in Trust Wallet', 
-        Icon: TrustWalletIcon 
-      },
-      { 
-        id: 'coinbase', 
-        label: 'Coinbase Wallet', 
-        mobileLabel: hasInjected ? 'Connect Coinbase' : 'Open in Coinbase', 
-        Icon: CoinbaseIcon 
-      },
-      { 
-        id: 'rabby', 
-        label: 'Rabby', 
-        mobileLabel: 'Rabby', 
-        Icon: RabbyIcon, 
-        desktopOnly: true 
-      },
-    ];
-    return isMobile ? all.filter(w => !w.desktopOnly) : all;
-  }, [isMobile]);
-
-  const renderWalletsStep = () => (
-    <div className={`space-y-3 transition-opacity duration-200 ${walletIconsReady ? 'opacity-100' : 'opacity-0'}`}>
-      {walletOptions.map(({ id, label, mobileLabel, Icon }) => (
-        <Button
-          key={id}
-          onClick={() => handleWalletConnect(id)}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
-        >
-          {activeProvider === id ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Icon />
-          )}
-          <span>{isMobile ? mobileLabel : label}</span>
-        </Button>
-      ))}
-
-      {isMobile && (
-        <p className="text-white/40 text-xs text-center pt-1">
-          {isWalletInAppBrowser()
-            ? "Tap to connect with your current wallet."
-            : "Tapping will open the wallet app. Log in from its built-in browser."}
-        </p>
-      )}
     </div>
   );
 
@@ -480,7 +299,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             {step === 'main' && 'Log in'}
             {step === 'email' && 'Continue with Email'}
             {step === 'sms' && 'Continue with SMS'}
-            {step === 'wallets' && 'Connect Wallet'}
           </DialogTitle>
         </DialogHeader>
 
@@ -489,7 +307,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {step === 'main' && renderMainStep()}
           {step === 'email' && renderEmailStep()}
           {step === 'sms' && renderSMSStep()}
-          {step === 'wallets' && renderWalletsStep()}
         </div>
 
         {/* Footer */}
