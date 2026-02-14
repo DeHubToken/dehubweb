@@ -83,17 +83,24 @@ export function SidebarLeaderboard() {
   const balanceOverrides: Record<string, number> = {
     maldoteth: 273298163.18321,
   };
+  const badgeBalanceOverrides: Record<string, number> = {
+    maldoteth: 273298163.18321,
+  };
   const blockedLeaderboardUsers = ['microsoft', 'd'];
 
   const entries = (data?.result?.byWalletBalance || [])
     .filter((entry: LeaderboardEntry) => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()))
     .map((entry: LeaderboardEntry) => {
-      const override = entry.username ? balanceOverrides[entry.username.toLowerCase()] : undefined;
-      if (override !== undefined) {
-        return { ...entry, total: override };
-      }
-      return entry;
+      const uname = entry.username?.toLowerCase();
+      const totalOverride = uname ? balanceOverrides[uname] : undefined;
+      const badgeOverride = uname ? badgeBalanceOverrides[uname] : undefined;
+      return {
+        ...entry,
+        ...(totalOverride !== undefined ? { total: totalOverride } : {}),
+        ...(badgeOverride !== undefined ? { badgeBalance: badgeOverride } : {}),
+      };
     })
+    .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
     .slice(0, 50);
 
   // Batch fetch badge balances for all visible entries
