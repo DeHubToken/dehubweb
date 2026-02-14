@@ -362,7 +362,17 @@ export async function sendMessage(
     console.log('[DM API] sendMessage response:', data);
 
     if (data?.result) {
-      return data.result;
+      // Handle nested {result: {success, data: {…}}} from edge function
+      const result = data.result?.data || data.result;
+      return {
+        id: result._id || result.id || `temp-${Date.now()}`,
+        conversationId: result.conversationId || conversationId,
+        sender: result.sender || { address: result.senderAddress },
+        content: result.content || content,
+        type: result.type || type,
+        mediaUrl: result.mediaUrl,
+        createdAt: result.createdAt || new Date().toISOString(),
+      };
     }
     if (data?._id || data?.id) {
       return {
