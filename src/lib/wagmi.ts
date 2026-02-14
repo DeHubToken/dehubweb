@@ -13,7 +13,7 @@ const metadata = {
   icons: ['https://dehub.io/favicon.ico']
 }
 
-const networks = [base] as const
+const networks = [base] as [typeof base]
 
 // Create Wagmi Adapter with custom RPC (mainnet.base.org returns 403)
 export const wagmiAdapter = new WagmiAdapter({
