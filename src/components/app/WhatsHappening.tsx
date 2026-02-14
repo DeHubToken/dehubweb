@@ -1,7 +1,8 @@
 /**
  * WhatsHappening / Talk of the Town Sidebar Widget
  * ==================================================
- * Shows top categories ranked by content volume.
+ * Shows trending categories ranked by post volume from the last week.
+ * Data is computed server-side and cached every 5 minutes.
  * Clicking navigates to the home feed pre-filtered to that category.
  * 
  * @module components/app/WhatsHappening
@@ -9,24 +10,46 @@
 
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { LayoutGrid } from 'lucide-react';
-import { getCategories } from '@/lib/api/dehub';
+import { LayoutGrid, TrendingUp } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
 
 /** Max categories shown in sidebar */
 const MAX_CATEGORIES = 8;
 
+interface TrendingCategory {
+  id: string;
+  name: string;
+  slug: string;
+  post_count: number;
+}
+
+async function fetchTrendingCategories(): Promise<TrendingCategory[]> {
+  const { data, error } = await supabase
+    .from('feed_cache')
+    .select('data')
+    .eq('cache_key', 'trending_categories')
+    .maybeSingle();
+
+  if (error || !data) return [];
+  
+  const parsed = data.data as { categories?: TrendingCategory[] };
+  return parsed?.categories || [];
+}
+
 export function WhatsHappening() {
   const navigate = useNavigate();
 
-  const { data: allCategories = [], isLoading } = useQuery({
-    queryKey: ['dehub-categories'],
-    queryFn: getCategories,
-    staleTime: 1000 * 60 * 30,
+  const { data: trendingCategories = [], isLoading } = useQuery({
+    queryKey: ['trending-categories'],
+    queryFn: fetchTrendingCategories,
+    staleTime: 1000 * 60 * 30, // 30 min - data is refreshed server-side
+    gcTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
   });
 
-  const displayed = allCategories.slice(0, MAX_CATEGORIES);
+  const displayed = trendingCategories.slice(0, MAX_CATEGORIES);
 
   const handleCategoryClick = (categoryId: string) => {
     // Pre-set the home feed category filter
@@ -59,7 +82,7 @@ export function WhatsHappening() {
           <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-3">
             <LayoutGrid className="w-6 h-6 text-zinc-500" />
           </div>
-          <p className="text-zinc-400 text-sm">No categories yet</p>
+          <p className="text-zinc-400 text-sm">No trending categories</p>
         </div>
       ) : (
         <div className="flex flex-col gap-1">
@@ -72,8 +95,16 @@ export function WhatsHappening() {
                 'hover:bg-zinc-800 text-left group'
               )}
             >
-              <span className="text-white font-medium truncate min-w-0">
-                {cat.name}
+              <div className="flex items-center gap-2.5 min-w-0">
+                {index < 3 && (
+                  <TrendingUp className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                )}
+                <span className="text-white font-medium truncate min-w-0">
+                  {cat.name}
+                </span>
+              </div>
+              <span className="text-zinc-500 text-xs flex-shrink-0 ml-2">
+                {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
               </span>
             </button>
           ))}
