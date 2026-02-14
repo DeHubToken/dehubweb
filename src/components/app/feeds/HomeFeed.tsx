@@ -53,7 +53,8 @@ import {
 } from '@/hooks/use-unified-feed';
 import { useDeHubStoryUsers } from '@/hooks/use-dehub-feed';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
-import { getMediaUrl, getNFTInfo, getAccountInfo } from '@/lib/api/dehub';
+import { getMediaUrl, getNFTInfo, getAccountInfo, getCategories } from '@/lib/api/dehub';
+import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -118,6 +119,9 @@ function getDateRange(dateValue: string): 'day' | 'week' | 'month' | 'year' | un
 interface FilterSectionProps {
   selectedSort: SortOption;
   onSortSelect: (o: SortOption) => void;
+  selectedCategory: string;
+  onCategorySelect: (category: string) => void;
+  categories: DeHubCategory[];
   selectedDate: DateFilterOption;
   onDateSelect: (o: DateFilterOption) => void;
   selectedPostType: PostTypeFilterValue;
@@ -129,7 +133,10 @@ interface FilterSectionProps {
 
 function SortFilterSection({ 
   selectedSort, 
-  onSortSelect, 
+  onSortSelect,
+  selectedCategory,
+  onCategorySelect,
+  categories,
   selectedDate, 
   onDateSelect,
   selectedPostType,
@@ -157,6 +164,41 @@ function SortFilterSection({
                 )}
               >
                 {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+        </div>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <div className="relative">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+            <button
+              onClick={() => onCategorySelect('all')}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                selectedCategory === 'all'
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              )}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => onCategorySelect(cat.id)}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                  selectedCategory === cat.id
+                    ? 'bg-white text-black'
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                )}
+              >
+                {cat.name}
               </button>
             ))}
           </div>
@@ -261,6 +303,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
+
+  // Fetch categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const { walletAddress, isAuthenticated } = useAuth();
   const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
@@ -336,10 +386,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     sortOrder,
     range,
     status: 'minted' as const,
+    category: selectedCategory !== 'all' ? selectedCategory : undefined,
     isPPV: contentFilters.ppv ? true : undefined,
     hasBounty: contentFilters.w2e ? true : undefined,
     isLocked: contentFilters.locked ? true : undefined,
-  }), [sortBy, sortOrder, range, contentFilters]);
+  }), [sortBy, sortOrder, range, selectedCategory, contentFilters]);
 
   // ============================================================================
   // THREE SEPARATE FEED QUERIES
@@ -909,6 +960,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   <SortFilterSection 
                     selectedSort={selectedSort} 
                     onSortSelect={handleSortSelect}
+                    selectedCategory={selectedCategory}
+                    onCategorySelect={setSelectedCategory}
+                    categories={categories}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
                     selectedPostType={selectedPostType}
@@ -917,6 +971,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                     onContentFilterToggle={toggleContentFilter}
                     onReset={() => {
                       setSelectedSort(SORT_OPTIONS[0]);
+                      setSelectedCategory('all');
                       setSelectedDate(DATE_FILTER_OPTIONS[0]);
                       setSelectedPostType('all');
                       resetContentFilters();
