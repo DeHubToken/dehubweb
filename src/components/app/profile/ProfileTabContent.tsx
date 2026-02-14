@@ -166,7 +166,7 @@ export function ProfileTabContent({
     }
     case 'posts':
       if (PROFILE_POSTS.length === 0) {
-        return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No text posts yet" subtitle="Text posts will appear here" />;
+        return <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No text posts or comments yet" subtitle="They will appear here" />;
       }
       return (
         <div className="space-y-3">
