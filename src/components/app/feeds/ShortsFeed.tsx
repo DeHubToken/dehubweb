@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
-import { useDeHubVideos } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -366,10 +366,11 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     isLoading: isApiLoading,
     isError,
     refetch,
-  } = useDeHubVideos({
+  } = useDeHubFeed({
     unit: 12,
     sortMode: getApiSortMode(selectedSort.value),
     category: selectedCategory || undefined,
+    postType: 'video',
   });
 
   // Refetch when refreshKey changes
@@ -387,15 +388,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
-    // Filter to only video content — exclude text-only posts and images
-    const videosOnly = allRawNFTs.filter(nft => {
-      const hasVideo = !!(nft.videoUrl || nft.media_url);
-      const postType = (nft as any).postType || nft.media_type;
-      // Exclude explicit non-video types
-      if (postType === 'image' || postType === 'text') return false;
-      return hasVideo;
-    });
-    const dateFiltered = filterByDate(videosOnly, selectedUploadDate.value);
+    // API now returns only videos (postType: 'video'), no client-side filter needed
+    const dateFiltered = filterByDate(allRawNFTs, selectedUploadDate.value);
     const sorted = applySorting(dateFiltered, selectedSort.value);
     return sorted.map((nft, index) => mapToShortVideo(nft, index));
   }, [allRawNFTs, selectedSort.value, selectedUploadDate.value]);
