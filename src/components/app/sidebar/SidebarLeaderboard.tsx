@@ -83,7 +83,7 @@ export function SidebarLeaderboard() {
   const balanceOverrides: Record<string, number> = {
     maldoteth: 273298163.18321,
   };
-  const blockedLeaderboardUsers = ['microsoft'];
+  const blockedLeaderboardUsers = ['microsoft', 'd'];
 
   const entries = (data?.result?.byWalletBalance || [])
     .filter((entry: LeaderboardEntry) => entry.username && !blockedLeaderboardUsers.includes(entry.username.toLowerCase()))
