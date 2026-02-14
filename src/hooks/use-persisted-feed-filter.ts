@@ -63,9 +63,10 @@ function getFilterValue<T>(feedType: FeedType, filterKey: string, defaultValue: 
 }
 
 /**
- * Set a specific filter value for a feed
+ * Set a specific filter value for a feed.
+ * Exported so external code (e.g. sidebar) can pre-set a filter before navigation.
  */
-function setFilterValue<T>(feedType: FeedType, filterKey: string, value: T): void {
+export function setFilterValue<T>(feedType: FeedType, filterKey: string, value: T): void {
   const allFilters = getAllFilters();
   
   if (!allFilters[feedType]) {
