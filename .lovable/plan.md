@@ -1,40 +1,37 @@
 
 
-## Fix: Restrict Moderation Actions to Moderators Only
+# Leaderboard: Show All Users with Infinite Scroll Pagination
 
-### Problem
-The pin/unpin and ban/unban actions in the live chat are shown to **every authenticated user**. The `showActions` prop on `ChatMessage` is set to `isAuthenticated` with no moderator check, so any logged-in user sees these options.
+## Overview
+Remove the zero-value filters from the backend so all users appear, and add client-side infinite scroll pagination to the leaderboard page so it loads in batches (e.g., 25 at a time) as the user scrolls down.
 
-### Solution
-Use the existing room details (which already include a moderators list) to determine if the current user is a moderator, and only pass `showActions=true` for moderators.
+## Changes
 
-### Changes
+### 1. Backend: Remove Zero-Value Filters
+**File:** `supabase/functions/refresh-leaderboard-cache/index.ts`
 
-**1. `src/components/app/chat/PublicChat.tsx`**
-- Derive an `isModerator` flag by checking if the current user's wallet address is in `roomDetails.moderators`
-- Pass `showActions={isModerator}` instead of `showActions={isAuthenticated}` to `ChatMessage`
-- Also gate the "Unpin" button on the pinned message banner behind the same check
+- **Line 550**: Remove `.filter((e) => e.total > 0)` so users with 0 holdings are included
+- **Line 755**: Remove `.filter((e) => (e[metric] ?? 0) > 0)` so users with 0 followers/likes/subscribers are included
 
-**2. `src/components/app/chat/ChatMessage.tsx`** (no changes needed)
-- The component already respects the `showActions` prop correctly -- it just needs to receive the right value from its parent
+All users will still be sorted by value (descending), so zero-value users naturally appear at the bottom.
+
+### 2. Frontend: Add Infinite Scroll Pagination
+**File:** `src/pages/app/LeaderboardPage.tsx`
+
+- Add a `visibleCount` state starting at 25
+- Slice the filtered/sorted `entries` array to only render the first `visibleCount` items
+- Add an `IntersectionObserver` on a sentinel element at the bottom of the list
+- When the sentinel becomes visible, increase `visibleCount` by 25 (loading the next batch)
+- Reset `visibleCount` to 25 when the user changes category, time period, or search query
+- Show a small loading spinner at the bottom while more items exist beyond the current view
 
 ### Technical Details
 
-In `PublicChat.tsx`, after the existing `roomDetails` hook (around line 61):
-
-```typescript
-// Determine if current user is a moderator for this room
-const isModerator = useMemo(() => {
-  if (!walletAddress || !roomDetails?.moderators) return false;
-  return roomDetails.moderators.some(
-    (mod: string) => mod.toLowerCase() === walletAddress.toLowerCase()
-  );
-}, [walletAddress, roomDetails]);
-```
-
-Then replace `showActions={isAuthenticated}` with `showActions={isModerator}` on the ChatMessage component (line 308).
-
-Gate the pinned message "Unpin" button (line 247) with `isModerator` instead of `isAuthenticated`.
-
-This also fixes the build errors in `src/lib/wagmi.ts` -- those are a separate pre-existing issue with readonly type assignment that should be addressed by casting `[base] as const` to a mutable type.
+| Area | Detail |
+|------|--------|
+| Batch size | 25 entries per load |
+| Reset triggers | Category change, time period change, search input |
+| Scroll detection | `IntersectionObserver` on a div rendered after the last visible entry |
+| Badge batching | Only fetch badge balances for the currently visible slice (not all entries) |
+| No backend pagination needed | Data is already fully cached; slicing happens client-side for simplicity |
 
