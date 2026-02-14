@@ -3,11 +3,11 @@
  * ============================
  * Fully branded login experience.
  * Social logins via Web3Auth, wallet connections via wagmi injected connector.
- * Mobile: deep links open dApp in wallet's in-app browser.
+ * Mobile: WalletConnect deep links - wallet opens for signing, user returns to Chrome.
  */
 
 import React, { useState, useMemo } from 'react';
-import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone, Globe } from 'lucide-react';
+import { X, Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,7 +83,7 @@ interface LoginModalProps {
 type LoginStep = 'main' | 'email' | 'sms' | 'wallets';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, isConnecting } = useAuth();
+  const { connectWithProvider, connectWithEmail, connectWithSMS, connectWithWallet, connectWithWalletDeepLink, isConnecting } = useAuth();
   const [step, setStep] = useState<LoginStep>('main');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -249,8 +249,100 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
 
+  // Connect wallet on mobile via WalletConnect deep link
+  // User stays in Chrome - wallet app opens for signing only, then returns
+  const handleMobileWalletConnect = async (walletType: 'metamask' | 'trust' | 'phantom' | 'coinbase') => {
+    setActiveProvider(walletType);
+    onOpenChange(false); // Close login modal
+    try {
+      await connectWithWalletDeepLink(walletType);
+    } catch (error) {
+      console.error(`${walletType} deep link connection failed:`, error);
+      setActiveProvider(null);
+      onOpenChange(true); // Reopen on error
+    }
+  };
+
   const renderWalletsStep = () => (
     <div className="space-y-3">
+      {/* Mobile: Show individual wallet buttons via WalletConnect deep links */}
+      {isMobile && !hasInjectedWallet && (
+        <>
+          <Button
+            onClick={() => handleMobileWalletConnect('metamask')}
+            disabled={isConnecting}
+            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+          >
+            {activeProvider === 'metamask' ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <MetaMaskIcon />
+            )}
+            <span className="flex-1 text-left">MetaMask</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+
+          <Button
+            onClick={() => handleMobileWalletConnect('trust')}
+            disabled={isConnecting}
+            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+          >
+            {activeProvider === 'trust' ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <TrustWalletIcon />
+            )}
+            <span className="flex-1 text-left">Trust Wallet</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+
+          <Button
+            onClick={() => handleMobileWalletConnect('phantom')}
+            disabled={isConnecting}
+            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+          >
+            {activeProvider === 'phantom' ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <PhantomIcon />
+            )}
+            <span className="flex-1 text-left">Phantom</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+
+          <Button
+            onClick={() => handleMobileWalletConnect('coinbase')}
+            disabled={isConnecting}
+            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+          >
+            {activeProvider === 'coinbase' ? (
+              <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+            ) : (
+              <CoinbaseIcon />
+            )}
+            <span className="flex-1 text-left">Coinbase Wallet</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+        </>
+      )}
+
+      {/* Mobile: In wallet in-app browser - direct connect */}
+      {isMobile && hasInjectedWallet && (
+        <Button
+          onClick={handleInjectedConnect}
+          disabled={isConnecting}
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+        >
+          {activeProvider === 'injected' ? (
+            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+          ) : (
+            <Wallet className="w-5 h-5 flex-shrink-0" />
+          )}
+          <span className="flex-1 text-left">Connect Wallet</span>
+          <ChevronRight className="w-4 h-4 text-white/40" />
+        </Button>
+      )}
+
       {/* Desktop with wallet extension: Direct connect */}
       {!isMobile && hasInjectedWallet && (
         <Button
@@ -268,9 +360,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
       )}
 
-      {/* WalletConnect - works everywhere:
-          Desktop: Shows QR code to scan with any mobile wallet
-          Mobile: Opens wallet app for approval, returns to browser */}
+      {/* WalletConnect - QR code on desktop, fallback on mobile */}
       <Button
         onClick={handleWalletConnect}
         disabled={isConnecting}
@@ -283,35 +373,18 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
           </svg>
         )}
-        <span className="flex-1 text-left">
-          {isMobile ? 'Connect Wallet' : 'WalletConnect'}
-        </span>
+        <span className="flex-1 text-left">WalletConnect</span>
         <ChevronRight className="w-4 h-4 text-white/40" />
       </Button>
 
-      {/* Mobile: Also show direct connect if in wallet in-app browser */}
-      {isMobile && hasInjectedWallet && (
-        <Button
-          onClick={handleInjectedConnect}
-          disabled={isConnecting}
-          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
-        >
-          {activeProvider === 'injected' ? (
-            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
-          ) : (
-            <Globe className="w-5 h-5 flex-shrink-0" />
-          )}
-          <span className="flex-1 text-left">Browser Wallet</span>
-          <ChevronRight className="w-4 h-4 text-white/40" />
-        </Button>
-      )}
-
       <p className="text-white/40 text-xs text-center pt-1">
-        {isMobile
-          ? 'Opens your wallet app for approval'
-          : hasInjectedWallet
-            ? 'Connect via browser extension or scan QR code'
-            : 'Scan QR code with your mobile wallet'}
+        {isMobile && !hasInjectedWallet
+          ? 'Approve in wallet app, then return here'
+          : isMobile && hasInjectedWallet
+            ? 'Connect with your current wallet'
+            : hasInjectedWallet
+              ? 'Connect via browser extension or scan QR code'
+              : 'Scan QR code with your mobile wallet'}
       </p>
     </div>
   );

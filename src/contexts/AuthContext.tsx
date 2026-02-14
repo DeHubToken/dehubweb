@@ -40,6 +40,7 @@ import type { IProvider } from '@web3auth/base';
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
 export type WalletProvider = 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust';
+export type DeepLinkWallet = 'metamask' | 'trust' | 'phantom' | 'coinbase';
 
 interface AuthContextType {
   user: DeHubUser | null;
@@ -59,6 +60,7 @@ interface AuthContextType {
   connectWithEmail: (email: string) => Promise<void>;
   connectWithSMS: (phone: string) => Promise<void>;
   connectWithWallet: (wallet: WalletProvider) => Promise<void>;
+  connectWithWalletDeepLink: (wallet: DeepLinkWallet) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
@@ -809,6 +811,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [connectors, connectAsync]);
 
   /**
+   * Connect wallet on mobile via WalletConnect deep link.
+   * User stays in Chrome - wallet app opens only for approval, then returns.
+   * Flow: WC generates URI → deep link opens wallet app → user approves → back to Chrome → connected
+   */
+  const connectWithWalletDeepLink = useCallback(async (walletType: DeepLinkWallet) => {
+    console.log(`[Auth] connectWithWalletDeepLink(${walletType}) called`);
+
+    const wcConnector = connectors.find(c => c.id === 'walletConnect');
+    if (!wcConnector) {
+      toast.error('WalletConnect not available. Please try another option.');
+      return;
+    }
+
+    wagmiAuthIntentRef.current = true;
+
+    try {
+      // Get the underlying WalletConnect provider to listen for the pairing URI
+      const provider = await wcConnector.getProvider() as any;
+
+      // Listen for the WC URI and open wallet-specific deep link
+      provider.once('display_uri', (uri: string) => {
+        console.log('[Auth] WC URI received, opening wallet deep link...');
+        const encodedUri = encodeURIComponent(uri);
+
+        const deepLinks: Record<DeepLinkWallet, string> = {
+          metamask: `https://metamask.app.link/wc?uri=${encodedUri}`,
+          trust: `https://link.trustwallet.com/wc?uri=${encodedUri}`,
+          phantom: `https://phantom.app/ul/v1/connect?uri=${encodedUri}`,
+          coinbase: `https://go.cb-w.com/wc?uri=${encodedUri}`,
+        };
+
+        // Open wallet app - browser stays in background, wallet opens for approval
+        window.location.href = deepLinks[walletType];
+      });
+
+      toast.info(`Opening ${walletType === 'metamask' ? 'MetaMask' : walletType === 'trust' ? 'Trust Wallet' : walletType === 'phantom' ? 'Phantom' : 'Coinbase Wallet'}...`);
+
+      // Start WC connection - this triggers the display_uri event
+      await connectAsync({ connector: wcConnector });
+      // Auth flow continues in the wagmi useEffect hook
+    } catch (error: unknown) {
+      wagmiAuthIntentRef.current = false;
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error('[Auth] WalletConnect deep link failed:', msg);
+
+      if (msg.includes('rejected') || msg.includes('denied') || msg.includes('cancelled')) {
+        toast.error('Connection was cancelled.');
+      } else {
+        toast.error('Failed to connect wallet. Please try again.');
+      }
+    }
+  }, [connectors, connectAsync]);
+
+  /**
    * Legacy connect method - opens default Web3Auth modal
    * Kept for backwards compatibility
    */
@@ -923,6 +979,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         connectWithEmail,
         connectWithSMS,
         connectWithWallet,
+        connectWithWalletDeepLink,
         disconnect,
         refreshUser,
         refreshSession,
