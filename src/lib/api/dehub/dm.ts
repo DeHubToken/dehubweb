@@ -1,4 +1,5 @@
 import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { supabase } from '@/integrations/supabase/client';
 import type { DeHubUser, DeHubNFT } from './types';
 
 export type DMMessageType = 'text' | 'image' | 'gif' | 'audio' | 'video' | 'tip';
@@ -260,68 +261,79 @@ export async function sendMessage(
   tipCurrency?: string
 ): Promise<DeHubDMMessage> {
   console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
-  
+
   const token = getAuthToken();
   if (!token) {
     throw new Error("Authentication required");
   }
-  
+
   const isNewConversation = conversationId.startsWith('new_');
   const recipientAddress = isNewConversation ? conversationId.replace('new_', '') : undefined;
-  
+
   try {
     const senderAddress = localStorage.getItem('dehub_wallet');
     if (!senderAddress) {
       throw new Error("Wallet address not found. Please reconnect your wallet.");
     }
-    
+
     const sender = senderAddress.toLowerCase();
     const hasMedia = !!mediaUrl || (type !== 'text' && type !== 'tip');
-    
+
     let data: any;
-    
+
     if (!hasMedia) {
-      const body: Record<string, unknown> = {
+      // Use Supabase Edge Function to proxy DM send (avoids CORS / auth issues)
+      const edgeBody: Record<string, unknown> = {
         sender,
         content,
         type,
       };
-      
+
       if (isNewConversation && recipientAddress) {
-        body.receiver = recipientAddress.toLowerCase();
+        edgeBody.receiver = recipientAddress.toLowerCase();
         console.log('[DM API] Sending text to new conversation with recipient:', recipientAddress);
       } else {
-        body.conversationId = conversationId;
+        edgeBody.conversationId = conversationId;
       }
-      
+
       if (type === 'tip' && tipAmount !== undefined) {
-        body.tipAmount = tipAmount;
-        body.tipCurrency = tipCurrency || 'DHB';
+        edgeBody.tipAmount = tipAmount;
+        edgeBody.tipCurrency = tipCurrency || 'DHB';
       }
-      
-      console.log('[DM API] Sending text message via /api/dm/tnx');
-      data = await apiCall<any>('/api/dm/tnx', {
-        method: 'POST',
-        body,
-        requiresAuth: true,
+
+      console.log('[DM API] Sending text message via dm-send edge function');
+      const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
+        body: edgeBody,
+        headers: {
+          'x-wallet-address': sender,
+          'x-dehub-token': token,
+        },
       });
+
+      if (edgeError) {
+        console.error('[DM API] dm-send edge function error:', edgeError);
+        throw new Error(edgeError.message || 'Failed to send message');
+      }
+
+      // The edge function wraps DeHub response in { status, result, message }
+      data = edgeData?.result || edgeData;
     } else {
       const formData = new FormData();
       formData.append('content', content);
       formData.append('type', type);
       formData.append('sender', sender);
-      
+
       if (isNewConversation && recipientAddress) {
         formData.append('receiver', recipientAddress.toLowerCase());
         console.log('[DM API] Sending media to new conversation with recipient:', recipientAddress);
       } else {
         formData.append('conversationId', conversationId);
       }
-      
+
       if (mediaUrl) {
         formData.append('mediaUrl', mediaUrl);
       }
-      
+
       console.log('[DM API] Sending media message via /api/dm/upload');
       const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
         method: 'POST',
@@ -330,18 +342,18 @@ export async function sendMessage(
         },
         body: formData,
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('[DM API] sendMessage upload error response:', errorData);
         throw new Error(errorData.message || 'Failed to send message');
       }
-      
+
       data = await response.json();
     }
-    
+
     console.log('[DM API] sendMessage response:', data);
-    
+
     if (data?.result) {
       return data.result;
     }
@@ -359,7 +371,7 @@ export async function sendMessage(
     if (data?.message && typeof data.message === 'object') {
       return data.message;
     }
-    
+
     console.warn('[DM API] Unknown response format for sendMessage:', data);
     throw new Error('Invalid response from sendMessage');
   } catch (error) {
