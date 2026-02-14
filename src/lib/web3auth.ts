@@ -48,6 +48,59 @@ export function isMobileDevice(): boolean {
   return false;
 }
 
+/**
+ * Detect if running inside a wallet's in-app browser.
+ * Wallet browsers inject window.ethereum and have distinctive user agents.
+ */
+export function isWalletInAppBrowser(): boolean {
+  if (typeof window === 'undefined') return false;
+  const ua = navigator.userAgent.toLowerCase();
+  const hasEthereum = !!(window as any).ethereum;
+
+  // Check known wallet in-app browser UA strings
+  const walletUAs = [
+    'metamask',        // MetaMask mobile browser
+    'trust',           // Trust Wallet
+    'trustwallet',
+    'coinbasebrowser', // Coinbase Wallet browser
+    'coinbase',
+    'phantom',         // Phantom
+    'tokenpocket',
+    'imtoken',
+    'bitkeep',
+    'okex',            // OKX Wallet
+    'okapp',
+  ];
+  const isKnownWalletUA = walletUAs.some(w => ua.includes(w));
+
+  // If we're on mobile with window.ethereum injected, it's very likely a wallet browser
+  // even if UA doesn't match (some wallets use generic Chrome UA)
+  if (isMobileDevice() && hasEthereum) return true;
+  if (isKnownWalletUA && hasEthereum) return true;
+
+  return false;
+}
+
+/**
+ * Get the name of the detected wallet in-app browser (for display purposes)
+ */
+export function getWalletBrowserName(): string | null {
+  if (typeof window === 'undefined') return null;
+  const ua = navigator.userAgent.toLowerCase();
+  const ethereum = (window as any).ethereum;
+  if (!ethereum) return null;
+
+  if (ethereum.isMetaMask) return 'MetaMask';
+  if (ethereum.isTrust || ua.includes('trust')) return 'Trust Wallet';
+  if (ethereum.isCoinbaseWallet || ua.includes('coinbasebrowser')) return 'Coinbase Wallet';
+  if (ethereum.isPhantom || ua.includes('phantom')) return 'Phantom';
+  if (ua.includes('tokenpocket')) return 'TokenPocket';
+
+  // Generic fallback - we know it's a wallet browser but can't identify which
+  if (isMobileDevice() && ethereum) return 'Wallet';
+  return null;
+}
+
 // Re-export for use in other files
 export { WALLET_ADAPTERS };
 
@@ -201,12 +254,6 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
     return initPromise;
   }
 
-  // Cleanup any stuck instance from previous sessions
-  if (web3authInstance) {
-    console.log("[Web3Auth] Cleaning up stale instance before init...");
-    await resetWeb3AuthState();
-  }
-
   isInitializing = true;
   console.log("[Web3Auth] Starting initialization...");
 
@@ -234,7 +281,6 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
         clientId,
         chainConfig,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-        sessionTime: 86400, // 24 hours
       });
       console.log("[Web3Auth] Web3AuthNoModal instance created");
 
@@ -467,7 +513,16 @@ export async function connectToExternalWallet(
 
   console.log(`[Web3Auth] Connecting to external wallet: ${walletAdapter}...`);
 
-  const provider = await web3auth.connectTo(walletAdapter);
+  // Add timeout for WalletConnect on mobile to prevent infinite spinning
+  const timeoutMs = walletAdapter === WALLET_ADAPTERS.WALLET_CONNECT_V2 && isMobileDevice() ? 30000 : 60000;
+
+  const provider = await Promise.race([
+    web3auth.connectTo(walletAdapter),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Wallet connection timed out after ${timeoutMs / 1000}s. Please try again.`)), timeoutMs)
+    ),
+  ]);
+
   lastConnectedAdapter = walletAdapter; // Track that this was an external wallet
 
   console.log(`[Web3Auth] Connected to ${walletAdapter}`);

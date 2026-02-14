@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { isMobileDevice } from '@/lib/web3auth';
+import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import phantomLogo from '@/assets/icons/phantom-logo.png';
 import rabbyLogo from '@/assets/icons/rabby-logo.png';
@@ -192,13 +192,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   // Deep link URLs for wallet in-app browsers on mobile
   // When opened, the wallet loads dehub.io in its built-in browser where window.ethereum is available
-  // We add ?auto_login=wallet param so the app knows to trigger connection immediately upon load
-  const currentUrl = window.location.origin + window.location.pathname;
   const WALLET_DEEP_LINKS: Record<string, string> = {
-    metamask: `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}?auto_login=metamask`,
-    trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(currentUrl + '?auto_login=trust')}`,
-    phantom: `https://phantom.app/ul/browse/${encodeURIComponent(currentUrl + '?auto_login=phantom')}?ref=${encodeURIComponent(window.location.origin)}`,
-    coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(currentUrl + '?auto_login=coinbase')}`,
+    metamask: `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`,
+    trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(window.location.origin)}`,
+    phantom: `https://phantom.app/ul/browse/${encodeURIComponent(window.location.origin)}?ref=${encodeURIComponent(window.location.origin)}`,
+    coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(window.location.origin)}`,
   };
 
   const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {
@@ -448,8 +446,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
       {isMobile && (
         <p className="text-white/40 text-xs text-center pt-1">
-          {typeof window !== 'undefined' && !!(window as any).ethereum 
-            ? "Log in using your current wallet's browser."
+          {isWalletInAppBrowser()
+            ? "Tap to connect with your current wallet."
             : "Tapping will open the wallet app. Log in from its built-in browser."}
         </p>
       )}
