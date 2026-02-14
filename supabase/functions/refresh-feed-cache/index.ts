@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
       const { data: cachedPages } = await supabase
         .from("feed_cache")
         .select("data")
-        .eq("cache_key", "feed_latest_page1");
+        .like("cache_key", "feed_latest_page%");
       
       const categoryCounts: Record<string, number> = {};
       
