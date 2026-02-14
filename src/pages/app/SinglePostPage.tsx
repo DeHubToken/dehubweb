@@ -374,7 +374,7 @@ function DesktopCreatorInfo({
           <img 
             src={channelAvatar} 
             alt={channel}
-            className="w-10 h-10 rounded-full object-cover shrink-0"
+            className="w-10 h-10 rounded-md object-cover shrink-0"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/placeholder.svg';
             }}
