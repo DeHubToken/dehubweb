@@ -154,7 +154,7 @@ Deno.serve(async (req) => {
         // Filter out underscored names that look like usernames (e.g. "Da_Mystic_Cryptic")
         if (lower.includes('_') && /^[a-z0-9_]+$/i.test(lower)) return false;
         // Filter out generic/spam-like entries
-        if (['others', 'other', 'none', 'n/a'].includes(lower)) return false;
+        if (['others', 'other', 'none', 'n/a', 'general'].includes(lower)) return false;
         return true;
       };
       
