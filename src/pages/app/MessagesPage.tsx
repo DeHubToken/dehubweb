@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Search, Plus, MessageCircle, RefreshCw } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { useConversations, useUserOnlineStatus } from '@/hooks/use-messages';
+import { useConversations, useUserOnlineStatus, useCreateConversation } from '@/hooks/use-messages';
 import { getMediaUrl, type DeHubConversation } from '@/lib/api/dehub';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -99,6 +100,7 @@ function ConversationItem({
 }
 
 export default function MessagesPage() {
+  const location = useLocation();
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
   const [showMessageSelector, setShowMessageSelector] = useState(false);
@@ -114,6 +116,30 @@ export default function MessagesPage() {
     refetch, 
     isRefetching,
   } = useConversations(searchQuery);
+
+  const createConversation = useCreateConversation();
+
+  // Handle incoming "open DM with" navigation from profile page
+  useEffect(() => {
+    const state = location.state as { openDmWith?: string; username?: string } | null;
+    if (!state?.openDmWith || !isAuthenticated) return;
+    
+    const targetAddress = state.openDmWith.toLowerCase();
+    const existing = conversations?.find(c => 
+      c.otherUser?.address?.toLowerCase() === targetAddress
+    );
+    
+    if (existing) {
+      setSelectedConversation(existing);
+    } else if (!isLoading) {
+      createConversation.mutateAsync({
+        recipientAddress: state.openDmWith,
+        recipientUser: { address: state.openDmWith, username: state.username } as any,
+      }).then(conv => setSelectedConversation(conv)).catch(() => {});
+    }
+    
+    window.history.replaceState({}, document.title);
+  }, [location.state, isAuthenticated, conversations, isLoading]);
 
   // Block access for unauthenticated users
   if (!isAuthenticated) {
@@ -222,6 +248,7 @@ export default function MessagesPage() {
                 </Button>
               </div>
             )}
+
 
 
             {/* Conversations */}
