@@ -202,9 +202,9 @@ export default function HomePage() {
     };
 
     const handleCategoryFilter = () => {
-      // Switch to home tab and show filters when a category is selected from sidebar
+      // Switch to home tab and refresh feed when a category is selected from sidebar
       setActiveTab('home');
-      setShowHomeFilters(true);
+      triggerRefresh();
     };
 
     window.addEventListener('home-refresh', handleHomeRefresh);
