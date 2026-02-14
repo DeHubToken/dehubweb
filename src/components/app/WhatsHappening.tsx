@@ -100,9 +100,6 @@ export function WhatsHappening() {
                   {cat.name}
                 </span>
               </div>
-              <span className="text-zinc-500 text-xs flex-shrink-0 ml-2">
-                {cat.post_count} {cat.post_count === 1 ? 'post' : 'posts'}
-              </span>
             </button>
           ))}
         </div>
