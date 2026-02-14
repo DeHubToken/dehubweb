@@ -73,16 +73,7 @@ const CoinbaseIcon = () => (
   </svg>
 );
 
-// dApp URL for deep links
-const DAPP_URL = 'https://dehub.io';
-
-// Deep links to open our dApp inside wallet's in-app browser
-const WALLET_DEEP_LINKS = {
-  metamask: `https://metamask.app.link/dapp/${DAPP_URL.replace('https://', '')}`,
-  trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(DAPP_URL)}`,
-  phantom: `https://phantom.app/ul/browse/${encodeURIComponent(DAPP_URL)}?ref=${encodeURIComponent(DAPP_URL)}`,
-  coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(DAPP_URL)}`,
-};
+// WalletConnect icon SVG (used inline in the wallets step)
 
 interface LoginModalProps {
   open: boolean;
@@ -177,11 +168,19 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  // Open dApp inside wallet's in-app browser via deep link (mobile only)
-  const handleDeepLink = (wallet: keyof typeof WALLET_DEEP_LINKS) => {
-    const url = WALLET_DEEP_LINKS[wallet];
-    console.log(`[Login] Opening deep link for ${wallet}:`, url);
-    window.location.href = url;
+  // Connect using WalletConnect (QR code on desktop, deep links on mobile)
+  // User stays in their browser - wallet app opens for approval, then returns
+  const handleWalletConnect = async () => {
+    setActiveProvider('walletconnect');
+    onOpenChange(false); // Close our modal - WalletConnect shows its own modal
+    try {
+      await connectWithWallet('walletconnect');
+      // Auth continues in useEffect
+    } catch (error) {
+      console.error('WalletConnect failed:', error);
+      setActiveProvider(null);
+      onOpenChange(true); // Reopen our modal on error
+    }
   };
 
   const renderMainStep = () => (
@@ -252,8 +251,46 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const renderWalletsStep = () => (
     <div className="space-y-3">
-      {/* If a wallet is injected (extension or in-app browser), show direct connect */}
-      {hasInjectedWallet && (
+      {/* Desktop with wallet extension: Direct connect */}
+      {!isMobile && hasInjectedWallet && (
+        <Button
+          onClick={handleInjectedConnect}
+          disabled={isConnecting}
+          className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+        >
+          {activeProvider === 'injected' ? (
+            <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+          ) : (
+            <MetaMaskIcon />
+          )}
+          <span className="flex-1 text-left">Browser Wallet</span>
+          <ChevronRight className="w-4 h-4 text-white/40" />
+        </Button>
+      )}
+
+      {/* WalletConnect - works everywhere:
+          Desktop: Shows QR code to scan with any mobile wallet
+          Mobile: Opens wallet app for approval, returns to browser */}
+      <Button
+        onClick={handleWalletConnect}
+        disabled={isConnecting}
+        className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
+      >
+        {activeProvider === 'walletconnect' ? (
+          <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" />
+        ) : (
+          <svg viewBox="0 0 300 185" className="w-5 h-5 flex-shrink-0">
+            <path fill="#3B99FC" d="M61.4 36.3c49.1-48.1 128.6-48.1 177.7 0l5.9 5.8c2.5 2.4 2.5 6.3 0 8.7l-20.2 19.8c-1.2 1.2-3.2 1.2-4.4 0l-8.1-8c-34.2-33.5-89.7-33.5-124 0l-8.7 8.5c-1.2 1.2-3.2 1.2-4.4 0L55 51.3c-2.5-2.4-2.5-6.3 0-8.7l6.4-6.3zm219.6 41l18 17.6c2.5 2.4 2.5 6.3 0 8.7l-81.1 79.4c-2.5 2.4-6.4 2.4-8.9 0l-57.5-56.4c-.6-.6-1.6-.6-2.2 0L92.7 182.9c-2.5 2.4-6.4 2.4-8.9 0L2.8 103.5c-2.5-2.4-2.5-6.3 0-8.7l18-17.6c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.4-2.4 8.9 0l57.5 56.4c.6.6 1.6.6 2.2 0l57.5-56.4c2.5-2.4 6.5-2.4 9 0z"/>
+          </svg>
+        )}
+        <span className="flex-1 text-left">
+          {isMobile ? 'Connect Wallet' : 'WalletConnect'}
+        </span>
+        <ChevronRight className="w-4 h-4 text-white/40" />
+      </Button>
+
+      {/* Mobile: Also show direct connect if in wallet in-app browser */}
+      {isMobile && hasInjectedWallet && (
         <Button
           onClick={handleInjectedConnect}
           disabled={isConnecting}
@@ -269,79 +306,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
       )}
 
-      {/* Mobile: Show deep links to open dApp in wallet apps */}
-      {isMobile ? (
-        <>
-          <Button
-            onClick={() => handleDeepLink('metamask')}
-            disabled={isConnecting}
-            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
-          >
-            <MetaMaskIcon />
-            <span className="flex-1 text-left">MetaMask</span>
-            <ChevronRight className="w-4 h-4 text-white/40" />
-          </Button>
-
-          <Button
-            onClick={() => handleDeepLink('trust')}
-            disabled={isConnecting}
-            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
-          >
-            <TrustWalletIcon />
-            <span className="flex-1 text-left">Trust Wallet</span>
-            <ChevronRight className="w-4 h-4 text-white/40" />
-          </Button>
-
-          <Button
-            onClick={() => handleDeepLink('phantom')}
-            disabled={isConnecting}
-            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
-          >
-            <PhantomIcon />
-            <span className="flex-1 text-left">Phantom</span>
-            <ChevronRight className="w-4 h-4 text-white/40" />
-          </Button>
-
-          <Button
-            onClick={() => handleDeepLink('coinbase')}
-            disabled={isConnecting}
-            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4"
-          >
-            <CoinbaseIcon />
-            <span className="flex-1 text-left">Coinbase Wallet</span>
-            <ChevronRight className="w-4 h-4 text-white/40" />
-          </Button>
-
-          {!hasInjectedWallet && (
-            <p className="text-white/40 text-xs text-center pt-1">
-              Tap a wallet to open DeHub in its browser
-            </p>
-          )}
-        </>
-      ) : (
-        <>
-          {/* Desktop: Show individual wallet extension connect buttons */}
-          <Button
-            onClick={handleInjectedConnect}
-            disabled={isConnecting || !hasInjectedWallet}
-            className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center gap-3 border border-white/10 px-4 disabled:opacity-40"
-          >
-            <MetaMaskIcon />
-            <span className="flex-1 text-left">MetaMask</span>
-            {activeProvider === 'injected' ? (
-              <Loader2 className="w-4 h-4 animate-spin text-white/40" />
-            ) : (
-              <ChevronRight className="w-4 h-4 text-white/40" />
-            )}
-          </Button>
-
-          {!hasInjectedWallet && (
-            <p className="text-white/40 text-xs text-center pt-1">
-              No wallet extension detected. Please install MetaMask or another wallet.
-            </p>
-          )}
-        </>
-      )}
+      <p className="text-white/40 text-xs text-center pt-1">
+        {isMobile
+          ? 'Opens your wallet app for approval'
+          : hasInjectedWallet
+            ? 'Connect via browser extension or scan QR code'
+            : 'Scan QR code with your mobile wallet'}
+      </p>
     </div>
   );
 

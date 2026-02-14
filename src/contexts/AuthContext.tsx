@@ -326,28 +326,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Auto-connect in wallet in-app browsers (Trust Wallet, MetaMask mobile, etc.)
   // When user opens our dApp via deep link, window.ethereum is injected by the wallet.
-  // We detect this and auto-connect so the user doesn't need to tap "Connect Wallet".
+  // Runs IMMEDIATELY on mount - doesn't wait for Web3Auth init or isLoading.
   useEffect(() => {
     const autoConnectInAppBrowser = async () => {
-      // Only on mobile, only if window.ethereum exists, only if not already connected/loading
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       const hasInjected = typeof window !== 'undefined' && !!window.ethereum;
       const alreadyAttempted = sessionStorage.getItem('dehub_wallet_auto_connect_attempted');
+      // Check existing session synchronously (no API call)
+      const hasExistingSession = !!getAuthToken() && !isTokenExpired();
 
-      if (!isMobile || !hasInjected || isLoading || isConnecting || isAuthenticated || alreadyAttempted) {
+      if (!isMobile || !hasInjected || hasExistingSession || alreadyAttempted) {
         return;
       }
 
       // Mark as attempted to prevent retry loops
       sessionStorage.setItem('dehub_wallet_auto_connect_attempted', 'true');
 
-      console.log('[Auth] Mobile in-app browser detected, auto-connecting...');
+      console.log('[Auth] Mobile in-app browser detected, auto-connecting immediately...');
       const injectedConnector = connectors.find(c => c.id === 'injected');
       if (!injectedConnector) return;
 
       wagmiAuthIntentRef.current = true;
       try {
         await connectAsync({ connector: injectedConnector });
+        // wagmi useEffect will pick up the connection and start DeHub auth
       } catch (err) {
         console.warn('[Auth] In-app browser auto-connect failed:', err);
         wagmiAuthIntentRef.current = false;
@@ -355,7 +357,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     autoConnectInAppBrowser();
-  }, [isLoading, isConnecting, isAuthenticated, connectors, connectAsync]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run ONCE on mount - no deps to avoid re-runs
 
   /**
    * Complete DeHub auth using Wagmi (Sign Message)
@@ -762,11 +765,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
     console.log(`[Auth] connectWithWallet(${wallet}) called`);
 
-    // Find the injected connector (handles MetaMask, Trust, Coinbase, etc.)
-    const injectedConnector = connectors.find(c => c.id === 'injected');
-    if (!injectedConnector) {
-      toast.error('No wallet detected. Please install MetaMask or use a wallet browser.');
-      return;
+    // Determine which connector to use:
+    // - 'walletconnect' → WalletConnect (QR code on desktop, deep links on mobile)
+    // - anything else → injected (browser extensions, in-app browsers)
+    let connector;
+    if (wallet === 'walletconnect') {
+      connector = connectors.find(c => c.id === 'walletConnect');
+      if (!connector) {
+        toast.error('WalletConnect not available. Please try another option.');
+        return;
+      }
+    } else {
+      connector = connectors.find(c => c.id === 'injected');
+      if (!connector) {
+        toast.error('No wallet detected. Please install a wallet extension.');
+        return;
+      }
     }
 
     // Set intent flag so the wagmi auto-connect effect knows this was user-initiated
@@ -776,8 +790,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Don't set isConnecting here - the wagmi auto-connect useEffect will set it
       // when it detects the connection and starts the auth flow.
       // Setting it here would block the useEffect (it checks !isConnecting).
-      console.log('[Auth] Connecting via injected connector...');
-      await connectAsync({ connector: injectedConnector });
+      console.log(`[Auth] Connecting via ${connector.id} connector...`);
+      await connectAsync({ connector });
       // Auth flow continues in the useEffect hook monitoring wagmi state
     } catch (error: unknown) {
       wagmiAuthIntentRef.current = false;
@@ -785,7 +799,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] Wallet connection failed:', msg);
 
       if (msg.includes('not found') || msg.includes('not installed')) {
-        toast.error('MetaMask not found. Please install the MetaMask extension.');
+        toast.error('Wallet not found. Please install a wallet extension.');
       } else if (msg.includes('rejected') || msg.includes('denied') || msg.includes('cancelled')) {
         toast.error('Connection was cancelled.');
       } else {

@@ -2,12 +2,16 @@
  * Wagmi Configuration (Pure wagmi - no AppKit)
  * =============================================
  * Uses wagmi connectors directly for wallet connections.
- * Injected connector handles MetaMask, Trust Wallet, Coinbase, etc.
+ * - injected: MetaMask extension, Trust/Phantom/Coinbase in-app browsers
+ * - walletConnect: QR code (desktop) / deep links (mobile) for any wallet
  */
 
 import { createConfig, http } from 'wagmi'
 import { base } from 'viem/chains'
-import { injected } from 'wagmi/connectors'
+import { injected, walletConnect } from 'wagmi/connectors'
+
+// WalletConnect project ID (used for WalletConnect relay protocol)
+const projectId = '0751965bb69056635999763785664539'
 
 /**
  * Prevent wagmi auto-reconnect on page load when there's no valid DeHub session.
@@ -38,6 +42,16 @@ export const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
     injected({ shimDisconnect: true }),
+    walletConnect({
+      projectId,
+      showQrModal: true, // Shows WalletConnect modal with QR code / wallet deep links
+      metadata: {
+        name: 'DeHub',
+        description: 'DeHub Social App',
+        url: 'https://dehub.io',
+        icons: ['https://dehub.io/favicon.ico'],
+      },
+    }),
   ],
   transports: {
     [base.id]: http('https://base-rpc.publicnode.com'),

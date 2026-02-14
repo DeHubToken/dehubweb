@@ -49,6 +49,7 @@
     "@types/three": "^0.181.0",
     "@wagmi/connectors": "^7.1.7",
     "@wagmi/core": "^3.3.3",
+    "@walletconnect/ethereum-provider": "^2.23.5",
     "@walletconnect/modal": "^2.7.0",
     "@walletconnect/sign-client": "^2.17.0",
     "@web3auth/base": "^8.12.4",
