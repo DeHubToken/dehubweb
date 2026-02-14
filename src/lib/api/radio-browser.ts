@@ -408,3 +408,46 @@ export function getCountryFlag(countryCode: string): string {
   
   return String.fromCodePoint(...codePoints);
 }
+
+// ============================================================================
+// CURATED CAROUSEL STATIONS
+// ============================================================================
+
+const CURATED_STATION_NAMES = [
+  'Lofi 24/7',
+  'christmas vinyl',
+  'miami beach radio',
+  'NBC News',
+  'Nightwave Plaza',
+  'ilovemusic - ilovechillpop',
+  'isekoi radio chillzone',
+  'pax lofi',
+  'Rocking 247 Radio',
+  '247 mixing',
+];
+
+/**
+ * Fetch curated stations for carousels by searching each name.
+ * Returns stations in the order defined above.
+ */
+export async function getCuratedCarouselStations(): Promise<RadioStation[]> {
+  const results = await Promise.allSettled(
+    CURATED_STATION_NAMES.map(name => searchStations(name, 3))
+  );
+
+  const stations: RadioStation[] = [];
+  const seen = new Set<string>();
+
+  results.forEach((result, i) => {
+    if (result.status === 'fulfilled' && result.value.length > 0) {
+      // Pick the best match (first result, highest votes)
+      const match = result.value[0];
+      if (!seen.has(match.stationuuid)) {
+        seen.add(match.stationuuid);
+        stations.push(match);
+      }
+    }
+  });
+
+  return stations;
+}

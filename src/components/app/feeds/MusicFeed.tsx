@@ -21,7 +21,7 @@ import { searchNFTs, getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
-import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
+import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import type { VideoItem } from '@/types/feed.types';
@@ -533,11 +533,11 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
   const { walletAddress } = useAuth();
 
-  // Fetch radio stations for carousel
+  // Fetch curated radio stations for carousel
   const { data: radioStations = [] } = useQuery({
-    queryKey: ['radio-stations-top'],
-    queryFn: () => getStationsByGenre('top', 20),
-    staleTime: 5 * 60 * 1000,
+    queryKey: ['radio-stations-curated'],
+    queryFn: () => getCuratedCarouselStations(),
+    staleTime: 10 * 60 * 1000,
   });
 
   // Fetch music-categorized videos for carousel - randomized

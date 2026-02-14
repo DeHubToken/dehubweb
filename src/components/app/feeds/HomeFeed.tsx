@@ -54,7 +54,7 @@ import {
 import { useDeHubStoryUsers } from '@/hooks/use-dehub-feed';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getAccountInfo } from '@/lib/api/dehub';
-import { getStationsByGenre, type RadioStation } from '@/lib/api/radio-browser';
+import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
@@ -424,11 +424,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     });
   }, [scrollFeed.data]);
 
-  // Fetch radio stations for carousel
+  // Fetch curated radio stations for carousel
   const { data: radioStations = [] } = useQuery({
-    queryKey: ['radio-stations-home'],
-    queryFn: () => getStationsByGenre('top', 20),
-    staleTime: 5 * 60 * 1000,
+    queryKey: ['radio-stations-curated'],
+    queryFn: () => getCuratedCarouselStations(),
+    staleTime: 10 * 60 * 1000,
   });
 
   // Fetch pinned post if provided
