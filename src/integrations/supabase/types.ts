@@ -237,6 +237,39 @@ export type Database = {
         }
         Relationships: []
       }
+      direct_messages: {
+        Row: {
+          content: string
+          conversation_id: string | null
+          created_at: string
+          id: string
+          media_url: string | null
+          message_type: string
+          receiver_address: string
+          sender_address: string
+        }
+        Insert: {
+          content?: string
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          message_type?: string
+          receiver_address: string
+          sender_address: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          message_type?: string
+          receiver_address?: string
+          sender_address?: string
+        }
+        Relationships: []
+      }
       feature_request_votes: {
         Row: {
           created_at: string
