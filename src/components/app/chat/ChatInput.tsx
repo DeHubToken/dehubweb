@@ -138,7 +138,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   return (
-    <div className="p-3 border-t border-transparent bg-zinc-900">
+    <div className="p-3 lg:pl-4 border-t border-transparent bg-zinc-900">
       {/* Image Preview */}
       {imagePreview && (
         <div className="mb-2 relative inline-block">
