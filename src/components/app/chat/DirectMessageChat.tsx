@@ -56,7 +56,7 @@ function MessageBubble({
         <Avatar className="w-8 h-8 flex-shrink-0">
           {avatarUrl && <AvatarImage src={avatarUrl} />}
           <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-            {displayName.charAt(0).toUpperCase()}
+            {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
       )}
@@ -318,7 +318,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           <Avatar className="w-10 h-10">
             {avatarUrl && <AvatarImage src={avatarUrl} />}
             <AvatarFallback className="bg-zinc-700 text-white font-medium">
-              {displayName.charAt(0).toUpperCase()}
+              {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           

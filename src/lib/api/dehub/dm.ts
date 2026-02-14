@@ -106,7 +106,7 @@ export async function getConversations(
 
           sData.forEach((m: any) => {
             const otherAddress = m.sender_address === userAddress ? m.receiver_address : m.sender_address;
-            if (otherAddress === 'unknown') return;
+            if (otherAddress === 'unknown' || otherAddress === userAddress) return; // Skip self-conversations
 
             if (!conversationsMap.has(otherAddress)) {
               conversationsMap.set(otherAddress, {

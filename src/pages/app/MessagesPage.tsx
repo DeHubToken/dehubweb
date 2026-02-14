@@ -41,7 +41,8 @@ function ConversationItem({
 }) {
   const otherUser = conversation.otherUser || conversation.participants?.[0];
   const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
-  const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username || 'User';
+  const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username ||
+    (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
   const lastMessagePreview = conversation.lastMessage?.content || 'No messages yet';
   const lastMessageTime = conversation.lastMessage?.createdAt 
     ? formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: false })
@@ -63,7 +64,7 @@ function ConversationItem({
         <Avatar className="w-12 h-12">
           {avatarUrl && <AvatarImage src={avatarUrl} />}
           <AvatarFallback className="bg-zinc-700 text-white font-medium">
-            {displayName.charAt(0).toUpperCase()}
+            {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         {/* Online indicator */}
