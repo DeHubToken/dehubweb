@@ -1,31 +1,23 @@
 
-## Fix: batch-avatars Edge Function Failing for All Addresses
 
-### Root Cause
-The `batch-avatars` edge function checks `if (!data.status || !data.result)` on line 50, but the DeHub API `/api/account_info/{address}` does NOT return a `status` field. The response is just `{ result: { ... } }` with no `status` boolean.
+## Fix: Restore Individual Follow Notifications
 
-Since `data.status` is `undefined` (falsy), the check fails for **every single address**, causing all avatars to return `null` with error "No result". This means the enrichment service has been completely broken -- no fresh avatars have been loading at all.
+### Problem
+The client-side bundling logic groups all "following" notifications within 24 hours into a single entry, completely removing usa's and outforrder's individual notifications from the list. The user expects to see each follow as its own notification item.
 
-### Fix
-**File:** `supabase/functions/batch-avatars/index.ts`
+### Solution
+Remove the client-side multi-actor bundling for follows. Instead, only use multi-actor display when the **backend already provides** aggregated data (via `aggregatedCount` and `latestActorNames` fields on a single notification).
 
-Change the validation on line 50 from:
-```typescript
-if (!data.status || !data.result) {
-```
-to:
-```typescript
-if (!data.result) {
-```
+### Changes
 
-This single-line fix will make the edge function correctly parse the API response, returning real avatar URLs, usernames, and display names. Combined with the cache-busting already added to `buildAvatarUrl`, okanbey (and all other users) will show their current profile pictures in notifications.
+**File:** `src/pages/app/NotificationsPage.tsx`
 
-### Verification
-After deploying, the `batch-avatars` response will change from:
-```json
-{"avatarUrl": null, "error": "No result"}
-```
-to actual data like:
-```json
-{"avatarUrl": "avatars/0xabc.jpg", "username": "okanbey", "displayName": "Okanbey"}
-```
+1. **Remove client-side multi-actor bundling** -- Delete the "following" grouping block (lines 69-94) in `bundleNotifications` that consumes individual follow notifications into a single bundle.
+
+2. **Keep same-actor bundling** -- Retain the logic that groups multiple likes/comments from the same person (e.g., "Frank liked 5 of your posts"), since that consolidates one person's repeated actions.
+
+3. **Support backend-aggregated follows** -- When a single notification arrives from the API with `aggregatedCount > 1` and `latestActorNames`, display it as "okanbey and 2 others started following you" with names below. This uses the API's own aggregation rather than client-side grouping.
+
+4. **Update `getNotificationContent`** -- For `type === 'following'`, check `notification.aggregatedCount > 1` to show "and X others" phrasing. Otherwise show the standard single follow text.
+
+This way, individual follow notifications remain visible as separate items, but if the backend sends a pre-aggregated notification, it still displays nicely.
