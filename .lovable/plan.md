@@ -1,56 +1,31 @@
 
 
-## Fix Shorts Feed: Show More Items and Improve Load Speed
+## Fix: Analyze All Cached Pages for Trending Categories
 
-### Root Cause Analysis
+### Problem
+Currently, trending categories only analyze 50 posts (page 1). This gives a very narrow view of what's actually trending. Previously it analyzed all 5 pages but showed post counts that didn't match when clicked.
 
-**Why only 2 items show up:** The Shorts feed fetches 12 items from the API with NO `postType` filter, meaning it gets a mix of videos, images, and text posts. Then it client-side filters to only items with a `videoUrl` -- most of the 12 items are images/text, leaving only ~2 actual videos visible. This immediately triggers the infinite scroll loader (ugly "Load More" right away).
-
-**Why it's slow:** The prefetch cache key matches, but the data is the same mixed-content batch. There is no server-side caching for shorts specifically.
-
----
+### Solution
+Analyze all 5 cached pages (250 posts) to determine what's truly trending, but remove the exact post count from the sidebar to avoid the mismatch issue. Instead, show a relative popularity indicator.
 
 ### Changes
 
-**1. ShortsFeed.tsx -- Add postType filter to API call**
-- Pass `postType: 'video'` to `useDeHubVideos` so the API returns ONLY video content
-- This ensures all 12 items are videos, eliminating the client-side filtering that drops most results
-- Remove the redundant `videosOnly` client-side filter since the API now handles it
+**1. Edge Function: `supabase/functions/refresh-feed-cache/index.ts`**
+- Change the query back to read all 5 cached latest pages (`feed_latest_page1` through `feed_latest_page5`) instead of just page 1
+- This gives 250 posts worth of data for more accurate trending analysis
 
-**2. use-feed-prefetch.ts -- Fix prefetch to match**
-- Update the shorts prefetch call to include `postType: 'video'` so it fetches only videos
-- Update the cache key to include `postType: 'video'` so it matches the component's query key
-- This ensures the prefetch cache hit works and shorts load instantly from cache
+**2. Sidebar UI: `src/components/app/WhatsHappening.tsx`**
+- Remove the exact "X posts" count label from each category row
+- The ranking order itself already communicates which categories are most popular
+- This eliminates the count mismatch problem entirely since there's no number to disagree with
 
-**3. ShortsFeed.tsx -- Use useDeHubFeed directly with postType**
-- Since `useDeHubVideos` is a wrapper that omits `postType`, switch to `useDeHubFeed` directly with `postType: 'video'` to get proper API-level filtering
-
----
+### Why This Works
+- Trending order is based on 250 posts instead of 50, giving a much better signal
+- No misleading post counts that don't match when clicked
+- Categories are ranked by true popularity, and the rank position alone tells users what's hot
 
 ### Technical Details
-
-```
-ShortsFeed.tsx (line ~17-18):
-  - Import useDeHubFeed instead of useDeHubVideos
-  
-ShortsFeed.tsx (line ~361-373):
-  - Change: useDeHubVideos({ unit: 12, sortMode, category })
-  - To: useDeHubFeed({ unit: 12, sortMode, category, postType: 'video' })
-
-ShortsFeed.tsx (lines ~391-397):
-  - Remove the client-side videosOnly filter (hasVideo check)
-  - Apply date filter and sorting directly on allRawNFTs
-
-use-feed-prefetch.ts (lines ~101-107):
-  - Add postType: 'video' to the shortsPromise searchNFTs call
-
-use-feed-prefetch.ts (lines ~200-219):
-  - Add postType: 'video' to the shortsParams cache key object
-```
-
-### Expected Result
-- Shorts tab shows a full grid of 6+ video thumbnails immediately (all 12 items are videos)
-- No ugly immediate "Load More" trigger
-- Prefetch cache hit means instant tab switch
-- Feed loads from warm cache within the existing 5-minute pg_cron refresh cycle
+- Edge function query changes from `.eq("cache_key", "feed_latest_page1")` to `.like("cache_key", "feed_latest_page%")`
+- UI removes the `post_count` display span from each category button
+- The `post_count` field is still computed and stored (used for sorting) but not shown to users
 
