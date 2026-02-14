@@ -115,7 +115,9 @@ export default function LeaderboardPage() {
 
 
   // Manual balance overrides (username -> total override)
-  const balanceOverrides: Record<string, number> = {};
+  const balanceOverrides: Record<string, number> = {
+    maldoteth: 273298163.18321,
+  };
 
   // Usernames to exclude from leaderboard
   const blockedLeaderboardUsers = ['microsoft'];
