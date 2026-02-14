@@ -1,21 +1,40 @@
 
 
-# Fix: Wrong BNB DHB Token Address + Add Block Chunking
+## Fix: Restrict Moderation Actions to Moderators Only
 
-## Problem
-The BNB DHB **token** address (used for querying Transfer event logs) is wrong in both tip/earning edge functions. Currently `0x680d3113caf77b61b510f332d5ef4cf5b41a761d` -- should be `0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7`. This means all BNB Transfer event queries return nothing.
+### Problem
+The pin/unpin and ban/unban actions in the live chat are shown to **every authenticated user**. The `showActions` prop on `ChatMessage` is set to `isAuthenticated` with no moderator check, so any logged-in user sees these options.
 
-Additionally, no block-range chunking exists, so long-period queries (month/year) exceed RPC limits and silently fail.
+### Solution
+Use the existing room details (which already include a moderators list) to determine if the current user is a moderator, and only pass `showActions=true` for moderators.
 
-## Changes (only 2 files)
+### Changes
 
-### 1. `supabase/functions/backfill-tip-snapshots/index.ts`
-- Fix `DHB_BNB` on line 11 to `0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7`
-- Add chunked log fetching: BNB = 5,000-block chunks, Base = 50,000-block chunks
-- Add optional `?period=day|week|month|year` query param to run one period at a time (avoids timeouts)
+**1. `src/components/app/chat/PublicChat.tsx`**
+- Derive an `isModerator` flag by checking if the current user's wallet address is in `roomDetails.moderators`
+- Pass `showActions={isModerator}` instead of `showActions={isAuthenticated}` to `ChatMessage`
+- Also gate the "Unpin" button on the pinned message banner behind the same check
 
-### 2. `supabase/functions/refresh-leaderboard-cache/index.ts`
-- Fix `DHB_BNB` on line 11 to `0x680d3113cAF77B61b510967F4433D2EdFbBC6cD7`
+**2. `src/components/app/chat/ChatMessage.tsx`** (no changes needed)
+- The component already respects the `showActions` prop correctly -- it just needs to receive the right value from its parent
 
-Nothing else is touched.
+### Technical Details
+
+In `PublicChat.tsx`, after the existing `roomDetails` hook (around line 61):
+
+```typescript
+// Determine if current user is a moderator for this room
+const isModerator = useMemo(() => {
+  if (!walletAddress || !roomDetails?.moderators) return false;
+  return roomDetails.moderators.some(
+    (mod: string) => mod.toLowerCase() === walletAddress.toLowerCase()
+  );
+}, [walletAddress, roomDetails]);
+```
+
+Then replace `showActions={isAuthenticated}` with `showActions={isModerator}` on the ChatMessage component (line 308).
+
+Gate the pinned message "Unpin" button (line 247) with `isModerator` instead of `isAuthenticated`.
+
+This also fixes the build errors in `src/lib/wagmi.ts` -- those are a separate pre-existing issue with readonly type assignment that should be addressed by casting `[base] as const` to a mutable type.
 
