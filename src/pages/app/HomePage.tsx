@@ -323,15 +323,8 @@ export default function HomePage() {
   const handleTouchStart = (e: React.TouchEvent) => {
     // Skip entire gesture if touch originated inside a no-swipe zone (filter panel)
     const target = e.target as HTMLElement;
-    const noSwipeEl = target.closest('[data-no-swipe]');
-    touchInsideNoSwipe.current = !!noSwipeEl;
-    
-    console.log('[SWIPE DEBUG] touchStart target:', target.tagName, target.className?.slice(0, 50), 'noSwipe:', !!noSwipeEl);
-    
-    if (touchInsideNoSwipe.current) {
-      console.log('[SWIPE DEBUG] BLOCKING - inside no-swipe zone');
-      return;
-    }
+    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
+    if (touchInsideNoSwipe.current) return;
 
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
@@ -426,6 +419,10 @@ export default function HomePage() {
   const handleWheel = useCallback((e: React.WheelEvent) => {
     // LOCKED? Ignore all wheel events until lock expires (covers inertia)
     if (gestureTriggered.current) return;
+    
+    // Skip if wheel originated inside a no-swipe zone (filter panel)
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-no-swipe]')) return;
     
     const absDeltaX = Math.abs(e.deltaX);
     const absDeltaY = Math.abs(e.deltaY);
