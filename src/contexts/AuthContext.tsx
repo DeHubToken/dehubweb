@@ -129,6 +129,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const connectionAbortedRef = useRef(false);
   // Ref to track if redirect has been processed to prevent double processing
   const redirectProcessedRef = useRef(false);
+  // Ref to track if user explicitly clicked "Connect Wallet" (prevents auto-auth on page load)
+  const wagmiAuthIntentRef = useRef(false);
 
   const isAuthenticated = !!user && !!walletAddress && !!getAuthToken() && !isTokenExpired();
 
@@ -222,7 +224,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handleWagmiConnect = async () => {
       // If Wagmi connects (via AppKit or injected) and we are not authed yet
       if (isWagmiConnected && wagmiAddress && !isConnecting && !isLoading) {
-        
+
         // CASE A: Already authed with same address -> Sync state
         if (isAuthenticated && walletAddress && walletAddress.toLowerCase() === wagmiAddress.toLowerCase()) {
            if (connectionSource !== 'wagmi') {
@@ -240,17 +242,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
            setUser(null);
         }
 
-        // CASE C: Not authed -> Start auth flow
-        console.log('[Auth] Wagmi connected (no session), starting auth:', wagmiAddress);
+        // CASE C: Not authed -> Only start auth if user explicitly clicked "Connect Wallet"
+        // OR if they are a returning wagmi user (connectionSource was 'wagmi' in localStorage)
+        const savedSource = localStorage.getItem('dehub_connection_source');
+        const hasUserIntent = wagmiAuthIntentRef.current;
+        const isReturningWagmiUser = savedSource === 'wagmi' && !!getAuthToken() && !isTokenExpired();
+
+        if (!hasUserIntent && !isReturningWagmiUser) {
+          // Wagmi auto-reconnected from localStorage but user didn't click "Connect Wallet"
+          // and there's no valid DeHub session - silently disconnect to prevent unwanted auth popup
+          console.log('[Auth] Wagmi auto-reconnected without user intent, disconnecting silently');
+          wagmiDisconnect();
+          return;
+        }
+
+        console.log('[Auth] Wagmi connected, starting auth:', wagmiAddress,
+          hasUserIntent ? '(user intent)' : '(returning user)');
 
         try {
           setIsConnecting(true);
           setConnectionSource('wagmi');
+          wagmiAuthIntentRef.current = false; // Reset intent after use
           await completeDeHubAuthWagmi(wagmiAddress);
           closeLoginModal();
         } catch (err) {
           console.error('[Auth] Wagmi auth failed:', err);
-          // If signature fails, reset connection source but keep wallet connected (user might try again)
           setConnectionSource(null);
         } finally {
           setIsConnecting(false);
@@ -714,6 +730,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
     console.log(`[Auth] connectWithWallet(${wallet}) called - delegating to AppKit`);
+    // Set intent flag so the wagmi auto-connect effect knows this was user-initiated
+    wagmiAuthIntentRef.current = true;
     // AppKit handles the UI and connection logic.
     // Auth flow (signing) continues in the useEffect hook monitoring Wagmi state.
     await appKit.open();
