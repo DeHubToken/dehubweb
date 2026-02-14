@@ -330,7 +330,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const autoConnectInAppBrowser = async () => {
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const hasInjected = typeof window !== 'undefined' && !!window.ethereum;
+      const hasInjected = typeof window !== 'undefined' && !!(window as any).ethereum;
       const alreadyAttempted = sessionStorage.getItem('dehub_wallet_auto_connect_attempted');
       // Check existing session synchronously (no API call)
       const hasExistingSession = !!getAuthToken() && !isTokenExpired();

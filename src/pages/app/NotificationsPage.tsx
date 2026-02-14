@@ -158,9 +158,13 @@ function NotificationItem({
   const freshAvatarPath = enriched?.avatarUrl;
   const staleAvatarPath = extractAvatarPath(notification) || notification.actorAvatar;
   
-  const avatarUrl = notification.actorAddress 
-    ? buildAvatarUrl(notification.actorAddress, freshAvatarPath || staleAvatarPath)
-    : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
+  // If enriched avatar is already a full URL, use it directly with cache-busting
+  const cacheBust = Math.floor(Date.now() / 300000);
+  const avatarUrl = freshAvatarPath?.startsWith('http')
+    ? `${freshAvatarPath}${freshAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`
+    : notification.actorAddress
+      ? buildAvatarUrl(notification.actorAddress, freshAvatarPath || staleAvatarPath)
+      : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
   
   // Dicebear fallback for when no avatar exists
   const fallbackAvatar = notification.actorAddress 

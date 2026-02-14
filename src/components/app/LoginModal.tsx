@@ -92,7 +92,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
 
   const isMobile = useMemo(() => isMobileDevice(), []);
-  const hasInjectedWallet = useMemo(() => typeof window !== 'undefined' && !!window.ethereum, []);
+  const hasInjectedWallet = useMemo(() => typeof window !== 'undefined' && !!(window as any).ethereum, []);
 
   const handleClose = () => {
     setStep('main');
