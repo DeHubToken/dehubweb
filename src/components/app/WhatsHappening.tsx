@@ -62,7 +62,7 @@ export function WhatsHappening() {
   return (
     <div className="bg-zinc-900 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4 pr-1.5">
-        <h3 className="font-bold text-lg text-white">Talk of the Town</h3>
+        <h3 className="font-bold text-lg text-white">Talk of The Town</h3>
         <Link 
           to="/app/explore" 
           className="text-sm text-white/50 hover:text-white transition-colors font-medium"
