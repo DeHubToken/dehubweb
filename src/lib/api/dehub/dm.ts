@@ -315,8 +315,15 @@ export async function sendMessage(
         throw new Error(edgeError.message || 'Failed to send message');
       }
 
-      // The edge function wraps DeHub response in { status, result, message }
-      data = edgeData?.result || edgeData;
+      console.log('[DM API] dm-send edge response:', edgeData);
+
+      // Edge function always returns 200 with { ok, result, error, dehubResponse }
+      if (!edgeData?.ok) {
+        console.error('[DM API] DeHub API rejected DM:', edgeData?.error, edgeData?.dehubResponse);
+        throw new Error(edgeData?.error || 'Failed to send message');
+      }
+
+      data = edgeData?.result;
     } else {
       const formData = new FormData();
       formData.append('content', content);

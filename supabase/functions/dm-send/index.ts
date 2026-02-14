@@ -6,25 +6,11 @@ const corsHeaders = {
 
 const DEHUB_API_BASE = 'https://api.dehub.io';
 
-interface ApiResponse<T> {
-  status: boolean;
-  result: T | null;
-  message: string;
-}
-
-function jsonResponse<T>(data: ApiResponse<T>, status = 200): Response {
+function jsonOk(data: Record<string, unknown>): Response {
   return new Response(JSON.stringify(data), {
-    status,
+    status: 200,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
-}
-
-function errorResponse(message: string, status = 400): Response {
-  return jsonResponse({ status: false, result: null, message }, status);
-}
-
-function successResponse<T>(result: T, message = 'Success'): Response {
-  return jsonResponse({ status: true, result, message });
 }
 
 Deno.serve(async (req) => {
@@ -34,18 +20,18 @@ Deno.serve(async (req) => {
   }
 
   if (req.method !== 'POST') {
-    return errorResponse('Method not allowed', 405);
+    return jsonOk({ ok: false, error: 'Method not allowed' });
   }
 
   const walletAddress = req.headers.get('x-wallet-address')?.toLowerCase() || '';
   const dehubToken = req.headers.get('x-dehub-token') || '';
 
   if (!walletAddress) {
-    return errorResponse('x-wallet-address header is required', 401);
+    return jsonOk({ ok: false, error: 'x-wallet-address header is required' });
   }
 
   if (!dehubToken) {
-    return errorResponse('x-dehub-token header is required', 401);
+    return jsonOk({ ok: false, error: 'x-dehub-token header is required' });
   }
 
   try {
@@ -61,11 +47,11 @@ Deno.serve(async (req) => {
     } = body;
 
     if (!content && type === 'text') {
-      return errorResponse('content is required for text messages');
+      return jsonOk({ ok: false, error: 'content is required for text messages' });
     }
 
     if (!conversationId && !receiver) {
-      return errorResponse('conversationId or receiver is required');
+      return jsonOk({ ok: false, error: 'conversationId or receiver is required' });
     }
 
     // Build the request body for DeHub API
@@ -90,6 +76,7 @@ Deno.serve(async (req) => {
       hasReceiver: !!receiver,
       hasConversationId: !!conversationId,
       type,
+      dmBody,
     });
 
     // Proxy request to DeHub API
@@ -107,19 +94,22 @@ Deno.serve(async (req) => {
 
     if (!response.ok) {
       console.error('[dm-send] DeHub API error:', {
-        status: response.status,
+        httpStatus: response.status,
         data,
       });
-      return errorResponse(
-        data.message || data.error || `DeHub API error: ${response.status}`,
-        response.status
-      );
+      // Always return 200 so client can read the error details
+      return jsonOk({
+        ok: false,
+        httpStatus: response.status,
+        error: data.message || data.error || `DeHub API error: ${response.status}`,
+        dehubResponse: data,
+      });
     }
 
     console.log('[dm-send] Message sent successfully:', data);
-    return successResponse(data);
+    return jsonOk({ ok: true, result: data });
   } catch (err) {
     console.error('[dm-send] Unexpected error:', err);
-    return errorResponse('Internal server error', 500);
+    return jsonOk({ ok: false, error: String(err) });
   }
 });
