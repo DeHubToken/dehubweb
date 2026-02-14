@@ -98,10 +98,11 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
     page: 0,
   });
   
-  // Shorts
+  // Shorts (postType: 'video' to match ShortsFeed component query key)
   const shortsPromise = searchNFTs({
     unit: 12,
     sortMode: 'new',
+    postType: 'video',
     status: 'minted',
     page: 0,
   });
@@ -202,6 +203,7 @@ async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, 
       unit: 12,
       sortMode: 'new' as const,
       category: undefined,
+      postType: 'video' as const,
       status: 'minted' as const,
     };
     queryClient.setQueryData(
