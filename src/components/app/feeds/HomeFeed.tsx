@@ -305,6 +305,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string>('home', 'category', 'all');
 
+  // Listen for external category changes (e.g. from Talk of the Town sidebar)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const categoryId = (e as CustomEvent).detail;
+      if (categoryId) setSelectedCategory(categoryId);
+    };
+    window.addEventListener('category-filter-changed', handler);
+    return () => window.removeEventListener('category-filter-changed', handler);
+  }, [setSelectedCategory]);
+
   // Fetch categories
   const { data: categories = [] } = useQuery({
     queryKey: ['dehub-categories'],

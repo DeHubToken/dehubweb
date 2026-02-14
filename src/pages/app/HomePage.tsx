@@ -200,8 +200,18 @@ export default function HomePage() {
       triggerRefresh();
     };
 
+    const handleCategoryFilter = () => {
+      // Switch to home tab and show filters when a category is selected from sidebar
+      setActiveTab('home');
+      setShowHomeFilters(true);
+    };
+
     window.addEventListener('home-refresh', handleHomeRefresh);
-    return () => window.removeEventListener('home-refresh', handleHomeRefresh);
+    window.addEventListener('category-filter-changed', handleCategoryFilter);
+    return () => {
+      window.removeEventListener('home-refresh', handleHomeRefresh);
+      window.removeEventListener('category-filter-changed', handleCategoryFilter);
+    };
   }, [triggerRefresh]);
 
   /**
