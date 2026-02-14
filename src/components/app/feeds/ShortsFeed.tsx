@@ -51,6 +51,10 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
 
 type DurationFilter = typeof DURATION_FILTERS[number];
 
+// Shared filter pill styles
+const ACTIVE_FILTER_CLASS = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+const INACTIVE_FILTER_CLASS = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
+
 // ============================================================================
 // HELPERS
 // ============================================================================
@@ -142,16 +146,16 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
             <button
               key={option.label}
               onClick={() => onSelect(option)}
               className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                 selected.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  ? ACTIVE_FILTER_CLASS
+                  : INACTIVE_FILTER_CLASS
               )}
             >
               {option.label}
@@ -169,21 +173,102 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">Duration</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {DURATION_FILTERS.map((option) => (
             <button
               key={option.label}
               onClick={() => onSelect(option)}
               className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                 selected.label === option.label
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  ? ACTIVE_FILTER_CLASS
+                  : INACTIVE_FILTER_CLASS
               )}
             >
               {option.label}
             </button>
           ))}
+        </div>
+        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
+      </div>
+    </div>
+  );
+}
+
+// Category Filter Section with search
+function CategoryFilterSection({ 
+  categories, 
+  selectedCategory, 
+  onSelect 
+}: { 
+  categories: DeHubCategory[]; 
+  selectedCategory: string | null; 
+  onSelect: (cat: string | null) => void 
+}) {
+  const [search, setSearch] = useState('');
+  
+  const selectedObj = useMemo(() => {
+    if (!selectedCategory) return null;
+    return categories.find(c => c.id === selectedCategory) || null;
+  }, [categories, selectedCategory]);
+
+  const filtered = useMemo(() => {
+    let list = categories;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(c => c.name.toLowerCase().includes(q));
+    }
+    if (selectedObj) {
+      list = list.filter(c => c.id !== selectedCategory);
+    }
+    return list;
+  }, [categories, search, selectedCategory, selectedObj]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+      <input
+        type="text"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        placeholder="Search categories..."
+        className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
+      />
+      <div className="relative">
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
+          {selectedObj && (
+            <button
+              onClick={() => { onSelect(null); setSearch(''); }}
+              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", ACTIVE_FILTER_CLASS)}
+            >
+              {selectedObj.name}
+              <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
+            </button>
+          )}
+          <button
+            onClick={() => { onSelect(null); setSearch(''); }}
+            className={cn(
+              'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+              selectedCategory === null ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+            )}
+          >
+            All
+          </button>
+          {filtered.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => { onSelect(cat.id); setSearch(''); }}
+              className={cn(
+                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                selectedCategory === cat.id ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+              )}
+            >
+              {cat.name}
+            </button>
+          ))}
+          {filtered.length === 0 && search.trim() && (
+            <span className="text-xs text-zinc-500 py-1.5">No matches</span>
+          )}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
       </div>
@@ -405,22 +490,27 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="overflow-hidden"
             >
-              <div className="relative bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
+              <div data-no-swipe className="relative bg-zinc-900 rounded-2xl p-4 mb-3 space-y-4">
                 <SortFilterSection selected={selectedSort} onSelect={setSelectedSort} />
+                <CategoryFilterSection 
+                  categories={categories} 
+                  selectedCategory={selectedCategory} 
+                  onSelect={setSelectedCategory} 
+                />
                 <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
                 <div className="flex flex-col gap-2">
                   <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
                   <div className="relative">
-                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
                       {DATE_FILTER_OPTIONS.map((option) => (
                         <button
                           key={option.label}
                           onClick={() => setSelectedUploadDate(option)}
                           className={cn(
-                            'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                            'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                             selectedUploadDate.label === option.label
-                              ? 'bg-white text-black'
-                              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                              ? ACTIVE_FILTER_CLASS
+                              : INACTIVE_FILTER_CLASS
                           )}
                         >
                           {option.label}
@@ -434,6 +524,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 <button
                   onClick={() => {
                     setSelectedSort(SORT_OPTIONS[1]);
+                    setSelectedCategory(null);
                     setSelectedDuration(DURATION_FILTERS[0]);
                     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
                   }}
@@ -446,37 +537,6 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Category Pills */}
-        <div className="mb-3">
-          <div className="relative">
-            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-            
-            <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide px-1 pr-12">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={cn(
-                  'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap transition-colors',
-                  selectedCategory === null ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                )}
-              >
-                All
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={cn(
-                    'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap transition-colors',
-                    selectedCategory === cat.id ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                  )}
-                >
-                  {cat.name}
-                </button>
-              ))}
-            </SwipeableCarousel>
-          </div>
-        </div>
 
         {/* Shorts Grid or Empty State */}
         {allShorts.length === 0 ? (
