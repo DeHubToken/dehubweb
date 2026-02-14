@@ -216,7 +216,7 @@ export default function MessagesPage() {
             {/* Public Chat (pinned) */}
             <button
               onClick={() => setShowPublicChat(true)}
-              className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left border-b border-zinc-800"
+              className="w-full flex items-center gap-3 p-4 hover:bg-zinc-800/50 transition-colors text-left"
             >
               <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
                 <img 
