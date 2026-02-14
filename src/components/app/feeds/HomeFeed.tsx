@@ -8,7 +8,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -151,7 +151,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {SORT_OPTIONS.map((option) => (
               <button
                 key={option.label}
@@ -175,7 +175,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             <button
               onClick={() => onCategorySelect('all')}
               className={cn(
@@ -210,7 +210,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {DATE_FILTER_OPTIONS.map((option) => (
               <button
                 key={option.value}
@@ -234,7 +234,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Post Type</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {POST_TYPE_FILTERS.map((option) => (
               <button
                 key={option.value}
@@ -258,7 +258,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {CONTENT_TYPE_FILTERS.map((filter) => (
               <button
                 key={filter.value}
@@ -296,6 +296,28 @@ function SortFilterSection({
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
   const loaderRef = useRef<HTMLDivElement>(null);
+  const bentoRef = useRef<HTMLDivElement>(null);
+
+  // Native touch event listeners on bento wrapper to reliably block propagation
+  useEffect(() => {
+    const el = bentoRef.current;
+    if (!el) return;
+
+    const stop = (e: TouchEvent) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    };
+
+    el.addEventListener('touchstart', stop, { passive: true });
+    el.addEventListener('touchmove', stop, { passive: true });
+    el.addEventListener('touchend', stop, { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', stop);
+      el.removeEventListener('touchmove', stop);
+      el.removeEventListener('touchend', stop);
+    };
+  }, [showFilters]);
   const isFetchingRef = useRef(false);
   
   // Default to Trending (first option) - persisted to sessionStorage
@@ -966,7 +988,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="overflow-hidden"
               >
-                <div className="bg-zinc-900 rounded-2xl p-4 mb-3" onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+                <div ref={bentoRef} data-no-swipe className="bg-zinc-900 rounded-2xl p-4 mb-3">
                   <SortFilterSection 
                     selectedSort={selectedSort} 
                     onSortSelect={handleSortSelect}

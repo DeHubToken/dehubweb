@@ -320,6 +320,10 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Skip recording if touch originated inside a no-swipe zone (filter panel)
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-no-swipe]')) return;
+
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchEndX.current = null;
