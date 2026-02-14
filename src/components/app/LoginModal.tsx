@@ -192,11 +192,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   // Deep link URLs for wallet in-app browsers on mobile
   // When opened, the wallet loads dehub.io in its built-in browser where window.ethereum is available
+  // We add ?auto_login=wallet param so the app knows to trigger connection immediately upon load
+  const currentUrl = window.location.origin + window.location.pathname;
   const WALLET_DEEP_LINKS: Record<string, string> = {
-    metamask: `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`,
-    trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(window.location.origin)}`,
-    phantom: `https://phantom.app/ul/browse/${encodeURIComponent(window.location.origin)}?ref=${encodeURIComponent(window.location.origin)}`,
-    coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(window.location.origin)}`,
+    metamask: `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}?auto_login=metamask`,
+    trust: `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(currentUrl + '?auto_login=trust')}`,
+    phantom: `https://phantom.app/ul/browse/${encodeURIComponent(currentUrl + '?auto_login=phantom')}?ref=${encodeURIComponent(window.location.origin)}`,
+    coinbase: `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(currentUrl + '?auto_login=coinbase')}`,
   };
 
   const handleWalletConnect = async (wallet: 'metamask' | 'walletconnect' | 'coinbase' | 'phantom' | 'rabby' | 'trust') => {

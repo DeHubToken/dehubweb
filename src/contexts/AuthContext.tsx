@@ -271,7 +271,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     processRedirect();
-  }, []);
+  }, [user]);
+
+
 
   /**
    * Complete DeHub auth specifically after redirect flow
@@ -409,34 +411,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     console.log('[Auth] Using address for auth:', authAddress);
-    console.log('[Auth] Signature length:', signature?.length);
+    
+    // Notify user to check their wallet for signature request
+    // This prevents the "hanging" feeling when the wallet is waiting for input but not in focus
+    toast.info('Please sign the message in your wallet to verify ownership.', {
+      duration: 10000,
+      id: 'signature-request-toast',
+    });
+    setNeedsSignature(true);
 
-    const BASE_CHAIN_ID = 8453;
-    const authResponse = await authenticateWallet(
-      authAddress,
-      signature,
-      timestamp,
-      BASE_CHAIN_ID
-    );
+    try {
+      const BASE_CHAIN_ID = 8453;
+      const authResponse = await authenticateWallet(
+        authAddress,
+        signature!,
+        timestamp,
+        BASE_CHAIN_ID
+      );
 
-    const normalizedUser = normalizeUser(authResponse.user, authAddress);
+      const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
-    localStorage.setItem('dehub_wallet', authAddress);
-    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+      localStorage.setItem('dehub_wallet', authAddress);
+      localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
-    setWalletAddress(authAddress);
-    setUser(normalizedUser);
+      setWalletAddress(authAddress);
+      setUser(normalizedUser);
 
-    if (!normalizedUser.username) {
-      setRequiresUsername(true);
+      if (!normalizedUser.username) {
+        setRequiresUsername(true);
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+      
+      toast.dismiss('signature-request-toast');
+      toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
+      console.log('[Auth] ✓ DeHub authentication complete');
+    } catch (e) {
+      toast.dismiss('signature-request-toast');
+      throw e;
     }
-    
-    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-    
-    toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
-    console.log('[Auth] ✓ DeHub authentication complete');
   };
 
   /**
@@ -489,6 +504,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     toast.error(userFriendlyMessage);
     // NOTE: Removed throw - throwing here prevents finally block from resetting isConnecting
   };
+
+  /**
+   * Connect with an external wallet (MetaMask, WalletConnect, Coinbase)
+   */
+  const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
+    console.log(`[Auth] connectWithWallet(${wallet}) called`);
+    setIsConnecting(true);
+
+    try {
+      const walletConnector = mapWalletProvider(wallet);
+      const web3authProvider = await connectToExternalWallet(walletConnector);
+
+      if (!web3authProvider) {
+        throw new Error('Failed to connect - no provider returned');
+      }
+
+      await completeDeHubAuth(web3authProvider);
+      setNeedsSignature(false);
+
+      console.log(`[Auth] ✓ ${wallet} connection complete!`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '';
+
+      try {
+        await forceCleanupWeb3Auth();
+      } catch (e) {
+        console.warn('[Auth] Cleanup after error failed:', e);
+      }
+
+      if (isCancellationError(errorMessage)) {
+        toast.error('Log in was cancelled');
+        return;
+      }
+
+      handleConnectionError(error);
+    } finally {
+      setIsConnecting(false);
+    }
+  }, []);
 
   /**
    * Connect with a social provider (Google, X, Telegram, Apple, etc.)
@@ -619,44 +673,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  /**
-   * Connect with an external wallet (MetaMask, WalletConnect, Coinbase)
-   */
-  const connectWithWallet = useCallback(async (wallet: WalletProvider) => {
-    console.log(`[Auth] connectWithWallet(${wallet}) called`);
-    setIsConnecting(true);
 
-    try {
-      const walletConnector = mapWalletProvider(wallet);
-      const web3authProvider = await connectToExternalWallet(walletConnector);
-
-      if (!web3authProvider) {
-        throw new Error('Failed to connect - no provider returned');
-      }
-
-      await completeDeHubAuth(web3authProvider);
-      setNeedsSignature(false);
-
-      console.log(`[Auth] ✓ ${wallet} connection complete!`);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '';
-
-      try {
-        await forceCleanupWeb3Auth();
-      } catch (e) {
-        console.warn('[Auth] Cleanup after error failed:', e);
-      }
-
-      if (isCancellationError(errorMessage)) {
-        toast.error('Log in was cancelled');
-        return;
-      }
-
-      handleConnectionError(error);
-    } finally {
-      setIsConnecting(false);
-    }
-  }, []);
 
   /**
    * Legacy connect method - opens default Web3Auth modal
@@ -701,6 +718,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Failed to refresh user:', error);
     }
   }, [walletAddress, disconnect]);
+  
+  // Handle auto-login from deep links (e.g. Trust Wallet browser)
+  // Placed here to ensure connectWithWallet is defined
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const autoLoginProvider = params.get('auto_login') as WalletProvider | null;
+    
+    if (autoLoginProvider && !isAuthenticated && !isConnecting && !isProcessingRedirect) {
+      console.log('[Auth] Auto-login requested via deep link for:', autoLoginProvider);
+      
+      // Wait for window.ethereum to be injected (sometimes takes a moment in wallet browsers)
+      const checkInjection = () => {
+        if ((window as any).ethereum) {
+          console.log('[Auth] window.ethereum found, triggering connection...');
+          // Clean up URL parameters first
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, '', newUrl);
+          
+          // Trigger connection
+          connectWithWallet(autoLoginProvider).catch(err => {
+            console.error('[Auth] Auto-login failed:', err);
+            toast.error('Auto-login failed. Please try manually.');
+          });
+        } else {
+          console.log('[Auth] Waiting for wallet injection...');
+          setTimeout(checkInjection, 500);
+        }
+      };
+      
+      // Try for up to 5 seconds
+      setTimeout(checkInjection, 500);
+      setTimeout(() => {
+        // Stop checking if nothing happened
+        const stillParams = new URLSearchParams(window.location.search);
+        if (stillParams.get('auto_login')) {
+             console.warn('[Auth] Auto-login timed out - window.ethereum not found');
+             const newUrl = window.location.pathname;
+             window.history.replaceState({}, '', newUrl);
+        }
+      }, 5000);
+    }
+  }, [isAuthenticated, isConnecting, isProcessingRedirect, connectWithWallet]);
 
   /**
    * Seamlessly refresh the session by requesting a new signature

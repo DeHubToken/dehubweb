@@ -201,6 +201,12 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
     return initPromise;
   }
 
+  // Cleanup any stuck instance from previous sessions
+  if (web3authInstance) {
+    console.log("[Web3Auth] Cleaning up stale instance before init...");
+    await resetWeb3AuthState();
+  }
+
   isInitializing = true;
   console.log("[Web3Auth] Starting initialization...");
 
@@ -228,6 +234,7 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
         clientId,
         chainConfig,
         web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        sessionTime: 86400, // 24 hours
       });
       console.log("[Web3Auth] Web3AuthNoModal instance created");
 
