@@ -1,58 +1,31 @@
 
+## Fix: batch-avatars Edge Function Failing for All Addresses
 
-## Fix: Notification Avatars Not Refreshing for Aggregated Entries
+### Root Cause
+The `batch-avatars` edge function checks `if (!data.status || !data.result)` on line 50, but the DeHub API `/api/account_info/{address}` does NOT return a `status` field. The response is just `{ result: { ... } }` with no `status` boolean.
 
-### Problem
-Aggregated notifications (e.g., "okanbey started following you" with "okanbey, usa, outforrder") show a stale or default avatar for the primary actor. Two root causes:
+Since `data.status` is `undefined` (falsy), the check fails for **every single address**, causing all avatars to return `null` with error "No result". This means the enrichment service has been completely broken -- no fresh avatars have been loading at all.
 
-1. **No cache-busting on CDN avatar URLs** -- `buildAvatarUrl` produces a static URL like `dehubcdn.../avatars/0xabc.jpg`. When a user updates their profile picture, the filename stays the same, so the browser serves a cached version of the old (or default) image indefinitely.
+### Fix
+**File:** `supabase/functions/batch-avatars/index.ts`
 
-2. **Batch-avatars may return a full URL that gets double-processed** -- If the `batch-avatars` edge function returns a full `https://dehubcdn...` URL, `buildAvatarUrl` returns it as-is (correct). But if it returns a relative path, the function rebuilds it using the actor's address, which may produce a URL the CDN doesn't recognize for that user.
-
-### Solution
-
-#### 1. Add cache-busting timestamp to avatar URLs
-Append a time-based query parameter to CDN avatar URLs so browsers always fetch the latest version. Use a coarse timestamp (rounded to every 5 minutes) to still benefit from short-term caching.
-
-**File:** `src/lib/media-url.ts`
-- In `buildAvatarUrl`, append `?v={timestamp}` to the final CDN URL where the timestamp is rounded to the nearest 5-minute window.
-
-#### 2. Prefer enriched full URL directly when available
-When `batch-avatars` returns a complete avatar URL (starting with `https://`), use it directly instead of re-processing through `buildAvatarUrl`.
-
-**File:** `src/pages/app/NotificationsPage.tsx`
-- In `NotificationItem`, if the enriched avatar URL is already a full URL, use it directly with cache-busting instead of passing it through `buildAvatarUrl`.
-
-### Technical Details
-
-**media-url.ts change:**
+Change the validation on line 50 from:
 ```typescript
-export function buildAvatarUrl(address: string, apiAvatarPath: string | undefined | null): string | undefined {
-  // ... existing logic ...
-  // Before returning any CDN URL, append cache-bust param
-  const cacheBust = Math.floor(Date.now() / 300000); // 5-min windows
-  return `${cdnUrl}?v=${cacheBust}`;
-}
+if (!data.status || !data.result) {
+```
+to:
+```typescript
+if (!data.result) {
 ```
 
-**NotificationsPage.tsx change:**
-```typescript
-// If enriched avatar is a full URL, use it directly with cache-busting
-const cacheBust = Math.floor(Date.now() / 300000);
-const freshAvatar = enriched?.avatarUrl;
-const avatarUrl = freshAvatar?.startsWith('http')
-  ? `${freshAvatar}${freshAvatar.includes('?') ? '&' : '?'}v=${cacheBust}`
-  : notification.actorAddress
-    ? buildAvatarUrl(notification.actorAddress, freshAvatar || staleAvatarPath)
-    : staleAvatarPath?.startsWith('http') ? staleAvatarPath : undefined;
+This single-line fix will make the edge function correctly parse the API response, returning real avatar URLs, usernames, and display names. Combined with the cache-busting already added to `buildAvatarUrl`, okanbey (and all other users) will show their current profile pictures in notifications.
+
+### Verification
+After deploying, the `batch-avatars` response will change from:
+```json
+{"avatarUrl": null, "error": "No result"}
 ```
-
-### Build Error Fix
-The existing build errors (`Property 'ethereum' does not exist on type 'Window'`) are unrelated to this change but will be fixed by adding a `Window` interface extension in a global type declaration file.
-
-**New file:** `src/types/global.d.ts`
-```typescript
-interface Window {
-  ethereum?: any;
-}
+to actual data like:
+```json
+{"avatarUrl": "avatars/0xabc.jpg", "username": "okanbey", "displayName": "Okanbey"}
 ```
