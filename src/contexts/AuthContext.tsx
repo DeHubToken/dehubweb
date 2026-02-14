@@ -13,7 +13,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useAccount, useSignMessage, useDisconnect } from 'wagmi';
-import { appKit } from '@/lib/wagmi';
+import { appKit, clearWagmiStorage } from '@/lib/wagmi';
 import {
   authenticateWallet,
   getAccountInfo,
@@ -756,7 +756,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Disconnect error:', error);
     }
-    
+
+    // Always clear wagmi storage to prevent auto-reconnect on next page load
+    clearWagmiStorage();
+
     clearAuthSession();
     localStorage.removeItem('dehub_user');
     sessionStorage.removeItem('dehub_wallet_auto_connect_attempted');
