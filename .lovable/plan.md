@@ -1,86 +1,61 @@
 
 
-# Fix: Category Carousel Swipe Conflicting with Page Tab Switch
+## Performance Fix: Stop Category Count Spam and Lazy-Load Categories
 
-## Problem Analysis
+### Problem Identified
 
-The current `stopPropagation()` approach on React synthetic events is unreliable because:
+The network logs reveal the root cause: the **"Talk of the Town" sidebar widget** (`WhatsHappening.tsx`) fires a separate `/api/feed?category=X&limit=1` request for **every single category** simultaneously. With dozens of categories, this triggers **429 Too Many Requests** rate limiting from the DeHub API, which then blocks or delays the actual feed content from loading.
 
-1. **React synthetic events** use a single delegated listener at the root. When both the bento wrapper and the HomePage feed container use React `onTouchMove` handlers, the native event has already been captured at the root before React dispatches synthetic events down the tree. In some cases (especially with framer-motion's `AnimatePresence` wrapping the filter panel), the propagation stopping doesn't reliably prevent the parent's swipe logic from executing.
+Additionally, categories are eagerly fetched on Videos and Shorts tab mount even though they're hidden inside a dropdown that users may never open.
 
-2. **The real fix** requires using **native DOM event listeners** with `{ capture: true }` or attaching directly to the element, which intercepts the touch at the browser level before React's delegation system processes it.
+### Also Fixing: Shorts Default Sort
 
-## Solution
+The Shorts feed currently defaults to `SORT_OPTIONS[1]` ("Following"), which isn't implemented yet. This will be changed to `SORT_OPTIONS[0]` ("Latest").
 
-### 1. Add `touch-action: pan-x` CSS to all scrollable filter rows (HomeFeed.tsx)
+---
 
-On each `overflow-x-auto` div inside `SortFilterSection`, add the CSS class `touch-action-pan-x` (or inline style `touchAction: 'pan-x'`). This tells the browser "this element handles horizontal touch gestures natively" and prevents vertical scroll interference.
+### Changes
 
-### 2. Replace React synthetic `stopPropagation` with a native `useEffect` listener on the bento wrapper
+**1. WhatsHappening.tsx -- Remove per-category API spam**
+- Stop firing individual `/api/feed` requests for every category
+- Instead, just display categories from the existing `getCategories()` call (no counts) or show static counts
+- This eliminates 30-50+ simultaneous API calls that cause rate limiting
 
-Instead of React's `onTouchStart/Move/End` with `stopPropagation`, attach native event listeners via a `ref` + `useEffect` on the bento `div`. Native listeners fire before React's delegated system and can reliably call `e.stopPropagation()` to prevent the touch from ever reaching the HomePage's handlers.
+**2. ShortsFeed.tsx -- Lazy-load categories**
+- Change the `useQuery` for categories to only run when the filter dropdown is open (`enabled: showFilters`)
+- Show a loading spinner inside the category section when categories are being fetched
+- Fix the default sort from `SORT_OPTIONS[1]` (Following) to `SORT_OPTIONS[0]` (Latest)
 
-### 3. Update the HomePage swipe handler to check target context
+**3. VideosFeed.tsx -- Lazy-load categories**
+- Same lazy-loading treatment: only fetch categories when the filter dropdown is open
+- Show a loading spinner while categories load on first open
 
-As a safety net, modify `handleTouchEnd` in `HomePage.tsx` to check if the touch originated inside a scrollable filter area (using a data attribute like `data-no-swipe`). If so, skip the tab-switch logic entirely.
+### Technical Details
 
-## Files to Change
+```
+WhatsHappening.tsx:
+  - Remove fetchCategoryCount() function
+  - Remove getCategoriesWithCounts() function  
+  - Use plain getCategories() query (already cached, shared key)
+  - Display categories without counts (or with a simple "trending" indicator)
 
-- **`src/components/app/feeds/HomeFeed.tsx`**
-  - Add a `ref` to the bento wrapper div
-  - Replace inline `onTouchStart/Move/End` with a `useEffect` that attaches native listeners with `stopPropagation` and `stopImmediatePropagation`
-  - Add `touch-action: pan-x` style to each `overflow-x-auto` scrollable row
-  - Add `data-no-swipe` attribute to the bento wrapper
+ShortsFeed.tsx line 318:
+  - Change SORT_OPTIONS[1] to SORT_OPTIONS[0]
 
-- **`src/pages/app/HomePage.tsx`**
-  - In `handleTouchStart`, check if `e.target` is inside a `[data-no-swipe]` element; if so, skip recording start coordinates
-  - In `handleTouchEnd`, add a guard that bails if touch refs are null (already partially there, but reinforce)
+ShortsFeed.tsx lines 330-335:
+  - Add enabled: showFilters to the useQuery
 
-## Technical Details
+VideosFeed.tsx lines 482-487:
+  - Add enabled: showFilters to the useQuery
 
-```text
-Touch event flow (current - broken):
-  Browser -> React root delegate -> synthetic dispatch -> parent fires FIRST
-  
-Touch event flow (fixed):
-  Browser -> native listener on bento (stopPropagation) -> event never reaches parent
+Both feeds:
+  - Add a small Loader2 spinner in the category section 
+    while isLoading is true
 ```
 
-The key change in HomeFeed.tsx bento wrapper:
+### Expected Impact
+- Eliminates 30-50+ unnecessary API calls on page load
+- Prevents 429 rate limiting that blocks actual content
+- Feed content loads significantly faster
+- Categories appear instantly when dropdown is opened (after first load, cached for 30 min)
 
-```typescript
-const bentoRef = useRef<HTMLDivElement>(null);
-
-useEffect(() => {
-  const el = bentoRef.current;
-  if (!el) return;
-  
-  const stop = (e: TouchEvent) => {
-    e.stopPropagation();
-  };
-  
-  el.addEventListener('touchstart', stop, { passive: true });
-  el.addEventListener('touchmove', stop, { passive: true });
-  el.addEventListener('touchend', stop, { passive: true });
-  
-  return () => {
-    el.removeEventListener('touchstart', stop);
-    el.removeEventListener('touchmove', stop);
-    el.removeEventListener('touchend', stop);
-  };
-}, []);
-```
-
-And the safety check in HomePage.tsx `handleTouchStart`:
-
-```typescript
-const handleTouchStart = (e: React.TouchEvent) => {
-  const target = e.target as HTMLElement;
-  if (target.closest('[data-no-swipe]')) return; // Skip if inside filter panel
-  
-  touchStartX.current = e.touches[0].clientX;
-  // ...rest
-};
-```
-
-This two-layer approach (native stopPropagation + parent guard) ensures the swipe never triggers when interacting with the filter panel, regardless of event delegation quirks.
