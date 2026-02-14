@@ -47,7 +47,7 @@ async function fetchAccount(address: string): Promise<AvatarResult> {
 
     const data: DeHubAccountResponse = await response.json();
     
-    if (!data.status || !data.result) {
+    if (!data.result) {
       return { address, avatarUrl: null, username: null, displayName: null, error: 'No result' };
     }
 
