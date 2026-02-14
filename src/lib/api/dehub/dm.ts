@@ -361,11 +361,23 @@ export async function sendMessage(
 
     console.log('[DM API] sendMessage response:', data);
 
+    // Handle {success: true, data: {...}} from DeHub API via edge function
+    if (data?.success && data?.data) {
+      const d = data.data;
+      return {
+        id: d._id || d.id || `msg-${Date.now()}`,
+        conversationId: d.conversationId || conversationId,
+        sender: d.sender || { address: d.senderAddress },
+        content: d.content || content,
+        type: d.type || type,
+        mediaUrl: d.mediaUrl,
+        createdAt: d.createdAt || new Date().toISOString(),
+      };
+    }
     if (data?.result) {
-      // Handle nested {result: {success, data: {…}}} from edge function
       const result = data.result?.data || data.result;
       return {
-        id: result._id || result.id || `temp-${Date.now()}`,
+        id: result._id || result.id || `msg-${Date.now()}`,
         conversationId: result.conversationId || conversationId,
         sender: result.sender || { address: result.senderAddress },
         content: result.content || content,
