@@ -308,6 +308,11 @@ export default function NotificationsPage() {
   const [enrichedAvatars, setEnrichedAvatars] = useState<Map<string, EnrichedAvatar>>(new Map());
   const enrichedRef = useRef<Set<string>>(new Set());
 
+  // Clear enrichment cache on mount so fresh avatars are always fetched
+  useEffect(() => {
+    enrichedRef.current.clear();
+  }, []);
+
   useEffect(() => {
     if (!allNotifications.length) return;
     
