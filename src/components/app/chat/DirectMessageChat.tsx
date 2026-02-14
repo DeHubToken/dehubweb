@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -181,6 +182,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const avatarUrl = getMediaUrl(otherUser?.avatarImageUrl || otherUser?.avatarUrl);
   const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username || 
     (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
+  const profileLink = otherUser?.username ? `/${otherUser.username}` : otherUser?.address ? `/${otherUser.address}` : '#';
 
   const {
     messages,
@@ -343,19 +345,21 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             <ArrowLeft className="w-5 h-5" />
           </Button>
           
-          <Avatar className="w-10 h-10">
-            {avatarUrl && <AvatarImage src={avatarUrl} />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium">
-              {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          
-          <div>
-            <h2 className="font-semibold text-white">{displayName}</h2>
-            {otherUser?.username && (
-              <p className="text-xs text-zinc-500">@{otherUser.username}</p>
-            )}
-          </div>
+          <Link to={profileLink} className="flex items-center gap-3">
+            <Avatar className="w-10 h-10">
+              {avatarUrl && <AvatarImage src={avatarUrl} />}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium">
+                {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            
+            <div>
+              <h2 className="font-semibold text-white">{displayName}</h2>
+              {otherUser?.username && (
+                <p className="text-xs text-zinc-500">@{otherUser.username}</p>
+              )}
+            </div>
+          </Link>
         </div>
 
         <DropdownMenu>
