@@ -1,26 +1,21 @@
-import { useState } from 'react';
-import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2 } from 'lucide-react';
+import { Pin, ShieldBan, ShieldCheck, MoreVertical } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText } from '../TranslatableText';
 import { useLiveChatUser } from '@/hooks/use-livechat';
-import { getMediaUrl } from '@/lib/api/dehub';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 
 export interface Message {
   id: string;
   userId: string;
   userName: string;
+  userHandle?: string;
   userAvatar?: string;
   content: string;
   timestamp: Date;
@@ -36,71 +31,6 @@ interface ChatMessageProps {
   onUnpin?: (messageId: string) => void;
   onBan?: (userId: string, userName: string) => void;
   onUnban?: (userId: string, userName: string) => void;
-}
-
-function UserProfilePopover({ address, children }: { address: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const { profile, isLoading } = useLiveChatUser(open ? address : null);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent
-        side="right"
-        align="start"
-        className="w-56 bg-zinc-900 border-zinc-700 p-3 text-white"
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center py-3">
-            <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
-          </div>
-        ) : profile ? (
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <Avatar className="w-10 h-10">
-                {profile.avatarImageUrl && (
-                  <AvatarImage src={getMediaUrl(profile.avatarImageUrl)} />
-                )}
-                <AvatarFallback className="bg-zinc-700 text-white text-sm font-medium">
-                  {(profile.displayName || profile.username || address)
-                    .charAt(0)
-                    .toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <p className="font-semibold text-sm text-white truncate">
-                  {profile.displayName || profile.username || address.slice(0, 10)}
-                </p>
-                {profile.username && (
-                  <p className="text-xs text-zinc-400 truncate">@{profile.username}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-1.5">
-              {profile.isModerator && (
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
-                  <ShieldCheck className="w-3 h-3" />
-                  Moderator
-                </span>
-              )}
-              {profile.isBanned && (
-                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/20">
-                  <ShieldBan className="w-3 h-3" />
-                  Banned
-                </span>
-              )}
-            </div>
-
-            <p className="text-[11px] text-zinc-500 truncate font-mono">{address}</p>
-          </div>
-        ) : (
-          <p className="text-xs text-zinc-500 text-center py-2">Profile not found</p>
-        )}
-      </PopoverContent>
-    </Popover>
-  );
 }
 
 /** Inline moderator badge shown next to the username */
@@ -120,26 +50,44 @@ function ModeratorBadge({ address }: { address: string }) {
 }
 
 export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
+  const navigate = useNavigate();
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  const handleProfileClick = () => {
+    if (message.userHandle) {
+      navigate(`/${message.userHandle}`);
+    }
+  };
+
+  const isClickable = !!message.userHandle;
+
   return (
     <div className={`flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group ${message.isPinned ? 'bg-yellow-500/5 border-l-2 border-yellow-500/30' : ''}`}>
-      <Avatar className="w-8 h-8 flex-shrink-0">
-        {message.userAvatar && <AvatarImage src={message.userAvatar} />}
-        <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-          {message.userName.charAt(0).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
+      <button
+        onClick={handleProfileClick}
+        disabled={!isClickable}
+        className={`flex-shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+      >
+        <Avatar className="w-8 h-8">
+          {message.userAvatar && <AvatarImage src={message.userAvatar} />}
+          <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+            {message.userName.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </button>
       
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">
-          <UserProfilePopover address={message.userId}>
-            <button className="font-semibold text-white text-sm hover:underline cursor-pointer">
-              {message.userName}
-            </button>
-          </UserProfilePopover>
+          <button
+            onClick={handleProfileClick}
+            disabled={!isClickable}
+            className={`font-semibold text-white text-sm ${isClickable ? 'hover:underline cursor-pointer' : 'cursor-default'}`}
+          >
+            {message.userName}
+          </button>
           <ModeratorBadge address={message.userId} />
           <span className="text-zinc-500 text-xs">{formatTime(message.timestamp)}</span>
           {message.isPinned && (

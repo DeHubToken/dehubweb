@@ -8,12 +8,14 @@ import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/ho
 import { getMediaUrl } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 
 export function SidebarChat() {
   const [newMessage, setNewMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
   // Use the first available room
@@ -92,16 +94,20 @@ export function SidebarChat() {
             messages.map((msg) => {
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
+              const handle = msg.sender_username;
+              const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
                 <div key={msg.id} className="flex items-start gap-2">
-                  <Avatar className="w-6 h-6 flex-shrink-0">
-                    {avatarUrl && <AvatarImage src={avatarUrl} />}
-                    <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
-                      {name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
+                    <Avatar className="w-6 h-6">
+                      {avatarUrl && <AvatarImage src={avatarUrl} />}
+                      <AvatarFallback className="bg-zinc-700 text-white text-[10px] font-medium">
+                        {name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
                   <div className="min-w-0">
-                    <span className="text-xs font-semibold text-white">{name}</span>
+                    <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
                     {msg.message_type === 'image' && msg.image_url ? (
                       <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
                     ) : msg.message_type === 'gif' && msg.image_url ? (
