@@ -118,6 +118,7 @@ export default function HomePage() {
   const touchStartY = useRef<number | null>(null);
   const touchEndY = useRef<number | null>(null);
   const touchGestureTriggered = useRef(false);
+  const touchInsideNoSwipe = useRef(false);
   
   // Trackpad gesture - simple lock approach
   const gestureTriggered = useRef(false);
@@ -320,9 +321,10 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    // Skip recording if touch originated inside a no-swipe zone (filter panel)
+    // Skip entire gesture if touch originated inside a no-swipe zone (filter panel)
     const target = e.target as HTMLElement;
-    if (target.closest('[data-no-swipe]')) return;
+    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
+    if (touchInsideNoSwipe.current) return;
 
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
@@ -333,6 +335,8 @@ export default function HomePage() {
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchInsideNoSwipe.current) return;
+
     touchEndX.current = e.touches[0].clientX;
     touchEndY.current = e.touches[0].clientY;
     pullHandlers.onTouchMove(e);
@@ -344,6 +348,11 @@ export default function HomePage() {
   };
 
   const handleTouchEnd = () => {
+    if (touchInsideNoSwipe.current) {
+      touchInsideNoSwipe.current = false;
+      return;
+    }
+
     pullHandlers.onTouchEnd();
     
     // Already triggered this gesture? Reset and exit
