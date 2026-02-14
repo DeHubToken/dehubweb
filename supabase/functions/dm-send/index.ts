@@ -60,6 +60,7 @@ Deno.serve(async (req) => {
       senderAddress: sender || walletAddress,
       content,
       type,
+      transactionHash: body.transactionHash || `0x${Date.now().toString(16)}`,
     };
 
     if (receiver) {
