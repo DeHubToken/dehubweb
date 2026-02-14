@@ -132,20 +132,45 @@ Deno.serve(async (req) => {
       const categoryCounts: Record<string, number> = {};
       const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
       
+      // Collect all usernames to filter them out of categories
+      const allUsernames = new Set<string>();
       if (cachedPages) {
         for (const page of cachedPages) {
           const feedData = page.data as { result?: any[] };
           const items = feedData?.result || [];
           for (const item of items) {
-            // Only count posts from the last week
+            if (item.minterUsername) allUsernames.add(item.minterUsername.toLowerCase());
+            if (item.mintername) allUsernames.add(item.mintername.toLowerCase());
+          }
+        }
+      }
+      
+      // Categories that are clearly not real categories
+      const isValidCategory = (cat: string): boolean => {
+        const lower = cat.toLowerCase().trim();
+        if (!lower || lower.length < 2) return false;
+        // Filter out usernames used as categories
+        if (allUsernames.has(lower)) return false;
+        // Filter out underscored names that look like usernames (e.g. "Da_Mystic_Cryptic")
+        if (lower.includes('_') && /^[a-z0-9_]+$/i.test(lower)) return false;
+        // Filter out generic/spam-like entries
+        if (['others', 'other', 'none', 'n/a'].includes(lower)) return false;
+        return true;
+      };
+      
+      if (cachedPages) {
+        for (const page of cachedPages) {
+          const feedData = page.data as { result?: any[] };
+          const items = feedData?.result || [];
+          for (const item of items) {
             const createdAt = item.createdAt ? new Date(item.createdAt).getTime() : 0;
             if (createdAt < oneWeekAgo) continue;
             
-            // Handle category as string or array
             const cats = Array.isArray(item.category) ? item.category : item.category ? [item.category] : [];
             for (const cat of cats) {
-              if (typeof cat === 'string' && cat.trim()) {
-                categoryCounts[cat.trim()] = (categoryCounts[cat.trim()] || 0) + 1;
+              if (typeof cat === 'string' && isValidCategory(cat)) {
+                const trimmed = cat.trim();
+                categoryCounts[trimmed] = (categoryCounts[trimmed] || 0) + 1;
               }
             }
           }
