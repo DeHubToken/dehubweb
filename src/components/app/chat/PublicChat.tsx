@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
 export function PublicChat({ onBack }: PublicChatProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
 
   // Fetch rooms, use the first available room
   const { rooms, isLoading: roomsLoading, error: roomsError, refetch: refetchRooms } = useLiveChatRooms();
@@ -62,6 +62,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Online presence
   const { onlineCount } = useLiveChatPresence(selectedRoomId);
+
+  // Determine if current user is a moderator for this room
+  const isModerator = useMemo(() => {
+    if (!walletAddress || !roomDetails?.moderators) return false;
+    return roomDetails.moderators.some(
+      (mod: string) => mod.toLowerCase() === walletAddress.toLowerCase()
+    );
+  }, [walletAddress, roomDetails]);
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
@@ -244,7 +252,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
           <span className="text-yellow-200/80 font-medium text-xs truncate">
             {pinnedMessage.userName}: {pinnedMessage.content}
           </span>
-          {isAuthenticated && (
+          {isModerator && (
             <button
               onClick={() => handleUnpinMessage(pinnedMessage.id)}
               className="ml-auto text-yellow-500/50 hover:text-yellow-300 text-xs flex-shrink-0"
@@ -305,7 +313,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <ChatMessage 
                 key={message.id} 
                 message={message}
-                showActions={isAuthenticated}
+                showActions={isModerator}
                 onPin={handlePinMessage}
                 onUnpin={handleUnpinMessage}
                 onBan={handleBanUser}
