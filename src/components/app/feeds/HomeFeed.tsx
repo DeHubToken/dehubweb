@@ -146,7 +146,7 @@ function SortFilterSection({
   onReset,
 }: FilterSectionProps) {
   return (
-    <div className="relative flex flex-col gap-4">
+    <div className="relative flex flex-col gap-4" onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
