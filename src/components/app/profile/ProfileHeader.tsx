@@ -272,9 +272,9 @@ export function ProfileHeader({
             }}>
               <DrawerTrigger asChild>
                 <Button 
-                  variant="outline" 
+                  variant="glass" 
                   size="icon" 
-                  className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-9 w-9"
+                  className="rounded-xl h-9 w-9"
                 >
                   <Plus className="w-4 h-4" />
                 </Button>
