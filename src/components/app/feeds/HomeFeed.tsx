@@ -147,11 +147,24 @@ function SortFilterSection({
 }: FilterSectionProps) {
   const [categorySearch, setCategorySearch] = useState('');
 
+  // Find the currently selected category object (if not 'all')
+  const selectedCategoryObj = useMemo(() => {
+    if (selectedCategory === 'all') return null;
+    return categories.find(cat => cat.id === selectedCategory) || null;
+  }, [categories, selectedCategory]);
+
   const filteredCategories = useMemo(() => {
-    if (!categorySearch.trim()) return categories;
-    const q = categorySearch.toLowerCase();
-    return categories.filter(cat => cat.name.toLowerCase().includes(q));
-  }, [categories, categorySearch]);
+    let filtered = categories;
+    if (categorySearch.trim()) {
+      const q = categorySearch.toLowerCase();
+      filtered = categories.filter(cat => cat.name.toLowerCase().includes(q));
+    }
+    // Remove selected category from the list (it will be pinned separately)
+    if (selectedCategoryObj) {
+      filtered = filtered.filter(cat => cat.id !== selectedCategory);
+    }
+    return filtered;
+  }, [categories, categorySearch, selectedCategory, selectedCategoryObj]);
 
   return (
     <div className="relative flex flex-col gap-4">
