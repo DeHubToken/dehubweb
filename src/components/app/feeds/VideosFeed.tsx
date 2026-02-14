@@ -16,7 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
-import { useAuth } from '@/contexts/AuthContext';
+
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useDeHubVideos, mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
@@ -489,8 +489,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
-  
-  const { walletAddress } = useAuth();
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -532,7 +530,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     sortBy: getUnifiedSortBy(selectedSort.value),
     sortOrder: 'desc',
     range: effectiveRange,
-    address: walletAddress || undefined,
     isPPV: contentFilters.ppv || undefined,
     hasBounty: contentFilters.w2e || undefined,
     isLocked: contentFilters.locked || undefined,
@@ -542,7 +539,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   // Fetch shorts for the carousel (using original hook since it doesn't need content filtering)
   const { data: shortsData } = useDeHubVideos({
     unit: 10,
-    address: walletAddress || undefined,
   });
 
   useEffect(() => {
