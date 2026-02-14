@@ -1,31 +1,40 @@
 
 
-## Fix: Analyze All Cached Pages for Trending Categories
+## Fix: Align Trending Categories With What Users Actually See
 
 ### Problem
-Currently, trending categories only analyze 50 posts (page 1). This gives a very narrow view of what's actually trending. Previously it analyzed all 5 pages but showed post counts that didn't match when clicked.
+The trending sidebar analyzes 250 posts (5 cached pages) to rank categories, but when a user clicks a category, the feed makes a fresh API call that only shows what's available on the current page. "funny" appears as the #1 trending category (found 17 times across 250 posts), but when clicked, the filtered feed only shows 1 post because most "funny" posts are scattered across later pages.
+
+### Root Cause
+The disconnect is between:
+- **Sidebar ranking**: Scans 250 cached posts to count category frequency
+- **Filtered feed**: Makes a fresh API call with `category=funny`, which only returns matching posts from the external API's page 1 (often just 1-2 results)
+
+There's no way to force the external DeHub API to return more category-filtered results -- we can only control what we count and display.
 
 ### Solution
-Analyze all 5 cached pages (250 posts) to determine what's truly trending, but remove the exact post count from the sidebar to avoid the mismatch issue. Instead, show a relative popularity indicator.
+Two-pronged approach to make the sidebar honest about what users will see:
 
-### Changes
+**1. Edge Function (`supabase/functions/refresh-feed-cache/index.ts`)**
+- Revert to counting categories from only page 1 (50 posts) instead of all 5 pages
+- This ensures the trending ranking reflects what's actually in the first page of results users see
+- Categories with genuinely high presence on page 1 will rank higher
 
-**1. Edge Function: `supabase/functions/refresh-feed-cache/index.ts`**
-- Change the query back to read all 5 cached latest pages (`feed_latest_page1` through `feed_latest_page5`) instead of just page 1
-- This gives 250 posts worth of data for more accurate trending analysis
+**2. Sidebar UI (`src/components/app/WhatsHappening.tsx`)**  
+- No changes needed -- post counts are already removed from the previous update
+- The ranking order alone communicates relative popularity
 
-**2. Sidebar UI: `src/components/app/WhatsHappening.tsx`**
-- Remove the exact "X posts" count label from each category row
-- The ranking order itself already communicates which categories are most popular
-- This eliminates the count mismatch problem entirely since there's no number to disagree with
-
-### Why This Works
-- Trending order is based on 250 posts instead of 50, giving a much better signal
-- No misleading post counts that don't match when clicked
-- Categories are ranked by true popularity, and the rank position alone tells users what's hot
+### Why Not Just Increase Feed Page Size?
+The external DeHub API controls pagination. We can't force it to return all "funny" posts at once. Even with `limit=50`, the category filter might only match a few items on a given page. The only reliable fix is to make the sidebar ranking match reality.
 
 ### Technical Details
-- Edge function query changes from `.eq("cache_key", "feed_latest_page1")` to `.like("cache_key", "feed_latest_page%")`
-- UI removes the `post_count` display span from each category button
-- The `post_count` field is still computed and stored (used for sorting) but not shown to users
 
+Edge function change (single line):
+```
+// Change from:
+.like("cache_key", "feed_latest_page%")
+// Back to:
+.eq("cache_key", "feed_latest_page1")  
+```
+
+This is intentionally scoped to page 1 only. The ranking will be less "comprehensive" but far more honest -- if "funny" appears 3 times in 50 posts, it genuinely means users will see ~3 funny posts when they click through.
