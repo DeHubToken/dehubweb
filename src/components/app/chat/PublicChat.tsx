@@ -8,6 +8,7 @@ import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, type LiveChatRoom } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -28,7 +29,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     id: msg.id,
     userId: msg.sender_address || 'unknown',
     userName: msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon',
-    userAvatar: getMediaUrl(msg.sender_avatar_url ?? undefined) || undefined,
+    userAvatar: buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url) || undefined,
     content: msg.content || '',
     timestamp: new Date(msg.created_at),
     type: (msg.message_type as Message['type']) || 'text',

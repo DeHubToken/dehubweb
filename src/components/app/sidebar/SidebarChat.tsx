@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { TranslatableText } from '../TranslatableText';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { getMediaUrl } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -89,7 +90,7 @@ export function SidebarChat() {
             </div>
           ) : (
             messages.map((msg) => {
-              const avatarUrl = getMediaUrl(msg.sender_avatar_url ?? undefined);
+              const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
               return (
                 <div key={msg.id} className="flex items-start gap-2">
