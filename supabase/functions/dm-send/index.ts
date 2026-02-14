@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token',
@@ -22,6 +24,10 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return jsonOk({ ok: false, error: 'Method not allowed' });
   }
+
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   const walletAddress = req.headers.get('x-wallet-address')?.toLowerCase() || '';
   const dehubToken = req.headers.get('x-dehub-token') || '';
@@ -54,8 +60,15 @@ Deno.serve(async (req) => {
       return jsonOk({ ok: false, error: 'conversationId or receiver is required' });
     }
 
+    // Determine receiver address - needed for Supabase and potentially DeHub
+    let targetReceiver = receiver?.toLowerCase();
+
+    // If we only have a conversationId that is a wallet address (new_0x...), extract it
+    if (!targetReceiver && conversationId?.startsWith('0x')) {
+      targetReceiver = conversationId.toLowerCase();
+    }
+
     // Build the request body for DeHub API
-    // API expects: senderAddress, receiverAddress, content, type
     const dmBody: Record<string, unknown> = {
       senderAddress: sender || walletAddress,
       content,
@@ -63,10 +76,10 @@ Deno.serve(async (req) => {
       transactionHash: body.transactionHash || `0x${Date.now().toString(16)}`,
     };
 
-    if (receiver) {
-      dmBody.receiverAddress = receiver.toLowerCase();
+    if (targetReceiver) {
+      dmBody.receiverAddress = targetReceiver;
     }
-    if (conversationId) {
+    if (conversationId && !conversationId.startsWith('new_')) {
       dmBody.conversationId = conversationId;
     }
 
@@ -76,43 +89,74 @@ Deno.serve(async (req) => {
     }
 
     console.log(`[dm-send] Sending DM from ${walletAddress}`, {
-      hasReceiver: !!receiver,
-      hasConversationId: !!conversationId,
+      targetReceiver,
+      conversationId,
       type,
-      dmBody,
     });
 
-    // Proxy request to DeHub API
-    const response = await fetch(`${DEHUB_API_BASE}/api/dm/tnx`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${dehubToken}`,
-      },
-      body: JSON.stringify(dmBody),
-    });
+    // 1. Attempt to send via DeHub API
+    let dehubData: any = {};
+    let dehubOk = false;
 
-    const data = await response.json().catch(() => ({}));
+    try {
+      const response = await fetch(`${DEHUB_API_BASE}/api/dm/tnx`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${dehubToken}`,
+        },
+        body: JSON.stringify(dmBody),
+      });
 
-    if (!response.ok) {
-      console.error('[dm-send] DeHub API error:', {
-        httpStatus: response.status,
-        data,
-      });
-      // Always return 200 so client can read the error details
-      return jsonOk({
-        ok: false,
-        httpStatus: response.status,
-        error: data.message || data.error || `DeHub API error: ${response.status}`,
-        dehubResponse: data,
-      });
+      dehubData = await response.json().catch(() => ({}));
+      dehubOk = response.ok;
+
+      if (!dehubOk) {
+        console.warn('[dm-send] DeHub API error (continuing with Supabase fallback):', dehubData);
+      }
+    } catch (err) {
+      console.error('[dm-send] DeHub API fetch failed:', err);
     }
 
-    console.log('[dm-send] Message sent successfully:', data);
-    return jsonOk({ ok: true, result: data });
+    // 2. Always save to Supabase for reliability and Realtime
+    // Use the conversationId from DeHub if available, or the one provided
+    const resolvedConversationId = dehubData?.result?.data?._id || dehubData?.result?._id || conversationId;
+
+    const { data: supabaseData, error: supabaseError } = await supabase
+      .from('direct_messages')
+      .insert({
+        conversation_id: resolvedConversationId,
+        sender_address: (sender || walletAddress).toLowerCase(),
+        receiver_address: targetReceiver || 'unknown',
+        content: content || '',
+        message_type: type,
+        media_url: body.mediaUrl || null,
+      })
+      .select()
+      .single();
+
+    if (supabaseError) {
+      console.error('[dm-send] Supabase insert error:', supabaseError);
+      // If DeHub also failed, then we return error
+      if (!dehubOk) {
+        return jsonOk({ ok: false, error: 'Failed to send message to both DeHub and Supabase' });
+      }
+    }
+
+    console.log('[dm-send] Message saved successfully');
+
+    // Return a combined response. If DeHub failed but Supabase succeeded, we still return ok: true
+    // but include the info so the frontend knows how to handle it.
+    return jsonOk({
+      ok: true,
+      result: dehubOk ? dehubData : { success: true, data: supabaseData },
+      source: dehubOk ? 'dehub' : 'supabase'
+    });
+
   } catch (err) {
     console.error('[dm-send] Unexpected error:', err);
     return jsonOk({ ok: false, error: String(err) });
   }
 });
+
