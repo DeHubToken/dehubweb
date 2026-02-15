@@ -102,21 +102,10 @@ export function CardHeader({
         disabled={!isClickable}
         className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
       >
-        {isLive ? (
-          <div className="p-0.5 rounded-md bg-gradient-to-br from-red-500 via-red-600 to-orange-500">
-            <div className="p-0.5 bg-zinc-900 rounded-md">
-              <Avatar className="w-9 h-9 rounded-md">
-                {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
-                <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-        ) : (
-          <Avatar className="w-9 h-9 rounded-md">
-            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
-        )}
+        <Avatar className="w-9 h-9 rounded-md">
+          {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
+          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
+        </Avatar>
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="relative inline-flex items-baseline shrink min-w-0">
