@@ -1,4 +1,4 @@
-import { Lock, Loader2, Plus, MessageCircle } from 'lucide-react';
+import { Loader2, Plus, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -18,6 +18,7 @@ import subs3dIcon from '@/assets/icons/subs-3d-icon.png';
 import star3dIcon from '@/assets/icons/star-3d-icon.png';
 import filmstrip3dIcon from '@/assets/icons/filmstrip-3d-icon.png';
 import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
+import lock3dIcon from '@/assets/lock-3d.png';
 import home3dIcon from '@/assets/icons/home-3d-icon.png';
 import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
 
@@ -74,9 +75,7 @@ export function ProfileTabContent({
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mb-4">
-          <Lock className="w-8 h-8 text-zinc-500" />
-        </div>
+        <img src={lock3dIcon} alt="Private" className="w-12 h-12 object-contain mb-4" />
         <p className="text-white text-lg font-semibold">This account is private</p>
         <p className="text-zinc-500 text-sm mt-1 max-w-xs">
           {isPending 
