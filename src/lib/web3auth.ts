@@ -1,24 +1,26 @@
 /**
- * Web3Auth Configuration with No-Modal SDK v8
- * ============================================
- * Web3Auth No-Modal SDK v8 for Base Mainnet with direct private key access.
- * Uses EthereumPrivateKeyProvider + OpenloginAdapter for eth_private_key support
- * to generate standard ECDSA signatures required by DeHub backend.
+ * Web3Auth Configuration with Account Abstraction (v10 Modal SDK)
+ * ================================================================
+ * Web3Auth Modal SDK v10 for Base Mainnet with Pimlico-powered
+ * Account Abstraction for gasless transactions.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
- * without showing any Web3Auth modal.
+ * without showing the default Web3Auth modal.
+ *
+ * External wallets (MetaMask, WalletConnect, etc.) are handled by
+ * Wagmi + Reown AppKit — NOT by Web3Auth.
  */
 
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import {
+  Web3Auth,
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
-  WALLET_ADAPTERS,
+  WALLET_CONNECTORS,
+  AUTH_CONNECTION,
+  CONFIRMATION_STRATEGY,
+  authConnector,
   UX_MODE,
-  IProvider,
-} from "@web3auth/base";
+} from "@web3auth/modal";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -96,20 +98,9 @@ export function getWalletBrowserName(): string | null {
 }
 
 // Re-export for use in other files
-export { WALLET_ADAPTERS };
+export { WALLET_CONNECTORS, AUTH_CONNECTION };
 
-// Auth connection types for social login (maps to Web3Auth login providers)
-export const AUTH_CONNECTION = {
-  GOOGLE: "google",
-  APPLE: "apple",
-  TWITTER: "twitter",
-  DISCORD: "discord",
-  TELEGRAM: "telegram",
-  GITHUB: "github",
-  EMAIL_PASSWORDLESS: "email_passwordless",
-  SMS_PASSWORDLESS: "sms_passwordless",
-} as const;
-
+// Auth connection type for TypeScript
 export type AuthConnectionType = typeof AUTH_CONNECTION[keyof typeof AUTH_CONNECTION];
 
 // Chain configuration for Base Mainnet
@@ -125,23 +116,17 @@ const chainConfig = {
   logo: "https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0",
 };
 
-let web3authInstance: Web3AuthNoModal | null = null;
+let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
-let initPromise: Promise<Web3AuthNoModal> | null = null;
-// Track which adapter was last used (for detecting social login vs external wallet)
-let lastConnectedAdapter: string | null = null;
+let initPromise: Promise<Web3Auth> | null = null;
+// Track which connector was last used (for detecting social login vs external wallet)
+let lastConnectedConnector: string | null = null;
 // Track if we've detected that popups are blocked and should use redirect
 let forceRedirectMode = false;
 
-// Cached config from edge function
-interface Web3AuthConfig {
-  clientId: string;
-  aggregateVerifier?: string;
-  googleSubVerifier?: string;
-  emailSubVerifier?: string;
-  googleClientId?: string;
-}
-let cachedConfig: Web3AuthConfig | null = null;
+// Cached configs from edge functions
+let cachedClientId: string | null = null;
+let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
 
 /**
  * Reset all Web3Auth module state - used for HMR and error recovery
@@ -154,8 +139,8 @@ export function resetWeb3AuthState(): void {
   web3authInstance = null;
   isInitializing = false;
   initPromise = null;
-  lastConnectedAdapter = null;
-  // Don't reset cachedConfig or forceRedirectMode - persist across resets
+  lastConnectedConnector = null;
+  // Don't reset cached configs or forceRedirectMode - persist across resets
   console.log("[Web3Auth] Module state reset");
 }
 
@@ -192,8 +177,7 @@ export function consumePreLoginPath(): string | null {
 
 /**
  * Check if URL contains Web3Auth redirect parameters.
- * Web3Auth v8 may attach params in hash OR search, and may use
- * `b64Params`, `sessionId`, or `sessionNamespace`.
+ * Web3Auth v10 may attach params in hash OR search.
  */
 export function hasRedirectResult(): boolean {
   const hash = window.location.hash;
@@ -206,32 +190,35 @@ export function hasRedirectResult(): boolean {
   );
 }
 
-async function getWeb3AuthConfig(): Promise<Web3AuthConfig> {
-  if (cachedConfig) return cachedConfig;
-  console.log("[Web3Auth] Fetching config from edge function...");
+async function getWeb3AuthClientId(): Promise<string> {
+  if (cachedClientId) return cachedClientId;
+  console.log("[Web3Auth] Fetching client ID from edge function...");
   const { data, error } = await supabase.functions.invoke("get-web3auth-config");
   console.log("[Web3Auth] get-web3auth-config response:", { data, error });
   if (!error && data?.clientId) {
-    cachedConfig = {
-      clientId: data.clientId,
-      aggregateVerifier: data.aggregateVerifier || undefined,
-      googleSubVerifier: data.googleSubVerifier || undefined,
-      emailSubVerifier: data.emailSubVerifier || undefined,
-      googleClientId: data.googleClientId || undefined,
-    };
-    if (cachedConfig.aggregateVerifier) {
-      console.log("[Web3Auth] Aggregate verifier configured:", cachedConfig.aggregateVerifier);
-    }
-    return cachedConfig;
+    cachedClientId = data.clientId;
+    return cachedClientId;
   }
   throw new Error("Web3Auth client ID not configured");
 }
 
+async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: string }> {
+  if (cachedPimlicoConfig) return cachedPimlicoConfig;
+  console.log("[Web3Auth] Fetching Pimlico config from edge function...");
+  const { data, error } = await supabase.functions.invoke("get-pimlico-config");
+  console.log("[Web3Auth] get-pimlico-config response:", { data, error });
+  if (!error && data?.bundlerUrl && data?.paymasterUrl) {
+    cachedPimlicoConfig = data;
+    return cachedPimlicoConfig;
+  }
+  throw new Error("Pimlico API key not configured");
+}
+
 /**
- * Initialize Web3Auth No-Modal v8 with direct private key access
- * Uses EthereumPrivateKeyProvider + OpenloginAdapter for eth_private_key support
+ * Initialize Web3Auth Modal v10 with Account Abstraction via Pimlico
+ * Configured for CUSTOM UI - no default modal shown
  */
-export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
+export async function initWeb3Auth(): Promise<Web3Auth> {
   console.log("[Web3Auth] initWeb3Auth() called");
   console.log("[Web3Auth] Current instance:", web3authInstance ? "exists" : "null");
   console.log("[Web3Auth] Current status:", web3authInstance?.status || "N/A");
@@ -253,82 +240,73 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
 
   initPromise = (async () => {
     try {
-      // Fetch Web3Auth configuration (client ID + optional aggregate verifier)
-      console.log("[Web3Auth] Fetching configuration...");
-      const config = await getWeb3AuthConfig();
-      const clientId = config.clientId;
+      // Fetch configurations in parallel
+      console.log("[Web3Auth] Fetching configurations...");
+      const [clientId, pimlicoConfig] = await Promise.all([
+        getWeb3AuthClientId(),
+        getPimlicoConfig(),
+      ]);
       console.log("[Web3Auth] Client ID fetched:", clientId?.substring(0, 15) + "...");
+      console.log("[Web3Auth] Pimlico config fetched");
 
-      // Create private key provider for direct key access
-      console.log("[Web3Auth] Creating EthereumPrivateKeyProvider...");
-      const privateKeyProvider = new EthereumPrivateKeyProvider({
-        config: { chainConfig },
-      });
-      console.log("[Web3Auth] PrivateKeyProvider created");
-
-      // Create Web3Auth No-Modal instance
-      console.log("[Web3Auth] Creating Web3AuthNoModal instance...");
-      console.log("[Web3Auth] Is mobile device:", isMobileDevice());
-      console.log("[Web3Auth] UX Mode:", isMobileDevice() ? "REDIRECT" : "POPUP");
-
-      web3authInstance = new Web3AuthNoModal({
-        clientId,
-        chainConfig,
-        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
-      });
-      console.log("[Web3Auth] Web3AuthNoModal instance created");
-
-      // Configure Openlogin adapter for social/email/sms logins
-      // Use REDIRECT mode on mobile OR if popups were previously blocked.
+      // Determine UX mode based on device
       const mobile = isMobileDevice();
       const useRedirect = mobile || forceRedirectMode;
-      const redirectUrl = useRedirect
-        ? window.location.origin + '/app'
-        : window.location.origin;
-      console.log("[Web3Auth] Configuring Openlogin adapter...");
-      console.log("[Web3Auth] mobile:", mobile, "forceRedirect:", forceRedirectMode, "useRedirect:", useRedirect);
-      console.log("[Web3Auth] redirectUrl:", redirectUrl);
+      console.log("[Web3Auth] Is mobile device:", mobile);
+      console.log("[Web3Auth] UX Mode:", useRedirect ? "REDIRECT" : "POPUP");
+      console.log("[Web3Auth] forceRedirect:", forceRedirectMode);
 
-      // Build loginConfig for aggregate verifier (if configured)
-      // This ensures Google + Email Passwordless produce the SAME wallet address for the same email.
-      const adapterSettings: Record<string, unknown> = {
-        uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
-        redirectUrl,
-      };
+      // Create Web3Auth instance with custom UI configuration
+      // Modal is hidden - we use connectTo() for direct provider access
+      console.log("[Web3Auth] Creating Web3Auth v10 instance with AA config...");
 
-      const disableAggregate = localStorage.getItem('dehub_disable_aggregate_verifier') === 'true';
-
-      if (config.aggregateVerifier && config.googleSubVerifier && config.emailSubVerifier && config.googleClientId && !disableAggregate) {
-        console.log("[Web3Auth] Using aggregate verifier:", config.aggregateVerifier);
-        adapterSettings.loginConfig = {
-          google: {
-            verifier: config.aggregateVerifier,
-            verifierSubIdentifier: config.googleSubVerifier,
-            typeOfLogin: "google",
-            clientId: config.googleClientId,
+      web3authInstance = new Web3Auth({
+        clientId,
+        chains: [chainConfig],
+        web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+        // v10 Account Abstraction configuration with Pimlico
+        accountAbstractionConfig: {
+          smartAccountType: "safe",
+          chains: [
+            {
+              chainId: "0x2105", // Base Mainnet
+              bundlerConfig: {
+                url: pimlicoConfig.bundlerUrl,
+              },
+              paymasterConfig: {
+                url: pimlicoConfig.paymasterUrl,
+              },
+            },
+          ],
+        },
+        // Use AA only for embedded wallets (social/email login)
+        // External wallets like MetaMask use Wagmi, not Web3Auth
+        useAAWithExternalWallet: false,
+        // Configure connectors for mobile-aware email/SMS login
+        connectors: [
+          authConnector({
+            connectorSettings: {
+              uxMode: useRedirect ? UX_MODE.REDIRECT : UX_MODE.POPUP,
+              redirectUrl: `${window.location.origin}/app`,
+            }
+          })
+        ],
+        // Auto-approve signatures for auth messages (bypasses blocking modal)
+        walletServicesConfig: {
+          confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
+          modalZIndex: 99999,
+          whiteLabel: {
+            showWidgetButton: false,
           },
-          email_passwordless: {
-            verifier: config.aggregateVerifier,
-            verifierSubIdentifier: config.emailSubVerifier,
-            typeOfLogin: "email_passwordless",
-            clientId: clientId,
-          },
-        };
-      } else if (disableAggregate) {
-        console.warn("[Web3Auth] Aggregate verifier DISABLED by localStorage flag. Using default legacy verifiers.");
-      } else {
-        console.log("[Web3Auth] Using default verifiers (No aggregation configured).");
-      }
-
-      const openloginAdapter = new OpenloginAdapter({
-        privateKeyProvider,
-        adapterSettings,
+        } as unknown as ConstructorParameters<typeof Web3Auth>[0]["walletServicesConfig"],
+        // Custom UI configuration - we use our own modal
+        uiConfig: {
+          appName: "DeHub",
+          mode: "dark",
+          defaultLanguage: "en",
+        },
       });
-      web3authInstance.configureAdapter(openloginAdapter);
-      console.log("[Web3Auth] Openlogin adapter configured (uxMode:", useRedirect ? "REDIRECT" : "POPUP", ")");
-
-      // Note: External wallet adapters (MetaMask, WalletConnect, Coinbase) removed.
-      // Wallet connections are now handled by wagmi + Reown AppKit.
+      console.log("[Web3Auth] Instance created with Account Abstraction");
 
       // Initialize
       console.log("[Web3Auth] Calling init()...");
@@ -344,7 +322,7 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
       console.log("[Web3Auth] init() completed, status:", web3authInstance.status);
       console.log("[Web3Auth] Connected:", web3authInstance.connected);
 
-      console.log("[Web3Auth] INITIALIZATION COMPLETE (No-Modal v8 + PrivateKeyProvider), status:", web3authInstance.status);
+      console.log("[Web3Auth] INITIALIZATION COMPLETE (Modal v10 + Pimlico AA), status:", web3authInstance.status);
       return web3authInstance;
     } catch (error) {
       console.error("[Web3Auth] INITIALIZATION FAILED:", error);
@@ -388,16 +366,16 @@ function isPopupBlockedError(err: unknown): boolean {
 
 /**
  * Connect to a specific social login provider using connectTo()
- * This bypasses any modal completely - direct provider connection.
+ * This bypasses the Web3Auth modal completely - direct provider connection.
  * If popup is blocked, automatically switches to REDIRECT mode and retries.
  */
 export async function connectToSocialProvider(
   authConnection: AuthConnectionType,
   loginHint?: string
-): Promise<IProvider | null> {
+): Promise<ReturnType<Web3Auth['connectTo']>> {
   console.log(`[Web3Auth] connectToSocialProvider: phase=INIT authConnection=${authConnection} loginHint=${loginHint ? 'set' : 'none'}`);
 
-  let web3auth: Web3AuthNoModal;
+  let web3auth: Web3Auth;
   try {
     web3auth = await getOrInitWeb3Auth();
     console.log(`[Web3Auth] connectToSocialProvider: phase=READY status=${web3auth.status}`);
@@ -406,30 +384,23 @@ export async function connectToSocialProvider(
     throw err;
   }
 
-  const extraLoginOptions: Record<string, unknown> = {};
+  const params: Record<string, unknown> = {
+    authConnection,
+  };
 
   // Add login hint for email/sms passwordless
   if (loginHint) {
-    extraLoginOptions.login_hint = loginHint;
-  }
-
-  // When using aggregate verifier with email_passwordless, must set connection: "email"
-  // so the sub-verifier correctly identifies the login type
-  if (authConnection === AUTH_CONNECTION.EMAIL_PASSWORDLESS && cachedConfig?.aggregateVerifier) {
-    extraLoginOptions.connection = "email";
+    params.loginHint = loginHint;
   }
 
   // Save current path before potential redirect
   savePreLoginPath();
 
-  let provider: IProvider | null;
+  let provider: Awaited<ReturnType<Web3Auth['connectTo']>>;
   try {
-    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_ADAPTERS.OPENLOGIN}, { loginProvider: ${authConnection} })`);
-    provider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-      loginProvider: authConnection,
-      extraLoginOptions,
-    });
-    lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN;
+    console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT calling connectTo(${WALLET_CONNECTORS.AUTH}, { authConnection: ${authConnection} })`);
+    provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+    lastConnectedConnector = WALLET_CONNECTORS.AUTH;
     console.log(`[Web3Auth] connectToSocialProvider: phase=CONNECT_OK provider=${provider ? 'received' : 'null'}`);
   } catch (err) {
     // If popup was blocked, switch to REDIRECT mode and retry automatically
@@ -446,11 +417,8 @@ export async function connectToSocialProvider(
 
       console.log('[Web3Auth] Re-initialized with REDIRECT mode, retrying connectTo...');
       // This will redirect the browser (won't return on mobile)
-      provider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-        loginProvider: authConnection,
-        extraLoginOptions,
-      });
-      lastConnectedAdapter = WALLET_ADAPTERS.OPENLOGIN;
+      provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
+      lastConnectedConnector = WALLET_CONNECTORS.AUTH;
       console.log(`[Web3Auth] connectToSocialProvider: phase=REDIRECT_CONNECT_OK`);
     } else {
       console.error(`[Web3Auth] connectToSocialProvider: phase=CONNECT_FAILED`, err);
@@ -466,7 +434,7 @@ export async function connectToSocialProvider(
 /**
  * Get the initialized Web3Auth instance
  */
-export function getWeb3Auth(): Web3AuthNoModal {
+export function getWeb3Auth(): Web3Auth {
   if (!web3authInstance || (web3authInstance.status !== "ready" && web3authInstance.status !== "connected")) {
     throw new Error("Web3Auth not initialized. Call initWeb3Auth() first.");
   }
@@ -476,18 +444,18 @@ export function getWeb3Auth(): Web3AuthNoModal {
 /**
  * Get or initialize Web3Auth
  */
-export async function getOrInitWeb3Auth(): Promise<Web3AuthNoModal> {
+export async function getOrInitWeb3Auth(): Promise<Web3Auth> {
   if (web3authInstance?.status === "ready" || web3authInstance?.status === "connected") {
     return web3authInstance;
   }
   return initWeb3Auth();
 }
 
-export function getWeb3AuthInstance(): Web3AuthNoModal | null {
+export function getWeb3AuthInstance(): Web3Auth | null {
   return web3authInstance;
 }
 
-export function getWeb3AuthProvider(): IProvider | null {
+export function getWeb3AuthProvider() {
   return web3authInstance?.provider || null;
 }
 
@@ -564,23 +532,23 @@ export function isWeb3AuthConnected(): boolean {
 }
 
 /**
- * Check if the current connection is via social login (Openlogin adapter)
- * Used to determine signing method (private key vs provider)
+ * Check if the current connection is via social login (AUTH connector)
+ * Used to determine signing method in AuthContext
  */
 export function isSocialLoginConnected(): boolean {
-  return lastConnectedAdapter === WALLET_ADAPTERS.OPENLOGIN;
+  return lastConnectedConnector === WALLET_CONNECTORS.AUTH;
 }
 
 /**
- * Get the last connected adapter name
+ * Get the last connected connector name
  */
 export function getLastConnectedConnector(): string | null {
-  return lastConnectedAdapter;
+  return lastConnectedConnector;
 }
 
 /**
- * Set the last connected adapter (used when restoring session from redirect)
+ * Set the last connected connector (used when restoring session from redirect)
  */
 export function setLastConnectedConnector(connector: string | null): void {
-  lastConnectedAdapter = connector;
+  lastConnectedConnector = connector;
 }

@@ -2,11 +2,11 @@
  * Auth Context
  * ============
  * Provides Web3Auth authentication integrated with DeHub API.
- * Uses Web3Auth No-Modal SDK for direct private key access and
- * standard ECDSA signatures required by the DeHub backend.
+ * Uses Web3Auth Modal SDK v10 with Pimlico Account Abstraction for
+ * social/email/SMS login, and Wagmi for external wallet connections.
  *
  * CUSTOM UI MODE: Uses connectTo() for direct provider connections
- * without showing any Web3Auth modal.
+ * without showing the default Web3Auth modal.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
@@ -22,7 +22,6 @@ import {
   isTokenExpired,
   type DeHubUser
 } from '@/lib/api/dehub';
-import { Wallet } from 'ethers';
 import {
   initWeb3Auth,
   disconnectWeb3Auth,
@@ -31,11 +30,12 @@ import {
   connectToSocialProvider,
   hasRedirectResult,
   isSocialLoginConnected,
+  setLastConnectedConnector,
   AUTH_CONNECTION,
+  WALLET_CONNECTORS,
   getOrInitWeb3Auth,
 } from '@/lib/web3auth';
-import type { Web3AuthNoModal } from '@web3auth/no-modal';
-import type { IProvider } from '@web3auth/base';
+import type { Web3Auth } from '@web3auth/modal';
 
 // Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
@@ -50,7 +50,7 @@ interface AuthContextType {
   isProcessingRedirect: boolean;
   requiresUsername: boolean;
   needsSignature: boolean;
-  web3auth: Web3AuthNoModal | null;
+  web3auth: Web3Auth | null;
   connectionSource: 'web3auth' | 'wagmi' | null;
   // Legacy connect method (opens default modal)
   connect: () => Promise<void>;
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
   const [requiresUsername, setRequiresUsername] = useState(false);
   const [needsSignature, setNeedsSignature] = useState(false);
-  const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
+  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [connectionSource, setConnectionSource] = useState<'web3auth' | 'wagmi' | null>(
     (localStorage.getItem('dehub_connection_source') as 'web3auth' | 'wagmi' | null) || null
@@ -223,6 +223,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Wagmi Auto-connect logic
   useEffect(() => {
     const handleWagmiConnect = async () => {
+      // Don't interfere if we're processing a redirect (mobile email/SMS login)
+      if (isProcessingRedirect || hasRedirectResult()) {
+        console.log('[Auth] Skipping Wagmi auto-connect during redirect processing');
+        return;
+      }
+
       // If Wagmi connects (via AppKit or injected) and we are not authed yet
       if (isWagmiConnected && wagmiAddress && !isConnecting && !isLoading) {
 
@@ -276,42 +282,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     handleWagmiConnect();
-  }, [isWagmiConnected, wagmiAddress, isAuthenticated, isConnecting, isLoading, walletAddress, connectionSource]);
+  }, [isWagmiConnected, wagmiAddress, isAuthenticated, isConnecting, isLoading, walletAddress, connectionSource, isProcessingRedirect]);
 
 
   // Handle Web3Auth redirect result (mobile email/SMS login)
   useEffect(() => {
     const processRedirect = async () => {
+      const hasRedirect = hasRedirectResult();
+      console.log('[Auth] [REDIRECT] Check redirect params:', {
+        hasRedirect,
+        alreadyProcessed: redirectProcessedRef.current,
+        url: window.location.href.substring(0, 200),
+        hash: window.location.hash ? 'present' : 'empty',
+        search: window.location.search ? 'present' : 'empty',
+      });
+
       // Only process once and only if redirect params present
-      if (redirectProcessedRef.current || !hasRedirectResult()) {
+      if (redirectProcessedRef.current || !hasRedirect) {
         return;
       }
-      
+
       redirectProcessedRef.current = true;
-      console.log('[Auth] Processing Web3Auth redirect result...');
+      console.log('[Auth] [REDIRECT] Processing Web3Auth redirect result...');
       setIsProcessingRedirect(true);
 
       try {
         // Initialize Web3Auth - this will automatically process the redirect params
         const web3authInstance = await initWeb3Auth();
         setWeb3auth(web3authInstance);
-        
-        console.log('[Auth] Web3Auth initialized after redirect, status:', web3authInstance.status);
-        console.log('[Auth] Web3Auth connected:', web3authInstance.connected);
+
+        console.log('[Auth] [REDIRECT] Web3Auth initialized, status:', web3authInstance.status, 'connected:', web3authInstance.connected);
 
         // If Web3Auth is connected after processing redirect, complete DeHub auth
         if (web3authInstance.connected && web3authInstance.provider) {
-          console.log('[Auth] Completing DeHub auth after redirect...');
+          console.log('[Auth] [REDIRECT] Completing DeHub auth after redirect...');
+          // Mark as social login since redirect is always from email/SMS
+          setLastConnectedConnector(WALLET_CONNECTORS.AUTH);
           await completeDeHubAuthAfterRedirect(web3authInstance.provider);
+          closeLoginModal();
         } else {
-          console.warn('[Auth] Web3Auth not connected after redirect processing');
+          console.warn('[Auth] [REDIRECT] Web3Auth not connected after redirect processing. Status:', web3authInstance.status);
           toast.error('Login failed. Please try again.');
         }
 
         // Clear URL parameters to prevent reprocessing on refresh
         window.history.replaceState({}, '', window.location.pathname);
       } catch (error) {
-        console.error('[Auth] Redirect result processing failed:', error);
+        console.error('[Auth] [REDIRECT] Processing failed:', error);
         toast.error('Login failed. Please try again.');
         // Clear params even on error to prevent infinite loop
         window.history.replaceState({}, '', window.location.pathname);
@@ -335,7 +352,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Check existing session synchronously (no API call)
       const hasExistingSession = !!getAuthToken() && !isTokenExpired();
 
-      if (!isMobile || !hasInjected || hasExistingSession || alreadyAttempted) {
+      // Don't auto-connect if we're returning from a Web3Auth redirect (email/SMS login)
+      if (!isMobile || !hasInjected || hasExistingSession || alreadyAttempted || hasRedirectResult()) {
         return;
       }
 
@@ -409,13 +427,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Complete DeHub auth specifically after redirect flow
-   * Uses personal_sign with the provider - works for both social logins (AA) and external wallets
+   * Uses eth_accounts + personal_sign through the v10 AA provider
    */
-  const completeDeHubAuthAfterRedirect = async (provider: IProvider) => {
+  const completeDeHubAuthAfterRedirect = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    // Log Web3Auth user info for diagnostics (verifier + verifierId determine the key)
+    // Log Web3Auth user info for diagnostics
     try {
       const w3aInstance = await getOrInitWeb3Auth();
       const userInfo = await w3aInstance.getUserInfo();
@@ -430,42 +448,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
     }
 
-    // Redirect flow is always from social login (email/SMS)
-    // Get private key and sign with ethers for standard ECDSA signature
-    console.log('[Auth] Redirect - Getting private key for direct signing...');
-    const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
-    const wallet = new Wallet(privateKey);
-    const authAddress = wallet.address.toLowerCase();
+    // Get address from provider (Smart Account address with AA)
+    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available from provider after redirect');
+    }
+    const authAddress = accounts[0].toLowerCase();
 
     const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-    console.log('[Auth] Redirect - Signing with ethers.Wallet for address:', authAddress);
-    const signature = await wallet.signMessage(message);
+    console.log('[Auth] Redirect - Signing with provider for address:', authAddress);
+    const signature = await provider.request({
+      method: 'personal_sign',
+      params: [message, authAddress],
+    }) as string;
 
     console.log('[Auth] Redirect auth - Address:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
-
-    // ── Diagnostic: check if this address already has an account ──
-    try {
-      console.log('[Auth] [DIAG-REDIRECT] Checking for existing account for address:', authAddress);
-      const checkRes = await fetch(`https://api.dehub.io/api/account_info/${authAddress}`);
-      const checkData = await checkRes.json();
-      const existing = checkData?.result;
-      if (existing?._id) {
-        console.log('[Auth] [DIAG-REDIRECT] Account ALREADY EXISTS:', {
-          _id: existing._id,
-          username: existing.username,
-          displayName: existing.displayName,
-          createdAt: existing.createdAt,
-          address: existing.address,
-        });
-      } else {
-        console.log('[Auth] [DIAG-REDIRECT] Account does NOT exist yet — will be created by /api/web/auth');
-      }
-    } catch (e) {
-      console.warn('[Auth] [DIAG-REDIRECT] account_info check failed:', e);
-    }
-    // ── End Diagnostic ──
 
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
@@ -486,31 +485,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!normalizedUser.username) {
       setRequiresUsername(true);
     }
-    
+
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-    
+
     toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
     console.log('[Auth] ✓ DeHub authentication complete (redirect flow)');
   };
 
   /**
    * Complete DeHub authentication after Web3Auth connects
-   * Uses personal_sign with the provider - works for both social logins (AA) and external wallets
+   * Uses eth_accounts + personal_sign through the v10 provider (AA for social, direct for wallets)
    */
-  const completeDeHubAuth = async (provider: IProvider) => {
+  const completeDeHubAuth = async (provider: any) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
 
-    let authAddress: string;
-    let signature: string;
-
-    // Check if this is a social login (embedded wallet)
+    // Log Web3Auth user info for diagnostics
     const isSocial = isSocialLoginConnected();
     console.log('[Auth] Is social login:', isSocial);
 
-    // Log Web3Auth user info for diagnostics (verifier + verifierId determine the key)
     if (isSocial) {
       try {
         const w3aInstance = await getOrInitWeb3Auth();
@@ -527,70 +522,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    if (isSocial) {
-      // Social login: get private key and sign with ethers for standard ECDSA signature
-      // This bypasses Web3Auth wallet services which would transform the signature
-      console.log('[Auth] Getting private key for direct signing...');
-      const privateKey = await provider.request({ method: 'eth_private_key' }) as string;
-      const wallet = new Wallet(privateKey);
-      authAddress = wallet.address.toLowerCase();
+    // Get address from provider (Smart Account address for social login with AA)
+    const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
+    if (!accounts || accounts.length === 0) {
+      throw new Error('No accounts available from provider');
+    }
+    const authAddress = accounts[0].toLowerCase();
 
-      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
+    const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
 
-      console.log('[Auth] Signing with ethers.Wallet for address:', authAddress);
-      signature = await wallet.signMessage(message);
-    } else {
-      // External wallet: use provider signing
-      const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts available from provider');
-      }
-      authAddress = accounts[0].toLowerCase();
-
-      const message = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${authAddress}.\nIt is ${displayedDate.toUTCString()}.`;
-
-      console.log('[Auth] Signing with external wallet for address:', authAddress);
-      try {
-        signature = await provider.request({
-          method: 'personal_sign',
-          params: [message, authAddress],
-        }) as string;
-      } catch {
-        // Fallback: some providers expect [address, message] order
-        signature = await provider.request({
-          method: 'personal_sign',
-          params: [authAddress, message],
-        }) as string;
-      }
+    console.log('[Auth] Signing with provider for address:', authAddress);
+    let signature: string;
+    try {
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [message, authAddress],
+      }) as string;
+    } catch {
+      // Fallback: some providers expect [address, message] order
+      signature = await provider.request({
+        method: 'personal_sign',
+        params: [authAddress, message],
+      }) as string;
     }
 
     console.log('[Auth] Using address for auth:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
-
-    // ── Diagnostic: check if this address already has an account ──
-    const prevWallet = localStorage.getItem('dehub_wallet');
-    console.log('[Auth] [DIAG] Previous stored wallet:', prevWallet);
-    console.log('[Auth] [DIAG] Current  wallet:', authAddress);
-    console.log('[Auth] [DIAG] Same address?', prevWallet?.toLowerCase() === authAddress.toLowerCase());
-    try {
-      const checkRes = await fetch(`https://api.dehub.io/api/account_info/${authAddress}`);
-      const checkData = await checkRes.json();
-      const existing = checkData?.result;
-      if (existing?._id) {
-        console.log('[Auth] [DIAG] Account ALREADY EXISTS:', {
-          _id: existing._id,
-          username: existing.username,
-          displayName: existing.displayName,
-          createdAt: existing.createdAt,
-          address: existing.address,
-        });
-      } else {
-        console.log('[Auth] [DIAG] Account does NOT exist yet — will be created by /api/web/auth');
-      }
-    } catch (e) {
-      console.warn('[Auth] [DIAG] account_info check failed:', e);
-    }
-    // ── End Diagnostic ──
 
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
@@ -601,15 +558,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
-
-    // ── Diagnostic: log what /api/web/auth returned ──
-    console.log('[Auth] [DIAG] authResponse user:', {
-      _id: (authResponse.user as any)?._id,
-      username: (authResponse.user as any)?.username,
-      address: (authResponse.user as any)?.address,
-      createdAt: (authResponse.user as any)?.createdAt,
-    });
-    // ── End Diagnostic ──
 
     localStorage.setItem('dehub_wallet', authAddress);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));

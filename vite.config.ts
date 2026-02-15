@@ -28,7 +28,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
     dedupe: [
+      "@web3auth/modal",
       "@web3auth/no-modal",
+      "@web3auth/account-abstraction-provider",
       "@toruslabs/base-controllers",
       "@toruslabs/ethereum-controllers",
       "permissionless",
