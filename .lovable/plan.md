@@ -1,53 +1,26 @@
 
 
-## Fix PPV/Bounty/Locked Badge Taps on Mobile
+## Show Thumbnail Instead of Blur on PPV Locked Videos
 
-**Problem**: Tapping PPV, Bounty, or Locked badges on feed posts doesn't open the drawer on mobile. Desktop works fine. The root cause is `DrawerTrigger asChild` nested inside the video card overlay -- vaul's DOM manipulation on mobile touch events conflicts with the card's event handling and causes the drawer to never open.
+**Problem**: When a video is PPV-locked and has a thumbnail/cover image, it currently shows a blurred version of that image. It should show the thumbnail clearly so users can see what they're paying for.
 
-**Solution**: Convert the three badge drawers from the `DrawerTrigger` pattern to the controlled-state pattern, matching how `MobileCreatorInfo` already handles it (and works correctly).
+**Fix**: Remove the `blur-xl scale-110` classes from the thumbnail `<img>` on line 963 of `VideoCard.tsx`, and reduce the dark overlay opacity so the cover image is clearly visible while still showing the lock/unlock UI on top.
 
-### What changes
+### Changes
 
-**File: `src/components/app/cards/VideoCard.tsx`**
+**File: `src/components/app/cards/VideoCard.tsx`** (line 963)
 
-Replace the PPV, Bounty, and Locked badge sections (lines 985-1130) from:
-
+Change:
 ```tsx
-<Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-  <DrawerTrigger asChild>
-    <button onClick={(e) => e.stopPropagation()}>...</button>
-  </DrawerTrigger>
-  <DrawerContent>...</DrawerContent>
-</Drawer>
+className="w-full h-full object-cover blur-xl scale-110"
 ```
 
-To the controlled pattern:
-
+To:
 ```tsx
-{/* Just the button inline */}
-<button onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}>
-  ...
-</button>
+className="w-full h-full object-cover"
 ```
 
-Then move all three `Drawer` components (PPV, Bounty, Locked) out of the overlay div and render them at the root level of the VideoCard return -- as standalone controlled drawers with no `DrawerTrigger`:
+And reduce the overlay darkness from `bg-black/50` to `bg-black/30` (line 967) so the thumbnail is more visible behind the lock icon.
 
-```tsx
-<Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-  <DrawerContent glass>...</DrawerContent>
-</Drawer>
-```
-
-Same change for Bounty and Locked drawers.
-
-### Why this works
-
-The `MobileCreatorInfo` component at the bottom of the same file already uses this exact pattern (plain button + controlled Drawer at root level) and works perfectly on mobile. The `DrawerTrigger` pattern fails because vaul intercepts touch events and manipulates pointer-events on ancestor containers, which conflicts with the video overlay's `stopPropagation` and navigation handlers.
-
-### Scope
-
-- One file changed: `VideoCard.tsx`
-- Three drawer refactors (PPV, Bounty, Locked) -- all identical pattern changes
-- No visual or behavioral changes on desktop -- drawers will continue to work the same way
-- State variables (`showPPVDrawer`, `showBountyDrawer`, `showLockedDrawer`) already exist and are reused
+That's it -- one line class change, one overlay opacity tweak.
 
