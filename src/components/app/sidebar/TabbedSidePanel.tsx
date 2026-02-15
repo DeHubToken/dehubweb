@@ -116,9 +116,15 @@ export function TabbedSidePanel() {
 
       {/* Tab Content */}
       <div className="px-0 py-4 h-[400px] overflow-x-hidden">
-        {activeTab === 'follow' && <WhoToFollow />}
-        {activeTab === 'leaderboard' && <SidebarLeaderboard ref={leaderboardRef} />}
-        {activeTab === 'chat' && <SidebarChat />}
+        <div style={{ display: activeTab === 'leaderboard' ? 'block' : 'none' }} className="h-full">
+          <SidebarLeaderboard ref={leaderboardRef} />
+        </div>
+        <div style={{ display: activeTab === 'follow' ? 'block' : 'none' }} className="h-full">
+          <WhoToFollow />
+        </div>
+        <div style={{ display: activeTab === 'chat' ? 'block' : 'none' }} className="h-full">
+          <SidebarChat />
+        </div>
       </div>
     </div>
   );
