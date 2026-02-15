@@ -600,7 +600,7 @@ export default function ExplorePage() {
 
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to explore and discover content on DeHub." />
+      <AuthGate description="Log in to explore and discover trending posts, creators, and communities on DeHub. Find your next favorite creator." />
     );
   }
 
