@@ -1,43 +1,64 @@
 
-## Fix PPV/Bounty/Locked Filters to Load All Matching Content
+## Add PPV/Bounty/Locked Support to Image Posts
 
-**Root Cause**: When you click PPV (or Bounty/Locked) on the Home feed, the app splits the query into 3 separate API calls -- one for videos, one for images, one for text posts. Each of these returns very few (or zero) PPV items. Meanwhile, a single query without a `postType` restriction would return ALL PPV content at once.
+**Problem**: Image posts that are marked as PPV in the API are shown fully visible without any blur, badge, or payment gate. This is because:
+1. The `ImagePost` type has no PPV/Bounty/Locked fields
+2. The `toImagePost()` mapper doesn't extract PPV data from the API
+3. The `ImageCard` component has no PPV overlay, blur, or badge rendering
 
-**Fix**: When any content filter is active, force the Home feed to use a single unified API call instead of splitting by content type.
+**Solution**: Mirror the existing PPV gating system from `VideoCard` into the image post pipeline.
 
 ---
 
-### Changes
+### 1. Update `ImagePost` type (`src/types/feed.types.ts`)
 
-**File: `src/components/app/feeds/HomeFeed.tsx`** (line 479)
+Add the missing fields to the `ImagePost` interface:
+- `isPPV`, `ppvPrice`, `ppvCurrency`
+- `isW2E`, `isLocked`, `lockedPrice`, `lockedCurrency`
+- `bountyViews`, `bountyComments`, `bountyAmount`, `bountyCurrency`
 
-Update the interleaved feed condition to also disable interleaving when content filters are active:
+### 2. Update `toImagePost()` mapper (`src/pages/app/SinglePostPage.tsx`)
 
-```tsx
-// Before
-const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
+Extract PPV/Bounty/Locked fields from `streamInfo` (same logic already used in `toVideoItem()`):
+- `isPPV: nft.is_ppv || streamInfo?.isPayPerView || false`
+- `ppvPrice`, `ppvCurrency`, `isW2E`, `isLocked`, etc.
 
-// After
-const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
-const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
+Also update any other `mapToImagePost` functions used in feed mappers (e.g., in `ImagesFeed.tsx` and `useDeHubImages`).
+
+### 3. Update `ImageCard` component (`src/components/app/cards/ImageCard.tsx`)
+
+Add PPV gating UI matching the VideoCard pattern:
+- When `isPPV` is true: blur the image (`blur-lg`) and show a centered Ticket icon inside a liquid glass container
+- Display PPV/Bounty/Locked badges in the top-left corner (same style as VideoCard)
+- Clicking the blurred overlay opens a PPV payment drawer
+- Suppress image interaction (navigation arrows, click-through) when PPV-locked
+
+### 4. Update feed-level image mappers
+
+Ensure all places that create `ImagePost` objects pass through PPV fields:
+- `src/components/app/feeds/ImagesFeed.tsx` (both `useDeHubImages` and `useUnifiedFeed` paths)
+- `src/hooks/use-dehub-images.ts` (if it maps data)
+- Any other feed mapper creating `ImagePost` objects
+
+---
+
+### Technical Details
+
+**PPV Locked State (ImageCard)**:
+```text
++---------------------------+
+|  [Blurred Image]          |
+|                           |
+|     +------------------+  |
+|     | Ticket Icon      |  |
+|     | "10 DHB"         |  |
+|     +------------------+  |
+|                           |
+| [PPV Badge top-left]     |
++---------------------------+
 ```
 
-This single change means that when PPV/Bounty/Locked is toggled, the app fires one API call to `/api/feed?isPPV=true&status=minted` (no `postType` param), which returns every PPV item across all content types.
-
----
-
-**File: `src/components/app/feeds/VideosFeed.tsx`** and **`src/components/app/feeds/ImagesFeed.tsx`**
-
-Verify these feeds already pass `isPPV`/`hasBounty`/`isLocked` to `useUnifiedFeed` correctly. From the search results, VideosFeed already does (lines 534-536). ImagesFeed needs the same treatment if it uses a different hook -- will wire it up to `useUnifiedFeed` with the filter params when content filters are active (as outlined in the previous approved plan).
-
----
-
-### Summary
-
-| Feed | Current Behavior | After Fix |
-|------|-----------------|-----------|
-| Home | 3 separate queries (video/images/text) each with isPPV -- few results | 1 query with isPPV, no postType filter -- all PPV content |
-| Videos | Already passes isPPV to useUnifiedFeed -- should work | No change needed |
-| Images | Uses useDeHubImages which ignores filters | Switch to useUnifiedFeed when filters active |
-
-This is a minimal change (one line in HomeFeed, one conditional swap in ImagesFeed) that ensures all PPV/Bounty/Locked content loads from the API.
+- Blur: `blur-lg` on the image element
+- Overlay: centered liquid glass container (bg-black/40, backdrop-blur-[24px], border-white/10) with Lucide `Ticket` icon
+- Badge: same compact badge style as VideoCard (top-left, bg-black/40, Ticket icon)
+- Click triggers PPV payment drawer (reuse existing drawer component from VideoCard)
