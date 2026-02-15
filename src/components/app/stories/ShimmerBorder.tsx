@@ -18,7 +18,7 @@ interface ShimmerBorderProps {
 export function ShimmerBorder({ active, children, className = '' }: ShimmerBorderProps) {
   // Both states use the same liquid glass gradient border as the Create button
   return (
-    <div className={`rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-white/5 p-[2px] ${active ? 'story-shimmer-border' : ''} ${className}`}>
+    <div className={`rounded-xl bg-gradient-to-tl from-white/40 via-white/20 to-white/5 p-[2px] ${active ? 'story-shimmer-border' : ''} ${className}`}>
       {children}
     </div>
   );
