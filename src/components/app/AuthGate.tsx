@@ -47,9 +47,9 @@ export function AuthGate({ description }: AuthGateProps) {
       
       {showSkeleton ? (
         <>
-          <div className="w-20 h-20 mb-6 rounded-full bg-zinc-800 animate-pulse" />
-          <div className="h-6 w-40 bg-zinc-800 rounded animate-pulse mb-6" />
-          <div className="h-10 w-24 bg-zinc-800 rounded-xl animate-pulse" />
+          <div className="w-20 h-20 mb-6 rounded-full bg-white/[0.06] animate-pulse" />
+          <div className="h-6 w-40 bg-white/[0.06] rounded animate-pulse mb-6" />
+          <div className="h-10 w-24 bg-white/[0.06] rounded-xl animate-pulse" />
         </>
       ) : (
         <>

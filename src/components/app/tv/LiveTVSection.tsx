@@ -108,13 +108,13 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
       {isLoading && (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-zinc-900/50 rounded-2xl overflow-hidden">
-              <Skeleton className="aspect-video w-full" />
-              <div className="p-3 flex gap-3">
-                <Skeleton className="w-10 h-10 rounded-lg" />
+            <div key={i} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+              <Skeleton className="aspect-video w-full rounded-lg bg-white/[0.06]" />
+              <div className="pt-3 flex gap-3">
+                <Skeleton className="w-10 h-10 rounded-lg bg-white/[0.06]" />
                 <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-4 w-3/4 bg-white/[0.06]" />
+                  <Skeleton className="h-3 w-1/2 bg-white/[0.06]" />
                 </div>
               </div>
             </div>

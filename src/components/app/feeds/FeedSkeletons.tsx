@@ -21,7 +21,7 @@ function Skeleton({ className }: SkeletonProps) {
   return (
     <div 
       className={cn(
-        "animate-pulse bg-zinc-800/60 rounded-lg",
+        "animate-pulse bg-white/[0.06] rounded-lg",
         className
       )} 
     />
@@ -34,7 +34,7 @@ function Skeleton({ className }: SkeletonProps) {
 
 export function StoriesBarSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4 -mt-[7px]">
+    <div className="p-4 -mt-[7px]">
       <div className="flex gap-4 overflow-hidden">
         {/* Create button skeleton */}
         <div className="flex flex-col items-center gap-1 flex-shrink-0">
@@ -59,19 +59,19 @@ export function StoriesBarSkeleton() {
 
 export function VideoCardSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
       {/* Header */}
-      <div className="p-3 flex items-center gap-3">
-        <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+      <div className="pb-3 flex items-center gap-3">
+        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-24 rounded" />
           <Skeleton className="h-3 w-16 rounded" />
         </div>
       </div>
       {/* Thumbnail */}
-      <Skeleton className="w-full aspect-video" />
+      <Skeleton className="w-full aspect-video rounded-lg" />
       {/* Footer */}
-      <div className="p-3 space-y-2">
+      <div className="pt-3 space-y-2">
         <Skeleton className="h-4 w-3/4 rounded" />
         <div className="flex gap-4">
           <Skeleton className="h-8 w-16 rounded-full" />
@@ -89,19 +89,19 @@ export function VideoCardSkeleton() {
 
 export function ImageCardSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
       {/* Header */}
-      <div className="p-3 flex items-center gap-3">
-        <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+      <div className="pb-3 flex items-center gap-3">
+        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-24 rounded" />
           <Skeleton className="h-3 w-16 rounded" />
         </div>
       </div>
       {/* Image */}
-      <Skeleton className="w-full aspect-square" />
+      <Skeleton className="w-full aspect-square rounded-lg" />
       {/* Footer */}
-      <div className="p-3 space-y-2">
+      <div className="pt-3 space-y-2">
         <Skeleton className="h-4 w-2/3 rounded" />
         <div className="flex gap-4">
           <Skeleton className="h-8 w-16 rounded-full" />
@@ -118,10 +118,10 @@ export function ImageCardSkeleton() {
 
 export function PostCardSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4">
+    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3">
       {/* Header */}
       <div className="flex items-center gap-3 mb-3">
-        <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-28 rounded" />
           <Skeleton className="h-3 w-16 rounded" />
@@ -176,7 +176,7 @@ export function MusicVideoCardSkeleton() {
     <div className="space-y-2">
       <Skeleton className="w-full aspect-video rounded-xl" />
       <div className="flex items-center gap-2">
-        <Skeleton className="w-8 h-8 rounded-full flex-shrink-0" />
+        <Skeleton className="w-8 h-8 rounded-md flex-shrink-0" />
         <div className="flex-1 space-y-1">
           <Skeleton className="h-3 w-3/4 rounded" />
           <Skeleton className="h-2 w-1/2 rounded" />
@@ -201,7 +201,7 @@ export function LiveStreamCardSkeleton() {
       {/* Info */}
       <div className="p-3">
         <div className="flex items-center gap-3">
-          <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+          <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-3/4 rounded" />
             <Skeleton className="h-3 w-1/2 rounded" />
@@ -232,7 +232,7 @@ export function ImageCollageSkeleton() {
 
 export function CategoryPillsSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-3">
+    <div className="p-3">
       <div className="flex gap-2 overflow-hidden">
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton 

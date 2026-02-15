@@ -38,18 +38,18 @@ function BookmarksSkeleton() {
   return (
     <div className="space-y-4">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="bg-zinc-900 rounded-2xl overflow-hidden">
-          <div className="p-4 flex items-center gap-3">
-            <Skeleton className="w-10 h-10 rounded-full" />
+        <div key={i} className="rounded-xl border border-white/[0.08] bg-transparent p-3">
+          <div className="pb-3 flex items-center gap-3">
+            <Skeleton className="w-10 h-10 rounded-md" />
             <div className="space-y-2 flex-1">
-              <Skeleton className="h-4 w-1/3" />
-              <Skeleton className="h-3 w-1/4" />
+              <Skeleton className="h-4 w-1/3 bg-white/[0.06]" />
+              <Skeleton className="h-3 w-1/4 bg-white/[0.06]" />
             </div>
           </div>
-          <Skeleton className="aspect-video w-full" />
-          <div className="p-4 space-y-2">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-3 w-1/2" />
+          <Skeleton className="aspect-video w-full rounded-lg bg-white/[0.06]" />
+          <div className="pt-3 space-y-2">
+            <Skeleton className="h-4 w-3/4 bg-white/[0.06]" />
+            <Skeleton className="h-3 w-1/2 bg-white/[0.06]" />
           </div>
         </div>
       ))}

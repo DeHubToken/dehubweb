@@ -77,10 +77,10 @@ export function SidebarChat() {
             <div className="space-y-2 py-2">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="flex items-start gap-2">
-                  <Skeleton className="w-6 h-6 rounded-full bg-zinc-800" />
+                  <Skeleton className="w-6 h-6 rounded-md bg-white/[0.06]" />
                   <div className="space-y-1 flex-1">
-                    <Skeleton className="h-3 w-16 bg-zinc-800" />
-                    <Skeleton className="h-3 w-32 bg-zinc-800" />
+                    <Skeleton className="h-3 w-16 bg-white/[0.06]" />
+                    <Skeleton className="h-3 w-32 bg-white/[0.06]" />
                   </div>
                 </div>
               ))}
