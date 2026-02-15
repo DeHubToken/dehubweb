@@ -1,108 +1,115 @@
 
-## Fix User Blocking and Follow Recommendations
+# Fix All Skeletons to Match Current UI/UX
 
-### Issues Found
+## Problem
+Skeleton loading states across the app use outdated styles (`bg-zinc-900 rounded-2xl`, `rounded-full` avatars, solid backgrounds) that don't match the current liquid glass bento design system (`rounded-xl border border-white/[0.08] bg-transparent p-3`, `rounded-md` avatars).
 
-1. **Block button is a placeholder**: The "Block" button in `ProfileOptionsDrawer.tsx` and all feed cards (`PostCard`, `VideoCard`, `ImageCard`, `LiveCard`, `LiveStreamCard`) only shows a toast message -- no API call, no persistence.
+## Changes
 
-2. **Followed users appearing in recommendations**: The `MobileWhoToFollowCarousel` reads `currentUserData?.followings` while the desktop `WhoToFollow` reads `currentUserData?.followingsList` -- these may return different data shapes, and the 5-minute stale cache means newly followed users persist in suggestions.
+### 1. `src/components/app/feeds/FeedSkeletons.tsx` (main skeleton file)
 
-3. **No blocked users section in settings**: There is no UI to view or manage blocked users.
+**Base Skeleton component:**
+- Change from `bg-zinc-800/60 rounded-lg` to `bg-white/[0.06] rounded-lg` (matches glass aesthetic)
 
----
+**StoriesBarSkeleton:**
+- Remove solid `bg-zinc-900 rounded-2xl` wrapper, use transparent with `-mt-[7px]` to match actual StoriesBar
 
-### Solution
+**VideoCardSkeleton:**
+- Change wrapper from `bg-zinc-900 rounded-2xl` to `rounded-xl border border-white/[0.08] bg-transparent p-3` (bento style)
+- Change avatar from `rounded-full` to `rounded-md` (squared-off)
 
-Since the DeHub API has no dedicated "block user" endpoint at the profile level (only DM-level blocking exists), we will build a local blocking system using the database.
+**ImageCardSkeleton:**
+- Same bento wrapper update
+- Avatar to `rounded-md`
 
-#### Part 1: Database -- `blocked_users` table
+**PostCardSkeleton:**
+- Same bento wrapper update
+- Avatar to `rounded-md`
 
-Create a new table to store blocked users per wallet address:
+**LiveStreamCardSkeleton:**
+- Keep `bg-zinc-900 rounded-2xl` (LiveStreamCard actually uses this)
+- Avatar to `rounded-md`
 
-```sql
-CREATE TABLE public.blocked_users (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  blocker_address TEXT NOT NULL,
-  blocked_address TEXT NOT NULL,
-  blocked_username TEXT,
-  blocked_display_name TEXT,
-  blocked_avatar_url TEXT,
-  created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-  UNIQUE(blocker_address, blocked_address)
-);
+**CategoryPillsSkeleton:**
+- Remove solid `bg-zinc-900 rounded-2xl` wrapper, use transparent (category bars sit directly on background per memory)
 
-ALTER TABLE public.blocked_users ENABLE ROW LEVEL SECURITY;
+**ImageCollageSkeleton / ShortsGridSkeleton / MusicVideoCardSkeleton:**
+- Update shimmer color to `bg-white/[0.06]`
 
-CREATE POLICY "Users can read own blocks"
-  ON public.blocked_users FOR SELECT
-  USING (blocker_address = current_setting('request.headers')::json->>'x-wallet-address');
+### 2. `src/pages/app/BookmarksPage.tsx`
 
-CREATE POLICY "Users can insert own blocks"
-  ON public.blocked_users FOR INSERT
-  WITH CHECK (blocker_address = current_setting('request.headers')::json->>'x-wallet-address');
+**BookmarksSkeleton:**
+- Change wrapper from `bg-zinc-900 rounded-2xl` to bento style
+- Avatar from `rounded-full` to `rounded-md`
 
-CREATE POLICY "Users can delete own blocks"
-  ON public.blocked_users FOR DELETE
-  USING (blocker_address = current_setting('request.headers')::json->>'x-wallet-address');
-```
+### 3. `src/components/app/AuthGate.tsx`
 
-**Note:** Since authentication uses external wallet-based auth (not Supabase Auth), RLS will use a custom header or we'll query via an edge function for secure access.
+**Loading skeleton:**
+- Change `bg-zinc-800` to `bg-white/[0.06]` for the avatar, text, and button placeholders
 
-#### Part 2: Edge Function -- `manage-blocked-users`
+### 4. `src/pages/app/MessagesPage.tsx`
 
-A simple edge function to handle CRUD for blocked users, authenticated via the wallet address from localStorage:
+**ConversationsSkeleton:**
+- Change `bg-zinc-800` overrides to `bg-white/[0.06]` (Skeleton component already has base color)
 
-- `GET /manage-blocked-users` -- list blocked users for the caller
-- `POST /manage-blocked-users` -- block a user (body: `{ blockedAddress, username?, displayName?, avatarUrl? }`)
-- `DELETE /manage-blocked-users?address=0x...` -- unblock a user
+### 5. `src/components/app/sidebar/SidebarChat.tsx`
 
-#### Part 3: React Hook -- `useBlockedUsers`
+**Chat loading skeleton:**
+- Change `bg-zinc-800` overrides to `bg-white/[0.06]`
+- Avatar from `rounded-full` to `rounded-md`
 
-New hook (`src/hooks/use-blocked-users.ts`) providing:
-- `blockedUsers` -- list of blocked addresses
-- `blockedSet` -- Set for O(1) lookups
-- `blockUser(address, metadata)` -- block + optimistic update
-- `unblockUser(address)` -- unblock + optimistic update
-- `isBlocked(address)` -- quick check
+### 6. `src/components/app/tv/LiveTVSection.tsx`
 
-#### Part 4: Wire Up the Block Button
+**TV channel loading skeleton:**
+- Change wrapper from `bg-zinc-900/50 rounded-2xl` to `rounded-xl border border-white/[0.08] bg-transparent p-3`
+- Already uses `rounded-lg` for avatars which is fine for TV cards
 
-**`ProfileOptionsDrawer.tsx`**: Replace the placeholder toast with actual `blockUser()` call, passing the profile's address and metadata.
+### 7. `src/pages/app/PostInfoPage.tsx`
 
-**Feed cards** (`PostCard.tsx`, `VideoCard.tsx`, `ImageCard.tsx`, `LiveCard.tsx`, `LiveStreamCard.tsx`): Wire the "Block Creator" button to call `blockUser()` with the creator's address.
+**Token holders loading skeleton:**
+- Change avatar from `rounded-full` to `rounded-md`
 
-#### Part 5: Filter Blocked Users from Feeds and Recommendations
+### 8. `src/components/app/profile/FollowersListDrawer.tsx`
 
-**`WhoToFollow.tsx` and `MobileWhoToFollowCarousel.tsx`**: Add `blockedSet` to the filter logic so blocked users never appear in suggestions.
+**Followers loading skeleton:**
+- Already uses `rounded-lg` avatars and `bg-white/5` rows -- no changes needed (already matches)
 
-**Feed hooks** (`use-unified-feed.ts`, `use-dehub-feed.ts`): Add blocked user filtering alongside the existing `BLOCKED_CREATORS` check.
+### 9. `src/features/post/components/LinkPreviews.tsx`
 
-#### Part 6: Fix Followed Users in Recommendations
+**Link preview loading skeleton:**
+- Already uses `bg-white/5 border border-white/10 rounded-xl` -- matches glass style, no changes needed
 
-**`MobileWhoToFollowCarousel.tsx`**: Change `currentUserData?.followings` to also check `currentUserData?.followingsList` (matching the desktop version), ensuring consistent filtering regardless of which API field is populated.
+### 10. `src/components/app/chat/DirectMessageChat.tsx`
 
-#### Part 7: Blocked Users Section in Settings
-
-Add a "Blocked Users" section inside `PrivacySettings` in `SettingsPage.tsx`:
-- Shows list of blocked users with avatar, name, and "Unblock" button
-- Empty state: "You haven't blocked anyone"
-- Uses the `useBlockedUsers` hook
+**Message loading skeleton:**
+- Change `bg-zinc-800` to `bg-white/[0.06]`
+- Avatar from `rounded-xl` is fine for chat context
 
 ---
 
-### Files to Create
-- `supabase/functions/manage-blocked-users/index.ts` -- edge function
-- `src/hooks/use-blocked-users.ts` -- React hook
+## Summary
 
-### Files to Modify
-- `src/components/app/profile/ProfileOptionsDrawer.tsx` -- wire block button
-- `src/components/app/cards/PostCard.tsx` -- wire block button
-- `src/components/app/cards/VideoCard.tsx` -- wire block button
-- `src/components/app/cards/ImageCard.tsx` -- wire block button
-- `src/components/app/cards/LiveCard.tsx` -- wire block button
-- `src/components/app/cards/LiveStreamCard.tsx` -- wire block button
-- `src/components/app/WhoToFollow.tsx` -- filter blocked users
-- `src/components/app/mobile/MobileWhoToFollowCarousel.tsx` -- filter blocked users + fix followings field
-- `src/hooks/use-unified-feed.ts` -- filter blocked users from feeds
-- `src/hooks/use-dehub-feed.ts` -- filter blocked users from feeds
-- `src/pages/app/SettingsPage.tsx` -- add Blocked Users section
+| Component | Issue | Fix |
+|-----------|-------|-----|
+| FeedSkeletons base | `bg-zinc-800/60` | `bg-white/[0.06]` |
+| Card wrappers | `bg-zinc-900 rounded-2xl` | `rounded-xl border border-white/[0.08] bg-transparent p-3` |
+| All avatars | `rounded-full` | `rounded-md` |
+| Category pills | Solid wrapper | No wrapper |
+| Stories bar | Solid wrapper | Transparent, match actual |
+| AuthGate | `bg-zinc-800` | `bg-white/[0.06]` |
+| Messages | `bg-zinc-800` | `bg-white/[0.06]` |
+| Bookmarks | `bg-zinc-900` | Bento style |
+| SidebarChat | `bg-zinc-800` | `bg-white/[0.06]` |
+| TV Section | `bg-zinc-900/50` | Bento style |
+| PostInfoPage | `rounded-full` avatar | `rounded-md` |
+| DirectMessageChat | `bg-zinc-800` | `bg-white/[0.06]` |
+
+**Files to modify: 8 files total**
+- `src/components/app/feeds/FeedSkeletons.tsx`
+- `src/pages/app/BookmarksPage.tsx`
+- `src/components/app/AuthGate.tsx`
+- `src/pages/app/MessagesPage.tsx`
+- `src/components/app/sidebar/SidebarChat.tsx`
+- `src/components/app/tv/LiveTVSection.tsx`
+- `src/pages/app/PostInfoPage.tsx`
+- `src/components/app/chat/DirectMessageChat.tsx`
