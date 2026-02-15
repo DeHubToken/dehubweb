@@ -480,7 +480,7 @@ function ProfileSettings() {
       {/* Social Links */}
       <div>
         <h3 className="font-medium text-white mb-4">Social Links</h3>
-        <div className="space-y-3">
+        <div className="space-y-5">
           <SocialLinkInput 
             label="X (Twitter)" 
             placeholder="https://x.com/username"
@@ -1125,10 +1125,12 @@ function SocialLinkInput({
   onChange?: (value: string) => void;
 }) {
   return (
-    <div>
-      <label className="block text-sm text-zinc-400 mb-1">{label}</label>
-      <div className="flex items-center gap-2">
-        {icon}
+    <div className="space-y-1.5">
+      <label className="block text-sm text-zinc-400">{label}</label>
+      <div className="flex items-center gap-3">
+        <div className="flex-shrink-0 w-5 h-5 [&_svg]:w-5 [&_svg]:h-5">
+          {icon}
+        </div>
         <Input 
           placeholder={placeholder}
           value={value}
