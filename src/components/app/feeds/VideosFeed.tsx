@@ -516,6 +516,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     return getUnifiedRange(selectedUploadDate.value);
   }, [selectedSort.value, selectedUploadDate.value]);
 
+  const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
+
   // Use unified feed with server-side PPV/Bounty/Locked filtering
   const {
     data: apiData,
@@ -527,7 +529,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   } = useUnifiedFeed({
     limit: 12,
-    postType: 'video',
+    postType: hasContentFilter ? undefined : 'video',
     sortBy: getUnifiedSortBy(selectedSort.value),
     sortOrder: 'desc',
     range: effectiveRange,
