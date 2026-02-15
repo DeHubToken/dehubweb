@@ -11,7 +11,7 @@ import { base } from 'viem/chains'
 import { injected, walletConnect } from 'wagmi/connectors'
 
 // WalletConnect project ID (used for WalletConnect relay protocol)
-const projectId = '0751965bb69056635999763785664539'
+const projectId = 'e6db175d9deccba51bc4414384e9c089'
 
 /**
  * Prevent wagmi auto-reconnect on page load when there's no valid DeHub session.
