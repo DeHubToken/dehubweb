@@ -75,7 +75,7 @@ export function ProfileTabContent({
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <img src={lock3dIcon} alt="Private" className="w-12 h-12 object-contain mb-4" />
+        <img src={lock3dIcon} alt="Private" className="w-[80px] h-[80px] object-contain mb-4" />
         <p className="text-white text-lg font-semibold">This account is private</p>
         <p className="text-zinc-500 text-sm mt-1 max-w-xs">
           {isPending 
