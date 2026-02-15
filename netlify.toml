@@ -48,10 +48,9 @@
   # Don't apply this redirect for actual files
   conditions = {Role = ["user"]}
 
-# Environment variables (optional - can also set in Netlify Dashboard)
-# [build.environment]
-#   NODE_VERSION = "18"
-#   NPM_VERSION = "9"
+# Environment variables
+[build.environment]
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # Plugin configuration (optional)
 # [[plugins]]
