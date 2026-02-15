@@ -389,7 +389,7 @@ export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = 
 export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'recent' | 'popular'; category?: string } = {}) {
   return useInfiniteQuery({
     queryKey: ['dehub-live', options],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam = 1 }) => {
       try {
         const response = await getLiveStreams({
           page: pageParam,
@@ -425,7 +425,7 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
       }
       return undefined;
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
     staleTime: 1000 * 60 * 2, // 2 minutes for live (more frequent but not too much)
     gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
     refetchOnWindowFocus: false,
