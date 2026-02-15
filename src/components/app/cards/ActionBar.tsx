@@ -227,14 +227,12 @@ export function ActionBar({
   };
 
   const handleRepost = () => {
-    onRepost?.();
-    toast.success('Reposted!');
+    toast.info('Bug reported, fix will be live soon!');
     setSheetOpen(false);
   };
 
   const handleQuote = () => {
-    onQuote?.();
-    toast.success('Quote created!');
+    toast.info('Bug reported, fix will be live soon!');
     setSheetOpen(false);
   };
 

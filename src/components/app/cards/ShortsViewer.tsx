@@ -516,12 +516,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   };
 
   const handleRepost = () => {
-    toast.success('Reposted!');
+    toast.info('Bug reported, fix will be live soon!');
     setShareSheetOpen(false);
   };
 
   const handleQuote = () => {
-    toast.success('Quote created!');
+    toast.info('Bug reported, fix will be live soon!');
     setShareSheetOpen(false);
   };
 
