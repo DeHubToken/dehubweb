@@ -14,8 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import assistantAvatar from '@/assets/assistant-avatar.png';
 
 interface AuthGateProps {
-  /** Description shown below "Log in required" */
-  description: string;
+  /** @deprecated No longer displayed */
+  description?: string;
 }
 
 export function AuthGate({ description }: AuthGateProps) {
@@ -48,8 +48,7 @@ export function AuthGate({ description }: AuthGateProps) {
       {showSkeleton ? (
         <>
           <div className="w-20 h-20 mb-6 rounded-full bg-zinc-800 animate-pulse" />
-          <div className="h-6 w-40 bg-zinc-800 rounded animate-pulse mb-2" />
-          <div className="h-4 w-64 bg-zinc-800 rounded animate-pulse mb-6" />
+          <div className="h-6 w-40 bg-zinc-800 rounded animate-pulse mb-6" />
           <div className="h-10 w-24 bg-zinc-800 rounded-xl animate-pulse" />
         </>
       ) : (
@@ -59,10 +58,7 @@ export function AuthGate({ description }: AuthGateProps) {
             alt="Log in" 
             className="w-20 h-20 object-contain mb-6 translate-y-[11px]"
           />
-          <h2 className="text-xl font-semibold text-white mb-2">Log in required</h2>
-          <p className="text-white/60 text-center mb-6 max-w-sm">
-            {description}
-          </p>
+          <h2 className="text-xl font-semibold text-white mb-6">Log in required</h2>
           <Button 
             onClick={handleLogin}
             disabled={isConnecting}
