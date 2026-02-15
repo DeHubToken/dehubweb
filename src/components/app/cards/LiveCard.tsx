@@ -12,7 +12,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, Heart, Gift } from 'lucide-react';
+import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
@@ -82,16 +82,6 @@ export function LiveCard({ stream }: LiveCardProps) {
           creatorUsername={stream.creatorUsername}
         />
         <div className="flex items-center gap-1">
-          <motion.button
-            onClick={handleLike}
-            disabled={isLiking || isLiked}
-            className={`transition-colors ${isLiked ? 'text-red-500' : 'text-zinc-400 hover:text-red-400'}`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Like stream"
-          >
-            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-          </motion.button>
           <motion.button
             onClick={() => setShowAIChat(true)}
             className="text-zinc-400 hover:text-white transition-colors"
