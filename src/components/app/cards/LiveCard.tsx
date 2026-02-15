@@ -68,7 +68,7 @@ export function LiveCard({ stream }: LiveCardProps) {
   return (
     <div 
       onClick={handleCardClick}
-      className="bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer isolate"
+      className="rounded-xl border border-white/[0.08] bg-transparent p-3 cursor-pointer isolate"
     >
       {/* Header with AI and menu buttons */}
       <div className="flex items-start justify-between">
@@ -128,12 +128,12 @@ export function LiveCard({ stream }: LiveCardProps) {
       </div>
 
       {/* Thumbnail */}
-      <div className="aspect-video bg-zinc-800" data-no-navigate>
+      <div className="aspect-video bg-zinc-800 rounded-lg overflow-hidden" data-no-navigate>
         <img src={stream.thumbnail} alt="" className="w-full h-full object-cover" />
       </div>
 
       {/* Info & Actions */}
-      <div className="pt-3 px-3">
+      <div className="pt-3">
         <ActionBar 
           postId={stream.id} 
           className="p-0 mb-2" 
