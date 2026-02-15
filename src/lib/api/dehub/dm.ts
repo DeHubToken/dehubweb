@@ -388,7 +388,13 @@ export async function getMessages(
     let dehubHasMore = false;
     let dehubTotal = 0;
 
+    // Only call DeHub messages API if conversationId looks like a MongoDB ID (not a wallet address)
+    const isWalletAddress = conversationId.startsWith('0x');
     try {
+      if (isWalletAddress) {
+        console.log('[DM API] Skipping DeHub messages API for wallet address conversationId, using Supabase only');
+        throw new Error('Wallet address used as conversationId - skip DeHub API');
+      }
       const response = await apiCall<any>(`/api/dm/messages/${conversationId}`, {
         params: { page, limit },
         requiresAuth: true,
@@ -539,10 +545,15 @@ export async function sendMessage(
       formData.append('sender', sender);
 
       if (isNewConversation && recipientAddress) {
-        formData.append('receiver', recipientAddress.toLowerCase());
+        formData.append('receiverAddress', recipientAddress.toLowerCase());
         console.log('[DM API] Sending media to new conversation with recipient:', recipientAddress);
       } else {
-        formData.append('conversationId', conversationId);
+        // If conversationId is a wallet address, send it as receiverAddress
+        if (conversationId.startsWith('0x')) {
+          formData.append('receiverAddress', conversationId.toLowerCase());
+        } else {
+          formData.append('conversationId', conversationId);
+        }
       }
 
       if (mediaFile) {
