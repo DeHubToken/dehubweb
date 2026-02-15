@@ -108,14 +108,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="flex flex-col sm:flex-row gap-3 w-full">
               <Button 
                 onClick={this.handleReset}
-                className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white hover:bg-white/15 gap-2"
+                variant="glass"
+                className="flex-1 h-12 rounded-xl gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </Button>
               <Button 
                 onClick={this.handleGoHome}
-                className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white hover:bg-white/15 gap-2"
+                variant="glass"
+                className="flex-1 h-12 rounded-xl gap-2"
               >
                 <Home className="w-4 h-4" />
                 Go Home
