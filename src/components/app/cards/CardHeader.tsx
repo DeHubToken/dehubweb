@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
 import { getBadgeUrl } from '@/lib/staking-badges';
-import { useBadgeBalance } from '@/hooks/use-badge-balance';
+import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -72,8 +72,8 @@ export function CardHeader({
   const liveAvatarUrl = useProfileAvatar(creatorId, avatarSeed);
   const agentFallback = getAgentAvatarFallback(creatorId);
   
-  // Fetch on-chain badge balance
-  const { badgeBalance } = useBadgeBalance(creatorId);
+  // Badge balance from batch context (single request per feed page)
+  const { badgeBalance } = useBatchedBadgeBalance(creatorId);
   const badgeUrl = getBadgeUrl(badgeBalance);
   
   // Only use avatarSeed as image source if it's a real URL and hasn't errored

@@ -12,6 +12,21 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Server-side translation cache to avoid repeated API/AI calls for identical text
+const translationCache = new Map<string, TranslateResponse>();
+const MAX_CACHE_SIZE = 500;
+
+function getCacheKey(text: string, targetLang: string): string {
+  // Hash first 200 chars + target lang
+  const sample = text.slice(0, 200).trim();
+  let hash = 0;
+  for (let i = 0; i < sample.length; i++) {
+    hash = ((hash << 5) - hash) + sample.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return `${hash.toString(36)}_${targetLang}`;
+}
+
 interface TranslateRequest {
   text: string;
   targetLang: string;
@@ -207,9 +222,26 @@ serve(async (req) => {
 
     console.log(`Translating to ${targetLang}: "${text.substring(0, 50)}..."`);
 
+    // Check server-side cache first
+    const cacheKey = getCacheKey(text, targetLang);
+    const cached = translationCache.get(cacheKey);
+    if (cached) {
+      console.log('Translation cache hit');
+      return new Response(
+        JSON.stringify({ ...cached, cached: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Try MyMemory first (most reliable free option)
     let result = await translateWithMyMemory(text, targetLang, sourceLang);
     if (result) {
+      // Cache the result
+      if (translationCache.size >= MAX_CACHE_SIZE) {
+        const firstKey = translationCache.keys().next().value;
+        if (firstKey) translationCache.delete(firstKey);
+      }
+      translationCache.set(cacheKey, result);
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -219,6 +251,12 @@ serve(async (req) => {
     // Fallback to Lovable AI (Gemini) - reliable but uses AI credits
     result = await translateWithAI(text, targetLang);
     if (result) {
+      // Cache AI result too
+      if (translationCache.size >= MAX_CACHE_SIZE) {
+        const firstKey = translationCache.keys().next().value;
+        if (firstKey) translationCache.delete(firstKey);
+      }
+      translationCache.set(cacheKey, result);
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

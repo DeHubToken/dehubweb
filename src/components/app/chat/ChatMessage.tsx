@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText } from '../TranslatableText';
 import { useLiveChatUser } from '@/hooks/use-livechat';
 import { useNavigate } from 'react-router-dom';
-import { useBadgeBalance } from '@/hooks/use-badge-balance';
+import { useBatchedBadgeBalance } from '@/contexts/BadgeBalanceContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import {
   DropdownMenu,
@@ -54,7 +54,7 @@ function ModeratorBadge({ address }: { address: string }) {
 
 /** Inline staking badge (blue tick) shown next to display name */
 function StakingBadgeInline({ address }: { address: string }) {
-  const { badgeBalance } = useBadgeBalance(address);
+  const { badgeBalance } = useBatchedBadgeBalance(address);
   const badgeUrl = getBadgeUrl(badgeBalance);
   if (!badgeUrl) return null;
   return (
