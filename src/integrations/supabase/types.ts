@@ -198,6 +198,39 @@ export type Database = {
         }
         Relationships: []
       }
+      client_error_logs: {
+        Row: {
+          component: string | null
+          created_at: string | null
+          id: string
+          level: string
+          message: string
+          metadata: Json | null
+          stack_trace: string | null
+          user_address: string | null
+        }
+        Insert: {
+          component?: string | null
+          created_at?: string | null
+          id?: string
+          level: string
+          message: string
+          metadata?: Json | null
+          stack_trace?: string | null
+          user_address?: string | null
+        }
+        Update: {
+          component?: string | null
+          created_at?: string | null
+          id?: string
+          level?: string
+          message?: string
+          metadata?: Json | null
+          stack_trace?: string | null
+          user_address?: string | null
+        }
+        Relationships: []
+      }
       creator_applications: {
         Row: {
           created_at: string

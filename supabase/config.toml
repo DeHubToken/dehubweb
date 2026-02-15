@@ -95,3 +95,6 @@ verify_jwt = false
 
 [functions.dm-upload-media]
 verify_jwt = false
+
+[functions.client-logs]
+verify_jwt = false
