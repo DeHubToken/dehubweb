@@ -16,6 +16,7 @@ import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
+import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
@@ -968,8 +969,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchEnd={(e) => { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
-                <Lock className="h-7 w-7 text-white" />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-3">
+                <img src={ppvTicketIcon} alt="PPV" className="w-14 h-14 object-contain drop-shadow-lg" />
               </div>
               <p className="text-white font-semibold text-sm mb-1">Pay-Per-View Content</p>
               <p className="text-white/70 text-xs">
