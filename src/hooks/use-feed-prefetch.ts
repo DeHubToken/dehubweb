@@ -117,7 +117,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
   });
   
   // Live - no auth needed
-  const livePromise = getLiveStreams({ page: 0, unit: 15, sortMode: 'recent' }).catch(() => ({ result: [] }));
+  const livePromise = getLiveStreams({ page: 1, unit: 15, sortMode: 'recent' }).catch(() => ({ result: [] }));
   
   // ============================================================================
   // STEP 2: WAIT FOR ALL TO COMPLETE (TRULY PARALLEL!)
@@ -259,12 +259,12 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       {
         pages: [{
           data: streams,
-          page: 0,
+          page: 1,
           has_more: streams.length >= 15,
           total: streams.length,
           limit: 15,
         }],
-        pageParams: [0],
+        pageParams: [1],
       }
     );
     console.log('[Prefetch] Live cached:', streams.length, 'items');
