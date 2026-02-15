@@ -54,11 +54,6 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       </div>
       
       <div className="flex items-center gap-4">
-        {/* Coin Balance (when stickToBanner is enabled and user is logged in) */}
-        {isAuthenticated && stickToBanner && (
-          <CoinBalanceMenu balance={coinBalance} variant="mobile" />
-        )}
-
         {/* Notifications Button - only visible when logged in */}
         {isAuthenticated && (
           <button
@@ -73,6 +68,11 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
               </span>
             )}
           </button>
+        )}
+        
+        {/* Coin Balance (when stickToBanner is enabled and user is logged in) */}
+        {isAuthenticated && stickToBanner && (
+          <CoinBalanceMenu balance={coinBalance} variant="mobile" />
         )}
         
         {/* Menu Button - Avatar drawer when authenticated, login prompt when not */}
