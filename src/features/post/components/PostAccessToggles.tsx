@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Lock, CreditCard, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus, Save } from 'lucide-react';
+import { Lock, Gift, Shield, Eye, MessageCircle, Check, Info, Tag, Search, X, Plus, Save } from 'lucide-react';
+import ppvIcon from '@/assets/icons/ppv-icon.png';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -262,7 +263,7 @@ export function PostAccessToggles({
         {/* PPV */}
         <div className="flex items-center justify-between py-0.5">
           <div className="flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-white" />
+            <img src={ppvIcon} alt="PPV" className="w-4 h-4" />
             <span className="text-sm text-white">PPV</span>
             {isPPV && ppvAmount && (
               <span className="text-xs text-white/50">({ppvAmount} {ppvCurrency})</span>
@@ -400,7 +401,7 @@ export function PostAccessToggles({
         <DrawerContent glass>
           <DrawerHeader className="text-left">
             <DrawerTitle className="flex items-center gap-2 text-white">
-              <CreditCard className="w-5 h-5" />
+              <img src={ppvIcon} alt="PPV" className="w-5 h-5" />
               Set PPV Price
             </DrawerTitle>
           </DrawerHeader>
