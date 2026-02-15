@@ -1,26 +1,23 @@
 
 
-## Convert ErrorBoundary Buttons to Glass Variant
-
-The error/fallback page in `src/components/ErrorBoundary.tsx` has three buttons that use manual white/10 styling instead of the `variant="glass"` standard.
+## Lock Down Public Chat: Remove Topic Switcher, Admin-Gate Create & Settings
 
 ### Changes
 
-**File: `src/components/ErrorBoundary.tsx`**
+**File: `src/components/app/chat/PublicChat.tsx`**
 
-1. **"Try Again" button (line ~108)**: Replace inline `bg-white/10 backdrop-blur-xl border border-white/10` classes with `variant="glass"`
-2. **"Go Home" button (line ~115)**: Same change -- replace inline glass-like classes with `variant="glass"`
-3. Both buttons keep their existing `flex-1 h-12 rounded-xl gap-2` sizing classes
+1. **Remove the room selector dropdown** (lines 206-218) -- delete the `<select>` element entirely since there should only be one public chat room.
 
-Before:
-```tsx
-<Button className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white hover:bg-white/15 gap-2">
-```
+2. **Gate "Create new room" button to moderators only** (lines 219-233) -- change the condition from `isAuthenticated` to `isModerator` so only room moderators (admins) can create new topic rooms.
 
-After:
-```tsx
-<Button variant="glass" className="flex-1 h-12 rounded-xl gap-2">
-```
+3. **Gate "Room Settings" button to moderators only** (lines 234-246) -- wrap the settings button in an `isModerator` check so only moderators can access room settings.
 
-This is a 2-line change that brings the error page in line with the liquid glass design system.
+No other files need to change. The `CreateTopicRoomModal` and `RoomSettingsModal` components stay in the codebase but are only accessible to moderators.
+
+### Technical Detail
+
+Three targeted edits in `PublicChat.tsx`:
+- Lines 206-218: Delete the `<select>` block
+- Line 219: Change `{isAuthenticated && (` to `{isModerator && (`
+- Lines 234-246: Wrap in `{isModerator && (...)}`
 
