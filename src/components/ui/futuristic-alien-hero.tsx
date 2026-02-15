@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { X } from 'lucide-react';
+import { useNebulaPrefetch } from '@/hooks/use-nebula-prefetch';
 import { cn } from '@/lib/utils';
 import dehubLogoCenter from '@/assets/dehub-logo-center.png';
 
@@ -33,6 +34,9 @@ export const FuturisticAlienHero = () => {
   const navigate = useNavigate();
   const { masterGlitch, corruptedTitle, corruptedSubtitle, showPixelCorruption } = useGlitchEffect();
   const [isCloseButtonGlitching, setIsCloseButtonGlitching] = useState(false);
+  
+  // Prefetch app data on first user interaction (mousemove/touch/scroll)
+  useNebulaPrefetch();
   
   // Close button glitch effect - triggers every 4-6 seconds
   useEffect(() => {

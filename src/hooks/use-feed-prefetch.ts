@@ -71,7 +71,7 @@ async function fetchUnifiedFeed(params: {
  * 
  * This ensures all HTTP requests go out at the same time instead of sequentially.
  */
-async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, walletAddress: string | null) {
+export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryClient>, walletAddress: string | null) {
   console.log('[Prefetch] Starting TRUE PARALLEL feed prefetch, walletAddress:', walletAddress ? 'present' : 'null');
   const startTime = Date.now();
   
