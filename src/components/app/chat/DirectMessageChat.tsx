@@ -262,33 +262,25 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
   const handleSendMessage = async (content: string, type: 'text' | 'image' | 'gif' | 'audio', imageUrl?: string) => {
     let finalMediaUrl = imageUrl;
-    let mediaFile: File | undefined;
 
-    // If sending an image with a base64 data URL, upload to CDN first
+    // If sending an image with a base64 data URL, upload via edge function first
     if (type === 'image' && imageUrl && imageUrl.startsWith('data:')) {
       try {
         // Convert base64 to File
         const response = await fetch(imageUrl);
         const blob = await response.blob();
         const file = new File([blob], 'chat-image.jpg', { type: blob.type || 'image/jpeg' });
-        try {
-          const { url } = await uploadChatImage(file);
-          finalMediaUrl = url;
-        } catch (uploadErr) {
-          console.warn('[DM] Supabase upload failed, will send file via DeHub API:', uploadErr);
-          // Pass the file directly to sendMessage for FormData upload
-          mediaFile = file;
-          finalMediaUrl = undefined;
-        }
+        const { url } = await uploadChatImage(file);
+        finalMediaUrl = url;
       } catch (err) {
-        console.error('[DM] Image conversion failed:', err);
-        toast.error('Failed to process image');
+        console.error('[DM] Image upload failed:', err);
+        toast.error('Failed to upload image');
         return;
       }
     }
 
     sendMessageMutation.mutate(
-      { content, type, mediaUrl: finalMediaUrl, mediaFile },
+      { content, type, mediaUrl: finalMediaUrl },
       {
         onSuccess: (data) => {
           // Only resolve virtual "new_0x..." conversation IDs to the other user's address

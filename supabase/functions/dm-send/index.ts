@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       tipCurrency,
     } = body;
 
-    if (!content && type === 'text') {
+    if (!content && type === 'text' && !body.mediaUrl) {
       return jsonOk({ ok: false, error: 'content is required for text messages' });
     }
 

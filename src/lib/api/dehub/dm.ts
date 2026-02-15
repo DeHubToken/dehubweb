@@ -465,8 +465,7 @@ export async function sendMessage(
   type: DMMessageType = 'text',
   mediaUrl?: string,
   tipAmount?: number,
-  tipCurrency?: string,
-  mediaFile?: File
+  tipCurrency?: string
 ): Promise<DeHubDMMessage> {
   console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
 
@@ -485,101 +484,58 @@ export async function sendMessage(
     }
 
     const sender = senderAddress.toLowerCase();
-    const hasMedia = !!mediaUrl || (type !== 'text' && type !== 'tip');
 
-    let data: any;
+    // Always use dm-send edge function for all message types
+    // Images are pre-uploaded via dm-upload-media edge function, so we just pass the URL
+    const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
 
-    if (!hasMedia) {
-      // Use Supabase Edge Function to proxy DM send (avoids CORS / auth issues)
-      // Get current user metadata to save with the message in Supabase
-      const currentUser = JSON.parse(localStorage.getItem('dehub_user') || '{}');
+    const edgeBody: Record<string, unknown> = {
+      sender,
+      content,
+      type,
+      sender_username: currentUser?.username,
+      sender_display_name: currentUser?.displayName,
+      sender_avatar_url: currentUser?.avatarImageUrl,
+    };
 
-      const edgeBody: Record<string, unknown> = {
-        sender,
-        content,
-        type,
-        sender_username: currentUser?.username,
-        sender_display_name: currentUser?.displayName,
-        sender_avatar_url: currentUser?.avatarImageUrl,
-      };
-
-      if (isNewConversation && recipientAddress) {
-        edgeBody.receiver = recipientAddress.toLowerCase();
-        console.log('[DM API] Sending text to new conversation with recipient:', recipientAddress);
-      } else {
-        edgeBody.conversationId = conversationId;
-      }
-
-      if (type === 'tip' && tipAmount !== undefined) {
-        edgeBody.tipAmount = tipAmount;
-        edgeBody.tipCurrency = tipCurrency || 'DHB';
-      }
-
-      console.log('[DM API] Sending text message via dm-send edge function');
-      const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
-        body: edgeBody,
-        headers: {
-          'x-wallet-address': sender,
-          'x-dehub-token': token,
-        },
-      });
-
-      if (edgeError) {
-        console.error('[DM API] dm-send edge function error:', edgeError);
-        throw new Error(edgeError.message || 'Failed to send message');
-      }
-
-      console.log('[DM API] dm-send edge response:', edgeData);
-
-      // Edge function always returns 200 with { ok, result, error, dehubResponse }
-      if (!edgeData?.ok) {
-        console.error('[DM API] DeHub API rejected DM:', edgeData?.error, edgeData?.dehubResponse);
-        throw new Error(edgeData?.error || 'Failed to send message');
-      }
-
-      data = edgeData?.result;
-    } else {
-      const formData = new FormData();
-      formData.append('content', content);
-      formData.append('type', type);
-      formData.append('sender', sender);
-
-      if (isNewConversation && recipientAddress) {
-        formData.append('receiverAddress', recipientAddress.toLowerCase());
-        console.log('[DM API] Sending media to new conversation with recipient:', recipientAddress);
-      } else {
-        // If conversationId is a wallet address, send it as receiverAddress
-        if (conversationId.startsWith('0x')) {
-          formData.append('receiverAddress', conversationId.toLowerCase());
-        } else {
-          formData.append('conversationId', conversationId);
-        }
-      }
-
-      if (mediaFile) {
-        formData.append('file', mediaFile, mediaFile.name);
-        console.log('[DM API] Attaching file to FormData:', mediaFile.name, mediaFile.size);
-      } else if (mediaUrl && !mediaUrl.startsWith('data:')) {
-        formData.append('mediaUrl', mediaUrl);
-      }
-
-      console.log('[DM API] Sending media message via /api/dm/upload');
-      const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('[DM API] sendMessage upload error response:', errorData);
-        throw new Error(errorData.message || 'Failed to send message');
-      }
-
-      data = await response.json();
+    if (mediaUrl) {
+      edgeBody.mediaUrl = mediaUrl;
     }
+
+    if (isNewConversation && recipientAddress) {
+      edgeBody.receiver = recipientAddress.toLowerCase();
+      console.log('[DM API] Sending message to new conversation with recipient:', recipientAddress);
+    } else {
+      edgeBody.conversationId = conversationId;
+    }
+
+    if (type === 'tip' && tipAmount !== undefined) {
+      edgeBody.tipAmount = tipAmount;
+      edgeBody.tipCurrency = tipCurrency || 'DHB';
+    }
+
+    console.log('[DM API] Sending message via dm-send edge function', { type, hasMedia: !!mediaUrl });
+    const { data: edgeData, error: edgeError } = await supabase.functions.invoke('dm-send', {
+      body: edgeBody,
+      headers: {
+        'x-wallet-address': sender,
+        'x-dehub-token': token,
+      },
+    });
+
+    if (edgeError) {
+      console.error('[DM API] dm-send edge function error:', edgeError);
+      throw new Error(edgeError.message || 'Failed to send message');
+    }
+
+    console.log('[DM API] dm-send edge response:', edgeData);
+
+    if (!edgeData?.ok) {
+      console.error('[DM API] DeHub API rejected DM:', edgeData?.error, edgeData?.dehubResponse);
+      throw new Error(edgeData?.error || 'Failed to send message');
+    }
+
+    let data: any = edgeData?.result;
 
     console.log('[DM API] sendMessage response:', data);
 
@@ -932,38 +888,38 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
     throw new Error("Authentication required");
   }
 
+  const walletAddress = localStorage.getItem('dehub_wallet');
+  if (!walletAddress) {
+    throw new Error("Wallet address not found");
+  }
+
   try {
-    // First try Supabase storage
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-    const filePath = `${fileName}`;
+    // Upload via dm-upload-media edge function (uses service role key, bypasses RLS)
+    const formData = new FormData();
+    formData.append('file', file, file.name);
 
-    console.log('[DM API] Uploading to Supabase bucket chat-media:', filePath);
+    console.log('[DM API] Uploading via dm-upload-media edge function');
 
-    const { data, error } = await supabase.storage
-      .from('chat-media')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
+    const { data, error } = await supabase.functions.invoke('dm-upload-media', {
+      body: formData,
+      headers: {
+        'x-wallet-address': walletAddress.toLowerCase(),
+        'x-dehub-token': token,
+      },
+    });
 
     if (error) {
-      console.warn('[DM API] Supabase storage upload failed (RLS), skipping:', error.message);
-      // Don't throw - return empty to let caller handle via DeHub API
-      throw new Error(`Supabase upload failed: ${error.message}`);
+      console.error('[DM API] dm-upload-media edge function error:', error);
+      throw new Error(error.message || 'Upload failed');
     }
 
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('chat-media')
-      .getPublicUrl(filePath);
-
-    if (!publicUrl) {
-      throw new Error('Failed to get public URL for uploaded image');
+    if (!data?.ok || !data?.url) {
+      console.error('[DM API] dm-upload-media returned error:', data);
+      throw new Error(data?.error || 'Upload failed - no URL returned');
     }
 
-    console.log('[DM API] Image uploaded successfully:', publicUrl);
-    return { url: publicUrl };
+    console.log('[DM API] Image uploaded successfully:', data.url);
+    return { url: data.url };
   } catch (error) {
     console.error('[DM API] uploadChatImage failed:', error);
     throw error;

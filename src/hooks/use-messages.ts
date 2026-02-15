@@ -192,16 +192,14 @@ export function useSendMessage(conversationId: string) {
       mediaUrl,
       tipAmount,
       tipCurrency,
-      mediaFile,
     }: {
       content: string;
       type?: DMMessageType;
       mediaUrl?: string;
       tipAmount?: number;
       tipCurrency?: string;
-      mediaFile?: File;
     }) => {
-      return sendMessage(conversationId, content, type, mediaUrl, tipAmount, tipCurrency, mediaFile);
+      return sendMessage(conversationId, content, type, mediaUrl, tipAmount, tipCurrency);
     },
     onMutate: async ({ content, type, mediaUrl }) => {
       // Cancel outgoing refetches
