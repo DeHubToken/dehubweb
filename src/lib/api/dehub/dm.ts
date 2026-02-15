@@ -459,7 +459,8 @@ export async function sendMessage(
   type: DMMessageType = 'text',
   mediaUrl?: string,
   tipAmount?: number,
-  tipCurrency?: string
+  tipCurrency?: string,
+  mediaFile?: File
 ): Promise<DeHubDMMessage> {
   console.log('[DM API] sendMessage called', { conversationId, content: content.substring(0, 50), type, mediaUrl });
 
@@ -544,7 +545,10 @@ export async function sendMessage(
         formData.append('conversationId', conversationId);
       }
 
-      if (mediaUrl) {
+      if (mediaFile) {
+        formData.append('media', mediaFile, mediaFile.name);
+        console.log('[DM API] Attaching file to FormData:', mediaFile.name, mediaFile.size);
+      } else if (mediaUrl && !mediaUrl.startsWith('data:')) {
         formData.append('mediaUrl', mediaUrl);
       }
 
@@ -918,7 +922,7 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
   }
 
   try {
-    // Determine file extension
+    // First try Supabase storage
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
     const filePath = `${fileName}`;
@@ -933,8 +937,9 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
       });
 
     if (error) {
-      console.error('[DM API] Supabase storage upload error:', error);
-      throw new Error(`Upload failed: ${error.message}`);
+      console.warn('[DM API] Supabase storage upload failed (RLS), skipping:', error.message);
+      // Don't throw - return empty to let caller handle via DeHub API
+      throw new Error(`Supabase upload failed: ${error.message}`);
     }
 
     // Get public URL
