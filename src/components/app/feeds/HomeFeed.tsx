@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { HomeFeedSkeleton, StoriesBarSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -979,6 +980,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
 
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: items.length,
+    isLoading: isLoadingState,
+    isError,
+    refetch,
+  });
+
   const EmptyState = () => {
     // Custom message for Following feed
     const isFollowingMode = selectedSort.value === 'following';
@@ -1018,7 +1026,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-      {isLoadingState ? (
+      {(isLoadingState || isAutoRetrying) ? (
         <HomeFeedSkeleton />
       ) : (
         <>

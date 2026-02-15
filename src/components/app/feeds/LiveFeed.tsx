@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useRef, useMemo } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { RefreshCw, Radio, Eye, Loader2, Tv, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -101,7 +102,14 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const isLoading = isApiLoading || isRefreshing;
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: streams.length,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  });
+
+  const isLoading = isApiLoading || isRefreshing || isAutoRetrying;
 
   // Empty state component
   const EmptyState = () => (

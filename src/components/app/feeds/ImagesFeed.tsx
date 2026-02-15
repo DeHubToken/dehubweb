@@ -8,6 +8,7 @@
  */
 
 import { useRef, useMemo, useEffect, useCallback } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2 } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
@@ -396,7 +397,14 @@ export function ImagesFeed({
     </div>
   );
 
-  if (isLoading) {
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: imagePosts.length,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  });
+
+  if (isLoading || isAutoRetrying) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <ImagesFeedSkeleton />

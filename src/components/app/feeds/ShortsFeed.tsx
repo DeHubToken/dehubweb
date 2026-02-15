@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -478,7 +479,14 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     </div>
   );
 
-  if (isLoading) {
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: allShorts.length,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  });
+
+  if (isLoading || isAutoRetrying) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <ShortsFeedSkeleton />
