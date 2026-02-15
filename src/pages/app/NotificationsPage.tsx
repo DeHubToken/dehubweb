@@ -220,16 +220,18 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'video_milestone':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'following':
-      return notification.actorUsername 
-        ? `/${notification.actorUsername}` 
-        : notification.actorAddress 
-          ? `/${notification.actorAddress}` 
+      return notification.actorAddress 
+        ? `/${notification.actorAddress}` 
+        : notification.actorUsername 
+          ? `/${notification.actorUsername}` 
           : null;
     case 'subscription':
     case 'ppv_purchase':
-      return notification.actorUsername 
-        ? `/${notification.actorUsername}` 
-        : '/app/command-centre';
+      return notification.actorAddress 
+        ? `/${notification.actorAddress}` 
+        : notification.actorUsername 
+          ? `/${notification.actorUsername}` 
+          : '/app/command-centre';
     case 'livestream_start':
       return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'video_removal':
@@ -276,10 +278,10 @@ function NotificationItem({
     ? (notification.tokenThumbnail.startsWith('http') ? notification.tokenThumbnail : `${DEHUB_CDN_BASE}${notification.tokenThumbnail}`)
     : null;
   
-  const profileLink = notification.actorUsername 
-    ? `/${notification.actorUsername}` 
-    : notification.actorAddress 
-      ? `/${notification.actorAddress}` 
+  const profileLink = notification.actorAddress 
+    ? `/${notification.actorAddress}` 
+    : notification.actorUsername 
+      ? `/${notification.actorUsername}` 
       : null;
 
   const hasUnread = bundle.bundleType !== 'single' 
@@ -311,7 +313,7 @@ function NotificationItem({
     >
       {/* Avatar with type icon overlay */}
       <div className="relative flex-shrink-0">
-        {profileLink && notification.actorUsername ? (
+        {profileLink ? (
           <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
             <Avatar className="w-12 h-12">
               <AvatarImage src={avatarUrl || fallbackAvatar} />
