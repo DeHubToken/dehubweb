@@ -1,26 +1,26 @@
 
 
-## Fix Public Chat Title and Subtitle
+## Convert ErrorBoundary Buttons to Glass Variant
 
-The current room header displays "test" and "Discussion about test" because these values come from the live chat room data returned by the DeHub API. Someone created the room with topic "test" -- this was not intentional branding.
+The error/fallback page in `src/components/ErrorBoundary.tsx` has three buttons that use manual white/10 styling instead of the `variant="glass"` standard.
 
 ### Changes
 
-**File: `src/components/app/chat/PublicChat.tsx`**
+**File: `src/components/ErrorBoundary.tsx`**
 
-Update line 162-163 to hardcode the Public Chat branding instead of relying on API data:
+1. **"Try Again" button (line ~108)**: Replace inline `bg-white/10 backdrop-blur-xl border border-white/10` classes with `variant="glass"`
+2. **"Go Home" button (line ~115)**: Same change -- replace inline glass-like classes with `variant="glass"`
+3. Both buttons keep their existing `flex-1 h-12 rounded-xl gap-2` sizing classes
 
-```typescript
-// Before
-const roomName = enrichedRoom?.name || enrichedRoom?.topic || 'Public Chat';
-const roomDescription = enrichedRoom?.description;
-
-// After
-const roomName = 'Public Chat';
-const roomDescription = 'All things DeHub';
+Before:
+```tsx
+<Button className="flex-1 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 text-white hover:bg-white/15 gap-2">
 ```
 
-This ensures the Public Chat header always shows "Public Chat" with subtitle "All things DeHub", regardless of what the backend room data contains.
+After:
+```tsx
+<Button variant="glass" className="flex-1 h-12 rounded-xl gap-2">
+```
 
-### Technical Note
-This is a 2-line change in `src/components/app/chat/PublicChat.tsx` (lines 162-163). The room selector dropdown (for multiple rooms) will still show API-provided names, but the main Public Chat room will always display the correct branding.
+This is a 2-line change that brings the error page in line with the liquid glass design system.
+
