@@ -112,7 +112,7 @@ export function TransactionsTab() {
           <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm h-9 px-4 rounded-xl">
             Add funds
           </Button>
-          <Button variant="outline" className="border-zinc-700 text-white text-sm h-9 px-4 rounded-xl bg-transparent hover:bg-zinc-800">
+          <Button variant="glass" className="text-sm h-9 px-4 rounded-xl">
             Withdraw
           </Button>
         </div>

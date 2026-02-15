@@ -148,7 +148,8 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
               size="sm"
               onClick={() => acceptAllMutation.mutate()}
               disabled={isBulkProcessing}
-              className="rounded-xl bg-white text-black hover:bg-zinc-200 h-8 px-3 gap-1.5 flex-1"
+              className="rounded-xl h-8 px-3 gap-1.5 flex-1"
+              variant="glass"
             >
               {bulkProcessing === 'accept' ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -231,7 +232,8 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                       size="sm"
                       onClick={() => approveMutation.mutate(requestId)}
                       disabled={isProcessing}
-                      className="rounded-xl bg-white text-black hover:bg-zinc-200 h-8 px-3 gap-1"
+                      className="rounded-xl h-8 px-3 gap-1"
+                      variant="glass"
                     >
                       {processingIds.has(requestId) ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
