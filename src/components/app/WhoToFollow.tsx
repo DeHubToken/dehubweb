@@ -79,12 +79,12 @@ export function WhoToFollow() {
 
   // Get following list as a Set for O(1) lookups
   const followingSet = useMemo(() => {
-    const followings = currentUserData?.followingsList;
+    const followings = currentUserData?.followingsList || currentUserData?.followings;
     if (!followings || !Array.isArray(followings)) {
       return new Set<string>();
     }
-    return new Set(followings.map(addr => addr.toLowerCase()));
-  }, [currentUserData?.followingsList]);
+    return new Set(followings.map((addr: string) => addr.toLowerCase()));
+  }, [currentUserData?.followingsList, currentUserData?.followings]);
 
   // Infinite query for user suggestions
   const {

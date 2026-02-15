@@ -87,12 +87,12 @@ export function MobileWhoToFollowCarousel() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Get following list as a Set
+  // Get following list as a Set — check both fields for consistency with desktop
   const followingSet = useMemo(() => {
-    const followings = currentUserData?.followings;
+    const followings = currentUserData?.followingsList || currentUserData?.followings;
     if (!followings || !Array.isArray(followings)) return new Set<string>();
-    return new Set(followings.map(addr => addr.toLowerCase()));
-  }, [currentUserData?.followings]);
+    return new Set(followings.map((addr: string) => addr.toLowerCase()));
+  }, [currentUserData?.followingsList, currentUserData?.followings]);
 
   // Accumulate all unique users across pages
   const allUsers = useMemo(() => {
