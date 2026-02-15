@@ -43,7 +43,7 @@ const PULL_THRESHOLD = 80;
 /** Minimum trackpad delta to trigger tab change */
 const TRACKPAD_THRESHOLD = 60;
 /** Lock duration after gesture trigger - covers trackpad inertia */
-const GESTURE_LOCK_DURATION = 400;
+const GESTURE_LOCK_DURATION = 300;
 
 // ============================================================================
 // MAIN COMPONENT
@@ -461,36 +461,7 @@ export default function HomePage() {
   // RENDER FEED BASED ON ACTIVE TAB
   // --------------------------------------------------------------------------
 
-  const renderFeed = () => {
-    switch (activeTab) {
-      case 'ppv':
-        return <PPVFeed />;
-      case 'w2e':
-        return <W2EFeed />;
-      case 'images':
-        return (
-          <ImagesFeed 
-            showCollage={showImagesCollage} 
-            showFilters={showImagesFilters}
-            isRefreshing={isRefreshing} 
-            refreshKey={refreshKey}
-            selectedPostId={selectedImageId}
-            onPostSelected={handleImageSelected}
-            onBackToCollage={handleBackToCollage}
-          />
-        );
-      case 'videos':
-        return <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      case 'shorts':
-        return <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      case 'live':
-        return <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />;
-      case 'music':
-        return <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />;
-      default:
-        return <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />;
-    }
-  };
+  // Feeds are rendered persistently below using CSS display toggle
 
   // --------------------------------------------------------------------------
   // RENDER
@@ -587,7 +558,39 @@ export default function HomePage() {
             </div>
           </div>
         )}
-        {renderFeed()}
+        {/* All feeds mounted persistently, only active one visible */}
+        <div style={{ display: activeTab === 'home' ? 'block' : 'none' }}>
+          <HomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
+        </div>
+        <div style={{ display: activeTab === 'videos' ? 'block' : 'none' }}>
+          <VideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+        </div>
+        <div style={{ display: activeTab === 'images' ? 'block' : 'none' }}>
+          <ImagesFeed 
+            showCollage={showImagesCollage} 
+            showFilters={showImagesFilters}
+            isRefreshing={isRefreshing} 
+            refreshKey={refreshKey}
+            selectedPostId={selectedImageId}
+            onPostSelected={handleImageSelected}
+            onBackToCollage={handleBackToCollage}
+          />
+        </div>
+        <div style={{ display: activeTab === 'shorts' ? 'block' : 'none' }}>
+          <ShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+        </div>
+        <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
+          <LiveFeed key={refreshKey} isRefreshing={isRefreshing} />
+        </div>
+        <div style={{ display: activeTab === 'music' ? 'block' : 'none' }}>
+          <MusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+        </div>
+        <div style={{ display: activeTab === 'ppv' ? 'block' : 'none' }}>
+          <PPVFeed />
+        </div>
+        <div style={{ display: activeTab === 'w2e' ? 'block' : 'none' }}>
+          <W2EFeed />
+        </div>
       </div>
 
       {/* Stages Modal */}
