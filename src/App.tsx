@@ -36,6 +36,7 @@ import BuyCoinsPage from "./pages/app/BuyCoinsPage";
 import AgentsPage from "./pages/app/AgentsPage";
 import FeaturesPage from "./pages/app/FeaturesPage";
 
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -99,6 +100,7 @@ function AppContent() {
             
             {/* Username-based profile route (e.g., /d, /username) */}
             <Route path="/:username" element={<ProfilePage />} />
+            
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
