@@ -105,7 +105,6 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
             <StakingBadgeInline address={message.userId} />
           </span>
           <ModeratorBadge address={message.userId} />
-          <span className="text-zinc-500 text-xs">{formatTime(message.timestamp)}</span>
           {message.isPinned && (
             <span className="flex items-center gap-1 text-yellow-500/70 text-xs">
               <Pin className="w-3 h-3" />
@@ -163,7 +162,10 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
         </div>
         
         {message.type === 'text' && (
-          <TranslatableText text={message.content} className="text-zinc-300 text-sm break-words" as="p" />
+          <p className="text-zinc-300 text-sm break-words">
+            <TranslatableText text={message.content} className="inline" as="span" />
+            <span className="text-zinc-500 text-[10px] ml-2 align-baseline whitespace-nowrap">{formatTime(message.timestamp)}</span>
+          </p>
         )}
         
         {message.type === 'image' && message.imageUrl && (
