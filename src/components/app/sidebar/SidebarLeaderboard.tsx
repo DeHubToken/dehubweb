@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -40,12 +40,31 @@ const formatDHB = (num: number): string => {
   return formatNumber(num);
 };
 
-export function SidebarLeaderboard() {
+export interface SidebarLeaderboardHandle {
+  /** Try to swipe the period. Returns true if consumed, false if at edge. */
+  swipePeriod: (direction: 1 | -1) => boolean;
+}
+
+export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function SidebarLeaderboard(_props, ref) {
   const navigate = useNavigate();
   const [activePeriod, setActivePeriod] = useState<string>('All');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [shimmerKey, setShimmerKey] = useState(0);
-  const directionRef = useRef(1); // 1 = forward, -1 = backward
+  const directionRef = useRef(1);
+
+  useImperativeHandle(ref, () => ({
+    swipePeriod(direction: 1 | -1): boolean {
+      const idx = PERIODS.indexOf(activePeriod as typeof PERIODS[number]);
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= PERIODS.length) return false; // at edge
+      directionRef.current = direction;
+      setActivePeriod(PERIODS[newIdx]);
+      setIsAutoRotating(false);
+      setShimmerKey(k => k + 1);
+      setTimeout(() => setIsAutoRotating(true), 30000);
+      return true;
+    },
+  }), [activePeriod]);
 
   const apiPeriod = PERIOD_MAP[activePeriod] || 'all';
 
@@ -103,7 +122,6 @@ export function SidebarLeaderboard() {
     .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
     .slice(0, 50);
 
-  // Batch fetch badge balances for all visible entries
   const walletAddresses = entries.map((e: LeaderboardEntry) => e.account);
   const { balances: badgeBalances } = useBatchBadgeBalances(walletAddresses);
 
@@ -270,4 +288,4 @@ export function SidebarLeaderboard() {
       </div>
     </div>
   );
-}
+});
