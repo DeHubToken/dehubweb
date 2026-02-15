@@ -57,7 +57,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
       {/* Post Button - only shown when authenticated */}
       {isAuthenticated && (
-        <div className="mt-4 pt-4 border-t border-zinc-700/50">
+        <div className="mt-4 pt-4">
           <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
