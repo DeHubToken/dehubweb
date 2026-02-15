@@ -110,6 +110,8 @@ export function FollowersListDrawer({
         username: undefined,
         displayName: truncateAddress(item.address),
         avatarUrl: undefined,
+        isFollowing: item.isFollowing,
+        followsYou: item.followsYou,
       } as UserListItem));
 
       // Start enrichment
