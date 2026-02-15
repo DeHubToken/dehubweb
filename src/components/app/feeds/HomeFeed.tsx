@@ -476,7 +476,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // For "Most Liked", "Trending", or "Following" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
   const useSingleFeedForGlobalSort = selectedSort.value === 'most-liked' || selectedSort.value === 'following' || selectedSort.value === 'random';
-  const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort;
+  const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
+  const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
 
   // Fetch videos
   const videosFeed = useUnifiedFeed({
