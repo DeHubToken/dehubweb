@@ -960,11 +960,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             <img 
               src={video.thumbnail} 
               alt={video.title}
-              className="w-full h-full object-cover blur-xl scale-110"
+              className="w-full h-full object-cover"
               loading="lazy"
             />
             <div 
-              className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 cursor-pointer"
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchEnd={(e) => { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }}
             >
