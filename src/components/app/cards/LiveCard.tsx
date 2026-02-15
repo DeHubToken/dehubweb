@@ -74,6 +74,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       <div className="flex items-start justify-between">
         <CardHeader
           username={stream.streamer}
+          handle={stream.creatorUsername}
           avatarSeed={stream.avatar}
           contentType="live"
           isLive
