@@ -1,37 +1,11 @@
 
-# Instant Side Panel Tab Switching
 
-## Problem
-The `TabbedSidePanel` uses conditional rendering (`activeTab === 'follow' && <WhoToFollow />`) which unmounts and remounts components on every tab switch. Going right (to Who to Follow / Chat) feels slow because those components fully reinitialize -- fetching data, showing skeletons, reconnecting to live chat.
+## Replace Live Stream Tab Icon
 
-## Solution
-Apply the same persistent mount pattern used on the home feed: render all three tab contents simultaneously and toggle visibility with CSS `display: none` / `display: block`.
+**What will change:**
+The current `live-3d-icon.png` asset used in the profile's "Live" tab empty state will be replaced with the new smaller camera/video icon you uploaded.
 
-## Changes
+**Steps:**
+1. Copy the uploaded image (`user-uploads://3-5.png`) to `src/assets/icons/live-3d-icon.png`, overwriting the existing file
+2. No code changes needed -- all components already reference this asset path
 
-**File: `src/components/app/sidebar/TabbedSidePanel.tsx`**
-
-Replace lines 119-121:
-```tsx
-{activeTab === 'follow' && <WhoToFollow />}
-{activeTab === 'leaderboard' && <SidebarLeaderboard ref={leaderboardRef} />}
-{activeTab === 'chat' && <SidebarChat />}
-```
-
-With persistent mounting:
-```tsx
-<div style={{ display: activeTab === 'leaderboard' ? 'block' : 'none' }} className="h-full">
-  <SidebarLeaderboard ref={leaderboardRef} />
-</div>
-<div style={{ display: activeTab === 'follow' ? 'block' : 'none' }} className="h-full">
-  <WhoToFollow />
-</div>
-<div style={{ display: activeTab === 'chat' ? 'block' : 'none' }} className="h-full">
-  <SidebarChat />
-</div>
-```
-
-This ensures:
-- First visit to each tab still loads normally (skeleton/spinner)
-- Every subsequent visit is instant -- no remount, no refetch
-- Chat stays connected, leaderboard keeps its period state, Who to Follow keeps its list
