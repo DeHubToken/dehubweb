@@ -19,6 +19,7 @@ import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOptio
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
+import { useUnifiedFeed, mapToImagePost } from '@/hooks/use-unified-feed';
 import type { ImagePost } from '@/types/feed.types';
 
 /** Number of pages to pre-fetch for random mode cross-page shuffling */
@@ -304,20 +305,52 @@ export function ImagesFeed({
   
   // Get wallet address for authenticated requests
   const { walletAddress } = useAuth();
+
+  // Determine if premium content filters are active
+  const isPremiumFilterActive = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
   
-  // Fetch from DeHub API
+  // Fetch from DeHub API (default - no content filters)
   const {
     data: apiData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isApiLoading,
-    isError,
-    refetch,
+    fetchNextPage: fetchNextPageDefault,
+    hasNextPage: hasNextPageDefault,
+    isFetchingNextPage: isFetchingNextPageDefault,
+    isLoading: isApiLoadingDefault,
+    isError: isErrorDefault,
+    refetch: refetchDefault,
   } = useDeHubImages({
     unit: 12,
     sortMode: selectedSort.value === 'most-liked' ? 'popular' : 'new',
   });
+
+  // Fetch from unified feed API (when content filters are active)
+  const {
+    data: unifiedData,
+    fetchNextPage: fetchNextPageUnified,
+    hasNextPage: hasNextPageUnified,
+    isFetchingNextPage: isFetchingNextPageUnified,
+    isLoading: isApiLoadingUnified,
+    isError: isErrorUnified,
+    refetch: refetchUnified,
+  } = useUnifiedFeed({
+    postType: 'feed-images',
+    isPPV: contentFilters.ppv || undefined,
+    hasBounty: contentFilters.w2e || undefined,
+    isLocked: contentFilters.locked || undefined,
+    limit: 12,
+    status: 'minted',
+    sortBy: selectedSort.value === 'most-liked' ? 'likes' : 'createdAt',
+    sortOrder: 'desc',
+    enabled: isPremiumFilterActive,
+  });
+
+  // Select the active data source based on filter state
+  const fetchNextPage = isPremiumFilterActive ? fetchNextPageUnified : fetchNextPageDefault;
+  const hasNextPage = isPremiumFilterActive ? hasNextPageUnified : hasNextPageDefault;
+  const isFetchingNextPage = isPremiumFilterActive ? isFetchingNextPageUnified : isFetchingNextPageDefault;
+  const isApiLoading = isPremiumFilterActive ? isApiLoadingUnified : isApiLoadingDefault;
+  const isError = isPremiumFilterActive ? isErrorUnified : isErrorDefault;
+  const refetch = isPremiumFilterActive ? refetchUnified : refetchDefault;
 
   // Refetch when refreshKey changes
   useEffect(() => {
@@ -328,10 +361,15 @@ export function ImagesFeed({
 
   // Map API data to ImagePost array
   const imagePosts = useMemo(() => {
+    if (isPremiumFilterActive) {
+      if (!unifiedData?.pages) return [];
+      const allItems = unifiedData.pages.flatMap(page => page.items || []);
+      return allItems.map((item, index) => mapToImagePost(item, index));
+    }
     if (!apiData?.pages) return [];
     const allNFTs = apiData.pages.flatMap(page => page.data || []);
     return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
-  }, [apiData]);
+  }, [apiData, unifiedData, isPremiumFilterActive]);
 
   // Handle image click in collage - switch to feed view
   const handleImageClick = (postId: string) => {
