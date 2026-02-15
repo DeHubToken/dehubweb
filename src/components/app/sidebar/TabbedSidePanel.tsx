@@ -30,13 +30,7 @@ export function TabbedSidePanel() {
     if (now - lastSwipeTime.current < 300) return;
     lastSwipeTime.current = now;
 
-    // direction: 1 = next (swipe left), -1 = prev (swipe right)
-    if (activeTab === 'leaderboard' && leaderboardRef.current) {
-      const consumed = leaderboardRef.current.swipePeriod(direction);
-      if (consumed) return; // period changed, don't switch tab
-    }
-
-    // Switch tab
+    // Always switch tab — don't let leaderboard period consume swipes
     const idx = TAB_ORDER.indexOf(activeTab);
     const newIdx = idx + direction;
     if (newIdx >= 0 && newIdx < TAB_ORDER.length) {
