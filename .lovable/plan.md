@@ -1,37 +1,24 @@
 
-# Fix Slow Sidebar Swipe Response
+
+# Fix: Followers List Shows "Follow" for Already-Followed Users
 
 ## Problem
-The 2-finger trackpad swipe on the sidebar panel feels slow for two reasons:
+When viewing a Followers list, users you already follow incorrectly show a "Follow" button instead of "Following". This happens because the `getFollowList` API call does not send authentication, so the backend can't determine the relationship between the current user and each listed user. The `isFollowing` field comes back as `undefined`/`false`.
 
-1. **100ms debounce delay** on the wheel handler -- it waits 100ms after the last wheel event before processing the accumulated delta. This adds noticeable lag before anything happens.
-2. **300ms slide animation** on leaderboard period changes (via `AnimatePresence` + `motion.div`) -- after the delay, you then wait for the animation to complete.
+## Solution
+Pass `requiresAuth: true` to the `getFollowList` API call so the backend receives the user's auth token and can return accurate `isFollowing` status for each user in the list.
 
-Combined, there's nearly 400ms of perceived delay.
+## Technical Details
 
-## Fix
+### File: `src/lib/api/dehub/social.ts`
+- Add `requiresAuth: true` to the `apiCall` options inside `getFollowList`
+- This ensures the JWT token is sent, allowing the API to return the correct `isFollowing` field per user
 
-### 1. Reduce wheel debounce from 100ms to 40ms
-The 100ms timeout was overly conservative. 40ms is enough to batch trackpad inertia events while feeling near-instant.
+### Change
+```text
+Before:  apiCall(`/api/follow_list/...`, { params })
+After:   apiCall(`/api/follow_list/...`, { params, requiresAuth: true })
+```
 
-**File:** `src/components/app/sidebar/TabbedSidePanel.tsx`
-- Change `setTimeout(..., 100)` to `setTimeout(..., 40)`
+This is a one-line fix. No other files need to change -- the `FollowersListDrawer` already reads `isFollowing` from the response and renders the button state correctly; it just never received the right data.
 
-### 2. Speed up leaderboard period transition animation
-Reduce the slide animation duration from 300ms to 150ms so period switches feel snappy.
-
-**File:** `src/components/app/sidebar/SidebarLeaderboard.tsx`  
-- Change `transition={{ duration: 0.3, ... }}` to `transition={{ duration: 0.15, ... }}`
-
-### 3. Add a cooldown to prevent double-firing
-Add a ref-based cooldown (~300ms) after each swipe fires, so trackpad inertia doesn't trigger multiple consecutive swipes. This replaces the need for a long debounce.
-
-**File:** `src/components/app/sidebar/TabbedSidePanel.tsx`
-- Add a `lastSwipeTime` ref
-- Skip processing if within cooldown window
-
-## Summary of Changes
-| File | Change |
-|------|--------|
-| `TabbedSidePanel.tsx` | Reduce wheel debounce to 40ms, add 300ms cooldown between swipes |
-| `SidebarLeaderboard.tsx` | Reduce animation duration to 150ms |
