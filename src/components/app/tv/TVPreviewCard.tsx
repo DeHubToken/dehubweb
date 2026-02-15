@@ -79,6 +79,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         manifestLoadingTimeOut: 8000,
       });
 
+      console.log('[TVPreviewCard] HLS supported, loading source...', channel.streamUrl);
       hls.loadSource(channel.streamUrl);
       hls.attachMedia(video);
 
@@ -87,6 +88,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
       });
 
       hls.on(Hls.Events.ERROR, (_, data) => {
+        console.error('[TVPreviewCard] HLS Error:', data);
         if (data.fatal) destroyHls();
       });
 

@@ -9,12 +9,12 @@
 
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { 
-  searchNFTs, 
-  getMediaUrl, 
-  DEHUB_CDN_BASE, 
+import {
+  searchNFTs,
+  getMediaUrl,
+  DEHUB_CDN_BASE,
   getLiveStreams,
-  type DeHubNFT, 
+  type DeHubNFT,
   type SearchNFTsParams,
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
@@ -42,7 +42,7 @@ const BLOCKED_CREATORS = [
 function isBlockedCreator(nft: DeHubNFT): boolean {
   const displayName = (nft.minterDisplayName || nft.mintername || '').toLowerCase();
   const username = (nft.creator?.username || '').toLowerCase();
-  return BLOCKED_CREATORS.some(blocked => 
+  return BLOCKED_CREATORS.some(blocked =>
     displayName.includes(blocked) || username.includes(blocked)
   );
 }
@@ -81,50 +81,50 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // Get ID from various possible fields
   const tokenId = nft.tokenId || nft.id || nft.token_id;
   const id = String(tokenId);
-  
+
   // Get thumbnail with CDN URL
-  const thumbnail = getMediaUrl(nft.imageUrl) || 
-                    getMediaUrl(nft.thumbnail_url) || 
-                    getMediaUrl(nft.media_url) || 
-                    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
-  
+  const thumbnail = getMediaUrl(nft.imageUrl) ||
+    getMediaUrl(nft.thumbnail_url) ||
+    getMediaUrl(nft.media_url) ||
+    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+
   // Build video URL using cdnurl/videos/{tokenId}.mp4 pattern
   const videoUrl = tokenId ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4` : undefined;
-  
+
   // Get duration from various fields
   const duration = nft.videoDuration || nft.duration;
-  
+
   // Get creator info from various possible fields
-  const channel = nft.minterDisplayName || 
-                  nft.minterUsername || 
-                  nft.mintername || 
-                  nft.creator?.display_name || 
-                  nft.creator?.username || 
-                  'Unknown Creator';
-  
+  const channel = nft.minterDisplayName ||
+    nft.minterUsername ||
+    nft.mintername ||
+    nft.creator?.display_name ||
+    nft.creator?.username ||
+    'Unknown Creator';
+
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
-  const channelAvatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
-                        buildAvatarUrl(minterAddress, nft.creator?.avatar_url) || 
-                        'user';
-  
+  const channelAvatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) ||
+    buildAvatarUrl(minterAddress, nft.creator?.avatar_url) ||
+    'user';
+
   const verified = nft.creator?.is_verified || false;
-  
+
   // Get view count from various fields
   const viewCount = nft.views || nft.view_count;
-  
+
   // Get created date from various fields
   const createdAt = nft.createdAt || nft.created_at;
-  
+
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
   const creatorUsername = nft.minterUsername || nft.mintername || nft.creator?.username;
-  
+
   // Get stats
   const likeCount = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
   const dislikeCount = nft.dislikes ?? nft.totalVotes?.against ?? nft.dislike_count ?? 0;
   const commentCount = nft.commentCount || nft.comment_count || 0;
-  
+
   // Map content access fields from API
   const isPPV = nft.is_ppv ?? false;
   const ppvPrice = nft.ppv_price;
@@ -133,7 +133,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const isLocked = nft.is_locked ?? false;
   const lockedPrice = nft.locked_price;
   const lockedCurrency = nft.locked_currency || 'DHB';
-  
+
   return {
     id,
     type: 'video',
@@ -173,42 +173,42 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   // Get ID from various possible fields
   const tokenId = nft.tokenId || nft.id || nft.token_id;
   const id = String(tokenId);
-  
+
   // Build image URLs array from imageUrls field using shared utility
   const imageUrls = buildFeedImageUrls(nft.imageUrls) || [];
-  
+
   // Get primary image URL (first from array or fallback to single image)
-  const primaryImage = imageUrls[0] || 
-                       getMediaUrl(nft.imageUrl) || 
-                       getMediaUrl(nft.media_url) || 
-                       getMediaUrl(nft.thumbnail_url) || 
-                       FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
-  
+  const primaryImage = imageUrls[0] ||
+    getMediaUrl(nft.imageUrl) ||
+    getMediaUrl(nft.media_url) ||
+    getMediaUrl(nft.thumbnail_url) ||
+    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+
   // Get creator info
   const username = nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.display_name || nft.creator?.username || 'unknown';
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
-  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
-                 buildAvatarUrl(minterAddress, nft.creator?.avatar_url) || 
-                 'user';
+  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) ||
+    buildAvatarUrl(minterAddress, nft.creator?.avatar_url) ||
+    'user';
   const verified = nft.creator?.is_verified || false;
-  
+
   // Get stats
   const likes = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
   const comments = nft.commentCount || nft.comment_count || 0;
   const viewCount = nft.views || nft.view_count || 0;
-  
+
   // Get created date
   const createdAt = nft.createdAt || nft.created_at;
-  
+
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
   const creatorUsername = nft.minterUsername || nft.mintername || nft.creator?.username;
-  
+
   // Get title and description
   const title = nft.name || nft.title || '';
   const description = nft.description || '';
-  
+
   return {
     id,
     type: 'image',
@@ -249,31 +249,31 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
  */
 export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
   const id = String(nft.tokenId || nft.id || nft.token_id);
-  
-  const thumbnail = getMediaUrl(nft.imageUrl) || 
-                    getMediaUrl(nft.thumbnail_url) || 
-                    getMediaUrl(nft.media_url) || 
-                    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
-  
-  const streamer = nft.minterDisplayName || 
-                   nft.mintername || 
-                   nft.creator?.display_name || 
-                   nft.creator?.username || 
-                   'Unknown Streamer';
-  
+
+  const thumbnail = getMediaUrl(nft.imageUrl) ||
+    getMediaUrl(nft.thumbnail_url) ||
+    getMediaUrl(nft.media_url) ||
+    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+
+  const streamer = nft.minterDisplayName ||
+    nft.mintername ||
+    nft.creator?.display_name ||
+    nft.creator?.username ||
+    'Unknown Streamer';
+
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
-  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
-                 buildAvatarUrl(minterAddress, nft.creator?.avatar_url) || 
-                 'user';
-  
+  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) ||
+    buildAvatarUrl(minterAddress, nft.creator?.avatar_url) ||
+    'user';
+
   const viewCount = nft.views || nft.view_count || 0;
   const category = Array.isArray(nft.category) ? nft.category[0] : nft.category;
-  
+
   // Get creator ID and username for profile navigation
   const creatorId = nft.minter || nft.creator?.id;
   const creatorUsername = nft.mintername || nft.creator?.username;
-  
+
   return {
     id,
     type: 'live',
@@ -294,18 +294,18 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
  * Map DeHub NFT creator to story user format
  */
 export function mapNFTToStoryUser(nft: DeHubNFT): { name: string; avatar: string } {
-  const name = nft.minterDisplayName || 
-               nft.mintername || 
-               nft.creator?.display_name || 
-               nft.creator?.username || 
-               'User';
-  
+  const name = nft.minterDisplayName ||
+    nft.mintername ||
+    nft.creator?.display_name ||
+    nft.creator?.username ||
+    'User';
+
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
-  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) || 
-                 buildAvatarUrl(minterAddress, nft.creator?.avatar_url) || 
-                 '';
-  
+  const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl) ||
+    buildAvatarUrl(minterAddress, nft.creator?.avatar_url) ||
+    '';
+
   return { name, avatar };
 }
 
@@ -319,7 +319,7 @@ interface UseDeHubFeedOptions extends SearchNFTsParams {
  */
 export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
   const { enabled = true, status = 'minted', ...searchParams } = options;
-  
+
   return useInfiniteQuery({
     queryKey: ['dehub-feed', { ...searchParams, status }],
     queryFn: async ({ pageParam = 0 }) => {
@@ -329,15 +329,15 @@ export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {
         page: pageParam,
         unit: searchParams.unit || 15,
       });
-      
+
       // Handle both response formats: { result: [...] } or { data: [...] }
       const rawData = (response as any).result || response.data || [];
-      
+
       // Filter out blocked creators and blocked posts
       const data = rawData.filter((nft: DeHubNFT) => !isBlockedCreator(nft) && !isBlockedPost(nft));
-      
+
       const unit = searchParams.unit || 15;
-      
+
       return {
         data,
         page: pageParam,
@@ -397,9 +397,9 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
           sortMode: options.sortMode,
           category: options.category,
         });
-        
+
         const streams = response.result || [];
-        
+
         return {
           data: streams,
           page: pageParam,
@@ -438,17 +438,17 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
  * Map API LiveStream to local LiveStream format
  */
 export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): LiveStream {
-  const thumbnail = stream.thumbnailUrl || 
-                    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
-  
-  const streamerName = stream.streamer?.displayName || 
-                       stream.streamer?.username || 
-                       'Unknown Streamer';
-  
-  const avatar = stream.streamer 
-    ? buildAvatarUrl(stream.streamer.address, stream.streamer.avatarImageUrl || stream.streamer.avatarUrl) 
+  const thumbnail = stream.thumbnailUrl ||
+    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+
+  const streamerName = stream.streamer?.displayName ||
+    stream.streamer?.username ||
+    'Unknown Streamer';
+
+  const avatar = stream.streamer
+    ? buildAvatarUrl(stream.streamer.address, stream.streamer.avatarImageUrl || stream.streamer.avatarUrl)
     : '';
-  
+
   return {
     id: stream.streamId,
     type: 'live',
@@ -460,6 +460,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     thumbnail,
     tags: [],
     isLive: stream.status === 'live',
+    playbackUrl: stream.playbackUrl,
     creatorId: stream.address,
     creatorUsername: stream.streamer?.username,
     likeCount: stream.likeCount || 0,

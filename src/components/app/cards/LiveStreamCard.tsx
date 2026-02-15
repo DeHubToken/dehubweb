@@ -95,10 +95,27 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     const video = videoRef.current;
     if (!video || !stream.isLive) return;
 
-    const streamUrl = stream.thumbnail;
-    
+    const streamUrl = stream.playbackUrl || stream.thumbnail;
+    console.log('[LiveStreamCard] Initializing player', { 
+      streamId: stream.id, 
+      isLive: stream.isLive, 
+      playbackUrl: stream.playbackUrl,
+      thumbnailAsFallback: stream.thumbnail,
+      finalStreamUrl: streamUrl,
+      videoId 
+    });
+
     if (!streamUrl || !streamUrl.includes('.m3u8')) {
-      setStreamEnded(true);
+      console.warn('[LiveStreamCard] Stream URL missing or invalid (no .m3u8)', { 
+        playbackUrl: stream.playbackUrl,
+        thumbnail: stream.thumbnail 
+      });
+      // Don't set streamEnded here if handles scheduled streams, 
+      // but for live playback we need a valid URL.
+      if (stream.isLive) {
+        setError('Stream source not found');
+        setStreamEnded(true);
+      }
       return;
     }
 
@@ -106,18 +123,26 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       const hls = new Hls({
         enableWorker: true,
         lowLatencyMode: true,
+        backBufferLength: 60,
       });
       
+      console.log('[LiveStreamCard] HLS supported, loading source...', streamUrl);
       hls.loadSource(streamUrl);
       hls.attachMedia(video);
       
       hls.on(Hls.Events.ERROR, (_, data) => {
+        console.error('[LiveStreamCard] HLS Error:', data);
         if (data.fatal) {
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            console.error('[LiveStreamCard] Network error, stream might be offline');
             setError('Stream unavailable');
             setStreamEnded(true);
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            console.log('[LiveStreamCard] Media error, attempting recovery...');
             hls.recoverMediaError();
+          } else {
+            hls.destroy();
+            setStreamEnded(true);
           }
         }
       });

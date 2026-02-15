@@ -123,6 +123,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         levelLoadingTimeOut: 10000,
       });
       
+      console.log('[TVChannelCard] HLS supported, loading source...', channel.streamUrl);
       hls.loadSource(channel.streamUrl);
       hls.attachMedia(video);
       
@@ -131,6 +132,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       });
       
       hls.on(Hls.Events.ERROR, (_, data) => {
+        console.error('[TVChannelCard] HLS Error:', data);
         if (isStoppingRef.current) return;
         if (data.fatal) {
           setHasError(true);

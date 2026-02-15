@@ -234,6 +234,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     likeCount: nft.totalVotes?.for || 0,
     commentCount: nft.commentCount || nft.comment_count || 0,
+    playbackUrl: nft.videoUrl || (nft as any).playbackUrl,
   };
 }
 

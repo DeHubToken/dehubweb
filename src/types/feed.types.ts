@@ -183,6 +183,8 @@ export interface LiveStream extends BaseFeedItem {
   thumbnail: string;
   tags: string[];
   isLive: boolean;
+  /** HLS playback URL (.m3u8) */
+  playbackUrl?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */

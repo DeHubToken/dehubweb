@@ -113,6 +113,7 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
         backBufferLength: 90,
       });
       
+      console.log('[TVPlayer] HLS supported, loading source...', url);
       hls.loadSource(url);
       hls.attachMedia(video);
       
@@ -123,6 +124,7 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
       });
       
       hls.on(Hls.Events.ERROR, (_, data) => {
+        console.error('[TVPlayer] HLS Error:', data);
         if (data.fatal) {
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
