@@ -202,21 +202,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
         </div>
         
         <div className="flex items-center gap-2">
-          {/* Room selector for multiple rooms */}
-          {rooms.length > 1 && (
-            <select
-              value={selectedRoomId || ''}
-              onChange={(e) => setSelectedRoomId(e.target.value)}
-              className="bg-zinc-800 text-white text-xs rounded-lg px-2 py-1 border border-zinc-700"
-            >
-              {rooms.map((room) => (
-                <option key={room.id} value={room.id}>
-                  {room.name || room.topic || room.id}
-                </option>
-              ))}
-            </select>
-          )}
-          {isAuthenticated && (
+          {isModerator && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -231,19 +217,21 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <TooltipContent>Create new room</TooltipContent>
             </Tooltip>
           )}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-zinc-400 hover:text-white"
-                onClick={() => setSettingsOpen(true)}
-              >
-                <Settings className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Room settings</TooltipContent>
-          </Tooltip>
+          {isModerator && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-zinc-400 hover:text-white"
+                  onClick={() => setSettingsOpen(true)}
+                >
+                  <Settings className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Room settings</TooltipContent>
+            </Tooltip>
+          )}
         </div>
       </div>
 
