@@ -7,9 +7,9 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useEffect, useRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { RefreshCw, Radio, Eye, Loader2, Tv, ChevronRight } from 'lucide-react';
+import { RefreshCw, Radio, Eye, Tv, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
@@ -52,7 +52,6 @@ interface LiveFeedProps {
 }
 
 export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
-  const loaderRef = useRef<HTMLDivElement>(null);
   const [showStagesModal, setShowStagesModal] = useState(false);
   const navigate = useNavigate();
 
@@ -85,22 +84,7 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
     return allStreams.map((stream, index) => mapApiLiveStreamToLocal(stream, index));
   }, [apiData]);
 
-  // Infinite scroll observer
-  useEffect(() => {
-    if (!loaderRef.current || !hasNextPage) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1, rootMargin: '100px' }
-    );
-
-    observer.observe(loaderRef.current);
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  // No infinite scroll needed - streams are shown in a carousel
 
   const { isAutoRetrying } = useAutoRetryFeed({
     itemCount: streams.length,
@@ -191,24 +175,15 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
             {streams.length === 0 ? (
               <EmptyState />
             ) : (
-              <>
-                {streams.map((stream) => (
-                  <LiveCard key={stream.id} stream={stream} />
-                ))}
-                
-                {/* Infinite scroll loader */}
-                <div ref={loaderRef} className="py-4 flex justify-center">
-                  {isFetchingNextPage && (
-                    <div className="flex items-center gap-2 text-zinc-400">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span className="text-sm">Loading more...</span>
+              <SwipeableCarousel>
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
+                  {streams.map((stream) => (
+                    <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
+                      <LiveCard stream={stream} />
                     </div>
-                  )}
-                  {!hasNextPage && streams.length > 0 && (
-                    <p className="text-zinc-500 text-sm">No more streams</p>
-                  )}
+                  ))}
                 </div>
-              </>
+              </SwipeableCarousel>
             )}
           </div>
 

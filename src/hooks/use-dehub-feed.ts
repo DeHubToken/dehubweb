@@ -439,32 +439,42 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
  * Map API LiveStream to local LiveStream format
  */
 export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): LiveStream {
-  const thumbnail = stream.thumbnailUrl ||
-    FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
+  // API returns 'account' not 'streamer', and 'thumbnail' as relative path
+  const rawAccount = (stream as any).account || stream.streamer;
+  const rawThumbnail = (stream as any).thumbnail || stream.thumbnailUrl;
+  const thumbnail = rawThumbnail
+    ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}/${rawThumbnail}`)
+    : FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
 
-  const streamerName = stream.streamer?.displayName ||
-    stream.streamer?.username ||
+  const streamerName = rawAccount?.displayName ||
+    rawAccount?.username ||
     'Unknown Streamer';
 
-  const avatar = stream.streamer
-    ? buildAvatarUrl(stream.streamer.address, stream.streamer.avatarImageUrl || stream.streamer.avatarUrl)
+  const avatar = rawAccount
+    ? buildAvatarUrl(rawAccount.address, rawAccount.avatarImageUrl || rawAccount.avatarUrl)
     : '';
 
+  // API uses _id not streamId, categories[] not category, totalViews not viewerCount
+  const id = (stream as any)._id || stream.streamId || String(index);
+  const category = Array.isArray((stream as any).categories) ? (stream as any).categories[0] : stream.category;
+  const viewerCount = (stream as any).totalViews ?? (stream as any).peakViewers ?? stream.viewerCount ?? 0;
+  const likeCount = (stream as any).likes ?? stream.likeCount ?? 0;
+
   return {
-    id: stream.streamId,
+    id,
     type: 'live',
     streamer: streamerName,
     avatar,
     title: stream.title,
-    game: stream.category || 'Just Chatting',
-    viewers: formatViews(stream.viewerCount).replace(' views', ''),
+    game: category || 'Just Chatting',
+    viewers: formatViews(viewerCount).replace(' views', ''),
     thumbnail,
     tags: [],
-    isLive: stream.status === 'live',
-    playbackUrl: stream.playbackUrl,
-    creatorId: stream.address,
-    creatorUsername: stream.streamer?.username,
-    likeCount: stream.likeCount || 0,
+    isLive: stream.status === 'live' || (stream.status as string) === 'LIVE',
+    playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+    creatorId: stream.address || rawAccount?.address,
+    creatorUsername: rawAccount?.username,
+    likeCount,
   };
 }
 
