@@ -183,8 +183,9 @@ export function WhoToFollow() {
   };
 
   const handleUserClick = (user: UniqueUser) => {
-    if (user.username) {
-      navigate(`/${user.username}`);
+    const target = user.username || user.address;
+    if (target) {
+      navigate(`/${target}`);
     }
   };
 
