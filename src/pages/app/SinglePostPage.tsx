@@ -129,6 +129,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   const title = nft.title || nft.name;
   const description = nft.description && nft.description !== title ? nft.description : undefined;
   const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const streamInfo = nft.streamInfo;
   
   // Canonical avatar resolution (matches feed normalization)
   const creatorObj = (nft as any).creator;
@@ -157,6 +158,17 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     isLiked: nft.isLiked,
     isDisliked: nft.isDisliked,
+    isPPV: nft.is_ppv || streamInfo?.isPayPerView || false,
+    ppvPrice: nft.ppv_price || streamInfo?.payPerViewAmount,
+    ppvCurrency: nft.ppv_currency || 'DHB',
+    isW2E: nft.is_w2e || streamInfo?.isAddBounty || false,
+    isLocked: nft.is_locked || streamInfo?.isLockContent || false,
+    lockedPrice: nft.locked_price || streamInfo?.lockContentAmount,
+    lockedCurrency: nft.locked_currency || streamInfo?.lockContentTokenSymbol || 'DHB',
+    bountyViews: streamInfo?.addBountyFirstXViewers != null ? Number(streamInfo.addBountyFirstXViewers) : undefined,
+    bountyComments: streamInfo?.addBountyFirstXComments != null ? Number(streamInfo.addBountyFirstXComments) : undefined,
+    bountyAmount: streamInfo?.addBountyAmount,
+    bountyCurrency: streamInfo?.addBountyTokenSymbol || 'DHB',
   };
 }
 

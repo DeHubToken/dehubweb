@@ -259,6 +259,18 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     isDisliked: item.isDisliked ?? false,
     // Preserve raw timestamp for navigation caching
     createdAt: item.createdAt,
+    // PPV/Bounty/Locked fields
+    isPPV: item.streamInfo?.isPayPerView ?? false,
+    ppvPrice: item.streamInfo?.payPerViewAmount,
+    ppvCurrency: 'DHB',
+    isW2E: item.streamInfo?.isAddBounty ?? false,
+    isLocked: item.streamInfo?.isLockContent ?? false,
+    lockedPrice: item.streamInfo?.lockContentAmount,
+    lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
+    bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
+    bountyAmount: item.streamInfo?.addBountyAmount,
+    bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
   };
 }
 
