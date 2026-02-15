@@ -439,10 +439,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userInfo = await w3aInstance.getUserInfo();
       console.log('[Auth] [DIAG-REDIRECT] Web3Auth userInfo:', JSON.stringify({
         email: userInfo.email,
-        verifier: userInfo.verifier,
-        verifierId: userInfo.verifierId,
-        typeOfLogin: userInfo.typeOfLogin,
-        aggregateVerifier: userInfo.aggregateVerifier,
+        verifier: (userInfo as any).verifier,
+        verifierId: (userInfo as any).verifierId,
+        typeOfLogin: (userInfo as any).typeOfLogin,
+        aggregateVerifier: (userInfo as any).aggregateVerifier,
       }));
     } catch (e) {
       console.warn('[Auth] [DIAG-REDIRECT] getUserInfo failed:', e);
@@ -512,10 +512,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userInfo = await w3aInstance.getUserInfo();
         console.log('[Auth] [DIAG-POPUP] Web3Auth userInfo:', JSON.stringify({
           email: userInfo.email,
-          verifier: userInfo.verifier,
-          verifierId: userInfo.verifierId,
-          typeOfLogin: userInfo.typeOfLogin,
-          aggregateVerifier: userInfo.aggregateVerifier,
+          verifier: (userInfo as any).verifier,
+          verifierId: (userInfo as any).verifierId,
+          typeOfLogin: (userInfo as any).typeOfLogin,
+          aggregateVerifier: (userInfo as any).aggregateVerifier,
         }));
       } catch (e) {
         console.warn('[Auth] [DIAG-POPUP] getUserInfo failed:', e);

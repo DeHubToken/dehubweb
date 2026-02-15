@@ -983,149 +983,45 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
             {/* PPV Badge */}
             {video.isPPV && video.ppvPrice && (
-              <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-                <DrawerTrigger asChild>
-                  <button 
-                    className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Ticket className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">
-                      {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
-                    </span>
-                  </button>
-                </DrawerTrigger>
-                <DrawerContent glass className="px-4 pb-6">
-                  <DrawerHeader className="pb-3">
-                    <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                      <Ticket className="w-5 h-5 text-white" />
-                      Pay-Per-View Content
-                    </DrawerTitle>
-                  </DrawerHeader>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                      <span className="text-white text-sm">Unlock Price</span>
-                      <span className="text-white text-lg font-bold">
-                        {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
-                      </span>
-                    </div>
-                    <p className="text-center text-white/60 text-sm">
-                      Pay once to unlock this exclusive content forever! 💎
-                    </p>
-                  </div>
-                </DrawerContent>
-              </Drawer>
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+              >
+                <Ticket className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+                </span>
+              </button>
             )}
             
             {/* Bounty Badge */}
             {video.isW2E && (
-              <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
-                <DrawerTrigger asChild>
-                  <button 
-                    className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Gift className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">
-                      {video.bountyAmount && video.bountyAmount > 0 
-                        ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}` 
-                        : 'Bounty'}
-                    </span>
-                  </button>
-                </DrawerTrigger>
-                <DrawerContent glass className="px-4 pb-6">
-                  <DrawerHeader className="pb-3">
-                    <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                      <Gift className="w-5 h-5 text-white" />
-                      Bounty Rewards
-                    </DrawerTitle>
-                  </DrawerHeader>
-                  <div className="flex flex-col gap-4">
-                    {/* Reward Criteria */}
-                    <div className="space-y-3">
-                      {video.bountyViews && video.bountyViews > 0 && (
-                        <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                          <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-                            <Eye className="w-4 h-4 text-white" />
-                          </div>
-                          <div>
-                            <p className="text-white text-sm font-medium">First {video.bountyViews} views</p>
-                            <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
-                          </div>
-                        </div>
-                      )}
-                      {video.bountyComments && video.bountyComments > 0 && (
-                        <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
-                          <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-                            <MessageCircle className="w-4 h-4 text-white" />
-                          </div>
-                          <div>
-                            <p className="text-white text-sm font-medium">First {video.bountyComments} comments</p>
-                            <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Reward per User */}
-                    {video.bountyAmount && video.bountyAmount > 0 && (
-                      <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                        <span className="text-white text-sm">Reward per User</span>
-                        <div className="flex items-center gap-2">
-                          <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                          <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Call to Action */}
-                    <p className="text-center text-white/60 text-sm">
-                      Watch and engage to earn rewards! 🎁
-                    </p>
-                  </div>
-                </DrawerContent>
-              </Drawer>
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
+              >
+                <Gift className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {video.bountyAmount && video.bountyAmount > 0 
+                    ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}` 
+                    : 'Bounty'}
+                </span>
+              </button>
             )}
             
             {/* Locked/Gated Badge */}
             {video.isLocked && (
-              <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
-                <DrawerTrigger asChild>
-                  <button 
-                    className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Lock className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">
-                      {video.lockedPrice && video.lockedPrice > 0 
-                        ? `${formatCompact(video.lockedPrice)} ${video.lockedCurrency || 'DHB'}` 
-                        : ''}
-                    </span>
-                  </button>
-                </DrawerTrigger>
-                <DrawerContent glass className="px-4 pb-6">
-                  <DrawerHeader className="pb-3">
-                    <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                      <Lock className="w-5 h-5 text-white" />
-                      Gated Content
-                    </DrawerTitle>
-                  </DrawerHeader>
-                  <div className="flex flex-col gap-4">
-                    {video.lockedPrice && video.lockedPrice > 0 && (
-                      <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                        <span className="text-white text-sm">Must hold to view</span>
-                        <div className="flex items-center gap-2">
-                          <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
-                          <span className="text-white text-lg font-bold">{formatCompact(video.lockedPrice)} {video.lockedCurrency || 'DHB'}</span>
-                        </div>
-                      </div>
-                    )}
-                    <p className="text-center text-white/60 text-sm">
-                      Hold the required tokens to view this content! 🔓
-                    </p>
-                  </div>
-                </DrawerContent>
-              </Drawer>
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+              >
+                <Lock className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {video.lockedPrice && video.lockedPrice > 0 
+                    ? `${formatCompact(video.lockedPrice)} ${video.lockedCurrency || 'DHB'}` 
+                    : ''}
+                </span>
+              </button>
             )}
           </div>
         )}
@@ -1440,6 +1336,111 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
         }}
       />
+
+      {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
+      {video.isPPV && video.ppvPrice && (
+        <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Ticket className="w-5 h-5 text-white" />
+                Pay-Per-View Content
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-white text-sm">Unlock Price</span>
+                <span className="text-white text-lg font-bold">
+                  {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+                </span>
+              </div>
+              <p className="text-center text-white/60 text-sm">
+                Pay once to unlock this exclusive content forever! 💎
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Bounty Drawer - controlled, rendered at root level for mobile compatibility */}
+      {video.isW2E && (
+        <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Gift className="w-5 h-5 text-white" />
+                Bounty Rewards
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="space-y-3">
+                {video.bountyViews && video.bountyViews > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Eye className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">First {video.bountyViews} views</p>
+                      <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                    </div>
+                  </div>
+                )}
+                {video.bountyComments && video.bountyComments > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">First {video.bountyComments} comments</p>
+                      <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {video.bountyAmount && video.bountyAmount > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">Reward per User</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{video.bountyAmount} {video.bountyCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                Watch and engage to earn rewards! 🎁
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
+      {video.isLocked && (
+        <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-white" />
+                Gated Content
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              {video.lockedPrice && video.lockedPrice > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">Must hold to view</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(video.lockedPrice)} {video.lockedCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                Hold the required tokens to view this content! 🔓
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   );
 });
