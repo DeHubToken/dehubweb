@@ -401,9 +401,9 @@ function ProfileSettings() {
         )}
         <button
           onClick={() => coverInputRef.current?.click()}
-          className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+          className="absolute inset-0 bg-black/30 transition-opacity hover:bg-black/50 flex items-center justify-center"
         >
-          <Camera className="w-6 h-6 text-white" />
+          <Camera className="w-6 h-6 text-white/70" />
         </button>
         <input
           ref={coverInputRef}
