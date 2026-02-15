@@ -918,32 +918,36 @@ export async function uploadChatImage(file: File): Promise<{ url: string }> {
   }
 
   try {
-    const formData = new FormData();
-    formData.append('file', file);
+    // Determine file extension
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    const filePath = `${fileName}`;
 
-    const response = await fetch(`${DEHUB_API_BASE}/api/chat-image`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    console.log('[DM API] Uploading to Supabase bucket chat-media:', filePath);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to upload image');
+    const { data, error } = await supabase.storage
+      .from('chat-media')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('[DM API] Supabase storage upload error:', error);
+      throw new Error(`Upload failed: ${error.message}`);
     }
 
-    const data = await response.json();
-    console.log('[DM API] uploadChatImage response:', data);
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('chat-media')
+      .getPublicUrl(filePath);
 
-    const url = data?.result?.url || data?.url || data?.imageUrl || data?.result?.imageUrl;
-
-    if (!url) {
-      throw new Error('No URL returned from image upload');
+    if (!publicUrl) {
+      throw new Error('Failed to get public URL for uploaded image');
     }
 
-    return { url };
+    console.log('[DM API] Image uploaded successfully:', publicUrl);
+    return { url: publicUrl };
   } catch (error) {
     console.error('[DM API] uploadChatImage failed:', error);
     throw error;
