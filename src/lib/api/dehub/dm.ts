@@ -557,7 +557,7 @@ export async function sendMessage(
       }
 
       if (mediaFile) {
-        formData.append('media', mediaFile, mediaFile.name);
+        formData.append('file', mediaFile, mediaFile.name);
         console.log('[DM API] Attaching file to FormData:', mediaFile.name, mediaFile.size);
       } else if (mediaUrl && !mediaUrl.startsWith('data:')) {
         formData.append('mediaUrl', mediaUrl);
