@@ -1,20 +1,50 @@
 
 
-## Fix Stale Username Navigation in Notifications
+## Fix: Follow Status Lost in Followers List
 
 ### Problem
-When a user changes their username, old notifications still reference the previous username. Clicking these notifications navigates to `/{oldUsername}`, which shows the "Username available!" page instead of the actual user profile. The mobile app works because it likely resolves profiles by wallet address.
+When the followers list items need avatar enrichment (they come as raw addresses without usernames), the `processItems` function creates placeholder objects that don't carry over the `isFollowing` and `followsYou` fields from the original API response. After a page refresh, all users incorrectly show "Follow" instead of "Following".
 
-### Solution
-Update the notifications page to always prefer navigating by wallet address (`actorAddress`) over username (`actorUsername`), since wallet addresses are immutable and always resolve correctly.
+### Root Cause
+In `src/components/app/profile/FollowersListDrawer.tsx`, lines 108-113 create placeholder objects with only `address`, `username`, `displayName`, and `avatarUrl` -- dropping `isFollowing` and `followsYou` from the original items.
 
-### Changes (1 file)
+### Fix (1 file)
 
-**`src/pages/app/NotificationsPage.tsx`**
+**`src/components/app/profile/FollowersListDrawer.tsx`** -- Update the placeholder creation in `processItems` to preserve relationship fields from the original API items:
 
-1. Update `getNavigationLink()` (lines 222-232) -- for `following`, `subscription`, and `ppv_purchase` types, prefer `actorAddress` over `actorUsername`
-2. Update `profileLink` (lines 279-283) -- prefer `actorAddress` for the avatar link destination
-3. Update the avatar `<Link>` condition (line 314) -- show clickable avatar when `profileLink` exists (not just when `actorUsername` exists)
+```tsx
+// Before (lines 108-113):
+const placeholders = items.map(item => ({
+  address: item.address,
+  username: undefined,
+  displayName: truncateAddress(item.address),
+  avatarUrl: undefined,
+} as UserListItem));
 
-All three changes follow the same pattern: use `actorAddress` as the primary navigation target, with `actorUsername` as fallback.
+// After:
+const placeholders = items.map(item => ({
+  address: item.address,
+  username: undefined,
+  displayName: truncateAddress(item.address),
+  avatarUrl: undefined,
+  isFollowing: item.isFollowing,
+  followsYou: item.followsYou,
+} as UserListItem));
+```
+
+Also preserve these fields after enrichment (around line 122):
+
+```tsx
+// Before:
+return {
+  ...user,
+  username: enriched.username || undefined,
+  displayName: enriched.displayName || enriched.username || truncateAddress(user.address),
+  avatarUrl: buildAvatarUrl(user.address, enriched.avatarUrl || undefined),
+};
+
+// After (no change needed -- spread ...user already carries isFollowing/followsYou)
+```
+
+Since the enriched merge uses `...user` spread, the `isFollowing` and `followsYou` fields will be preserved automatically once they're added to the placeholders.
 
