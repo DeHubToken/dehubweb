@@ -459,7 +459,7 @@ export default function NotificationsPage() {
 
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to view your notifications and stay updated." />
+      <AuthGate description="Log in to view your notifications and stay updated with your friends on DeHub." />
     );
   }
 
