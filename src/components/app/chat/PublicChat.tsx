@@ -168,7 +168,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [refetchRooms]);
 
   return (
-    <div className="flex flex-col h-full bg-zinc-900 rounded-2xl overflow-hidden">
+    <div className="flex flex-col h-full bg-zinc-900 rounded-2xl overflow-hidden overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-zinc-800">
         <div className="flex items-center gap-3">
