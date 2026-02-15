@@ -20,10 +20,10 @@ function ConversationsSkeleton() {
     <div className="space-y-1">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="flex items-center gap-3 p-4">
-          <Skeleton className="w-12 h-12 rounded-xl bg-zinc-800" />
+          <Skeleton className="w-12 h-12 rounded-xl bg-white/[0.06]" />
           <div className="flex-1 space-y-2">
-            <Skeleton className="h-4 w-32 bg-zinc-800" />
-            <Skeleton className="h-3 w-48 bg-zinc-800" />
+            <Skeleton className="h-4 w-32 bg-white/[0.06]" />
+            <Skeleton className="h-3 w-48 bg-white/[0.06]" />
           </div>
         </div>
       ))}

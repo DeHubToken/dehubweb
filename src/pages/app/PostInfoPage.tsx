@@ -570,7 +570,7 @@ export default function PostInfoPage() {
                 <>
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <Skeleton className="w-10 h-10 rounded-full" />
+                      <Skeleton className="w-10 h-10 rounded-md" />
                       <div className="flex-1 space-y-1.5">
                         <Skeleton className="h-4 w-24" />
                         <Skeleton className="h-3 w-32" />

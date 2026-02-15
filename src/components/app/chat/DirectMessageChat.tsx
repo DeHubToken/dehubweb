@@ -113,11 +113,11 @@ function MessagesSkeleton() {
       {[...Array(5)].map((_, i) => (
         <div key={i} className={`flex gap-3 ${i % 2 === 0 ? '' : 'flex-row-reverse'}`}>
           {i % 2 === 0 && (
-            <div className="w-8 h-8 rounded-xl bg-zinc-800 animate-pulse flex-shrink-0" />
+            <div className="w-8 h-8 rounded-xl bg-white/[0.06] animate-pulse flex-shrink-0" />
           )}
           <div className={`flex-1 max-w-[75%] ${i % 2 !== 0 ? 'text-right' : ''}`}>
             <div 
-              className={`inline-block h-12 w-48 rounded-2xl bg-zinc-800 animate-pulse ${
+              className={`inline-block h-12 w-48 rounded-2xl bg-white/[0.06] animate-pulse ${
                 i % 2 !== 0 ? 'rounded-br-md' : 'rounded-bl-md'
               }`} 
             />
