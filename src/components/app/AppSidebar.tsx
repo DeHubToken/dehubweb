@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { PenSquare, LogIn } from 'lucide-react';
+import { PenSquare, LogIn, LogOut } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { MobileHeader } from './navigation/MobileHeader';
@@ -16,7 +16,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, disconnect } = useAuth();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   const mobileNavContent = (
@@ -57,13 +57,20 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
       {/* Post Button - only shown when authenticated */}
       {isAuthenticated && (
-        <div className="mt-4 pt-4">
+        <div className="mt-4 pt-4 space-y-3">
           <LiquidGlassBubble shimmer className="w-full cursor-pointer" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
               Post
             </div>
           </LiquidGlassBubble>
+          <button
+            onClick={() => { onToggle(); disconnect(); }}
+            className="w-full flex items-center justify-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors py-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Log out
+          </button>
         </div>
       )}
     </>
