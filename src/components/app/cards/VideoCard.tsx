@@ -12,7 +12,8 @@
 import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, DollarSign, MessageCircle, Link2, MessageSquare, Pencil, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, MessageCircle, Link2, MessageSquare, Pencil, Trash2 } from 'lucide-react';
+import ppvIcon from '@/assets/icons/ppv-icon.png';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -178,7 +179,7 @@ function MobileCreatorInfo({
                     setShowPPVDrawer(true);
                   }}
                 >
-                  <DollarSign className="w-4 h-4 text-white" />
+                  <img src={ppvIcon} alt="PPV" className="w-4 h-4" />
                 </button>
               )}
               
@@ -304,7 +305,7 @@ function MobileCreatorInfo({
         <DrawerContent glass className="px-4 pb-6">
           <DrawerHeader className="pb-3">
             <DrawerTitle className="text-white text-lg flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-white" />
+              <img src={ppvIcon} alt="PPV" className="w-5 h-5" />
               Pay-Per-View Content
             </DrawerTitle>
           </DrawerHeader>
@@ -989,7 +990,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                     className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <DollarSign className="w-3 h-3 text-white" />
+                    <img src={ppvIcon} alt="PPV" className="w-3 h-3" />
                     <span className="text-white text-xs font-medium">
                       {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
                     </span>
@@ -998,7 +999,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 <DrawerContent glass className="px-4 pb-6">
                   <DrawerHeader className="pb-3">
                     <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                      <DollarSign className="w-5 h-5 text-white" />
+                      <img src={ppvIcon} alt="PPV" className="w-5 h-5" />
                       Pay-Per-View Content
                     </DrawerTitle>
                   </DrawerHeader>
