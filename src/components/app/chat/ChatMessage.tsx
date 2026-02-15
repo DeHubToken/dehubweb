@@ -69,6 +69,13 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  const formatDate = (date: Date) => {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yy = String(date.getFullYear()).slice(-2);
+    return `${dd}/${mm}/${yy}`;
+  };
+
   const handleProfileClick = () => {
     if (message.userHandle) {
       navigate(`/${message.userHandle}`);
@@ -162,10 +169,10 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
         </div>
         
         {message.type === 'text' && (
-          <p className="text-zinc-300 text-sm break-words">
-            <TranslatableText text={message.content} className="inline" as="span" />
-            <span className="text-zinc-500 text-[10px] ml-2 align-baseline whitespace-nowrap">{formatTime(message.timestamp)}</span>
-          </p>
+          <div>
+            <TranslatableText text={message.content} className="text-zinc-300 text-sm break-words" as="p" />
+            <span className="text-zinc-500 text-[10px] whitespace-nowrap block mt-0.5">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+          </div>
         )}
         
         {message.type === 'image' && message.imageUrl && (
