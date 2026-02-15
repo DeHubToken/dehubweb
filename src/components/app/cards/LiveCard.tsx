@@ -132,7 +132,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           likeCount={stream.likeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{stream.viewers} watching</p>
+        <p className="font-semibold text-white text-sm">{stream.viewers} tuned in</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>
