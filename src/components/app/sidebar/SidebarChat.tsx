@@ -27,8 +27,11 @@ export function SidebarChat() {
   // Auto-scroll on new messages
   useEffect(() => {
     if (messages.length > 0) {
+      // Double rAF ensures DOM is fully laid out before scrolling
       requestAnimationFrame(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        requestAnimationFrame(() => {
+          bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
       });
     }
   }, [messages.length]);
