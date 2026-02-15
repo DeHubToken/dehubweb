@@ -156,6 +156,9 @@ export function FollowersListDrawer({
         const msg = err?.message || '';
         if (msg.toLowerCase().includes('hidden')) {
           setError('This user has hidden their followers/following list.');
+        } else if (msg.toLowerCase().includes('authentication required')) {
+          setError('This list is private.');
+          toast.error('This user\'s followers list is private');
         } else {
           setError('Failed to load list. Please try again.');
           toast.error('Failed to load follow list');
