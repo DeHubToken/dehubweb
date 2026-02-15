@@ -9,7 +9,7 @@
 
 import { useRef, useMemo, useEffect, useCallback } from 'react';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2 } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2, Ticket } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -168,8 +168,19 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
               <img
                 src={post.image}
                 alt=""
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className={cn(
+                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  post.isPPV && "blur-lg"
+                )}
               />
+              {/* PPV overlay in collage */}
+              {post.isPPV && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                    <Ticket className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />

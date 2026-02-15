@@ -146,6 +146,28 @@ export interface ImagePost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Whether content is pay-per-view */
+  isPPV?: boolean;
+  /** PPV price amount */
+  ppvPrice?: number;
+  /** PPV currency (e.g., "USDC", "DHB") */
+  ppvCurrency?: string;
+  /** Whether content is watch-to-earn/bounty */
+  isW2E?: boolean;
+  /** Whether content is subscriber-only locked */
+  isLocked?: boolean;
+  /** Locked: price to unlock */
+  lockedPrice?: number;
+  /** Locked: currency (DHB, USDC) */
+  lockedCurrency?: string;
+  /** Bounty: number of viewers to reward */
+  bountyViews?: number;
+  /** Bounty: number of commenters to reward */
+  bountyComments?: number;
+  /** Bounty: total reward amount */
+  bountyAmount?: number;
+  /** Bounty: reward currency (DHB, USDC) */
+  bountyCurrency?: string;
 }
 
 /**

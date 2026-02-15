@@ -12,10 +12,11 @@
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
+import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
@@ -300,11 +301,27 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
+  const [showPPVDrawer, setShowPPVDrawer] = useState(false);
+  const [showBountyDrawer, setShowBountyDrawer] = useState(false);
+  const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  
+  // PPV/Bounty/Locked status
+  const isPPV = post.isPPV || false;
+  const isW2E = post.isW2E || false;
+  const isLocked = post.isLocked || false;
+  const hasBadges = isPPV || isW2E || isLocked;
+
+  // Format numbers with abbreviations (1K, 1M, etc.)
+  const formatCompact = (num: number): string => {
+    if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
+    if (num >= 1000) return `${Math.floor(num / 1000)}K`;
+    return String(num);
+  };
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -462,9 +479,86 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       </div>
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
-      <SwipeableCarousel>
-        <ImageCarousel images={images} onImageClick={handleImageClick} />
-      </SwipeableCarousel>
+      <div className="relative">
+        {isPPV ? (
+          <>
+            {/* PPV: show blurred image with ticket overlay */}
+            <div className="relative rounded-md overflow-hidden">
+              <img 
+                src={images[0]} 
+                alt="" 
+                className="w-full max-h-[600px] object-cover blur-lg"
+                loading="lazy"
+              />
+              <div 
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+                onTouchEnd={(e) => { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                  <Ticket className="h-7 w-7 text-white" />
+                </div>
+                <p className="text-white font-semibold text-sm mb-1">Pay-Per-View Content</p>
+                <p className="text-white/70 text-xs">
+                  Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                </p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <SwipeableCarousel>
+            <ImageCarousel images={images} onImageClick={handleImageClick} />
+          </SwipeableCarousel>
+        )}
+
+        {/* Content Type Badges - PPV/Bounty/Locked */}
+        {hasBadges && (
+          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
+            {/* PPV Badge */}
+            {isPPV && post.ppvPrice && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+              >
+                <Ticket className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                </span>
+              </button>
+            )}
+            
+            {/* Bounty Badge */}
+            {isW2E && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
+              >
+                <Gift className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {post.bountyAmount && post.bountyAmount > 0 
+                    ? `${formatCompact(post.bountyAmount)} ${post.bountyCurrency || 'DHB'}` 
+                    : 'Bounty'}
+                </span>
+              </button>
+            )}
+            
+            {/* Locked/Gated Badge */}
+            {isLocked && (
+              <button 
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
+              >
+                <Lock className="w-3 h-3 text-white" />
+                <span className="text-white text-xs font-medium">
+                  {post.lockedPrice && post.lockedPrice > 0 
+                    ? `${formatCompact(post.lockedPrice)} ${post.lockedCurrency || 'DHB'}` 
+                    : ''}
+                </span>
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Info & Actions */}
       <div className="pt-3 space-y-2">
@@ -574,6 +668,111 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
           queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
         }}
       />
+
+      {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isPPV && post.ppvPrice && (
+        <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Ticket className="w-5 h-5 text-white" />
+                Pay-Per-View Content
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                <span className="text-white text-sm">Unlock Price</span>
+                <span className="text-white text-lg font-bold">
+                  {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                </span>
+              </div>
+              <p className="text-center text-white/60 text-sm">
+                Pay once to unlock this exclusive content forever! 💎
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Bounty Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isW2E && (
+        <Drawer open={showBountyDrawer} onOpenChange={setShowBountyDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Gift className="w-5 h-5 text-white" />
+                Bounty Rewards
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              <div className="space-y-3">
+                {post.bountyViews && post.bountyViews > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Eye className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">First {post.bountyViews} views</p>
+                      <p className="text-zinc-400 text-xs">Get rewarded for watching</p>
+                    </div>
+                  </div>
+                )}
+                {post.bountyComments && post.bountyComments > 0 && (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">First {post.bountyComments} comments</p>
+                      <p className="text-zinc-400 text-xs">Get rewarded for engaging</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {post.bountyAmount && post.bountyAmount > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">Reward per User</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{post.bountyAmount} {post.bountyCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                Watch and engage to earn rewards! 🎁
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* Locked Drawer - controlled, rendered at root level for mobile compatibility */}
+      {isLocked && (
+        <Drawer open={showLockedDrawer} onOpenChange={setShowLockedDrawer}>
+          <DrawerContent glass className="px-4 pb-6">
+            <DrawerHeader className="pb-3">
+              <DrawerTitle className="text-white text-lg flex items-center gap-2">
+                <Lock className="w-5 h-5 text-white" />
+                Gated Content
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4">
+              {post.lockedPrice && post.lockedPrice > 0 && (
+                <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-white text-sm">Must hold to view</span>
+                  <div className="flex items-center gap-2">
+                    <img src={dehubCoinSmall} alt="DHB" className="w-5 h-5" />
+                    <span className="text-white text-lg font-bold">{formatCompact(post.lockedPrice)} {post.lockedCurrency || 'DHB'}</span>
+                  </div>
+                </div>
+              )}
+              <p className="text-center text-white/60 text-sm">
+                Hold the required tokens to view this content! 🔓
+              </p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   );
 });
