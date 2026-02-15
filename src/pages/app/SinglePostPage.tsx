@@ -26,6 +26,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
 import { RelatedVideosFeed } from '@/components/app/feeds/RelatedVideosFeed';
+import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import { PostAIChat } from '@/components/app/cards/PostAIChat';
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import {
@@ -506,8 +507,17 @@ export default function SinglePostPage() {
         return <VideoCard video={toVideoItem(post)} isImmersive />;
       case 'image':
         return <ImageCard post={toImagePost(post)} />;
-      case 'live':
-        return <LiveStreamCard stream={toLiveStream(post)} />;
+      case 'live': {
+        const liveData = toLiveStream(post);
+        return (
+          <>
+            <LiveStreamCard stream={liveData} />
+            <div className="mt-4">
+              <LivePostChat streamId={liveData.id} isOffline={!liveData.isLive} />
+            </div>
+          </>
+        );
+      }
       default:
         return <PostCard post={toTextPost(post)} />;
     }
