@@ -119,7 +119,7 @@ export function CardHeader({
               )}
             </span>
             {verified && <CheckCircle className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
-            {isLive && <span className="ml-1 w-2 h-2 bg-red-500 rounded-full animate-pulse shrink-0" />}
+            
           </div>
           {formattedHandle && (
             <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
