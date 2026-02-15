@@ -1,42 +1,26 @@
 
 
-## Run Chat Media Storage Bucket Migration
+## Fix Public Chat Title and Subtitle
 
-Execute the SQL migration to create the `chat-media` storage bucket and its security policies. This sets up the infrastructure for DM and public chat image uploads.
+The current room header displays "test" and "Discussion about test" because these values come from the live chat room data returned by the DeHub API. Someone created the room with topic "test" -- this was not intentional branding.
 
-### What will be created:
-- **Storage bucket**: `chat-media` (public)
-- **Insert policy**: Authenticated users can upload
-- **Select policy**: Public can view (needed for chat image rendering)
-- **Update policy**: Users can update their own uploads
-- **Delete policy**: Users can delete their own uploads
+### Changes
 
-### Technical Details
-Run the following SQL via the database migration tool:
+**File: `src/components/app/chat/PublicChat.tsx`**
 
-```sql
-insert into storage.buckets (id, name, public)
-values ('chat-media', 'chat-media', true)
-on conflict (id) do nothing;
+Update line 162-163 to hardcode the Public Chat branding instead of relying on API data:
 
-create policy "Authenticated users can upload chat media"
-on storage.objects for insert
-to authenticated
-with check ( bucket_id = 'chat-media' );
+```typescript
+// Before
+const roomName = enrichedRoom?.name || enrichedRoom?.topic || 'Public Chat';
+const roomDescription = enrichedRoom?.description;
 
-create policy "Public can view chat media"
-on storage.objects for select
-to public
-using ( bucket_id = 'chat-media' );
-
-create policy "Users can update their own chat media"
-on storage.objects for update
-to authenticated
-using ( bucket_id = 'chat-media' and owner = auth.uid() );
-
-create policy "Users can delete their own chat media"
-on storage.objects for delete
-to authenticated
-using ( bucket_id = 'chat-media' and owner = auth.uid() );
+// After
+const roomName = 'Public Chat';
+const roomDescription = 'All things DeHub';
 ```
 
+This ensures the Public Chat header always shows "Public Chat" with subtitle "All things DeHub", regardless of what the backend room data contains.
+
+### Technical Note
+This is a 2-line change in `src/components/app/chat/PublicChat.tsx` (lines 162-163). The room selector dropdown (for multiple rooms) will still show API-provided names, but the main Public Chat room will always display the correct branding.
