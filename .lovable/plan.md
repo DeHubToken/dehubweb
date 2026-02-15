@@ -1,23 +1,37 @@
 
+# Fix Slow Sidebar Swipe Response
 
-## Lock Down Public Chat: Remove Topic Switcher, Admin-Gate Create & Settings
+## Problem
+The 2-finger trackpad swipe on the sidebar panel feels slow for two reasons:
 
-### Changes
+1. **100ms debounce delay** on the wheel handler -- it waits 100ms after the last wheel event before processing the accumulated delta. This adds noticeable lag before anything happens.
+2. **300ms slide animation** on leaderboard period changes (via `AnimatePresence` + `motion.div`) -- after the delay, you then wait for the animation to complete.
 
-**File: `src/components/app/chat/PublicChat.tsx`**
+Combined, there's nearly 400ms of perceived delay.
 
-1. **Remove the room selector dropdown** (lines 206-218) -- delete the `<select>` element entirely since there should only be one public chat room.
+## Fix
 
-2. **Gate "Create new room" button to moderators only** (lines 219-233) -- change the condition from `isAuthenticated` to `isModerator` so only room moderators (admins) can create new topic rooms.
+### 1. Reduce wheel debounce from 100ms to 40ms
+The 100ms timeout was overly conservative. 40ms is enough to batch trackpad inertia events while feeling near-instant.
 
-3. **Gate "Room Settings" button to moderators only** (lines 234-246) -- wrap the settings button in an `isModerator` check so only moderators can access room settings.
+**File:** `src/components/app/sidebar/TabbedSidePanel.tsx`
+- Change `setTimeout(..., 100)` to `setTimeout(..., 40)`
 
-No other files need to change. The `CreateTopicRoomModal` and `RoomSettingsModal` components stay in the codebase but are only accessible to moderators.
+### 2. Speed up leaderboard period transition animation
+Reduce the slide animation duration from 300ms to 150ms so period switches feel snappy.
 
-### Technical Detail
+**File:** `src/components/app/sidebar/SidebarLeaderboard.tsx`  
+- Change `transition={{ duration: 0.3, ... }}` to `transition={{ duration: 0.15, ... }}`
 
-Three targeted edits in `PublicChat.tsx`:
-- Lines 206-218: Delete the `<select>` block
-- Line 219: Change `{isAuthenticated && (` to `{isModerator && (`
-- Lines 234-246: Wrap in `{isModerator && (...)}`
+### 3. Add a cooldown to prevent double-firing
+Add a ref-based cooldown (~300ms) after each swipe fires, so trackpad inertia doesn't trigger multiple consecutive swipes. This replaces the need for a long debounce.
 
+**File:** `src/components/app/sidebar/TabbedSidePanel.tsx`
+- Add a `lastSwipeTime` ref
+- Skip processing if within cooldown window
+
+## Summary of Changes
+| File | Change |
+|------|--------|
+| `TabbedSidePanel.tsx` | Reduce wheel debounce to 40ms, add 300ms cooldown between swipes |
+| `SidebarLeaderboard.tsx` | Reduce animation duration to 150ms |
