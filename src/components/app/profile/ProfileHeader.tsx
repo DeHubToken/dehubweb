@@ -1,5 +1,5 @@
 import { 
-  UserPlus, Pencil, Copy, Wallet, Star, Play, Lock, Clock, Plus, Image, Loader2
+  UserPlus, Pencil, Copy, Wallet, Star, Play, Clock, Plus, Image, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
@@ -303,9 +303,7 @@ export function ProfileHeader({
                   />
                 )}
               </span>
-              {isTargetPrivate && !isViewingOwnProfile && (
-                <Lock className="w-4 h-4 text-zinc-500" />
-              )}
+              {/* Lock icon removed for private accounts */}
             </div>
             <div className="flex items-center gap-2">
               <button
