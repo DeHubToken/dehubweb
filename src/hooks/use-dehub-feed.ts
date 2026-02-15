@@ -443,7 +443,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   const rawAccount = (stream as any).account || stream.streamer;
   const rawThumbnail = (stream as any).thumbnail || stream.thumbnailUrl;
   const thumbnail = rawThumbnail
-    ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}/${rawThumbnail}`)
+    ? (rawThumbnail.startsWith('http') ? rawThumbnail : `${DEHUB_CDN_BASE}${rawThumbnail}`)
     : FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
 
   const streamerName = rawAccount?.displayName ||
