@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TranslatableText } from '../TranslatableText';
 import { useLiveChatUser } from '@/hooks/use-livechat';
 import { useNavigate } from 'react-router-dom';
+import { useBadgeBalance } from '@/hooks/use-badge-balance';
+import { getBadgeUrl } from '@/lib/staking-badges';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,6 +51,17 @@ function ModeratorBadge({ address }: { address: string }) {
   );
 }
 
+
+/** Inline staking badge (blue tick) shown next to display name */
+function StakingBadgeInline({ address }: { address: string }) {
+  const { badgeBalance } = useBadgeBalance(address);
+  const badgeUrl = getBadgeUrl(badgeBalance);
+  if (!badgeUrl) return null;
+  return (
+    <img src={badgeUrl} alt="Badge" className="w-[9px] h-[9px] shrink-0 absolute -top-0.5 -right-3" />
+  );
+}
+
 export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnban }: ChatMessageProps) {
   const navigate = useNavigate();
 
@@ -81,13 +94,16 @@ export function ChatMessage({ message, showActions, onPin, onUnpin, onBan, onUnb
       
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">
-          <button
-            onClick={handleProfileClick}
-            disabled={!isClickable}
-            className={`font-semibold text-white text-sm ${isClickable ? 'hover:underline cursor-pointer' : 'cursor-default'}`}
-          >
-            {message.userName}
-          </button>
+          <span className="relative inline-flex items-baseline">
+            <button
+              onClick={handleProfileClick}
+              disabled={!isClickable}
+              className={`font-semibold text-white text-sm ${isClickable ? 'hover:underline cursor-pointer' : 'cursor-default'}`}
+            >
+              {message.userName}
+            </button>
+            <StakingBadgeInline address={message.userId} />
+          </span>
           <ModeratorBadge address={message.userId} />
           <span className="text-zinc-500 text-xs">{formatTime(message.timestamp)}</span>
           {message.isPinned && (
