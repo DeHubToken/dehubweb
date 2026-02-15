@@ -1,44 +1,20 @@
 
 
-## Create Client Error Logs Table and Deploy Edge Function
+## Fix Stale Username Navigation in Notifications
 
-### Step 1: Database Migration
-Run a SQL migration to create the `client_error_logs` table with RLS policies:
+### Problem
+When a user changes their username, old notifications still reference the previous username. Clicking these notifications navigates to `/{oldUsername}`, which shows the "Username available!" page instead of the actual user profile. The mobile app works because it likely resolves profiles by wallet address.
 
-```sql
-CREATE TABLE IF NOT EXISTS public.client_error_logs (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    created_at TIMESTAMPTZ DEFAULT now(),
-    level TEXT NOT NULL,
-    component TEXT,
-    message TEXT NOT NULL,
-    stack_trace TEXT,
-    metadata JSONB,
-    user_address TEXT
-);
+### Solution
+Update the notifications page to always prefer navigating by wallet address (`actorAddress`) over username (`actorUsername`), since wallet addresses are immutable and always resolve correctly.
 
-ALTER TABLE public.client_error_logs ENABLE ROW LEVEL SECURITY;
+### Changes (1 file)
 
-CREATE POLICY "Allow anonymous log insertion" 
-ON public.client_error_logs 
-FOR INSERT 
-WITH CHECK (true);
+**`src/pages/app/NotificationsPage.tsx`**
 
-CREATE POLICY "Allow authenticated read access" 
-ON public.client_error_logs 
-FOR SELECT 
-USING (auth.role() = 'authenticated' OR auth.role() = 'service_role');
-```
+1. Update `getNavigationLink()` (lines 222-232) -- for `following`, `subscription`, and `ppv_purchase` types, prefer `actorAddress` over `actorUsername`
+2. Update `profileLink` (lines 279-283) -- prefer `actorAddress` for the avatar link destination
+3. Update the avatar `<Link>` condition (line 314) -- show clickable avatar when `profileLink` exists (not just when `actorUsername` exists)
 
-### Step 2: Deploy Edge Function
-Deploy the existing `client-logs` edge function (already coded at `supabase/functions/client-logs/index.ts`). It is already configured in `supabase/config.toml` with `verify_jwt = false` to allow logging from unauthenticated users.
-
-### Step 3: Add config.toml entry (if missing)
-Add the following to `supabase/config.toml`:
-```toml
-[functions.client-logs]
-verify_jwt = false
-```
-
-No code changes are needed -- the edge function and client-side logger (`src/lib/logger.ts`) are already implemented and wired up.
+All three changes follow the same pattern: use `actorAddress` as the primary navigation target, with `actorUsername` as fallback.
 
