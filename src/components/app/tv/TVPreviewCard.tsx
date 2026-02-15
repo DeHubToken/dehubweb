@@ -14,6 +14,9 @@ import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('TVPreviewCard');
 
 interface TVPreviewCardProps {
   channel: TVChannel;
@@ -79,16 +82,18 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         manifestLoadingTimeOut: 8000,
       });
 
-      console.log('[TVPreviewCard] HLS supported, loading source...', channel.streamUrl);
+      logger.info('Initializing thumbnail player', { channel: channel.name, url: channel.streamUrl });
       hls.loadSource(channel.streamUrl);
       hls.attachMedia(video);
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
+        video.play().catch(() => {
+          // Normal for thumbnail to be blocked if not interaction
+        });
       });
 
       hls.on(Hls.Events.ERROR, (_, data) => {
-        console.error('[TVPreviewCard] HLS Error:', data);
+        logger.error('TV Preview Error', { channel: channel.name, type: data.type, details: data.details, fatal: data.fatal }, data);
         if (data.fatal) destroyHls();
       });
 

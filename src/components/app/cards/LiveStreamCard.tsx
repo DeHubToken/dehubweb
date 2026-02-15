@@ -36,7 +36,10 @@ import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { fromWei } from '@/lib/contracts/dhb-token';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
+import { createLogger } from '@/lib/logger';
 import type { LiveStream } from '@/types/feed.types';
+
+const logger = createLogger('LiveStreamCard');
 
 interface LiveStreamCardProps {
   stream: LiveStream;
@@ -96,17 +99,16 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     if (!video || !stream.isLive) return;
 
     const streamUrl = stream.playbackUrl || stream.thumbnail;
-    console.log('[LiveStreamCard] Initializing player', { 
+    logger.info('Initializing player', { 
       streamId: stream.id, 
       isLive: stream.isLive, 
       playbackUrl: stream.playbackUrl,
       thumbnailAsFallback: stream.thumbnail,
       finalStreamUrl: streamUrl,
-      videoId 
     });
 
     if (!streamUrl || !streamUrl.includes('.m3u8')) {
-      console.warn('[LiveStreamCard] Stream URL missing or invalid (no .m3u8)', { 
+      logger.warn('Stream URL missing or invalid (no .m3u8)', { 
         playbackUrl: stream.playbackUrl,
         thumbnail: stream.thumbnail 
       });
@@ -126,24 +128,26 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
         backBufferLength: 60,
       });
       
-      console.log('[LiveStreamCard] HLS supported, loading source...', streamUrl);
+      logger.info('HLS supported, loading source...', { streamUrl });
       hls.loadSource(streamUrl);
       hls.attachMedia(video);
       
       hls.on(Hls.Events.ERROR, (_, data) => {
-        console.error('[LiveStreamCard] HLS Error:', data);
         if (data.fatal) {
+          logger.error('HLS Fatal Error', { type: data.type, details: data.details }, data);
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            console.error('[LiveStreamCard] Network error, stream might be offline');
             setError('Stream unavailable');
             setStreamEnded(true);
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            console.log('[LiveStreamCard] Media error, attempting recovery...');
+            logger.info('Attempting media error recovery...');
             hls.recoverMediaError();
           } else {
             hls.destroy();
             setStreamEnded(true);
           }
+        } else {
+          // Log non-fatal errors as warnings
+          logger.warn('HLS Non-fatal error', { type: data.type, details: data.details });
         }
       });
       

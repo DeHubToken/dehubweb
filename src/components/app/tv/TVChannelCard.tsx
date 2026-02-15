@@ -14,9 +14,12 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
-import type { TVChannel } from '@/lib/api/live-tv';
+import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('TVChannelCard');
 
 interface TVChannelCardProps {
   channel: TVChannel;
@@ -128,11 +131,13 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       hls.attachMedia(video);
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
+        video.play().catch(() => {
+          logger.warn('Autoplay blocked by browser', { channel: channel.name });
+        });
       });
       
       hls.on(Hls.Events.ERROR, (_, data) => {
-        console.error('[TVChannelCard] HLS Error:', data);
+        logger.error('TV HLS Error', { channel: channel.name, type: data.type, details: data.details, fatal: data.fatal }, data);
         if (isStoppingRef.current) return;
         if (data.fatal) {
           setHasError(true);

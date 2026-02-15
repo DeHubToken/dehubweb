@@ -21,6 +21,9 @@ import Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
 import { toast } from '@/hooks/use-toast';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('TVPlayer');
 
 // ============================================================================
 // TYPES
@@ -113,18 +116,18 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
         backBufferLength: 90,
       });
       
-      console.log('[TVPlayer] HLS supported, loading source...', url);
+      logger.info('HLS supported, loading source...', { url });
       hls.loadSource(url);
       hls.attachMedia(video);
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         video.play().catch(() => {
-          // Autoplay blocked, will need user interaction
+          logger.warn('Autoplay blocked by browser');
         });
       });
       
       hls.on(Hls.Events.ERROR, (_, data) => {
-        console.error('[TVPlayer] HLS Error:', data);
+        logger.error('Global TV HLS Error', { type: data.type, details: data.details, fatal: data.fatal }, data);
         if (data.fatal) {
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
