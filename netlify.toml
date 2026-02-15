@@ -51,6 +51,7 @@
 # Environment variables
 [build.environment]
   NPM_FLAGS = "--legacy-peer-deps"
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 # Plugin configuration (optional)
 # [[plugins]]
