@@ -249,7 +249,7 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
   // Live
   if (liveResult.status === 'fulfilled') {
     const response = liveResult.value as any;
-    const streams = response.result || [];
+    const streams = Array.isArray(response) ? response : (response.result || []);
     const liveParams = {
       unit: 15,
       sortMode: 'recent' as const,

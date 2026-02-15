@@ -398,7 +398,8 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
           category: options.category,
         });
 
-        const streams = response.result || [];
+        // API returns a plain array, not { result: [...] }
+        const streams = Array.isArray(response) ? response : (response.result || []);
 
         return {
           data: streams,
@@ -426,10 +427,10 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
       return undefined;
     },
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 2,
+    staleTime: 0, // Live data should always be fresh
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    refetchOnMount: 'always' as const,
     retry: 1,
   });
 }
