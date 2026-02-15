@@ -203,9 +203,9 @@ export function ProfileHeader({
           <div className="flex items-center gap-2">
             {isViewingOwnProfile ? (
               <Button
-                variant="outline" 
+                variant="glass" 
                 size="sm" 
-                className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent gap-2"
+                className="rounded-xl gap-2"
                 onClick={() => navigate('/app/settings')}
               >
                 <Pencil className="w-4 h-4" />
