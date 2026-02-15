@@ -23,8 +23,13 @@ export function TabbedSidePanel() {
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const swiping = useRef(false);
+  const lastSwipeTime = useRef(0);
 
   const handleSwipe = useCallback((direction: 1 | -1) => {
+    const now = Date.now();
+    if (now - lastSwipeTime.current < 300) return;
+    lastSwipeTime.current = now;
+
     // direction: 1 = next (swipe left), -1 = prev (swipe right)
     if (activeTab === 'leaderboard' && leaderboardRef.current) {
       const consumed = leaderboardRef.current.swipePeriod(direction);
@@ -75,7 +80,7 @@ export function TabbedSidePanel() {
       if (Math.abs(total) < SWIPE_THRESHOLD) return;
 
       handleSwipe(total > 0 ? 1 : -1);
-    }, 100);
+    }, 40);
   }, [handleSwipe]);
 
   return (
