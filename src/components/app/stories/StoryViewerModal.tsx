@@ -285,7 +285,7 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
   };
 
   const handleRepost = () => {
-    toast.success('Reposted!');
+    toast.info('Bug reported, fix will be live soon!');
     setShareSheetOpen(false);
   };
 
