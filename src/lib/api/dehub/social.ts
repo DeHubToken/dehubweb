@@ -122,7 +122,7 @@ export async function getFollowList(
   
   const response = await apiCall<{ result: any; status?: boolean }>(
     `/api/follow_list/${encodeURIComponent(address)}`, 
-    { params }
+    { params, requiresAuth: true }
   );
   
   const raw: any = (response && typeof response === 'object' && 'result' in response)
