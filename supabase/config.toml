@@ -92,3 +92,6 @@ verify_jwt = false
 
 [functions.dm-send]
 verify_jwt = false
+
+[functions.dm-upload-media]
+verify_jwt = false
