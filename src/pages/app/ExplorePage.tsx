@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
+import { AuthGate } from '@/components/app/AuthGate';
 import { 
   useDeHubSearch, 
   useSearchAnalytics,
@@ -281,7 +282,7 @@ const UserResultCard = ({
 
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { walletAddress } = useAuth();
+  const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('all');
@@ -596,6 +597,12 @@ export default function ExplorePage() {
   const showLoading = isSearchLoading || isUserLoading;
   const showResults = isSearching && !showLoading && (searchResults.users.length > 0 || searchResults.posts.length > 0);
   const showNoResults = isSearching && !showLoading && searchResults.users.length === 0 && searchResults.posts.length === 0;
+
+  if (!isAuthenticated) {
+    return (
+      <AuthGate description="Log in to explore and discover content on DeHub." />
+    );
+  }
 
   return (
     <div className="min-h-screen">
