@@ -9,6 +9,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { isTemplateId } from './use-stories';
+
 
 interface StoryReaction {
   id: string;
@@ -32,7 +34,7 @@ export function useStoryReactions(storyId: string | undefined) {
   const { data: reactionData, isLoading } = useQuery({
     queryKey: ['story-reactions', storyId],
     queryFn: async (): Promise<ReactionCounts> => {
-      if (!storyId) return { likes: 0, dislikes: 0, userReaction: null };
+      if (!storyId || isTemplateId(storyId)) return { likes: 0, dislikes: 0, userReaction: null };
 
       // Get all reactions for this story
       const { data: reactions, error } = await supabase
@@ -44,7 +46,7 @@ export function useStoryReactions(storyId: string | undefined) {
 
       const likes = reactions?.filter(r => r.reaction_type === 'like').length || 0;
       const dislikes = reactions?.filter(r => r.reaction_type === 'dislike').length || 0;
-      
+
       // Find user's reaction
       const userReaction = walletAddress
         ? (reactions?.find(r => r.wallet_address.toLowerCase() === walletAddress.toLowerCase())?.reaction_type as 'like' | 'dislike' | undefined) || null
@@ -52,15 +54,15 @@ export function useStoryReactions(storyId: string | undefined) {
 
       return { likes, dislikes, userReaction };
     },
-    enabled: !!storyId,
+    enabled: !!storyId && !isTemplateId(storyId),
     staleTime: 10000, // 10 seconds
   });
 
   // Mutation for reacting to a story
   const reactMutation = useMutation({
     mutationFn: async (reactionType: 'like' | 'dislike') => {
-      if (!storyId || !walletAddress) {
-        throw new Error('Not authenticated');
+      if (!storyId || !walletAddress || isTemplateId(storyId)) {
+        throw new Error(!walletAddress ? 'Not authenticated' : 'Cannot react to template stories');
       }
 
       const lowerWallet = walletAddress.toLowerCase();

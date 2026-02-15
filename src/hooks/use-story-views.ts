@@ -7,6 +7,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useCallback, useEffect } from 'react';
+import { isTemplateId } from './use-stories';
+
 
 const STORIES_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories-api`;
 
@@ -28,7 +30,7 @@ export function useStoryViews(storyId: string | undefined) {
   const { data: fetchedCount, isLoading } = useQuery({
     queryKey: ['story-views', storyId],
     queryFn: async (): Promise<number> => {
-      if (!storyId) return 0;
+      if (!storyId || isTemplateId(storyId)) return 0;
 
       const response = await fetch(`${STORIES_API_URL}/views?story_id=${storyId}`);
       if (!response.ok) {
@@ -43,7 +45,7 @@ export function useStoryViews(storyId: string | undefined) {
       viewCountCache.set(storyId, count);
       return count;
     },
-    enabled: !!storyId,
+    enabled: !!storyId && !isTemplateId(storyId),
     staleTime: 30000,
     gcTime: 300000,
   });
@@ -55,7 +57,7 @@ export function useStoryViews(storyId: string | undefined) {
 
   // Stable recordView — fires exactly once per storyId, no query invalidation
   const recordView = useCallback(() => {
-    if (!storyId) return;
+    if (!storyId || isTemplateId(storyId)) return;
     if (hasRecordedRef.current === storyId) return; // Already recorded
 
     hasRecordedRef.current = storyId;

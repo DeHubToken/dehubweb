@@ -42,6 +42,9 @@ export interface Story {
   expires_at: string;
 }
 
+/** Check if a story ID is a client-side template ID */
+export const isTemplateId = (id: string | undefined) => !!id && id.startsWith('template-');
+
 /**
  * Extract the first frame from a video blob as a JPEG image
  */
@@ -177,7 +180,7 @@ async function fetchTemplateStories(): Promise<Story[]> {
 
     const usernames = Object.keys(TEMPLATE_VIDEO_URLS);
     const totalStories = usernames.length;
-    
+
     // Spread stories across 1-2 hours ago so they appear fresh
     // They'll naturally expire 24 hours after their created_at timestamp
     const now = Date.now();
@@ -307,7 +310,7 @@ export function useStories() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
+
       const result = data as Story[];
       setCachedStories(result);
       return result;
@@ -335,10 +338,10 @@ export function useStories() {
     queryKey: ['stories-with-avatars', storyIdsKey],
     queryFn: async () => {
       if (activeStories.length === 0) return [];
-      
+
       const storiesWithUsernames = activeStories.filter(s => s.username);
       if (storiesWithUsernames.length === 0) return activeStories;
-      
+
       // Fetch fresh avatars by username in parallel (module-level cache handles dedup)
       const avatarMap = new Map<string, string | null>();
       await Promise.all(
@@ -347,7 +350,7 @@ export function useStories() {
           avatarMap.set(username.toLowerCase(), freshAvatar);
         })
       );
-      
+
       return activeStories.map(story => {
         if (!story.username) return story;
         const fresh = avatarMap.get(story.username.toLowerCase());

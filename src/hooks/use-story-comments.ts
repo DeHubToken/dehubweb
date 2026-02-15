@@ -8,6 +8,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { isTemplateId } from './use-stories';
+
 
 export interface StoryComment {
   id: string;
@@ -28,7 +30,7 @@ export function useStoryComments(storyId: string | undefined) {
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ['story-comments', storyId],
     queryFn: async (): Promise<StoryComment[]> => {
-      if (!storyId) return [];
+      if (!storyId || isTemplateId(storyId)) return [];
 
       const { data, error } = await supabase
         .from('story_comments' as any)
@@ -43,7 +45,7 @@ export function useStoryComments(storyId: string | undefined) {
 
       return (data as unknown as StoryComment[]) || [];
     },
-    enabled: !!storyId,
+    enabled: !!storyId && !isTemplateId(storyId),
     staleTime: 10000,
   });
 
@@ -55,8 +57,8 @@ export function useStoryComments(storyId: string | undefined) {
       username?: string;
       avatar?: string;
     }) => {
-      if (!storyId || !walletAddress) {
-        throw new Error('Not authenticated');
+      if (!storyId || !walletAddress || isTemplateId(storyId)) {
+        throw new Error(!walletAddress ? 'Not authenticated' : 'Cannot comment on template stories');
       }
 
       const lowerWallet = walletAddress.toLowerCase();
