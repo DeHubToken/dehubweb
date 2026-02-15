@@ -8,6 +8,7 @@
  */
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye, Loader2 } from 'lucide-react';
@@ -686,8 +687,15 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     </div>
   );
 
+  const { isAutoRetrying } = useAutoRetryFeed({
+    itemCount: allVideos.length,
+    isLoading: isApiLoading,
+    isError,
+    refetch,
+  });
+
   // Show loading during initial load or while auto-fetching for duration filter
-  if (isRefreshing || isApiLoading || isAutoFetching) {
+  if (isRefreshing || isApiLoading || isAutoFetching || isAutoRetrying) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <VideosFeedSkeleton />
