@@ -520,8 +520,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     };
   }, []);
 
+  const isPPVLocked = !!video.isPPV;
+
   const handlePlayClick = useCallback(() => {
-    if (!video.videoUrl) return;
+    if (!video.videoUrl || isPPVLocked) return;
     
     if (isPlaying) {
       videoRef.current?.pause();
@@ -952,30 +954,57 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        {/* Show video element when we have a video URL */}
-        {video.videoUrl && !hasError ? (
-          <video
-            ref={videoRef}
-            src={video.videoUrl}
-            poster={video.thumbnail}
-            muted={isMuted}
-            playsInline
-            preload="metadata"
-            crossOrigin="anonymous"
-            onEnded={handleVideoEnded}
-            onError={handleVideoError}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onLoadedData={() => console.log('Video loaded:', video.videoUrl)}
-            className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
-          />
+        {/* PPV Locked State - blurred thumbnail with unlock overlay */}
+        {isPPVLocked ? (
+          <>
+            <img 
+              src={video.thumbnail} 
+              alt={video.title}
+              className="w-full h-full object-cover blur-xl scale-110"
+              loading="lazy"
+            />
+            <div 
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 cursor-pointer"
+              onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+              onTouchEnd={(e) => { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }}
+            >
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                <Lock className="h-7 w-7 text-white" />
+              </div>
+              <p className="text-white font-semibold text-sm mb-1">Pay-Per-View Content</p>
+              <p className="text-white/70 text-xs">
+                Unlock for {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+              </p>
+            </div>
+          </>
         ) : (
-          <img 
-            src={video.thumbnail} 
-            alt={video.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          <>
+            {/* Show video element when we have a video URL */}
+            {video.videoUrl && !hasError ? (
+              <video
+                ref={videoRef}
+                src={video.videoUrl}
+                poster={video.thumbnail}
+                muted={isMuted}
+                playsInline
+                preload="metadata"
+                crossOrigin="anonymous"
+                onEnded={handleVideoEnded}
+                onError={handleVideoError}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onLoadedData={() => console.log('Video loaded:', video.videoUrl)}
+                className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
+              />
+            ) : (
+              <img 
+                src={video.thumbnail} 
+                alt={video.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            )}
+          </>
         )}
         
         {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}
@@ -1026,6 +1055,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
           </div>
         )}
         
+        {/* Video controls - hidden when PPV locked */}
+        {!isPPVLocked && <>
         {/* Loading spinner */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
@@ -1158,6 +1189,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             {video.duration}
           </div>
         )}
+        </>}
         
       </div>
 
