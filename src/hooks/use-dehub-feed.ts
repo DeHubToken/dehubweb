@@ -426,10 +426,10 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
       return undefined;
     },
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 2, // 2 minutes for live (more frequent but not too much)
-    gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
+    staleTime: 1000 * 60 * 2,
+    gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     retry: 1,
   });
 }
