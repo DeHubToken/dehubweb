@@ -50,6 +50,9 @@ export const wagmiConfig = createConfig({
         description: 'DeHub Social App',
         url: 'https://dehub.io',
         icons: ['https://dehub.io/favicon.ico'],
+        redirect: {
+          universal: 'https://dehub.io/app',
+        },
       },
     }),
   ],
