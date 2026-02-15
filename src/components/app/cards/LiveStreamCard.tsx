@@ -265,11 +265,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden isolate">
+    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3 isolate">
       {/* Header with AI and menu buttons */}
       <div className="flex items-center justify-between">
         <CardHeader
           username={stream.streamer}
+          handle={stream.creatorUsername}
           avatarSeed={stream.avatar}
           contentType="live"
           isLive={stream.isLive && !streamEnded}
@@ -356,7 +357,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       </div>
 
       {/* Video Player or Stream Ended State */}
-      <div ref={containerRef} className="aspect-video bg-black relative">
+      <div ref={containerRef} className="aspect-video bg-black relative rounded-lg overflow-hidden">
         {streamEnded || error ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900">
             <div 
@@ -403,7 +404,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
                   <span className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
                     LIVE
                   </span>
-                  <span className="text-white text-sm">{stream.viewers} watching</span>
+                  <span className="text-white text-sm">{stream.viewers} tuned in</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -426,7 +427,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       </div>
 
       {/* Info & Actions */}
-      <div className="p-3">
+      <div className="pt-3">
         <ActionBar 
           postId={stream.id} 
           className="p-0 mb-2" 
@@ -435,7 +436,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           commentCount={stream.commentCount}
         />
         {!streamEnded && (
-          <p className="font-semibold text-white text-sm">{stream.viewers} watching</p>
+          <p className="font-semibold text-white text-sm">{stream.viewers} tuned in</p>
         )}
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
