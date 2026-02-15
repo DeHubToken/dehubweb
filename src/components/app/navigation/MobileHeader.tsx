@@ -63,7 +63,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         {isAuthenticated && (
           <button
             onClick={() => navigate('/app/notifications')}
-            className={`relative flex items-center justify-center transition-colors mr-[-8px] ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
+            className={`relative flex items-center justify-center transition-colors mr-[-13px] ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
             aria-label="Notifications"
           >
             <Bell className="w-[26px] h-[26px]" />
