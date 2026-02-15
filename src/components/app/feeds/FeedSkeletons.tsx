@@ -192,21 +192,21 @@ export function MusicVideoCardSkeleton() {
 
 export function LiveStreamCardSkeleton() {
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
-      {/* Thumbnail with live badge placeholder */}
-      <div className="relative">
-        <Skeleton className="w-full aspect-video" />
-        <Skeleton className="absolute top-2 left-2 w-12 h-5 rounded" />
-      </div>
-      {/* Info */}
-      <div className="p-3">
-        <div className="flex items-center gap-3">
-          <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-4 w-3/4 rounded" />
-            <Skeleton className="h-3 w-1/2 rounded" />
-          </div>
+    <div className="rounded-xl border border-white/[0.08] bg-transparent p-3 flex-shrink-0 w-72 sm:w-80">
+      {/* Header */}
+      <div className="flex items-center gap-3 pb-3">
+        <Skeleton className="w-10 h-10 rounded-md flex-shrink-0" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-4 w-3/4 rounded" />
+          <Skeleton className="h-3 w-1/2 rounded" />
         </div>
+      </div>
+      {/* Thumbnail */}
+      <Skeleton className="w-full aspect-video rounded-lg" />
+      {/* Actions */}
+      <div className="pt-3 space-y-2">
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-3 w-2/3 rounded" />
       </div>
     </div>
   );
@@ -347,10 +347,28 @@ export function MusicFeedSkeleton() {
  */
 export function LiveFeedSkeleton() {
   return (
-    <div className="space-y-3">
-      <LiveStreamCardSkeleton />
-      <LiveStreamCardSkeleton />
-      <LiveStreamCardSkeleton />
+    <div className="space-y-4">
+      {/* Categories skeleton */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-24 rounded ml-1" />
+        <div className="flex gap-3 overflow-hidden pr-12">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex-shrink-0">
+              <Skeleton className="w-24 sm:w-28 aspect-[3/4] rounded-xl" />
+              <Skeleton className="h-3 w-20 rounded mt-1.5" />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Streams skeleton */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-20 rounded ml-1" />
+        <div className="flex gap-3 overflow-hidden pr-12">
+          <LiveStreamCardSkeleton />
+          <LiveStreamCardSkeleton />
+          <LiveStreamCardSkeleton />
+        </div>
+      </div>
     </div>
   );
 }
