@@ -55,9 +55,9 @@ export function AuthGate({ description }: AuthGateProps) {
       ) : (
         <>
           <img 
-            src={assistantAvatar} 
+           src={assistantAvatar} 
             alt="Log in" 
-            className="w-20 h-20 object-contain mb-6"
+            className="w-20 h-20 object-contain mb-6 mt-[10px]"
           />
           <h2 className="text-xl font-semibold text-white mb-2">Log in required</h2>
           <p className="text-white/60 text-center mb-6 max-w-sm">
