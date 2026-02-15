@@ -1,49 +1,53 @@
 
 
-## Compress Heavy Image Assets (>500KB to ~500KB)
+## Fix PPV/Bounty/Locked Badge Taps on Mobile
 
-**Approach:**
-Create a temporary browser-based compression utility that uses the HTML Canvas API to resize and re-encode each oversized PNG. The utility will run in the sandbox browser, and compressed images will be extracted and written back to the project, replacing the originals.
+**Problem**: Tapping PPV, Bounty, or Locked badges on feed posts doesn't open the drawer on mobile. Desktop works fine. The root cause is `DrawerTrigger asChild` nested inside the video card overlay -- vaul's DOM manipulation on mobile touch events conflicts with the card's event handling and causes the drawer to never open.
 
-**How it works:**
-1. Create a temporary edge function (`compress-image`) that:
-   - Accepts an image URL and target max file size
-   - Fetches the image, decodes it, resizes proportionally until it fits under ~500KB
-   - Returns the compressed image as base64
-2. For each of the 20 heavy assets, call the edge function and write the compressed result back to the original file path
-3. Clean up the temporary edge function afterward
+**Solution**: Convert the three badge drawers from the `DrawerTrigger` pattern to the controlled-state pattern, matching how `MobileCreatorInfo` already handles it (and works correctly).
 
-**Assets to compress (20 files, ~19MB total):**
+### What changes
 
-| Asset | Current Size |
-|---|---|
-| yorkie-sprite.png | 2.91 MB |
-| apex-category.png | 2.81 MB |
-| fortnite-category.png | 1.53 MB |
-| gta-category.png | 1.07 MB |
-| subs-3d-icon.png | 993 KB |
-| ai-star-icon.png | 970 KB |
-| johncena.png | 911 KB |
-| cod-category.png | 876 KB |
-| home-3d-icon.png | 863 KB |
-| comment-3d-icon.png | 791 KB |
-| rickybobby.png | 755 KB |
-| image-frame-3d-icon.png | 748 KB |
-| filmstrip-3d-icon.png | 710 KB |
-| roblox-category.png | 698 KB |
-| minecraft-category.png | 676 KB |
-| valorant-category.png | 652 KB |
-| messages-3d-icon.png | 605 KB |
-| league-category.png | 574 KB |
-| search-3d-icon.png | 556 KB |
-| bookmark-3d-icon.png | 536 KB |
+**File: `src/components/app/cards/VideoCard.tsx`**
 
-**Technical details:**
-- The edge function will use Deno-compatible image decoding and Canvas API to resize images
-- Images are scaled down proportionally (reducing dimensions) and re-encoded as PNG
-- Quality and dimensions are iteratively adjusted until the output is under 500KB
-- Original file paths are preserved so no code changes are needed anywhere
-- The edge function is deleted after compression is complete
+Replace the PPV, Bounty, and Locked badge sections (lines 985-1130) from:
 
-**Expected result:** ~19MB reduced to ~10MB total, with no asset exceeding 500KB.
+```tsx
+<Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
+  <DrawerTrigger asChild>
+    <button onClick={(e) => e.stopPropagation()}>...</button>
+  </DrawerTrigger>
+  <DrawerContent>...</DrawerContent>
+</Drawer>
+```
+
+To the controlled pattern:
+
+```tsx
+{/* Just the button inline */}
+<button onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}>
+  ...
+</button>
+```
+
+Then move all three `Drawer` components (PPV, Bounty, Locked) out of the overlay div and render them at the root level of the VideoCard return -- as standalone controlled drawers with no `DrawerTrigger`:
+
+```tsx
+<Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
+  <DrawerContent glass>...</DrawerContent>
+</Drawer>
+```
+
+Same change for Bounty and Locked drawers.
+
+### Why this works
+
+The `MobileCreatorInfo` component at the bottom of the same file already uses this exact pattern (plain button + controlled Drawer at root level) and works perfectly on mobile. The `DrawerTrigger` pattern fails because vaul intercepts touch events and manipulates pointer-events on ancestor containers, which conflicts with the video overlay's `stopPropagation` and navigation handlers.
+
+### Scope
+
+- One file changed: `VideoCard.tsx`
+- Three drawer refactors (PPV, Bounty, Locked) -- all identical pattern changes
+- No visual or behavioral changes on desktop -- drawers will continue to work the same way
+- State variables (`showPPVDrawer`, `showBountyDrawer`, `showLockedDrawer`) already exist and are reused
 
