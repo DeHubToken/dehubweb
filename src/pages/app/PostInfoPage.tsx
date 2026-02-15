@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil } from 'lucide-react';
+import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageCircle, User, Loader2, Users, Tag, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
@@ -459,6 +459,35 @@ export default function PostInfoPage() {
               </div>
             )}
           </section>
+
+          {/* Live Stream Info - shown for live content */}
+          {((nftInfo as any).postType === 'live' || (nftInfo as any).isLive !== undefined) && (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h2 className="text-sm font-medium text-white/60 mb-3">Stream Info</h2>
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${(nftInfo as any).isLive ? 'bg-red-500/20' : 'bg-white/5'}`}>
+                  <Radio className={`w-5 h-5 ${(nftInfo as any).isLive ? 'text-red-400' : 'text-zinc-500'}`} />
+                </div>
+                <div>
+                  <p className="text-white font-medium">
+                    {(nftInfo as any).isLive ? 'Currently Live' : 'Stream Offline'}
+                  </p>
+                  <p className="text-xs text-white/60">
+                    {(nftInfo as any).totalViews ?? nftInfo.views ?? 0} total views
+                  </p>
+                </div>
+              </div>
+              {(nftInfo as any).categories && (nftInfo as any).categories.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {(nftInfo as any).categories.map((cat: string, i: number) => (
+                    <span key={i} className="px-2 py-1 text-xs bg-white/10 rounded-lg text-white/70">
+                      {cat}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Creator Info */}
           <section className="bg-white/5 rounded-xl p-4 border border-white/10">

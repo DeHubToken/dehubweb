@@ -122,46 +122,6 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
         <LiveFeedSkeleton />
       ) : (
         <>
-          {/* Categories Carousel */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="font-bold text-white">Categories</h2>
-              <button className="text-red-400 text-sm hover:underline">Browse</button>
-            </div>
-            
-            <SwipeableCarousel>
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
-                {MOCK_CATEGORIES.map((category) => (
-                  <button
-                    key={category.id}
-                    className="flex-shrink-0 group"
-                  >
-                    <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
-                      <img 
-                        src={category.image} 
-                        alt={category.name}
-                        className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
-                      />
-                    </div>
-                    <div className="mt-1.5 text-left">
-                      <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
-                      <div className="flex items-center gap-2 text-zinc-500 text-xs">
-                        <span className="flex items-center gap-0.5">
-                          <Radio className="w-3 h-3" />
-                          {category.streams}
-                        </span>
-                        <span className="flex items-center gap-0.5">
-                          <Eye className="w-3 h-3" />
-                          {category.viewers}
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </SwipeableCarousel>
-          </div>
-
           {/* Streams */}
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
@@ -218,6 +178,46 @@ export function LiveFeed({ isRefreshing = false }: LiveFeedProps) {
 
           {/* Stages Carousel */}
           <StagesCarousel onOpenStages={() => setShowStagesModal(true)} />
+
+          {/* Categories Carousel - at bottom */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="font-bold text-white">Categories</h2>
+              <button className="text-red-400 text-sm hover:underline">Browse</button>
+            </div>
+            
+            <SwipeableCarousel>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
+                {MOCK_CATEGORIES.map((category) => (
+                  <button
+                    key={category.id}
+                    className="flex-shrink-0 group"
+                  >
+                    <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+                      <img 
+                        src={category.image} 
+                        alt={category.name}
+                        className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
+                      />
+                    </div>
+                    <div className="mt-1.5 text-left">
+                      <p className="text-white text-xs font-medium truncate w-24 sm:w-28">{category.name}</p>
+                      <div className="flex items-center gap-2 text-zinc-500 text-xs">
+                        <span className="flex items-center gap-0.5">
+                          <Radio className="w-3 h-3" />
+                          {category.streams}
+                        </span>
+                        <span className="flex items-center gap-0.5">
+                          <Eye className="w-3 h-3" />
+                          {category.viewers}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </SwipeableCarousel>
+          </div>
         </>
       )}
 
