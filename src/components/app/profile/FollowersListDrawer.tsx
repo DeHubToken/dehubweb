@@ -149,7 +149,18 @@ export function FollowersListDrawer({
         });
 
         const processed = await processItems(items);
-        setUsers(processed);
+
+        // When viewing your OWN following list, everyone is followed by definition
+        const isOwnFollowingList =
+          title === 'Following' &&
+          currentUserAddress &&
+          profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
+
+        const finalUsers = isOwnFollowingList
+          ? processed.map(u => ({ ...u, isFollowing: true }))
+          : processed;
+
+        setUsers(finalUsers);
         setCurrentPage(1);
         setHasMore(pagination?.hasMore ?? false);
         setTotalCount(pagination?.totalCount ?? null);
@@ -187,7 +198,17 @@ export function FollowersListDrawer({
       });
 
       const processed = await processItems(items);
-      setUsers(prev => [...prev, ...processed]);
+
+      const isOwnFollowingList =
+        title === 'Following' &&
+        currentUserAddress &&
+        profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
+
+      const finalItems = isOwnFollowingList
+        ? processed.map(u => ({ ...u, isFollowing: true }))
+        : processed;
+
+      setUsers(prev => [...prev, ...finalItems]);
       setCurrentPage(nextPage);
       setHasMore(pagination?.hasMore ?? false);
     } catch (err) {
