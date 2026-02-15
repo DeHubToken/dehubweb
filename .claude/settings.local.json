@@ -5,7 +5,8 @@
       "WebFetch(domain:web3auth.io)",
       "Bash(curl:*)",
       "Bash(findstr:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "WebFetch(domain:api.dehub.io)"
     ]
   }
 }

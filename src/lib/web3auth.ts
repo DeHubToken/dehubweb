@@ -296,7 +296,9 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
         redirectUrl,
       };
 
-      if (config.aggregateVerifier && config.googleSubVerifier && config.emailSubVerifier && config.googleClientId) {
+      const disableAggregate = localStorage.getItem('dehub_disable_aggregate_verifier') === 'true';
+
+      if (config.aggregateVerifier && config.googleSubVerifier && config.emailSubVerifier && config.googleClientId && !disableAggregate) {
         console.log("[Web3Auth] Using aggregate verifier:", config.aggregateVerifier);
         adapterSettings.loginConfig = {
           google: {
@@ -312,6 +314,10 @@ export async function initWeb3Auth(): Promise<Web3AuthNoModal> {
             clientId: clientId,
           },
         };
+      } else if (disableAggregate) {
+        console.warn("[Web3Auth] Aggregate verifier DISABLED by localStorage flag. Using default legacy verifiers.");
+      } else {
+        console.log("[Web3Auth] Using default verifiers (No aggregation configured).");
       }
 
       const openloginAdapter = new OpenloginAdapter({

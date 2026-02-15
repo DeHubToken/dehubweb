@@ -445,6 +445,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] Redirect auth - Address:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
 
+    // ── Diagnostic: check if this address already has an account ──
+    try {
+      console.log('[Auth] [DIAG-REDIRECT] Checking for existing account for address:', authAddress);
+      const checkRes = await fetch(`https://api.dehub.io/api/account_info/${authAddress}`);
+      const checkData = await checkRes.json();
+      const existing = checkData?.result;
+      if (existing?._id) {
+        console.log('[Auth] [DIAG-REDIRECT] Account ALREADY EXISTS:', {
+          _id: existing._id,
+          username: existing.username,
+          displayName: existing.displayName,
+          createdAt: existing.createdAt,
+          address: existing.address,
+        });
+      } else {
+        console.log('[Auth] [DIAG-REDIRECT] Account does NOT exist yet — will be created by /api/web/auth');
+      }
+    } catch (e) {
+      console.warn('[Auth] [DIAG-REDIRECT] account_info check failed:', e);
+    }
+    // ── End Diagnostic ──
+
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
       authAddress,
@@ -545,6 +567,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('[Auth] Using address for auth:', authAddress);
     console.log('[Auth] Signature length:', signature?.length);
 
+    // ── Diagnostic: check if this address already has an account ──
+    const prevWallet = localStorage.getItem('dehub_wallet');
+    console.log('[Auth] [DIAG] Previous stored wallet:', prevWallet);
+    console.log('[Auth] [DIAG] Current  wallet:', authAddress);
+    console.log('[Auth] [DIAG] Same address?', prevWallet?.toLowerCase() === authAddress.toLowerCase());
+    try {
+      const checkRes = await fetch(`https://api.dehub.io/api/account_info/${authAddress}`);
+      const checkData = await checkRes.json();
+      const existing = checkData?.result;
+      if (existing?._id) {
+        console.log('[Auth] [DIAG] Account ALREADY EXISTS:', {
+          _id: existing._id,
+          username: existing.username,
+          displayName: existing.displayName,
+          createdAt: existing.createdAt,
+          address: existing.address,
+        });
+      } else {
+        console.log('[Auth] [DIAG] Account does NOT exist yet — will be created by /api/web/auth');
+      }
+    } catch (e) {
+      console.warn('[Auth] [DIAG] account_info check failed:', e);
+    }
+    // ── End Diagnostic ──
+
     const BASE_CHAIN_ID = 8453;
     const authResponse = await authenticateWallet(
       authAddress,
@@ -555,6 +602,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
+    // ── Diagnostic: log what /api/web/auth returned ──
+    console.log('[Auth] [DIAG] authResponse user:', {
+      _id: (authResponse.user as any)?._id,
+      username: (authResponse.user as any)?.username,
+      address: (authResponse.user as any)?.address,
+      createdAt: (authResponse.user as any)?.createdAt,
+    });
+    // ── End Diagnostic ──
+
     localStorage.setItem('dehub_wallet', authAddress);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
 
@@ -564,11 +620,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!normalizedUser.username) {
       setRequiresUsername(true);
     }
-    
+
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
     queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
-    
+
     toast.success(normalizedUser.username ? 'Welcome back!' : 'Successfully logged in!');
     console.log('[Auth] ✓ DeHub authentication complete');
   };
