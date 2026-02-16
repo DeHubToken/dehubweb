@@ -1,42 +1,32 @@
 
 
-# Fix Missing "Close" Translation Key
+## Fix: PPV Content Navigation Guard
 
-## Problem
-The PPV drawer's Close button uses `t('common.close', 'Close')`, but no locale file has a `close` key in the `common` section. The fallback English string "Close" is always shown regardless of language.
+**Problem**: Clicking anywhere on a PPV-locked video card's bento area (outside the centered PPV overlay) navigates to the dedicated post page, bypassing the PPV gate. The current guard in `handleCardClick` only blocks navigation when a drawer is already open, but doesn't account for gated content that should never allow direct navigation from the feed.
 
-"Pagar" (Pay) is correct -- that's the Spanish translation working as intended.
+**Solution**: Add `isContentGated` (which covers both PPV and Bounty locked states) to the `handleCardClick` guard so that clicking the card area does nothing for gated content. Users must interact through the centered overlay to trigger the drawer.
 
-## Solution
-Add the `close` key to the `common` section of all 23 locale files.
+---
 
-## Changes
+### Technical Details
 
-| Language | File | Value |
-|----------|------|-------|
-| English | en.json | "Close" |
-| Spanish | es.json | "Cerrar" |
-| French | fr.json | "Fermer" |
-| German | de.json | "Schließen" |
-| Italian | it.json | "Chiudi" |
-| Portuguese | pt.json | "Fechar" |
-| Russian | ru.json | "Закрыть" |
-| Chinese | zh.json | "关闭" |
-| Japanese | ja.json | "閉じる" |
-| Korean | ko.json | "닫기" |
-| Arabic | ar.json | "إغلاق" |
-| Hindi | hi.json | "बंद करें" |
-| Thai | th.json | "ปิด" |
-| Vietnamese | vi.json | "Đóng" |
-| Dutch | nl.json | "Sluiten" |
-| Polish | pl.json | "Zamknij" |
-| Turkish | tr.json | "Kapat" |
-| Ukrainian | uk.json | "Закрити" |
-| Romanian | ro.json | "Închide" |
-| Bengali | bn.json | "বন্ধ করুন" |
-| Indonesian | id.json | "Tutup" |
-| Malay | ms.json | "Tutup" |
-| Tagalog | tl.json | "Isara" |
+**File**: `src/components/app/cards/VideoCard.tsx`
 
-No code changes needed -- the component already references the correct key.
+**Change**: In `handleCardClick`, add a check for `isContentGated` to prevent navigation:
+
+```typescript
+const handleCardClick = useCallback((e: React.MouseEvent) => {
+  const target = e.target as HTMLElement;
+  const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
+  if (isInteractive) return;
+
+  // Guard: don't navigate if content is gated or any drawer is open
+  if (isContentGated || showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
+
+  cacheVideoForNavigation(queryClient, video);
+  navigate(`/app/post/${video.id}`);
+}, [navigate, video.id, queryClient, video, isContentGated, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+```
+
+This is a one-line addition that fully blocks card-level navigation for any gated content, forcing users through the proper drawer flow (PPV pay or Bounty view).
 
