@@ -8,6 +8,7 @@
  */
 
 import { useRef, useMemo, useEffect, useCallback } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2, Ticket } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
@@ -47,9 +48,10 @@ interface ImagesFeedProps {
 // ============================================================================
 
 function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {SORT_OPTIONS.map((option) => (
@@ -63,7 +65,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
-              {option.label}
+              {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
             </button>
           ))}
         </div>
@@ -74,9 +76,10 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
 }
 
 function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterOption; onSelect: (o: DateFilterOption) => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {DATE_FILTER_OPTIONS.map((option) => (
@@ -90,7 +93,7 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
-              {option.label}
+              {option.value === 'all' ? t('filters.all') : option.label}
             </button>
           ))}
         </div>
@@ -107,9 +110,10 @@ function ContentTypeFilterSection({
   filters: ContentTypeFilters; 
   onToggle: (filter: keyof ContentTypeFilters) => void 
 }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {CONTENT_TYPE_FILTERS.map((filter) => (
@@ -123,7 +127,7 @@ function ContentTypeFilterSection({
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
-              {filter.label}
+              {t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label)}
             </button>
           ))}
         </div>
@@ -304,6 +308,7 @@ export function ImagesFeed({
   onPostSelected,
   onBackToCollage,
 }: ImagesFeedProps) {
+  const { t } = useI18n();
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
@@ -487,7 +492,7 @@ export function ImagesFeed({
                 onSelect={setSelectedUploadDate} 
               />
               <div className="flex flex-col gap-2">
-                <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Type</span>
+                <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
                 <div className="relative">
                   <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
                     {CONTENT_TYPE_FILTERS.map((filter) => (
@@ -501,7 +506,7 @@ export function ImagesFeed({
                             : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                         )}
                       >
-                        {filter.label}
+                        {t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label)}
                       </button>
                     ))}
                   </div>
@@ -516,7 +521,7 @@ export function ImagesFeed({
                   resetContentFilters();
                 }}
                 className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-                aria-label="Reset filters"
+                aria-label={t('filters.resetFilters')}
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>

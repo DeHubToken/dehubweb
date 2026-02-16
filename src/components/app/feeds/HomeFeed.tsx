@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
@@ -146,6 +147,7 @@ function SortFilterSection({
   onContentFilterToggle,
   onReset,
 }: FilterSectionProps) {
+  const { t } = useI18n();
   const [categorySearch, setCategorySearch] = useState('');
 
   // Find the currently selected category object (if not 'all')
@@ -174,7 +176,7 @@ function SortFilterSection({
     <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {SORT_OPTIONS.map((option) => (
@@ -188,7 +190,7 @@ function SortFilterSection({
                     : inactiveFilterClass
                 )}
               >
-                {option.label}
+              {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
               </button>
             ))}
           </div>
@@ -198,12 +200,12 @@ function SortFilterSection({
 
       {/* Category Filter */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
         <input
           type="text"
           value={categorySearch}
           onChange={e => setCategorySearch(e.target.value)}
-          placeholder="Search categories..."
+          placeholder={t('filters.searchCategories')}
           className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
         />
         <div className="relative">
@@ -227,7 +229,7 @@ function SortFilterSection({
                   : inactiveFilterClass
               )}
             >
-              All
+              {t('filters.all')}
             </button>
             {filteredCategories.map((cat) => (
               <button
@@ -244,7 +246,7 @@ function SortFilterSection({
               </button>
             ))}
             {filteredCategories.length === 0 && categorySearch.trim() && (
-              <span className="text-xs text-zinc-500 py-1.5">No matches</span>
+              <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
             )}
           </div>
           <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -253,7 +255,7 @@ function SortFilterSection({
       
       {/* Date Filter Options */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {DATE_FILTER_OPTIONS.map((option) => (
@@ -277,7 +279,7 @@ function SortFilterSection({
 
       {/* Post Type Filter */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Post Type</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {POST_TYPE_FILTERS.map((option) => (
@@ -291,7 +293,7 @@ function SortFilterSection({
                     : inactiveFilterClass
                 )}
               >
-                {option.label}
+                {t(`filters.${option.value === 'all' ? 'all' : option.value === 'video' ? 'videos' : option.value === 'feed-images' ? 'images' : 'text'}`, option.label)}
               </button>
             ))}
           </div>
@@ -301,7 +303,7 @@ function SortFilterSection({
 
       {/* Content Type Filters */}
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Content Access</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentAccess')}</span>
         <div className="relative">
           <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
             {CONTENT_TYPE_FILTERS.map((filter) => (
@@ -315,7 +317,7 @@ function SortFilterSection({
                     : inactiveFilterClass
                 )}
               >
-                {filter.label}
+                {t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label)}
               </button>
             ))}
           </div>
@@ -327,7 +329,7 @@ function SortFilterSection({
       <button
         onClick={onReset}
         className="absolute bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-        aria-label="Reset filters"
+        aria-label={t('filters.resetFilters')}
       >
         <RefreshCw className="w-3.5 h-3.5" />
       </button>
