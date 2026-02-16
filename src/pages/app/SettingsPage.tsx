@@ -68,15 +68,26 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import settingsIcon from '@/assets/icons/settings-icon.png';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
+import { useTranslation } from 'react-i18next';
+
+const TAB_KEYS: Record<string, string> = {
+  profile: 'settings.profile',
+  notifications: 'settings.notifications',
+  privacy: 'settings.privacy',
+  appearance: 'settings.appearance',
+  content: 'settings.content',
+  messages: 'settings.messages',
+  assets: 'settings.assets',
+};
 
 const tabs = [
-  { icon: User, value: 'profile', label: 'Profile' },
-  { icon: Bell, value: 'notifications', label: 'Notifications' },
-  { icon: Shield, value: 'privacy', label: 'Privacy' },
-  { icon: Palette, value: 'appearance', label: 'Appearance' },
-  { icon: Eye, value: 'content', label: 'Content' },
-  { icon: MessageSquare, value: 'messages', label: 'Messages' },
-  { icon: Wallet, value: 'assets', label: 'Assets' },
+  { icon: User, value: 'profile', label: 'settings.profile' },
+  { icon: Bell, value: 'notifications', label: 'settings.notifications' },
+  { icon: Shield, value: 'privacy', label: 'settings.privacy' },
+  { icon: Palette, value: 'appearance', label: 'settings.appearance' },
+  { icon: Eye, value: 'content', label: 'settings.content' },
+  { icon: MessageSquare, value: 'messages', label: 'settings.messages' },
+  { icon: Wallet, value: 'assets', label: 'settings.assets' },
 ];
 
 export default function SettingsPage() {
@@ -84,12 +95,14 @@ export default function SettingsPage() {
   const [theme, setTheme] = useState('system');
   const { isAuthenticated, disconnect } = useAuth();
 
+  const { t } = useTranslation();
+
   const handleLogout = async () => {
     try {
       await disconnect();
-      toast.success('Logged out');
+      toast.success(t('settings.loggedOut'));
     } catch {
-      toast.error('Logout failed');
+      toast.error(t('settings.logoutFailed'));
     }
   };
 
@@ -108,8 +121,8 @@ export default function SettingsPage() {
           <div className="flex items-center gap-4">
             <img src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
             <div>
-              <h1 className="text-xl font-bold text-white">Settings</h1>
-              <p className="text-zinc-500 text-sm">Manage your account and preferences</p>
+              <h1 className="text-xl font-bold text-white">{t('settings.title')}</h1>
+              <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>
             </div>
           </div>
           <button
@@ -117,7 +130,7 @@ export default function SettingsPage() {
             className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white"
           >
             <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline text-sm font-medium">Log out</span>
+            <span className="hidden sm:inline text-sm font-medium">{t('settings.logOut')}</span>
           </button>
         </div>
 
@@ -134,7 +147,7 @@ export default function SettingsPage() {
                     ? 'bg-zinc-800 text-white'
                     : 'text-zinc-500 hover:text-white hover:bg-zinc-800/50'
                 }`}
-                title={tab.label}
+                title={t(tab.label)}
               >
                 <Icon className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
               </button>
