@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { startLiveStream, getStreamKey, getStreamIngestUrl, type StartLiveStreamResponse } from '@/lib/api/dehub';
+import { startLiveStream, getStreamKey, getStreamIngestUrl, getUserLiveStreams, type StartLiveStreamResponse } from '@/lib/api/dehub';
 import { mintPost } from '@/lib/api/dehub/content';
 import { getWeb3AuthSigner, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories } from '@/lib/api/dehub/feed';
@@ -107,56 +107,97 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       const minterAddress = await getWeb3AuthSigner();
       logger.info('Minter address obtained', { minterAddress });
 
-      // Step 1: Create the actual Live Stream on the streaming server
-      // Calling startLiveStream without a streamId tells the server to create a NEW one
-      // and return the MongoDB ObjectId we need for the key/ingest endpoints.
-      logger.info('Creating new stream session...', { title });
+      // Step 1: Mint the post first (Numeric ID system)
+      logger.info('Minting live post...', { title });
       
-      const startResponse = await startLiveStream({
-        title: title.trim(),
+      const mintResponse = await mintPost({
+        name: title.trim(),
         description: description.trim(),
-        category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray[0] : 'General',
+        postType: 'live',
+        chainId: BASE_CHAIN_ID,
+        category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
+        minterAddress,
+        streamInfo: {
+          isLockContent: false,
+          isPayPerView: false,
+          isAddBounty: false,
+        },
       });
 
-      const resultData = startResponse.result;
+      const tokenId = mintResponse.createdTokenId;
+      logger.info('NFT Minted successfully', { tokenId });
+
+      // Step 2: Since we need the MongoDB ID for the key, we fetch the user's live list
+      // This is because /api/live/user/{address} returns the MongoDB ObjectId we need.
+      logger.info('Finding stream mapping for keys...', { minterAddress });
       
-      if (!resultData?.streamId || !resultData?.streamKey) {
-        throw new Error('Failed to create stream session - no credentials returned');
+      // We'll retry a few times to give the backend time to sync the NFT to the Live system
+      let mongoStreamId = '';
+      let retryCount = 0;
+      const MAX_RETRIES = 5;
+
+      while (retryCount < MAX_RETRIES) {
+        try {
+          const streamsRes = await getUserLiveStreams(minterAddress);
+          const streams = streamsRes.result || [];
+          
+          // Find the stream that matches our title or is the newest
+          const matchingStream = streams[0]; // Assuming the latest one is ours
+          
+          if (matchingStream?.streamId && matchingStream.streamId.length > 10) {
+            mongoStreamId = matchingStream.streamId;
+            break; 
+          }
+        } catch (e) {
+          logger.warn('Failed to fetch user streams, retrying...', e);
+        }
+        retryCount++;
+        await new Promise(r => setTimeout(r, 2000));
       }
 
-      const mongoStreamId = resultData.streamId;
-      logger.info('Streaming session created (MongoDB ID)', { mongoStreamId });
-
-      // Step 2: (Optional/Parallel) Mint the NFT/Post so it shows up in the feed
-      // We do this so the post exists on-chain and in the social feed
-      try {
-        await mintPost({
-          name: title.trim(),
+      if (!mongoStreamId) {
+        // Fallback: Try startLiveStream to force an ID generation if sync failed
+        logger.info('Falling back to direct stream start...');
+        const startRes = await startLiveStream({
+          title: title.trim(),
           description: description.trim(),
-          postType: 'live',
-          chainId: BASE_CHAIN_ID,
-          category: selectedCategoriesArray.length > 0 ? selectedCategoriesArray : ['General'],
-          minterAddress,
-          streamInfo: {
-            isLockContent: false,
-            isPayPerView: false,
-            isAddBounty: false,
-          },
+          category: selectedCategoriesArray[0] || 'General'
         });
-        logger.info('NFT Post minted for the stream');
-      } catch (mintErr) {
-        // We log mint error but don't block the stream, as the user primarily needs the keys
-        logger.warn('Minting post failed, but stream is created', mintErr);
+        mongoStreamId = startRes.result?.streamId || '';
       }
+
+      if (!mongoStreamId) {
+        throw new Error('Could not obtain a valid Stream ID from the server.');
+      }
+
+      // Step 3: Fetch credentials using the proper MongoDB ID
+      logger.info('Fetching keys with MongoDB ID', { mongoStreamId });
+      const [keyRes, ingestRes] = await Promise.all([
+        getStreamKey(mongoStreamId),
+        getStreamIngestUrl(mongoStreamId)
+      ]);
+
+      const resultData = {
+        streamId: mongoStreamId,
+        streamKey: keyRes?.result?.streamKey || '',
+        ingestUrl: ingestRes?.result?.ingestUrl || '',
+        playbackUrl: `https://dehub.io/app/post/${tokenId}`, // Display on site with numeric ID
+      };
 
       setStreamData(resultData);
       setStep('ready');
-      logger.info('Stream setup ready', { streamId, hasKey: !!resultData.streamKey });
-      toast.success('Stream created! Copy your credentials to start broadcasting.');
+      logger.info('Stream setup ready', { streamId: mongoStreamId, hasKey: !!resultData.streamKey });
+      toast.success('Live stream is ready!');
     } catch (error) {
       logger.error('Failed to start stream', { title, selectedCategory }, error);
-      const message = error instanceof Error ? error.message : 'Failed to create stream';
-      toast.error(message);
+      const isWeb3AuthError = error instanceof Error && error.message.includes('Web3Auth');
+      
+      if (isWeb3AuthError) {
+        toast.error('Web3Auth service is currently slow or timing out. Please check your internet or try refreshing.');
+      } else {
+        const message = error instanceof Error ? error.message : 'Failed to create stream';
+        toast.error(message);
+      }
     } finally {
       setIsLoading(false);
     }
