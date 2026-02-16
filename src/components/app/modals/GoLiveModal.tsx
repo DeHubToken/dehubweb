@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { mintPost } from '@/lib/api/dehub/content';
-import { getWeb3AuthSigner, BASE_CHAIN_ID } from '@/lib/contracts';
+import { getWeb3AuthSigner, mintOnChain, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
@@ -124,9 +124,29 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       });
 
       const tokenId = mintResponse.createdTokenId;
-      logger.info('NFT Minted successfully', { tokenId });
+      logger.info('NFT Minted via API', { tokenId });
 
-      // Step 3: Poll /api/nft_info/{tokenId} to get stream credentials
+      // Step 3: Execute on-chain minting transaction
+      if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
+        throw new Error('Invalid signature data from backend');
+      }
+
+      logger.info('Executing on-chain mint...', { tokenId });
+      toast.loading('Publishing to blockchain...', { id: 'golive-progress', duration: Infinity });
+
+      const txHash = await mintOnChain({
+        tokenId,
+        timestamp: mintResponse.timestamp,
+        v: mintResponse.v,
+        r: mintResponse.r,
+        s: mintResponse.s,
+        chainId: BASE_CHAIN_ID,
+      });
+
+      logger.info('On-chain mint confirmed', { tokenId, txHash });
+      toast.dismiss('golive-progress');
+
+      // Step 4: Poll /api/nft_info/{tokenId} to get stream credentials
       // Backend needs a moment to provision the stream after minting
       logger.info('Fetching stream credentials from nft_info...', { tokenId });
 
@@ -174,6 +194,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       logger.info('Stream setup ready', { streamId, tokenId });
       toast.success('Live stream is ready!');
     } catch (error) {
+      toast.dismiss('golive-progress');
       logger.error('Failed to start stream', { title, selectedCategory }, error);
       const isWeb3AuthError = error instanceof Error && error.message.includes('Web3Auth');
 

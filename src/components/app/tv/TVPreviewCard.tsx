@@ -93,8 +93,12 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
       });
 
       hls.on(Hls.Events.ERROR, (_, data) => {
-        logger.error('TV Preview Error', { channel: channel.name, type: data.type, details: data.details, fatal: data.fatal }, data);
-        if (data.fatal) destroyHls();
+        if (data.fatal) {
+          logger.error('TV Preview Fatal Error', { channel: channel.name, type: data.type, details: data.details });
+          destroyHls();
+        }
+        // Non-fatal errors (bufferStalledError, bufferSeekOverHole, fragLoadTimeOut) are
+        // expected with live HLS streams and handled internally by hls.js — no need to log.
       });
 
       hlsRef.current = hls;
