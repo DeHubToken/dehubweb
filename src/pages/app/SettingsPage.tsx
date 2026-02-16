@@ -898,24 +898,32 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
-              { value: 'light', icon: Sun, label: 'Light' },
-              { value: 'dark', icon: Moon, label: 'Dark' },
-              { value: 'system', icon: Monitor, label: 'System' },
-              { value: 'cosmic', icon: Sparkles, label: 'Cosmic' },
-              { value: 'christmas', icon: Gift, label: 'Christmas' },
-              { value: 'island', icon: Palmtree, label: 'Island' },
-              { value: 'hacker', icon: Terminal, label: 'Hacker' },
-              { value: 'horror', icon: Skull, label: 'Horror' },
+              { value: 'system', icon: Monitor, label: 'System', available: true },
+              { value: 'light', icon: Sun, label: 'Light', available: false },
+              { value: 'dark', icon: Moon, label: 'Dark', available: false },
+              { value: 'cosmic', icon: Sparkles, label: 'Cosmic', available: false },
+              { value: 'christmas', icon: Gift, label: 'Christmas', available: false },
+              { value: 'island', icon: Palmtree, label: 'Island', available: false },
+              { value: 'hacker', icon: Terminal, label: 'Hacker', available: false },
+              { value: 'horror', icon: Skull, label: 'Horror', available: false },
             ].map((option) => {
               const Icon = option.icon;
               return (
                 <button
                   key={option.value}
-                  onClick={() => setTheme(option.value)}
+                  onClick={() => {
+                    if (option.available) {
+                      setTheme(option.value);
+                    } else {
+                      toast.info('Coming soon');
+                    }
+                  }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
-                    theme === option.value
-                      ? 'bg-zinc-800 border-2 border-white'
-                      : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
+                    option.available
+                      ? theme === option.value
+                        ? 'bg-zinc-800 border-2 border-white'
+                        : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
+                      : 'bg-zinc-800/30 border-2 border-transparent opacity-40 cursor-not-allowed'
                   }`}
                 >
                   <Icon className="w-6 h-6 text-zinc-400" />
