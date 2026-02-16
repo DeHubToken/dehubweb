@@ -472,7 +472,7 @@ export default function HomePage() {
     <div>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-10 p-2 sm:p-3 lg:mt-0">
-        <div className="bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-1">
+        <div className="bg-gradient-to-br from-white/10 via-white/5 to-black/40 backdrop-blur-xl rounded-2xl p-1">
           <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
