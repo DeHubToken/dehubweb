@@ -247,6 +247,8 @@
     "rewardPerUser": "Belohnung pro Nutzer",
     "totalBountyPool": "Gesamter Belohnungspool",
     "bountyDescription": "Schau zu und mach mit, um Belohnungen zu verdienen! 🎁",
+    "bountyView": "Ansehen",
+    "bountyClose": "Schließen",
     "gatedTitle": "Geschützter Inhalt",
     "mustHoldToView": "Token erforderlich zum Ansehen",
     "gatedDescription": "Halte die erforderlichen Token, um diesen Inhalt zu sehen! 🔓",

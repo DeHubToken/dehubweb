@@ -15,6 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 import dehubCoinSmall from '@/assets/dehub-coin.png';
@@ -821,11 +822,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
+    // Guard: don't navigate if any drawer is open or was recently closed
+    if (showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
     
     // Cache the video data before navigation for instant display
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`);
-  }, [navigate, video.id, queryClient, video]);
+  }, [navigate, video.id, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
   
   return (
     <div 
@@ -1439,6 +1442,27 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-center text-white/60 text-sm">
                 {t('drawers.bountyDescription')}
               </p>
+              {/* View / Close action buttons */}
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="glass"
+                  className="flex-1 rounded-xl font-semibold"
+                  onClick={() => {
+                    setShowBountyDrawer(false);
+                    cacheVideoForNavigation(queryClient, video);
+                    navigate(`/app/post/${video.id}`);
+                  }}
+                >
+                  {t('drawers.bountyView')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="flex-1 rounded-xl font-semibold text-zinc-400 hover:text-white"
+                  onClick={() => setShowBountyDrawer(false)}
+                >
+                  {t('drawers.bountyClose')}
+                </Button>
+              </div>
             </div>
           </DrawerContent>
         </Drawer>

@@ -247,6 +247,8 @@
     "rewardPerUser": "Hadiah per pengguna",
     "totalBountyPool": "Total kumpulan hadiah",
     "bountyDescription": "Tonton dan berpartisipasi untuk mendapatkan hadiah! 🎁",
+    "bountyView": "Lihat",
+    "bountyClose": "Tutup",
     "gatedTitle": "Konten Terbatas",
     "mustHoldToView": "Harus memiliki token untuk melihat",
     "gatedDescription": "Miliki token yang diperlukan untuk melihat konten ini! 🔓",

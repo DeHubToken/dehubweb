@@ -247,6 +247,8 @@
     "rewardPerUser": "每位用户奖励",
     "totalBountyPool": "总奖励池",
     "bountyDescription": "观看并参与以赚取奖励！🎁",
+    "bountyView": "查看",
+    "bountyClose": "关闭",
     "gatedTitle": "限制内容",
     "mustHoldToView": "需持有代币才能查看",
     "gatedDescription": "持有所需代币即可查看此内容！🔓",

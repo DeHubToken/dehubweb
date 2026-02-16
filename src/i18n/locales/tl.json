@@ -33,6 +33,8 @@
     "rewardPerUser": "Gantimpala bawat user",
     "totalBountyPool": "Kabuuang pool ng gantimpala",
     "bountyDescription": "Manood at lumahok para kumita ng gantimpala! 🎁",
+    "bountyView": "Tingnan",
+    "bountyClose": "Isara",
     "gatedTitle": "Limitadong Nilalaman",
     "mustHoldToView": "Kailangang may hawak na token para makita",
     "gatedDescription": "Hawakan ang kinakailangang token para makita ang nilalamang ito! 🔓",

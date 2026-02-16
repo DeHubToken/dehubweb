@@ -247,6 +247,8 @@
     "rewardPerUser": "Kullanıcı başına ödül",
     "totalBountyPool": "Toplam ödül havuzu",
     "bountyDescription": "İzle ve katıl, ödüller kazan! 🎁",
+    "bountyView": "Görüntüle",
+    "bountyClose": "Kapat",
     "gatedTitle": "Kısıtlı İçerik",
     "mustHoldToView": "Görüntülemek için token gerekli",
     "gatedDescription": "Bu içeriği görmek için gerekli tokenları tutun! 🔓",

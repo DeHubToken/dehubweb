@@ -33,6 +33,8 @@
     "rewardPerUser": "Ganjaran setiap pengguna",
     "totalBountyPool": "Jumlah kumpulan ganjaran",
     "bountyDescription": "Tonton dan sertai untuk mendapat ganjaran! 🎁",
+    "bountyView": "Lihat",
+    "bountyClose": "Tutup",
     "gatedTitle": "Kandungan Terhad",
     "mustHoldToView": "Perlu memegang token untuk melihat",
     "gatedDescription": "Pegang token yang diperlukan untuk melihat kandungan ini! 🔓",

@@ -247,6 +247,8 @@
     "rewardPerUser": "प्रति उपयोगकर्ता पुरस्कार",
     "totalBountyPool": "कुल पुरस्कार पूल",
     "bountyDescription": "देखें और भाग लें, पुरस्कार जीतें! 🎁",
+    "bountyView": "देखें",
+    "bountyClose": "बंद करें",
     "gatedTitle": "प्रतिबंधित सामग्री",
     "mustHoldToView": "देखने के लिए टोकन रखना आवश्यक",
     "gatedDescription": "इस सामग्री को देखने के लिए आवश्यक टोकन रखें! 🔓",

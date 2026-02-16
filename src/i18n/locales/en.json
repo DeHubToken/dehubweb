@@ -301,6 +301,8 @@
     "rewardPerUser": "Reward per User",
     "totalBountyPool": "Total Bounty Pool",
     "bountyDescription": "Watch and engage to earn rewards! 🎁",
+    "bountyView": "View",
+    "bountyClose": "Close",
     "gatedTitle": "Gated Content",
     "mustHoldToView": "Must hold to view",
     "gatedDescription": "Hold the required tokens to view this content! 🔓",
