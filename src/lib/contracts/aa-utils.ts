@@ -58,8 +58,19 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   }
   
   const targetChainHex = chainIdToHex(chainId);
-  
-  // Retry once on transient failures
+
+  // 1. Check current chain -- skip if already correct
+  try {
+    const currentChainHex = await provider.request({ method: 'eth_chainId' }) as string;
+    if (parseInt(currentChainHex, 16) === chainId) {
+      console.log('[AA] Already on correct chain:', chainConfig.name);
+      return;
+    }
+  } catch {
+    // If we can't check, proceed with switch attempt
+  }
+
+  // 2. Try switching with retry
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       await provider.request({
@@ -69,8 +80,10 @@ export async function switchChain(chainId: ChainId): Promise<void> {
       console.log('[AA] Switched to chain:', chainConfig.name);
       return;
     } catch (switchError: any) {
-      // If chain doesn't exist, try to add it
-      if (switchError?.code === 4902 || switchError?.message?.includes('Unrecognized chain')) {
+      const code = switchError?.code ?? switchError?.data?.code;
+
+      // Chain not added -- try adding it
+      if (code === 4902 || switchError?.message?.includes('Unrecognized chain')) {
         try {
           await provider.request({
             method: 'wallet_addEthereumChain',
@@ -93,14 +106,23 @@ export async function switchChain(chainId: ChainId): Promise<void> {
           throw new Error(`Failed to add ${chainConfig.name} network to wallet`);
         }
       }
-      
-      // On first attempt of a transient error, retry after a short delay
+
+      // Method not supported -- wallet can't switch programmatically
+      if (code === -32601 || code === -32603 ||
+          switchError?.message?.includes('does not exist')) {
+        console.warn('[AA] wallet_switchEthereumChain not supported');
+        throw new Error(
+          `Please switch to ${chainConfig.name} network in your wallet app and try again.`
+        );
+      }
+
+      // Transient error on first attempt -- retry
       if (attempt === 0) {
         console.warn('[AA] Chain switch attempt failed, retrying...', switchError);
         await new Promise(r => setTimeout(r, 1000));
         continue;
       }
-      
+
       console.error('[AA] Failed to switch chain:', switchError);
       throw new Error(`Failed to switch to ${chainConfig.name} network`);
     }
