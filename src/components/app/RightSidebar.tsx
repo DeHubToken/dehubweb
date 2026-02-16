@@ -35,7 +35,7 @@ export function RightSidebar({ showSearch = true }: RightSidebarProps) {
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search..."
-              className="w-full pl-10 bg-zinc-800 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-9"
+              className="w-full pl-10 bg-zinc-800 border-0 rounded-[9px] text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-9"
             />
           </div>
         </div>
