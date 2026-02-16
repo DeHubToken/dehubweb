@@ -29,10 +29,10 @@ const GENERIC_TLDS = 'com|org|net|info|biz|xyz|app|dev|ai|io|cc|gg|me|tv|ly|fm|s
 const COMMON_TLDS = `${CC_TLDS}|${GENERIC_TLDS}`;
 
 // TLD-restricted regex for non-www links (avoids false positives like "file.mp4")
-const TLD_URL_REGEX_SRC = `(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
+const TLD_URL_REGEX_SRC = `(?:^|(?<=\\s)|(?<=[\\(\\[<"']))(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%_+~#=]{1,256}\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
 
 // www. prefix always means a link, regardless of TLD
-const WWW_URL_REGEX_SRC = '(?:https?:\\/\\/)?www\\.[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z]{2,63}\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)';
+const WWW_URL_REGEX_SRC = `(?:^|(?<=\\s)|(?<=[\\(\\[<"']))(?:https?:\\/\\/)?www\\.[-a-zA-Z0-9@:%_+~#=]{1,256}\\.[a-zA-Z]{2,63}\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
 
 // Combined: match www. links (any TLD) OR TLD-restricted links
 const URL_REGEX = new RegExp(`(?:${WWW_URL_REGEX_SRC})|(?:${TLD_URL_REGEX_SRC})`, 'gi');
