@@ -259,5 +259,32 @@
     "endStream": "End Stream",
     "linkCopied": "Link copied to clipboard",
     "postUrlCopied": "Post URL copied to clipboard"
+  },
+  "filters": {
+    "sort": "Sort",
+    "category": "Category",
+    "searchCategories": "Search categories...",
+    "noMatches": "No matches",
+    "uploadDate": "Upload Date",
+    "postType": "Post Type",
+    "contentAccess": "Content Access",
+    "contentType": "Content Type",
+    "duration": "Duration",
+    "all": "All",
+    "latest": "Latest",
+    "following": "Following",
+    "subscribed": "Subscribed",
+    "mostViewed": "Most Viewed",
+    "mostLiked": "Most Liked",
+    "mostComments": "Most Comments",
+    "random": "Random",
+    "videos": "Videos",
+    "images": "Images",
+    "text": "Text",
+    "ppv": "PPV",
+    "bounty": "Bounty",
+    "locked": "Locked",
+    "any": "Any",
+    "resetFilters": "Reset filters"
   }
 }

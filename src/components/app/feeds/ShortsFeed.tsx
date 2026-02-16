@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
@@ -143,9 +144,10 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
 // ============================================================================
 
 function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSelect: (o: SortOption) => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Sort</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {SORT_OPTIONS.map((option) => (
@@ -159,7 +161,7 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
                   : INACTIVE_FILTER_CLASS
               )}
             >
-              {option.label}
+              {t(`filters.${option.value === 'most-viewed' ? 'mostViewed' : option.value === 'most-liked' ? 'mostLiked' : option.value === 'most-comments' ? 'mostComments' : option.value}`, option.label)}
             </button>
           ))}
         </div>
@@ -170,9 +172,10 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
 }
 
 function DurationFilterSection({ selected, onSelect }: { selected: DurationFilter; onSelect: (o: DurationFilter) => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Duration</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.duration')}</span>
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
           {DURATION_FILTERS.map((option) => (
@@ -186,7 +189,7 @@ function DurationFilterSection({ selected, onSelect }: { selected: DurationFilte
                   : INACTIVE_FILTER_CLASS
               )}
             >
-              {option.label}
+              {option.label === 'Any' ? t('filters.any') : option.label}
             </button>
           ))}
         </div>
@@ -208,6 +211,7 @@ function CategoryFilterSection({
   onSelect: (cat: string | null) => void;
   isLoading?: boolean;
 }) {
+  const { t } = useI18n();
   const [search, setSearch] = useState('');
   
   const selectedObj = useMemo(() => {
@@ -230,7 +234,7 @@ function CategoryFilterSection({
   if (isLoading) {
     return (
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
         <div className="flex items-center justify-center py-3">
           <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
           <span className="text-xs text-zinc-500 ml-2">Loading categories...</span>
@@ -241,12 +245,12 @@ function CategoryFilterSection({
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Category</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
       <input
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
-        placeholder="Search categories..."
+        placeholder={t('filters.searchCategories')}
         className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
       />
       <div className="relative">
@@ -267,7 +271,7 @@ function CategoryFilterSection({
               selectedCategory === null ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
             )}
           >
-            All
+            {t('filters.all')}
           </button>
           {filtered.map((cat) => (
             <button
@@ -282,7 +286,7 @@ function CategoryFilterSection({
             </button>
           ))}
           {filtered.length === 0 && search.trim() && (
-            <span className="text-xs text-zinc-500 py-1.5">No matches</span>
+            <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
           )}
         </div>
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none" />
@@ -292,9 +296,10 @@ function CategoryFilterSection({
 }
 
 function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterOption; onSelect: (o: DateFilterOption) => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
       <div className="relative">
         <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6">
           {DATE_FILTER_OPTIONS.map((option) => (
@@ -308,7 +313,7 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
-              {option.label}
+              {option.value === 'all' ? t('filters.all') : option.label}
             </button>
           ))}
         </div>
@@ -329,6 +334,7 @@ interface ShortsFeedProps {
 }
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
+  const { t } = useI18n();
   // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch - persisted
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('shorts', 'sort', SORT_OPTIONS[0]);
   // Duration and upload date are client-side filters - persisted
@@ -517,7 +523,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 />
                 <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs text-zinc-500 uppercase tracking-wider">Upload Date</span>
+                  <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
                   <div className="relative">
                     <div className="flex gap-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap pr-6" style={{ touchAction: 'pan-x' }}>
                       {DATE_FILTER_OPTIONS.map((option) => (
@@ -531,7 +537,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                               : INACTIVE_FILTER_CLASS
                           )}
                         >
-                          {option.label}
+                          {option.value === 'all' ? t('filters.all') : option.label}
                         </button>
                       ))}
                     </div>
@@ -547,7 +553,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
                   }}
                   className="absolute bottom-4 right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
-                  aria-label="Reset filters"
+                  aria-label={t('filters.resetFilters')}
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                 </button>
