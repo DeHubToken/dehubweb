@@ -20,6 +20,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { PostMetadata } from './PostMetadata';
 import { TranslatableText, useTranslation } from '../TranslatableText';
+import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { EditPostModal } from '../modals/EditPostModal';
@@ -58,6 +59,7 @@ interface PostCardProps {
 
 export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -131,27 +133,27 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           </DrawerTrigger>
           <DrawerContent glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
-              <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+              <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-1">
               <button
                 onClick={() => setShowReportModal(true)}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Flag className="w-5 h-5" /> Report
+                <Flag className="w-5 h-5" /> {t('postOptions.report')}
               </button>
               <button
                 onClick={() => {
                   const url = `${window.location.origin}/app/post/${post.id}`;
                   navigator.clipboard.writeText(url);
-                  toast.success('Post URL copied to clipboard');
+                  toast.success(t('postOptions.postUrlCopied'));
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Link2 className="w-5 h-5" /> Copy Post URL
+                <Link2 className="w-5 h-5" /> {t('postOptions.copyPostUrl')}
               </button>
               <button className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
-                <Ban className="w-5 h-5" /> Block Creator
+                <Ban className="w-5 h-5" /> {t('postOptions.blockCreator')}
               </button>
               {isOwnPost && (
                 <>
@@ -160,13 +162,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                     onClick={() => setShowEditModal(true)}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <Pencil className="w-5 h-5" /> Edit Post
+                    <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
                   <button
                     onClick={() => setShowDeleteModal(true)}
                     className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <Trash2 className="w-5 h-5" /> Delete Post
+                    <Trash2 className="w-5 h-5" /> {t('postOptions.deletePost')}
                   </button>
                   <button
                     onClick={async () => {

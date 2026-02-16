@@ -239,5 +239,25 @@
     "goBack": "Go back",
     "showOriginal": "Show original",
     "translating": "Translating..."
+  },
+  "postOptions": {
+    "options": "Options",
+    "sendTip": "Send Tip",
+    "queue": "Queue",
+    "watchList": "Watch List",
+    "report": "Report",
+    "download": "Download",
+    "copyPostUrl": "Copy Post URL",
+    "copyLink": "Copy Link",
+    "blockCreator": "Block Creator",
+    "seeLessLikeThis": "See Less Like This",
+    "editPost": "Edit Post",
+    "deletePost": "Delete Post",
+    "translateImage": "Translate Image",
+    "notifyWhenLive": "Notify When Live",
+    "activityLog": "Activity Log",
+    "endStream": "End Stream",
+    "linkCopied": "Link copied to clipboard",
+    "postUrlCopied": "Post URL copied to clipboard"
   }
 }
