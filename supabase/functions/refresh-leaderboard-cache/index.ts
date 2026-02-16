@@ -36,8 +36,14 @@ const PERIODS = ["day", "week", "month", "year", "all"] as const;
 // Minimum DHB balance to include from discovery (10,000 DHB)
 const DISCOVERY_MIN_BALANCE = 10_000;
 
-// Search prefixes for API-based profile discovery (a-z, 0-9)
-const SEARCH_PREFIXES = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
+// Search prefixes for API-based profile discovery (two-character combos for broader coverage)
+const SEARCH_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
+const SEARCH_PREFIXES: string[] = [];
+for (const a of SEARCH_CHARS) {
+  for (const b of SEARCH_CHARS) {
+    SEARCH_PREFIXES.push(a + b);
+  }
+}
 
 // Period to days-ago mapping for snapshot deltas
 const PERIOD_DAYS: Record<string, number> = {
@@ -323,20 +329,37 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
 
 // ── API-based profile discovery ─────────────────────────────────────
 
-/** Search DeHub API for registered accounts using a prefix */
+/** Search DeHub API for registered accounts using a prefix, with pagination */
+const SEARCH_LIMIT = 100;
+
 async function searchProfiles(prefix: string): Promise<Array<Record<string, unknown>>> {
+  const allItems: Array<Record<string, unknown>> = [];
+  let page = 1;
+
   try {
-    const res = await fetch(
-      `${DEHUB_API_BASE}/api/feed?type=accounts&search=${encodeURIComponent(prefix)}&limit=50`,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    if (!res.ok) return [];
-    const data = await res.json();
-    const items = data?.result?.items || data?.result || [];
-    return Array.isArray(items) ? items : [];
+    while (true) {
+      const res = await fetch(
+        `${DEHUB_API_BASE}/api/feed?type=accounts&search=${encodeURIComponent(prefix)}&limit=${SEARCH_LIMIT}&page=${page}`,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (!res.ok) break;
+      const data = await res.json();
+      const items = data?.result?.items || data?.result || [];
+      const pageItems = Array.isArray(items) ? items : [];
+      allItems.push(...pageItems);
+
+      // If we got fewer than the limit, we've reached the end
+      if (pageItems.length < SEARCH_LIMIT) break;
+
+      // Otherwise fetch next page
+      page++;
+      await new Promise((r) => setTimeout(r, 100));
+    }
   } catch {
-    return [];
+    // Return whatever we collected so far
   }
+
+  return allItems;
 }
 
 /** Discover holders by searching all registered DeHub profiles, then checking on-chain balances */
@@ -352,8 +375,8 @@ async function discoverProfileHolders(
     // 1. Search DeHub API with all prefixes to gather registered accounts
     const profileMap = new Map<string, Record<string, unknown>>();
 
-    // Process prefixes in batches of 6 to avoid hammering the API
-    const PREFIX_BATCH = 6;
+    // Process prefixes in batches of 4 to avoid hammering the API
+    const PREFIX_BATCH = 4;
     for (let i = 0; i < SEARCH_PREFIXES.length; i += PREFIX_BATCH) {
       const batch = SEARCH_PREFIXES.slice(i, i + PREFIX_BATCH);
       const results = await Promise.all(batch.map(searchProfiles));
@@ -366,7 +389,7 @@ async function discoverProfileHolders(
         }
       }
       if (i + PREFIX_BATCH < SEARCH_PREFIXES.length) {
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise((r) => setTimeout(r, 500));
       }
     }
 
