@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -55,6 +56,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   }, [postContext.type, postContext.author, postContext.title, postContext.caption]);
 
   const isMobile = useIsMobile();
+  const { t } = useI18n();
   const { language: userLanguage } = useUserLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -109,7 +111,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       setMessages([{
         id: 'initial',
         role: 'assistant',
-        content: `I can see this ${postContext.type}. ${contextDescription}\n\nWhat would you like to know about it?`
+        content: t('aiChat.welcomePost', { type: postContext.type, context: contextDescription })
       }]);
     }
   }, [isOpen, postContext]);
@@ -178,7 +180,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response || 'I apologize, I couldn\'t generate a response.'
+        content: data.response || t('aiChat.noResponse')
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -187,7 +189,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: t('aiChat.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);
@@ -316,7 +318,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
               />
               <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-                <span className="text-sm text-white/60">Thinking...</span>
+                <span className="text-sm text-white/60">{t('aiChat.thinking')}</span>
               </div>
             </motion.div>
           )}
@@ -365,7 +367,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
               }
             }}
             onKeyDown={handleKeyDown}
-            placeholder={isRecording ? "Listening..." : "Ask about this post..."}
+            placeholder={isRecording ? t('aiChat.listening') : t('aiChat.askAboutPost')}
             className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
               isRecording ? 'text-white/60 italic' : ''
             }`}
@@ -389,7 +391,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                   <VolumeX className="w-5 h-5" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Stop speaking</TooltipContent>
+              <TooltipContent>{t('aiChat.stopSpeaking')}</TooltipContent>
             </Tooltip>
           )}
           
@@ -421,7 +423,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
-                <DrawerTitle className="text-white text-base">AI Assistant</DrawerTitle>
+                <DrawerTitle className="text-white text-base">{t('aiChat.title')}</DrawerTitle>
               </div>
               <div className="flex items-center gap-1">
                 <Button
@@ -463,7 +465,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
-              <DialogTitle className="text-white text-base">AI Assistant</DialogTitle>
+              <DialogTitle className="text-white text-base">{t('aiChat.title')}</DialogTitle>
             </div>
             <div className="flex items-center gap-1">
               <Button
