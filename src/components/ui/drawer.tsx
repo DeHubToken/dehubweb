@@ -21,10 +21,7 @@ const DrawerOverlay = React.forwardRef<
   <DrawerPrimitive.Overlay 
     ref={ref} 
     className={cn("fixed inset-0 z-[100] bg-black/80", className)} 
-    onClick={(e) => {
-      e.stopPropagation();
-      onClick?.(e);
-    }}
+    onClick={onClick}
     {...props} 
   />
 ));
@@ -45,6 +42,7 @@ const DrawerContent = React.forwardRef<
           : "border bg-background",
         className,
       )}
+      onClick={(e) => e.stopPropagation()}
       {...props}
     >
       {!hideHandle && (
