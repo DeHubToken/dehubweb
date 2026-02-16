@@ -149,7 +149,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
           logger.info('Stream not ready yet, retrying...', { attempt: retryCount + 1, status: stream?.status });
         } catch (e) {
-          logger.warn('Failed to fetch nft_info, retrying...', { attempt: retryCount + 1 }, e);
+          logger.warn('Failed to fetch nft_info, retrying...', { attempt: retryCount + 1 });
         }
         retryCount++;
         await new Promise(r => setTimeout(r, 2000));
