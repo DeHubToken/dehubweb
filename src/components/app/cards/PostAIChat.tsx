@@ -19,6 +19,7 @@ import { useUserLanguage } from '@/hooks/use-user-language';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useMinimizedChats } from '@/hooks/use-minimized-chats';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { toast } from 'sonner';
@@ -48,6 +49,7 @@ interface PostAIChatProps {
 }
 
 export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
+  const { walletAddress } = useAuth();
   // Generate a STABLE chat ID based on post context (not useId which changes on remount)
   const chatId = useMemo(() => {
     const baseId = `${postContext.type}-${postContext.author || 'anon'}`;
@@ -411,6 +413,11 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
 
   // When minimized, don't render anything - global MinimizedAIChats handles the floating button
   if (isThisMinimized) {
+    return null;
+  }
+
+  // Don't render if not authenticated
+  if (!walletAddress) {
     return null;
   }
 
