@@ -967,6 +967,23 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
+              onTouchStart={(e) => {
+                // Record touch start position for scroll detection
+                (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+              }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                const start = (e.currentTarget as any)._touchStart;
+                if (!start) return;
+                const touch = e.changedTouches[0];
+                const dx = Math.abs(touch.clientX - start.x);
+                const dy = Math.abs(touch.clientY - start.y);
+                // Only open if it was a tap, not a scroll
+                if (dx < 10 && dy < 10) {
+                  e.preventDefault();
+                  setShowPPVDrawer(true);
+                }
+              }}
             >
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Ticket className="h-7 w-7 text-white" />
