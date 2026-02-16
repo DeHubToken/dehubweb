@@ -384,6 +384,12 @@
     "whatsHappeningNews": "What's happening in the news today?",
     "loginRequired": "Log in to access the AI Assistant and unlock powerful features like image and video generation."
   },
+  "publicChat": {
+    "searchMessages": "Search messages",
+    "searchPlaceholder": "Search...",
+    "resultsCount": "{{count}} results",
+    "noResults": "No messages found"
+  },
   "aiChat": {
     "title": "AI Assistant",
     "welcomePost": "I can see this {{type}}. {{context}}\n\nWhat would you like to know about it?",

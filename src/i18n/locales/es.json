@@ -377,6 +377,12 @@
     "whatsHappeningNews": "¿Qué está pasando en las noticias hoy?",
     "loginRequired": "Inicia sesión para acceder al Asistente IA y desbloquear funciones como generación de imágenes y vídeos."
   },
+  "publicChat": {
+    "searchMessages": "Buscar mensajes",
+    "searchPlaceholder": "Buscar...",
+    "resultsCount": "{{count}} resultados",
+    "noResults": "No se encontraron mensajes"
+  },
   "aiChat": {
     "title": "Asistente IA",
     "welcomePost": "Puedo ver este {{type}}. {{context}}\n\n¿Qué te gustaría saber sobre esto?",

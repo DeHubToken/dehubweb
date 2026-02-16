@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -40,9 +41,15 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
 }
 
 export function PublicChat({ onBack }: PublicChatProps) {
+  const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const { isAuthenticated, walletAddress } = useAuth();
+
+  // Search state
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch rooms, use the first available room
   const { rooms, isLoading: roomsLoading, error: roomsError, refetch: refetchRooms } = useLiveChatRooms();
@@ -76,8 +83,29 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
+  // Filter messages based on search query
+  const filteredMessages = useMemo(() => {
+    if (!searchQuery.trim()) return messages;
+    const q = searchQuery.toLowerCase();
+    return messages.filter(
+      m => m.content.toLowerCase().includes(q) || m.userName.toLowerCase().includes(q)
+    );
+  }, [messages, searchQuery]);
+
   // Find pinned message
   const pinnedMessage = messages.find(m => m.isPinned);
+
+  // Toggle search
+  const handleToggleSearch = useCallback(() => {
+    setIsSearchOpen(prev => {
+      if (!prev) {
+        setTimeout(() => searchInputRef.current?.focus(), 100);
+      } else {
+        setSearchQuery('');
+      }
+      return !prev;
+    });
+  }, []);
 
   // Auto-scroll when messages change
   useEffect(() => {
@@ -202,6 +230,20 @@ export function PublicChat({ onBack }: PublicChatProps) {
         </div>
         
         <div className="flex items-center gap-2">
+          {/* Search toggle - available to all users */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`h-8 w-8 ${isSearchOpen ? 'text-white bg-zinc-700' : 'text-zinc-400 hover:text-white'}`}
+                onClick={handleToggleSearch}
+              >
+                <Search className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{t('publicChat.searchMessages')}</TooltipContent>
+          </Tooltip>
           {isModerator && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -234,6 +276,32 @@ export function PublicChat({ onBack }: PublicChatProps) {
           )}
         </div>
       </div>
+
+      {/* Search bar */}
+      {isSearchOpen && (
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-zinc-800 bg-zinc-800/50">
+          <Search className="w-4 h-4 text-zinc-500 flex-shrink-0" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder={t('publicChat.searchPlaceholder')}
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none"
+          />
+          {searchQuery && (
+            <span className="text-xs text-zinc-400 flex-shrink-0">
+              {t('publicChat.resultsCount', { count: filteredMessages.length })}
+            </span>
+          )}
+          <button
+            onClick={handleToggleSearch}
+            className="text-zinc-500 hover:text-white flex-shrink-0"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Pinned message banner */}
       {pinnedMessage && (
@@ -298,8 +366,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <p className="text-sm">No messages yet</p>
               <p className="text-xs text-zinc-600">Be the first to say something!</p>
             </div>
+          ) : filteredMessages.length === 0 && searchQuery ? (
+            <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
+              <Search className="w-12 h-12 text-zinc-700" />
+              <p className="text-sm">{t('publicChat.noResults')}</p>
+            </div>
           ) : (
-            messages.map((message) => (
+            filteredMessages.map((message) => (
               <ChatMessage 
                 key={message.id} 
                 message={message}
