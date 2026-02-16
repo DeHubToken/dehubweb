@@ -1,32 +1,42 @@
 
 
-# Fix PPV Drawer Translation Keys
+# Fix Missing "Close" Translation Key
 
 ## Problem
-The PPV drawer buttons use translation keys `drawers.paying` and `drawers.payAmount` that don't exist in any of the 23 locale files. The `drawers` section itself only exists in `en.json` and `es.json` -- the other 21 locale files are missing it entirely.
+The PPV drawer's Close button uses `t('common.close', 'Close')`, but no locale file has a `close` key in the `common` section. The fallback English string "Close" is always shown regardless of language.
 
-Because `react-i18next` falls back to the hardcoded English default strings, the buttons always show English text regardless of the user's language.
+"Pagar" (Pay) is correct -- that's the Spanish translation working as intended.
 
 ## Solution
-Add the missing `paying` and `payAmount` keys to `en.json` and `es.json`, then add the full `drawers` section (with all existing keys plus the two new ones) to the remaining 21 locale files with properly translated strings.
+Add the `close` key to the `common` section of all 23 locale files.
 
 ## Changes
 
-### 1. Add missing keys to `en.json`
-Add to the `drawers` section:
-- `"paying": "Paying..."`
-- `"payAmount": "Pay {{amount}} {{currency}}"`
+| Language | File | Value |
+|----------|------|-------|
+| English | en.json | "Close" |
+| Spanish | es.json | "Cerrar" |
+| French | fr.json | "Fermer" |
+| German | de.json | "Schließen" |
+| Italian | it.json | "Chiudi" |
+| Portuguese | pt.json | "Fechar" |
+| Russian | ru.json | "Закрыть" |
+| Chinese | zh.json | "关闭" |
+| Japanese | ja.json | "閉じる" |
+| Korean | ko.json | "닫기" |
+| Arabic | ar.json | "إغلاق" |
+| Hindi | hi.json | "बंद करें" |
+| Thai | th.json | "ปิด" |
+| Vietnamese | vi.json | "Đóng" |
+| Dutch | nl.json | "Sluiten" |
+| Polish | pl.json | "Zamknij" |
+| Turkish | tr.json | "Kapat" |
+| Ukrainian | uk.json | "Закрити" |
+| Romanian | ro.json | "Închide" |
+| Bengali | bn.json | "বন্ধ করুন" |
+| Indonesian | id.json | "Tutup" |
+| Malay | ms.json | "Tutup" |
+| Tagalog | tl.json | "Isara" |
 
-### 2. Add missing keys to `es.json`
-Add to the `drawers` section:
-- `"paying": "Pagando..."`
-- `"payAmount": "Pagar {{amount}} {{currency}}"`
+No code changes needed -- the component already references the correct key.
 
-### 3. Add `drawers` section to remaining 21 locale files
-Each of the following files needs the full `drawers` block with all keys translated into their respective language:
-
-`ar.json`, `bn.json`, `de.json`, `fr.json`, `hi.json`, `id.json`, `it.json`, `ja.json`, `ko.json`, `ms.json`, `nl.json`, `pl.json`, `pt.json`, `ro.json`, `ru.json`, `th.json`, `tl.json`, `tr.json`, `uk.json`, `vi.json`, `zh.json`
-
-Each file will include translated versions of all drawer keys: `ppvTitle`, `unlockPrice`, `ppvDescription`, `unlockFor`, `bountyTitle`, `firstViews`, `rewardedWatching`, `firstComments`, `rewardedEngaging`, `rewardPerUser`, `totalBountyPool`, `bountyDescription`, `gatedTitle`, `mustHoldToView`, `gatedDescription`, `setPpvPrice`, `currency`, `price`, `ppvDhbInfo`, `ppvUsdInfo`, `setupBounty`, `viewersToReward`, `numberOfViewers`, `commentersToReward`, `numberOfCommenters`, `rewardPerPerson`, `amountPerPerson`, `totalLocked`, `tokenGateSettings`, `requiresDhb`, `minimumDhb`, `minimumAmount`, `cancel`, `confirm`, **`paying`**, and **`payAmount`**.
-
-No code changes needed -- the component already references the correct keys with proper fallbacks.
