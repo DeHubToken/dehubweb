@@ -103,6 +103,20 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
     commentCount: post.comments || 0,
     // Preserve the original timestamp - timeAgo is already formatted, so we need to pass createdAt
     createdAt: post.createdAt,
+    // Preserve gating fields (PPV/Bounty/Locked)
+    is_ppv: post.isPPV || false,
+    ppv_price: post.ppvPrice,
+    ppv_currency: post.ppvCurrency,
+    is_w2e: post.isW2E || false,
+    is_locked: post.isLocked || false,
+    locked_price: post.lockedPrice,
+    locked_currency: post.lockedCurrency,
+    streamInfo: {
+      ...(post.bountyAmount != null && { addBountyAmount: post.bountyAmount }),
+      ...(post.bountyViews != null && { addBountyFirstXViewers: post.bountyViews }),
+      ...(post.bountyComments != null && { addBountyFirstXComments: post.bountyComments }),
+      ...(post.bountyCurrency && { addBountyTokenSymbol: post.bountyCurrency }),
+    } as any,
   };
 }
 
