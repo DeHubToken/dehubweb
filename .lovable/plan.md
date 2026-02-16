@@ -1,29 +1,36 @@
 
 
-# Fix: Group Creation "2 people must be added" Error
+# Fix: False Positive URL Detection in Messages
 
 ## Problem
-The DeHub API endpoint `POST /api/dm/group` returns an error requiring at least 2 members. The current code sends only the selected members in the `members` field, but the API likely expects the creator's address to also be included in the members array -- meaning you need to select at least 2 *other* people, or the API counts total participants (including you) and needs 3+.
+The `TranslatableText` component's URL-to-emoji feature is incorrectly converting regular words like "working" into clickable link emojis. The URL regex is too aggressive because:
+1. It has no **start boundary** -- it can match anywhere in text, including mid-sentence
+2. The character class `[-a-zA-Z0-9@:%._+~#=]` includes dots, allowing the regex to consume surrounding punctuation
+3. The 300+ TLD whitelist includes many 2-letter country codes (`.in`, `.ng`, `.re`, `.to`, `.me`, etc.) that overlap with common English word fragments
 
 ## Solution
-Update the `handleCreateGroup` function to include the current user's wallet address in the `members` array sent to the API.
+Add a start boundary to the URL regex so it only matches after whitespace, start of string, or opening brackets -- never in the middle of normal text.
 
 ## Technical Details
 
-### File: `src/components/app/chat/CreateGroupModal.tsx`
+### File: `src/components/app/TranslatableText.tsx`
 
-**Change**: In `handleCreateGroup`, append the current user's `walletAddress` to the `memberAddresses` array before sending it to the API.
+**Change 1**: Update `TLD_URL_REGEX_SRC` to require a preceding boundary:
+```
+// Before:
+(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.(?:TLDs)...
 
-```typescript
-// Current code (line 127):
-const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
-
-// Updated code:
-const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
-if (walletAddress && !memberAddresses.includes(walletAddress)) {
-  memberAddresses.push(walletAddress);
-}
+// After:
+(?:^|(?<=\s)|(?<=[\(\[<"']))(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%_+~#=]{1,256}\.(?:TLDs)...
 ```
 
-This ensures the API receives all participants including the creator, satisfying the minimum member requirement.
+Key changes:
+- Add a lookbehind `(?:^|(?<=\s)|(?<=[\(\[<"']))` to ensure URLs only match at the start of text or after whitespace/opening punctuation
+- Remove `.` (dot) from the main domain character class `[-a-zA-Z0-9@:%._+~#=]` to prevent consuming sentence periods as part of the "domain". Dots in subdomains are already handled by the overall regex structure
+
+**Change 2**: Apply the same boundary fix to `WWW_URL_REGEX_SRC`.
+
+**Change 3**: In `renderTextWithLinks`, trim any captured whitespace from the match so the link emoji doesn't swallow spaces.
+
+This prevents words like "working", "gaming", "trading", etc. from being falsely detected as URLs while still correctly detecting real bare-domain links like `example.com` or `crypto.exchange`.
 
