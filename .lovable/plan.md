@@ -1,34 +1,29 @@
 
-# Add Search to Public Chat
 
-## Overview
-Add a search bar to the Public Chat header that lets users filter through messages in real time by matching against message content and usernames.
+# Fix: Group Creation "2 people must be added" Error
 
-## How It Works
-- A search icon button appears in the Public Chat header
-- Tapping it expands a search input field inline
-- As you type, messages are filtered client-side to only show those matching your query (content or username)
-- A count badge shows how many results matched
-- Pressing the X or clearing the input exits search mode and restores the full chat
+## Problem
+The DeHub API endpoint `POST /api/dm/group` returns an error requiring at least 2 members. The current code sends only the selected members in the `members` field, but the API likely expects the creator's address to also be included in the members array -- meaning you need to select at least 2 *other* people, or the API counts total participants (including you) and needs 3+.
+
+## Solution
+Update the `handleCreateGroup` function to include the current user's wallet address in the `members` array sent to the API.
 
 ## Technical Details
 
-### 1. Update `PublicChat.tsx`
-- Add a `searchQuery` state and a `isSearchOpen` toggle
-- Add a `Search` icon button in the header (next to existing moderator buttons)
-- When search is open, render an input field in the header area with auto-focus
-- Filter the `messages` array using a case-insensitive match on `content` and `userName` before rendering
-- Show a small result count indicator (e.g., "3 results") when filtering is active
+### File: `src/components/app/chat/CreateGroupModal.tsx`
 
-### 2. i18n Support
-- Add search-related keys to `en.json` and `es.json` (and other locales):
-  - `"searchMessages"`: "Search messages" / "Buscar mensajes"
-  - `"searchPlaceholder"`: "Search..." / "Buscar..."
-  - `"resultsCount"`: "{{count}} results" / "{{count}} resultados"
-  - `"noResults"`: "No messages found" / "No se encontraron mensajes"
+**Change**: In `handleCreateGroup`, append the current user's `walletAddress` to the `memberAddresses` array before sending it to the API.
 
-### 3. UX Details
-- The search bar slides in below the header when activated, keeping the header buttons visible
-- An `X` button closes search and clears the filter
-- Empty state shows a "No messages found" message when the filter yields zero results
-- Search is available to all users (not just moderators)
+```typescript
+// Current code (line 127):
+const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
+
+// Updated code:
+const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
+if (walletAddress && !memberAddresses.includes(walletAddress)) {
+  memberAddresses.push(walletAddress);
+}
+```
+
+This ensures the API receives all participants including the creator, satisfying the minimum member requirement.
+
