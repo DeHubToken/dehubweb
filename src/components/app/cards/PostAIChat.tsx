@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useUserLanguage } from '@/hooks/use-user-language';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
 import { useMinimizedChats } from '@/hooks/use-minimized-chats';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,6 +55,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   }, [postContext.type, postContext.author, postContext.title, postContext.caption]);
 
   const isMobile = useIsMobile();
+  const { language: userLanguage } = useUserLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -166,7 +168,8 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             role: m.role,
             content: m.content
           })),
-          postContext
+          postContext,
+          userLanguage
         }
       });
 
@@ -212,7 +215,8 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
             role: m.role,
             content: m.content
           })),
-          postContext
+          postContext,
+          userLanguage
         }
       });
 
