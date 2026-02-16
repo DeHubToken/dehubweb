@@ -76,7 +76,9 @@ export function SidebarNavItem({
         <div className={cn(
           "rounded-xl flex items-center justify-center flex-shrink-0",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
-          collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+          isDesktop
+            ? collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+            : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
@@ -119,9 +121,13 @@ export function SidebarNavItem({
         <div className={cn(
           "rounded-xl flex items-center justify-center flex-shrink-0 transition-colors relative",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
-          isActive 
-            ? "bg-zinc-700" 
-            : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+          isDesktop
+            ? isActive 
+              ? "bg-zinc-700" 
+              : collapsed ? "bg-transparent xl:bg-zinc-800" : "bg-zinc-800"
+            : isActive
+              ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
+              : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
           {notificationCount !== undefined && notificationCount > 0 && (
