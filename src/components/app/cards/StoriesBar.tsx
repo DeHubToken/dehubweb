@@ -15,6 +15,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerDescription,
 } from '@/components/ui/drawer';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -26,6 +27,9 @@ import { PostModal } from '@/features/post';
 import { useStories, useUploadStory, useWatchedStories, type Story } from '@/hooks/use-stories';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('StoriesBar');
 
 interface StoryUser {
   name: string;
@@ -64,9 +68,11 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const showSkeleton = externalLoading || storiesLoading;
 
   const handleGoLiveVideo = () => {
+    logger.info('User clicked "Video Go Live" in StoriesBar');
     setShowLiveOptions(false);
     setIsOpen(false);
     requireAuth(() => {
+      logger.info('Auth requirement met, opening GoLiveModal');
       setIsGoLiveOpen(true);
     });
   };
@@ -308,6 +314,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               <DrawerContent glass className="px-4 pb-8" hideHandle>
                 <DrawerHeader className="mb-2">
                   <DrawerTitle className="text-white">Create</DrawerTitle>
+                  <DrawerDescription className="sr-only">
+                    Choose what you want to create: a livestream, a story, or a post.
+                  </DrawerDescription>
                 </DrawerHeader>
                 {menuContent}
               </DrawerContent>
@@ -318,6 +327,9 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
               <DrawerContent glass className="px-4 pb-8" hideHandle>
                 <DrawerHeader className="mb-2">
                   <DrawerTitle className="text-white">Go Live</DrawerTitle>
+                  <DrawerDescription className="sr-only">
+                    Choose between starting a video livestream or an audio stage.
+                  </DrawerDescription>
                 </DrawerHeader>
                 {liveOptionsContent}
               </DrawerContent>

@@ -1,13 +1,6 @@
-/**
- * Go Live Modal
- * =============
- * Modal for starting a live stream with title, description, and category.
- * Supports both immediate live and scheduled streams.
- */
-
 import { useState, useEffect, useMemo } from 'react';
 import { Radio, Loader2, Copy, Check, ExternalLink, Tag, Search, X, Plus, Save } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,6 +9,9 @@ import { cn } from '@/lib/utils';
 import { createLiveStream, startLiveStream, getStreamKey, getStreamIngestUrl, type StartLiveStreamResponse } from '@/lib/api/dehub';
 import { getCategories } from '@/lib/api/dehub/feed';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('GoLiveModal');
 
 
 interface GoLiveModalProps {
@@ -103,6 +99,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     }
 
     setIsLoading(true);
+    logger.info('User initiated "Go Live"', { title, category });
     try {
       // Send first category to API (API accepts single category string)
       const categoryForApi = selectedCategoriesArray.length > 0
@@ -116,19 +113,28 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       });
 
       const streamId = createResponse.result?.streamId;
+      logger.info('Stream creation response received', { streamId });
 
       if (!streamId) {
         throw new Error('Failed to create stream - no stream ID returned');
       }
 
       const startResponse = await startLiveStream({ streamId });
+      logger.info('Start stream response received', { hasResult: !!startResponse.result });
 
       let resultData = startResponse.result;
 
       if (!resultData?.streamKey || !resultData?.ingestUrl) {
+        logger.warn('Start stream response missing credentials, fetching explicitly');
         const [keyRes, ingestRes] = await Promise.all([
-          getStreamKey(streamId).catch(() => null),
-          getStreamIngestUrl(streamId).catch(() => null),
+          getStreamKey(streamId).catch((err) => {
+            logger.error('Failed to get stream key', { streamId }, err);
+            return null;
+          }),
+          getStreamIngestUrl(streamId).catch((err) => {
+            logger.error('Failed to get ingest URL', { streamId }, err);
+            return null;
+          }),
         ]);
         resultData = {
           streamId,
@@ -140,8 +146,10 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
       setStreamData(resultData);
       setStep('ready');
+      logger.info('Stream setup ready', { streamId, hasKey: !!resultData.streamKey });
       toast.success('Stream created! Copy your stream key to start broadcasting.');
     } catch (error) {
+      logger.error('Failed to start stream', { title, category }, error);
       console.error('Failed to start stream:', error);
       const message = error instanceof Error ? error.message : 'Failed to create stream';
       if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
@@ -177,10 +185,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             {step === 'setup' ? 'Go Live' : step === 'ready' ? 'Ready to Stream' : 'Live Now'}
           </DrawerTitle>
+          <DrawerDescription className="sr-only">
+            Configure your livestream settings including title and category.
+          </DrawerDescription>
         </DrawerHeader>
 
-        {step === 'setup' && (
-          <div className="space-y-4">
+        <div className="overflow-y-auto max-h-[70vh] px-1 pb-12 custom-scrollbar">
+          {step === 'setup' && (
+            <div className="space-y-4">
             {/* Title */}
             <div className="space-y-2">
               <label className="text-sm text-zinc-400">Stream Title *</label>
@@ -387,6 +399,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             </div>
           </div>
         )}
+        </div>
       </DrawerContent>
 
       {/* Category Drawer - matching PostAccessToggles pattern */}
