@@ -247,6 +247,8 @@
     "rewardPerUser": "사용자당 보상",
     "totalBountyPool": "총 보상 풀",
     "bountyDescription": "시청하고 참여하여 보상을 받으세요! 🎁",
+    "bountyView": "보기",
+    "bountyClose": "닫기",
     "gatedTitle": "제한된 콘텐츠",
     "mustHoldToView": "보려면 토큰 보유 필요",
     "gatedDescription": "필요한 토큰을 보유하여 이 콘텐츠를 확인하세요! 🔓",

@@ -247,6 +247,8 @@
     "rewardPerUser": "প্রতি ব্যবহারকারী পুরস্কার",
     "totalBountyPool": "মোট পুরস্কার পুল",
     "bountyDescription": "দেখুন এবং অংশগ্রহণ করুন, পুরস্কার জিতুন! 🎁",
+    "bountyView": "দেখুন",
+    "bountyClose": "বন্ধ করুন",
     "gatedTitle": "সীমাবদ্ধ কন্টেন্ট",
     "mustHoldToView": "দেখতে টোকেন থাকা আবশ্যক",
     "gatedDescription": "এই কন্টেন্ট দেখতে প্রয়োজনীয় টোকেন রাখুন! 🔓",

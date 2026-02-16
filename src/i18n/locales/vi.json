@@ -33,6 +33,8 @@
     "rewardPerUser": "Phần thưởng mỗi người",
     "totalBountyPool": "Tổng quỹ thưởng",
     "bountyDescription": "Xem và tham gia để nhận phần thưởng! 🎁",
+    "bountyView": "Xem",
+    "bountyClose": "Đóng",
     "gatedTitle": "Nội dung hạn chế",
     "mustHoldToView": "Cần nắm giữ token để xem",
     "gatedDescription": "Nắm giữ token cần thiết để xem nội dung này! 🔓",

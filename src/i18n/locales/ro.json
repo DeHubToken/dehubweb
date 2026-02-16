@@ -247,6 +247,8 @@
     "rewardPerUser": "Recompensă per utilizator",
     "totalBountyPool": "Fond total de recompense",
     "bountyDescription": "Vizionează și implică-te pentru a câștiga recompense! 🎁",
+    "bountyView": "Vizualizare",
+    "bountyClose": "Închide",
     "gatedTitle": "Conținut restricționat",
     "mustHoldToView": "Trebuie să dețineți tokenuri pentru a vizualiza",
     "gatedDescription": "Dețineți tokenurile necesare pentru a vedea acest conținut! 🔓",

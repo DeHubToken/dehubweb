@@ -247,6 +247,8 @@
     "rewardPerUser": "المكافأة لكل مستخدم",
     "totalBountyPool": "إجمالي صندوق المكافآت",
     "bountyDescription": "شاهد وشارك لكسب المكافآت! 🎁",
+    "bountyView": "عرض",
+    "bountyClose": "إغلاق",
     "gatedTitle": "محتوى مقيد",
     "mustHoldToView": "يجب امتلاك التوكنات للمشاهدة",
     "gatedDescription": "احتفظ بالتوكنات المطلوبة لمشاهدة هذا المحتوى! 🔓",

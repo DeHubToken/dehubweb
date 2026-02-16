@@ -33,6 +33,8 @@
     "rewardPerUser": "รางวัลต่อผู้ใช้",
     "totalBountyPool": "กองทุนรางวัลรวม",
     "bountyDescription": "ดูและมีส่วนร่วมเพื่อรับรางวัล! 🎁",
+    "bountyView": "ดู",
+    "bountyClose": "ปิด",
     "gatedTitle": "เนื้อหาจำกัด",
     "mustHoldToView": "ต้องถือโทเคนเพื่อดู",
     "gatedDescription": "ถือโทเคนที่ต้องการเพื่อดูเนื้อหานี้! 🔓",

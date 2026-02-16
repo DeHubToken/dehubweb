@@ -33,6 +33,8 @@
     "rewardPerUser": "Ricompensa per utente",
     "totalBountyPool": "Fondo ricompense totale",
     "bountyDescription": "Guarda e partecipa per guadagnare ricompense! 🎁",
+    "bountyView": "Visualizza",
+    "bountyClose": "Chiudi",
     "gatedTitle": "Contenuto limitato",
     "mustHoldToView": "È necessario possedere token per vedere",
     "gatedDescription": "Possiedi i token richiesti per vedere questo contenuto! 🔓",

@@ -247,6 +247,8 @@
     "rewardPerUser": "ユーザーあたりの報酬",
     "totalBountyPool": "報酬プール合計",
     "bountyDescription": "視聴して参加して報酬を獲得！🎁",
+    "bountyView": "見る",
+    "bountyClose": "閉じる",
     "gatedTitle": "制限付きコンテンツ",
     "mustHoldToView": "閲覧にはトークンが必要",
     "gatedDescription": "必要なトークンを保有してこのコンテンツを閲覧！🔓",
