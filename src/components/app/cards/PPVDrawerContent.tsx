@@ -7,6 +7,7 @@
 import { Ticket, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { usePPVPayment } from '@/hooks/use-ppv-payment';
 import {
   DrawerContent,
@@ -59,14 +60,15 @@ export function PPVDrawerContent({
           {t('drawers.ppvDescription')}
         </p>
         <div className="flex gap-3 mt-2">
-          <Button
-            variant="outline"
-            className="flex-1 border-white/10 text-white hover:bg-white/10"
-            onClick={onClose}
-            disabled={isPaying}
+          <LiquidGlassBubble
+            shimmer={false}
+            className="flex-1 cursor-pointer"
+            onClick={isPaying ? undefined : onClose}
           >
-            Close
-          </Button>
+            <span className="block text-center text-white text-sm font-medium">
+              {t('common.close', 'Close')}
+            </span>
+          </LiquidGlassBubble>
           <Button
             variant="glass"
             className="flex-1"
@@ -76,10 +78,13 @@ export function PPVDrawerContent({
             {isPaying ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Paying...
+                {t('drawers.paying', 'Paying...')}
               </>
             ) : (
-              `Pay ${formatCompact(Number(price))} ${currency || 'DHB'}`
+              t('drawers.payAmount', 'Pay {{amount}} {{currency}}', {
+                amount: formatCompact(Number(price)),
+                currency: currency || 'DHB',
+              })
             )}
           </Button>
         </div>
