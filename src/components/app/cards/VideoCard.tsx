@@ -223,7 +223,7 @@ function MobileCreatorInfo({
           
           <motion.button
             onClick={onAIClick}
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Ask AI about this video"
@@ -232,7 +232,7 @@ function MobileCreatorInfo({
           </motion.button>
           <button 
             onClick={onMenuClick}
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
           >
             <MoreVertical className="w-5 h-5" />
           </button>
