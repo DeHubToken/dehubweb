@@ -43,7 +43,8 @@ import {
   Gift,
   Palmtree,
   Terminal,
-  Skull
+  Skull,
+  Orbit
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -883,7 +884,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
               { value: 'light', icon: Sun, labelKey: 'settings.light', available: false },
               { value: 'dark', icon: Moon, labelKey: 'settings.dark', available: false },
-              { value: 'cosmic', icon: Sparkles, labelKey: 'settings.cosmic', available: false },
+              { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: false },
               { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: false },
               { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
               { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
