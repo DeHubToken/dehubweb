@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { mintPost } from '@/lib/api/dehub/content';
 import { getWeb3AuthSigner, mintOnChain, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
-import { getStreamIngestUrl } from '@/lib/api/dehub/livestream';
+import { getStreamIngestUrl, startLiveStream } from '@/lib/api/dehub/livestream';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
 
@@ -182,19 +182,36 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
       }
 
-      // Step 5: Determine the RTMP ingest URL
-      // Try API first, fall back to standard Livepeer RTMP URL
+      // Step 5: Activate the stream and get the RTMP ingest URL
+      // Call /api/live/start to activate, which returns ingestUrl + playbackUrl
       const LIVEPEER_RTMP_URL = 'rtmp://rtmp.livepeer.com/live';
       let ingestUrl = '';
+      let playbackUrl = '';
+
+      // Try startLiveStream first — this activates the stream on the backend
       try {
-        logger.info('Fetching ingest URL from API...', { streamId });
-        const ingestRes = await getStreamIngestUrl(streamId);
-        ingestUrl = ingestRes?.result?.ingestUrl || '';
-        logger.info('Ingest URL obtained from API', { ingestUrl });
+        logger.info('Activating stream via /api/live/start...', { streamId });
+        const startRes = await startLiveStream({ streamId, title: title.trim() });
+        ingestUrl = startRes?.result?.ingestUrl || '';
+        playbackUrl = startRes?.result?.playbackUrl || '';
+        logger.info('Stream activated via /api/live/start', { ingestUrl, playbackUrl, startRes: startRes?.result });
       } catch (e) {
-        logger.warn('API ingest URL failed (expected if streamId is not a MongoDB ObjectId), using Livepeer default', e);
+        logger.warn('startLiveStream failed, trying getStreamIngestUrl...', e);
       }
 
+      // Fallback: try the ingest URL endpoint
+      if (!ingestUrl) {
+        try {
+          logger.info('Fetching ingest URL from API...', { streamId });
+          const ingestRes = await getStreamIngestUrl(streamId);
+          ingestUrl = ingestRes?.result?.ingestUrl || '';
+          logger.info('Ingest URL from getStreamIngestUrl', { ingestUrl });
+        } catch (e) {
+          logger.warn('getStreamIngestUrl failed', e);
+        }
+      }
+
+      // Final fallback: standard Livepeer RTMP URL
       if (!ingestUrl) {
         ingestUrl = LIVEPEER_RTMP_URL;
         logger.info('Using standard Livepeer RTMP ingest URL', { ingestUrl });
@@ -204,7 +221,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         streamId,
         streamKey,
         ingestUrl,
-        playbackUrl: `https://dehub.io/app/post/${tokenId}`,
+        playbackUrl: playbackUrl || `https://dehub.io/app/post/${tokenId}`,
       };
 
       setStreamData(resultData);
