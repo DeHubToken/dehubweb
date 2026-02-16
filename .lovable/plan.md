@@ -1,47 +1,46 @@
 
 
-# Fix: Follow Suggestions Empty for Users Following Many People
+# Fix: Follow Suggestions Showing Empty Prematurely
 
 ## Problem
-The follow suggestions system fetches only 2 pages of NFTs (200 items) from the `searchNFTs` API. After extracting unique creators (~100-150 users), it filters out the 170 people you already follow, your own account, and users without avatars. This leaves zero or near-zero suggestions.
+The empty state ("No suggestions yet") renders immediately when `suggestions.length === 0`, but the auto-fetch `useEffect` hasn't had a chance to fire yet. React renders first, then runs effects -- so the user sees the empty state briefly (or permanently if the effect doesn't re-trigger properly). This affects all users, not just those following many people.
 
 ## Solution
-Automatically fetch additional batches when the filtered suggestion pool is too small after the initial load. This ensures users who follow many people still see a healthy list of suggestions.
+Update the empty-state guard in `WhoToFollow.tsx` (and the equivalent in `MobileWhoToFollowCarousel.tsx`) to check whether auto-fetching is still possible. If there are still pages to load and we haven't hit the 5-batch cap, show a loading spinner instead of the empty state.
 
-### Changes in `src/components/app/WhoToFollow.tsx`
-- After the initial data loads, check if filtered `suggestions.length` is below a minimum threshold (e.g., 5)
-- If so, automatically trigger `fetchNextPage()` up to a reasonable limit (e.g., 5 total batches / 1000 NFTs)
-- Add a `useEffect` that watches `suggestions.length` and `data?.pages?.length` to auto-fetch more when needed
+## Changes
 
-### Changes in `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
-- Apply the same auto-fetch logic so the mobile carousel also backfills when suggestions are sparse
+### `src/components/app/WhoToFollow.tsx`
+Replace the `suggestions.length === 0` empty-state block (~line 253) with a check:
+- If `suggestions.length === 0` AND there are still more pages to auto-fetch (i.e., `hasNextPage && pagesLoaded < 5`), show a spinner (same as the initial loading state)
+- Only show "No suggestions yet" when auto-fetching is truly exhausted
+
+### `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
+Apply the same logic to the mobile component's empty state so both desktop and mobile stay consistent.
 
 ## Technical Detail
 
-Both components will get a new `useEffect` like:
-
 ```typescript
-// Auto-fetch more batches if suggestions are sparse after filtering
-useEffect(() => {
-  const pagesLoaded = data?.pages?.length ?? 0;
-  const MAX_AUTO_BATCHES = 5; // up to 1000 NFTs total
-  const MIN_SUGGESTIONS = 5;
+// Before (broken):
+if (suggestions.length === 0) {
+  return <EmptyState />;
+}
 
-  if (
-    suggestions.length < MIN_SUGGESTIONS &&
-    hasNextPage &&
-    !isFetchingNextPage &&
-    pagesLoaded < MAX_AUTO_BATCHES &&
-    !isLoadingInitial
-  ) {
-    fetchNextPage();
-  }
-}, [suggestions.length, hasNextPage, isFetchingNextPage, data?.pages?.length, isLoadingInitial]);
+// After (fixed):
+const pagesLoaded = data?.pages?.length ?? 0;
+const stillAutoFetching = hasNextPage && pagesLoaded < 5;
+
+if (suggestions.length === 0 && (isFetchingNextPage || stillAutoFetching)) {
+  return <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />;
+}
+
+if (suggestions.length === 0) {
+  return <EmptyState />;
+}
 ```
 
-This ensures the system keeps pulling more creator data until it finds enough unfollowed users to display, capped at 5 batches to avoid excessive API calls.
+This ensures the loading spinner stays visible while the system is still searching for suggestions across additional batches.
 
 ## Files Modified
-- `src/components/app/WhoToFollow.tsx` -- add auto-fetch effect
-- `src/components/app/mobile/MobileWhoToFollowCarousel.tsx` -- add auto-fetch effect
-
+- `src/components/app/WhoToFollow.tsx`
+- `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
