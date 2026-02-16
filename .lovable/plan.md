@@ -1,32 +1,14 @@
 
+## Fix: Uniform Border Gap on Search Bento
 
-## Fix: PPV Content Navigation Guard
+**Problem:** The outer container and inner input both use `rounded-xl` (12px). When nesting rounded rectangles with a 3px gap, the inner radius should be `12px - 3px = 9px` to keep the visible border uniform on all sides. With matching radii, the corners create a wider visual gap than the straight edges.
 
-**Problem**: Clicking anywhere on a PPV-locked video card's bento area (outside the centered PPV overlay) navigates to the dedicated post page, bypassing the PPV gate. The current guard in `handleCardClick` only blocks navigation when a drawer is already open, but doesn't account for gated content that should never allow direct navigation from the feed.
-
-**Solution**: Add `isContentGated` (which covers both PPV and Bounty locked states) to the `handleCardClick` guard so that clicking the card area does nothing for gated content. Users must interact through the centered overlay to trigger the drawer.
+**Solution:** Change the inner Input's border-radius to a slightly smaller value so the curves are concentric.
 
 ---
 
 ### Technical Details
 
-**File**: `src/components/app/cards/VideoCard.tsx`
+**File:** `src/components/app/RightSidebar.tsx` (line 38)
 
-**Change**: In `handleCardClick`, add a check for `isContentGated` to prevent navigation:
-
-```typescript
-const handleCardClick = useCallback((e: React.MouseEvent) => {
-  const target = e.target as HTMLElement;
-  const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
-  if (isInteractive) return;
-
-  // Guard: don't navigate if content is gated or any drawer is open
-  if (isContentGated || showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
-
-  cacheVideoForNavigation(queryClient, video);
-  navigate(`/app/post/${video.id}`);
-}, [navigate, video.id, queryClient, video, isContentGated, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
-```
-
-This is a one-line addition that fully blocks card-level navigation for any gated content, forcing users through the proper drawer flow (PPV pay or Bounty view).
-
+- Change the Input's class from `rounded-xl` (12px) to `rounded-[9px]` so the inner curve is concentric with the outer `rounded-xl`, keeping the 3px gap uniform around all sides including corners.
