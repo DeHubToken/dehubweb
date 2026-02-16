@@ -512,9 +512,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
   }, []);
 
   const isPPVLocked = !!video.isPPV;
+  const isBountyLocked = !!video.isW2E;
+  const isContentGated = isPPVLocked || isBountyLocked;
 
   const handlePlayClick = useCallback(() => {
-    if (!video.videoUrl || isPPVLocked) return;
+    if (!video.videoUrl || isContentGated) return;
     
     if (isPlaying) {
       videoRef.current?.pause();
@@ -542,7 +544,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, instanceId, showControlsBriefly]);
+  }, [isPlaying, video.videoUrl, instanceId, showControlsBriefly, isContentGated]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -947,7 +949,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        {/* PPV Locked State - blurred thumbnail with unlock overlay */}
+        {/* PPV Locked State - thumbnail with unlock overlay */}
         {isPPVLocked ? (
           <>
             <img 
@@ -960,7 +962,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
               onTouchStart={(e) => {
-                // Record touch start position for scroll detection
                 (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
               }}
               onTouchEnd={(e) => {
@@ -970,7 +971,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
                 const touch = e.changedTouches[0];
                 const dx = Math.abs(touch.clientX - start.x);
                 const dy = Math.abs(touch.clientY - start.y);
-                // Only open if it was a tap, not a scroll
                 if (dx < 10 && dy < 10) {
                   e.preventDefault();
                   setShowPPVDrawer(true);
@@ -983,6 +983,44 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
               <p className="text-white font-semibold text-sm mb-1">{t('drawers.ppvTitle')}</p>
               <p className="text-white/70 text-xs">
                 {t('drawers.unlockFor')} {formatCompact(Number(video.ppvPrice))} {video.ppvCurrency || 'USDC'}
+              </p>
+            </div>
+          </>
+        ) : isBountyLocked ? (
+          <>
+            <img 
+              src={video.thumbnail} 
+              alt={video.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <div 
+              className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
+              onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
+              onTouchStart={(e) => {
+                (e.currentTarget as any)._touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+              }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                const start = (e.currentTarget as any)._touchStart;
+                if (!start) return;
+                const touch = e.changedTouches[0];
+                const dx = Math.abs(touch.clientX - start.x);
+                const dy = Math.abs(touch.clientY - start.y);
+                if (dx < 10 && dy < 10) {
+                  e.preventDefault();
+                  setShowBountyDrawer(true);
+                }
+              }}
+            >
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                <Gift className="h-7 w-7 text-white" />
+              </div>
+              <p className="text-white font-semibold text-sm mb-1">{t('drawers.bountyTitle')}</p>
+              <p className="text-white/70 text-xs">
+                {video.bountyAmount && video.bountyAmount > 0 
+                  ? `${formatCompact(video.bountyAmount)} ${video.bountyCurrency || 'DHB'}`
+                  : t('drawers.bountyDescription')}
               </p>
             </div>
           </>
@@ -1065,7 +1103,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false }:
         )}
         
         {/* Video controls - hidden when PPV locked */}
-        {!isPPVLocked && <>
+        {!isContentGated && <>
         {/* Loading spinner */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
