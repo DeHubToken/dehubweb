@@ -56,7 +56,7 @@ export function SettingDrawerSelect({
         <DrawerHeader className="border-b border-white/10 pb-4">
           <DrawerTitle className="text-white text-lg font-semibold">{title}</DrawerTitle>
         </DrawerHeader>
-        <div className="p-4 space-y-2">
+        <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto scrollbar-hide">
           {options.map((option) => (
             <button
               key={option.value}
