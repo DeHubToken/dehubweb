@@ -210,16 +210,17 @@ export function CreateGroupModal({
             
             <div className="flex gap-3 pt-2">
               <Button
-                variant="outline"
+                variant="glass"
                 onClick={handleClose}
-                className="flex-1 border-zinc-700 text-white hover:bg-zinc-800"
+                className="flex-1"
               >
                 Cancel
               </Button>
               <Button
+                variant="glass"
                 onClick={() => setStep('members')}
                 disabled={!groupName.trim()}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white"
+                className="flex-1"
               >
                 Next
               </Button>
@@ -308,16 +309,17 @@ export function CreateGroupModal({
             {/* Actions */}
             <div className="flex gap-3 pt-2">
               <Button
-                variant="outline"
+                variant="glass"
                 onClick={() => setStep('details')}
-                className="flex-1 border-zinc-700 text-white hover:bg-zinc-800"
+                className="flex-1"
               >
                 Back
               </Button>
               <Button
+                variant="glass"
                 onClick={handleCreateGroup}
                 disabled={selectedMembers.length === 0 || isCreating}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white"
+                className="flex-1"
               >
                 {isCreating ? (
                   <>
