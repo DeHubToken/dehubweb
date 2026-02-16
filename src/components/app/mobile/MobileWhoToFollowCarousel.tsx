@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -121,6 +121,23 @@ export function MobileWhoToFollowCarousel() {
       return true;
     });
   }, [allUsers, walletAddress, followingSet, followedUsers]);
+
+  // Auto-fetch more batches if suggestions are sparse after filtering
+  useEffect(() => {
+    const pagesLoaded = data?.pages?.length ?? 0;
+    const MAX_AUTO_BATCHES = 5;
+    const MIN_SUGGESTIONS = 5;
+
+    if (
+      suggestions.length < MIN_SUGGESTIONS &&
+      hasNextPage &&
+      !isFetchingNextPage &&
+      pagesLoaded < MAX_AUTO_BATCHES &&
+      !isLoading
+    ) {
+      fetchNextPage();
+    }
+  }, [suggestions.length, hasNextPage, isFetchingNextPage, data?.pages?.length, isLoading, fetchNextPage]);
 
   const visibleSuggestions = suggestions.slice(0, visibleCount);
   const hasMoreToShow = visibleCount < suggestions.length || hasNextPage;
