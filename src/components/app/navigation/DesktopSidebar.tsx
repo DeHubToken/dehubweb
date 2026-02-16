@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PenSquare, Sparkles, LogIn } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
@@ -21,6 +22,7 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
   const { stickToBanner } = useCoinPlacement();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
@@ -139,7 +141,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     )}>
                       <Sparkles className="w-5 h-5" />
                     </div>
-                    <span className="truncate hidden xl:inline">Assistant</span>
+                    <span className="truncate hidden xl:inline">{t('nav.assistant')}</span>
                   </NavLink>
                 )}
               </div>
@@ -162,22 +164,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               {isAuthenticated ? (
                 <>
                   <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
-                  <span className="hidden xl:inline">Create</span>
+                  <span className="hidden xl:inline">{t('nav.create')}</span>
                 </>
               ) : isConnecting ? (
                 <>
                   <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                  <span className="hidden xl:inline">Connecting...</span>
+                  <span className="hidden xl:inline">{t('nav.connecting')}</span>
                 </>
               ) : needsSignature ? (
                 <>
                   <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                  <span className="hidden xl:inline">Sign message</span>
+                  <span className="hidden xl:inline">{t('nav.signMessage')}</span>
                 </>
               ) : (
                 <>
                   <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                  <span className="hidden xl:inline">Log in</span>
+                  <span className="hidden xl:inline">{t('nav.login')}</span>
                 </>
               )}
             </div>

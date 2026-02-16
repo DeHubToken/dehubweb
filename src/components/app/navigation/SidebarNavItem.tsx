@@ -1,7 +1,15 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+
+// Map nav item labels to i18n keys
+const NAV_LABEL_KEYS: Record<string, string> = {
+  Home: 'nav.home', Explore: 'nav.explore', Notifications: 'nav.notifications',
+  Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
+  Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
+};
 
 interface SidebarNavItemProps {
   item: NavItem;
@@ -31,6 +39,8 @@ export function SidebarNavItem({
   notificationCount,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
   
   const handleClick = (e: React.MouseEvent) => {
     // Call custom onClick first if provided
@@ -82,7 +92,7 @@ export function SidebarNavItem({
         )}>
           <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
         </div>
-        <span className={cn("truncate", collapsed && "hidden xl:inline")}>{item.label}</span>
+        <span className={cn("truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
       </a>
     );
   }
@@ -137,7 +147,7 @@ export function SidebarNavItem({
           )}
         </div>
       )}
-      <span className={cn("truncate", collapsed && "hidden xl:inline")}>{item.label}</span>
+      <span className={cn("truncate", collapsed && "hidden xl:inline")}>{translatedLabel}</span>
     </NavLink>
   );
 }
