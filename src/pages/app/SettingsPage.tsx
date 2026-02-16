@@ -171,10 +171,11 @@ export default function SettingsPage() {
 }
 
 function ProfileSettings() {
+  const { t } = useTranslation();
   const { user: authUser, refreshUser } = useAuthContext();
   const queryClient = useQueryClient();
   
-  // Form state
+  // Form state declarations
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
@@ -186,7 +187,6 @@ function ProfileSettings() {
   const [telegramLink, setTelegramLink] = useState('');
   const [facebookLink, setFacebookLink] = useState('');
   
-  // Original values to compare against
   const [originalValues, setOriginalValues] = useState({
     displayName: '',
     username: '',
@@ -200,20 +200,15 @@ function ProfileSettings() {
     facebookLink: '',
   });
   
-  // Image state
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>();
   const [coverPreview, setCoverPreview] = useState<string | undefined>();
   const [avatarFile, setAvatarFile] = useState<File | undefined>();
   const [coverFile, setCoverFile] = useState<File | undefined>();
-  
-  // Loading state
   const [isLoading, setIsLoading] = useState(true);
-  
-  // Refs for file inputs
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   
-  // Fetch current profile data
+  // Load profile data on mount or authUser change
   useEffect(() => {
     async function loadProfile() {
       if (!authUser?.address) return;
@@ -222,12 +217,10 @@ function ProfileSettings() {
         setIsLoading(true);
         const userData = await getAccountInfo(authUser.address);
         
-        // Populate form fields
         const loadedDisplayName = userData.displayName || userData.display_name || '';
         const loadedUsername = userData.username || '';
         const loadedBio = userData.aboutMe || userData.bio || '';
         
-        // Social links from customs or direct fields
         const customs = userData.customs as Record<string, string> | undefined;
         const loadedTwitter = customs?.twitterLink || '';
         const loadedDiscord = customs?.discordLink || '';
@@ -248,7 +241,6 @@ function ProfileSettings() {
         setTelegramLink(loadedTelegram);
         setFacebookLink(loadedFacebook);
         
-        // Store original values
         setOriginalValues({
           displayName: loadedDisplayName,
           username: loadedUsername,
@@ -262,7 +254,6 @@ function ProfileSettings() {
           facebookLink: loadedFacebook,
         });
         
-        // Set avatar/cover preview from existing URLs
         const address = userData.address || userData.wallet_address || '';
         const rawAvatarUrl = userData.avatarImageUrl || userData.avatarUrl || userData.avatar_url;
         const rawCoverUrl = userData.coverImageUrl || userData.coverUrl || userData.cover_url;
@@ -270,7 +261,7 @@ function ProfileSettings() {
         setCoverPreview(buildCoverUrl(address, rawCoverUrl));
       } catch (error) {
         console.error('Failed to load profile:', error);
-        toast.error('Failed to load profile data');
+        toast.error(t('settings.failedLoadProfile'));
       } finally {
         setIsLoading(false);
       }
@@ -279,7 +270,6 @@ function ProfileSettings() {
     loadProfile();
   }, [authUser?.address]);
   
-  // Compute hasChanges by comparing current values to original
   const hasChanges = 
     displayName !== originalValues.displayName ||
     username !== originalValues.username ||
@@ -294,18 +284,15 @@ function ProfileSettings() {
     !!avatarFile ||
     !!coverFile;
   
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (data: UpdateProfileData) => {
       return updateProfile(data);
     },
     onSuccess: async () => {
-      toast.success('Profile updated successfully');
+      toast.success(t('settings.profileUpdated'));
       setAvatarFile(undefined);
       setCoverFile(undefined);
-      // Refresh AuthContext user to update sidebar avatar
       await refreshUser();
-      // Reload profile to update original values
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
         const customs = userData.customs as Record<string, string> | undefined;
@@ -322,21 +309,19 @@ function ProfileSettings() {
           facebookLink: customs?.facebookLink || '',
         });
       }
-      // Invalidate profile queries to refresh data everywhere
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update profile');
+      toast.error(error.message || t('settings.failedUpdateProfile'));
     },
   });
   
-  // Handle avatar upload
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image must be less than 5MB');
+        toast.error(t('settings.imageTooLarge5'));
         return;
       }
       setAvatarFile(file);
@@ -344,12 +329,11 @@ function ProfileSettings() {
     }
   };
   
-  // Handle cover upload
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        toast.error('Image must be less than 10MB');
+        toast.error(t('settings.imageTooLarge10'));
         return;
       }
       setCoverFile(file);
@@ -357,11 +341,9 @@ function ProfileSettings() {
     }
   };
   
-  // Handle save
   const handleSave = () => {
     const data: UpdateProfileData = {};
     
-    // Only include changed fields
     if (displayName) data.displayName = displayName;
     if (username) data.username = username;
     if (bio) data.aboutMe = bio;
@@ -391,7 +373,7 @@ function ProfileSettings() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <User className="w-5 h-5 text-zinc-400" />
-          <h2 className="text-lg font-semibold text-white">Profile Settings</h2>
+          <h2 className="text-lg font-semibold text-white">{t('settings.profileSettings')}</h2>
         </div>
         {hasChanges && (
           <Button
@@ -404,12 +386,12 @@ function ProfileSettings() {
             ) : (
               <Save className="w-4 h-4 mr-2" />
             )}
-            Save Changes
+            {t('settings.saveChanges')}
           </Button>
         )}
       </div>
 
-      {/* Cover Image - same aspect ratio as Profile page */}
+      {/* Cover Image */}
       <div className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group">
         {coverPreview && (
           <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
@@ -453,39 +435,39 @@ function ProfileSettings() {
           />
         </div>
         <div>
-          <h3 className="font-medium text-white">Profile Picture</h3>
-          <p className="text-zinc-500 text-sm">Click the camera icon to upload</p>
+          <h3 className="font-medium text-white">{t('settings.profilePicture')}</h3>
+          <p className="text-zinc-500 text-sm">{t('settings.clickCameraUpload')}</p>
         </div>
       </div>
 
       {/* Display Name & Username */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-white mb-2">Display Name</label>
+          <label className="block text-sm font-medium text-white mb-2">{t('settings.displayName')}</label>
           <Input 
-            placeholder="Enter your display name"
+            placeholder={t('settings.enterDisplayName')}
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-white mb-2">Username</label>
+          <label className="block text-sm font-medium text-white mb-2">{t('settings.username')}</label>
           <Input 
-            placeholder="username"
+            placeholder={t('settings.usernamePlaceholder')}
             value={username}
             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
           />
-          <p className="text-zinc-500 text-xs mt-1">3-30 characters, letters, numbers, underscores only</p>
+          <p className="text-zinc-500 text-xs mt-1">{t('settings.usernameHint')}</p>
         </div>
       </div>
 
       {/* Bio */}
       <div>
-        <label className="block text-sm font-medium text-white mb-2">Bio</label>
+        <label className="block text-sm font-medium text-white mb-2">{t('settings.bio')}</label>
         <Textarea 
-          placeholder="Tell us about yourself..."
+          placeholder={t('settings.bioPlaceholder')}
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 min-h-[100px]"
@@ -494,7 +476,7 @@ function ProfileSettings() {
 
       {/* Social Links */}
       <div>
-        <h3 className="font-medium text-white mb-4">Social Links</h3>
+        <h3 className="font-medium text-white mb-4">{t('settings.socialLinks')}</h3>
         <div className="space-y-5">
           <SocialLinkInput 
             label="X (Twitter)" 
@@ -569,27 +551,28 @@ function ProfileSettings() {
 }
 
 function NotificationSettings() {
+  const { t } = useTranslation();
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Bell className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Notification Settings</h2>
+        <h2 className="text-lg font-semibold text-white">{t('settings.notificationSettings')}</h2>
       </div>
 
       {/* General */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">General</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.general')}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Mail}
-            title="Email Notifications"
-            description="Receive notifications via email"
+            title={t('settings.emailNotifications')}
+            description={t('settings.emailNotificationsDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Bell}
-            title="Push Notifications"
-            description="Receive push notifications in browser"
+            title={t('settings.pushNotifications')}
+            description={t('settings.pushNotificationsDesc')}
             defaultChecked
           />
         </div>
@@ -597,30 +580,30 @@ function NotificationSettings() {
 
       {/* Activity */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Activity</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.activity')}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Heart}
-            title="Likes"
-            description="When someone likes your posts"
+            title={t('settings.likes')}
+            description={t('settings.likesDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={MessageSquare}
-            title="Comments"
-            description="When someone comments on your posts"
+            title={t('settings.comments')}
+            description={t('settings.commentsDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Users}
-            title="New Followers"
-            description="When someone follows you"
+            title={t('settings.newFollowers')}
+            description={t('settings.newFollowersDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={MessageSquare}
-            title="Direct Messages"
-            description="When you receive new messages"
+            title={t('settings.directMessages')}
+            description={t('settings.directMessagesDesc')}
             defaultChecked
           />
         </div>
@@ -628,11 +611,11 @@ function NotificationSettings() {
 
       {/* Quiet Hours */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Quiet Hours</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quietHours')}</h3>
         <SettingToggle
           icon={Clock}
-          title="Enable Quiet Hours"
-          description="Pause notifications from 10 PM to 8 AM"
+          title={t('settings.enableQuietHours')}
+          description={t('settings.quietHoursDesc')}
         />
       </div>
     </div>
@@ -640,6 +623,7 @@ function NotificationSettings() {
 }
 
 function PrivacySettings() {
+  const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const [whoCanMessage, setWhoCanMessage] = useState('everyone');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
@@ -648,17 +632,15 @@ function PrivacySettings() {
   
   const handlePostVisibilityChange = async (newVisibility: 'public' | 'private') => {
     if (!user?.address) {
-      toast.error('Please connect your wallet first');
+      toast.error(t('settings.connectWalletFirst'));
       return;
     }
     
     setIsUpdatingVisibility(true);
     
     try {
-      // First update the setting in database
       updateSettings({ default_post_visibility: newVisibility });
       
-      // Then call the API to update all existing posts visibility
       const { getAuthToken } = await import('@/lib/api/dehub');
       const token = getAuthToken();
       if (token) {
@@ -680,12 +662,12 @@ function PrivacySettings() {
       
       toast.success(
         newVisibility === 'private' 
-          ? 'All posts set to private' 
-          : 'All posts set to public'
+          ? t('settings.allPostsPrivate')
+          : t('settings.allPostsPublic')
       );
     } catch (error) {
       console.error('Failed to update visibility:', error);
-      toast.error('Failed to update visibility');
+      toast.error(t('settings.failedUpdateVisibility'));
     } finally {
       setIsUpdatingVisibility(false);
     }
@@ -695,17 +677,17 @@ function PrivacySettings() {
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Shield className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Privacy & Security</h2>
+        <h2 className="text-lg font-semibold text-white">{t('settings.privacySecurity')}</h2>
       </div>
 
       {/* Profile Visibility */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Profile Visibility</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.profileVisibility')}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Lock}
-            title="Private Account"
-            description="Only approved followers can see your content"
+            title={t('settings.privateAccount')}
+            description={t('settings.privateAccountDesc')}
             defaultChecked={isPrivate}
             onCheckedChange={(checked) => updateSettings({ is_private: checked })}
             disabled={isUpdating || isLoading}
@@ -717,23 +699,23 @@ function PrivacySettings() {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-white text-sm font-medium"
               >
                 <UserPlus className="w-4 h-4" />
-                View Follow Requests
+                {t('settings.viewFollowRequests')}
               </button>
               <FollowRequestsDrawer open={followRequestsOpen} onOpenChange={setFollowRequestsOpen} />
             </div>
           )}
           <SettingToggle
             icon={Globe}
-            title="Public Profile"
-            description="Make your profile visible to everyone"
+            title={t('settings.publicProfile')}
+            description={t('settings.publicProfileDesc')}
             defaultChecked
           />
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Follow Visibility</p>
-                <p className="text-zinc-500 text-sm">Control how others see your social stats</p>
+                <p className="text-white font-medium">{t('settings.followVisibility')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.followVisibilityDesc')}</p>
               </div>
             </div>
             <SettingDrawerSelect
@@ -752,24 +734,24 @@ function PrivacySettings() {
                 }
               }}
               disabled={isUpdating || isLoading}
-              title="Follow Visibility"
+              title={t('settings.followVisibility')}
               options={[
-                { value: 'public', label: 'Public', description: 'Numbers visible and clickable' },
-                { value: 'counts-only', label: 'Numbers only', description: 'Numbers visible but not clickable' },
-                { value: 'hidden', label: 'Hidden', description: 'Numbers hidden from visitors' },
+                { value: 'public', label: t('settings.publicOption'), description: t('settings.publicOptionDesc') },
+                { value: 'counts-only', label: t('settings.numbersOnly'), description: t('settings.numbersOnlyDesc') },
+                { value: 'hidden', label: t('settings.hiddenOption'), description: t('settings.hiddenOptionDesc') },
               ]}
             />
           </div>
           <SettingToggle
             icon={Users}
-            title="Show Activity Status"
-            description="Let others see when you're active"
+            title={t('settings.showActivityStatus')}
+            description={t('settings.showActivityStatusDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Globe}
-            title="Search Engine Indexing"
-            description="Allow search engines to index your profile"
+            title={t('settings.searchEngineIndexing')}
+            description={t('settings.searchEngineIndexingDesc')}
             defaultChecked
           />
         </div>
@@ -777,52 +759,52 @@ function PrivacySettings() {
 
       {/* Post Visibility */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Post Visibility</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.postVisibility')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Eye className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Default Post Visibility</p>
-                <p className="text-zinc-500 text-sm">Applies to all current and future posts</p>
+                <p className="text-white font-medium">{t('settings.defaultPostVisibility')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.defaultPostVisibilityDesc')}</p>
               </div>
             </div>
             <SettingDrawerSelect
               value={defaultPostVisibility}
               onValueChange={(value) => handlePostVisibilityChange(value as 'public' | 'private')}
               disabled={isUpdating || isLoading || isUpdatingVisibility}
-              title="Default Post Visibility"
+              title={t('settings.defaultPostVisibility')}
               options={[
-                { value: 'public', label: 'Public', description: 'Anyone can see your posts' },
-                { value: 'private', label: 'Private', description: 'Only you can see your posts' },
+                { value: 'public', label: t('settings.public'), description: t('settings.publicDesc') },
+                { value: 'private', label: t('settings.private'), description: t('settings.privateDesc') },
               ]}
             />
           </div>
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
-            <p><strong className="text-white">Note:</strong> Changing this will update the visibility of all your existing posts and set the default for new posts.</p>
+            <p><strong className="text-white">{t('settings.note')}:</strong> {t('settings.postVisibilityNote')}</p>
           </div>
         </div>
       </div>
 
       {/* Messaging */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Messaging</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.messages')}</h3>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <MessageCircle className="w-5 h-5 text-zinc-500" />
             <div>
-              <p className="text-white font-medium">Who can message you</p>
-              <p className="text-zinc-500 text-sm">Control who can send you direct messages</p>
+              <p className="text-white font-medium">{t('settings.whoCanMessage')}</p>
+              <p className="text-zinc-500 text-sm">{t('settings.whoCanMessageDesc')}</p>
             </div>
           </div>
           <SettingDrawerSelect
             value={whoCanMessage}
             onValueChange={setWhoCanMessage}
-            title="Who can message you"
+            title={t('settings.whoCanMessage')}
             options={[
-              { value: 'everyone', label: 'Everyone', description: 'Anyone can send you messages' },
-              { value: 'followers', label: 'Followers', description: 'Only your followers can message you' },
-              { value: 'none', label: 'No one', description: 'Disable direct messages' },
+              { value: 'everyone', label: t('settings.everyone'), description: t('settings.everyoneDesc') },
+              { value: 'followers', label: t('settings.followers'), description: t('settings.followersOnlyDesc') },
+              { value: 'none', label: t('settings.noOne'), description: t('settings.noOneDesc') },
             ]}
           />
         </div>
@@ -830,18 +812,18 @@ function PrivacySettings() {
 
       {/* Account Security */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Account Security</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.accountSecurity')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Shield className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Two-Factor Authentication</p>
-                <p className="text-zinc-500 text-sm">Add an extra layer of security</p>
+                <p className="text-white font-medium">{t('settings.twoFactorAuth')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.twoFactorAuthDesc')}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md">
-              Enable
+              {t('settings.enable')}
             </Button>
           </div>
         </div>
@@ -849,30 +831,30 @@ function PrivacySettings() {
 
       {/* Extract Data */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Your Data</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.yourData')}</h3>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Download className="w-5 h-5 text-zinc-500" />
             <div>
-              <p className="text-white font-medium">Extract Data</p>
-              <p className="text-zinc-500 text-sm">Download a copy of all your data</p>
+              <p className="text-white font-medium">{t('settings.extractData')}</p>
+              <p className="text-zinc-500 text-sm">{t('settings.extractDataDesc')}</p>
             </div>
           </div>
           <Button 
             variant="outline" 
             size="sm" 
             className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md"
-            onClick={() => toast.success('Data export request submitted. You will receive an email when your data is ready.')}
+            onClick={() => toast.success(t('settings.dataExportSubmitted'))}
           >
-            Download
+            {t('settings.download')}
           </Button>
         </div>
       </div>
 
       {/* Geo-Blocking */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Geo-Blocking</h3>
-        <p className="text-zinc-500 text-sm mb-4">Block users from specific countries from viewing your content</p>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.geoBlocking')}</h3>
+        <p className="text-zinc-500 text-sm mb-4">{t('settings.geoBlockingDesc')}</p>
         <GeoBlockingSelector />
       </div>
     </div>
@@ -880,32 +862,32 @@ function PrivacySettings() {
 }
 
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
+  const { t } = useTranslation();
   const { stickToBanner, setStickToBanner } = useCoinPlacement();
   const [feedLayout, setFeedLayout] = useState('comfortable');
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Palette className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Appearance</h2>
+        <h2 className="text-lg font-semibold text-white">{t('settings.appearance')}</h2>
       </div>
 
       {/* Theme */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Theme</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.theme')}</h3>
         <div className="relative">
-          {/* Right fade only */}
           <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
-              { value: 'system', icon: Monitor, label: 'System', available: true },
-              { value: 'light', icon: Sun, label: 'Light', available: false },
-              { value: 'dark', icon: Moon, label: 'Dark', available: false },
-              { value: 'cosmic', icon: Sparkles, label: 'Cosmic', available: false },
-              { value: 'christmas', icon: Gift, label: 'Christmas', available: false },
-              { value: 'island', icon: Palmtree, label: 'Island', available: false },
-              { value: 'hacker', icon: Terminal, label: 'Hacker', available: false },
-              { value: 'horror', icon: Skull, label: 'Horror', available: false },
+              { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
+              { value: 'light', icon: Sun, labelKey: 'settings.light', available: false },
+              { value: 'dark', icon: Moon, labelKey: 'settings.dark', available: false },
+              { value: 'cosmic', icon: Sparkles, labelKey: 'settings.cosmic', available: false },
+              { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: false },
+              { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
+              { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
+              { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false },
             ].map((option) => {
               const Icon = option.icon;
               return (
@@ -915,7 +897,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                     if (option.available) {
                       setTheme(option.value);
                     } else {
-                      toast.info('Coming soon');
+                      toast.info(t('settings.comingSoon', 'Coming soon'));
                     }
                   }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
@@ -927,7 +909,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                   }`}
                 >
                   <Icon className="w-6 h-6 text-zinc-400" />
-                  <span className="text-white text-sm">{option.label}</span>
+                  <span className="text-white text-sm">{t(option.labelKey)}</span>
                 </button>
               );
             })}
@@ -937,14 +919,14 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
 
       {/* Language */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Language</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.language')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Globe className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Language</p>
-                <p className="text-zinc-500 text-sm">Choose your preferred language</p>
+                <p className="text-white font-medium">{t('settings.language')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.languageDesc')}</p>
               </div>
             </div>
             <LanguageSelector />
@@ -953,48 +935,48 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       </div>
 
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Layout</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.layout')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <LayoutGrid className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Feed Layout</p>
-                <p className="text-zinc-500 text-sm">Choose how posts are displayed</p>
+                <p className="text-white font-medium">{t('settings.feedLayout')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.feedLayoutDesc')}</p>
               </div>
             </div>
             <SettingDrawerSelect
               value={feedLayout}
               onValueChange={setFeedLayout}
-              title="Feed Layout"
+              title={t('settings.feedLayout')}
               options={[
-                { value: 'comfortable', label: 'Comfortable', description: 'Standard spacing for easy reading' },
-                { value: 'compact', label: 'Compact', description: 'Reduced spacing for more content' },
+                { value: 'comfortable', label: t('settings.comfortable'), description: t('settings.comfortableDesc') },
+                { value: 'compact', label: t('settings.compact'), description: t('settings.compactDesc') },
               ]}
             />
           </div>
           <SettingToggle
             icon={LayoutGrid}
-            title="Compact Mode"
-            description="Reduce spacing for more content"
+            title={t('settings.compactMode')}
+            description={t('settings.compactModeDesc')}
           />
         </div>
       </div>
 
       {/* Media */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Media</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.media')}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Play}
-            title="Auto-play Videos"
-            description="Automatically play videos in feed"
+            title={t('settings.autoPlay')}
+            description={t('settings.autoPlayDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Sparkles}
-            title="Show Animations"
-            description="Enable smooth transitions and effects"
+            title={t('settings.showAnimations')}
+            description={t('settings.showAnimationsDesc')}
             defaultChecked
           />
         </div>
@@ -1002,14 +984,14 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
 
       {/* Coin Placement */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Coin Placement</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.coinPlacement')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Coins className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Stick coin to banner</p>
-                <p className="text-zinc-500 text-sm">Show coin in header (mobile) and sidebar (desktop)</p>
+                <p className="text-white font-medium">{t('settings.stickCoinBanner')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.stickCoinBannerDesc')}</p>
               </div>
             </div>
             <Switch
@@ -1023,7 +1005,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
 
       <div>
         <Button variant="glass" className="w-full">
-          Apply Changes
+          {t('settings.applyChanges')}
         </Button>
       </div>
     </div>
@@ -1031,12 +1013,13 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
 }
 
 function LanguageSelector() {
+  const { t } = useTranslation();
   const { language, setPreferredLanguage } = useUserLanguage();
   return (
     <SettingDrawerSelect
       value={language}
       onValueChange={setPreferredLanguage}
-      title="Language"
+      title={t('settings.language')}
       options={SUPPORTED_LANGUAGES.map(l => ({
         value: l.code,
         label: `${l.nativeName}`,
@@ -1047,42 +1030,43 @@ function LanguageSelector() {
 }
 
 function ContentSettings() {
+  const { t } = useTranslation();
   const [postVisibility, setPostVisibility] = useState('public');
   
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Eye className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Content Preferences</h2>
+        <h2 className="text-lg font-semibold text-white">{t('settings.contentPreferences')}</h2>
       </div>
 
       {/* Post Settings */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Post Settings</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.postSettings')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Globe className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Default Post Visibility</p>
-                <p className="text-zinc-500 text-sm">Who can see your posts by default</p>
+                <p className="text-white font-medium">{t('settings.defaultPostVisibility')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.whoCanSeeDefault')}</p>
               </div>
             </div>
             <SettingDrawerSelect
               value={postVisibility}
               onValueChange={setPostVisibility}
-              title="Default Post Visibility"
+              title={t('settings.defaultPostVisibility')}
               options={[
-                { value: 'public', label: 'Public', description: 'Anyone can see your posts' },
-                { value: 'followers', label: 'Followers', description: 'Only your followers can see' },
-                { value: 'private', label: 'Private', description: 'Only you can see' },
+                { value: 'public', label: t('settings.public'), description: t('settings.publicDesc') },
+                { value: 'followers', label: t('settings.followers'), description: t('settings.followersDesc') },
+                { value: 'private', label: t('settings.private'), description: t('settings.privateDesc') },
               ]}
             />
           </div>
           <SettingToggle
             icon={FileText}
-            title="Auto-save Drafts"
-            description="Automatically save your posts as drafts"
+            title={t('settings.autoSaveDrafts')}
+            description={t('settings.autoSaveDraftsDesc')}
             defaultChecked
           />
         </div>
@@ -1090,23 +1074,23 @@ function ContentSettings() {
 
       {/* Content Filtering */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Content Filtering</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.contentFiltering')}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Filter}
-            title="Filter Explicit Content"
-            description="Hide posts marked as explicit or mature"
+            title={t('settings.filterExplicit')}
+            description={t('settings.filterExplicitDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Eye}
-            title="Show Sensitive Content"
-            description="Display content warnings for sensitive posts"
+            title={t('settings.showSensitive')}
+            description={t('settings.showSensitiveDesc')}
           />
           <SettingToggle
             icon={AlertTriangle}
-            title="Enable Content Warnings"
-            description="Show warnings before displaying sensitive content"
+            title={t('settings.enableContentWarnings')}
+            description={t('settings.enableContentWarningsDesc')}
             defaultChecked
           />
         </div>
@@ -1114,18 +1098,18 @@ function ContentSettings() {
 
       {/* Feed Preferences */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Feed Preferences</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.feedPreferences')}</h3>
         <SettingToggle
           icon={Repeat2}
-          title="Show Reposts"
-          description="Display posts shared by people you follow"
+          title={t('settings.showReposts')}
+          description={t('settings.showRepostsDesc')}
           defaultChecked
         />
       </div>
 
       <div className="flex justify-end">
         <Button className="bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700">
-          Save Preferences
+          {t('settings.savePreferences')}
         </Button>
       </div>
     </div>
@@ -1198,21 +1182,20 @@ function SocialLinkInput({
 }
 
 function AssetsSettings() {
+  const { t } = useTranslation();
   const { walletAddress } = useAuthContext();
   const [walletDrawerOpen, setWalletDrawerOpen] = useState(false);
 
-  // TODO: Get real balance from wallet
   const coinBalance = 0;
 
-  // Format wallet address for display
   const truncatedAddress = walletAddress 
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-    : 'Not connected';
+    : t('settings.notConnected');
 
   const handleCopyWallet = () => {
     if (walletAddress) {
       navigator.clipboard.writeText(walletAddress);
-      toast.success('Wallet address copied!');
+      toast.success(t('settings.walletCopied'));
     }
   };
 
@@ -1220,7 +1203,7 @@ function AssetsSettings() {
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <Wallet className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Assets</h2>
+        <h2 className="text-lg font-semibold text-white">{t('settings.assets')}</h2>
       </div>
 
       {/* Wallet Address */}
@@ -1252,7 +1235,7 @@ function AssetsSettings() {
             </div>
             <span className="text-white font-semibold">{coinBalance.toLocaleString()} DHB</span>
           </div>
-          <span className="text-zinc-500 group-hover:text-white transition-colors text-sm">Manage →</span>
+          <span className="text-zinc-500 group-hover:text-white transition-colors text-sm">{t('settings.manage')}</span>
         </button>
       </div>
 
@@ -1270,11 +1253,11 @@ function AssetsSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <PieChart className="w-4 h-4" />
-          Fractions You Own
+          {t('settings.fractionsOwn')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <PieChart className="w-10 h-10 text-zinc-600 mb-3" />
-          <p className="text-zinc-500">You don't own any fractions yet</p>
+          <p className="text-zinc-500">{t('settings.noFractions')}</p>
         </div>
       </div>
 
@@ -1282,11 +1265,11 @@ function AssetsSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <AtSign className="w-4 h-4" />
-          Usernames You Own
+          {t('settings.usernamesOwn')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <AtSign className="w-10 h-10 text-zinc-600 mb-3" />
-          <p className="text-zinc-500">You don't own any usernames yet</p>
+          <p className="text-zinc-500">{t('settings.noUsernames')}</p>
         </div>
       </div>
 
@@ -1294,11 +1277,11 @@ function AssetsSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4 flex items-center gap-2">
           <Handshake className="w-4 h-4" />
-          Offers You've Made
+          {t('settings.offersMade')}
         </h3>
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <Handshake className="w-10 h-10 text-zinc-600 mb-3" />
-          <p className="text-zinc-500">You haven't made any offers yet</p>
+          <p className="text-zinc-500">{t('settings.noOffers')}</p>
         </div>
       </div>
     </div>
@@ -1306,108 +1289,109 @@ function AssetsSettings() {
 }
 
 function MessagesSettings() {
+  const { t } = useTranslation();
   const [dmAccess, setDmAccess] = useState('everyone');
   
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <MessageSquare className="w-5 h-5 text-zinc-400" />
-        <h2 className="text-lg font-semibold text-white">Message Settings</h2>
+        <h2 className="text-lg font-semibold text-white">{t('settings.messageSettings')}</h2>
       </div>
 
       {/* DM Access Control */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Direct Message Access</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.directMessageAccess')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <MessageCircle className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">Allow Direct Messages</p>
-                <p className="text-zinc-500 text-sm">Control who can send you DMs</p>
+                <p className="text-white font-medium">{t('settings.allowDirectMessages')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.controlDMs')}</p>
               </div>
             </div>
             <SettingDrawerSelect
               value={dmAccess}
               onValueChange={setDmAccess}
-              title="Allow Direct Messages"
+              title={t('settings.allowDirectMessages')}
               options={[
-                { value: 'everyone', label: 'Everyone', description: 'Anyone can send you a DM' },
-                { value: 'following', label: 'People I follow', description: 'Only users you follow can message you' },
-                { value: 'none', label: 'No one (Closed)', description: 'DMs are completely disabled' },
+                { value: 'everyone', label: t('settings.everyone'), description: t('settings.dmEveryoneHelp') },
+                { value: 'following', label: t('settings.peopleIFollow'), description: t('settings.peopleIFollowDesc') },
+                { value: 'none', label: t('settings.noOneClosed'), description: t('settings.noOneClosedDesc') },
               ]}
             />
           </div>
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
-            <p className="mb-2"><strong className="text-white">Everyone:</strong> Anyone can send you a DM</p>
-            <p className="mb-2"><strong className="text-white">People I follow:</strong> Only users you follow can message you</p>
-            <p><strong className="text-white">No one (Closed):</strong> DMs are completely disabled</p>
+            <p className="mb-2"><strong className="text-white">{t('settings.everyone')}:</strong> {t('settings.dmEveryoneHelp')}</p>
+            <p className="mb-2"><strong className="text-white">{t('settings.peopleIFollow')}:</strong> {t('settings.dmFollowingHelp')}</p>
+            <p><strong className="text-white">{t('settings.noOneClosed')}:</strong> {t('settings.dmClosedHelp')}</p>
           </div>
         </div>
       </div>
 
       {/* Message Preferences */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Preferences</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.preferences')}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Bell}
-            title="Message Notifications"
-            description="Receive notifications for new messages"
+            title={t('settings.messageNotifications')}
+            description={t('settings.messageNotificationsDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Eye}
-            title="Read Receipts"
-            description="Let others know when you've read their messages"
+            title={t('settings.readReceipts')}
+            description={t('settings.readReceiptsDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Lock}
-            title="End-to-End Encryption"
-            description="Encrypt all your messages for extra security"
+            title={t('settings.e2eEncryption')}
+            description={t('settings.e2eEncryptionDesc')}
             defaultChecked
           />
           <SettingToggle
             icon={Filter}
-            title="Filter Message Requests"
-            description="Hide message requests from accounts you don't follow"
+            title={t('settings.filterMessageRequests')}
+            description={t('settings.filterMessageRequestsDesc')}
           />
         </div>
       </div>
 
       {/* Storage */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Storage</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.storage')}</h3>
         <div className="bg-zinc-800 rounded-xl p-4">
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-white font-medium">Storage Used</span>
-            <span className="text-zinc-400">2.1 GB of 5 GB</span>
+            <span className="text-white font-medium">{t('settings.storageUsed')}</span>
+            <span className="text-zinc-400">{t('settings.storageAmount')}</span>
           </div>
           <div className="w-full bg-zinc-700 rounded-lg h-2 mb-3">
             <div className="bg-white h-2 rounded-lg" style={{ width: '42%' }} />
           </div>
           <div className="flex justify-between text-xs text-zinc-500">
-            <span>Messages: 1.2 GB</span>
-            <span>Media: 900 MB</span>
+            <span>{t('settings.messagesStorage')}</span>
+            <span>{t('settings.mediaStorage')}</span>
           </div>
           <p className="text-center text-xs text-zinc-600 mt-3">
-            Increase your stakeholdings or upgrade to premium to unlock more storage
+            {t('settings.upgradeStorage')}
           </p>
         </div>
       </div>
 
       {/* Quick Actions */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Quick Actions</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quickActions')}</h3>
         <div className="grid grid-cols-2 gap-3">
           <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
             <FileText className="w-6 h-6 text-zinc-400" />
-            <span className="text-zinc-300 text-sm">Archived Chats</span>
+            <span className="text-zinc-300 text-sm">{t('settings.archivedChats')}</span>
           </button>
           <button className="flex flex-col items-center gap-2 p-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition-colors">
             <Save className="w-6 h-6 text-zinc-400" />
-            <span className="text-zinc-300 text-sm">Export Chats</span>
+            <span className="text-zinc-300 text-sm">{t('settings.exportChats')}</span>
           </button>
         </div>
       </div>
@@ -1471,6 +1455,7 @@ const COUNTRIES = [
 ];
 
 function GeoBlockingSelector() {
+  const { t } = useTranslation();
   const [blockedCountries, setBlockedCountries] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -1526,8 +1511,8 @@ function GeoBlockingSelector() {
           <MapPin className="w-4 h-4 text-zinc-500" />
           <span className="text-zinc-400">
             {blockedCountries.length === 0 
-              ? 'Select countries to block...' 
-              : `${blockedCountries.length} ${blockedCountries.length === 1 ? 'country' : 'countries'} blocked`}
+              ? t('settings.selectCountries')
+              : `${blockedCountries.length} ${blockedCountries.length === 1 ? t('settings.countryBlocked') : t('settings.countriesBlocked')}`}
           </span>
         </div>
         <svg 
@@ -1544,7 +1529,7 @@ function GeoBlockingSelector() {
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent glass className="max-h-[70vh]">
           <DrawerHeader className="border-b border-white/10">
-            <DrawerTitle className="text-white">Block Countries</DrawerTitle>
+            <DrawerTitle className="text-white">{t('settings.blockCountries')}</DrawerTitle>
           </DrawerHeader>
           
           {/* Search input */}
@@ -1553,7 +1538,7 @@ function GeoBlockingSelector() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
                 type="text"
-                placeholder="Search countries..."
+                placeholder={t('settings.searchCountries')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
@@ -1588,7 +1573,7 @@ function GeoBlockingSelector() {
               ))
             ) : (
               <div className="px-4 py-8 text-center text-sm text-zinc-500">
-                No countries found
+                {t('settings.noCountriesFound')}
               </div>
             )}
           </div>
