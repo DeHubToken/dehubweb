@@ -21,6 +21,7 @@ import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsSection } from './CommentsSection';
 import { PostMetadata } from './PostMetadata';
+import { PPVDrawerContent } from './PPVDrawerContent';
 import { useTranslation, LANGUAGE_NAMES } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -691,25 +692,14 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
       {isPPV && post.ppvPrice && (
         <Drawer open={showPPVDrawer} onOpenChange={setShowPPVDrawer}>
-          <DrawerContent glass className="px-4 pb-6">
-            <DrawerHeader className="pb-3">
-              <DrawerTitle className="text-white text-lg flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-white" />
-                {t('drawers.ppvTitle')}
-              </DrawerTitle>
-            </DrawerHeader>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between px-4 py-4 bg-white/5 rounded-xl border border-white/10">
-                <span className="text-white text-sm">{t('drawers.unlockPrice')}</span>
-                <span className="text-white text-lg font-bold">
-                  {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
-                </span>
-              </div>
-              <p className="text-center text-white/60 text-sm">
-                {t('drawers.ppvDescription')}
-              </p>
-            </div>
-          </DrawerContent>
+          <PPVDrawerContent
+            tokenId={post.id}
+            price={Number(post.ppvPrice)}
+            currency={post.ppvCurrency || 'DHB'}
+            creatorAddress={post.creatorId}
+            onClose={() => setShowPPVDrawer(false)}
+            formatCompact={formatCompact}
+          />
         </Drawer>
       )}
 
