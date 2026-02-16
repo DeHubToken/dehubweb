@@ -228,6 +228,19 @@ export function MobileWhoToFollowCarousel() {
     );
   }
 
+  const pagesLoaded = data?.pages?.length ?? 0;
+  const stillAutoFetching = hasNextPage && pagesLoaded < 5;
+
+  if (suggestions.length === 0 && (isFetchingNextPage || stillAutoFetching)) {
+    return (
+      <div className="lg:hidden py-4">
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   if (suggestions.length === 0) {
     return (
       <div className="lg:hidden py-4 border-y border-zinc-800/50">

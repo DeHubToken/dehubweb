@@ -250,6 +250,17 @@ export function WhoToFollow() {
     );
   }
 
+  const pagesLoaded = data?.pages?.length ?? 0;
+  const stillAutoFetching = hasNextPage && pagesLoaded < 5;
+
+  if (suggestions.length === 0 && (isFetchingNextPage || stillAutoFetching)) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
+      </div>
+    );
+  }
+
   if (suggestions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
