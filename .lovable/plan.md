@@ -1,40 +1,35 @@
 
+## Fix: PPV Info Button Opens Video After Drawer Closes
 
-## Manual Leaderboard Refresh Button
+### Problem
+When you tap the PPV info badge (the ticket icon button), it correctly opens the drawer. But when the drawer is dismissed (by tapping the overlay or swiping down), the click event from the overlay bubbles up to the card's root `onClick={handleCardClick}`, which navigates to the video's single post page.
 
-A "Refresh Me" button next to the search bar on the leaderboard page. When tapped, it reads the logged-in user's wallet address, checks their on-chain balance, and injects them into the leaderboard cache if they qualify.
+This same issue affects the Bounty and Locked badge drawers too.
 
-### How It Works
+### Root Cause
+The PPV/Bounty/Locked Drawers are rendered **inside** the card's root `<div>` which has the `handleCardClick` navigation handler. When the drawer overlay is clicked to dismiss, that click propagates up to the card wrapper and triggers navigation.
 
-1. User taps the refresh icon button (next to the search input)
-2. If not logged in, shows an auth prompt
-3. If logged in, calls a new edge function with their wallet address
-4. The edge function:
-   - Looks up on-chain DHB balance (Base + BNB + staking)
-   - Fetches the user's profile from DeHub API
-   - If balance >= 10,000 DHB, merges them into the existing leaderboard cache entries
-   - Returns success with the user's balance
-5. Frontend shows a toast with the result and refetches leaderboard data
+### Solution
+Add a guard in `handleCardClick` that checks whether any drawer (PPV, Bounty, or Locked) is currently open. If any drawer is open, skip navigation entirely.
 
 ### Technical Details
 
-**New Edge Function**: `supabase/functions/refresh-leaderboard-user/index.ts`
+**File**: `src/components/app/cards/VideoCard.tsx`
 
-- Accepts `?address=0x...` query parameter
-- Reuses the same on-chain balance logic from `refresh-leaderboard-cache` (RPC calls to Base + BNB for balanceOf + staking)
-- Fetches profile from DeHub API (`/api/account_info?account=0x...`)
-- Reads the current `leaderboard_cache` rows for `holdings/all`
-- If user qualifies (>= 10,000 DHB), merges them into the cached data and updates the row
-- Returns `{ success: true, balance: number, added: boolean }`
-- CORS headers included
+In the `handleCardClick` callback (around line 831), add a check at the top:
 
-**Frontend Changes**: `src/pages/app/LeaderboardPage.tsx`
+```typescript
+const handleCardClick = useCallback((e: React.MouseEvent) => {
+  // Don't navigate if a drawer is open (PPV/Bounty/Locked)
+  if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
+  
+  const target = e.target as HTMLElement;
+  const isInteractive = target.closest('button, a, input, ...');
+  if (isInteractive) return;
+  
+  cacheVideoForNavigation(queryClient, video);
+  navigate(`/app/post/${video.id}`);
+}, [navigate, video.id, queryClient, video, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+```
 
-- Import `useAuth` and `RefreshCw` icon
-- Add a refresh button next to the search input (right side)
-- On click: if not authenticated, show auth prompt; otherwise call the edge function with `walletAddress`
-- Show loading spinner on the button while processing
-- On success: show toast ("You've been added!" or "Balance too low") and invalidate the leaderboard query cache to refetch
-- Button has a cooldown (disabled for 30 seconds after use) to prevent spam
-
-**Config**: Add JWT verification bypass in `supabase/config.toml` for the new function.
+This ensures that while any drawer is open (or being dismissed), clicking won't navigate away. The same pattern should be checked in the `ImageCard.tsx` component if it has the same issue.
