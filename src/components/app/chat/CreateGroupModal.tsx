@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Search, Loader2, X, Users, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -77,6 +78,7 @@ export function CreateGroupModal({
   onOpenChange, 
   onGroupCreated,
 }: CreateGroupModalProps) {
+  const { walletAddress } = useAuth();
   const [step, setStep] = useState<'details' | 'members'>('details');
   const [groupName, setGroupName] = useState('');
   const [groupDescription, setGroupDescription] = useState('');
@@ -125,6 +127,9 @@ export function CreateGroupModal({
       }
       // Send member addresses as JSON array
       const memberAddresses = selectedMembers.map(m => m.address || m._id).filter(Boolean);
+      if (walletAddress && !memberAddresses.includes(walletAddress)) {
+        memberAddresses.push(walletAddress);
+      }
       formData.append('members', JSON.stringify(memberAddresses));
 
       const response = await fetch(`${DEHUB_API_BASE}/api/dm/group`, {
