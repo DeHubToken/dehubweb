@@ -5,6 +5,7 @@
  */
 
 import type { ChainId } from '@/components/app/ChainSelector';
+import { supabase } from '@/integrations/supabase/client';
 
 // Chain IDs
 export const BASE_CHAIN_ID = 8453;
@@ -41,6 +42,33 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     streamController: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Uses same as collection on BNB
   },
 };
+
+// Alchemy RPC initialization
+let rpcInitialized = false;
+
+/**
+ * Fetch Alchemy RPC endpoints and update CHAIN_CONFIGS.
+ * Called once per session; falls back to public RPCs on failure.
+ */
+export async function initChainRpcUrls(): Promise<void> {
+  if (rpcInitialized) return;
+  try {
+    const { data, error } = await supabase.functions.invoke('get-rpc-endpoints');
+    if (error) throw error;
+    if (data?.base) {
+      CHAIN_CONFIGS[BASE_CHAIN_ID].rpcUrl = data.base;
+      console.log('[RPC] Using Alchemy for Base');
+    }
+    if (data?.bsc) {
+      CHAIN_CONFIGS[BNB_CHAIN_ID].rpcUrl = data.bsc;
+      console.log('[RPC] Using Alchemy for BNB');
+    }
+    rpcInitialized = true;
+  } catch (err) {
+    console.warn('[RPC] Failed to fetch Alchemy endpoints, using public fallback:', err);
+    // Keep existing public RPC URLs as fallback
+  }
+}
 
 /**
  * Get chain configuration by chain ID

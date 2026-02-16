@@ -13,7 +13,7 @@ import { getConnectorClient } from '@wagmi/core';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import type { ChainId } from '@/components/app/ChainSelector';
-import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
+import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './dhb-token';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
@@ -47,6 +47,9 @@ function chainIdToHex(chainId: ChainId): Hex {
  * Switch the wallet to a different chain
  */
 export async function switchChain(chainId: ChainId): Promise<void> {
+  // Ensure we have Alchemy RPC URLs before switching
+  await initChainRpcUrls();
+
   const provider = await getActiveProvider();
   
   const chainConfig = CHAIN_CONFIGS[chainId];
@@ -56,37 +59,48 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   
   const targetChainHex = chainIdToHex(chainId);
   
-  try {
-    // First try to switch to the chain
-    await provider.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: targetChainHex }],
-    });
-    console.log('[AA] Switched to chain:', chainConfig.name);
-  } catch (switchError: any) {
-    // If chain doesn't exist, try to add it
-    if (switchError?.code === 4902 || switchError?.message?.includes('Unrecognized chain')) {
-      try {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: targetChainHex,
-            chainName: chainConfig.name,
-            nativeCurrency: {
-              name: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
-              symbol: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
-              decimals: 18,
-            },
-            rpcUrls: [chainConfig.rpcUrl],
-            blockExplorerUrls: [chainConfig.explorerUrl],
-          }],
-        });
-        console.log('[AA] Added and switched to chain:', chainConfig.name);
-      } catch (addError) {
-        console.error('[AA] Failed to add chain:', addError);
-        throw new Error(`Failed to add ${chainConfig.name} network to wallet`);
+  // Retry once on transient failures
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: targetChainHex }],
+      });
+      console.log('[AA] Switched to chain:', chainConfig.name);
+      return;
+    } catch (switchError: any) {
+      // If chain doesn't exist, try to add it
+      if (switchError?.code === 4902 || switchError?.message?.includes('Unrecognized chain')) {
+        try {
+          await provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: targetChainHex,
+              chainName: chainConfig.name,
+              nativeCurrency: {
+                name: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
+                symbol: chainId === BNB_CHAIN_ID ? 'BNB' : 'ETH',
+                decimals: 18,
+              },
+              rpcUrls: [chainConfig.rpcUrl],
+              blockExplorerUrls: [chainConfig.explorerUrl],
+            }],
+          });
+          console.log('[AA] Added and switched to chain:', chainConfig.name);
+          return;
+        } catch (addError) {
+          console.error('[AA] Failed to add chain:', addError);
+          throw new Error(`Failed to add ${chainConfig.name} network to wallet`);
+        }
       }
-    } else {
+      
+      // On first attempt of a transient error, retry after a short delay
+      if (attempt === 0) {
+        console.warn('[AA] Chain switch attempt failed, retrying...', switchError);
+        await new Promise(r => setTimeout(r, 1000));
+        continue;
+      }
+      
       console.error('[AA] Failed to switch chain:', switchError);
       throw new Error(`Failed to switch to ${chainConfig.name} network`);
     }
