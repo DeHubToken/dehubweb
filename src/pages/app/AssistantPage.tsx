@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
@@ -353,6 +354,7 @@ export default function AssistantPage() {
   const { isAuthenticated } = useAuth();
   const isMobile = useIsMobile();
   const { language: userLanguage } = useUserLanguage();
+  const { t } = useI18n();
   
   // Conversation persistence hook
   const { 
@@ -366,7 +368,7 @@ export default function AssistantPage() {
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to access the AI Assistant and unlock powerful features like image and video generation." />
+      <AuthGate description={t('assistant.loginRequired')} />
     );
   }
   
@@ -450,7 +452,7 @@ export default function AssistantPage() {
         toast.info('Using DeHub AI - Grok API key not configured');
       }
 
-      const responseText = data.response || 'I apologize, I couldn\'t generate a response.';
+      const responseText = data.response || t('assistant.noResponse');
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -471,7 +473,7 @@ export default function AssistantPage() {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: t('assistant.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);
@@ -485,7 +487,7 @@ export default function AssistantPage() {
       {
         id: 'initial',
         role: 'assistant',
-        content: `Use the text box below or these action buttons to get started.`
+        content: t('assistant.welcome')
       }
     ]);
   }, []);
@@ -749,7 +751,7 @@ export default function AssistantPage() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: "Here's the official DeHub logo! 🎨",
+          content: t('assistant.officialLogo'),
           imageUrl: ftvLogoSymbol
         };
         setMessages(prev => [...prev, assistantMessage]);
@@ -819,7 +821,7 @@ export default function AssistantPage() {
         // Check for error in response (like safety blocks or content refusals)
         if (data.error) {
           const errorMessage = data.safetyBlocked 
-            ? "This content can't be generated on DeHub - we're a family-friendly platform! Try something else 🎨"
+            ? t('assistant.safetyBlocked')
             : data.error;
           
           // If clearHistory flag is set, reset to just the welcome message
@@ -829,7 +831,7 @@ export default function AssistantPage() {
               {
                 id: 'initial',
                 role: 'assistant',
-                content: `Hi! Ask me anything, whether it's DeHub related or not, I can help.`
+                content: t('assistant.welcomeAlt')
               },
               {
                 id: (Date.now() + 1).toString(),
@@ -897,7 +899,7 @@ export default function AssistantPage() {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: data.response || 'I apologize, I couldn\'t generate a response.'
+            content: data.response || t('assistant.noResponse')
           };
 
           setMessages(prev => [...prev, assistantMessage]);
@@ -916,7 +918,7 @@ export default function AssistantPage() {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: t('assistant.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);
@@ -944,7 +946,7 @@ export default function AssistantPage() {
       m.id === messageId ? { ...m, simulationStatus: 'approved' as const } : m
     ));
     
-    toast.success('Transaction simulated successfully!');
+    toast.success(t('assistant.transferComplete'));
   };
 
   // Handle simulation rejection
@@ -1051,8 +1053,8 @@ export default function AssistantPage() {
           >
             <div className="flex flex-col items-center gap-3 p-8 rounded-2xl bg-white/10 border border-white/20">
               <ImageIcon className="w-12 h-12 text-white/80" />
-              <p className="text-white text-lg font-medium">Drop image here</p>
-              <p className="text-white/50 text-sm">to attach for editing</p>
+              <p className="text-white text-lg font-medium">{t('assistant.dropImageHere')}</p>
+              <p className="text-white/50 text-sm">{t('assistant.toAttachForEditing')}</p>
             </div>
           </motion.div>
         )}
@@ -1061,7 +1063,7 @@ export default function AssistantPage() {
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <img src={aiSparkleIcon} alt="AI" className="w-10 h-10 object-contain" />
-          <h1 className="text-lg font-semibold text-white leading-none mt-0.5">AI Assistant</h1>
+          <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
         </div>
 
         <div className="flex items-center gap-4">
@@ -1106,7 +1108,7 @@ export default function AssistantPage() {
             <DrawerHeader className="border-b border-white/10">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white" />
-                AI Personality
+                {t('assistant.aiPersonality')}
               </DrawerTitle>
             </DrawerHeader>
             {styleMenuContent}
@@ -1119,7 +1121,7 @@ export default function AssistantPage() {
             <DrawerHeader className="border-b border-white/10">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <Settings className="w-5 h-5 text-white" />
-                AI Settings
+                {t('assistant.aiSettings')}
               </DrawerTitle>
             </DrawerHeader>
             <div className="h-[70vh] overflow-y-auto">
@@ -1127,7 +1129,7 @@ export default function AssistantPage() {
               <div className="border-b border-white/10 pb-4">
                 <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  Chat Model
+                  {t('assistant.chatModel')}
                 </div>
                 {CHAT_MODEL_OPTIONS.map((model) => (
                   <button
@@ -1151,7 +1153,7 @@ export default function AssistantPage() {
               <div className="border-b border-white/10 pb-4">
                 <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
                   <ImageIcon className="w-4 h-4" />
-                  Image Model
+                  {t('assistant.imageModel')}
                 </div>
                 {IMAGE_MODEL_OPTIONS.map((model) => (
                   <button
@@ -1175,10 +1177,10 @@ export default function AssistantPage() {
               <div className="border-b border-white/10 pb-4">
                 <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
                   <Video className="w-4 h-4" />
-                  Video Model
+                  {t('assistant.videoModel')}
                 </div>
                 {/* Premium tier */}
-                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider">Premium</div>
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider">{t('assistant.premium')}</div>
                 {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'premium').map((model) => (
                   <button
                     key={model.id}
@@ -1196,7 +1198,7 @@ export default function AssistantPage() {
                   </button>
                 ))}
                 {/* Standard tier */}
-                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2">Standard</div>
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2">{t('assistant.standard')}</div>
                 {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'standard').map((model) => (
                   <button
                     key={model.id}
@@ -1214,7 +1216,7 @@ export default function AssistantPage() {
                   </button>
                 ))}
                 {/* Fast tier */}
-                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2">Fast</div>
+                <div className="px-4 py-1 text-xs text-white/40 uppercase tracking-wider mt-2">{t('assistant.fast')}</div>
                 {VIDEO_MODEL_OPTIONS.filter(m => m.tier === 'fast').map((model) => (
                   <button
                     key={model.id}
@@ -1237,7 +1239,7 @@ export default function AssistantPage() {
               <div className="pb-4">
                 <div className="px-4 py-3 text-sm text-white/60 flex items-center gap-2">
                   <Volume2 className="w-4 h-4" />
-                  AI Voice
+                  {t('assistant.aiVoice')}
                 </div>
                 {VOICE_PREFERENCE_OPTIONS.map((voice) => (
                   <button
@@ -1259,8 +1261,8 @@ export default function AssistantPage() {
                 {/* Always Speak Toggle */}
                 <div className="px-4 py-3 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-sm text-white">Always speak replies</span>
-                    <span className="text-xs text-white/50">Speak all AI responses, not just voice</span>
+                    <span className="text-sm text-white">{t('assistant.alwaysSpeakReplies')}</span>
+                    <span className="text-xs text-white/50">{t('assistant.alwaysSpeakRepliesDesc')}</span>
                   </div>
                   <button
                     type="button"
@@ -1419,7 +1421,7 @@ export default function AssistantPage() {
                               onClick={() => {
                                 setAttachedImage(message.imageUrl!);
                                 inputRef.current?.focus();
-                                toast.success('Image attached - describe your edits');
+                                toast.success(t('assistant.imageAttached'));
                               }}
                               className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
@@ -1439,9 +1441,9 @@ export default function AssistantPage() {
                                   await navigator.clipboard.write([
                                     new ClipboardItem({ [blob.type]: blob })
                                   ]);
-                                  toast.success('Image copied to clipboard');
+                                  toast.success(t('assistant.imageCopied'));
                                 } catch (err) {
-                                  toast.error('Failed to copy image');
+                                  toast.error(t('assistant.imageCopyFailed'));
                                 }
                               }}
                               className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
@@ -1486,7 +1488,7 @@ export default function AssistantPage() {
                                   text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                               >
                                 <Check className="w-4 h-4" />
-                                Approve
+                                {t('assistant.approve')}
                               </button>
                               <button
                                 onClick={() => handleSimulationReject(message.id)}
@@ -1496,7 +1498,7 @@ export default function AssistantPage() {
                                   text-white/70 hover:text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                               >
                                 <XCircle className="w-4 h-4" />
-                                Reject
+                                {t('assistant.reject')}
                               </button>
                             </div>
                           )}
@@ -1506,10 +1508,10 @@ export default function AssistantPage() {
                             <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 w-fit">
                                 <Check className="w-4 h-4 text-white" />
-                                <span className="text-sm text-white">Transfer Complete</span>
+                                <span className="text-sm text-white">{t('assistant.transferComplete')}</span>
                               </div>
                               <div className="text-xs text-white/60">
-                                <span className="text-white/40">Hash: </span>
+                                <span className="text-white/40">{t('assistant.hash')}: </span>
                                 <code className="font-mono text-white/70">{abbreviateHash(message.simulationData.txHash)}</code>
                               </div>
                             </div>
@@ -1519,7 +1521,7 @@ export default function AssistantPage() {
                             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
                               <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20">
                                 <XCircle className="w-4 h-4 text-white/70" />
-                                <span className="text-sm text-white/70">Transfer Cancelled</span>
+                                <span className="text-sm text-white/70">{t('assistant.transferCancelled')}</span>
                               </div>
                             </div>
                           )}
@@ -1537,12 +1539,12 @@ export default function AssistantPage() {
                                 }`}
                             >
                               <Lock className="w-3.5 h-3.5" />
-                              {transferPin ? 'PIN Set' : 'Set PIN'}
+                              {transferPin ? t('assistant.pinSet') : t('assistant.setPin')}
                             </button>
                             <button
                               onClick={() => {
                                 setAutoApproveMode(!autoApproveMode);
-                                toast.success(autoApproveMode ? 'Auto Mode disabled' : 'Auto Mode enabled - transfers will auto-approve');
+                                toast.success(autoApproveMode ? t('assistant.autoModeDisabled') : t('assistant.autoModeEnabled'));
                               }}
                               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
                                 ${autoApproveMode 
@@ -1551,7 +1553,7 @@ export default function AssistantPage() {
                                 }`}
                             >
                               <Zap className="w-3.5 h-3.5" />
-                              Auto Mode {autoApproveMode ? 'On' : 'Off'}
+                              {t('assistant.autoMode')} {autoApproveMode ? t('assistant.on') : t('assistant.off')}
                             </button>
                           </div>
                         )}
@@ -1600,22 +1602,22 @@ export default function AssistantPage() {
                   >
                     <button
                       onClick={() => {
-                        handleSend("What's happening in the news today?");
+                        handleSend(t('assistant.whatsHappeningNews'));
                       }}
                       className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                     >
-                      What's new?
+                      {t('assistant.whatsNew')}
                     </button>
                     <button
                       onClick={() => {
-                        setInput("Generate an image of ");
+                        setInput(t('assistant.generateImageOf'));
                         inputRef.current?.focus();
                         setInputGlow(true);
                         setTimeout(() => setInputGlow(false), 2000);
                       }}
                       className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                     >
-                      Generate an image
+                      {t('assistant.generateImage')}
                     </button>
                     <button
                       onClick={() => {
@@ -1623,18 +1625,18 @@ export default function AssistantPage() {
                       }}
                       className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                     >
-                      Edit an image
+                      {t('assistant.editImage')}
                     </button>
                     <button
                       onClick={() => {
-                        setInput("Generate a video of ");
+                        setInput(t('assistant.generateVideoOf'));
                         inputRef.current?.focus();
                         setInputGlow(true);
                         setTimeout(() => setInputGlow(false), 2000);
                       }}
                       className="px-3 py-1.5 text-xs rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap shrink-0"
                     >
-                      Generate a video
+                      {t('assistant.generateVideo')}
                     </button>
                   </div>
                 </motion.div>
@@ -1655,7 +1657,7 @@ export default function AssistantPage() {
                   />
                   <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-                    <span className="text-sm text-white/60">Thinking...</span>
+                    <span className="text-sm text-white/60">{t('assistant.thinking')}</span>
                   </div>
                 </motion.div>
               )}
@@ -1711,7 +1713,7 @@ export default function AssistantPage() {
                       <Paperclip className="w-5 h-5" />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent>Attach file</TooltipContent>
+                  <TooltipContent>{t('assistant.attachFile')}</TooltipContent>
                 </Tooltip>
                 
                 {/* Voice recording button - all devices */}
@@ -1737,7 +1739,7 @@ export default function AssistantPage() {
                         )}
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
+                    <TooltipContent>{isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}</TooltipContent>
                   </Tooltip>
                 )}
                 
@@ -1785,7 +1787,7 @@ export default function AssistantPage() {
                     }
                   }}
                   onPaste={handlePaste}
-                  placeholder={isRecording ? "Listening..." : attachedImage ? "Describe edits..." : "Ask anything..."}
+                  placeholder={isRecording ? t('assistant.listening') : attachedImage ? t('assistant.describeEdits') : t('assistant.askAnything')}
                   className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 ${
                     isRecording ? 'text-white/60 italic' : ''
                   }`}
@@ -1820,7 +1822,7 @@ export default function AssistantPage() {
                         <VolumeX className="w-5 h-5" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>Stop speaking</TooltipContent>
+                    <TooltipContent>{t('assistant.stopSpeaking')}</TooltipContent>
                   </Tooltip>
                 )}
                 
@@ -1904,8 +1906,8 @@ export default function AssistantPage() {
                   <Lock className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">Set Transfer PIN</h3>
-                  <p className="text-sm text-white/60">Required before approving transfers</p>
+                  <h3 className="text-lg font-semibold text-white">{t('assistant.setTransferPin')}</h3>
+                  <p className="text-sm text-white/60">{t('assistant.requiredBeforeApproving')}</p>
                 </div>
               </div>
               
@@ -1913,7 +1915,7 @@ export default function AssistantPage() {
                 type="password"
                 inputMode="numeric"
                 maxLength={6}
-                placeholder="Enter 4-6 digit PIN"
+                placeholder={t('assistant.enterPin')}
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-center text-xl tracking-[0.5em] placeholder:text-white/30 placeholder:tracking-normal focus:outline-none focus:border-white/30 mb-4"
@@ -1927,7 +1929,7 @@ export default function AssistantPage() {
                   }}
                   className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/70 font-medium text-sm hover:bg-white/10 transition-all"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => {
@@ -1935,15 +1937,15 @@ export default function AssistantPage() {
                       setTransferPin(pinInput);
                       setShowPinModal(false);
                       setPinInput('');
-                      toast.success('Transfer PIN set successfully');
+                      toast.success(t('assistant.pinSetSuccess'));
                     } else {
-                      toast.error('PIN must be at least 4 digits');
+                      toast.error(t('assistant.pinTooShort'));
                     }
                   }}
                   disabled={pinInput.length < 4}
                   className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-medium text-sm hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Set PIN
+                  {t('assistant.setPinButton')}
                 </button>
               </div>
               
@@ -1953,11 +1955,11 @@ export default function AssistantPage() {
                     setTransferPin(null);
                     setShowPinModal(false);
                     setPinInput('');
-                    toast.success('Transfer PIN removed');
+                    toast.success(t('assistant.pinRemoved'));
                   }}
                   className="w-full mt-3 px-4 py-2 rounded-xl text-white/50 text-sm hover:text-white/70 transition-colors"
                 >
-                  Remove existing PIN
+                  {t('assistant.removeExistingPin')}
                 </button>
               )}
             </motion.div>
