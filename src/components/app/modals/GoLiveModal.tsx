@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { mintPost } from '@/lib/api/dehub/content';
 import { getWeb3AuthSigner, mintOnChain, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
+import { getStreamIngestUrl } from '@/lib/api/dehub/livestream';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
 
@@ -179,8 +180,27 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
       }
 
-      // Default RTMP ingest URL for Livepeer-based streams
-      const ingestUrl = 'rtmp://rtmp.livepeer.com/live';
+      // Step 5: Fetch the ingest URL from the API
+      let ingestUrl = '';
+      try {
+        logger.info('Fetching ingest URL...', { streamId });
+        const ingestRes = await getStreamIngestUrl(streamId);
+        ingestUrl = ingestRes?.result?.ingestUrl || '';
+        logger.info('Ingest URL obtained from API', { ingestUrl });
+      } catch (e) {
+        logger.warn('Failed to get ingest URL from API, trying with tokenId...', e);
+        try {
+          const ingestRes = await getStreamIngestUrl(tokenId);
+          ingestUrl = ingestRes?.result?.ingestUrl || '';
+          logger.info('Ingest URL obtained with tokenId', { ingestUrl });
+        } catch {
+          logger.warn('Could not fetch ingest URL');
+        }
+      }
+
+      if (!ingestUrl) {
+        throw new Error('Could not obtain the RTMP ingest URL from the server. Please try again.');
+      }
 
       const resultData = {
         streamId,
