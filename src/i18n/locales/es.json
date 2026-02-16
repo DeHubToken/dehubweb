@@ -231,7 +231,8 @@
     "search": "Buscar",
     "goBack": "Volver",
     "showOriginal": "Mostrar original",
-    "translating": "Traduciendo..."
+    "translating": "Traduciendo...",
+    "close": "Cerrar"
   },
   "postOptions": {
     "options": "Opciones",

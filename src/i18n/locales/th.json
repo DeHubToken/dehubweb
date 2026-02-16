@@ -19,7 +19,7 @@
     "storage": "พื้นที่เก็บข้อมูล", "storageUsed": "พื้นที่ที่ใช้", "storageAmount": "2.1 GB / 5 GB", "messagesStorage": "ข้อความ: 1.2 GB", "mediaStorage": "สื่อ: 900 MB", "upgradeStorage": "เพิ่มการถือครองหรืออัปเกรดเป็นพรีเมียมเพื่อพื้นที่เพิ่มเติม", "quickActions": "การดำเนินการด่วน", "archivedChats": "แชทที่เก็บถาวร", "exportChats": "ส่งออกแชท",
     "notConnected": "ไม่ได้เชื่อมต่อ", "manage": "จัดการ →", "fractionsOwn": "เศษส่วนที่คุณเป็นเจ้าของ", "noFractions": "คุณยังไม่มีเศษส่วน", "usernamesOwn": "ชื่อผู้ใช้ที่คุณเป็นเจ้าของ", "noUsernames": "คุณยังไม่มีชื่อผู้ใช้", "offersMade": "ข้อเสนอที่ทำ", "noOffers": "คุณยังไม่ได้ทำข้อเสนอ", "walletCopied": "คัดลอกที่อยู่กระเป๋าเงินแล้ว!", "note": "หมายเหตุ"
   },
-  "common": { "save": "บันทึก", "cancel": "ยกเลิก", "delete": "ลบ", "edit": "แก้ไข", "loading": "กำลังโหลด...", "search": "ค้นหา", "goBack": "กลับ", "showOriginal": "แสดงต้นฉบับ", "translating": "กำลังแปล..." },
+  "common": { "save": "บันทึก", "cancel": "ยกเลิก", "delete": "ลบ", "edit": "แก้ไข", "loading": "กำลังโหลด...", "search": "ค้นหา", "goBack": "กลับ", "showOriginal": "แสดงต้นฉบับ", "translating": "กำลังแปล...", "close": "ปิด" },
   "drawers": {
     "ppvTitle": "เนื้อหาจ่ายต่อการดู",
     "unlockPrice": "ราคาปลดล็อก",

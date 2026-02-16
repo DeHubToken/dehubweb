@@ -231,7 +231,8 @@
     "search": "검색",
     "goBack": "뒤로",
     "showOriginal": "원문 보기",
-    "translating": "번역 중..."
+    "translating": "번역 중...",
+    "close": "닫기"
   },
   "drawers": {
     "ppvTitle": "유료 콘텐츠",

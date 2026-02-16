@@ -19,7 +19,7 @@
     "storage": "Pamięć", "storageUsed": "Wykorzystana pamięć", "storageAmount": "2,1 GB z 5 GB", "messagesStorage": "Wiadomości: 1,2 GB", "mediaStorage": "Media: 900 MB", "upgradeStorage": "Zwiększ udziały lub przejdź na premium aby uzyskać więcej pamięci", "quickActions": "Szybkie akcje", "archivedChats": "Zarchiwizowane czaty", "exportChats": "Eksportuj czaty",
     "notConnected": "Nie połączono", "manage": "Zarządzaj →", "fractionsOwn": "Twoje udziały", "noFractions": "Nie masz jeszcze udziałów", "usernamesOwn": "Twoje nazwy użytkownika", "noUsernames": "Nie masz jeszcze nazw użytkownika", "offersMade": "Twoje oferty", "noOffers": "Nie złożyłeś jeszcze ofert", "walletCopied": "Adres portfela skopiowany!", "note": "Notatka"
   },
-  "common": { "save": "Zapisz", "cancel": "Anuluj", "delete": "Usuń", "edit": "Edytuj", "loading": "Ładowanie...", "search": "Szukaj", "goBack": "Wróć", "showOriginal": "Pokaż oryginał", "translating": "Tłumaczenie..." },
+  "common": { "save": "Zapisz", "cancel": "Anuluj", "delete": "Usuń", "edit": "Edytuj", "loading": "Ładowanie...", "search": "Szukaj", "goBack": "Wróć", "showOriginal": "Pokaż oryginał", "translating": "Tłumaczenie...", "close": "Zamknij" },
   "drawers": {
     "ppvTitle": "Treść Pay-Per-View",
     "unlockPrice": "Cena odblokowania",

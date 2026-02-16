@@ -19,7 +19,7 @@
     "storage": "Opslag", "storageUsed": "Gebruikte opslag", "storageAmount": "2,1 GB van 5 GB", "messagesStorage": "Berichten: 1,2 GB", "mediaStorage": "Media: 900 MB", "upgradeStorage": "Verhoog je aandelen of upgrade naar premium voor meer opslag", "quickActions": "Snelle acties", "archivedChats": "Gearchiveerde chats", "exportChats": "Chats exporteren",
     "notConnected": "Niet verbonden", "manage": "Beheren →", "fractionsOwn": "Je fracties", "noFractions": "Je bezit nog geen fracties", "usernamesOwn": "Je gebruikersnamen", "noUsernames": "Je bezit nog geen gebruikersnamen", "offersMade": "Je biedingen", "noOffers": "Je hebt nog geen biedingen gedaan", "walletCopied": "Portemonnee-adres gekopieerd!", "note": "Notitie"
   },
-  "common": { "save": "Opslaan", "cancel": "Annuleren", "delete": "Verwijderen", "edit": "Bewerken", "loading": "Laden...", "search": "Zoeken", "goBack": "Terug", "showOriginal": "Toon origineel", "translating": "Vertalen..." },
+  "common": { "save": "Opslaan", "cancel": "Annuleren", "delete": "Verwijderen", "edit": "Bewerken", "loading": "Laden...", "search": "Zoeken", "goBack": "Terug", "showOriginal": "Toon origineel", "translating": "Vertalen...", "close": "Sluiten" },
   "drawers": {
     "ppvTitle": "Pay-Per-View Inhoud",
     "unlockPrice": "Ontgrendelprijs",

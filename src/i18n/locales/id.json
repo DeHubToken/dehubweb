@@ -231,7 +231,8 @@
     "search": "Cari",
     "goBack": "Kembali",
     "showOriginal": "Tampilkan asli",
-    "translating": "Menerjemahkan..."
+    "translating": "Menerjemahkan...",
+    "close": "Tutup"
   },
   "drawers": {
     "ppvTitle": "Konten Bayar-Per-Tayang",

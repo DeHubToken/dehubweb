@@ -231,7 +231,8 @@
     "search": "Ara",
     "goBack": "Geri dön",
     "showOriginal": "Orijinali göster",
-    "translating": "Çevriliyor..."
+    "translating": "Çevriliyor...",
+    "close": "Kapat"
   },
   "drawers": {
     "ppvTitle": "İzle-Öde İçeriği",

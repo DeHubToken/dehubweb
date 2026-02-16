@@ -19,7 +19,7 @@
     "storage": "Storage", "storageUsed": "Ginamit na Storage", "storageAmount": "2.1 GB ng 5 GB", "messagesStorage": "Mga Mensahe: 1.2 GB", "mediaStorage": "Media: 900 MB", "upgradeStorage": "Dagdagan ang holdings o mag-upgrade sa premium para sa mas maraming storage", "quickActions": "Mga Mabilis na Aksyon", "archivedChats": "Mga Naka-archive na Chat", "exportChats": "I-export ang mga Chat",
     "notConnected": "Hindi konektado", "manage": "Pamahalaan →", "fractionsOwn": "Mga fraction na pagmamay-ari mo", "noFractions": "Wala ka pang fraction", "usernamesOwn": "Mga username na pagmamay-ari mo", "noUsernames": "Wala ka pang username", "offersMade": "Mga alok na ginawa", "noOffers": "Wala ka pang alok", "walletCopied": "Nakopya ang wallet address!", "note": "Tala"
   },
-  "common": { "save": "I-save", "cancel": "Kanselahin", "delete": "Burahin", "edit": "I-edit", "loading": "Naglo-load...", "search": "Maghanap", "goBack": "Bumalik", "showOriginal": "Ipakita ang orihinal", "translating": "Nagsasalin..." },
+  "common": { "save": "I-save", "cancel": "Kanselahin", "delete": "Burahin", "edit": "I-edit", "loading": "Naglo-load...", "search": "Maghanap", "goBack": "Bumalik", "showOriginal": "Ipakita ang orihinal", "translating": "Nagsasalin...", "close": "Isara" },
   "drawers": {
     "ppvTitle": "Pay-Per-View na Nilalaman",
     "unlockPrice": "Presyo ng Pag-unlock",

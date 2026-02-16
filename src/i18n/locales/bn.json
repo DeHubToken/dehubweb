@@ -231,7 +231,8 @@
     "search": "অনুসন্ধান",
     "goBack": "ফিরে যান",
     "showOriginal": "মূল দেখান",
-    "translating": "অনুবাদ হচ্ছে..."
+    "translating": "অনুবাদ হচ্ছে...",
+    "close": "বন্ধ করুন"
   },
   "drawers": {
     "ppvTitle": "পে-পার-ভিউ কন্টেন্ট",

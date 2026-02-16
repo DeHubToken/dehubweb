@@ -231,7 +231,8 @@
     "search": "検索",
     "goBack": "戻る",
     "showOriginal": "原文を表示",
-    "translating": "翻訳中..."
+    "translating": "翻訳中...",
+    "close": "閉じる"
   },
   "drawers": {
     "ppvTitle": "ペイパービューコンテンツ",
