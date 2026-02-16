@@ -215,16 +215,17 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      variant="outline"
+                      variant="glass"
                       onClick={() => setIsEditing(false)}
-                      className="flex-1 border-zinc-700 text-white hover:bg-zinc-800"
+                      className="flex-1"
                     >
                       Cancel
                     </Button>
                     <Button
+                      variant="glass"
                       onClick={handleSave}
                       disabled={isSaving}
-                      className="flex-1 bg-white/10 border border-white/20 hover:bg-white/20 text-white"
+                      className="flex-1"
                     >
                       {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Settings className="w-4 h-4 mr-2" />}
                       Save
@@ -397,8 +398,9 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                   walletAddress && (m.address || m._id || '').toLowerCase() === walletAddress.toLowerCase()
                 ) && (
                   <Button
+                    variant="glass"
                     onClick={handleJoin}
-                    className="w-full bg-white/10 border border-white/20 hover:bg-white/20 text-white rounded-xl gap-2"
+                    className="w-full rounded-xl gap-2"
                   >
                     <UserPlus className="w-4 h-4" />
                     Join Group
