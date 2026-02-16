@@ -1,42 +1,40 @@
 
 
-## Problem: New users with significant holdings are missing from the leaderboard
+## Manual Leaderboard Refresh Button
 
-### Root Cause
+A "Refresh Me" button next to the search bar on the leaderboard page. When tapped, it reads the logged-in user's wallet address, checks their on-chain balance, and injects them into the leaderboard cache if they qualify.
 
-The leaderboard cache refresh function discovers users through two methods:
-1. The DeHub API leaderboard endpoint (returns a fixed/limited set of known users)
-2. A profile discovery step that searches the DeHub API with single-character prefixes (a-z, 0-9) limited to **50 results per prefix**
+### How It Works
 
-With the letter "p" alone likely having well over 50 registered accounts, the user "pokemon" (who signed up 3 days ago with 5.8M tokens) never gets returned in the discovery results. They simply fall outside the top 50 for prefix "p".
-
-### Solution
-
-Increase the discovery coverage by:
-
-1. **Use two-character prefixes instead of one-character** -- search for "pa", "pb", ..., "po", "pp", etc. This dramatically increases the number of unique users that can be discovered (up to ~46,800 vs current ~1,800).
-
-2. **Increase the per-prefix limit from 50 to 100** for additional safety margin.
-
-3. **Add pagination support** -- if a prefix returns the maximum number of results, fetch additional pages to ensure no one is missed.
-
----
+1. User taps the refresh icon button (next to the search input)
+2. If not logged in, shows an auth prompt
+3. If logged in, calls a new edge function with their wallet address
+4. The edge function:
+   - Looks up on-chain DHB balance (Base + BNB + staking)
+   - Fetches the user's profile from DeHub API
+   - If balance >= 10,000 DHB, merges them into the existing leaderboard cache entries
+   - Returns success with the user's balance
+5. Frontend shows a toast with the result and refetches leaderboard data
 
 ### Technical Details
 
-**File**: `supabase/functions/refresh-leaderboard-cache/index.ts`
+**New Edge Function**: `supabase/functions/refresh-leaderboard-user/index.ts`
 
-**Change 1**: Generate two-character prefixes instead of single characters.
+- Accepts `?address=0x...` query parameter
+- Reuses the same on-chain balance logic from `refresh-leaderboard-cache` (RPC calls to Base + BNB for balanceOf + staking)
+- Fetches profile from DeHub API (`/api/account_info?account=0x...`)
+- Reads the current `leaderboard_cache` rows for `holdings/all`
+- If user qualifies (>= 10,000 DHB), merges them into the cached data and updates the row
+- Returns `{ success: true, balance: number, added: boolean }`
+- CORS headers included
 
-Replace the current `SEARCH_PREFIXES` constant (single chars "a"-"z", "0"-"9") with a function that generates all two-character combinations from those same characters (e.g., "aa", "ab", ..., "az", "a0", ..., "a9", "ba", ..., "99"). This produces 1,296 prefixes instead of 36.
+**Frontend Changes**: `src/pages/app/LeaderboardPage.tsx`
 
-**Change 2**: Add pagination to `searchProfiles`.
+- Import `useAuth` and `RefreshCw` icon
+- Add a refresh button next to the search input (right side)
+- On click: if not authenticated, show auth prompt; otherwise call the edge function with `walletAddress`
+- Show loading spinner on the button while processing
+- On success: show toast ("You've been added!" or "Balance too low") and invalidate the leaderboard query cache to refetch
+- Button has a cooldown (disabled for 30 seconds after use) to prevent spam
 
-When a prefix returns 100 results (the max), continue fetching page 2, page 3, etc. until fewer results are returned. This ensures even popular prefixes capture all registered accounts.
-
-**Change 3**: Increase the batch delay between prefix groups slightly (from 300ms to 500ms) since we're making more requests, and reduce the concurrent batch size from 6 to 4 to avoid rate limiting the DeHub API.
-
-**Change 4**: Increase per-search limit from 50 to 100.
-
-This will ensure that "pokemon" and any other new users with significant holdings are discovered and included in the leaderboard cache on the next refresh cycle.
-
+**Config**: Add JWT verification bypass in `supabase/config.toml` for the new function.
