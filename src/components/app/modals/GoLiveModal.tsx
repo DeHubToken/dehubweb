@@ -6,10 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { startLiveStream, getStreamKey, getStreamIngestUrl, getUserLiveStreams, type StartLiveStreamResponse } from '@/lib/api/dehub';
 import { mintPost } from '@/lib/api/dehub/content';
 import { getWeb3AuthSigner, BASE_CHAIN_ID } from '@/lib/contracts';
-import { getCategories } from '@/lib/api/dehub/feed';
+import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
 import type { DeHubCategory } from '@/lib/api/dehub/types';
 import { createLogger } from '@/lib/logger';
 
@@ -31,7 +30,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamData, setStreamData] = useState<StartLiveStreamResponse['result'] | null>(null);
+  const [streamData, setStreamData] = useState<{ streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   // Category drawer state
@@ -103,13 +102,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
     setIsLoading(true);
     logger.info('User initiated "Go Live"', { title, selectedCategoriesArray });
     try {
-      // Get user's wallet address for minting
+      // Step 1: Get user's wallet address for minting
       const minterAddress = await getWeb3AuthSigner();
       logger.info('Minter address obtained', { minterAddress });
 
-      // Step 1: Mint the post first (Numeric ID system)
+      // Step 2: Mint the live post via /api/user_mint
       logger.info('Minting live post...', { title });
-      
+
       const mintResponse = await mintPost({
         name: title.trim(),
         description: description.trim(),
@@ -127,71 +126,57 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       const tokenId = mintResponse.createdTokenId;
       logger.info('NFT Minted successfully', { tokenId });
 
-      // Step 2: Since we need the MongoDB ID for the key, we fetch the user's live list
-      // This is because /api/live/user/{address} returns the MongoDB ObjectId we need.
-      logger.info('Finding stream mapping for keys...', { minterAddress });
-      
-      // We'll retry a few times to give the backend time to sync the NFT to the Live system
-      let mongoStreamId = '';
+      // Step 3: Poll /api/nft_info/{tokenId} to get stream credentials
+      // Backend needs a moment to provision the stream after minting
+      logger.info('Fetching stream credentials from nft_info...', { tokenId });
+
+      let streamKey = '';
+      let streamId = '';
       let retryCount = 0;
-      const MAX_RETRIES = 5;
+      const MAX_RETRIES = 8;
 
       while (retryCount < MAX_RETRIES) {
         try {
-          const streamsRes = await getUserLiveStreams(minterAddress);
-          const streams = streamsRes.result || [];
-          
-          // Find the stream that matches our title or is the newest
-          const matchingStream = streams[0]; // Assuming the latest one is ours
-          
-          if (matchingStream?.streamId && matchingStream.streamId.length > 10) {
-            mongoStreamId = matchingStream.streamId;
-            break; 
+          const nftInfo = await getNFTInfo(tokenId);
+          const stream = nftInfo?.stream;
+
+          if (stream?.streamKey) {
+            streamKey = stream.streamKey;
+            streamId = stream.streamId || tokenId;
+            logger.info('Stream credentials obtained', { streamId, hasKey: true, attempt: retryCount + 1 });
+            break;
           }
+
+          logger.info('Stream not ready yet, retrying...', { attempt: retryCount + 1, status: stream?.status });
         } catch (e) {
-          logger.warn('Failed to fetch user streams, retrying...', e);
+          logger.warn('Failed to fetch nft_info, retrying...', { attempt: retryCount + 1 }, e);
         }
         retryCount++;
         await new Promise(r => setTimeout(r, 2000));
       }
 
-      if (!mongoStreamId) {
-        // Fallback: Try startLiveStream to force an ID generation if sync failed
-        logger.info('Falling back to direct stream start...');
-        const startRes = await startLiveStream({
-          title: title.trim(),
-          description: description.trim(),
-          category: selectedCategoriesArray[0] || 'General'
-        });
-        mongoStreamId = startRes.result?.streamId || '';
+      if (!streamKey) {
+        throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
       }
 
-      if (!mongoStreamId) {
-        throw new Error('Could not obtain a valid Stream ID from the server.');
-      }
-
-      // Step 3: Fetch credentials using the proper MongoDB ID
-      logger.info('Fetching keys with MongoDB ID', { mongoStreamId });
-      const [keyRes, ingestRes] = await Promise.all([
-        getStreamKey(mongoStreamId),
-        getStreamIngestUrl(mongoStreamId)
-      ]);
+      // Default RTMP ingest URL for Livepeer-based streams
+      const ingestUrl = 'rtmp://rtmp.livepeer.com/live';
 
       const resultData = {
-        streamId: mongoStreamId,
-        streamKey: keyRes?.result?.streamKey || '',
-        ingestUrl: ingestRes?.result?.ingestUrl || '',
-        playbackUrl: `https://dehub.io/app/post/${tokenId}`, // Display on site with numeric ID
+        streamId,
+        streamKey,
+        ingestUrl,
+        playbackUrl: `https://dehub.io/app/post/${tokenId}`,
       };
 
       setStreamData(resultData);
       setStep('ready');
-      logger.info('Stream setup ready', { streamId: mongoStreamId, hasKey: !!resultData.streamKey });
+      logger.info('Stream setup ready', { streamId, tokenId });
       toast.success('Live stream is ready!');
     } catch (error) {
       logger.error('Failed to start stream', { title, selectedCategory }, error);
       const isWeb3AuthError = error instanceof Error && error.message.includes('Web3Auth');
-      
+
       if (isWeb3AuthError) {
         toast.error('Web3Auth service is currently slow or timing out. Please check your internet or try refreshing.');
       } else {

@@ -134,9 +134,21 @@ export interface DeHubNFT {
   stream?: {
     streamId?: string;
     status?: string;
+    isActive?: boolean;
     viewerCount?: number;
     title?: string;
     category?: string;
+    streamKey?: string;
+    playbackId?: string;
+    startedAt?: string;
+    endedAt?: string;
+    scheduledFor?: string;
+    peakViewers?: number;
+    totalViews?: number;
+    likes?: number;
+    totalTips?: number;
+    duration?: number;
+    streamDelay?: number;
   };
   chainId?: number;
   mintTxHash?: string;
