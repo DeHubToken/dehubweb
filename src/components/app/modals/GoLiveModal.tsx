@@ -31,7 +31,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamData, setStreamData] = useState<{ streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string } | null>(null);
+  const [streamData, setStreamData] = useState<{ streamKey: string; ingestUrl: string; playbackUrl: string; streamId: string; hlsUrl?: string } | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   // Category drawer state
@@ -153,6 +153,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
       let streamKey = '';
       let streamId = '';
+      let playbackId = '';
       let retryCount = 0;
       const MAX_RETRIES = 8;
 
@@ -163,10 +164,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
           if (stream?.streamKey) {
             streamKey = stream.streamKey;
+            playbackId = stream.playbackId || '';
             // Try to get the MongoDB ObjectId from stream (needed for some API calls)
             const streamObj = stream as Record<string, unknown>;
             streamId = (streamObj._id as string) || (streamObj.id as string) || stream.streamId || tokenId;
-            logger.info('Stream credentials obtained', { streamId, playbackId: stream.playbackId, hasKey: true, attempt: retryCount + 1 });
+            logger.info('Stream credentials obtained', { streamId, playbackId, hasKey: true, attempt: retryCount + 1 });
             break;
           }
 
@@ -217,11 +219,13 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         logger.info('Using standard Livepeer RTMP ingest URL', { ingestUrl });
       }
 
+      const hlsUrl = playbackId ? `https://livepeercdn.studio/hls/${playbackId}/index.m3u8` : '';
       const resultData = {
         streamId,
         streamKey,
         ingestUrl,
         playbackUrl: playbackUrl || `https://dehub.io/app/post/${tokenId}`,
+        hlsUrl,
       };
 
       setStreamData(resultData);

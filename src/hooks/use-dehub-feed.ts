@@ -470,7 +470,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     viewers: formatViews(viewerCount).replace(' views', ''),
     thumbnail,
     tags: [],
-    isLive: stream.status === 'live' || (stream.status as string) === 'LIVE',
+    isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || stream.status === 'active' || !!(stream as any).streamKey,
     playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
     creatorId: stream.address || rawAccount?.address,
     creatorUsername: rawAccount?.username,

@@ -53,7 +53,9 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(videoPlaybackManager.globalMuted);
-  const [streamEnded, setStreamEnded] = useState(!stream.isLive);
+  // Don't immediately mark as ended if we have a playback URL — try loading it first
+  const hasPlaybackUrl = !!(stream.playbackUrl && stream.playbackUrl.includes('.m3u8'));
+  const [streamEnded, setStreamEnded] = useState(!stream.isLive && !hasPlaybackUrl);
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [giftAmount, setGiftAmount] = useState('');
@@ -96,25 +98,26 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !stream.isLive) return;
+    // Try to play if stream is marked live OR if we have a valid playback URL
+    // (backend may not have updated status to "live" yet)
+    const shouldAttemptPlayback = stream.isLive || hasPlaybackUrl;
+    if (!video || !shouldAttemptPlayback) return;
 
     const streamUrl = stream.playbackUrl || stream.thumbnail;
-    logger.info('Initializing player', { 
-      streamId: stream.id, 
-      isLive: stream.isLive, 
+    logger.info('Initializing player', {
+      streamId: stream.id,
+      isLive: stream.isLive,
+      hasPlaybackUrl,
       playbackUrl: stream.playbackUrl,
-      thumbnailAsFallback: stream.thumbnail,
       finalStreamUrl: streamUrl,
     });
 
     if (!streamUrl || !streamUrl.includes('.m3u8')) {
-      logger.warn('Stream URL missing or invalid (no .m3u8)', { 
+      logger.warn('Stream URL missing or invalid (no .m3u8)', {
         playbackUrl: stream.playbackUrl,
-        thumbnail: stream.thumbnail 
+        thumbnail: stream.thumbnail
       });
-      // Don't set streamEnded here if handles scheduled streams, 
-      // but for live playback we need a valid URL.
-      if (stream.isLive) {
+      if (stream.isLive || hasPlaybackUrl) {
         setError('Stream source not found');
         setStreamEnded(true);
       }
@@ -165,7 +168,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       hlsRef.current?.destroy();
       videoPlaybackManager.unregister(videoId);
     };
-  }, [stream.isLive, stream.thumbnail, videoId]);
+  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;

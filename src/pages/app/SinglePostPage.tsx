@@ -484,7 +484,7 @@ export default function SinglePostPage() {
           title: stream.title,
           description: stream.description,
           postType: 'live',
-          isLive: stream.status === 'live' || (stream.status as string) === 'LIVE',
+          isLive: stream.status === 'live' || (stream.status as string) === 'LIVE' || stream.status === 'active' || !!(stream as any).streamKey,
           videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
           playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
           imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
