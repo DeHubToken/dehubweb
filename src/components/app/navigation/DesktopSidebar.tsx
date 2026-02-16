@@ -102,7 +102,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento */}
-        <div className="-mt-[8.5px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch">
+        <div className="-mt-[8.5px] bg-zinc-900 rounded-2xl p-1 xl:p-2.5 space-y-2 xl:space-y-[2px] flex flex-col items-center xl:items-stretch">
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
