@@ -148,12 +148,14 @@ Deno.serve(async (req) => {
     let profile: Record<string, unknown> = {};
     try {
       const profileRes = await fetch(
-        `${DEHUB_API_BASE}/api/account_info?account=${address}`,
+        `${DEHUB_API_BASE}/api/account_info/${address}`,
         { headers: { "Content-Type": "application/json" } }
       );
       if (profileRes.ok) {
         const profileData = await profileRes.json();
-        profile = profileData?.result || profileData || {};
+        const raw = profileData?.result || profileData || {};
+        // The API may nest profile data under an 'account' object
+        profile = (raw.account || raw) as Record<string, unknown>;
       }
     } catch (err) {
       console.warn("[refresh-user] Profile fetch failed:", err);
@@ -163,16 +165,18 @@ Deno.serve(async (req) => {
     const newEntry: LeaderboardEntry = {
       account: address,
       total: balance,
-      username: (profile.username as string) || undefined,
-      userDisplayName: (profile.userDisplayName as string) || (profile.displayName as string) || undefined,
-      avatarUrl: (profile.avatarUrl as string) || undefined,
-      followers: (profile.followers as number) ?? undefined,
-      likes: (profile.likes as number) ?? undefined,
+      username: (profile.username as string) || (profile.handle as string) || undefined,
+      userDisplayName: (profile.userDisplayName as string) || (profile.displayName as string) || (profile.display_name as string) || undefined,
+      avatarUrl: (profile.avatarUrl as string) || (profile.avatar as string) || undefined,
+      followers: (profile.followers as number) ?? (profile.followerCount as number) ?? undefined,
+      likes: (profile.likes as number) ?? (profile.likeCount as number) ?? undefined,
       subscribers: (profile.subscribers as number) ?? undefined,
       sentTips: (profile.sentTips as number) ?? 0,
       receivedTips: (profile.receivedTips as number) ?? 0,
       badgeBalance: balance,
     };
+
+    console.log(`[refresh-user] Profile resolved: username=${newEntry.username}, displayName=${newEntry.userDisplayName}`);
 
     // 4. Read current leaderboard cache for holdings/all
     const { data: cached, error: cacheError } = await supabase
