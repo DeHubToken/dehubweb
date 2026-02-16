@@ -1,35 +1,37 @@
 
-## Fix: PPV Info Button Opens Video After Drawer Closes
 
-### Problem
-When you tap the PPV info badge (the ticket icon button), it correctly opens the drawer. But when the drawer is dismissed (by tapping the overlay or swiping down), the click event from the overlay bubbles up to the card's root `onClick={handleCardClick}`, which navigates to the video's single post page.
+# Add Turkish, Romanian, and 10 More Languages
 
-This same issue affects the Bounty and Locked badge drawers too.
+## Current State
+11 languages supported: English, Spanish, French, German, Portuguese, Chinese, Japanese, Korean, Russian, Arabic, Hindi.
 
-### Root Cause
-The PPV/Bounty/Locked Drawers are rendered **inside** the card's root `<div>` which has the `handleCardClick` navigation handler. When the drawer overlay is clicked to dismiss, that click propagates up to the card wrapper and triggers navigation.
+## Languages to Add (12 new)
+1. **Turkish** (tr) - 80M+ speakers
+2. **Romanian** (ro) - 24M+ speakers
+3. **Bengali** (bn) - 270M+ speakers
+4. **Indonesian** (id) - 200M+ speakers
+5. **Vietnamese** (vi) - 85M+ speakers
+6. **Thai** (th) - 60M+ speakers
+7. **Italian** (it) - 65M+ speakers
+8. **Dutch** (nl) - 25M+ speakers
+9. **Polish** (pl) - 45M+ speakers
+10. **Ukrainian** (uk) - 40M+ speakers
+11. **Tagalog/Filipino** (tl) - 28M+ speakers
+12. **Malay** (ms) - 80M+ speakers
 
-### Solution
-Add a guard in `handleCardClick` that checks whether any drawer (PPV, Bounty, or Locked) is currently open. If any drawer is open, skip navigation entirely.
+Total after: **23 languages**
 
-### Technical Details
+## Changes
 
-**File**: `src/components/app/cards/VideoCard.tsx`
+### 1. Create 12 new locale JSON files
+- `src/i18n/locales/tr.json`, `ro.json`, `bn.json`, `id.json`, `vi.json`, `th.json`, `it.json`, `nl.json`, `pl.json`, `uk.json`, `tl.json`, `ms.json`
+- Each file mirrors the exact same key structure as `en.json` (nav, feed, explore, settings, common sections)
 
-In the `handleCardClick` callback (around line 831), add a check at the top:
+### 2. Update `src/i18n/index.ts`
+- Import all 12 new locale files
+- Add them to the `resources` object
+- Add entries to the `SUPPORTED_LANGUAGES` array with code, name, and native name
 
-```typescript
-const handleCardClick = useCallback((e: React.MouseEvent) => {
-  // Don't navigate if a drawer is open (PPV/Bounty/Locked)
-  if (showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
-  
-  const target = e.target as HTMLElement;
-  const isInteractive = target.closest('button, a, input, ...');
-  if (isInteractive) return;
-  
-  cacheVideoForNavigation(queryClient, video);
-  navigate(`/app/post/${video.id}`);
-}, [navigate, video.id, queryClient, video, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
-```
+### 3. Update `src/hooks/use-user-language.ts`
+- Add the 12 new language codes to the `LANGUAGE_NAMES` map (some like Turkish, Italian, Dutch, Polish, Ukrainian, Vietnamese, Malay, Romanian are already there; Bengali, Indonesian, Thai, Tagalog need adding)
 
-This ensures that while any drawer is open (or being dismissed), clicking won't navigate away. The same pattern should be checked in the `ImageCard.tsx` component if it has the same issue.
