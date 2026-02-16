@@ -493,7 +493,6 @@ export const ImageCard = memo(function ImageCard({ post }: ImageCardProps) {
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
-                onTouchEnd={(e) => { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }}
               >
                 <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Ticket className="h-7 w-7 text-white" />
