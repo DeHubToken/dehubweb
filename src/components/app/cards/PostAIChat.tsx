@@ -49,7 +49,7 @@ interface PostAIChatProps {
 }
 
 export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
-  const { walletAddress } = useAuth();
+  const { walletAddress, openLoginModal } = useAuth();
   // Generate a STABLE chat ID based on post context (not useId which changes on remount)
   const chatId = useMemo(() => {
     const baseId = `${postContext.type}-${postContext.author || 'anon'}`;
@@ -416,8 +416,12 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     return null;
   }
 
-  // Don't render if not authenticated
+  // Prompt login if not authenticated
   if (!walletAddress) {
+    if (isOpen) {
+      onClose();
+      openLoginModal();
+    }
     return null;
   }
 

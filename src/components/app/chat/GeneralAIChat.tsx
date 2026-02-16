@@ -94,7 +94,7 @@ interface GeneralAIChatProps {
 }
 
 export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
-  const { walletAddress } = useAuth();
+  const { walletAddress, openLoginModal } = useAuth();
   const isMobile = useIsMobile();
   const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -418,8 +418,12 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
     </div>
   );
 
-  // Don't render if not authenticated
+  // Prompt login if not authenticated
   if (!walletAddress) {
+    if (isOpen) {
+      onClose();
+      openLoginModal();
+    }
     return null;
   }
 
