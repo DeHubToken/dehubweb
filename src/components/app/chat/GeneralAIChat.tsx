@@ -8,6 +8,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
 import { X, Send, Sparkles, Loader2, ImageIcon, Share } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -93,6 +94,7 @@ interface GeneralAIChatProps {
 
 export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
   const isMobile = useIsMobile();
+  const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -109,7 +111,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       setMessages([{
         id: 'initial',
         role: 'assistant',
-        content: `Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.`
+        content: t('aiChat.welcomeGeneral')
       }]);
     }
   }, [isOpen]);
@@ -168,7 +170,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: "Here's the official DeHub logo! 🎨",
+          content: t('aiChat.officialLogo'),
           imageUrl: ftvLogoSymbol
         };
         setMessages(prev => [...prev, assistantMessage]);
@@ -206,7 +208,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.text || (currentAttachedImage ? 'Here\'s your edited image!' : 'Here\'s your generated image!'),
+          content: data.text || (currentAttachedImage ? t('aiChat.editedImage') : t('aiChat.generatedImage')),
           imageUrl: data.imageUrl
         };
 
@@ -226,7 +228,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.response || 'I apologize, I couldn\'t generate a response.'
+          content: data.response || t('aiChat.noResponse')
         };
 
         setMessages(prev => [...prev, assistantMessage]);
@@ -236,7 +238,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: t('aiChat.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);
@@ -322,7 +324,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                             className="w-full gap-2 rounded-full"
                           >
                             <Share className="w-4 h-4" />
-                            Post
+                            {t('aiChat.post')}
                           </Button>
                         </div>
                       )}
@@ -389,7 +391,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                 <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Attach image to edit</TooltipContent>
+            <TooltipContent>{t('aiChat.attachImage')}</TooltipContent>
           </Tooltip>
           
           <input
@@ -398,7 +400,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={attachedImage ? "Describe how to edit this image..." : "Ask me anything or generate an image..."}
+            placeholder={attachedImage ? t('aiChat.describeEdits') : t('aiChat.askAnything')}
             className="flex-1 bg-white/10 border border-white/10 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
           <Button
@@ -423,7 +425,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-white" />
-                  <DrawerTitle className="text-white">AI Assistant</DrawerTitle>
+                  <DrawerTitle className="text-white">{t('aiChat.title')}</DrawerTitle>
                 </div>
                 <Button
                   variant="ghost"
@@ -456,7 +458,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           <DialogHeader className="p-4 border-b border-white/10 shrink-0">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-white" />
-              <DialogTitle className="text-white">AI Assistant</DialogTitle>
+              <DialogTitle className="text-white">{t('aiChat.title')}</DialogTitle>
             </div>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">

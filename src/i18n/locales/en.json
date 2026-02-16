@@ -383,5 +383,23 @@
     "generateVideoOf": "Generate a video of ",
     "whatsHappeningNews": "What's happening in the news today?",
     "loginRequired": "Log in to access the AI Assistant and unlock powerful features like image and video generation."
+  },
+  "aiChat": {
+    "title": "AI Assistant",
+    "welcomePost": "I can see this {{type}}. {{context}}\n\nWhat would you like to know about it?",
+    "welcomeGeneral": "Hi! I'm your AI assistant. Ask me anything - I'm here to help with questions, ideas, or just chat.",
+    "thinking": "Thinking...",
+    "errorGeneric": "Sorry, I encountered an error. Please try again.",
+    "noResponse": "I apologize, I couldn't generate a response.",
+    "askAboutPost": "Ask about this post...",
+    "askAnything": "Ask me anything or generate an image...",
+    "describeEdits": "Describe how to edit this image...",
+    "listening": "Listening...",
+    "stopSpeaking": "Stop speaking",
+    "attachImage": "Attach image to edit",
+    "post": "Post",
+    "officialLogo": "Here's the official DeHub logo! 🎨",
+    "editedImage": "Here's your edited image!",
+    "generatedImage": "Here's your generated image!"
   }
 }

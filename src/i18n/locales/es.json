@@ -376,5 +376,23 @@
     "generateVideoOf": "Generar un vídeo de ",
     "whatsHappeningNews": "¿Qué está pasando en las noticias hoy?",
     "loginRequired": "Inicia sesión para acceder al Asistente IA y desbloquear funciones como generación de imágenes y vídeos."
+  },
+  "aiChat": {
+    "title": "Asistente IA",
+    "welcomePost": "Puedo ver este {{type}}. {{context}}\n\n¿Qué te gustaría saber sobre esto?",
+    "welcomeGeneral": "¡Hola! Soy tu asistente IA. Pregúntame lo que quieras - estoy aquí para ayudar con preguntas, ideas o simplemente charlar.",
+    "thinking": "Pensando...",
+    "errorGeneric": "Lo siento, ocurrió un error. Inténtalo de nuevo.",
+    "noResponse": "Disculpa, no pude generar una respuesta.",
+    "askAboutPost": "Pregunta sobre esta publicación...",
+    "askAnything": "Pregúntame lo que sea o genera una imagen...",
+    "describeEdits": "Describe cómo editar esta imagen...",
+    "listening": "Escuchando...",
+    "stopSpeaking": "Dejar de hablar",
+    "attachImage": "Adjuntar imagen para editar",
+    "post": "Publicar",
+    "officialLogo": "¡Aquí tienes el logo oficial de DeHub! 🎨",
+    "editedImage": "¡Aquí tienes tu imagen editada!",
+    "generatedImage": "¡Aquí tienes tu imagen generada!"
   }
 }
