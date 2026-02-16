@@ -395,15 +395,17 @@ export default function LeaderboardPage() {
               className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
             />
           </div>
-          <button
-            type="button"
-            onClick={handleRefreshMe}
-            disabled={isRefreshing || refreshCooldown}
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
-            title={refreshCooldown ? 'Cooldown active (30s)' : 'Refresh my position'}
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          </button>
+          {category === 'holdings' && (
+            <button
+              type="button"
+              onClick={handleRefreshMe}
+              disabled={isRefreshing || refreshCooldown}
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+              title={refreshCooldown ? 'Cooldown active (30s)' : 'Refresh my position'}
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </button>
+          )}
         </div>
       </div>
 
