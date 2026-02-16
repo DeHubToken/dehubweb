@@ -1,46 +1,34 @@
 
+# Add Search to Public Chat
 
-# Fix: Follow Suggestions Showing Empty Prematurely
+## Overview
+Add a search bar to the Public Chat header that lets users filter through messages in real time by matching against message content and usernames.
 
-## Problem
-The empty state ("No suggestions yet") renders immediately when `suggestions.length === 0`, but the auto-fetch `useEffect` hasn't had a chance to fire yet. React renders first, then runs effects -- so the user sees the empty state briefly (or permanently if the effect doesn't re-trigger properly). This affects all users, not just those following many people.
+## How It Works
+- A search icon button appears in the Public Chat header
+- Tapping it expands a search input field inline
+- As you type, messages are filtered client-side to only show those matching your query (content or username)
+- A count badge shows how many results matched
+- Pressing the X or clearing the input exits search mode and restores the full chat
 
-## Solution
-Update the empty-state guard in `WhoToFollow.tsx` (and the equivalent in `MobileWhoToFollowCarousel.tsx`) to check whether auto-fetching is still possible. If there are still pages to load and we haven't hit the 5-batch cap, show a loading spinner instead of the empty state.
+## Technical Details
 
-## Changes
+### 1. Update `PublicChat.tsx`
+- Add a `searchQuery` state and a `isSearchOpen` toggle
+- Add a `Search` icon button in the header (next to existing moderator buttons)
+- When search is open, render an input field in the header area with auto-focus
+- Filter the `messages` array using a case-insensitive match on `content` and `userName` before rendering
+- Show a small result count indicator (e.g., "3 results") when filtering is active
 
-### `src/components/app/WhoToFollow.tsx`
-Replace the `suggestions.length === 0` empty-state block (~line 253) with a check:
-- If `suggestions.length === 0` AND there are still more pages to auto-fetch (i.e., `hasNextPage && pagesLoaded < 5`), show a spinner (same as the initial loading state)
-- Only show "No suggestions yet" when auto-fetching is truly exhausted
+### 2. i18n Support
+- Add search-related keys to `en.json` and `es.json` (and other locales):
+  - `"searchMessages"`: "Search messages" / "Buscar mensajes"
+  - `"searchPlaceholder"`: "Search..." / "Buscar..."
+  - `"resultsCount"`: "{{count}} results" / "{{count}} resultados"
+  - `"noResults"`: "No messages found" / "No se encontraron mensajes"
 
-### `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
-Apply the same logic to the mobile component's empty state so both desktop and mobile stay consistent.
-
-## Technical Detail
-
-```typescript
-// Before (broken):
-if (suggestions.length === 0) {
-  return <EmptyState />;
-}
-
-// After (fixed):
-const pagesLoaded = data?.pages?.length ?? 0;
-const stillAutoFetching = hasNextPage && pagesLoaded < 5;
-
-if (suggestions.length === 0 && (isFetchingNextPage || stillAutoFetching)) {
-  return <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />;
-}
-
-if (suggestions.length === 0) {
-  return <EmptyState />;
-}
-```
-
-This ensures the loading spinner stays visible while the system is still searching for suggestions across additional batches.
-
-## Files Modified
-- `src/components/app/WhoToFollow.tsx`
-- `src/components/app/mobile/MobileWhoToFollowCarousel.tsx`
+### 3. UX Details
+- The search bar slides in below the header when activated, keeping the header buttons visible
+- An `X` button closes search and clears the filter
+- Empty state shows a "No messages found" message when the filter yields zero results
+- Search is available to all users (not just moderators)
