@@ -18,7 +18,8 @@ import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, 
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
-import { getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
+import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
+
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -465,12 +466,42 @@ export default function SinglePostPage() {
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['single-post', id],
-    queryFn: () => getNFTInfo(id!),
+    queryFn: async () => {
+      // Try NFT info first (works for minted posts with tokenIds)
+      try {
+        return await getNFTInfo(id!);
+      } catch {
+        // Fallback: try livestream API (stream IDs from /api/live are not NFT tokenIds)
+        const liveRes = await getLiveStream(id!);
+        const stream: any = (liveRes as any)?.result || liveRes;
+        if (!stream) throw new Error('Post not found');
+        
+        // Convert livestream data to DeHubNFT-like shape for unified rendering
+        const account = (stream as any).account;
+        return {
+          tokenId: (stream as any)._id || stream.streamId || id,
+          name: stream.title,
+          title: stream.title,
+          description: stream.description,
+          postType: 'live',
+          isLive: stream.status === 'live' || (stream.status as string) === 'LIVE',
+          videoUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          playbackUrl: stream.playbackUrl || ((stream as any).playbackId ? `https://livepeercdn.studio/hls/${(stream as any).playbackId}/index.m3u8` : undefined),
+          imageUrl: stream.thumbnailUrl || (stream as any).thumbnail,
+          views: stream.viewerCount || (stream as any).totalViews || 0,
+          totalVotes: { for: stream.likeCount || (stream as any).likes || 0, against: 0 },
+          minter: stream.address || account?.address,
+          minterDisplayName: account?.displayName || account?.username || stream.streamer?.displayName,
+          minterUsername: account?.username || stream.streamer?.username,
+          minterAvatarUrl: account?.avatarImageUrl || account?.avatarUrl || stream.streamer?.avatarImageUrl,
+          category: (stream as any).categories || (stream.category ? [stream.category] : []),
+          creator: account ? { id: account.address, username: account.username, display_name: account.displayName, avatar_url: account.avatarImageUrl || account.avatarUrl } : undefined,
+        } as unknown as DeHubNFT;
+      }
+    },
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
     retry: 1,
-    // Use cached data from feed navigation as placeholder for instant display
-    // This allows background refetch while showing content immediately
     placeholderData: (previousData) => previousData,
   });
 
