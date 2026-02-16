@@ -456,7 +456,12 @@ export function getWeb3AuthInstance(): Web3Auth | null {
 }
 
 export function getWeb3AuthProvider() {
-  return web3authInstance?.provider || null;
+  // Only return provider if user actually authenticated through Web3Auth
+  // .provider exists after init() even for non-Web3Auth users
+  if (web3authInstance?.connected && web3authInstance.provider) {
+    return web3authInstance.provider;
+  }
+  return null;
 }
 
 export async function disconnectWeb3Auth(): Promise<void> {
